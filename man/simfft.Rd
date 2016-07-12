@@ -5,7 +5,7 @@
 \title{A wrapper for fft_function that calculates the predictive accuracy of trees for different training set sizes}
 \usage{
 simfft(train.cue.df = NULL, train.criterion.v = NULL, train.p = c(0.5),
-  sim.n = 20, hr.weight = 0.5, tree.criterion = "v", rank.method = "m",
+  sim.n = 20, hr.weight = 0.5, rank.method = "m",
   numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
   correction = 0.25, max.levels = 4, do.lr = T, do.cart = T,
   roc.p = 0.8, verbose = T, parallel.cpus = 0)
@@ -20,8 +20,6 @@ simfft(train.cue.df = NULL, train.criterion.v = NULL, train.p = c(0.5),
 \item{sim.n}{Number of simulations per train.p}
 
 \item{hr.weight}{A vector of numbers between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.}
-
-\item{tree.criterion}{A string vector indicating how to rank cues. "v" = HR - FAR, "d" = d-prime. Separate trees will be made for each value.}
 
 \item{rank.method}{A string vector indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 

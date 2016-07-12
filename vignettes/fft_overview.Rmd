@@ -16,7 +16,7 @@ vignette: >
 The purpose of this package is to produce, compare, and display Fast and Frugal Decision Trees (FFTs) like the one below. FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently prefereable to more complex decision strategies (such as Logistic Regression) because they rarely overfit data [@gigerenzer2009homo] and are easy to interpret and impliment in real-world decision tasks [@marewski2012heuristic].
 
 ```{r, echo = F, message = F, results = 'hide'}
-library(fft)
+library(FFTrees)
 ```
 
 

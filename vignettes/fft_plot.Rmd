@@ -11,7 +11,7 @@ vignette: >
 
 
 ```{r, echo = F, message = F, results = 'hide'}
-library(fft)
+library(FFTrees)
 ```
 
 This function visualizes FFTs. The best way to use the function is to create an fft object with `fft()`, then apply `plot()` to the object

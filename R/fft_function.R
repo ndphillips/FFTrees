@@ -1,5 +1,4 @@
-# fft
-#' This function creates fast and frugal trees (FFT).
+#' Create Fast and Frugal Trees (FFTrees).
 #'
 #' @param train.cue.df A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param train.criterion.v The criterion for training. A logical vector of length m containing criterion values for exemplars in cue.df
@@ -8,7 +7,6 @@
 #' @param max.levels A number indicating the maximum number of levels considered for the tree.
 #' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when test.cue.df and test.criterion.v are not specified by the user.
 #' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.
-#' @param tree.criterion A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
@@ -29,13 +27,7 @@ fft <- function(train.cue.df = NULL,
                 train.criterion.v = NULL,
                 test.cue.df = NULL,
                 test.criterion.v = NULL,
-                level.name.v = NULL,
-                level.class.v = NULL,
-                level.exit.v = NULL,
-                level.threshold.v = NULL,
-                level.sigdirection.v = NULL,
                 hr.weight = .5,
-                tree.criterion = "v",
                 numthresh.method = "o",
                 train.p = .5,
                 rank.method = "m",
@@ -54,6 +46,8 @@ fft <- function(train.cue.df = NULL,
 exit.method <- "fixed"
 n.cues <- ncol(train.cue.df)
 max.levels <- min(max.levels, ncol(train.cue.df))
+tree.criterion <- "v"
+
 
 # Check for missing or bad inputs
 

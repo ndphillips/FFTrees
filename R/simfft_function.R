@@ -6,7 +6,6 @@
 #' @param train.p A vector of numbers between 0 and 1 indicating what percentage of the data to use for training.
 #' @param sim.n Number of simulations per train.p
 #' @param hr.weight A vector of numbers between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.
-#' @param tree.criterion A string vector indicating how to rank cues. "v" = HR - FAR, "d" = d-prime. Separate trees will be made for each value.
 #' @param rank.method A string vector indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
@@ -29,7 +28,6 @@ simfft <- function(
                 train.p = c(.5),
                 sim.n = 20,
                 hr.weight = .5,
-                tree.criterion = "v",
                 rank.method = "m",
                 numthresh.method = "o",
                 stopping.rule = "exemplars",
@@ -42,35 +40,10 @@ simfft <- function(
                 verbose = T,
                 parallel.cpus = 0
 ) {
-#
-#
-#
-#   train.cue.df = heartdisease[,1:13]
-#   train.criterion.v = heartdisease$diagnosis
-#   train.p = c(.5)
-#   sim.n = 20
-#   hr.weight = .5
-#   tree.criterion = "v"
-#   rank.method = "m"
-#   numthresh.method = "o"
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   correction = .25
-#   max.levels = 4
-#   do.lr = T
-#   do.cart = T
-#   roc.p = .8
-#   verbose = T
-#   parallel.cpus = 0
-#
-#
-#   train.cue.df = train.cue.df.i
-#   train.criterion.v = criterion.v.i
-#   train.p = train.p.i
-#   sim.n = sim.n.i
-#   rank.method = rank.method.i
-#   max.levels = max.levels.i
-#   verbose = F
+
+
+# Set some global variables
+tree.criterion <- "v"
 
 # Set up design matrix
 
@@ -112,7 +85,6 @@ train.p.i <- design.matrix$train.p[i]
 result.i <- fft(train.cue.df = train.cue.df,
                 train.criterion.v = train.criterion.v,
                 hr.weight = hr.weight,
-                tree.criterion = tree.criterion,
                 numthresh.method = numthresh.method,
                 train.p = train.p.i,
                 rank.method = rank.method,
@@ -131,39 +103,38 @@ tree.results[[i]] <- result.i
 
 }
 
-if(parallel.cpus > 0) {
-
-  cluster.fun <- function(x) {
-
-    fft(train.cue.df = train.cue.df,
-        train.criterion.v = train.criterion.v,
-        test.cue.df = NULL,
-        hr.weight = hr.weight,
-        tree.criterion = tree.criterion,
-        train.p = design.matrix$train.p[i],
-        numthresh.method = numthresh.method,
-        rank.method = rank.method,
-        stopping.rule = stopping.rule,
-        stopping.par = stopping.par,
-        correction = correction,
-        max.levels = max.levels,
-        do.lr = do.lr,
-        do.cart = do.cart
-    )
-
-  }
-
-snowfall::sfInit(parallel = T, cpus = parallel.cpus)
-
-snowfall::sfLibrary(fft)
-snowfall::sfExportAll()
-
-tree.results <- snowfall::sfLapply(1:nrow(design.matrix),
-                         fun = cluster.fun)
-
-snowfall::sfStop()
-
-}
+# if(parallel.cpus > 0) {
+#
+#   cluster.fun <- function(x) {
+#
+#     fft(train.cue.df = train.cue.df,
+#         train.criterion.v = train.criterion.v,
+#         test.cue.df = NULL,
+#         hr.weight = hr.weight,
+#         train.p = design.matrix$train.p[i],
+#         numthresh.method = numthresh.method,
+#         rank.method = rank.method,
+#         stopping.rule = stopping.rule,
+#         stopping.par = stopping.par,
+#         correction = correction,
+#         max.levels = max.levels,
+#         do.lr = do.lr,
+#         do.cart = do.cart
+#     )
+#
+#   }
+#
+# snowfall::sfInit(parallel = T, cpus = parallel.cpus)
+#
+# snowfall::sfLibrary(FFTrees)
+# snowfall::sfExportAll()
+#
+# tree.results <- snowfall::sfLapply(1:nrow(design.matrix),
+#                          fun = cluster.fun)
+#
+# snowfall::sfStop()
+#
+# }
 
 
 # Determine train and test HR and FAR for best train tree in each sim

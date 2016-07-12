@@ -2,15 +2,13 @@
 % Please edit documentation in R/fft_function.R
 \name{fft}
 \alias{fft}
-\title{This function creates fast and frugal trees (FFT).}
+\title{Create Fast and Frugal Trees (FFTrees).}
 \usage{
 fft(train.cue.df = NULL, train.criterion.v = NULL, test.cue.df = NULL,
-  test.criterion.v = NULL, level.name.v = NULL, level.class.v = NULL,
-  level.exit.v = NULL, level.threshold.v = NULL,
-  level.sigdirection.v = NULL, hr.weight = 0.5, tree.criterion = "v",
-  numthresh.method = "o", train.p = 0.5, rank.method = "m",
-  stopping.rule = "exemplars", stopping.par = 0.1, correction = 0.25,
-  max.levels = 4, do.lr = T, do.cart = T, rounding = 0, verbose = F)
+  test.criterion.v = NULL, hr.weight = 0.5, numthresh.method = "o",
+  train.p = 0.5, rank.method = "m", stopping.rule = "exemplars",
+  stopping.par = 0.1, correction = 0.25, max.levels = 4, do.lr = T,
+  do.cart = T, rounding = 0, verbose = F)
 }
 \arguments{
 \item{train.cue.df}{A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
@@ -22,8 +20,6 @@ fft(train.cue.df = NULL, train.criterion.v = NULL, test.cue.df = NULL,
 \item{test.criterion.v}{(Optional) A model testing criterion}
 
 \item{hr.weight}{A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.}
-
-\item{tree.criterion}{A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.}
 
 \item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
 
@@ -51,6 +47,6 @@ fft(train.cue.df = NULL, train.criterion.v = NULL, test.cue.df = NULL,
 A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
 }
 \description{
-This function creates fast and frugal trees (FFT).
+Create Fast and Frugal Trees (FFTrees).
 }
 

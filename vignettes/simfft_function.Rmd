@@ -11,7 +11,7 @@ vignette: >
 
 
 ```{r, echo = F, message = F, results = 'hide'}
-library(fft)
+library(FFTrees)
 ```
 
 This function simulates multiple cross-validations of data with the `fft()` function.

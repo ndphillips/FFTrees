@@ -11,10 +11,10 @@ vignette: >
 
 
 ```{r, echo = F, message = F, results = 'hide'}
-library(fft)
+library(FFTrees)
 ```
 
-This function is at the heart of the `fft` package. The function takes a training dataset as an argument, and generates several FFT (more details about the algorithms coming soon...)
+This function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several FFT (more details about the algorithms coming soon...)
 
 ## Example with heartdisease
 
