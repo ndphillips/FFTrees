@@ -1,5 +1,6 @@
 #' Create Fast and Frugal Trees (FFTrees).
 #'
+#' @param formula
 #' @param train.cue.df A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param train.criterion.v The criterion for training. A logical vector of length m containing criterion values for exemplars in cue.df
 #' @param test.cue.df (Optional) A model testing dataset (same format as train.cue.df)
@@ -23,7 +24,9 @@
 
 
 
-fft <- function(train.cue.df = NULL,
+fft <- function(
+                formula = NULL,
+                train.cue.df = NULL,
                 train.criterion.v = NULL,
                 test.cue.df = NULL,
                 test.criterion.v = NULL,
