@@ -21,7 +21,8 @@
 #' @export
 #'
 
-fft <- function(train.cue.df = NULL,
+fft <- function(
+                train.cue.df = NULL,
                 train.criterion.v = NULL,
                 test.cue.df = NULL,
                 test.criterion.v = NULL,
