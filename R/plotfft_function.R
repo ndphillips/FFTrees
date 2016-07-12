@@ -31,7 +31,7 @@
 #'
 #' # See the vignette for details
 #'
-#' vignette("fft_plot", package = "fft")
+#' vignette("fft_plot", package = "FFTrees")
 #'
 #'
 #'
