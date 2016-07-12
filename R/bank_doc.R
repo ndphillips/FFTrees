@@ -1,0 +1,26 @@
+#' A bank marketing dataset
+#'
+#'
+#' @format A data frame containing 45,211 rows and 17 columns
+#' \describe{
+#'  \item{age}{numeric}
+#'  \item{job}{character}
+#'  \item{marital}{character - marital status}
+#'  \item{education}{character - education level}
+#'  \item{default}{character - has credit in default}
+#'  \item{balance}{numeric - balance of the loan}
+#'  \item{housing}{character - housing status}
+#'  \item{loan}{character - has a personal loan}
+#'  \item{contact}{character - contact communication type}
+#'  \item{day}{numeric - day in month last contacted}
+#'  \item{month}{character - last contact month}
+#'  \item{duration}{numeric - last contact duration in seconds}
+#'  \item{campaign}{numeric -number of contacts performed during this campaign for this client}
+#'  \item{pdays}{numeric - number of days that passed after the client was last contacted from a previous campaign (-1 means not previously contacted)}
+#'  \item{previous}{numeric - number of previous contacts}
+#'  \item{poutcome}{character - outcome of previous contact}
+#'  \item{y}{character - did the client subscribe to a term deposit?}
+#'   ...
+#' }
+#' @source http://archive.ics.uci.edu/ml/datasets/Bank+Marketing
+"bank"

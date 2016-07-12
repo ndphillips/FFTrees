@@ -1,0 +1,29 @@
+#' forestfires
+#'
+#' A dataset of forest fire statistics.
+#'
+#'
+#' @format A data frame containing 517 rows and 13 columns
+#' \describe{
+#'   \item{X}{Integer -x-axis spatial coordinate within the Montesinho park map: 1 to 9}
+#'   \item{Y}{Integer - y-axis spatial coordinate within the Montesinho park map: 2 to 9}
+#'   \item{month}{Factor - month of the year: "jan" to "dec" }
+#'   \item{day}{Factor -day of the week: "mon" to "sun"}
+#'   \item{FFMC}{Numeric -FFMC index from the FWI system: 18.7 to 96.20}
+#'   \item{DMC}{Numeric - DMC index from the FWI system: 1.1 to 291.3 }
+#'   \item{DC}{Numeric - DC index from the FWI system: 7.9 to 860.6 }
+#'   \item{ISI}{Numeric - ISI index from the FWI system: 0.0 to 56.10}
+#'   \item{temp}{Numeric - temperature in Celsius degrees: 2.2 to 33.30}
+#'   \item{RH}{Numeric - relative humidity in percent: 15.0 to 100 }
+#'   \item{wind}{Numeric - wind speed in km/h: 0.40 to 9.40 }
+#'   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
+#'   \item{area}{Numeric - the burned area of the forest (in ha): 0.00 to 1090.84 }
+#'
+#'
+#'
+#'   ...
+#' }
+#' @source http://archive.ics.uci.edu/ml/datasets/Forest+Fires
+
+#'
+"forestfires"

@@ -1,1 +1,2 @@
-# FFTrees
+# fft
+Fast and Frugal Trees
