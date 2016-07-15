@@ -29,6 +29,18 @@ applyfft <- function(
 ) {
 
 
+  # level.name.v = trees$level.name[tree.i]
+  # level.class.v = trees$level.class[tree.i]
+  # level.exit.v = trees$level.exit[tree.i]
+  # level.threshold.v = trees$level.threshold[tree.i]
+  # level.sigdirection.v = trees$level.sigdirection[tree.i]
+  # cue.df = cue.test
+  # criterion.v = crit.test
+  # hr.weight = hr.weight
+  # correction = correction
+  # which.trees  = tree.i
+  #
+
 if(is.null(fft.object) == F) {
 
   if(is.null(which.trees)) {which.trees <- 1:nrow(fft.object$trees)}

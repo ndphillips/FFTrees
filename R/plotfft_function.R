@@ -4,24 +4,9 @@
 #' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the fft() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
 #' @param description An optional string used as a plot label.
 #' @param x A fft object created from fft()
-#' @param do.roc A logical value indicating whether or not to plot an ROC curve (instead of an individual tree)
 #' @param which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
-#' @param level.names (M) A character vector indicating the names of the cues in each level
-#' @param level.thresholds (M) A character vector of length n indicating the cutoff points for each of the n cues
-#' @param level.sigdirections (M) A character vector of length n indicating the direction for which exemplars are classified as signals for each cue. Values must be in the set "<" (strictly less than), "<=" (less than or equal to), "=" (equal), "!=" (unequal), ">=" (greater than or equal to), or ">" (strictly greater than).
-#' @param decision.v (A) A logical vector of length m indicating the decision (TRUE = signal, FALSE = noise) of each exemplar.
-#' @param levelout.v (A) A numeric vector of length m indicating at which level each exemplar was classified.
-#' @param criterion.v (B) A logical vector of length m indicating the true class (e.g.; FALSE = noise, TRUE = signal) of each exemplar.
-#' @param level.exits (B) A numeric vector of length n indicating the exit direction for each level. 0 = noise clasification, 1 = signal classification, .5 = both.
-#' @param level.classes (B) A character vector of length n indicating the class of the cues for each level. "F" = factor, "N" = numeric, "<" = logical.
-#' @param decision.names A string vector of length 2 indicating the content-specific name for noise (criterion.v == FALSE) and signal (criterion.v == TRUE) cases.
-#' @param cue.df A dataframe of cue values
-#' @param ball.bg,ball.pch,ball.cex,ball.col The colors and size of noise and signal symbols
+#' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
 #' @param which.data Which data should be plotted? Either "training" or "test".
-#' @param correction If any classification cell is empty, this number is added to all cells when calculating d-prime (default is 0.25)
-#' @param do.lr (logical) Add logistic regression statistics to plot?
-#' @param do.cart (logical) Add cart statistics to plot?
-#' @param ... Additional arguments passed on to plot()
 #' @importFrom stats anova predict
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
@@ -38,71 +23,35 @@
 
 plot.fft <- function(
   x = NULL,
+  data = NULL,
   which.data = "train",  # train, test,
-  which.tree = "best.test", # Either a number of "best.train" or "best.test"
-  correction = .25,
-  do.roc = F,
-  do.lr = F,
-  do.cart = F,
+  which.tree = "best.train", # Either a number of "best.train" or "best.test"
   description = "Data",
-  decision.names = c("Noise", "Signal"),
-  ball.col = c(gray(0), gray(0)),
-  ball.bg = c(gray(1), gray(1)),
-  ball.pch = c(21, 24),
-  ball.cex = c(1, 1),
-  cue.df = NULL,
-  decision.v = NULL,
-  levelout.v = NULL,
-  criterion.v = NULL,
-  level.names = NULL,
-  level.classes = NULL,
-  level.exits = NULL,
-  level.sigdirections = NULL,
-  level.thresholds = NULL,
-  ...
-
+  decision.names = c("Noise", "Signal")
 ) {
 
-  error.col <- "red"
-  correct.col <- "green"
-  max.label.length <- 10
-  n.per.ball <- NULL
-  final.plot <- 1
-  def.par <- par(no.readonly = TRUE)
+
 
   # -------------------------
   # TESTING VALUES
   # --------------------------
-  # x = NULL
-  # which.data = "train"  # train, test,
-  # which.tree = "best.test" # Either a number of "best.train" or "best.test"
-  # correction = .25
-  # roc = F
-  # lr = F
-  # cart = F
-  # description = ""
-  # decision.names = c("N", "S")
-  # ball.col = c(gray(0), gray(0))
-  # ball.bg = c(gray(.95), gray(.6))
-  # ball.pch = c(21, 24)
-  # ball.cex = c(1, 1)
-  # error.col = "#FF00007F"
-  # correct.col = "#00FF007F"
-  # max.label.length = 10
-  # final.plot = 1  # 1, 2, 3 or 4
-  # n.per.ball = NULL
-  # cue.df = NULL
-  # criterion.v = NULL
-  # level.names = NULL
-  # level.classes = NULL
-  # level.exits = NULL
-  # level.sigdirections = NULL
-  # level.thresholds = NULL
+  # x <- a
+  # data = NULL
+  # which.data <- "train"
+  # which.tree <- "best.train"
+  # description <- "Data"
+  # decision.names = c("Noise", "Signal")
   #
-  # x <- fft()
 
 
-  # FUNCTIONS
+
+  # Global parameters
+
+  do.roc <- F
+
+
+
+  # Helper FUNCTIONS
 
   transparent <- function(orig.col = "red", trans.val = 1, maxColorValue = 255)
   {
@@ -116,14 +65,19 @@ plot.fft <- function(
     return(final.col)
   }
 
-
-
-  if(which.tree == "best.test" & is.null(x$test.decision.df)) {
-
-    print("You wanted to plot the best test tree (which.tree = 'best.test') but there were not test data, I'll plot the best training tree instead")
-
-    which.tree <- "best.train"
-
+  # Some general pparameters
+  {
+    ball.col = c(gray(0), gray(0))
+    ball.bg = c(gray(1), gray(1))
+    ball.pch = c(21, 24)
+    ball.cex = c(1, 1)
+    error.col <- "red"
+    correct.col <- "green"
+    max.label.length <- 10
+    n.per.ball <- NULL
+    final.plot <- 1
+    def.par <- par(no.readonly = TRUE)
+    do.roc <- F
   }
 
   # Check for problems
@@ -134,15 +88,17 @@ plot.fft <- function(
 
   }
 
-  if(which.tree == "best.test" & is.null(x$best.test.tree)) {
+  if(which.tree == "best.test" & is.null(x$data.test)) {
 
-    stop("You asked to print the test tree (which.tree = 'best.test') but there were no test data! Try again with which.tree = 'best.train'")
+    print("You wanted to plot the best test tree (which.tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
+
+    which.tree <- "best.train"
 
   }
 
-  if(which.data == "test" & is.null(x$test.cue)) {
+  if(is.numeric(which.tree) & which.tree %in% 1:nrow(x$trees) == F) {
 
-    stop("You asked to plot a tree for test data (which.data = 'test') but there were no test data in the x!")
+    stop(paste("You asked for a tree that does not exist. This object has", nrow(x$trees), "trees"))
 
   }
 
@@ -151,67 +107,73 @@ plot.fft <- function(
   # -------------------------
   # Calculate decision.v and levelout.v (if missing)
   # --------------------------
-  {
-
-    if(is.null(x) == F) {
-
-      n.trees <- nrow(x$trees)
-
-      if(is.null(which.tree)) {which.tree <- "best.train"}
-
-      if(which.tree == "best.train") {which.tree <- x$best.train.tree}
-      if(which.tree == "best.test") {
-
-        which.tree <- x$best.test.tree
 
 
-      }
+if(is.null(x) == F) {
 
+  n.trees <- nrow(x$trees)
 
+  if(is.null(which.tree)) {which.tree <- "best.train"}
 
-      level.name.v <- x$trees$level.name[which.tree]
-      level.class.v <- x$trees$level.class[which.tree]
-      level.exit.v <- x$trees$level.exit[which.tree]
-      level.sigdirection.v <- x$trees$level.sigdirection[which.tree]
-      level.threshold.v <- x$trees$level.threshold[which.tree]
+  if(which.tree == "best.train") {
 
-      if(which.data == "train") {
-
-        criterion.v <- unlist(x$train.crit)
-        cue.df <- x$train.cue
-
-      }
-
-      if(which.data == "test") {
-
-        criterion.v <- unlist(x$test.crit)
-        cue.df <- x$test.cue
-
-      }
-
-      if(which.data == "both") {
-
-        criterion.v <- c(unlist(x$train.crit), unlist(x$test.crit))
-        cue.df <- rbind(x$train.cue, x$test.cue)
-
-      }
-
+    which.tree <- which(x$trees$v.train == max(x$trees$v.train))
     }
+  if(which.tree == "best.train") {
 
-    output <- applyfft(level.name.v = level.name.v,
-                       level.class.v = level.class.v,
-                       level.exit.v = level.exit.v,
-                       level.sigdirection.v = level.sigdirection.v,
-                       level.threshold.v = level.threshold.v,
-                       cue.df = cue.df,
-                       criterion.v = criterion.v,
-                       correction = correction
-    )
-
-
-    decision.v <- output$decision.df[,1]
-    levelout.v <- output$levelout.df[,1]
+    which.tree <- which(x$trees$v.test == max(x$trees$v.test))
   }
+
+
+  # Determine dataset
+
+  if(which.data == "train" & is.null(data)) {
+
+    data.mf <- model.frame(formula = x$formula, data = x$data.train)
+    cue.df <- data.mf[,2:ncol(data.mf)]
+    crit.vec <- data.mf[,1]
+
+  }
+
+  if(which.data == "test" & is.null(data)) {
+
+    data.mf <- model.frame(formula = x$formula, data = x$data.test)
+    cue.df <- data.mf[,2:ncol(data.mf)]
+    crit.vec <- data.mf[,1]
+
+  }
+
+  if(is.null(data) == F) {
+
+    data.mf <- model.frame(formula = x$formula, data = data)
+    cue.df <- data.mf[,2:ncol(data.mf)]
+    crit.vec <- data.mf[,1]
+
+  }
+
+
+  # Convert crit to binary (if necessary)
+
+  if(setequal(unique(crit.vec), c(0, 1)) == F) {
+
+  stop("The criterion value is not binary (0s and 1s), please fix")
+
+  }
+
+
+
+  output <- predict.fft(x = x,
+                        data = data.mf,
+                        formula = formula,
+                        which.tree = which.tree
+  )
+
+
+  decision.v <- output$decision[,1]
+  levelout.v <- output$levelout[,1]
+}
+
+
 
   # -------------------------
   # Calculate level statistics
@@ -228,7 +190,7 @@ plot.fft <- function(
 
       level.stats <- classtable(prediction.v = decision.v[levelout.v == level.i],
                                 correction = .25,
-                                criterion.v = criterion.v[levelout.v == level.i],
+                                criterion.v = crit.vec[levelout.v == level.i],
                                 hr.weight = .5)
 
       level.df[level.i,] <- c(level.i, level.stats[1:8])
@@ -247,9 +209,9 @@ plot.fft <- function(
 
     if(sum(null.levels == 1) > 0) {
 
-      print(paste("level(s) ", level.df$level.name[null.levels],
-                  " appear to have no exits. It (they) will be removed",
-                  sep = ""))
+      # print(paste("level(s) ", level.df$level.name[null.levels],
+      #             " appear to have no exits. It (they) will be removed",
+      #             sep = ""))
 
       level.names <- level.df$level.name[null.levels == FALSE]
       level.df <- level.df[null.levels == FALSE,]
@@ -397,7 +359,7 @@ plot.fft <- function(
 
         if(is.null(n.per.ball)) {
 
-          max.n.side <- max(c(sum(criterion.v == 0), sum(criterion.v == 1)))
+          max.n.side <- max(c(sum(crit.vec == 0), sum(crit.vec == 1)))
 
           i <- max.n.side / c(1, 5, 10, 50, 100, 1000, 10000)
           i[i > 50] <- 0
@@ -613,7 +575,7 @@ plot.fft <- function(
 
 
       final.stats <- classtable(prediction.v = decision.v,
-                                criterion.v = criterion.v,
+                                criterion.v = crit.vec,
                                 correction = correction
       )
 
@@ -1458,7 +1420,13 @@ plot.fft <- function(
 
     if(is.null(final.roc.center) == F) {
 
-      text(final.roc.center[1], header.y.loc, "`ROC'", pos = 1, cex = header.cex)
+      text(final.roc.center[1], header.y.loc, "ROC", pos = 1, cex = header.cex)
+
+      if(which.data == "train") {final.auc <- x$trees.auc$fft[1]}
+      if(which.data == "test") {final.auc <-  x$trees.auc$fft[2]}
+
+      text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
+
 
       final.roc.x.loc <- c(final.roc.center[1] - final.roc.dim[1] / 2, final.roc.center[1] + final.roc.dim[1] / 2)
       final.roc.y.loc <- c(final.roc.center[2] - final.roc.dim[2] / 2, final.roc.center[2] + final.roc.dim[2] / 2)
@@ -1500,7 +1468,7 @@ plot.fft <- function(
 
       ## CART
 
-      cart.acc <- x$cart
+      cart.acc <- x$cart$cart.acc
 
       if(which.data == "train") {
 
@@ -1528,7 +1496,7 @@ plot.fft <- function(
 
 
       ## LR
-      lr.acc <- x$lr
+      lr.acc <- x$lr[[1]]
 
       if(which.data == "train") {
 
@@ -1557,14 +1525,45 @@ plot.fft <- function(
 
       ## FFT
 
-      points(final.roc.x.loc[1] + final.stats$far * final.roc.dim[1],
-             final.roc.y.loc[1] + final.stats$hr * final.roc.dim[2],
+     if(which.data == "train") {
+
+       fft.hr.vec <- x$trees$hr.train
+       fft.far.vec <- x$trees$far.train
+
+     }
+
+      if(which.data == "test") {
+
+        fft.hr.vec <- x$trees$hr.test
+        fft.far.vec <- x$trees$far.test
+
+      }
+
+      roc.order <- order(fft.far.vec)
+
+      fft.hr.vec <- fft.hr.vec[roc.order]
+      fft.far.vec <- fft.far.vec[roc.order]
+
+      fft.hr.vec <- c(0, fft.hr.vec, 1)
+      fft.far.vec <- c(0, fft.far.vec, 1)
+
+
+      segments(final.roc.x.loc[1] + fft.far.vec[1:(length(fft.far.vec)- 1)] * final.roc.dim[1],
+               final.roc.y.loc[1] + fft.hr.vec[1:(length(fft.far.vec) - 1)] * final.roc.dim[2],
+               final.roc.x.loc[1] + fft.far.vec[2:(length(fft.far.vec))] * final.roc.dim[1],
+               final.roc.y.loc[1] + fft.hr.vec[2:(length(fft.far.vec))] * final.roc.dim[2], lwd = .5)
+
+
+      points(final.roc.x.loc[1] + fft.far.vec[2:(length(fft.far.vec) - 1)] * final.roc.dim[1],
+             final.roc.y.loc[1] + fft.hr.vec[2:(length(fft.far.vec) - 1)] * final.roc.dim[2],
              pch = 21, cex = 1.5, col = transparent("green", .3),
              bg = transparent("green", .7))
 
-      points(final.roc.x.loc[1] + final.stats$far * final.roc.dim[1],
-             final.roc.y.loc[1] + final.stats$hr * final.roc.dim[2],
-             pch = "F", cex = .8, col = gray(.2))
+      text(final.roc.x.loc[1] + fft.far.vec[2:(length(fft.far.vec) - 1)] * final.roc.dim[1],
+             final.roc.y.loc[1] + fft.hr.vec[2:(length(fft.far.vec) - 1)] * final.roc.dim[2],
+            labels = (1:nrow(x$trees))[roc.order], cex = .8, col = gray(.2))
+
+
 
 
     }

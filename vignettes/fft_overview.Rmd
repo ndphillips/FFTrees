@@ -21,18 +21,18 @@ library(FFTrees)
 
 
 ```{r, fig.width = 6, fig.height = 6, echo = F, fig.align='center'}
-heart.fft <- fft(heartdisease[,names(heartdisease) != "diagnosis"],
-                 heartdisease$diagnosis,
-                 train.p = .5
+breastcancer$diagnosis <- breastcancer$diagnosis == "M"
+bcancer.fft <- fft(diagnosis ~.,
+                   data = heartdisease
                  )
 
-plot(heart.fft,
+plot(bcancer.fft,
      description = "Heart Disease",
      decision.names = c("Healthy", "Disease")
 )
 ```
 
-The main function in the package is `fft()` which takes a training dataset `train.cue.df` and a binary criterion vector `train.criterion.v` as arguments and returns several FFTs which attempt to classify training cases into criterion classes. You can also use the function to do cross-validation (aka prediction) by splitting the original training dataset into a smaller training set and a test dataset using the `train.p` argument. The `fft()` function returns a list object with the "fft" class which can then be passed to other functions such as `plot.fft()` (which plots the FFTs), and `applyfft()` which applies an existing set of FFTs to new datasets.
+The main function in the package is `fft()` which takes a formula `formula` and a training dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. You can also use the function to do cross-validation (aka prediction) by including a test dataset in the `data.test` argument. The `fft()` function returns a list object with the "fft" class which can then be passed to other functions such as `plot.fft()` (which plots the FFTs), and `applyfft()` which applies an existing set of FFTs to new datasets.
 
 ## Datasets
 
@@ -52,6 +52,5 @@ To learn more about the package, click the following guides:
 
 - [Creating FFTs with fft()](fft_function.html)
 - [Visualizing FFTs with plot()](fft_plot.html)
-- [Simulating FFTs with simfft()](simfft_function.html)
 
 ## Bibliography

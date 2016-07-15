@@ -18,7 +18,7 @@ This function is at the heart of the `FFTrees` package. The function takes a tra
 
 ## Example with heartdisease
 
-Let's start with an example, we'll create FFTs fitted to the `heartdisease` dataset. Here's how the dataset looks:
+Let's start with an example, we'll create FFTs fitted to the `breastcancer` dataset. Here's how the dataset looks:
 
 ```{r}
 head(heartdisease)
@@ -26,17 +26,12 @@ head(heartdisease)
 
 We'll create a new fft object called `heart.fft` using the `fft()` function. We'll set the criterion to `heartdisease$diagnosis` and use all other columns (`heartdisease[,names(heartdisease) != "diagnosis"]` as potential predictors. Additionally, we'll define two parameters:
 
-- `train.p = .5`: Train the trees on a random sample of 50% of the original training dataset, and test the trees on the remaining 50%
-- `max.levels = 4`: The maximum number of levels (e.g.; cues) the trees will consider is 4. Because each of the max.levels - 1 levels can have two exit structures, this will lead to $2^{3}$ possible trees.
 
 ```{r}
-set.seed(100) # For reproducability
-
 heart.fft <- fft(
-  train.cue.df = heartdisease[,names(heartdisease) != "diagnosis"],
-  train.criterion.v = heartdisease$diagnosis,
-  train.p = .5,
-  max.levels = 4
+  formula = diagnosis ~.,
+  data = heartdisease[1:50,],
+  data.test = heartdisease[51:nrow(heartdisease),]
   )
 ```
 
@@ -92,21 +87,14 @@ heart.fft$trees[,16:24]   # Test stats are in columns 16:24
 
 It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
 
-### best.train.tree, best.test.tree
 
-The best trees for training and testing are in `best.train.tree` and `best.test.tree`. That is, which of the trees had the best performance (in terms of v (HR - FAR)) in the training dataset and which had the best performance in the test dataset? We want these two values to be the same. If they are different, then the tree algorithm might be over-fitting to the training dataset.
+### AUC
 
-```{r}
-# which tree had the best training statistics?
-heart.fft$best.train.tree
-```
+AUC statistics are in `auc`
 
 ```{r}
-# Which tree had the best testing statistics?
-heart.fft$best.test.tree
+heart.fft$auc
 ```
-
-This is a good sign for our `heartdisease` dataset. It means that tree 2 did the best for both training and test.
 
 
 ### Other information
@@ -118,7 +106,7 @@ The `train.decision.df` and `test.decision.df` contain the raw classification de
 Here are each of the 8 tree decisions for the first 5 training cases.
 
 ```{r}
-heart.fft$train.decision.df[1:5,]
+heart.fft$decision.train[1:5,]
 ```
 
 
@@ -129,25 +117,9 @@ The `train.levelout.df` and `test.levelout.df` contain the levels at which each 
 Here are the levels at which the first 5 training cases were classified:
 
 ```{r}
-heart.fft$train.levelout.df[1:5,]
+heart.fft$levelout.train[1:5,]
 ```
 
-
-#### cart, lr
-
-The `cart` and `lr` dataframes contain information about how CART (using the `rpart` package) and Logistic Regression performed on the same data.
-
-The `cart` dataframe shows training and test statistics using different miss and false alarm costs (the standard tree is in the first row where the miss and false alarm costs are both set to 1).
-
-```{r}
-heart.fft$cart
-```
-
-The `lr` data frame shows training and test statistics using different probabilistic thresholds for decisions. A threshold value of 0.5 is the standard logistic regression model.
-
-```{r}
-heart.fft$lr
-```
 
 
 ## Plotting trees
@@ -156,8 +128,6 @@ Once you've created an fft object using `fft()` you can visualize the tree (and 
 
 ```{r, fig.width = 6, fig.height = 6}
 plot(heart.fft,
-     which.tree = "best.train",
-     which.data = "test",
      description = "Heart Disease",
      decision.names = c("Healthy", "Disease")
      )
@@ -171,12 +141,6 @@ The `fft()` function has several additional arguments than change how trees are 
 
 - `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Settting `train.p = 1` will fit the trees to the entire dataset (with no testing).
 
-- `test.cue.df`, `test.criterion.v`: If you have a specific set of training data that you want to test, you can specify them here. If you do, the function will use the entire training data (`train.cue.df`, `train.criterion.v`) for training and then will apply the training trees to the testing data you specify. Thus, this will bypass the `train.p` argument.
+- `n.sim`:
 
 - `rank.method`: As trees are being built, should cues be selected based on their marginal accuracy (`rank.method = "m"`) applied to the entire dataset, or on their conditional accuracy (`rank.method = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses.
-
-- `stopping.rule`, `stopping.par`: When should trees stop growing? While all trees will (currently) stop if the number of levels hits `max.levels`, you can also stop trees using additional criteria. 
-
-    - `stopping.rule = "levels"` will always the tree at the level indicated by `stopping.par` (in this case, it makes more sense to just set `max.levels` to the number of levels you want to stop at.). 
-    - `stopping.rule = "exemplars"` will stop the tree if only a small percentage of cases remain unclassified. This percentage is indicated by `stopping.par`. For example, `stopping.par = .05` will stop the tree if less than 5% of cases remain.
-

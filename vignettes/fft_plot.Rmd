@@ -18,16 +18,12 @@ This function visualizes FFTs. The best way to use the function is to create an 
 
 ## Creating an fft object
 
-Let's start with an example, we'll create an fft object called `heart.fft` from the `heartdisease` dataset:
+Let's start with an example, we'll create an fft object called `titanic.fft` from the `titanic` dataset:
 
 ```{r}
-set.seed(100) # For reproducability due to training / testing data split
-
-heart.fft <- fft(
-  train.cue.df = heartdisease[,names(heartdisease) != "diagnosis"],
-  train.criterion.v = heartdisease$diagnosis,
-  train.p = .5,
-  max.levels = 4
+titanic.fft <- fft(
+  formula = survived ~.,
+  data = titanic
   )
 ```
 
@@ -44,11 +40,9 @@ Once you've created an fft object using `fft()` you can visualize the tree (and 
 Let's plot the best training tree for the heartdisease data when applied to the test dataset:
 
 ```{r, fig.width = 6, fig.height = 6}
-plot(heart.fft,
-     which.tree = "best.train",
-     which.data = "test",
-     description = "Heart Disease",
-     decision.names = c("Healthy", "Disease")
+plot(titanic.fft,
+     description = "Titanic",
+     decision.names = c("Died", "Survived")
      )
 ```
 
@@ -59,9 +53,8 @@ Cumulative classification statistics are showin in the bottom panel of the plot.
 Now let's compare the result to tree # 1. This is a *very* conservative tree with Noise exits on all but the last branch. This tree should have a very low false-alarm rate but (unfortunately) also a very low hit-rate.
 
 ```{r, fig.width = 6, fig.height = 6}
-plot(heart.fft,
+plot(titanic.fft,
      which.tree = 1,
-     which.data = "test",
      description = "Heart Disease",
      decision.names = c("Healthy", "Disease")
      )
@@ -69,31 +62,3 @@ plot(heart.fft,
 
 Indeed, this tree is very conservative: only 23 cases were classified as signals ("+ disease") at the very end of the tree.
 
-
-## ROC curves
-
-You can also plot ROC curves, showing the cumulative HR and FAR of each of the trees, by specifying `roc = T`. Because all trees (and both training and test datasets) are plotted, no additional arguments are necessary.
-
-Here are the fitting and training ROC for the `heart.fft` object. The best training tree is specified with large filled symbols. The circle is for the training data, the triangle is for the test data.
-
-```{r, fig.width = 6, fig.height = 6}
-plot(heart.fft,
-     roc = T
-     )
-```
-
-Here, the value of the triangle (FAR = 24%, HR = 88%) corresponds to our individual tree plot above (i.e.; the best fittting tree applied to the test data). The point towards the bottom left of the plot (FAR = 0%, HR = 32%) corresponds to tree 2 (the very conservative tree).
-
-### Including LR and CART
-
-You can also include ROC curves for Logistic Regression and CART by including `lr = T` and/or `cart = T`:
-
-```{r, fig.width = 6, fig.height = 6}
-plot(heart.fft,
-     roc = T,
-     lr = T,
-     cart = T
-     )
-```
-
-Here, we can see that for data fitting (circles and dashed lines), the FFTs did worse than LR and CART. However, for fitting (triangles and solid lines) the trees outperformed both LR and CART.
