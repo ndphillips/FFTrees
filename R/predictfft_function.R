@@ -34,7 +34,6 @@ predict.fft <- function(
 
   }
 
-
   if(is.null(x) == F) {
 
     level.name.v <- x$trees$level.name[which.tree]

@@ -14,7 +14,7 @@ vignette: >
 library(FFTrees)
 ```
 
-This function visualizes FFTs. The best way to use the function is to create an fft object with `fft()`, then apply `plot()` to the object
+Applying the `plot()` function to an `fft` object will visualize the tree.
 
 ## Creating an fft object
 
@@ -28,14 +28,37 @@ titanic.fft <- fft(
 ```
 
 
+## Plotting a tree
 
-## Visualizing individual trees
+To plot the tree, use `plot()`:
 
-Once you've created an fft object using `fft()` you can visualize the tree (and ROC curves) using `plot()`. There are two main arguments:
+```{r}
+plot(titanic.fft)
+```
+
+You can specify additional arguments to the `plot()` command that will change what is displayed
 
 - `which.tree`: Which tree do you want to plot? You can specify an integer such as `which.tree = 2` will plot the tree #2 in the fft object, or `which.tree = "best.train"` which will use the best training tree.
 
-- `which.data`: Which data do you want to apply the tree to? Currently, you can either use the training dataset with `which.data = "train"` or the test dataset with `which.data = "test"`. 
+- `data`: Which data do you want to apply the tree to? You can specify `data = "train"` or `data = "test"` to use the training or testing datasets stored in the `fft` object. Alternatively, you can specify a new dataset (e.g.; `data = test.data`
+
+For example, let's plot tree # 4 with `which.tree = 4`.
+
+```{r}
+plot(titanic.fft, 
+     which.tree = 4)
+```
+
+Now let's apply this tree to a new dataset. I'll apply the tree to only data from children:
+
+```{r}
+plot(titanic.fft,
+     which.tree = 2,
+     data = subset(titanic, age == "child"),
+     )
+```
+
+
 
 Let's plot the best training tree for the heartdisease data when applied to the test dataset:
 

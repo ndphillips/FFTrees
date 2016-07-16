@@ -1,3 +1,66 @@
+# Colors
+
+transparent <- function(orig.col = "red", trans.val = 1, maxColorValue = 255)
+{
+  n.cols <- length(orig.col)
+  orig.col <- col2rgb(orig.col)
+  final.col <- rep(NA, n.cols)
+  for (i in 1:n.cols) {
+    final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[3,
+                                                                 i], alpha = (1 - trans.val) * 255, maxColorValue = maxColorValue)
+  }
+  return(final.col)
+}
+
+
+# Statistics
+
+
+
+auc <- function(hr.v, far.v) {
+
+
+  hr.order <- order(hr.v)
+
+  hr.v <- hr.v[hr.order]
+  far.v <- far.v[hr.order]
+
+  hr.v <- c(0, hr.v, 1)
+  far.v <- c(0, far.v, 1)
+
+
+  # Remove bad (i.e.. non-increasing values)
+
+  hr.v.n <- hr.v[1]
+  far.v.n <- far.v[1]
+
+  for(i in 2:length(hr.v)) {
+
+    if(hr.v[i] > hr.v.n[length(hr.v.n)] & far.v[i] >= far.v.n[length(far.v.n)]) {
+
+      hr.v.n <- c(hr.v.n, hr.v[i])
+      far.v.n <- c(far.v.n, far.v[i])
+
+    }
+
+
+  }
+
+  hr.v <- hr.v.n
+  far.v <- far.v.n
+
+
+  far.d.v <- far.v[2:length(far.v)] - far.v[1:(length(far.v) - 1)]
+  hr.d.v <- hr.v[2:length(hr.v)] - hr.v[1:(length(hr.v) - 1)]
+
+  aoc.i <- 1- sum(far.d.v * hr.d.v)
+
+  return(aoc.i)
+
+}
+
+
+
 lr.pred <- function(
   formula,
   data.train,
@@ -5,6 +68,13 @@ lr.pred <- function(
   thresholds = seq(.9, .1, -.1),
   correction = .25
 ) {
+
+
+  # formula = formula
+  # data.train = data
+  # data.test = data.test
+  #
+
 
 data.mf.train <- model.frame(formula = formula, data = data.train)
 crit.train <- data.mf.train[,1]
@@ -71,7 +141,6 @@ crit.test <- data.mf.test[,1]
 
 # Look for new factor values in test set not in training set
 
-
   orig.vals.ls <- lapply(2:ncol(data.mf.train), FUN = function(x) {unique(data.mf.train[,x])})
 
   can.predict.mtx <- matrix(1, nrow = nrow(data.test), ncol = ncol(data.test) - 1)
@@ -91,17 +160,23 @@ crit.test <- data.mf.test[,1]
 
   model.can.predict <- rowMeans(can.predict.mtx) == 1
 
+  if(mean(model.can.predict) != 1) {
 
+  warning(paste("Linear regression couldn't fit some testing data.", sum(model.can.predict), "out of",
+                nrow(data.test), "cases (", round(sum(model.can.predict == 0) / length(model.can.predict), 2) * 100,
+                "%) had to be ignored"))
+
+  }
 
     lr.test.predictions <- suppressWarnings(predict(lr.train.mod,
-                                                    newdata = data.test))
+                                                    newdata = data.test[model.can.predict,]))
 
     lr.test.predictions <- 1 / (1 + exp(-lr.test.predictions))
     lr.test.predictions.bin <- rep(0, length(lr.test.predictions))
     lr.test.predictions.bin[lr.test.predictions >= .5] <- 1
 
     lr.test.stats <- classtable(prediction.v = lr.test.predictions.bin,
-                                criterion.v = crit.test,
+                                criterion.v = crit.test[model.can.predict],
                                 correction = correction,
                                 hr.weight = .5
     )
@@ -118,7 +193,7 @@ crit.test <- data.mf.test[,1]
     for(threshold.i in thresholds) {
 
       lr.test.stats.i <- classtable(prediction.v = lr.test.predictions >= threshold.i,
-                                    criterion.v = crit.test)
+                                    criterion.v = crit.test[model.can.predict])
 
       lr.test.hr.v[thresholds == threshold.i] <- lr.test.stats.i$hr
       lr.test.far.v[thresholds == threshold.i] <- lr.test.stats.i$far
@@ -173,48 +248,6 @@ return(output)
 }
 
 
-
-auc <- function(hr.v, far.v) {
-
-
-  hr.order <- order(hr.v)
-
-  hr.v <- hr.v[hr.order]
-  far.v <- far.v[hr.order]
-
-  hr.v <- c(0, hr.v, 1)
-  far.v <- c(0, far.v, 1)
-
-
-  # Remove bad (i.e.. non-increasing values)
-
-  hr.v.n <- hr.v[1]
-  far.v.n <- far.v[1]
-
-  for(i in 2:length(hr.v)) {
-
-    if(hr.v[i] > hr.v.n[length(hr.v.n)] & far.v[i] >= far.v.n[length(far.v.n)]) {
-
-      hr.v.n <- c(hr.v.n, hr.v[i])
-      far.v.n <- c(far.v.n, far.v[i])
-
-    }
-
-
-  }
-
-  hr.v <- hr.v.n
-  far.v <- far.v.n
-
-
-  far.d.v <- far.v[2:length(far.v)] - far.v[1:(length(far.v) - 1)]
-  hr.d.v <- hr.v[2:length(hr.v)] - hr.v[1:(length(hr.v) - 1)]
-
-  aoc.i <- 1- sum(far.d.v * hr.d.v)
-
-  return(aoc.i)
-
-}
 
 
 cart.pred <- function(
@@ -387,5 +420,79 @@ cart.pred <- function(
 
   return(output)
 
+
+}
+
+
+classtable <- function(prediction.v,
+                       criterion.v,
+                       correction = .25,
+                       hr.weight = .5) {
+
+  #
+  #   prediction.v <- sample(c(0, 1), size = 100, replace = T)
+  #   criterion.v <- sample(c(0, 1), size = 100, replace = T)
+  #   correction <- .25
+  #   hr.weight <- .5
+
+
+  # prediction.v = subset(decision.df, levelout <= current.level)$decision
+  # criterion.v = subset(decision.df, levelout <= current.level)$criterion
+  # correction = correction
+  # hr.weight = hr.weight
+
+
+  hi <- sum(prediction.v == 1 & criterion.v == 1)
+  mi <- sum(prediction.v == 0 & criterion.v == 1)
+  fa <- sum(prediction.v == 1 & criterion.v == 0)
+  cr <- sum(prediction.v == 0 & criterion.v == 0)
+
+  hr <- hi / (hi + mi)
+  far <- fa / (cr + fa)
+  v <- hr - far
+  dprime <- qnorm(hr) - qnorm(far)
+
+  correct.index <- hi == 0 | mi == 0 | fa == 0 | cr == 0
+
+  hi.c <- hi
+  mi.c <- mi
+  fa.c <- fa
+  cr.c <- cr
+
+  hi.c[correct.index] <- hi[correct.index] + correction
+  mi.c[correct.index] <- mi[correct.index] + correction
+  fa.c[correct.index] <- fa[correct.index] + correction
+  cr.c[correct.index] <- cr[correct.index] + correction
+
+  hr.c <- hi.c / (hi.c + mi.c)
+  far.c <- fa.c / (fa.c + cr.c)
+  v.c <- hr.c - far.c
+  dprime.c <- qnorm(hr.c) - qnorm(far.c)
+
+
+  v.w <- hr * hr.weight - far * (1 - hr.weight)
+  dprime.w <- qnorm(hr) * hr.weight - qnorm(far) * (1 - hr.weight)
+
+  v.c.w <- (hr.c * hr.weight - far.c * (1 - hr.weight)) * (1 / hr.weight)
+  dprime.c.w <- qnorm(hr.c) * hr.weight - qnorm(far.c) * (1 - hr.weight)
+
+  result <- data.frame(
+    hi = hi, mi = mi, fa = fa, cr = cr,
+    hr = hr,
+    far = far,
+    v = v.c.w,
+    dprime = dprime.c.w,
+    correction = correction,
+    hr.weight = hr.weight
+  )
+
+  return(result)
+
+}
+
+
+summary.fft <- function(x) {
+
+  return(x$trees)
 
 }

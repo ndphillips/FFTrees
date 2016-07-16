@@ -6,12 +6,7 @@
 #' @param max.levels A number indicating the maximum number of levels considered for the tree.
 #' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test and crit.test are not specified by the user.
 #' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.
-#' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
-#' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
-#' @param stopping.par A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
-#' @param rounding An integer indicating how many digits to round numeric variables to (0 means round to the integer).
-#' @param correction A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0. Default is 0.25.
 #' @param verbose A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slow...
 #' @importFrom stats anova predict glm as.formula
 #' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
@@ -28,9 +23,17 @@ fft <- function(
                 verbose = F,
                 max.levels = 4
 ) {
+#
+#   formula = party.crit ~.
+#   data = voting.r[1:50,]
+#   data.test = voting.r[51:nrow(voting.r),]
+#   train.p <- 1
+#   n.sim <- 1
+#   rank.method <- "m"
+#   max.levels <- 4
 
 
-  hr.weight = .5
+  hr.weight <- .5
   tree.criterion <- "v"
   stopping.rule <- "exemplars"
   stopping.par <- .1
@@ -38,7 +41,8 @@ fft <- function(
   do.lr <- T
   do.cart <- T
   rounding <- 0
-  numthresh.method = "o"
+  numthresh.method <- "o"
+  rounding <- 2
 
 
 
@@ -208,9 +212,6 @@ data.train <- model.frame(formula = common.cue.formula,
 cue.train <- data.train[,2:ncol(data.train)]
 crit.train <- data.train[,1]
 
-# Convert non binary values
-
-
 
 # Determine final testing data
 
@@ -223,8 +224,8 @@ if(is.null(data.test)) {
 
 if(is.null(data.test) == F) {
 
-  cue.test <- data.test.true.o[,common.cues]
-  crit.test <- crit.test.true
+  cue.test <- data.test.o[,common.cues]
+  crit.test <- crit.test
 
 }
 
@@ -271,6 +272,28 @@ cart.acc <- cart.pred(formula = formula,
                       data.train = data,
                       data.test = data.test)
 
+
+# Sort trees by far.train
+
+final.tree.order <- order(final.result$trees$far.train)
+
+final.result$trees <- final.result$trees[final.tree.order,]
+final.result$decision.train <- final.result$decision.train[,final.tree.order]
+final.result$levelout.train <- final.result$levelout.train[,final.tree.order]
+
+final.result$trees$tree.num <- 1:n.trees
+names(final.result$decision.train) <- paste("tree", 1:n.trees, sep = ".")
+names(final.result$levelout.train) <- paste("tree", 1:n.trees, sep = ".")
+
+if(is.null(final.result$decision.test) == F) {
+
+final.result$decision.test <- final.result$decision.test[,final.tree.order]
+final.result$levelout.test <- final.result$levelout.test[,final.tree.order]
+
+names(final.result$decision.test) <- paste("tree", 1:n.trees, sep = ".")
+names(final.result$levelout.test) <- paste("tree", 1:n.trees, sep = ".")
+
+}
 
 output.fft <- list(
                   "formula" = formula,
