@@ -11,7 +11,6 @@
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
 #' @param stopping.par A number indicating the parameter for the stopping rule.
 #' @param parallel.cpus An integer indicating how many cups to use for parallel calculations using the snowfall package. A value of 0 means no parallel. You may need to explicitly load the snowfall package with library("snowfall") for parallel calculations to work.
-#' @param correction A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0.
 #' @param max.levels A number indicating the maximum number of tree levels to consder.
 #' @param do.lr  A logical value indicating whether to conduct linear regression for model comparison purposes.
 #' @param do.cart  A logical value indicating whether to conduct CART for model comparison purposes.
@@ -32,7 +31,6 @@ simfft <- function(
                 numthresh.method = "o",
                 stopping.rule = "exemplars",
                 stopping.par = .1,
-                correction = .25,
                 max.levels = 4,
                 do.lr = T,
                 do.cart = T,
@@ -90,7 +88,6 @@ result.i <- fft(train.cue.df = train.cue.df,
                 rank.method = rank.method,
                 stopping.rule = stopping.rule,
                 stopping.par = stopping.par,
-                correction = correction,
                 max.levels = max.levels,
                 do.lr = do.lr,
                 do.cart = do.cart,

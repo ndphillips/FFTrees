@@ -2,11 +2,12 @@
 #' Draws (and creates) a FFT.
 #'
 #' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the fft() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
-#' @param description An optional string used as a plot label.
 #' @param x A fft object created from fft()
+#' @param data Either a dataframe, or one of two strings 'best.train' or 'best.test'
 #' @param which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
-#' @importFrom stats anova predict
+#' @param description An optional string used as a plot label.
+#' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
 #' @export
@@ -23,7 +24,7 @@
 plot.fft <- function(
   x = NULL,
   data = "train",
-  which.tree = "best.train", # Either a number of "best.train" or "best.test"
+  which.tree = "best.train", # Either a number, or "best.train" or "best.test"
   description = "Data",
   decision.names = c("Noise", "Signal")
 ) {
@@ -31,13 +32,19 @@ plot.fft <- function(
   # -------------------------
   # TESTING VALUES
   # --------------------------
-  # x <- blood.fft
-  # data <- "test"
-  # which.tree = "best.train"
-  # description <- "asdf"
-  # decision.names = c("Noise", "Signal")
 
-  #
+#
+#   x <- heart.fft
+#   data <- "train"
+#   description = "Heart Disease"
+#   decision.names = c("Healthy", "Disease")
+#   which.tree = "best.train" # Either a number, or "best.train" or "best.test"
+#   description = "Data"
+#   decision.names = c("Noise", "Signal")
+#   level.names = NULL
+
+
+  level.names <- NULL
 
 
   # Some general parameters
@@ -120,6 +127,7 @@ if(is.null(x) == F) {
     crit.vec <- data.mf[,1]
     recalculate <- F
     fitting.type <- "train"
+
     }
 
     if(data == "test") {
@@ -148,6 +156,8 @@ if(is.null(x) == F) {
 
 
   # Convert crit to binary (if necessary)
+
+
 
   if(setequal(unique(crit.vec), c(0, 1)) == F) {
 
@@ -186,7 +196,6 @@ if(is.null(x) == F) {
     for (level.i in 1:(n.levels)) {
 
       level.stats <- classtable(prediction.v = decision.v[levelout.v == level.i],
-                                correction = .25,
                                 criterion.v = crit.vec[levelout.v == level.i],
                                 hr.weight = .5)
 
@@ -572,8 +581,7 @@ if(is.null(x) == F) {
 
 
       final.stats <- classtable(prediction.v = decision.v,
-                                criterion.v = crit.vec,
-                                correction = correction
+                                criterion.v = crit.vec
       )
 
 
@@ -1066,7 +1074,6 @@ if(is.null(x) == F) {
 
     }
 
-    {
     if(final.plot == 2) {
 
       final.noise.balls.center <- c(.125, .55)
@@ -1087,7 +1094,6 @@ if(is.null(x) == F) {
 
     }
 
-
     if(final.plot == 3) {
 
       final.balls <- T
@@ -1099,7 +1105,7 @@ if(is.null(x) == F) {
       final.balls <- F
 
     }
-    }
+
 
     # General plotting space
     {
@@ -1458,7 +1464,7 @@ if(is.null(x) == F) {
         fft.far.vec <- x$trees$far.train
         cart.acc <- x$cart$cart.acc
         cart.hr <- cart.acc$hr.train[cart.acc$miss.cost == cart.acc$fa.cost]
-        cart.fa <- cart.acc$far.train[cart.acc$miss.cost == cart.acc$fa.cost]
+        cart.far <- cart.acc$far.train[cart.acc$miss.cost == cart.acc$fa.cost]
         lr.hr <- x$lr[[1]]$hr.train[x$lr[[1]]$threshold == .5]
         lr.far <- x$lr[[1]]$far.train[x$lr[[1]]$threshold == .5]
 
@@ -1472,7 +1478,7 @@ if(is.null(x) == F) {
         fft.far.vec <- x$trees$far.test
         cart.acc <- x$cart$cart.acc
         cart.hr <- cart.acc$hr.test[cart.acc$miss.cost == cart.acc$fa.cost]
-        cart.fa <- cart.acc$far.test[cart.acc$miss.cost == cart.acc$fa.cost]
+        cart.far <- cart.acc$far.test[cart.acc$miss.cost == cart.acc$fa.cost]
         lr.hr <- x$lr[[1]]$hr.test[x$lr[[1]]$threshold == .5]
         lr.far <- x$lr[[1]]$far.test[x$lr[[1]]$threshold == .5]
 
@@ -1515,23 +1521,16 @@ if(is.null(x) == F) {
 
       segments(final.roc.x.loc[1], final.roc.y.loc[1], final.roc.x.loc[2], final.roc.y.loc[2], lty = 2)
 
-      # Points
-
-       ## FFT
-#
-#       points(final.roc.x.loc[1] + final.stats$far * final.roc.dim[1],
-#              final.roc.y.loc[1] + final.stats$hr * final.roc.dim[2],
-#              pch = 3, cex = 1.5)
 
       ## CART and LR
 {
 
-      points(final.roc.x.loc[1] + cart.fa * final.roc.dim[1],
+      points(final.roc.x.loc[1] + cart.far * final.roc.dim[1],
              final.roc.y.loc[1] + cart.hr * final.roc.dim[2],
              pch = 21, cex = 2, col = transparent("red", .3),
              bg = transparent("red", .7))
 
-      points(final.roc.x.loc[1] + cart.fa * final.roc.dim[1],
+      points(final.roc.x.loc[1] + cart.far * final.roc.dim[1],
              final.roc.y.loc[1] + cart.hr * final.roc.dim[2],
              pch = "C", cex = 1, col = gray(.2))
 
@@ -1551,7 +1550,7 @@ if(is.null(x) == F) {
 
 }
       ## FFT
-
+{
       roc.order <- order(fft.far.vec)
 
       fft.hr.vec.ord <- fft.hr.vec[roc.order]
@@ -1592,6 +1591,8 @@ if(is.null(x) == F) {
 
     }
 
+
+    }
 
     }
 

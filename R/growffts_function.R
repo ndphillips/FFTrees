@@ -1,16 +1,14 @@
 #' Grows fast and frugal trees
-#'
-#' @param cue.train A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
-#' @param crit.train (Optional) A model testing dataset (same format as data.train)
-#' @param cue.test A number indicating the maximum number of levels considered for the tree.
-#' @param crit.test A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test and crit.test are not specified by the user.
+#' @param formula a formula
+#' @param data.train A training dataset
+#' @param data.test A testing dataset
+#' @param max.levels The maximum number of levels in the tree(s)
+#' @param verbose A logical value indicating whether or not to display progress
 #' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
 #' @param stopping.par A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
-#' @param rounding An integer indicating how many digits to round numeric variables to (0 means round to the integer).
-#' @param correction A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0. Default is 0.25.
 #' @importFrom stats anova predict glm as.formula
 #' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
 #' @export
@@ -23,17 +21,17 @@ grow.ffts <- function(
                      data.test = NULL,
                      hr.weight = .5,
                      rank.method = "m",
-                     tree.criterion = "v",
                      numthresh.method = "o",
-                     exit.method = "fixed",
-                     correction = .25,
-                     rounding = 2,
                      max.levels = 4,
                      stopping.rule = "exemplars",
                      stopping.par = .1,
                      verbose = F
 ) {
 
+  tree.criterion <- "v"
+  exit.method <- "fixed"
+  correction <- .25
+  rounding <- 2
 
 
   # Set up dataframes
@@ -75,7 +73,6 @@ grow.ffts <- function(
                                   hr.weight = hr.weight,
                                   tree.criterion = tree.criterion,
                                   numthresh.method = numthresh.method,
-                                  correction = correction,
                                   rounding = rounding,
                                   verbose = verbose
   )
@@ -232,7 +229,6 @@ grow.ffts <- function(
                                              hr.weight = hr.weight,
                                              tree.criterion = tree.criterion,
                                              numthresh.method = numthresh.method,
-                                             correction = correction,
                                              rounding = rounding
           )
 
@@ -256,7 +252,6 @@ grow.ffts <- function(
 
         current.level.classtable <- classtable(prediction.v = current.decisions[is.na(decision.v)],
                                                criterion.v = criterion.v.i[is.na(decision.v)],
-                                               correction = correction,
                                                hr.weight = hr.weight
         )
 
@@ -295,7 +290,6 @@ grow.ffts <- function(
           cum.level.classtable <- classtable(
             prediction.v = decision.v[levelout.v <= current.level & is.na(levelout.v) == F],
             criterion.v = criterion.v.i[levelout.v <= current.level & is.na(levelout.v) == F],
-            correction = correction,
             hr.weight = hr.weight)
 
           if(current.level > 1) {
@@ -371,7 +365,6 @@ grow.ffts <- function(
 
           last.level.classtable <- classtable(prediction.v = decision.v,
                                               criterion.v = crit.train,
-                                              correction = correction,
                                               hr.weight = hr.weight
 
           )
@@ -431,7 +424,6 @@ grow.ffts <- function(
 
       tree.i.train.stats <- classtable(prediction.v = decision.train[,tree.i],
                                        criterion.v = crit.train,
-                                       correction = correction,
                                        hr.weight = hr.weight
       )
 

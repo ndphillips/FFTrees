@@ -26,7 +26,6 @@ head(heartdisease)
 
 We'll create a new fft object called `heart.fft` using the `fft()` function. 
 
-
 ```{r}
 heart.fft <- fft(
   formula = diagnosis ~.,
@@ -72,7 +71,7 @@ heart.fft$trees
 
 You can also use the generic `summary()` function to get the trees dataframe
 
-```{r}
+```{r, eval = F}
 summary(heart.fft)
 ```
 

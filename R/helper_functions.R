@@ -65,10 +65,9 @@ lr.pred <- function(
   formula,
   data.train,
   data.test = NULL,
-  thresholds = seq(.9, .1, -.1),
-  correction = .25
+  thresholds = seq(.9, .1, -.1)
 ) {
-
+correction <- .25
 
   # formula = formula
   # data.train = data
@@ -111,7 +110,6 @@ crit.test <- data.mf.test[,1]
 
   lr.train.stats <- classtable(prediction.v = lr.train.predictions.bin,
                                criterion.v = crit.train,
-                               correction = correction,
                                hr.weight = .5
   )
 
@@ -177,7 +175,6 @@ crit.test <- data.mf.test[,1]
 
     lr.test.stats <- classtable(prediction.v = lr.test.predictions.bin,
                                 criterion.v = crit.test[model.can.predict],
-                                correction = correction,
                                 hr.weight = .5
     )
 
@@ -253,8 +250,7 @@ return(output)
 cart.pred <- function(
   formula,
   data.train,
-  data.test = NULL,
-  correction = .25
+  data.test = NULL
 ) {
 
 
@@ -327,7 +323,6 @@ cart.pred <- function(
 
     cart.train.acc.i <- classtable(prediction.v = cart.train.pred.i,
                                    criterion.v = crit.train,
-                                   correction = correction,
                                    hr.weight = .5
     )
 
@@ -349,7 +344,6 @@ cart.pred <- function(
 
       cart.test.acc.i <- classtable(prediction.v = cart.test.pred.i,
                                     criterion.v = crit.test,
-                                    correction = correction,
                                     hr.weight = .5)
 
       cart.test.acc.ls[[row.i]] <- cart.test.acc.i
@@ -426,8 +420,10 @@ cart.pred <- function(
 
 classtable <- function(prediction.v,
                        criterion.v,
-                       correction = .25,
                        hr.weight = .5) {
+
+
+  correction <- .25
 
   #
   #   prediction.v <- sample(c(0, 1), size = 100, replace = T)

@@ -7,8 +7,8 @@
 simfft(train.cue.df = NULL, train.criterion.v = NULL, train.p = c(0.5),
   sim.n = 20, hr.weight = 0.5, rank.method = "m",
   numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
-  correction = 0.25, max.levels = 4, do.lr = T, do.cart = T,
-  roc.p = 0.8, verbose = T, parallel.cpus = 0)
+  max.levels = 4, do.lr = T, do.cart = T, roc.p = 0.8, verbose = T,
+  parallel.cpus = 0)
 }
 \arguments{
 \item{train.cue.df}{A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
@@ -28,8 +28,6 @@ simfft(train.cue.df = NULL, train.criterion.v = NULL, train.p = c(0.5),
 \item{stopping.rule}{A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.}
 
 \item{stopping.par}{A number indicating the parameter for the stopping rule.}
-
-\item{correction}{A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0.}
 
 \item{max.levels}{A number indicating the maximum number of tree levels to consder.}
 

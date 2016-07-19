@@ -50,5 +50,6 @@ To learn more about the package, click the following guides:
 
 - [Creating FFTs with fft()](fft_function.html)
 - [Visualizing FFTs with plot()](fft_plot.html)
+- [Lots of example FFTs](fft_example.html)
 
 ## Bibliography

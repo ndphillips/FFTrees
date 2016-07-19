@@ -3,7 +3,7 @@
 #'
 #' @format A data frame containing 8,124 rows and 23 columns (see http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names for column descriptions)
 #' \describe{
-#'   \item{edible}{numeric}
+#'   \item{poisonous}{numeric}
 #'   \item{cshape}{character}
 #'   \item{csurface}{character}
 #'   \item{ccolor}{character}

@@ -2,6 +2,8 @@
 #'
 #' @param x (M) An fft object created from the fft() function.
 #' @param data (M) An m x n dataframe containing n cue values for each of the m exemplars.
+#' @param formula a formula
+#' @param which.tree which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param level.name.v A character indicating the names of the levels in the tree separated by ;. For example "age;sex;occupation"
 #' @param level.threshold.v (M) A character indicating the level thresholds separated by ;. For example "25;female;occupation"
 #' @param level.sigdirection.v (M) A character vector of length n indicating the direction for which exemplars are classified as signals for each cue. Values must be in the set "<" (strictly less than), "<=" (less than or equal to), "=" (equal), "!=" (unequal), ">=" (greater than or equal to), or ">" (strictly greater than)/
@@ -154,9 +156,7 @@ predict.fft <- function(
     # get final stats
 
     tree.i.finalstats <- classtable(prediction.v = decision,
-                                    criterion.v = crit.train,
-                                    correction = correction,
-                                    hr.weight = hr.weight)
+                                    criterion.v = crit.train)
 
 
     tree.i.finalstats$n.levels <- n.levels
