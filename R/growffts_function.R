@@ -251,9 +251,8 @@ grow.ffts <- function(
         )
 
         current.level.classtable <- classtable(prediction.v = current.decisions[is.na(decision.v)],
-                                               criterion.v = criterion.v.i[is.na(decision.v)],
-                                               hr.weight = hr.weight
-        )
+                                               criterion.v = criterion.v.i[is.na(decision.v)])
+
 
         current.exit <- level.exits.v.i[current.level]
 
@@ -289,8 +288,7 @@ grow.ffts <- function(
 
           cum.level.classtable <- classtable(
             prediction.v = decision.v[levelout.v <= current.level & is.na(levelout.v) == F],
-            criterion.v = criterion.v.i[levelout.v <= current.level & is.na(levelout.v) == F],
-            hr.weight = hr.weight)
+            criterion.v = criterion.v.i[levelout.v <= current.level & is.na(levelout.v) == F])
 
           if(current.level > 1) {
 
@@ -364,10 +362,9 @@ grow.ffts <- function(
           # up
 
           last.level.classtable <- classtable(prediction.v = decision.v,
-                                              criterion.v = crit.train,
-                                              hr.weight = hr.weight
+                                              criterion.v = crit.train)
 
-          )
+
 
 
           level.stats$level.exitdirection[last.level] <- .5
@@ -423,9 +420,8 @@ grow.ffts <- function(
     for(tree.i in 1:n.trees) {
 
       tree.i.train.stats <- classtable(prediction.v = decision.train[,tree.i],
-                                       criterion.v = crit.train,
-                                       hr.weight = hr.weight
-      )
+                                       criterion.v = crit.train)
+
 
 
       if(tree.i == 1) {tree.train.stats <- tree.i.train.stats}

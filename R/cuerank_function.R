@@ -8,6 +8,7 @@
 #' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both.
 #' @param rounding An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param verbose A logical value indicating whether or not to print ongoing diagnostics
+#' @importFrom stats median
 #' @return A list with two elements. The first, "cue.stats" is a dataframe containing the classification statistics for every possible cue threshold. The second element, cue.best, contains data for the best performing cue threshold
 #' @export
 #'
@@ -22,6 +23,7 @@ cuerank <- function(cue.df = NULL,
                     verbose = F
 
 ) {
+
 
 
 # -----
@@ -139,8 +141,7 @@ for(cue.i in 1:n.cues) {
           if(level.sigdirection.i == "!=") {pred.vec <- cue.v != cue.level.i}
 
           classtable.temp <- classtable(prediction.v = pred.vec,
-                                        criterion.v = criterion.v,
-                                        hr.weight = hr.weight)
+                                        criterion.v = criterion.v)
 
 
           cue.stats.o[cue.stats.o$level.threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
@@ -181,8 +182,7 @@ for(cue.i in 1:n.cues) {
 
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v,
-                                      hr.weight = hr.weight)
+                                      criterion.v = criterion.v)
 
 
         cue.stats[row.index.i, accuracy.names] <- classtable.temp
@@ -243,8 +243,7 @@ for(cue.i in 1:n.cues) {
         if(sigdirection.i == ">=") {pred.vec <- cue.v >= level.i}
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v,
-                                      hr.weight = hr.weight)
+                                      criterion.v = criterion.v)
 
         sigdirection.accuracy.df[which(sigdirection.i == sigdirection.vec), names(classtable.temp)] <- classtable.temp
 

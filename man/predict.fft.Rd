@@ -4,12 +4,13 @@
 \alias{predict.fft}
 \title{Applies an existing fft to a new dataset}
 \usage{
-\method{predict}{fft}(x = NULL, data = NULL, formula = NULL,
+\method{predict}{fft}(object = NULL, data = NULL, formula = NULL,
   which.tree = NULL, level.name.v = NULL, level.threshold.v = NULL,
-  level.sigdirection.v = NULL, level.exit.v = NULL, level.class.v = NULL)
+  level.sigdirection.v = NULL, level.exit.v = NULL, level.class.v = NULL,
+  ...)
 }
 \arguments{
-\item{x}{(M) An fft object created from the fft() function.}
+\item{object}{(M) An fft object created from the fft() function.}
 
 \item{data}{(M) An m x n dataframe containing n cue values for each of the m exemplars.}
 
@@ -26,6 +27,8 @@
 \item{level.exit.v}{(B) A numeric vector of length n indicating the exit direction for each level. 0 = noise clasification, 1 = signal decision, .5 = both.}
 
 \item{level.class.v}{(B) A character vector of length n indicating the class of the cues for each level. "F" = factor, "N" = numeric, "L" = logical.}
+
+\item{...}{Additional arguments passed on to predict()}
 }
 \value{
 A list of length 3. The first element "decision.df" is a dataframe with the decisions (and level of decisions) for each exemplar. The second element, "final.df" is a dataframe showing final tree accuracy statistics. The third element "level.df" shows tree accuracy statistics at each level.

@@ -1,6 +1,6 @@
 #' Applies an existing fft to a new dataset
 #'
-#' @param x (M) An fft object created from the fft() function.
+#' @param object (M) An fft object created from the fft() function.
 #' @param data (M) An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param formula a formula
 #' @param which.tree which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
@@ -9,11 +9,12 @@
 #' @param level.sigdirection.v (M) A character vector of length n indicating the direction for which exemplars are classified as signals for each cue. Values must be in the set "<" (strictly less than), "<=" (less than or equal to), "=" (equal), "!=" (unequal), ">=" (greater than or equal to), or ">" (strictly greater than)/
 #' @param level.exit.v (B) A numeric vector of length n indicating the exit direction for each level. 0 = noise clasification, 1 = signal decision, .5 = both.
 #' @param level.class.v (B) A character vector of length n indicating the class of the cues for each level. "F" = factor, "N" = numeric, "L" = logical.
+#' @param ... Additional arguments passed on to predict()
 #' @return A list of length 3. The first element "decision.df" is a dataframe with the decisions (and level of decisions) for each exemplar. The second element, "final.df" is a dataframe showing final tree accuracy statistics. The third element "level.df" shows tree accuracy statistics at each level.
 #' @export
 
 predict.fft <- function(
-  x = NULL,
+  object = NULL,
   data = NULL,
   formula = NULL,
   which.tree = NULL,
@@ -21,7 +22,8 @@ predict.fft <- function(
   level.threshold.v = NULL,
   level.sigdirection.v = NULL,
   level.exit.v = NULL,
-  level.class.v = NULL
+  level.class.v = NULL,
+  ...
 ) {
 
 
@@ -31,20 +33,20 @@ predict.fft <- function(
 
   if(is.null(which.tree)) {
 
-    if(is.null(x) == F) {which.tree <- 1:nrow(x$trees)}
-    if(is.null(x) == T) {which.tree <- 1}
+    if(is.null(object) == F) {which.tree <- 1:nrow(object$trees)}
+    if(is.null(object) == T) {which.tree <- 1}
 
   }
 
-  if(is.null(x) == F) {
+  if(is.null(object) == F) {
 
-    level.name.v <- x$trees$level.name[which.tree]
-    level.class.v <- x$trees$level.class[which.tree]
-    level.exit.v <- x$trees$level.exit[which.tree]
-    level.threshold.v <- x$trees$level.threshold[which.tree]
-    level.sigdirection.v <- x$trees$level.sigdirection[which.tree]
+    level.name.v <- object$trees$level.name[which.tree]
+    level.class.v <- object$trees$level.class[which.tree]
+    level.exit.v <- object$trees$level.exit[which.tree]
+    level.threshold.v <- object$trees$level.threshold[which.tree]
+    level.sigdirection.v <- object$trees$level.sigdirection[which.tree]
 
-    formula <- x$formula
+    formula <- object$formula
 
     data.mf <- model.frame(formula = formula, data = data)
     cue.train <- data.mf[,2:ncol(data.mf)]
@@ -52,7 +54,7 @@ predict.fft <- function(
 
   }
 
-  if(is.null(x)) {
+  if(is.null(object)) {
 
     data.mf <- model.frame(formula = formula, data = data)
     cue.train <- data.mf[,2:ncol(data.mf)]

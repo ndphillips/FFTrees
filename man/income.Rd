@@ -3,7 +3,7 @@
 \docType{data}
 \name{income}
 \alias{income}
-\title{income}
+\title{Income dataset}
 \format{A data frame containing 32561 rows and 15 columns
 \describe{
   \item{age}{Numeric}

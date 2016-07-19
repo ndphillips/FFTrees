@@ -1,4 +1,4 @@
-#' titanic
+#' Titanic dataset
 #'
 #' A dataset indicating who survived on the Titanic
 #'

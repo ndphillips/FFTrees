@@ -1,4 +1,4 @@
-#' income
+#' Income dataset
 #'
 #' Census Data used to predict who has an income greater than 50K
 #'

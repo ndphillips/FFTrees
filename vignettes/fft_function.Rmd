@@ -16,21 +16,32 @@ library(FFTrees)
 
 This function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several FFT (more details about the algorithms coming soon...)
 
-## Example with heartdisease
+## heartdisease example
 
-Let's start with an example, we'll create FFTs fitted to the `breastcancer` dataset. Here's how the dataset looks:
+Let's start with an example, we'll create FFTs fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
 
 ```{r}
 head(heartdisease)
 ```
 
-We'll create a new fft object called `heart.fft` using the `fft()` function. 
+The critical dependent variable is `diagnosis` which indicates whether a patient has heart diesease or not. The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors.
+
+Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the test dataset:
+
+```{r}
+set.seed(100)
+samples <- sample(c(T, F), size = nrow(heartdisease), replace = T)
+heartdisease.train <- heartdisease[samples,]
+heartdisease.test <- heartdisease[samples == 0,]
+```
+
+We'll create a new fft object called `heart.fft` using the `fft()` function. We'll specify `diagnosis` as the (binary) dependent variable with `formula = diagnosis ~ .`:
 
 ```{r}
 heart.fft <- fft(
   formula = diagnosis ~.,
-  data = heartdisease[1:100,],
-  data.test = heartdisease[101:nrow(heartdisease),]
+  data = heartdisease.train,
+  data.test = heartdisease.test
   )
 ```
 
@@ -94,10 +105,10 @@ It looks like trees 2 and 6 also had the highest test v (HR - FAR) values.
 
 ### AUC
 
-AUC statistics are in `auc`
+AUC statistics are in `trees.auc`
 
 ```{r}
-heart.fft$auc
+heart.fft$trees.auc
 ```
 
 
@@ -145,6 +156,6 @@ The `fft()` function has several additional arguments than change how trees are 
 
 - `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Settting `train.p = 1` will fit the trees to the entire dataset (with no testing).
 
-- `n.sim`:
+- `n.sim`: If `train.p < 1`, how many different training sets should be generated to create the trees?
 
 - `rank.method`: As trees are being built, should cues be selected based on their marginal accuracy (`rank.method = "m"`) applied to the entire dataset, or on their conditional accuracy (`rank.method = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses.

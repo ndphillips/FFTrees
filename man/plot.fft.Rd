@@ -5,7 +5,7 @@
 \title{Draws (and creates) a FFT.}
 \usage{
 \method{plot}{fft}(x = NULL, data = "train", which.tree = "best.train",
-  description = "Data", decision.names = c("Noise", "Signal"))
+  description = "Data", decision.names = c("Noise", "Signal"), ...)
 }
 \arguments{
 \item{x}{A fft object created from fft()}
@@ -17,6 +17,8 @@
 \item{description}{An optional string used as a plot label.}
 
 \item{decision.names}{A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.}
+
+\item{...}{Additional arguments passed on to plot()}
 }
 \description{
 The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the fft() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.

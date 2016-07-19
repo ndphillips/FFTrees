@@ -26,13 +26,14 @@ fft <- function(
                 hr.weight = .5
 ) {
 #
-#   formula = party.crit ~.
-#   data = voting.r[1:50,]
-#   data.test = voting.r[51:nrow(voting.r),]
-#   train.p <- 1
-#   n.sim <- 1
-#   rank.method <- "m"
-#   max.levels <- 4
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # data.test = NULL
+  # train.p <- 1
+  # n.sim <- 1
+  # rank.method <- "m"
+  # max.levels <- 4
+  # verbose <- F
 
   tree.criterion <- "v"
   stopping.rule <- "exemplars"
@@ -203,11 +204,11 @@ common.cue.formula <- paste(common.cues, collapse = " + ")
 common.cue.formula <- as.formula(paste(crit.name, " ~ ", common.cue.formula, collapse = ""))
 
 
-data.train <- model.frame(formula = common.cue.formula,
+data.train.final <- model.frame(formula = common.cue.formula,
                           data = data.train.o)
 
-cue.train <- data.train[,2:ncol(data.train)]
-crit.train <- data.train[,1]
+cue.train.final <- data.train.final[,2:ncol(data.train.final)]
+crit.train.final <- data.train.final[,1]
 
 
 # Determine final testing data
@@ -229,7 +230,7 @@ if(is.null(data.test) == F) {
 
 final.result <- grow.ffts(
                          formula = formula,
-                         data.train = data.train,
+                         data.train = data.train.final,
                          data.test = data.test,
                          hr.weight = hr.weight,
                          rank.method = rank.method,

@@ -1,7 +1,7 @@
 ---
 title: "plot.fft() function"
 author: "Nathaniel Phillips"
-date: "`r Sys.Date()`"
+date: "2016-07-19"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
@@ -12,9 +12,7 @@ vignette: >
 ---
 
 
-```{r, echo = F, message = F, results = 'hide'}
-library(FFTrees)
-```
+
 
 Applying the `plot()` function to an `fft` object will visualize the tree.
 
@@ -22,7 +20,8 @@ Applying the `plot()` function to an `fft` object will visualize the tree.
 
 Let's create an fft object called `titanic.fft` from the `titanic` dataset.
 
-```{r}
+
+```r
 titanic.fft <- fft(
   formula = survived ~.,
   data = titanic
@@ -34,9 +33,12 @@ titanic.fft <- fft(
 
 To plot the tree, use `plot()`:
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.fft)
 ```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 You can specify additional arguments to the `plot()` command that will change what is displayed
 
@@ -46,16 +48,22 @@ You can specify additional arguments to the `plot()` command that will change wh
 
 For example, let's plot tree # 4 with `which.tree = 4`.
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.fft, 
      which.tree = 4)
 ```
 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+
 Now let's apply this tree to a new dataset. I'll apply the tree to only data from children:
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.fft,
      which.tree = 2,
      data = subset(titanic, age == "child")
      )
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)

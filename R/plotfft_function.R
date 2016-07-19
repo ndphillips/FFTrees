@@ -7,6 +7,7 @@
 #' @param which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
 #' @param description An optional string used as a plot label.
+#' @param ... Additional arguments passed on to plot()
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
@@ -26,7 +27,8 @@ plot.fft <- function(
   data = "train",
   which.tree = "best.train", # Either a number, or "best.train" or "best.test"
   description = "Data",
-  decision.names = c("Noise", "Signal")
+  decision.names = c("Noise", "Signal"),
+  ...
 ) {
 
   # -------------------------
@@ -42,6 +44,12 @@ plot.fft <- function(
 #   description = "Data"
 #   decision.names = c("Noise", "Signal")
 #   level.names = NULL
+
+  # x <- heart.fft
+  # description = "Heart Disease"
+  # decision.names = c("Healthy", "Disease")
+  # data = "train"
+  # which.tree = "best.train"
 
 
   level.names <- NULL
@@ -167,7 +175,7 @@ if(is.null(x) == F) {
 
   # Calculate tree statistics
 
-  output <- predict.fft(x = x,
+  output <- predict.fft(object = x,
                         data = data.mf,
                         formula = x$formula,
                         which.tree = which.tree
@@ -196,8 +204,7 @@ if(is.null(x) == F) {
     for (level.i in 1:(n.levels)) {
 
       level.stats <- classtable(prediction.v = decision.v[levelout.v == level.i],
-                                criterion.v = crit.vec[levelout.v == level.i],
-                                hr.weight = .5)
+                                criterion.v = crit.vec[levelout.v == level.i])
 
       level.df[level.i,] <- c(level.i, level.stats[1:8])
 
@@ -1439,7 +1446,10 @@ if(is.null(x) == F) {
 
       if(recalculate) {
 
-        new.stats <- predict.fft(x = x, formula = x$formula, data = data, which.tree = 1:n.trees)
+        new.stats <- predict.fft(object = x,
+                                 formula = x$formula,
+                                 data = data,
+                                 which.tree = 1:n.trees)
 
         final.auc <- new.stats$trees.auc
         fft.hr.vec <- new.stats$trees$hr
@@ -1601,226 +1611,226 @@ if(is.null(x) == F) {
   # -----
   # ROC
   # -----
-
-  if(do.roc == T) {
-
-
-    par(mfrow = c(1, 1))
-    par(mar = c(5, 4, 4, 1) + .1)
-
-    my.colors <- c("#A1C720FF",
-                   "#0C5BB0FF",
-                   "#EE0011FF")
-
-    even.point.cex <- 2
-    roc.line.lwd <- .5
-
-    # Set up plotting space
-
-    plot(1, xlim = c(0, 1),
-         ylim = c(0, 1),
-         xlab = "FAR",
-         ylab = "HR",
-         type = "n",
-         main = "ROC Curve",
-         yaxt = "n",
-         xaxt = "n"
-    )
-
-
-    axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
-    axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
-
-
-    rect(-100, -100, 100, 100, col = gray(.97))
-
-    abline(h = seq(0, 1, .1), lwd = c(2, 1), col = "white")
-    abline(v = seq(0, 1, .1), lwd = c(2, 1), col = "white")
-
-    abline(a = 0,
-           b = 1,
-           lty = 2)
-
-    if(do.lr == T | do.cart == T) {
-
-      legend(x = .45, y = .4,
-             legend = c("FFTs", "LR", "CART"),
-             col = my.colors,
-             lty = 1,
-             lwd = 2,
-             box.col = "white"
-      )
-
-    }
-
-
-    # Are test data included?
-    plot.test <- F
-
-    if("test.crit" %in% names(x) & length(x$test.crit > 1)) {plot.test <- T}
-
-
-    if(plot.test) {
-
-      legend(x = .75, y = .4,
-             legend = c("Fitting", "Prediction"),
-             col = "black",
-             lty = c(2, 1),
-             pch = c(21, 24),
-             lwd = 2,
-             box.col = "white"
-      )
-
-    }
-
-
-    if(plot.test == T) {type.i.vec <- c("train", "test")}
-    if(plot.test == F) {type.i.vec <- c("train")}
-
-    for(type.i in type.i.vec) {
-
-      if(type.i == "train") {
-
-        line.lty <- 2
-        line.lwd <- 1
-        point.lty <- 2
-        point.pch <- 21
-
-      }
-
-
-      if(type.i == "test") {
-
-        line.lty <- 1
-        line.lwd <- 1
-        point.lty <- 1
-        point.pch <- 24
-
-      }
-
-
-      # FFTs
-
-      fft.stats <- x$trees[c("tree.num", paste(c("hr.", "far."), type.i, sep = ""))]
-
-      names(fft.stats) <- c("tree.num", "hr", "far")
-
-      fft.stats <- fft.stats[order(fft.stats$far),]
-
-
-      # Add individual tree points and labels
-
-      points(x = fft.stats$far,
-             y = fft.stats$hr
-      )
-
-      # text(x = fft.stats$far,
-      #      y = fft.stats$hr,
-      #      labels = fft.stats$num,
-      #      pos = 3
-      # )
-
-      segments(x0 = fft.stats$far[1:(n.trees - 1)],
-               y0 = fft.stats$hr[1:(n.trees - 1)],
-               x1 = fft.stats$far[2:(n.trees)],
-               y1 = fft.stats$hr[2:(n.trees)],
-               col = my.colors[1],
-               lwd = line.lwd,
-               lty = line.lty
-      )
-
-      # Add center point
-
-      tree.i <- x$best.train.tree
-
-      points(x$trees[paste("far.", type.i, sep = "")][tree.i, 1],
-             x$trees[paste("hr.", type.i, sep = "")][tree.i, 1],
-             cex = even.point.cex,
-             pch = point.pch,
-             lty = point.lty,
-             bg = "green")
-
-
-      # LR
-
-      plot.lr <- F
-
-      if("lr" %in% names(x) & nrow(x$lr) > 1 & do.lr == T) {plot.lr <- T}
-
-      if(plot.lr) {
-
-        lr.df <- x$lr
-        lr.df <- lr.df[order(lr.df[paste("far.", type.i, sep = "")]),]
-
-        lr.far.vec <- unlist(lr.df[paste("far.", type.i, sep = "")])
-        lr.hr.vec <- unlist(lr.df[paste("hr.", type.i, sep = "")])
-
-        n.points <- length(lr.far.vec)
-
-        segments(lr.far.vec[1:(n.points - 1)],
-                 lr.hr.vec[1:(n.points - 1)],
-                 lr.far.vec[2:n.points],
-                 lr.hr.vec[2:n.points],
-                 col = my.colors[2],
-                 lwd = line.lwd,
-                 lty = line.lty
-        )
-
-        # Add LR points threshold == .5
-
-        lr.hr.even <- lr.df[lr.df$threshold == .5, paste("hr.", type.i, sep = "")]
-        lr.far.even <- lr.df[lr.df$threshold == .5, paste("far.", type.i, sep = "")]
-
-
-        points(lr.far.even,
-               lr.hr.even,
-               cex = even.point.cex,
-               pch = point.pch,
-               lty = point.lty,
-               bg = "lightblue")
-
-      }
-
-      # CART
-
-      plot.cart <- F
-
-      if("cart" %in% names(x) & nrow(x$cart) > 1 & do.cart == T) {plot.cart <- T}
-
-      if(plot.cart) {
-
-        cart.df <- x$cart
-
-        cart.df <- cart.df[order(cart.df[paste("far.", type.i, sep = "")]),]
-
-        segments(cart.df[1:(nrow(cart.df) - 1), paste("far.", type.i, sep = "")],
-                 cart.df[1:(nrow(cart.df) - 1), paste("hr.", type.i, sep = "")],
-                 cart.df[2:(nrow(cart.df)), paste("far.", type.i, sep = "")],
-                 cart.df[2:(nrow(cart.df)), paste("hr.", type.i, sep = "")],
-                 col = my.colors[3],
-                 lwd = line.lwd,
-                 lty = line.lty
-        )
-
-
-        cart.hr.even <- cart.df[cart.df$miss.cost == cart.df$fa.cost, paste("hr.", type.i, sep = "")]
-        cart.far.even <- cart.df[cart.df$miss.cost == cart.df$fa.cost, paste("far.", type.i, sep = "")]
-
-        points(cart.far.even,
-               cart.hr.even,
-               pch = point.pch,
-               cex = even.point.cex,
-               bg = "red")
-
-      }
-
-
-    }
-
-
-
-
-  }
+#
+#   if(do.roc == T) {
+#
+#
+#     par(mfrow = c(1, 1))
+#     par(mar = c(5, 4, 4, 1) + .1)
+#
+#     my.colors <- c("#A1C720FF",
+#                    "#0C5BB0FF",
+#                    "#EE0011FF")
+#
+#     even.point.cex <- 2
+#     roc.line.lwd <- .5
+#
+#     # Set up plotting space
+#
+#     plot(1, xlim = c(0, 1),
+#          ylim = c(0, 1),
+#          xlab = "FAR",
+#          ylab = "HR",
+#          type = "n",
+#          main = "ROC Curve",
+#          yaxt = "n",
+#          xaxt = "n"
+#     )
+#
+#
+#     axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
+#     axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
+#
+#
+#     rect(-100, -100, 100, 100, col = gray(.97))
+#
+#     abline(h = seq(0, 1, .1), lwd = c(2, 1), col = "white")
+#     abline(v = seq(0, 1, .1), lwd = c(2, 1), col = "white")
+#
+#     abline(a = 0,
+#            b = 1,
+#            lty = 2)
+#
+#     if(do.lr == T | do.cart == T) {
+#
+#       legend(x = .45, y = .4,
+#              legend = c("FFTs", "LR", "CART"),
+#              col = my.colors,
+#              lty = 1,
+#              lwd = 2,
+#              box.col = "white"
+#       )
+#
+#     }
+#
+#
+#     # Are test data included?
+#     plot.test <- F
+#
+#     if("test.crit" %in% names(x) & length(x$test.crit > 1)) {plot.test <- T}
+#
+#
+#     if(plot.test) {
+#
+#       legend(x = .75, y = .4,
+#              legend = c("Fitting", "Prediction"),
+#              col = "black",
+#              lty = c(2, 1),
+#              pch = c(21, 24),
+#              lwd = 2,
+#              box.col = "white"
+#       )
+#
+#     }
+#
+#
+#     if(plot.test == T) {type.i.vec <- c("train", "test")}
+#     if(plot.test == F) {type.i.vec <- c("train")}
+#
+#     for(type.i in type.i.vec) {
+#
+#       if(type.i == "train") {
+#
+#         line.lty <- 2
+#         line.lwd <- 1
+#         point.lty <- 2
+#         point.pch <- 21
+#
+#       }
+#
+#
+#       if(type.i == "test") {
+#
+#         line.lty <- 1
+#         line.lwd <- 1
+#         point.lty <- 1
+#         point.pch <- 24
+#
+#       }
+#
+#
+#       # FFTs
+#
+#       fft.stats <- x$trees[c("tree.num", paste(c("hr.", "far."), type.i, sep = ""))]
+#
+#       names(fft.stats) <- c("tree.num", "hr", "far")
+#
+#       fft.stats <- fft.stats[order(fft.stats$far),]
+#
+#
+#       # Add individual tree points and labels
+#
+#       points(x = fft.stats$far,
+#              y = fft.stats$hr
+#       )
+#
+#       # text(x = fft.stats$far,
+#       #      y = fft.stats$hr,
+#       #      labels = fft.stats$num,
+#       #      pos = 3
+#       # )
+#
+#       segments(x0 = fft.stats$far[1:(n.trees - 1)],
+#                y0 = fft.stats$hr[1:(n.trees - 1)],
+#                x1 = fft.stats$far[2:(n.trees)],
+#                y1 = fft.stats$hr[2:(n.trees)],
+#                col = my.colors[1],
+#                lwd = line.lwd,
+#                lty = line.lty
+#       )
+#
+#       # Add center point
+#
+#       tree.i <- x$best.train.tree
+#
+#       points(x$trees[paste("far.", type.i, sep = "")][tree.i, 1],
+#              x$trees[paste("hr.", type.i, sep = "")][tree.i, 1],
+#              cex = even.point.cex,
+#              pch = point.pch,
+#              lty = point.lty,
+#              bg = "green")
+#
+#
+#       # LR
+#
+#       plot.lr <- F
+#
+#       if("lr" %in% names(x) & nrow(x$lr) > 1 & do.lr == T) {plot.lr <- T}
+#
+#       if(plot.lr) {
+#
+#         lr.df <- x$lr
+#         lr.df <- lr.df[order(lr.df[paste("far.", type.i, sep = "")]),]
+#
+#         lr.far.vec <- unlist(lr.df[paste("far.", type.i, sep = "")])
+#         lr.hr.vec <- unlist(lr.df[paste("hr.", type.i, sep = "")])
+#
+#         n.points <- length(lr.far.vec)
+#
+#         segments(lr.far.vec[1:(n.points - 1)],
+#                  lr.hr.vec[1:(n.points - 1)],
+#                  lr.far.vec[2:n.points],
+#                  lr.hr.vec[2:n.points],
+#                  col = my.colors[2],
+#                  lwd = line.lwd,
+#                  lty = line.lty
+#         )
+#
+#         # Add LR points threshold == .5
+#
+#         lr.hr.even <- lr.df[lr.df$threshold == .5, paste("hr.", type.i, sep = "")]
+#         lr.far.even <- lr.df[lr.df$threshold == .5, paste("far.", type.i, sep = "")]
+#
+#
+#         points(lr.far.even,
+#                lr.hr.even,
+#                cex = even.point.cex,
+#                pch = point.pch,
+#                lty = point.lty,
+#                bg = "lightblue")
+#
+#       }
+#
+#       # CART
+#
+#       plot.cart <- F
+#
+#       if("cart" %in% names(x) & nrow(x$cart) > 1 & do.cart == T) {plot.cart <- T}
+#
+#       if(plot.cart) {
+#
+#         cart.df <- x$cart
+#
+#         cart.df <- cart.df[order(cart.df[paste("far.", type.i, sep = "")]),]
+#
+#         segments(cart.df[1:(nrow(cart.df) - 1), paste("far.", type.i, sep = "")],
+#                  cart.df[1:(nrow(cart.df) - 1), paste("hr.", type.i, sep = "")],
+#                  cart.df[2:(nrow(cart.df)), paste("far.", type.i, sep = "")],
+#                  cart.df[2:(nrow(cart.df)), paste("hr.", type.i, sep = "")],
+#                  col = my.colors[3],
+#                  lwd = line.lwd,
+#                  lty = line.lty
+#         )
+#
+#
+#         cart.hr.even <- cart.df[cart.df$miss.cost == cart.df$fa.cost, paste("hr.", type.i, sep = "")]
+#         cart.far.even <- cart.df[cart.df$miss.cost == cart.df$fa.cost, paste("far.", type.i, sep = "")]
+#
+#         points(cart.far.even,
+#                cart.hr.even,
+#                pch = point.pch,
+#                cex = even.point.cex,
+#                bg = "red")
+#
+#       }
+#
+#
+#     }
+#
+#
+#
+#
+#   }
 
   # CLEANUP
 

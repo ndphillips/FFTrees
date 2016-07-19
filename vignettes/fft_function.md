@@ -14,9 +14,9 @@ vignette: >
 
 This function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several FFT (more details about the algorithms coming soon...)
 
-## Example with heartdisease
+## heartdisease example
 
-Let's start with an example, we'll create FFTs fitted to the `breastcancer` dataset. Here's how the dataset looks:
+Let's start with an example, we'll create FFTs fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
 
 
 ```r
@@ -40,14 +40,26 @@ head(heartdisease)
 ## 6         0
 ```
 
-We'll create a new fft object called `heart.fft` using the `fft()` function. 
+The critical dependent variable is `diagnosis` which indicates whether a patient has heart diesease or not. The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors.
+
+Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the test dataset:
+
+
+```r
+set.seed(100)
+samples <- sample(c(T, F), size = nrow(heartdisease), replace = T)
+heartdisease.train <- heartdisease[samples,]
+heartdisease.test <- heartdisease[samples == 0,]
+```
+
+We'll create a new fft object called `heart.fft` using the `fft()` function. We'll specify `diagnosis` as the (binary) dependent variable with `formula = diagnosis ~ .`:
 
 
 ```r
 heart.fft <- fft(
   formula = diagnosis ~.,
-  data = heartdisease[1:100,],
-  data.test = heartdisease[101:nrow(heartdisease),]
+  data = heartdisease.train,
+  data.test = heartdisease.test
   )
 ```
 
@@ -88,18 +100,18 @@ heart.fft$cue.accuracies
 
 ```
 ##    cue.name cue.class level.threshold level.sigdirection hi mi fa cr
-## 2        ca   numeric               1                 >= 28 15  9 48
-## 4        cp   numeric               4                 >= 33 10 12 45
-## 1      thal   numeric               3                  > 34  9  9 48
-## 11    slope   numeric               1                  > 32 11 18 39
-##           hr       far         v    dprime correction hr.weight
-## 2  0.6511628 0.1578947 0.4932681 0.6958048       0.25       0.5
-## 4  0.7674419 0.2105263 0.5569155 0.7675223       0.25       0.5
-## 1  0.7906977 0.1578947 0.6328029 0.9059962       0.25       0.5
-## 11 0.7441860 0.3157895 0.4283966 0.5679053       0.25       0.5
+## 4        cp   numeric               4                 >= 50 14 22 63
+## 2     exang   numeric               1                 >= 40 24 11 74
+## 21     thal   numeric               6                 >= 47 17 17 68
+## 22    slope   numeric               2                 >= 52 12 31 54
+##          hr       far         v    dprime correction hr.weight
+## 4  0.781250 0.2588235 0.5224265 0.7116992       0.25       0.5
+## 2  0.625000 0.1294118 0.4955882 0.7239078       0.25       0.5
+## 21 0.734375 0.2000000 0.5343750 0.7338601       0.25       0.5
+## 22 0.812500 0.3647059 0.4477941 0.6165273       0.25       0.5
 ```
 
-Here, we can see that the `thal` cue had the highest v value of 0.6328 while `cp` had the second highest v value of 0.5569.
+Here, we can see that the `thal` cue had the highest v value of 0.5344 while `cp` had the second highest v value of 0.5224.
 
 
 ### trees
@@ -114,42 +126,42 @@ heart.fft$trees
 ```
 
 ```
-##   tree.num       level.name                     level.class level.exit
-## 1        1 thal;cp;ca;slope numeric;numeric;numeric;numeric  0;0;0;0.5
-## 5        2 thal;cp;ca;slope numeric;numeric;numeric;numeric  0;0;1;0.5
-## 3        3       thal;cp;ca         numeric;numeric;numeric    0;1;0.5
-## 7        4       thal;cp;ca         numeric;numeric;numeric    0;1;0.5
-## 2        5       thal;cp;ca         numeric;numeric;numeric    1;0;0.5
-## 6        6 thal;cp;ca;slope numeric;numeric;numeric;numeric  1;0;1;0.5
-## 4        7       thal;cp;ca         numeric;numeric;numeric    1;1;0.5
-## 8        8 thal;cp;ca;slope numeric;numeric;numeric;numeric  1;1;1;0.5
+##   tree.num          level.name                     level.class level.exit
+## 1        1 thal;cp;exang;slope numeric;numeric;numeric;numeric  0;0;0;0.5
+## 5        2       thal;cp;exang         numeric;numeric;numeric    0;0;0.5
+## 3        3       thal;cp;exang         numeric;numeric;numeric    0;1;0.5
+## 7        4 thal;cp;exang;slope numeric;numeric;numeric;numeric  0;1;1;0.5
+## 2        5       thal;cp;exang         numeric;numeric;numeric    1;0;0.5
+## 6        6 thal;cp;exang;slope numeric;numeric;numeric;numeric  1;0;1;0.5
+## 4        7       thal;cp;exang         numeric;numeric;numeric    1;1;0.5
+## 8        8 thal;cp;exang;slope numeric;numeric;numeric;numeric  1;1;1;0.5
 ##   level.threshold level.sigdirection n.train hi.train mi.train fa.train
-## 1         6;3;0;1           >=;>;>;>     100       16       27        0
-## 5         6;3;0;1           >=;>;>;>     100       26       17        2
-## 3           6;3;0             >=;>;>     100       32       11        4
-## 7           6;3;0             >=;>;>     100       32       11        4
-## 2           6;3;0             >=;>;>     100       38        5        9
-## 6         6;3;0;1           >=;>;>;>     100       38        5       12
-## 4           6;3;0             >=;>;>     100       39        4       26
-## 8         6;3;0;1           >=;>;>;>     100       42        1       36
-##   cr.train  hr.train  far.train   v.train dprime.train n.test hi.test
-## 1       57 0.3720930 0.00000000 0.3692154    1.1506813    203      27
-## 5       55 0.6046512 0.03508772 0.5695634    1.0380907    203      48
-## 3       53 0.7441860 0.07017544 0.6740106    1.0653953    203      61
-## 7       53 0.7441860 0.07017544 0.6740106    1.0653953    203      61
-## 2       48 0.8837209 0.15789474 0.7258262    1.0984715    203      80
-## 6       45 0.8837209 0.21052632 0.6731946    0.9991957    203      86
-## 4       31 0.9069767 0.45614035 0.4508364    0.7162638    203      94
-## 8       21 0.9767442 0.63157895 0.3451652    0.8273412    203      94
-##   mi.test fa.test cr.test   hr.test    far.test    v.test dprime.test
-## 1      69       1     106 0.2812500 0.009345794 0.2719042   0.8862466
-## 5      48       3     104 0.5000000 0.028037383 0.4719626   0.9552271
-## 3      35      11      96 0.6354167 0.102803738 0.5326129   0.8059853
-## 7      35      11      96 0.6354167 0.102803738 0.5326129   0.8059853
-## 2      16      28      79 0.8333333 0.261682243 0.5716511   0.8027947
-## 6      10      36      71 0.8958333 0.336448598 0.5593847   0.8401683
-## 4       2      61      46 0.9791667 0.570093458 0.4090732   0.9301110
-## 8       2      76      31 0.9791667 0.710280374 0.2688863   0.7413151
+## 1         3;3;0;2           >;>;>;>=     149       22       42        2
+## 5           3;3;0              >;>;>     149       26       38        4
+## 3           3;3;0              >;>;>     149       39       25        7
+## 7         3;3;0;2           >;>;>;>=     149       46       18       14
+## 2           3;3;0              >;>;>     149       58        6       20
+## 6         3;3;0;2           >;>;>;>=     149       58        6       24
+## 4           3;3;0              >;>;>     149       61        3       36
+## 8         3;3;0;2           >;>;>;>=     149       63        1       50
+##   cr.train hr.train  far.train   v.train dprime.train n.test hi.test
+## 1       83 0.343750 0.02352941 0.3202206    0.7917602    154      21
+## 5       81 0.406250 0.04705882 0.3591912    0.7184319    154      28
+## 3       78 0.609375 0.08235294 0.5270221    0.8335539    154      47
+## 7       71 0.718750 0.16470588 0.5540441    0.7772158    154      52
+## 2       65 0.906250 0.23529412 0.6709559    1.0197666    154      59
+## 6       61 0.906250 0.28235294 0.6238971    0.9469384    154      63
+## 4       49 0.953125 0.42352941 0.5295956    0.9344061    154      65
+## 8       35 0.984375 0.58823529 0.3961397    0.9654334    154      69
+##   mi.test fa.test cr.test   hr.test   far.test    v.test dprime.test
+## 1      54       0      79 0.2800000 0.00000000 0.2783123   1.0768926
+## 5      47       0      79 0.3733333 0.00000000 0.3710275   1.2057404
+## 3      28       6      73 0.6266667 0.07594937 0.5507173   0.8779473
+## 7      23      11      68 0.6933333 0.13924051 0.5540928   0.7945295
+## 2      16      20      59 0.7866667 0.25316456 0.5335021   0.7297365
+## 6      12      25      54 0.8400000 0.31645570 0.5235443   0.7360455
+## 4      10      37      42 0.8666667 0.46835443 0.3983122   0.5950893
+## 8       6      48      31 0.9200000 0.60759494 0.3124051   0.5660078
 ```
 
 You can also use the generic `summary()` function to get the trees dataframe
@@ -167,24 +179,24 @@ heart.fft$trees[,7:15]   # Training stats are in columns 7:15
 ```
 
 ```
-##   n.train hi.train mi.train fa.train cr.train  hr.train  far.train
-## 1     100       16       27        0       57 0.3720930 0.00000000
-## 5     100       26       17        2       55 0.6046512 0.03508772
-## 3     100       32       11        4       53 0.7441860 0.07017544
-## 7     100       32       11        4       53 0.7441860 0.07017544
-## 2     100       38        5        9       48 0.8837209 0.15789474
-## 6     100       38        5       12       45 0.8837209 0.21052632
-## 4     100       39        4       26       31 0.9069767 0.45614035
-## 8     100       42        1       36       21 0.9767442 0.63157895
+##   n.train hi.train mi.train fa.train cr.train hr.train  far.train
+## 1     149       22       42        2       83 0.343750 0.02352941
+## 5     149       26       38        4       81 0.406250 0.04705882
+## 3     149       39       25        7       78 0.609375 0.08235294
+## 7     149       46       18       14       71 0.718750 0.16470588
+## 2     149       58        6       20       65 0.906250 0.23529412
+## 6     149       58        6       24       61 0.906250 0.28235294
+## 4     149       61        3       36       49 0.953125 0.42352941
+## 8     149       63        1       50       35 0.984375 0.58823529
 ##     v.train dprime.train
-## 1 0.3692154    1.1506813
-## 5 0.5695634    1.0380907
-## 3 0.6740106    1.0653953
-## 7 0.6740106    1.0653953
-## 2 0.7258262    1.0984715
-## 6 0.6731946    0.9991957
-## 4 0.4508364    0.7162638
-## 8 0.3451652    0.8273412
+## 1 0.3202206    0.7917602
+## 5 0.3591912    0.7184319
+## 3 0.5270221    0.8335539
+## 7 0.5540441    0.7772158
+## 2 0.6709559    1.0197666
+## 6 0.6238971    0.9469384
+## 4 0.5295956    0.9344061
+## 8 0.3961397    0.9654334
 ```
 
 For our heart disease dataset, it looks like tree 2 had the highest training v (HR - FAR) values.
@@ -197,24 +209,24 @@ heart.fft$trees[,16:24]   # Test stats are in columns 16:24
 ```
 
 ```
-##   n.test hi.test mi.test fa.test cr.test   hr.test    far.test    v.test
-## 1    203      27      69       1     106 0.2812500 0.009345794 0.2719042
-## 5    203      48      48       3     104 0.5000000 0.028037383 0.4719626
-## 3    203      61      35      11      96 0.6354167 0.102803738 0.5326129
-## 7    203      61      35      11      96 0.6354167 0.102803738 0.5326129
-## 2    203      80      16      28      79 0.8333333 0.261682243 0.5716511
-## 6    203      86      10      36      71 0.8958333 0.336448598 0.5593847
-## 4    203      94       2      61      46 0.9791667 0.570093458 0.4090732
-## 8    203      94       2      76      31 0.9791667 0.710280374 0.2688863
+##   n.test hi.test mi.test fa.test cr.test   hr.test   far.test    v.test
+## 1    154      21      54       0      79 0.2800000 0.00000000 0.2783123
+## 5    154      28      47       0      79 0.3733333 0.00000000 0.3710275
+## 3    154      47      28       6      73 0.6266667 0.07594937 0.5507173
+## 7    154      52      23      11      68 0.6933333 0.13924051 0.5540928
+## 2    154      59      16      20      59 0.7866667 0.25316456 0.5335021
+## 6    154      63      12      25      54 0.8400000 0.31645570 0.5235443
+## 4    154      65      10      37      42 0.8666667 0.46835443 0.3983122
+## 8    154      69       6      48      31 0.9200000 0.60759494 0.3124051
 ##   dprime.test
-## 1   0.8862466
-## 5   0.9552271
-## 3   0.8059853
-## 7   0.8059853
-## 2   0.8027947
-## 6   0.8401683
-## 4   0.9301110
-## 8   0.7413151
+## 1   1.0768926
+## 5   1.2057404
+## 3   0.8779473
+## 7   0.7945295
+## 2   0.7297365
+## 6   0.7360455
+## 4   0.5950893
+## 8   0.5660078
 ```
 
 It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
@@ -249,10 +261,10 @@ heart.fft$decision.train[1:5,]
 
 ```
 ##   tree.1 tree.2 tree.3 tree.4 tree.5 tree.6 tree.7 tree.8
-## 1      0      0      0      0      1      1      1      1
+## 1      0      0      0      1      1      1      1      1
 ## 2      0      0      0      0      1      1      1      1
-## 3      1      1      1      1      1      1      1      1
-## 4      0      0      0      0      0      0      0      1
+## 3      0      0      0      0      0      0      0      1
+## 4      0      0      0      0      0      0      0      0
 ## 5      0      0      0      0      0      0      0      0
 ```
 
@@ -270,9 +282,9 @@ heart.fft$levelout.train[1:5,]
 
 ```
 ##   tree.1 tree.2 tree.3 tree.4 tree.5 tree.6 tree.7 tree.8
-## 1      2      2      3      3      1      1      1      1
+## 1      2      2      3      4      1      1      1      1
 ## 2      1      1      1      1      3      3      2      2
-## 3      4      3      2      2      1      1      1      1
+## 3      1      1      1      1      2      2      3      4
 ## 4      1      1      1      1      2      2      3      4
 ## 5      1      1      1      1      2      2      3      4
 ```
@@ -291,7 +303,7 @@ plot(heart.fft,
      )
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15-1.png)
 
 See the vignette on `plot.fft` `vignette("fft_plot", package = "fft")` for more details.
 
@@ -301,6 +313,6 @@ The `fft()` function has several additional arguments than change how trees are 
 
 - `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Settting `train.p = 1` will fit the trees to the entire dataset (with no testing).
 
-- `n.sim`:
+- `n.sim`: If `train.p < 1`, how many different training sets should be generated to create the trees?
 
 - `rank.method`: As trees are being built, should cues be selected based on their marginal accuracy (`rank.method = "m"`) applied to the entire dataset, or on their conditional accuracy (`rank.method = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses.

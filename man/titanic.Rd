@@ -3,7 +3,7 @@
 \docType{data}
 \name{titanic}
 \alias{titanic}
-\title{titanic}
+\title{Titanic dataset}
 \format{A data frame containing 2,201 rows and 4 columns
 \describe{
   \item{class}{Factor - Class (first, second, third, or crew)}
