@@ -35,6 +35,8 @@ plot.fft <- function(
   # TESTING VALUES
   # --------------------------
 
+  # x <- titanic.pred.fft
+
 #
 #   x <- heart.fft
 #   data <- "train"
@@ -1127,8 +1129,8 @@ if(is.null(x) == F) {
     segments(0, 1.1, 1, 1.1, col = gray(.2, .5), lwd = .5, lty = 1)
     rect(.25, 1, .75, 1.2, col = "white", border = NA)
 
-    if(fitting.type == "train") {title.text <- "Performance (Data Fitting)"}
-    if(fitting.type == "test") {title.text <- "Performance (Data Prediction)"}
+    if(fitting.type == "train") {title.text <- "Performance (Fitting)"}
+    if(fitting.type == "test") {title.text <- "Performance (Prediction)"}
 
     text(.5, 1.1, title.text, cex = panel.title.cex)
     par(xpd = F)

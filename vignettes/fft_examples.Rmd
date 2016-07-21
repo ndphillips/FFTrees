@@ -1,5 +1,5 @@
 ---
-title: "Example FFTs"
+title: "Examples of FFTs"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -13,6 +13,10 @@ vignette: >
 ```{r, echo = F, message = F, results = 'hide'}
 library(FFTrees)
 ```
+
+# Examples
+
+Here are some examples of FFTs created from datasets in the `FFTrees` package
 
 ## Mushrooms
 
@@ -32,12 +36,6 @@ mushrooms.test <- mushrooms[train.cases == F,]
 mushrooms.fft <- fft(formula = poisonous ~.,
                      data = mushrooms.train,
                      data.test = mushrooms.test)
-```
-
-Here is a summary of the final 8 trees:
-
-```{r}
-summary(mushrooms.fft)
 ```
 
 Here is the best training tree applied to the test data:
