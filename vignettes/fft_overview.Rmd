@@ -1,26 +1,28 @@
 ---
-title: "The fft package"
+title: "Overview of FFTrees"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{Overview of the fft package}
+  %\VignetteIndexEntry{Overview FFTrees}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Overview
+## What is a Fast and Frugal Decision Tree (FFT)?
 
-The purpose of this package is to produce, compare, and display Fast and Frugal Decision Trees (FFTs) like the one below. FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently prefereable to more complex decision strategies (such as Logistic Regression) because they rarely overfit data [@gigerenzer2009homo] and are easy to interpret and impliment in real-world decision tasks [@marewski2012heuristic].
+Informally, a fast and frugal decision tree (FFT) is a set of rules for making decisions based on very little information (usually 1 to 5 pieces). Formally, a FFT is a decision tree has at least one *exit* on each level of the tree [@martignon2003naive]. FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently prefereable to more complex decision strategies (such as Logistic Regression) because they rarely overfit data [@gigerenzer2009homo] and are easy to interpret and impliment in real-world decision tasks [@marewski2012heuristic]. They have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
+
+The purpose of the `FFTrees` package is to produce, compare, and display FFTs like the one below. 
 
 ```{r, echo = F, message = F, results = 'hide'}
 library(FFTrees)
 ```
 
 
-```{r, fig.width = 6, fig.height = 6, echo = F, fig.align='center'}
+```{r, fig.width = 6, fig.height = 6, echo = T, fig.align='center'}
 bcancer.fft <- fft(diagnosis ~.,
                    data = breastcancer
                  )

@@ -1,5 +1,5 @@
 ---
-title: "fft() function"
+title: "Creating FFTs with fft()"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
