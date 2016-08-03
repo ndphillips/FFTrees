@@ -5,26 +5,26 @@
 #'
 #' @format A data frame containing 303 rows and 14 columns
 #' \describe{
-#'   \item{age}{Numeric}
-#'   \item{sex}{Factor}
-#'   \item{cp}{Factor}
-#'   \item{trestbps}{Numeric}
-#'   \item{chol}{Numeric}
-#'   \item{fbs}{Factor}
-#'   \item{restecg}{Factor}
-#'   \item{thalach}{Numeric}
-#'   \item{exang}{Factor}
-#'   \item{oldpeak}{Numeric}
-#'   \item{slope}{Numeric}
-#'   \item{ca}{Numeric}
-#'   \item{thal}{Factor}
-#'   \item{diagnosis}{Factor. 1 = Heart disease, 0 = No Heart disease}
+#'   \item{age}{Age}
+#'   \item{sex}{Sex, 1 = male, 0 = female}
+#'   \item{cp}{Chest pain type: ta = typical angina, aa = atypical angina, np = non-anginal pain, a = asymptomatic}
+#'   \item{trestbps}{Resting blood pressure (in mm Hg on admission to the hospital) }
+#'   \item{chol}{Serum cholestoral in mg/dl}
+#'   \item{fbs}{Fasting blood sugar > 120 mg/dl: 1 = true, 0 = false }
+#'   \item{restecg}{Resting electrocardiographic results. "normal" = normal, "abnormal" = having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), "hypertrophy" = showing probable or definite left ventricular hypertrophy by Estes' criteria.}
+#'   \item{thalach}{Maximum heart rate achieved}
+#'   \item{exang}{Exercise induced angina: 1 = yes, 0 = no}
+#'   \item{oldpeak}{ST depression induced by exercise relative to rest }
+#'   \item{slope}{The slope of the peak exercise ST segment. }
+#'   \item{ca}{Number of major vessels (0-3) colored by flourosopy }
+#'   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversable defect}
+#'   \item{diagnosis}{1 = Heart disease, 0 = No Heart disease}
 #'
 #'
 #'
 #'   ...
 #' }
-#' @source http://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)
+#' @source https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 #'
 #'
 "heartdisease"
