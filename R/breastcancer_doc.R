@@ -3,20 +3,20 @@
 #'
 #' @format A data frame containing 699 rows and 9 columns
 #' \describe{
-#'   \item{thickness}{Numeric}
-#'   \item{cellsize.unif}{Numeric}
-#'   \item{cellshape.unif}{Numeric}
-#'   \item{adhesion}{Numeric}
-#'   \item{epithelial}{Numeric}
-#'   \item{nuclei.bare}{Numeric}
-#'   \item{chromatin}{Numeric}
-#'   \item{nucleoli}{Numeric}
-#'   \item{mitoses}{Numeric}
-#'   \item{diagnosis}{B = Benign (no cancer), M = Malignant (cancer present))}
+#'   \item{thickness}{Clump Thickness}
+#'   \item{cellsize.unif}{Uniformity of Cell Size}
+#'   \item{cellshape.unif}{Uniformity of Cell Shape}
+#'   \item{adhesion}{Marginal Adhesion}
+#'   \item{epithelial}{Single Epithelial Cell Size}
+#'   \item{nuclei.bare}{Bare Nuclei}
+#'   \item{chromatin}{Bland Chromatin}
+#'   \item{nucleoli}{Normal Nucleoli}
+#'   \item{mitoses}{Mitoses}
+#'   \item{diagnosis}{Is cancer present? T or F}
 #'
 #'
 #'
 #'   ...
 #' }
-#' @source The diagnostic Wisconsin breast cancer database. http://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)
+#' @source https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
 "breastcancer"
