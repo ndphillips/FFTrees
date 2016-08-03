@@ -2,23 +2,16 @@
 % Please edit documentation in R/classtable_function.R
 \name{classtable}
 \alias{classtable}
-\title{Takes a binary prediction and criterion vector and returns classification table statistics}
+\title{Calculates classification statistics from binary prediction and truth vectors}
 \usage{
-classtable(prediction.v, criterion.v, correction = 0.25, hr.weight = 0.5)
+classtable(prediction.v, criterion.v)
 }
 \arguments{
-\item{prediction.v}{A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
+\item{prediction.v}{A binary vector of predictions}
 
-\item{criterion.v}{The criterion for training. A logical vector of length m containing criterion values for exemplars in cue.df}
-
-\item{correction}{A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0.}
-
-\item{hr.weight}{A logical value specifying whether or not to plot the best FFT tree.}
-}
-\value{
-A dataframe containing classification table statistics
+\item{criterion.v}{A binary vector of criterion (true) values}
 }
 \description{
-Takes a binary prediction and criterion vector and returns classification table statistics
+Calculates classification statistics from binary prediction and truth vectors
 }
 

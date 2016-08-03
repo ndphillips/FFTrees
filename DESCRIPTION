@@ -1,22 +1,21 @@
 Package: FFTrees
 Type: Package
-Title: Generate, Visualise, and Compare Fast and Frugal Decision Trees (FFTs)
-Version: 1.0.1
-Date: 2016-07-11
+Title: Generate, Visualise, and Compare Fast and Frugal Decision Trees
+Version: 1.1.1
+Date: 2016-07-21
 Authors@R: person("Nathaniel", "Phillips", email = "Nathaniel.D.Phillips.is@gmail.com",
                   role = c("aut", "cre"))
 Maintainer: Nathaniel Phillips <Nathaniel.D.Phillips.is@gmail.com>
-Description: Fast and Frugal Trees (FFTs) are very simply decision trees for
+Description: Fast and Frugal Trees (FFTs) are very simple decision trees for
     classifying cases (i.e.; breast cancer patients) into one of two classes (e.g.;
     no cancer vs. true cancer). FFTs can be preferable to more complex algorithms (such as
     logistic regression) because they are easy to communicate and implement, and are
     robust against noisy data. This package contains several functions that allow users
-    to input their own data, set model criteria and visualize the best tree(s) for their data.
+    to create, visualize, and test FFts from their input their own data.
 LazyData: TRUE
 Depends: R(>= 2.10)
 Imports:
     rpart,
-    snowfall,
     MASS,
     circlize,
     graphics

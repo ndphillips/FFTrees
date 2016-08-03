@@ -7,8 +7,8 @@
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both.
 #' @param rounding An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
-#' @param correction If any classification cells are empty, this number is added to all cells when calculating d-prime. Default is 0.25.
 #' @param verbose A logical value indicating whether or not to print ongoing diagnostics
+#' @importFrom stats median
 #' @return A list with two elements. The first, "cue.stats" is a dataframe containing the classification statistics for every possible cue threshold. The second element, cue.best, contains data for the best performing cue threshold
 #' @export
 #'
@@ -19,11 +19,11 @@ cuerank <- function(cue.df = NULL,
                     tree.criterion = "v",
                     numthresh.method = "o",
                     hr.weight = .5,
-                    correction = .25,
                     rounding = NULL,
                     verbose = F
 
 ) {
+
 
 
 # -----
@@ -46,6 +46,9 @@ cuerank <- function(cue.df = NULL,
   # hr.weight = .5
   # correction = 0
   #
+
+
+  correction <- .25
 
 max.numcat <- 20
 n.cues <- ncol(cue.df)
@@ -101,7 +104,7 @@ for(cue.i in 1:n.cues) {
 
 
   cue.n <- length(cue.levels)
-  accuracy.names <- names(classtable(1, 2, 3, 4))
+  accuracy.names <- names(classtable(c(1, 0, 1), c(1, 1, 0)))
 
 
   # Step 1A: Determine best sigdirection for all cue levels
@@ -138,9 +141,7 @@ for(cue.i in 1:n.cues) {
           if(level.sigdirection.i == "!=") {pred.vec <- cue.v != cue.level.i}
 
           classtable.temp <- classtable(prediction.v = pred.vec,
-                                        criterion.v = criterion.v,
-                                        correction = correction,
-                                        hr.weight = hr.weight)
+                                        criterion.v = criterion.v)
 
 
           cue.stats.o[cue.stats.o$level.threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
@@ -181,9 +182,7 @@ for(cue.i in 1:n.cues) {
 
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v,
-                                      correction = correction,
-                                      hr.weight = hr.weight)
+                                      criterion.v = criterion.v)
 
 
         cue.stats[row.index.i, accuracy.names] <- classtable.temp
@@ -224,7 +223,7 @@ for(cue.i in 1:n.cues) {
 
     for(level.i in cue.levels) {
 
-      accuracy.names <- names(classtable(1, 2, 3, 4))
+      accuracy.names <- names(classtable(c(1, 1, 0), c(0, 1, 0)))
 
       sigdirection.accuracy.df <- as.data.frame(matrix(NA,
                                                        nrow = length(sigdirection.vec),
@@ -244,9 +243,7 @@ for(cue.i in 1:n.cues) {
         if(sigdirection.i == ">=") {pred.vec <- cue.v >= level.i}
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v,
-                                      correction = correction,
-                                      hr.weight = hr.weight)
+                                      criterion.v = criterion.v)
 
         sigdirection.accuracy.df[which(sigdirection.i == sigdirection.vec), names(classtable.temp)] <- classtable.temp
 

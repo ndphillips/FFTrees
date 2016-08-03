@@ -4,44 +4,28 @@
 \alias{fft}
 \title{Create Fast and Frugal Trees (FFTrees).}
 \usage{
-fft(train.cue.df = NULL, train.criterion.v = NULL, test.cue.df = NULL,
-  test.criterion.v = NULL, hr.weight = 0.5, numthresh.method = "o",
-  train.p = 0.5, rank.method = "m", stopping.rule = "exemplars",
-  stopping.par = 0.1, correction = 0.25, max.levels = 4, do.lr = T,
-  do.cart = T, rounding = 0, verbose = F)
+fft(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
+  n.sim = 1, rank.method = "m", verbose = F, max.levels = 4,
+  hr.weight = 0.5)
 }
 \arguments{
-\item{train.cue.df}{A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
+\item{formula}{A formula}
 
-\item{train.criterion.v}{The criterion for training. A logical vector of length m containing criterion values for exemplars in cue.df}
+\item{data}{A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
 
-\item{test.cue.df}{(Optional) A model testing dataset (same format as train.cue.df)}
+\item{data.test}{(Optional) A model testing dataset (same format as data.train)}
 
-\item{test.criterion.v}{(Optional) A model testing criterion}
+\item{train.p}{A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test and crit.test are not specified by the user.}
 
-\item{hr.weight}{A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.}
-
-\item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
-
-\item{train.p}{A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when test.cue.df and test.criterion.v are not specified by the user.}
+\item{n.sim}{An integer}
 
 \item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
-\item{stopping.rule}{A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.}
-
-\item{stopping.par}{A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
-
-\item{correction}{A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0. Default is 0.25.}
+\item{verbose}{A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slow...}
 
 \item{max.levels}{A number indicating the maximum number of levels considered for the tree.}
 
-\item{do.lr, }{A logical value indicating whether to conduct linear regression for model comparison purposes.}
-
-\item{do.cart}{A logical value indicating whether to conduct CART for model comparison purposes.}
-
-\item{rounding}{An integer indicating how many digits to round numeric variables to (0 means round to the integer).}
-
-\item{verbose}{A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slow...}
+\item{hr.weight}{A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.}
 }
 \value{
 A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.

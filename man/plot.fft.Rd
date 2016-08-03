@@ -4,53 +4,19 @@
 \alias{plot.fft}
 \title{Draws (and creates) a FFT.}
 \usage{
-\method{plot}{fft}(x = NULL, which.data = "train",
-  which.tree = "best.test", correction = 0.25, do.roc = F, do.lr = F,
-  do.cart = F, description = "Data", decision.names = c("Noise",
-  "Signal"), ball.col = c(gray(0), gray(0)), ball.bg = c(gray(1), gray(1)),
-  ball.pch = c(21, 24), ball.cex = c(1, 1), cue.df = NULL,
-  decision.v = NULL, levelout.v = NULL, criterion.v = NULL,
-  level.names = NULL, level.classes = NULL, level.exits = NULL,
-  level.sigdirections = NULL, level.thresholds = NULL, ...)
+\method{plot}{fft}(x = NULL, data = "train", which.tree = "best.train",
+  description = "Data", decision.names = c("Noise", "Signal"), ...)
 }
 \arguments{
 \item{x}{A fft object created from fft()}
 
-\item{which.data}{Which data should be plotted? Either "training" or "test".}
+\item{data}{Either a dataframe, or one of two strings 'best.train' or 'best.test'}
 
 \item{which.tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
-\item{correction}{If any classification cell is empty, this number is added to all cells when calculating d-prime (default is 0.25)}
-
-\item{do.roc}{A logical value indicating whether or not to plot an ROC curve (instead of an individual tree)}
-
-\item{do.lr}{(logical) Add logistic regression statistics to plot?}
-
-\item{do.cart}{(logical) Add cart statistics to plot?}
-
 \item{description}{An optional string used as a plot label.}
 
-\item{decision.names}{A string vector of length 2 indicating the content-specific name for noise (criterion.v == FALSE) and signal (criterion.v == TRUE) cases.}
-
-\item{ball.bg, ball.pch, ball.cex, ball.col}{The colors and size of noise and signal symbols}
-
-\item{cue.df}{A dataframe of cue values}
-
-\item{decision.v}{(A) A logical vector of length m indicating the decision (TRUE = signal, FALSE = noise) of each exemplar.}
-
-\item{levelout.v}{(A) A numeric vector of length m indicating at which level each exemplar was classified.}
-
-\item{criterion.v}{(B) A logical vector of length m indicating the true class (e.g.; FALSE = noise, TRUE = signal) of each exemplar.}
-
-\item{level.names}{(M) A character vector indicating the names of the cues in each level}
-
-\item{level.classes}{(B) A character vector of length n indicating the class of the cues for each level. "F" = factor, "N" = numeric, "<" = logical.}
-
-\item{level.exits}{(B) A numeric vector of length n indicating the exit direction for each level. 0 = noise clasification, 1 = signal classification, .5 = both.}
-
-\item{level.sigdirections}{(M) A character vector of length n indicating the direction for which exemplars are classified as signals for each cue. Values must be in the set "<" (strictly less than), "<=" (less than or equal to), "=" (equal), "!=" (unequal), ">=" (greater than or equal to), or ">" (strictly greater than).}
-
-\item{level.thresholds}{(M) A character vector of length n indicating the cutoff points for each of the n cues}
+\item{decision.names}{A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.}
 
 \item{...}{Additional arguments passed on to plot()}
 }

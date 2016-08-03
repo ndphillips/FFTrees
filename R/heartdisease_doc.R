@@ -1,4 +1,4 @@
-#' heartdisease
+#' Heart disease dataset
 #'
 #' Data for 303 patients tested for heart disease
 #'

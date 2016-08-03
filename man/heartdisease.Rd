@@ -3,7 +3,7 @@
 \docType{data}
 \name{heartdisease}
 \alias{heartdisease}
-\title{heartdisease}
+\title{Heart disease dataset}
 \format{A data frame containing 303 rows and 14 columns
 \describe{
   \item{age}{Numeric}

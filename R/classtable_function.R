@@ -1,24 +1,22 @@
-# classtable
-#' Takes a binary prediction and criterion vector and returns classification table statistics
-#'
-#' @param prediction.v A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
-#' @param criterion.v The criterion for training. A logical vector of length m containing criterion values for exemplars in cue.df
-#' @param correction A positive number indicating how much to add to classification cells in the case that at least 1 cell is 0.
-#' @param hr.weight A logical value specifying whether or not to plot the best FFT tree.
-#' @return A dataframe containing classification table statistics
-#' @importFrom stats qnorm median
+#' Calculates classification statistics from binary prediction and truth vectors
+#' @param prediction.v A binary vector of predictions
+#' @param criterion.v A binary vector of criterion (true) values
+#' @importFrom stats qnorm
 #' @export
+#'
 
 classtable <- function(prediction.v,
-                 criterion.v,
-                 correction = .25,
-                 hr.weight = .5) {
+                       criterion.v) {
 
-#
-#   prediction.v <- sample(c(0, 1), size = 100, replace = T)
-#   criterion.v <- sample(c(0, 1), size = 100, replace = T)
-#   correction <- .25
-#   hr.weight <- .5
+
+  correction <- .25
+  hr.weight <- .5
+
+  #
+  #   prediction.v <- sample(c(0, 1), size = 100, replace = T)
+  #   criterion.v <- sample(c(0, 1), size = 100, replace = T)
+  #   correction <- .25
+  #   hr.weight <- .5
 
 
   # prediction.v = subset(decision.df, levelout <= current.level)$decision
@@ -62,13 +60,13 @@ classtable <- function(prediction.v,
   dprime.c.w <- qnorm(hr.c) * hr.weight - qnorm(far.c) * (1 - hr.weight)
 
   result <- data.frame(
-                       hi = hi, mi = mi, fa = fa, cr = cr,
-                       hr = hr,
-                       far = far,
-                       v = v.c.w,
-                       dprime = dprime.c.w,
-                       correction = correction,
-                       hr.weight = hr.weight
+    hi = hi, mi = mi, fa = fa, cr = cr,
+    hr = hr,
+    far = far,
+    v = v.c.w,
+    dprime = dprime.c.w,
+    correction = correction,
+    hr.weight = hr.weight
   )
 
   return(result)

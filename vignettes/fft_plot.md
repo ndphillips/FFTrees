@@ -1,7 +1,7 @@
 ---
 title: "plot.fft() function"
 author: "Nathaniel Phillips"
-date: "`r Sys.Date()`"
+date: "2016-07-21"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
@@ -12,9 +12,7 @@ vignette: >
 ---
 
 
-```{r, echo = F, message = F, results = 'hide'}
-library(FFTrees)
-```
+
 
 Applying the `plot()` function to an `fft` object will visualize the tree.
 
@@ -22,7 +20,8 @@ Applying the `plot()` function to an `fft` object will visualize the tree.
 
 Let's create an fft object called `titanic.fft` from the `titanic` dataset.
 
-```{r}
+
+```r
 titanic.fft <- fft(
   formula = survived ~.,
   data = titanic
@@ -34,11 +33,14 @@ titanic.fft <- fft(
 
 To plot the tree from an fft object, use `plot()`. You can add some stylistic arguments like `description` and `decision.names`:
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.fft, 
      description = "Titanic", 
      decision.names = c("Died", "Survived"))
 ```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 ## Elements
 
@@ -60,7 +62,8 @@ You can specify additional arguments to the `plot()` command that will change wh
 
 For example, let's repeat the previous analysis, but now we'll create separate training and test datasets:
 
-```{r}
+
+```r
 set.seed(100)
 train.cases <- sample(c(T, F), size = nrow(titanic), replace = T, prob = c(.05, .95))
 titanic.train <- titanic[train.cases,]
@@ -73,33 +76,36 @@ titanic.pred.fft <- fft(formula = survived ~.,
 
 Here is the best training tree applied to the training data:
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.pred.fft,
-     which.tree = "best.train", 
-     description = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     which.tree = "best.train")
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
 
 The best training tree (tree #3) had a high specificity of 93%, but a low hit rate of just 67%. However, as we can see in the ROC table, LR didn't perform much better, and CART did even worse than tree #3.
 
 Now let's apply the same tree to the test data:
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.pred.fft,
      which.tree = "best.train",
-     data = "test", 
-     description = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     data = "test")
 ```
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png)
 
 Performance has decreased in this test data (e.g.; the hit-rate is down to a very poor 50%). However, both logistic regression and CART did similarly. Let's see how tree # 4, the most liberal tree, did:
 
-```{r, fig.width = 6, fig.height = 6}
+
+```r
 plot(titanic.pred.fft,
      which.tree = 4,
-     data = "test", 
-     description = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     data = "test")
 ```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
 
 Tree #4 was able to increase the testing hit-rate up to 62%, but at a cost of a lower specificity of 71%.
