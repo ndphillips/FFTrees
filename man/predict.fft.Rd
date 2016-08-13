@@ -29,8 +29,6 @@
 \item{level.class.v}{(B) A character vector of length n indicating the class of the cues for each level. "F" = factor, "N" = numeric, "L" = logical.}
 
 \item{...}{Additional arguments passed on to predict()}
-
-\item{do.lr, do.cart}{Logical values indicating whether or not to do logistic regression and/or CART for comparison}
 }
 \value{
 A list of length 3. The first element "decision.df" is a dataframe with the decisions (and level of decisions) for each exemplar. The second element, "final.df" is a dataframe showing final tree accuracy statistics. The third element "level.df" shows tree accuracy statistics at each level.
