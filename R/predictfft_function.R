@@ -26,25 +26,33 @@ predict.fft <- function(
   ...
 ) {
 
-
 #
-#   x <- a
-#   data <- heartdisease
+#   object = x
+#   data = data.mf
+#   formula = x$formula
+#   which.tree = which.tree
+#
+#   level.name.v = NULL
+#   level.threshold.v = NULL
+#   level.sigdirection.v = NULL
+#   level.exit.v = NULL
+#   level.class.v = NULL
+
 
   if(is.null(which.tree)) {
 
-    if(is.null(object) == F) {which.tree <- 1:nrow(object$trees)}
+    if(is.null(object) == F) {which.tree <- 1:nrow(object$fft.stats)}
     if(is.null(object) == T) {which.tree <- 1}
 
   }
 
   if(is.null(object) == F) {
 
-    level.name.v <- object$trees$level.name[which.tree]
-    level.class.v <- object$trees$level.class[which.tree]
-    level.exit.v <- object$trees$level.exit[which.tree]
-    level.threshold.v <- object$trees$level.threshold[which.tree]
-    level.sigdirection.v <- object$trees$level.sigdirection[which.tree]
+    level.name.v <- object$fft.stats$level.name[which.tree]
+    level.class.v <- object$fft.stats$level.class[which.tree]
+    level.exit.v <- object$fft.stats$level.exit[which.tree]
+    level.threshold.v <- object$fft.stats$level.threshold[which.tree]
+    level.sigdirection.v <- object$fft.stats$level.sigdirection[which.tree]
 
     formula <- object$formula
 
@@ -182,24 +190,95 @@ predict.fft <- function(
   names(levelout.df) <- paste("tree.", which.tree, sep = "")
   names(decision.df) <- paste("tree.", which.tree, sep = "")
 
-  # Calculate AUC
 
-  tree.auc.df <- data.frame("test" = auc(tree.stats$hr, tree.stats$far))
+tree.auc <- matrix(c(NA, auc(hr.v = tree.stats$hr, far.v = tree.stats$far)), nrow = 2, ncol = 1)
+rownames(tree.auc) <- c("train", "test")
+colnames(tree.auc) <- "fft"
 
-  # Calculate LR stats
+
+# Calculate LR stats
+if(is.null(object$lr.model) == F) {
+
+lr.pred <- suppressWarnings(predict(object$lr.model,
+                                    newdata = data))
+
+lr.pred <- 1 / (1 + exp(-lr.pred))
+lr.pred.bin <- rep(0, length(lr.pred))
+lr.pred.bin[lr.pred >= .5] <- 1
+
+lr.stats <- classtable(prediction.v = lr.pred.bin,
+                       criterion.v = crit.train)
+
+lr.auc <- matrix(c(NA, auc(hr.v = lr.stats$hr, far.v = lr.stats$far)), nrow = 2, ncol = 1)
+colnames(lr.auc) <- "lr"
+rownames(lr.auc) <- c("train", "test")
+lr.model <- object$lr.model
+
+}
+if(is.null(object$lr.model)) {
+
+lr.stats <- NULL
+lr.model <- NULL
+
+lr.auc <- matrix(NA, nrow = 2, ncol = 1)
+rownames(lr.auc) <- c("train", "test")
+colnames(lr.auc) <- "lr"
+
+}
+
+
+# Calculate CART stats
+if(is.null(object$cart.model) == F) {
+
+cart.pred <- predict(object$cart.model,
+                     data,
+                     type = "class")
+
+# Recode to logical
+
+if("TRUE" %in% paste(cart.pred)) {cart.pred <- as.logical(paste(cart.pred))}
+if("1" %in% paste(cart.pred)) {cart.pred <- as.logical(as.numeric(paste(cart.pred)))}
+
+
+# Calculate training accuracy stats
+
+cart.stats <- classtable(prediction.v = cart.pred,
+                         criterion.v = crit.train)
+
+cart.auc <- matrix(c(NA, auc(hr.v = cart.stats$hr, far.v = cart.stats$far)), nrow = 2, ncol = 1)
+colnames(cart.auc) <- "cart"
+rownames(cart.auc) <- c("train", "test")
+cart.model <- object$cart.model
+
+}
+if(is.null(object$cart.model)) {
+
+  cart.stats <- NULL
+  cart.model <- NULL
+
+  cart.auc <- matrix(NA, nrow = 2, ncol =1)
+  rownames(cart.auc) <- c("train", "test")
+  colnames(cart.auc) <- "cart"
+
+}
+
+# AUC
+
+auc <- cbind(tree.auc, lr.auc, cart.auc)
+
 
 
   # Create output
 
   output <- list(
                   "formula" = formula,
-                  "data.train" = NULL,
+                  "data.train" = data,
                   "data.test" = data,
                   "cue.accuracies" = NULL,
-                  "trees" = tree.stats,
-                  "trees.auc" = tree.auc.df,
-                  "lr" = NULL,
-                  "cart" = NULL,
+                  "fft.stats" = tree.stats,
+                  "lr.stats" = lr.stats,
+                  "cart.stats" = cart.stats,
+                  "auc" = auc,
                   "decision" = decision.df,
                   "levelout" = levelout.df
   )

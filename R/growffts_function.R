@@ -34,6 +34,11 @@ grow.ffts <- function(
   rounding <- 2
 
 
+
+
+
+
+
   # Set up dataframes
 
   datamf.train <- model.frame(formula = formula, data = data.train)
@@ -473,7 +478,7 @@ grow.ffts <- function(
         levelout.test[,tree.i] <- unlist(tree.i.pred$levelout)
         decision.test[,tree.i] <- unlist(tree.i.pred$decision)
 
-        trees[tree.i, paste(c("n", "hi", "mi", "fa", "cr", "hr", "far", "v", "dprime"), ".test", sep = "")] <- c(n.test, tree.i.pred$trees[c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")])
+        trees[tree.i, paste(c("n", "hi", "mi", "fa", "cr", "hr", "far", "v", "dprime"), ".test", sep = "")] <- c(n.test, tree.i.pred$fft.stats[c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")])
       }
 
 
@@ -499,8 +504,8 @@ grow.ffts <- function(
 
 
   # Summaraise all AUC stats
-  auc.df <- data.frame("fft" = c(fft.auc.train, fft.auc.test))
-
+  auc.df <- matrix(c(fft.auc.train, fft.auc.test), nrow = 2, ncol = 1)
+colnames(auc.df) <- "fft"
   rownames(auc.df) <- c("train", "test")
 
   output <- list(

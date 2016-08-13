@@ -6,6 +6,6 @@
 
 summary.fft <- function(object, ...) {
 
-  return(object$trees)
+  return(object$fft.stats)
 
 }

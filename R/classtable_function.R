@@ -12,19 +12,6 @@ classtable <- function(prediction.v,
   correction <- .25
   hr.weight <- .5
 
-  #
-  #   prediction.v <- sample(c(0, 1), size = 100, replace = T)
-  #   criterion.v <- sample(c(0, 1), size = 100, replace = T)
-  #   correction <- .25
-  #   hr.weight <- .5
-
-
-  # prediction.v = subset(decision.df, levelout <= current.level)$decision
-  # criterion.v = subset(decision.df, levelout <= current.level)$criterion
-  # correction = correction
-  # hr.weight = hr.weight
-
-
   hi <- sum(prediction.v == 1 & criterion.v == 1)
   mi <- sum(prediction.v == 0 & criterion.v == 1)
   fa <- sum(prediction.v == 1 & criterion.v == 0)

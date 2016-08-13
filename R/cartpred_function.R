@@ -15,9 +15,11 @@ cart.pred <- function(
 ) {
 
 
-  # formula <- diagnosis ~.
-  # data.train <- heartdisease[1:50,]
-  # data.test <- NULL
+
+  formula = formula
+  data.train = data.train
+  data.test = data.test
+
 
 
   data.mf.train <- model.frame(formula = formula, data = data.train)
@@ -33,8 +35,8 @@ cart.pred <- function(
 
   # Calculate loss df (for ROC curve)
 
-  loss.df <- expand.grid(miss.cost = seq(1, 5, length.out = 10),
-                         fa.cost = seq(1, 5, length.out = 10)
+  loss.df <- expand.grid(miss.cost = seq(1, 5, length.out = 3),
+                         fa.cost = seq(1, 5, length.out = 3)
   )
 
   # Remove some cases where costs are identical
@@ -97,8 +99,8 @@ cart.pred <- function(
 
       # Recode to logical
 
-      if("TRUE" %in% paste(cart.test.pred.i)) {cart.test.pred.i <- as.logical(paste(cart.test.pred.i))}
-      if("1" %in% paste(cart.test.pred.i)) {cart.test.pred.i <- as.logical(as.numeric(paste(cart.test.pred.i)))}
+      if("TRUE" %in% paste(cart.test.pred.i) | "FALSE" %in% paste(cart.test.pred.i)) {cart.test.pred.i <- as.logical(paste(cart.test.pred.i))}
+      if("1" %in% paste(cart.test.pred.i) | "0" %in% paste(cart.test.pred.i)) {cart.test.pred.i <- as.logical(as.numeric(paste(cart.test.pred.i)))}
 
 
       cart.test.acc.i <- classtable(prediction.v = cart.test.pred.i,
@@ -110,6 +112,14 @@ cart.pred <- function(
     }
 
   }
+
+  # SAVE BASIC CART MODEL
+
+  cart.model <- rpart::rpart(formula,
+                             data = data.train,
+                             method = "class"
+  )
+
 
   # Combine training statistics into a df
 
@@ -135,8 +145,18 @@ cart.pred <- function(
     names(cart.test.acc.df) <- c("hr.test", "far.test", "v.test", "dprime.test")
     cart.auc.test <- auc(cart.test.acc.df$hr.test, cart.test.acc.df$far.test)
 
-    cart.acc <- cbind(cart.acc, cart.test.acc.df)
   }
+
+  if(is.null(data.test) == T) {
+    # Combine test statistics into a df
+
+    cart.test.acc.df <- as.data.frame(matrix(NA, nrow = nrow(cart.train.acc.df), ncol =4))
+    names(cart.test.acc.df) <- c("hr.test", "far.test", "v.test", "dprime.test")
+
+  }
+
+  cart.acc <- cbind(cart.acc, cart.test.acc.df)
+
 
 
   # Sort in ascending order of FAR
@@ -164,10 +184,13 @@ cart.pred <- function(
     cart.auc.test <- NA
   }
 
-  cart.auc.df <- data.frame(train = cart.auc.train, test = cart.auc.test)
+  cart.auc <- matrix(c(cart.auc.train, cart.auc.test), nrow = 2, ncol = 1)
+  colnames(cart.auc) <- "cart"
+  rownames(cart.auc) <- c("train", "test")
 
-  output <- list(cart.acc = cart.acc,
-                 cart.auc = cart.auc.df
+  output <- list("accuracy" = cart.acc,
+                 "auc" = cart.auc,
+                 "model" = cart.model
   )
 
   return(output)

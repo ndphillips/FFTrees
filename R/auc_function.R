@@ -23,7 +23,7 @@ auc <- function(hr.v, far.v) {
 
   for(i in 2:length(hr.v)) {
 
-    if(hr.v[i] > hr.v.n[length(hr.v.n)] & far.v[i] >= far.v.n[length(far.v.n)]) {
+    if(hr.v[i] >= hr.v.n[length(hr.v.n)] & far.v[i] >= far.v.n[length(far.v.n)]) {
 
       hr.v.n <- c(hr.v.n, hr.v[i])
       far.v.n <- c(far.v.n, far.v[i])
@@ -35,13 +35,14 @@ auc <- function(hr.v, far.v) {
 
   hr.v <- hr.v.n
   far.v <- far.v.n
+  n <- length(hr.v)
 
 
-  far.d.v <- far.v[2:length(far.v)] - far.v[1:(length(far.v) - 1)]
-  hr.d.v <- hr.v[2:length(hr.v)] - hr.v[1:(length(hr.v) - 1)]
+  auc.i <- sum((far.v[2:n] - far.v[1:(n - 1)]) * hr.v[1:(n - 1)] +
+    (far.v[2:n] - far.v[1:(n - 1)]) * (hr.v[2:(n)] - hr.v[1:(n-1)]) / 2)
 
-  aoc.i <- 1- sum(far.d.v * hr.d.v)
 
-  return(aoc.i)
+
+  return(auc.i)
 
 }

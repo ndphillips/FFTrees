@@ -5,8 +5,8 @@
 \title{Create Fast and Frugal Trees (FFTrees).}
 \usage{
 fft(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  n.sim = 1, rank.method = "m", verbose = F, max.levels = 4,
-  hr.weight = 0.5)
+  rank.method = "m", verbose = F, max.levels = 4, hr.weight = 0.5,
+  do.cart = T, do.lr = T)
 }
 \arguments{
 \item{formula}{A formula}
@@ -17,8 +17,6 @@ fft(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{train.p}{A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test and crit.test are not specified by the user.}
 
-\item{n.sim}{An integer}
-
 \item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
 \item{verbose}{A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slow...}
@@ -26,6 +24,8 @@ fft(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{max.levels}{A number indicating the maximum number of levels considered for the tree.}
 
 \item{hr.weight}{A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.}
+
+\item{do.cart, do.lr}{logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.}
 }
 \value{
 A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.

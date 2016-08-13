@@ -35,23 +35,13 @@ plot.fft <- function(
   # TESTING VALUES
   # --------------------------
 
-  # x <- titanic.pred.fft
-
-#
-#   x <- heart.fft
-#   data <- "train"
-#   description = "Heart Disease"
-#   decision.names = c("Healthy", "Disease")
-#   which.tree = "best.train" # Either a number, or "best.train" or "best.test"
-#   description = "Data"
-#   decision.names = c("Noise", "Signal")
-#   level.names = NULL
-
-  # x <- heart.fft
-  # description = "Heart Disease"
-  # decision.names = c("Healthy", "Disease")
+  # x <- a
+  #
   # data = "train"
-  # which.tree = "best.train"
+  # which.tree = "best.train" # Either a number, or "best.train" or "best.test"
+  # description = "Data"
+  # decision.names = c("Noise", "Signal")
+
 
 
   level.names <- NULL
@@ -88,9 +78,9 @@ plot.fft <- function(
 
   }
 
-  if(is.numeric(which.tree) & which.tree %in% 1:nrow(x$trees) == F) {
+  if(is.numeric(which.tree) & which.tree %in% 1:nrow(x$fft.stats) == F) {
 
-    stop(paste("You asked for a tree that does not exist. This object has", nrow(x$trees), "trees"))
+    stop(paste("You asked for a tree that does not exist. This object has", nrow(x$fft.stats), "trees"))
 
   }
 
@@ -108,19 +98,19 @@ plot.fft <- function(
 
 if(is.null(x) == F) {
 
-  n.trees <- nrow(x$trees)
+  n.trees <- nrow(x$fft.stats)
 
   if(is.null(which.tree)) {which.tree <- "best.train"}
 
   if(which.tree == "best.train") {
 
-    which.tree <- which(x$trees$v.train == max(x$trees$v.train))[1]
+    which.tree <- which(x$fft.stats$v.train == max(x$fft.stats$v.train))[1]
 
   }
 
   if(which.tree == "best.test") {
 
-    which.tree <- which(x$trees$v.test == max(x$trees$v.test))[1]
+    which.tree <- which(x$fft.stats$v.test == max(x$fft.stats$v.test))[1]
   }
 
 
@@ -167,8 +157,6 @@ if(is.null(x) == F) {
 
   # Convert crit to binary (if necessary)
 
-
-
   if(setequal(unique(crit.vec), c(0, 1)) == F) {
 
   stop("The criterion value is not binary (0s and 1s), please fix")
@@ -186,9 +174,9 @@ if(is.null(x) == F) {
 
   decision.v <- output$decision[,1]
   levelout.v <- output$levelout[,1]
-  level.name.v <- output$trees$level.name[1]
-  level.threshold.v <- output$trees$level.threshold[1]
-  level.sigdirection.v <- output$trees$level.sigdirection[1]
+  level.name.v <- output$fft.stats$level.name[1]
+  level.threshold.v <- output$fft.stats$level.threshold[1]
+  level.sigdirection.v <- output$fft.stats$level.sigdirection[1]
 
 }
 
@@ -1471,29 +1459,27 @@ if(is.null(x) == F) {
 
         if(data == "train") {
 
-        final.auc <- x$trees.auc[1, 1]
-        fft.hr.vec <- x$trees$hr.train
-        fft.far.vec <- x$trees$far.train
-        cart.acc <- x$cart$cart.acc
-        cart.hr <- cart.acc$hr.train[cart.acc$miss.cost == cart.acc$fa.cost]
-        cart.far <- cart.acc$far.train[cart.acc$miss.cost == cart.acc$fa.cost]
-        lr.hr <- x$lr[[1]]$hr.train[x$lr[[1]]$threshold == .5]
-        lr.far <- x$lr[[1]]$far.train[x$lr[[1]]$threshold == .5]
+        final.auc <- x$auc[1,1]
+        fft.hr.vec <- x$fft.stats$hr.train
+        fft.far.vec <- x$fft.stats$far.train
+        lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
+        lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
+        cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+        cart.far <- x$cart.stats$far.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+
 
       }
 
 
       if(data == "test") {
 
-        final.auc <- x$trees.auc[2, 1]
-        fft.hr.vec <- x$trees$hr.test
-        fft.far.vec <- x$trees$far.test
-        cart.acc <- x$cart$cart.acc
-        cart.hr <- cart.acc$hr.test[cart.acc$miss.cost == cart.acc$fa.cost]
-        cart.far <- cart.acc$far.test[cart.acc$miss.cost == cart.acc$fa.cost]
-        lr.hr <- x$lr[[1]]$hr.test[x$lr[[1]]$threshold == .5]
-        lr.far <- x$lr[[1]]$far.test[x$lr[[1]]$threshold == .5]
-
+        final.auc <- x$auc[2,1]
+        fft.hr.vec <- x$fft.stats$hr.test
+        fft.far.vec <- x$fft.stats$far.test
+        lr.hr <- x$lr.stats$hr.test[x$lr.stats$threshold == .5]
+        lr.far <- x$lr.stats$far.test[x$lr.stats$threshold == .5]
+        cart.hr <- x$cart.stats$hr.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+        cart.far <- x$cart.stats$far.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
       }
       }
 
@@ -1549,7 +1535,6 @@ if(is.null(x) == F) {
 
 
       ## LR
-
 
       points(final.roc.x.loc[1] + lr.far * final.roc.dim[1],
              final.roc.y.loc[1] + lr.hr * final.roc.dim[2],
@@ -1713,7 +1698,7 @@ if(is.null(x) == F) {
 #
 #       # FFTs
 #
-#       fft.stats <- x$trees[c("tree.num", paste(c("hr.", "far."), type.i, sep = ""))]
+#       fft.stats <- x$fft.stats[c("tree.num", paste(c("hr.", "far."), type.i, sep = ""))]
 #
 #       names(fft.stats) <- c("tree.num", "hr", "far")
 #
@@ -1745,8 +1730,8 @@ if(is.null(x) == F) {
 #
 #       tree.i <- x$best.train.tree
 #
-#       points(x$trees[paste("far.", type.i, sep = "")][tree.i, 1],
-#              x$trees[paste("hr.", type.i, sep = "")][tree.i, 1],
+#       points(x$fft.stats[paste("far.", type.i, sep = "")][tree.i, 1],
+#              x$fft.stats[paste("hr.", type.i, sep = "")][tree.i, 1],
 #              cex = even.point.cex,
 #              pch = point.pch,
 #              lty = point.lty,

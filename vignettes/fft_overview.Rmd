@@ -23,7 +23,7 @@ library(FFTrees)
 
 
 ```{r, fig.width = 6, fig.height = 6, echo = T, fig.align='center'}
-bcancer.fft <- fft(diagnosis ~.,
+bcancer.fft <- fft(formula = diagnosis ~.,
                    data = breastcancer
                  )
 

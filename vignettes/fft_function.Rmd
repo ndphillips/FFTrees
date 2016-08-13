@@ -77,7 +77,7 @@ The `trees` dataframe contains all tree definitions and training (and possibly t
 Tree definitions (exit directions, cue order, and cue thresholds) are contained in columns 1 through 6:
 
 ```{r}
-heart.fft$trees
+heart.fft$fft.stats
 ```
 
 You can also use the generic `summary()` function to get the trees dataframe
@@ -89,7 +89,7 @@ summary(heart.fft)
 Training statistics are contained in columns 7:15 and have the `.train` suffix. 
 
 ```{r}
-heart.fft$trees[,7:15]   # Training stats are in columns 7:15
+heart.fft$fft.stats[,7:15]   # Training stats are in columns 7:15
 ```
 
 For our heart disease dataset, it looks like tree 2 had the highest training v (HR - FAR) values.
@@ -97,7 +97,7 @@ For our heart disease dataset, it looks like tree 2 had the highest training v (
 Test statistics are contained in columns 16:24 and have the `.test` suffix. 
 
 ```{r}
-heart.fft$trees[,16:24]   # Test stats are in columns 16:24
+heart.fft$fft.stats[,16:24]   # Test stats are in columns 16:24
 ```
 
 It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
@@ -105,10 +105,10 @@ It looks like trees 2 and 6 also had the highest test v (HR - FAR) values.
 
 ### AUC
 
-AUC statistics are in `trees.auc`
+AUC statistics are in `auc`
 
 ```{r}
-heart.fft$trees.auc
+heart.fft$auc
 ```
 
 
@@ -155,7 +155,5 @@ See the vignette on `plot.fft` `vignette("fft_plot", package = "fft")` for more 
 The `fft()` function has several additional arguments than change how trees are built. Note: Not all of these arguments have fully tested yet!
 
 - `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Settting `train.p = 1` will fit the trees to the entire dataset (with no testing).
-
-- `n.sim`: If `train.p < 1`, how many different training sets should be generated to create the trees?
 
 - `rank.method`: As trees are being built, should cues be selected based on their marginal accuracy (`rank.method = "m"`) applied to the entire dataset, or on their conditional accuracy (`rank.method = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses.
