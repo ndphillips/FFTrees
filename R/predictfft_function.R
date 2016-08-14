@@ -25,6 +25,18 @@ predict.fft <- function(
   level.class.v = NULL,
   ...
 ) {
+#
+#   object <- chick.fft
+#   data <- Chick
+#   formula = NULL
+#   which.tree = NULL
+#   level.name.v = NULL
+#   level.threshold.v = NULL
+#   level.sigdirection.v = NULL
+#   level.exit.v = NULL
+#   level.class.v = NULL
+
+
 
 #
 #   object = x
@@ -199,8 +211,43 @@ colnames(tree.auc) <- "fft"
 # Calculate LR stats
 if(is.null(object$lr.model) == F) {
 
+# Remove cues with no variance
+
+train.df.ex <- sapply(1:ncol(data), FUN = function(x) {length(unique(data[,x]))})
+data.lr <- data[,train.df.ex > 1]
+
+# Remove cases with new factor values
+
+orig.vals.ls <- lapply(1:ncol(data.lr), FUN = function(x) {unique(data.lr[,x])})
+
+can.predict.mtx <- matrix(1, nrow = nrow(data.lr), ncol = ncol(data.lr))
+
+for(i in 1:ncol(can.predict.mtx)) {
+
+  test.vals.i <- data.lr[,1]
+
+  if(is.numeric(test.vals.i)) {
+    can.predict.mtx[,i] <- 1} else {
+
+      can.predict.mtx[,i] <- paste(test.vals.i) %in% paste(orig.vals.ls[[i]])
+
+
+    }
+}
+
+lr.can.predict <- rowMeans(can.predict.mtx) == 1
+
+if(mean(lr.can.predict) != 1) {
+
+  # warning(paste("Linear regression couldn't fit some testing data.", sum(model.can.predict), "out of",
+  #               nrow(data.test), "cases (", round(sum(model.can.predict == 0) / length(model.can.predict), 2) * 100,
+  #               "%) had to be ignored"))
+
+}
+
+
 lr.pred <- suppressWarnings(predict(object$lr.model,
-                                    newdata = data))
+                                    newdata = data.lr))
 
 lr.pred <- 1 / (1 + exp(-lr.pred))
 lr.pred.bin <- rep(0, length(lr.pred))

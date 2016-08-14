@@ -35,7 +35,7 @@ heartdisease.train <- heartdisease[samples,]
 heartdisease.test <- heartdisease[samples == 0,]
 ```
 
-We'll create a new fft object called `heart.fft` using the `fft()` function. We'll specify `diagnosis` as the (binary) dependent variable with `formula = diagnosis ~ .`:
+We'll create a new fft object called `heart.fft` using the `fft()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
 
 ```{r}
 heart.fft <- fft(
