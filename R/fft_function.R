@@ -28,9 +28,9 @@ fft <- function(
 ) {
 # #
 # #
-  # formula = diagnosis ~.
-  # data = heartdisease
-# #
+#   formula = diagnosis ~.
+#   data = heartdisease
+# # #
 #   train.p = .2
 #   max.levels = 4
 #   verbose = T
@@ -231,6 +231,40 @@ cue.accuracies.train <- cuerank(cue.df = cue.train,
                                 verbose = verbose
 )
 
+stat.names <- c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")
+
+names(cue.accuracies.train)[names(cue.accuracies.train) %in% stat.names] <- paste(stat.names, ".train", sep = "")
+
+
+if(is.null(data.test) == F) {
+
+cue.accuracies.test <- cuerank(cue.df = cue.test,
+                                criterion.v = crit.test,
+                                hr.weight = hr.weight,
+                                tree.criterion = tree.criterion,
+                                numthresh.method = numthresh.method,
+                                rounding = rounding,
+                                verbose = verbose
+)
+
+cue.accuracies.test <- cue.accuracies.test[,names(cue.accuracies.test) %in% c("cue.name", stat.names)]
+
+names(cue.accuracies.test)[names(cue.accuracies.test) %in% stat.names] <- paste(stat.names, ".test", sep = "")
+
+}
+
+if(is.null(data.test)) {
+
+cue.accuracies.test <- as.data.frame(matrix(NA, nrow = nrow(cue.accuracies.train), ncol = length(stat.names)))
+names(cue.accuracies.test) <- paste(stat.names, ".test", sep = "")
+cue.accuracies.test <- cbind(cue.accuracies.train[,1], cue.accuracies.test)
+names(cue.accuracies.test)[1] <- "cue.name"
+
+}
+
+cue.accuracies <- merge(cue.accuracies.train, cue.accuracies.test)
+
+
 
 # GROW THE TREES!
 {
@@ -341,7 +375,7 @@ output.fft <- list(
                   "formula" = formula,
                   "data.train" = data.train,
                   "data.test" = data.test,
-                  "cue.accuracies" = cue.accuracies.train,
+                  "cue.accuracies" = cue.accuracies,
                   "fft.stats" = fft.stats,
                   "lr.stats" = lr.stats,
                   "cart.stats" = cart.stats,

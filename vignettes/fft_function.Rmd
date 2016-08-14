@@ -53,7 +53,7 @@ As you can see, `fft()` returns an object with the fft class
 class(heart.fft)
 ```
 
-There are many elements in an fft object:
+There are many elements in an fft object, here are their names:
 
 ```{r}
 names(heart.fft)
@@ -67,7 +67,13 @@ The `cue.accuracies` dataframe contains the original, marginal cue accuracies. T
 heart.fft$cue.accuracies
 ```
 
-Here, we can see that the `thal` cue had the highest v value of `r round(heart.fft$cue.accuracies$v[heart.fft$cue.accuracies$cue.name == "thal"], 4)` while `cp` had the second highest v value of `r round(heart.fft$cue.accuracies$v[heart.fft$cue.accuracies$cue.name == "cp"], 4)`.
+You can also view the cue accuracies in an ROC-type plot with `showcues`:
+
+```{r}
+showcues(heart.fft)
+```
+
+
 
 
 ### trees

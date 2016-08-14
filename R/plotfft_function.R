@@ -1434,41 +1434,41 @@ if(is.null(x) == F) {
 
       # Check if new final stats are needed
 
-      if(recalculate) {
+if(recalculate) {
 
-        new.stats <- predict.fft(object = x,
-                                 formula = x$formula,
-                                 data = data,
-                                 which.tree = 1:n.trees)
+  new.stats <- predict.fft(object = x,
+                           formula = x$formula,
+                           data = data,
+                           which.tree = 1:n.trees)
 
-        final.auc <- new.stats$trees.auc
-        fft.hr.vec <- new.stats$trees$hr
-        fft.far.vec <- new.stats$trees$far
+  final.auc <- new.stats$trees.auc
+  fft.hr.vec <- new.stats$trees$hr
+  fft.far.vec <- new.stats$trees$far
 
-        lr.stats <- lr.pred(formula = x$formula, data.train = x$data.train, data.test = data)
-        lr.hr <- lr.stats[[1]]$hr.test[lr.stats[[1]]$threshold == .5]
-        lr.far <- lr.stats[[1]]$far.test[lr.stats[[1]]$threshold == .5]
+  lr.stats <- lr.pred(formula = x$formula, data.train = x$data.train, data.test = data)
+  lr.hr <- lr.stats[[1]]$hr.test[lr.stats[[1]]$threshold == .5]
+  lr.far <- lr.stats[[1]]$far.test[lr.stats[[1]]$threshold == .5]
 
-        cart.stats <- cart.pred(formula = x$formula, data.train = x$data.train, data.test = data)
-        cart.hr <- cart.stats$cart.acc$hr.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
-        cart.far <- cart.stats$cart.acc$far.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
+  cart.stats <- cart.pred(formula = x$formula, data.train = x$data.train, data.test = data)
+  cart.hr <- cart.stats$cart.acc$hr.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
+  cart.far <- cart.stats$cart.acc$far.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
 
-      }
+}
 
-      if(recalculate == F) {
+if(recalculate == F) {
 
-        if(data == "train") {
+  if(data == "train") {
 
-        final.auc <- x$auc[1,1]
-        fft.hr.vec <- x$fft.stats$hr.train
-        fft.far.vec <- x$fft.stats$far.train
-        lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
-        lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
-        cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-        cart.far <- x$cart.stats$far.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+  final.auc <- x$auc[1,1]
+  fft.hr.vec <- x$fft.stats$hr.train
+  fft.far.vec <- x$fft.stats$far.train
+  lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
+  lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
+  cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+  cart.far <- x$cart.stats$far.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
 
 
-      }
+}
 
 
       if(data == "test") {
