@@ -166,7 +166,7 @@ cart.pred <- function(
   # Remove cases with the same result
 
   dup.rows <- duplicated.data.frame(cart.acc[,-c(1, 2)])
-  cart.acc <- cart.acc[dup.rows == F,]
+  cart.acc <- cart.acc[dup.rows == F | (cart.acc$miss.cost == 1 & cart.acc$fa.cost == 1),]
 
   # Remove cases without cues
 
