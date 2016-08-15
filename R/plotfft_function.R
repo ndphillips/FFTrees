@@ -1445,7 +1445,10 @@ if(recalculate) {
   fft.hr.vec <- new.stats$trees$hr
   fft.far.vec <- new.stats$trees$far
 
-  lr.stats <- lr.pred(formula = x$formula, data.train = x$data.train, data.test = data)
+  lr.stats <- lr.pred(formula = x$formula,
+                      data.train = x$data.train,
+                      data.test = data)
+
   lr.hr <- lr.stats[[1]]$hr.test[lr.stats[[1]]$threshold == .5]
   lr.far <- lr.stats[[1]]$far.test[lr.stats[[1]]$threshold == .5]
 

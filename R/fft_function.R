@@ -26,7 +26,18 @@ fft <- function(
                 do.cart = T,
                 do.lr = T
 ) {
-
+#
+#
+#   formula = fds.64.crit ~ .
+#   data = fds.64.data
+#   data.test <- NULL
+#   rank.method = "m"
+#   max.levels = 4
+#   verbose = T
+#   hr.weight = .5
+#   do.cart = T
+#   do.lr = T
+#   train.p <- 1
 
 # Set some global parameters
 

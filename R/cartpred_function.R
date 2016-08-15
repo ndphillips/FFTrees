@@ -15,13 +15,6 @@ cart.pred <- function(
 ) {
 
 
-
-  formula = formula
-  data.train = data.train
-  data.test = data.test
-
-
-
   data.mf.train <- model.frame(formula = formula, data = data.train)
   crit.train <- data.mf.train[,1]
 
@@ -170,7 +163,7 @@ cart.pred <- function(
 
   # Remove cases without cues
 
-  cart.acc <- cart.acc[cart.acc$cart.cues.vec != "",]
+  #cart.acc <- cart.acc[cart.acc$cart.cues.vec != "",]
 
   # Calculate auc
 
