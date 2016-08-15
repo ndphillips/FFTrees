@@ -87,7 +87,6 @@ lr.pred <- function(
   {
     if(is.null(data.test) == F) {
 
-
       # Look for new factor values in test set not in training set
 
       orig.vals.ls <- lapply(2:ncol(data.mf.train), FUN = function(x) {unique(data.mf.train[,x])})

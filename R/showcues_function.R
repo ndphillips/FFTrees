@@ -9,11 +9,11 @@
 #'
 
 showcues <- function(x = NULL,
-                          which.data = "train",
-                          top = 5,
-                          palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
-                                      "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
-                                      "#9A703E7F")) {
+                    which.data = "train",
+                    top = 5,
+                    palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
+                                "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
+                                "#9A703E7F")) {
 
 
 cue.df <- x$cue.accuracies
@@ -99,7 +99,14 @@ add.text <- function(labels, x, y.min, y.max, cex = .7, adj = 1) {
 
 add.text(row.names(cues.top), .54, 0, .4, adj = 0, cex = 1)
 add.text(substr(cues.top$cue.name, 1, 10), .6, 0, .4, cex = .8, adj = 0)
-add.text(paste(cues.top$level.sigdirection, cues.top$level.threshold), .68, 0, .4, cex = .8, adj = 0)
+
+# Clean up thresholds
+
+thresh.text <- paste(cues.top$level.sigdirection, cues.top$level.threshold)
+thresh.text[nchar(thresh.text) > 15] <- paste(substr(thresh.text[nchar(thresh.text) > 15], start = 1, stop = 15), "...", sep = "")
+
+
+add.text(thresh.text, .68, 0, .4, cex = .8, adj = 0)
 
 add.text(round(cues.top$v, 2), .85, 0, .4, cex = 1)
 add.text(round(cues.top$hr, 2), .92, 0, .4, cex = 1)
