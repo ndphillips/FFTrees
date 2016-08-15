@@ -27,9 +27,8 @@ fft <- function(
                 do.lr = T
 ) {
 #
-#
-#   formula = fds.64.crit ~ .
-#   data = fds.64.data
+#   formula = diagnosis ~ thickness + chromatin
+#   data = breastcancer
 #   data.test <- NULL
 #   rank.method = "m"
 #   max.levels = 4
@@ -273,6 +272,7 @@ final.result <- grow.ffts(
                          stopping.par = stopping.par,
                          max.levels = max.levels
 )
+
 
 # Sort trees by far.train
 

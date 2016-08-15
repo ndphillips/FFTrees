@@ -28,15 +28,12 @@ grow.ffts <- function(
                      verbose = F
 ) {
 
+
+
   tree.criterion <- "v"
   exit.method <- "fixed"
   correction <- .25
   rounding <- 2
-
-
-
-
-
 
 
   # Set up dataframes
@@ -59,11 +56,6 @@ grow.ffts <- function(
     crit.test <- NULL
 
   }
-
-
-
-
-
 
   n.cues <- ncol(cue.train)
 
@@ -397,6 +389,8 @@ grow.ffts <- function(
 
   }
 
+
+
   # -------------------------
   # SUMMARISE TREE DEFINITIONS AND STATISTICS
   #   trees
@@ -484,6 +478,19 @@ grow.ffts <- function(
 
     }
 
+
+    # Remove duplicate trees...
+
+    duplicate.trees <- duplicated(trees[c("level.name", "level.exit", "level.threshold", "level.sigdirection")])
+    trees <- trees[duplicate.trees == F,]
+
+    levelout.train <- levelout.train[,duplicate.trees == F]
+    levelout.test <- levelout.test[,duplicate.trees == F]
+
+    decision.train <- decision.train[,duplicate.trees == F]
+    decision.test <- decision.test[,duplicate.trees == F]
+
+    trees$tree.num <- 1:nrow(trees)
 
     # Calculate AUC
 
