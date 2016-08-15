@@ -9,6 +9,9 @@ classtable <- function(prediction.v,
                        criterion.v) {
 
 
+if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {prediction.v <- as.logical(paste(prediction.v))}
+if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {criterion.v <- as.logical(paste(criterion.v))}
+
   correction <- .25
   hr.weight <- .5
 

@@ -35,8 +35,8 @@ plot.fft <- function(
   # TESTING VALUES
   # --------------------------
 
-  # x <- a
-  #
+  #  x <- tree.64
+  # #
   # data = "train"
   # which.tree = "best.train" # Either a number, or "best.train" or "best.test"
   # description = "Data"

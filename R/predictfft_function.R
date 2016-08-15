@@ -26,10 +26,13 @@ predict.fft <- function(
   ...
 ) {
 #
-#   object <- chick.fft
-#   data <- Chick
-#   formula = NULL
-#   which.tree = NULL
+#
+#   object = x
+#   data = data.mf
+#   formula = x$formula
+#   which.tree = which.tree
+#
+#
 #   level.name.v = NULL
 #   level.threshold.v = NULL
 #   level.sigdirection.v = NULL

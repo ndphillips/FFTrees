@@ -26,23 +26,6 @@ fft <- function(
                 do.cart = T,
                 do.lr = T
 ) {
-# #
-# #
-#   formula = diagnosis ~.
-#   data = heartdisease
-# # #
-#   train.p = .2
-#   max.levels = 4
-#   verbose = T
-#   data.test <- NULL
-#   do.lr <- T
-#   do.cart <- T
-#   rank.method = "c"
-
-
-
-
-
 
 
 # Set some global parameters
