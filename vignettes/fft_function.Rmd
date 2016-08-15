@@ -142,6 +142,18 @@ heart.fft$levelout.train[1:5,]
 ```
 
 
+## Selecting cues
+
+If you want to select specific cues for a tree, just include them in the `formula` argument.
+
+For example, the following tree `heart.as.fft` will only consider the cues `sex` and `age`:
+
+```{r}
+heart.as.fft <- fft(formula = diagnosis ~ age + sex,
+                    data = heartdisease
+                    )
+```
+
 
 ## Plotting trees
 

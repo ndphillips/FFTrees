@@ -1,9 +1,7 @@
-#' Calculates predictions from CART
-#' @param formula a formula
+#' Does miscellaneous cleaning of prediction datasets
 #' @param data.train A training dataset
 #' @param data.test A testing dataset
-#' @importFrom stats model.frame formula glm
-#' @importFrom rpart rpart
+#' @param show.warning ...
 #' @export
 #'
 
@@ -14,12 +12,6 @@ factclean <- function(
   show.warning = T
 ) {
 
-
-  data.train <- data.frame("a" = c("a", "b", "a", "b"),
-                           "b" = c(1, 1, 1, 1), stringsAsFactors= F)
-
-  data.test <- data.frame("a" = c("a", "b", "c", "b"),
-                           "b" = c(1, 1, 1, 1), stringsAsFactors= F)
 
   # Look for new factor values in test set not in training set
 

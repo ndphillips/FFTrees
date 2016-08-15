@@ -2,7 +2,7 @@
 % Please edit documentation in R/factclean_function.R
 \name{factclean}
 \alias{factclean}
-\title{Calculates predictions from CART}
+\title{Does miscellaneous cleaning of prediction datasets}
 \usage{
 factclean(data.train, data.test, show.warning = T)
 }
@@ -11,9 +11,9 @@ factclean(data.train, data.test, show.warning = T)
 
 \item{data.test}{A testing dataset}
 
-\item{formula}{a formula}
+\item{show.warning}{...}
 }
 \description{
-Calculates predictions from CART
+Does miscellaneous cleaning of prediction datasets
 }
 
