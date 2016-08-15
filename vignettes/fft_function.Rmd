@@ -69,7 +69,7 @@ heart.fft$cue.accuracies
 
 You can also view the cue accuracies in an ROC-type plot with `showcues`:
 
-```{r}
+```{r fig.width = 8, fig.height = 8}
 showcues(heart.fft)
 ```
 
