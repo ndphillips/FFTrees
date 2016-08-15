@@ -76,9 +76,9 @@ showcues(heart.fft)
 
 
 
-### trees
+### fft.stats
 
-The `trees` dataframe contains all tree definitions and training (and possibly test) statistics for all ($2^{max.levels - 1}$) trees. For our `heart.fft` example, there are $2^{4 - 1} = 8$ trees.
+The `fft.stats` dataframe contains all tree definitions and training (and possibly test) statistics for all ($2^{max.levels - 1}$) trees. For our `heart.fft` example, there are $2^{4 - 1} = 8$ trees.
 
 Tree definitions (exit directions, cue order, and cue thresholds) are contained in columns 1 through 6:
 

@@ -648,7 +648,7 @@ if(is.null(x) == F) {
       par(xpd = T)
       segments(-plot.width, 0, - plot.width * .2, 0, col = gray(.2, .5), lwd = .5, lty = 1)
       segments(plot.width, 0, plot.width * .2, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-      text(x = 0, y = 0, "Tree", cex = panel.title.cex)
+      text(x = 0, y = 0, paste("Tree (#", which.tree, ")", sep = ""), cex = panel.title.cex)
 
       par(xpd = F)
 
