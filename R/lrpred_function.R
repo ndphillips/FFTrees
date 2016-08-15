@@ -12,7 +12,7 @@ lr.pred <- function(
   formula,
   data.train,
   data.test = NULL,
-  thresholds = seq(.9, .1, -.1)
+  thresholds = .5     #seq(.9, .1, -.1)
 ) {
   correction <- .25
 

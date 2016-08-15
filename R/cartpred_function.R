@@ -28,9 +28,12 @@ cart.pred <- function(
 
   # Calculate loss df (for ROC curve)
 
-  loss.df <- expand.grid(miss.cost = seq(1, 5, length.out = 3),
-                         fa.cost = seq(1, 5, length.out = 3)
-  )
+  loss.df <- expand.grid(miss.cost = 1,
+                         fa.cost = 1)
+
+  # loss.df <- expand.grid(miss.cost = seq(1, 5, length.out = 3),
+  #                        fa.cost = seq(1, 5, length.out = 3)
+  # )
 
   # Remove some cases where costs are identical
   loss.df <- loss.df[loss.df$miss.cost != loss.df$fa.cost | loss.df$miss.cost == 1,]

@@ -4,8 +4,7 @@
 \alias{lr.pred}
 \title{Calculates predictions from logistic regression}
 \usage{
-lr.pred(formula, data.train, data.test = NULL, thresholds = seq(0.9, 0.1,
-  -0.1))
+lr.pred(formula, data.train, data.test = NULL, thresholds = 0.5)
 }
 \arguments{
 \item{formula}{a formula}
