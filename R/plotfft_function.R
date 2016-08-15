@@ -1054,17 +1054,20 @@ if(is.null(x) == F) {
 
     if(final.plot == 1) {
 
-      final.classtable.center <- c(.2, .45)
+      final.classtable.center <- c(.18, .45)
       final.classtable.dim <- c(.2, .7)
 
-      final.spec.center <- c(.4, .45)
+      final.spec.center <- c(.35, .45)
       final.spec.dim <- c(.14, .65)
 
-      final.hr.center <- c(.5, .45)
+      final.hr.center <- c(.45, .45)
       final.hr.dim <- c(.14, .65)
 
-      final.dp.center <- c(.6, .45)
+      final.dp.center <- c(.55, .45)
       final.dp.dim <- c(.14, .65)
+
+      final.auc.center <- c(.65, .45)
+      final.auc.dim <- c(.14, .65)
 
       final.roc.center <- c(.85, .45)
       final.roc.dim <- c(.2, .65)
@@ -1102,6 +1105,62 @@ if(is.null(x) == F) {
       final.balls <- F
 
     }
+
+
+    # Check if new final stats are needed
+
+    if(recalculate) {
+
+      new.stats <- predict.fft(object = x,
+                               formula = x$formula,
+                               data = data,
+                               which.tree = 1:n.trees)
+
+      final.auc <- new.stats$trees.auc
+      fft.hr.vec <- new.stats$trees$hr
+      fft.far.vec <- new.stats$trees$far
+
+      lr.stats <- lr.pred(formula = x$formula,
+                          data.train = x$data.train,
+                          data.test = data)
+
+      lr.hr <- lr.stats[[1]]$hr.test[lr.stats[[1]]$threshold == .5]
+      lr.far <- lr.stats[[1]]$far.test[lr.stats[[1]]$threshold == .5]
+
+      cart.stats <- cart.pred(formula = x$formula, data.train = x$data.train, data.test = data)
+      cart.hr <- cart.stats$cart.acc$hr.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
+      cart.far <- cart.stats$cart.acc$far.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
+
+    }
+
+    if(recalculate == F) {
+
+      if(data == "train") {
+
+        final.auc <- x$auc[1,1]
+        fft.hr.vec <- x$fft.stats$hr.train
+        fft.far.vec <- x$fft.stats$far.train
+        lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
+        lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
+        cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+        cart.far <- x$cart.stats$far.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+
+
+      }
+
+
+      if(data == "test") {
+
+        final.auc <- x$auc[2,1]
+        fft.hr.vec <- x$fft.stats$hr.test
+        fft.far.vec <- x$fft.stats$far.test
+        lr.hr <- x$lr.stats$hr.test[x$lr.stats$threshold == .5]
+        lr.far <- x$lr.stats$far.test[x$lr.stats$threshold == .5]
+        cart.hr <- x$cart.stats$hr.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+        cart.far <- x$cart.stats$far.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
+      }
+    }
+
 
 
     # General plotting space
@@ -1275,7 +1334,6 @@ if(is.null(x) == F) {
 
       }
 
-
     # DP level
 
     if(is.null(final.dp.center) == F) {
@@ -1313,6 +1371,42 @@ if(is.null(x) == F) {
       text(x = rect.center,
            y = (rect.top + rect.bottom) / 2,
            labels = round((final.stats$dprime), 2),
+           cex = 1.2,
+           font = 1)
+
+    }
+
+    # AUC level
+
+    if(is.null(final.auc.center) == F) {
+
+      rect.top <- final.auc.center[2] + final.auc.dim[2] / 2
+      rect.bottom <-  final.auc.center[2] - final.auc.dim[2] / 2
+      rect.center <-  final.auc.center[1]
+      rect.width <- final.auc.dim[1] / 2
+
+      text(rect.center, header.y.loc, "AUC", cex = header.cex, pos= 1)
+
+      # Colored Fill
+      rect(rect.center - rect.width / 2,
+           rect.bottom,
+           rect.center + rect.width / 2,
+           ((final.auc - .5) / .5) * (rect.top - rect.bottom) + rect.bottom,
+           col = col.fun((final.auc - .5) / .5),
+           border = NA
+      )
+
+      # Border
+      rect(rect.center - rect.width / 2,
+           rect.bottom,
+           rect.center + rect.width / 2,
+           rect.top,
+           border = gray(.5, .5))
+
+
+      text(x = rect.center,
+           y = (rect.top + rect.bottom) / 2,
+           labels = round(final.auc, 2),
            cex = 1.2,
            font = 1)
 
@@ -1432,64 +1526,11 @@ if(is.null(x) == F) {
     if(is.null(final.roc.center) == F) {
 
 
-      # Check if new final stats are needed
-
-if(recalculate) {
-
-  new.stats <- predict.fft(object = x,
-                           formula = x$formula,
-                           data = data,
-                           which.tree = 1:n.trees)
-
-  final.auc <- new.stats$trees.auc
-  fft.hr.vec <- new.stats$trees$hr
-  fft.far.vec <- new.stats$trees$far
-
-  lr.stats <- lr.pred(formula = x$formula,
-                      data.train = x$data.train,
-                      data.test = data)
-
-  lr.hr <- lr.stats[[1]]$hr.test[lr.stats[[1]]$threshold == .5]
-  lr.far <- lr.stats[[1]]$far.test[lr.stats[[1]]$threshold == .5]
-
-  cart.stats <- cart.pred(formula = x$formula, data.train = x$data.train, data.test = data)
-  cart.hr <- cart.stats$cart.acc$hr.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
-  cart.far <- cart.stats$cart.acc$far.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
-
-}
-
-if(recalculate == F) {
-
-  if(data == "train") {
-
-  final.auc <- x$auc[1,1]
-  fft.hr.vec <- x$fft.stats$hr.train
-  fft.far.vec <- x$fft.stats$far.train
-  lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
-  lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
-  cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-  cart.far <- x$cart.stats$far.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-
-
-}
-
-
-      if(data == "test") {
-
-        final.auc <- x$auc[2,1]
-        fft.hr.vec <- x$fft.stats$hr.test
-        fft.far.vec <- x$fft.stats$far.test
-        lr.hr <- x$lr.stats$hr.test[x$lr.stats$threshold == .5]
-        lr.far <- x$lr.stats$far.test[x$lr.stats$threshold == .5]
-        cart.hr <- x$cart.stats$hr.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-        cart.far <- x$cart.stats$far.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-      }
-      }
 
 
 
       text(final.roc.center[1], header.y.loc, "ROC", pos = 1, cex = header.cex)
-      text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
+  #    text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
 
 
       final.roc.x.loc <- c(final.roc.center[1] - final.roc.dim[1] / 2, final.roc.center[1] + final.roc.dim[1] / 2)
@@ -1533,8 +1574,25 @@ if(recalculate == F) {
 
       points(final.roc.x.loc[1] + cart.far * final.roc.dim[1],
              final.roc.y.loc[1] + cart.hr * final.roc.dim[2],
-             pch = "C", cex = 1, col = gray(.2))
+             pch = "C", cex = .9, col = gray(.2))
 
+par("xpd" = F)
+
+points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
+       final.roc.y.loc[1] + .6 * final.roc.dim[2],
+       pch = 21, cex = 2, col = transparent("red", .3),
+       bg = transparent("red", .7))
+
+points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
+       final.roc.y.loc[1] + .6 * final.roc.dim[2],
+       pch = "C", cex = .9, col = gray(.2))
+
+text(final.roc.x.loc[1] + 1.13 * final.roc.dim[1],
+     final.roc.y.loc[1] + .6 * final.roc.dim[2],
+    labels = " CART", adj = 0, cex = .9)
+
+par("xpd" = T)
+#points(1.1, .6, )
 
 
       ## LR
@@ -1546,9 +1604,26 @@ if(recalculate == F) {
 
       points(final.roc.x.loc[1] + lr.far * final.roc.dim[1],
              final.roc.y.loc[1] + lr.hr * final.roc.dim[2],
-             pch = "L", cex = 1, col = gray(.2))
+             pch = "L", cex = .9, col = gray(.2))
 
-}
+      par("xpd" = F)
+
+      points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
+             final.roc.y.loc[1] + .4 * final.roc.dim[2],
+             pch = 21, cex = 2, col = transparent("blue", .3),
+             bg = transparent("blue", .7))
+
+      points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
+             final.roc.y.loc[1] + .4 * final.roc.dim[2],
+             pch = "L", cex = .9, col = gray(.2))
+
+      text(final.roc.x.loc[1] + 1.13 * final.roc.dim[1],
+           final.roc.y.loc[1] + .4 * final.roc.dim[2],
+           labels = " LR", adj = 0, cex = .9)
+
+      par("xpd" = T)
+
+      }
       ## FFT
 {
       roc.order <- order(fft.far.vec)
