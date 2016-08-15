@@ -27,16 +27,16 @@ fft <- function(
                 do.lr = T
 ) {
 #
-#   formula = diagnosis ~ thickness + chromatin
-#   data = breastcancer
-#   data.test <- NULL
-#   rank.method = "m"
-#   max.levels = 4
-#   verbose = T
-#   hr.weight = .5
-#   do.cart = T
-#   do.lr = T
-#   train.p <- 1
+  # formula = diagnosis ~ thickness + chromatin
+  # data = breastcancer
+  # data.test <- NULL
+  # rank.method = "m"
+  # max.levels = 4
+  # verbose = T
+  # hr.weight = .5
+  # do.cart = T
+  # do.lr = T
+  # train.p <- 1
 
 # Set some global parameters
 
@@ -105,9 +105,16 @@ if(is.null(data.test) & train.p < 1) {
 # create 'training testing' sets of size train.p * nrow(data.train)
 
   continue <- T
+  run.i <- 0
 
-  # Create train and test set (and make sure training criterion has at least one positive value)
+# Create train and test set
+
+# Test set must not have new factor values
+# training set must have at least one positive and one negative case
+
   while(continue) {
+
+    run.i <- run.i + 1
 
     n.train <- floor(train.p * nrow(data))
     train.exemplars.i <- sample(1:nrow(data), size = n.train)
@@ -115,7 +122,33 @@ if(is.null(data.test) & train.p < 1) {
     crit.train.i <- data[train.exemplars.i, 1]
     crit.test.i <- data[test.exemplars.i, 1]
 
-    if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 & mean(crit.test.i > 0) & mean(crit.test.i < 1)) {continue <- F}
+    data.train.i <- data[train.exemplars.i,]
+    data.test.i <- data[test.exemplars.i,]
+
+    orig.vals.ls <- lapply(1:ncol(data.train.i), FUN = function(x) {unique(data.train.i[,x])})
+
+    can.predict.mtx <- matrix(1, nrow = nrow(data.test.i), ncol = ncol(data.test.i))
+
+    for(i in 1:ncol(can.predict.mtx)) {
+
+      test.vals.i <- data.test.i[,i]
+
+      if(is.numeric(test.vals.i)) {
+        can.predict.mtx[,i] <- 1} else {
+
+          can.predict.mtx[,i] <- paste(test.vals.i) %in% paste(orig.vals.ls[[i]])
+
+
+        }
+    }
+
+    model.can.predict <- rowMeans(can.predict.mtx) == 1
+
+
+    if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 &
+       mean(crit.test.i > 0) & mean(crit.test.i < 1) & all(model.can.predict)) {continue <- F}
+
+    if(run.i == 20) {print("I'm having a hard time coming up with valid training and test datasets...You may need to stop the processor and create them manually")}
 
   }
 
