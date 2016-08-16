@@ -104,25 +104,26 @@ add.text <- function(labels, x, y.min, y.max, cex = .7, adj = 1) {
 
 }
 
+# Cue numbers
 add.text(row.names(cues.top), .54, 0, .4, adj = 0, cex = 1)
+
+# Cue names
+text(.66, .44, "cue", adj = 0, cex = .8)
 add.text(substr(cues.top$cue.name, 1, 10), .65, 0, .4, cex = .8, adj = 1)
 
-# Clean up thresholds
-
+# Thresholds
 thresh.text <- paste(cues.top$level.sigdirection, cues.top$level.threshold)
 thresh.text[nchar(thresh.text) > 15] <- paste(substr(thresh.text[nchar(thresh.text) > 15], start = 1, stop = 12), "...", sep = "")
-
-
 add.text(thresh.text, .67, 0, .4, cex = .8, adj = 0)
 
+# HR and FAR stats
 #add.text(round(cues.top$v, 2), .85, 0, .4, cex = .8)
+#text(.85, .44, "v", adj = 1, cex = .8)
+
 add.text(round(cues.top$hr, 2), .92, 0, .4, cex = .8)
 add.text(round(cues.top$far, 2), .99, 0, .4, cex = .8)
-
-text(.66, .44, "cue", adj = 0)
-#text(.85, .44, "v", adj = 1, cex = .8)
 text(.92, .44, "HR", adj = 1, cex = .8)
-text(.99, .44, "FAR", adj = 1, cex = .89)
+text(.99, .44, "FAR", adj = 1, cex = .8)
 
 
 # connection lines
