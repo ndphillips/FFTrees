@@ -1,0 +1,127 @@
+---
+title: "Examples of FFTs"
+author: "Nathaniel Phillips"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples of FFTs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, echo = F, message = F, results = 'hide'}
+library(FFTrees)
+```
+
+# Examples
+
+Here are some examples of FFTs created from datasets in the `FFTrees` package
+
+## Mushrooms
+
+The `mushrooms` dataset contains data about mushrooms (see `?mushrooms` for details). The goal of our model is to predict which mushrooms are poisonous based on `r ncol(mushrooms) - 1` cues ranging from the mushroom's odor, color, etc. 
+
+```{r}
+set.seed(100) # For replicability
+mushrooms.fft <- fft(formula = poisonous ~.,
+                     data = mushrooms,
+                     train.p = .5)
+```
+
+### mushrooms cue accuracies
+
+First, let's look at the individual cue training accuracies with `showcues`:
+
+```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
+showcues(mushrooms.fft)
+```
+
+It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final FFT to have no more than these two cues:
+
+### mushrooms FFT
+
+Now let's plot the best tree applied to the test dataset
+
+```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
+plot(mushrooms.fft, 
+     data = "test", 
+     description = "Mushrooms FFT",
+     decision.names = c("Safe", "Poisonous")
+     )
+```
+
+Indeed, it looks like the best tree only uses the *odor* and *sporepc* cues. In our test dataset, the tree had a false alarm rate of 0% (1 - specificity), a hit rate of 85%, and a d-prime of 2.27.
+
+Now, let's say that you talk to a mushroom expert who says that we are using the wrong cues. According to her, the best predictors for poisonous mushrooms are *ringtype* and *ringnum*. Let's build a set of trees with these cues and see how they perform relative to our initial tree:
+
+```{r}
+set.seed(100) # for replicability
+mushrooms.ring.fft <- fft(formula = poisonous ~ ringtype + ringnum,
+                          data = mushrooms,
+                          train.p = .5
+                          )
+```
+
+Here is the final tree:
+
+```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
+plot(mushrooms.ring.fft, 
+     data = "test", 
+     description = "Mushrooms (Ring only) FFT",
+     decision.names = c("Safe", "Poisonous")
+     )
+```
+
+As we can see, this tree did not perform nearly as well as our earlier one. The new d-prime is only 0.84. 
+
+
+## Iris
+
+The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to predict which flowers are of the class Virginica
+
+```{r}
+iris.fft <- fft(
+  formula = virginica ~.,
+  data = iris,
+  train.p = .5
+  )
+```
+
+### iris cue accuracies
+
+First, let's look at the individual cue training accuracies with `showcues`:
+
+```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
+showcues(iris.fft)
+```
+
+It looks like the cues *pet.wid* and *pet.len* are the best predictors. Based on this, we should expect the final FFT will likely use just one or both of these cues
+
+### iris FFT
+
+Now let's plot the best tree applied to the test dataset
+
+```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
+plot(iris.fft, 
+     data = "test", 
+     description = "Iris FFT",
+     decision.names = c("Not V", "Virginica")
+     )
+```
+
+Indeed, it looks like the best tree only uses the *pet.wid* and *pet.len* cues. In our test dataset, the tree had a false alarm rate of 2% (1 - specificity), a hit rate of 100%, and a d-prime of 2.15.
+
+Now, this tree did quite well, but what if someone wants a tree with the maximum possible hit-rate. If we look at the ROC plot in the bottom right corder of the plot above, we can see that tree #6 has a hit-rate of 100%. Let's look at that tree:
+
+```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
+plot(iris.fft, 
+     data = "test", 
+     description = "Iris FFT",
+     decision.names = c("Not V", "Virginica"),
+     which.tree = 6     # Show tree #6
+     )
+```
+
+As you can see, this tree does indeed have a maximum hit-rate. However, it comes at a high cost to specificity. 
+

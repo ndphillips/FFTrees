@@ -35,6 +35,9 @@ if(which.data == "test") {
 
 rownames(cue.df) <- 1:nrow(cue.df)
 
+if(nrow(cue.df) < top) {top <- nrow(cue.df)}
+
+
 # GENERAL PLOTTING SPACE
 
 plot(1, xlim = c(0, 1), ylim  = c(0, 1), type = "n",
@@ -54,11 +57,15 @@ abline(a = 0, b = 1)
 
 cues.nontop <- subset(cue.df, rank(-v) > top)
 
+if(nrow(cues.nontop) > 0) {
+
 with(cues.nontop, points(far, hr, cex = 1))
 
 with(cues.nontop,
        text(far, hr, labels = row.names(cues.nontop),
             pos = 3, cex = .8))
+
+}
 
 # Top x cues
 
