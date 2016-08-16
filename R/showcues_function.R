@@ -115,14 +115,14 @@ thresh.text[nchar(thresh.text) > 15] <- paste(substr(thresh.text[nchar(thresh.te
 
 add.text(thresh.text, .68, 0, .4, cex = .8, adj = 0)
 
-add.text(round(cues.top$v, 2), .85, 0, .4, cex = 1)
-add.text(round(cues.top$hr, 2), .92, 0, .4, cex = 1)
-add.text(round(cues.top$far, 2), .99, 0, .4, cex = 1)
+add.text(round(cues.top$v, 2), .85, 0, .4, cex = .8)
+add.text(round(cues.top$hr, 2), .92, 0, .4, cex = .8)
+add.text(round(cues.top$far, 2), .99, 0, .4, cex = .8)
 
 text(.66, .44, "cue", adj = 0)
-text(.85, .44, "v", adj = 1)
-text(.92, .44, "HR", adj = 1)
-text(.99, .44, "FAR", adj = 1)
+text(.85, .44, "v", adj = .8)
+text(.92, .44, "HR", adj = .8)
+text(.99, .44, "FAR", adj = .8)
 
 
 # connection lines

@@ -36,7 +36,7 @@ titanic.fft <- fft(
 
 You can visualise individual cue accuracies (specifically their hit rates and false alarm rates) using the `showcues()` function. Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
 
-```{r}
+```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
 showcues(titanic.fft)
 ```
 
