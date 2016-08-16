@@ -2,6 +2,7 @@
 #'
 #' @param x An FFT object
 #' @param which.data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
+#' @param main Main plot description
 #' @param top An integer indicating how many of the top cues to highlight
 #' @param palette An optional vector of colors
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -10,6 +11,7 @@
 
 showcues <- function(x = NULL,
                     which.data = "train",
+                    main = NULL,
                     top = 5,
                     palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
                                 "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
@@ -40,12 +42,19 @@ if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 
 # GENERAL PLOTTING SPACE
 
+if(is.null(main)) {main <- "Marginal Cue Accuracies"}
+
 plot(1, xlim = c(0, 1), ylim  = c(0, 1), type = "n",
-     xlab = "FAR", ylab = "HR", main = "Marginal cue performance"
+     xlab = "False Alarm Rate (FAR)", ylab = "Hit Rate (HR)", main = main,
+     yaxt = "n", xaxt = "n"
 )
 
-if(which.data == "test") {mtext("Testing", 3, line = .5)}
-if(which.data == "train") {mtext("Training", 3, line = .5)}
+axis(2, at = seq(0, 1, .1), las = 1)
+axis(1, at = seq(0, 1, .1))
+
+
+if(which.data == "test") {mtext("Testing data", 3, line = .5, cex = .8)}
+if(which.data == "train") {mtext("Training data", 3, line = .5, cex = .8)}
 
 
 rect(-100, -100, 100, 100, col = gray(.96))
@@ -55,7 +64,7 @@ abline(a = 0, b = 1)
 
 # Non-top cues
 
-cues.nontop <- subset(cue.df, rank(-v) > top)
+cues.nontop <- cue.df[rank(-cue.df$v) > top,]
 
 if(nrow(cues.nontop) > 0) {
 
@@ -69,7 +78,7 @@ with(cues.nontop,
 
 # Top x cues
 
-cues.top <- subset(cue.df, subset = rank(-v) <= top)
+cues.top <- cue.df[rank(-cue.df$v) <= top,]
 cues.top <- cues.top[order(cues.top$v),]
 
 with(cues.top,

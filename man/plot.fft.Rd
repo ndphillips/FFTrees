@@ -5,7 +5,7 @@
 \title{Draws (and creates) a FFT.}
 \usage{
 \method{plot}{fft}(x = NULL, data = "train", which.tree = "best.train",
-  description = "Data", decision.names = c("Noise", "Signal"), ...)
+  main = "Data", decision.names = c("Noise", "Signal"), ...)
 }
 \arguments{
 \item{x}{A fft object created from fft()}
@@ -14,7 +14,7 @@
 
 \item{which.tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
-\item{description}{An optional string used as a plot label.}
+\item{main}{The main plot label.}
 
 \item{decision.names}{A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.}
 

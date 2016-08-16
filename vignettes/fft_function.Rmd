@@ -60,35 +60,34 @@ names(heart.fft)
 ```
 
 
-## Printing
+## Printing an fft object
 
-You can view basic information about the fft object by just evaluating its name:
+You can view basic information about the fft object by printing its name. This will give you a quick summary of the object, includeing how many trees it has, which cues the tree(s) use, and how well they performed.
 
 ```{r}
 heart.fft
 ```
 
 
-### cue.accuracies
+### Cue accuracy statistics: cue.accuracies
 
-The `cue.accuracies` dataframe contains the original, marginal cue accuracies. That is, for each cue, the threshold that maximizes v (hr - far) is chosen (this is done using the `cuerank()` function):
+You can obtain marginal cue accuracy statistics from the  `cue.accuracies` dataframe. This dataframe contains the original, marginal cue accuracies. That is, for each cue, the threshold that maximizes the v-statistic (HR - FAR) is chosen.
 
 ```{r}
 heart.fft$cue.accuracies
 ```
 
-You can also view the cue accuracies in an ROC-type plot with `showcues`:
+You can also view the cue accuracies in an ROC-type plot with `showcues()`:
 
 ```{r fig.width = 8, fig.height = 8}
-showcues(heart.fft)
+showcues(heart.fft, 
+         main = "Heartdisease Cue Accuracy")
 ```
 
 
-### fft.stats
+### Tree definitions and accuracy statistics: fft.stats
 
 The `fft.stats` dataframe contains all tree definitions and training (and possibly test) statistics for all ($2^{max.levels - 1}$) trees. For our `heart.fft` example, there are $2^{4 - 1} = 8$ trees.
-
-Tree definitions (exit directions, cue order, and cue thresholds) are contained in columns 1 through 6:
 
 ```{r}
 heart.fft$fft.stats
@@ -100,12 +99,12 @@ You can also use the generic `summary()` function to get the trees dataframe
 summary(heart.fft)  # Same thing as heart.fft$fft.stats
 ```
 
-Training statistics are contained in columns 7:15 and have the `.train` suffix. For our heart disease dataset, it looks like tree 2 had the highest training v (HR - FAR) values. Test statistics are contained in columns 16:24 and have the `.test` suffix. It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
+Tree definitions (exit directions, cue order, and cue thresholds) are contained in columns 1 through 6. Training statistics are contained in columns 7:15 and have the `.train` suffix. For our heart disease dataset, it looks like tree 2 had the highest training v (HR - FAR) values. Test statistics are contained in columns 16:24 and have the `.test` suffix. It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
 
 
-### AUC
+### Area under the curve (AUC): auc
 
-AUC (area under the curve) statistics are in `auc`:
+AUC (area under the curve) statistics are in the `auc` dataframe:
 
 ```{r}
 heart.fft$auc
@@ -155,7 +154,7 @@ Once you've created an fft object using `fft()` you can visualize the tree (and 
 
 ```{r, fig.width = 6, fig.height = 6}
 plot(heart.fft,
-     description = "Heart Disease",
+     main = "Heart Disease",
      decision.names = c("Healthy", "Disease")
      )
 ```

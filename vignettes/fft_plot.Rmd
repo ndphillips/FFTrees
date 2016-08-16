@@ -37,7 +37,8 @@ titanic.fft <- fft(
 You can visualise individual cue accuracies (specifically their hit rates and false alarm rates) using the `showcues()` function. Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
 
 ```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
-showcues(titanic.fft)
+showcues(titanic.fft,
+         main = "Titanic cue accuracy")
 ```
 
 Wow. None of the cues did very well on their own. Good performing cues should be in the top left hand of the graph (i.e.; low false alarm rate and high hit rate). It looks like the best cue was `sex`, followed by `class`. `age` was a pretty terrible cue.
@@ -48,7 +49,7 @@ To plot the tree from an fft object, use `plot()`. You can add some stylistic ar
 
 ```{r, fig.width = 6, fig.height = 6}
 plot(titanic.fft, 
-     description = "Titanic", 
+     main = "Titanic", 
      decision.names = c("Died", "Survived"))
 ```
 
@@ -82,7 +83,7 @@ Here is the best training tree applied to the training data:
 ```{r, fig.width = 6, fig.height = 6}
 plot(titanic.pred.fft,
      which.tree = "best.train", 
-     description = "Titanic", 
+     main = "Titanic", 
      decision.names = c("Died", "Survived"))
 ```
 
@@ -94,7 +95,7 @@ Now let's apply the same tree to the test dataset:
 plot(titanic.pred.fft,
      which.tree = "best.train",
      data = "test", 
-     description = "Titanic", 
+     main = "Titanic", 
      decision.names = c("Died", "Survived"))
 ```
 
@@ -104,7 +105,7 @@ Performance has actually increased in this test data (e.g.; the hit-rate is up t
 plot(titanic.pred.fft,
      which.tree = 4,
      data = "test", 
-     description = "Titanic", 
+     main = "Titanic", 
      decision.names = c("Died", "Survived"))
 ```
 

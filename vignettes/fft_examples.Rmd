@@ -45,7 +45,7 @@ mushrooms.fft
 First, let's look at the individual cue training accuracies with `showcues`:
 
 ```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
-showcues(mushrooms.fft)
+showcues(mushrooms.fft, main = "Mushrooms")
 ```
 
 It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final FFT to have no more than these two cues:

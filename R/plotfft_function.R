@@ -6,7 +6,7 @@
 #' @param data Either a dataframe, or one of two strings 'best.train' or 'best.test'
 #' @param which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
-#' @param description An optional string used as a plot label.
+#' @param main The main plot label.
 #' @param ... Additional arguments passed on to plot()
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -26,7 +26,7 @@ plot.fft <- function(
   x = NULL,
   data = "train",
   which.tree = "best.train", # Either a number, or "best.train" or "best.test"
-  description = "Data",
+  main = "Data",
   decision.names = c("Noise", "Signal"),
   ...
 ) {
@@ -570,7 +570,7 @@ if(is.null(x) == F) {
       rect(.33, .8, .67, 1.2, col = "white", border = NA)
 
 
-      text(x = .5, y = .95, description, cex = panel.title.cex)
+      text(x = .5, y = .95, main, cex = panel.title.cex)
 
 
        text(x = .5, y = .80, paste("N = ", n.cases, "", sep = ""), cex = 1.25)
@@ -1048,7 +1048,7 @@ if(is.null(x) == F) {
     subheader.y.loc <- .9
 
     header.cex <- 1.2
-    subheader.cex <- .8
+    subheader.cex <- .9
 
 
 
@@ -1501,22 +1501,22 @@ if(is.null(x) == F) {
 
       # Labels
 
-      text(final.classtable.x.loc[1] + .15 * diff(final.classtable.x.loc),
-           final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
-           "CR", cex = 1, font = 3)
+      text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
+           final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+           "Cor Rej", cex = 1, font = 3, adj = 0)
 
-      text(final.classtable.x.loc[1] + .65 * diff(final.classtable.x.loc),
-           final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
-           "MI", cex = 1, font = 3)
+      text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
+           final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+           "Miss", cex = 1, font = 3, adj = 0)
 
 
-      text(final.classtable.x.loc[1] + .15 * diff(final.classtable.x.loc),
+      text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
            final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
-           "FA", cex = 1, font = 3)
+           "False Al", cex = 1, font = 3, adj = 0)
 
-      text(final.classtable.x.loc[1] + .65 * diff(final.classtable.x.loc),
+      text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
            final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
-           "H", cex = 1, font = 3)
+           "Hit", cex = 1, font = 3, adj = 0)
 
 
     }
