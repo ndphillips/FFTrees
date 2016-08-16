@@ -22,12 +22,23 @@ Here are some examples of FFTs created from datasets in the `FFTrees` package
 
 The `mushrooms` dataset contains data about mushrooms (see `?mushrooms` for details). The goal of our model is to predict which mushrooms are poisonous based on `r ncol(mushrooms) - 1` cues ranging from the mushroom's odor, color, etc. 
 
+Let's create some ffts. We'll separate the data into a 50% training and a 50% testing dataset with the `train.p = .5` argument:
+
 ```{r}
-set.seed(100) # For replicability
+set.seed(100) # For replicability of the training / test data split
+
 mushrooms.fft <- fft(formula = poisonous ~.,
                      data = mushrooms,
                      train.p = .5)
 ```
+
+Here's basic information about the trees:
+
+```{r}
+mushrooms.fft
+```
+
+[Cool beans.](https://goo.gl/B7YDuC)
 
 ### mushrooms cue accuracies
 
