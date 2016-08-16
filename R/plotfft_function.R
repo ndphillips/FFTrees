@@ -1648,8 +1648,6 @@ par("xpd" = T)
            labels = roc.order[-(which(roc.order == which.tree))], cex = 1, col = gray(.2))
 
 
-
-
       # Add large point for plotted tree
 
       points(final.roc.x.loc[1] + fft.far.vec[which.tree] * final.roc.dim[1],
@@ -1662,6 +1660,24 @@ par("xpd" = T)
             labels = which.tree, cex = 1, col = gray(.2))
 
 
+
+
+      par("xpd" = F)
+
+      points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
+             final.roc.y.loc[1] + .8 * final.roc.dim[2],
+             pch = 21, cex = 2, col = transparent("green", .3),
+             bg = transparent("green", .7))
+
+      points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
+             final.roc.y.loc[1] + .8 * final.roc.dim[2],
+             pch = "#", cex = .9, col = gray(.2))
+
+      text(final.roc.x.loc[1] + 1.13 * final.roc.dim[1],
+           final.roc.y.loc[1] + .8 * final.roc.dim[2],
+           labels = " FFT", adj = 0, cex = .9)
+
+      par("xpd" = T)
 
 
     }
