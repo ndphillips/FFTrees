@@ -8,6 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+test
 
 
 ```{r, echo = F, message = F, results = 'hide'}
