@@ -130,7 +130,7 @@ plot(iris.fft,
      data = "test", 
      description = "Iris FFT",
      decision.names = c("Not V", "Virginica"),
-     which.tree = 6     # Show tree #6
+     tree = 6     # Show tree #6
      )
 ```
 

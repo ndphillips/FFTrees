@@ -4,7 +4,7 @@
 #' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the fft() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
 #' @param x A fft object created from fft()
 #' @param data Either a dataframe, or one of two strings 'best.train' or 'best.test'
-#' @param which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
+#' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
 #' @param main The main plot label.
 #' @param ... Additional arguments passed on to plot()
@@ -25,7 +25,7 @@
 plot.fft <- function(
   x = NULL,
   data = "train",
-  which.tree = "best.train", # Either a number, or "best.train" or "best.test"
+  tree = "best.train", # Either a number, or "best.train" or "best.test"
   main = "Data",
   decision.names = c("Noise", "Signal"),
   ...
@@ -38,7 +38,7 @@ plot.fft <- function(
   #  x <- tree.64
   # #
   # data = "train"
-  # which.tree = "best.train" # Either a number, or "best.train" or "best.test"
+  # tree = "best.train" # Either a number, or "best.train" or "best.test"
   # description = "Data"
   # decision.names = c("Noise", "Signal")
 
@@ -70,15 +70,15 @@ plot.fft <- function(
 
   }
 
-  if(which.tree == "best.test" & is.null(x$data.test)) {
+  if(tree == "best.test" & is.null(x$data.test)) {
 
-    print("You wanted to plot the best test tree (which.tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
+    print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
 
-    which.tree <- "best.train"
+    tree <- "best.train"
 
   }
 
-  if(is.numeric(which.tree) & which.tree %in% 1:nrow(x$fft.stats) == F) {
+  if(is.numeric(tree) & tree %in% 1:nrow(x$fft.stats) == F) {
 
     stop(paste("You asked for a tree that does not exist. This object has", nrow(x$fft.stats), "trees"))
 
@@ -100,17 +100,17 @@ if(is.null(x) == F) {
 
   n.trees <- nrow(x$fft.stats)
 
-  if(is.null(which.tree)) {which.tree <- "best.train"}
+  if(is.null(tree)) {tree <- "best.train"}
 
-  if(which.tree == "best.train") {
+  if(tree == "best.train") {
 
-    which.tree <- which(x$fft.stats$v.train == max(x$fft.stats$v.train))[1]
+    tree <- which(x$fft.stats$v.train == max(x$fft.stats$v.train))[1]
 
   }
 
-  if(which.tree == "best.test") {
+  if(tree == "best.test") {
 
-    which.tree <- which(x$fft.stats$v.test == max(x$fft.stats$v.test))[1]
+    tree <- which(x$fft.stats$v.test == max(x$fft.stats$v.test))[1]
   }
 
 
@@ -168,7 +168,7 @@ if(is.null(x) == F) {
   output <- predict.fft(object = x,
                         data = data.mf,
                         formula = x$formula,
-                        which.tree = which.tree
+                        tree = tree
   )
 
 
@@ -242,6 +242,17 @@ if(is.null(x) == F) {
 
         level.df$level.name.t <-  strtrim(level.df$level.name, max.label.length)
 
+        if(n.levels == 1) {
+
+          label.box.text.cex <- 1.7
+          break.label.cex <- 1.5
+          plot.height <- 12
+          plot.width <- 16
+          ball.box.width <- 10
+
+        }
+
+
 
         if(n.levels == 2) {
 
@@ -255,10 +266,6 @@ if(is.null(x) == F) {
 
 
         # Label boxes
-
-
-
-
 
         if(n.levels == 3) {
 
@@ -648,7 +655,7 @@ if(is.null(x) == F) {
       par(xpd = T)
       segments(-plot.width, 0, - plot.width * .2, 0, col = gray(.2, .5), lwd = .5, lty = 1)
       segments(plot.width, 0, plot.width * .2, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-      text(x = 0, y = 0, paste("Tree (#", which.tree, ")", sep = ""), cex = panel.title.cex)
+      text(x = 0, y = 0, paste("Tree (#", tree, ")", sep = ""), cex = panel.title.cex)
 
       par(xpd = F)
 
@@ -1114,7 +1121,7 @@ if(is.null(x) == F) {
       new.stats <- predict.fft(object = x,
                                formula = x$formula,
                                data = data,
-                               which.tree = 1:n.trees)
+                               tree = 1:n.trees)
 
       final.auc <- new.stats$trees.auc
       fft.hr.vec <- new.stats$trees$hr
@@ -1631,33 +1638,33 @@ par("xpd" = T)
       fft.hr.vec.ord <- fft.hr.vec[roc.order]
       fft.far.vec.ord <- fft.far.vec[roc.order]
 
-      # Add segments and points for all trees but which.tree
+      # Add segments and points for all trees but tree
 
       segments(final.roc.x.loc[1] + c(0, fft.far.vec.ord) * final.roc.dim[1],
                final.roc.y.loc[1] + c(0, fft.hr.vec.ord) * final.roc.dim[2],
                final.roc.x.loc[1] + c(fft.far.vec.ord, 1) * final.roc.dim[1],
                final.roc.y.loc[1] + c(fft.hr.vec.ord, 1) * final.roc.dim[2], lwd = 1, col = gray(.5, .5))
 
-      points(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == which.tree))] * final.roc.dim[1],
-             final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == which.tree))] * final.roc.dim[2],
+      points(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * final.roc.dim[1],
+             final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * final.roc.dim[2],
              pch = 21, cex = 2.5, col = transparent("green", .3),
              bg = transparent("white", .5))
 
-      text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == which.tree))] * final.roc.dim[1],
-           final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == which.tree))] * final.roc.dim[2],
-           labels = roc.order[-(which(roc.order == which.tree))], cex = 1, col = gray(.2))
+      text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * final.roc.dim[1],
+           final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * final.roc.dim[2],
+           labels = roc.order[-(which(roc.order == tree))], cex = 1, col = gray(.2))
 
 
       # Add large point for plotted tree
 
-      points(final.roc.x.loc[1] + fft.far.vec[which.tree] * final.roc.dim[1],
-             final.roc.y.loc[1] + fft.hr.vec[which.tree] * final.roc.dim[2],
+      points(final.roc.x.loc[1] + fft.far.vec[tree] * final.roc.dim[1],
+             final.roc.y.loc[1] + fft.hr.vec[tree] * final.roc.dim[2],
              pch = 21, cex = 2.5, col = transparent("green", .3),
              bg = transparent("green", .7), lwd = 3)
 
-      text(final.roc.x.loc[1] + fft.far.vec[which.tree] * final.roc.dim[1],
-             final.roc.y.loc[1] + fft.hr.vec[which.tree] * final.roc.dim[2],
-            labels = which.tree, cex = 1, col = gray(.2))
+      text(final.roc.x.loc[1] + fft.far.vec[tree] * final.roc.dim[1],
+             final.roc.y.loc[1] + fft.hr.vec[tree] * final.roc.dim[2],
+            labels = tree, cex = 1, col = gray(.2))
 
 
 

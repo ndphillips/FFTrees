@@ -4,7 +4,7 @@
 \alias{plot.fft}
 \title{Draws (and creates) a FFT.}
 \usage{
-\method{plot}{fft}(x = NULL, data = "train", which.tree = "best.train",
+\method{plot}{fft}(x = NULL, data = "train", tree = "best.train",
   main = "Data", decision.names = c("Noise", "Signal"), ...)
 }
 \arguments{
@@ -12,7 +12,7 @@
 
 \item{data}{Either a dataframe, or one of two strings 'best.train' or 'best.test'}
 
-\item{which.tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
+\item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
 \item{main}{The main plot label.}
 
