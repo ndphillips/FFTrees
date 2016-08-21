@@ -216,7 +216,7 @@ if(is.null(object$lr.model) == F) {
 
 # Remove cues with no variance
 
-train.df.ex <- sapply(1:ncol(data), FUN = function(x) {length(unique(data[,x]))})
+train.df.ex <- sapply(1:ncol(data), FUN = function(x) {length(unique(data[[x]]))})
 data.lr <- data[,train.df.ex > 1]
 
 # Remove cases with new factor values
