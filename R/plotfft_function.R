@@ -232,119 +232,112 @@ if(is.null(x) == F) {
 
 
 
-    # -------------------------
-    # Define plotting parameters
-    # --------------------------
-    {
-      {
+# -------------------------
+# Define plotting parameters
+# --------------------------
+{
+{
 
-        panel.title.cex <- 2
+panel.title.cex <- 2
 
-        level.df$level.name.t <-  strtrim(level.df$level.name, max.label.length)
+level.df$level.name.t <-  strtrim(level.df$level.name, max.label.length)
 
-        if(n.levels == 1) {
+# Label boxes
 
-          label.box.text.cex <- 1.7
-          break.label.cex <- 1.5
-          plot.height <- 12
-          plot.width <- 16
-          ball.box.width <- 10
+if(n.levels == 1) {
 
-        }
+  label.box.text.cex <- 1.7
+  break.label.cex <- 1.5
 
+}
 
+if(n.levels == 2) {
 
-        if(n.levels == 2) {
+  label.box.text.cex <- 1.7
+  break.label.cex <- 1.5
 
-          label.box.text.cex <- 1.7
-          break.label.cex <- 1.5
-          plot.height <- 12
-          plot.width <- 16
-          ball.box.width <- 10
-
-        }
+}
 
 
-        # Label boxes
+if(n.levels == 3) {
 
-        if(n.levels == 3) {
+  label.box.text.cex <- 1.5
+  break.label.cex <- 1.25
 
-          label.box.text.cex <- 1.5
-          break.label.cex <- 1.25
+}
 
-        }
+if(n.levels == 4) {
 
-        if(n.levels == 4) {
+  label.box.text.cex <- 1.25
+  break.label.cex <- 1
 
-          label.box.text.cex <- 1.25
-          break.label.cex <- 1
+}
 
-        }
+if(n.levels >= 5) {
 
-        if(n.levels > 4) {
+  label.box.text.cex <- 1
+  break.label.cex <- .75
 
-          label.box.text.cex <- 1
-          break.label.cex <- .75
-
-        }
+}
 
 
-
-        label.box.height <- 2
-        label.box.width <- 5
-
-
-        # Node Segments
-
-        segment.lty <- 1
-        segment.lwd <- 1
+ball.box.width <- 10
+label.box.height <- 2
+label.box.width <- 5
 
 
-        continue.segment.lwd <- 1
-        continue.segment.lty <- 1
+# Node Segments
 
-        exit.segment.lwd <- 1
-        exit.segment.lty <- 1
+segment.lty <- 1
+segment.lwd <- 1
 
-        decision.node.cex <- 4
-        exit.node.cex <- 4
+continue.segment.lwd <- 1
+continue.segment.lty <- 1
 
-        if(n.levels == 3) {plot.height <- 15}
-        if(n.levels == 4) {plot.height <- 19}
-        if(n.levels == 5) {plot.height <- 23}
+exit.segment.lwd <- 1
+exit.segment.lty <- 1
 
+decision.node.cex <- 4
+exit.node.cex <- 4
 
-        #plot.height <- 5 * (n.levels) + 1
-
-        if(n.levels == 3) {plot.width <- 20}
-        if(n.levels == 4) {plot.width <- 24}
-        if(n.levels == 5) {plot.width <- 28}
-
-
-        #plot.width <- 8 * (n.levels)
+if(n.levels == 2) {plot.height <- 12}
+if(n.levels == 3) {plot.height <- 15}
+if(n.levels == 4) {plot.height <- 19}
+if(n.levels >= 5) {plot.height <- 23}
 
 
-        # Colors
+#plot.height <- 5 * (n.levels) + 1
 
-        exit.node.bg <- "white"
+if(n.levels == 2) {plot.width <- 16}
+if(n.levels == 3) {plot.width <- 20}
+if(n.levels == 4) {plot.width <- 24}
+if(n.levels >= 5) {plot.width <- 28}
 
-        error.colfun <- circlize::colorRamp2(c(0, 50, 100),
-                                   colors = c("white", "red", "black"))
 
-        correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
-                                   colors = c("white", "green", "black"))
+#plot.width <- 8 * (n.levels)
 
-        error.bg <- transparent(error.colfun(25), .3)
-        error.border <-  transparent(error.colfun(75), .3)
-        correct.bg <- transparent(correct.colfun(25), .3)
-        correct.border <-  transparent(correct.colfun(75), .3)
 
-        max.cex <- 6
-        min.cex <- 1
+# Colors
 
-        exit.node.pch <- 21
+exit.node.bg <- "white"
 
-        decision.node.pch <- NA_integer_
+error.colfun <- circlize::colorRamp2(c(0, 50, 100),
+                           colors = c("white", "red", "black"))
+
+correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
+                           colors = c("white", "green", "black"))
+
+error.bg <- transparent(error.colfun(25), .3)
+error.border <-  transparent(error.colfun(75), .3)
+correct.bg <- transparent(correct.colfun(25), .3)
+correct.border <-  transparent(correct.colfun(75), .3)
+
+max.cex <- 6
+min.cex <- 1
+
+exit.node.pch <- 21
+
+decision.node.pch <- NA_integer_
 
 
         # balls
