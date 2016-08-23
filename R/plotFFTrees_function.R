@@ -1,12 +1,13 @@
 #' Draws a FFTrees object.
 #'
 #' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the FFTrees() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
-#' @param x A FFTrees object created from FFTrees()
-#' @param data Either a dataframe, or one of two strings 'best.train' or 'best.test'
+#' @param x A FFTrees object created from \code{"FFTrees()"}
+#' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
 #' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
-#' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
+#' @param decision.names A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param main The main plot label.
-#' @param ... Additional arguments passed on to plot()
+#' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
+#' @param ... Currently ignored.
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
@@ -24,7 +25,8 @@
 plot.FFTrees <- function(
   x = NULL,
   data = "train",
-  tree = "best.train", # Either a number, or "best.train" or "best.test"
+  which.tree = NULL,
+  tree = "best.train",
   main = "Data",
   decision.names = c("Noise", "Signal"),
   ...
@@ -60,7 +62,15 @@ level.names <- NULL
   def.par <- par(no.readonly = TRUE)
 }
 
-# Check for problems
+# Check for problems and depreciated arguments
+
+if(is.null(which.tree) == F) {
+
+message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
+
+tree <- which.tree
+
+}
 
 if(class(x) != "FFTrees" & is.null(level.names)) {
 
