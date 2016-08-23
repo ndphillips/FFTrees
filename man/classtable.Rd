@@ -2,7 +2,7 @@
 % Please edit documentation in R/classtable_function.R
 \name{classtable}
 \alias{classtable}
-\title{Calculates classification statistics from binary prediction and truth vectors}
+\title{Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors}
 \usage{
 classtable(prediction.v, criterion.v)
 }
@@ -12,6 +12,6 @@ classtable(prediction.v, criterion.v)
 \item{criterion.v}{A binary vector of criterion (true) values}
 }
 \description{
-Calculates classification statistics from binary prediction and truth vectors
+Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 }
 

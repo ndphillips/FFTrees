@@ -16,7 +16,7 @@
 
 \item{formula}{a formula}
 
-\item{tree}{tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
+\item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
 \item{level.name.v}{A character indicating the names of the levels in the tree separated by ;. For example "age;sex;occupation"}
 

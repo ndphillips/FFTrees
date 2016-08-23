@@ -1,4 +1,4 @@
-#' Calculates AUC (Area under the Curve)
+#' Calculates AUC (Area under the Curve) using trapezoidal approximation
 #' @param hr.v a vector of hit rates
 #' @param far.v A vector of false alarm rates
 #' @export

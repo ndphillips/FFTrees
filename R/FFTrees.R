@@ -1,14 +1,13 @@
-#' Create Fast and Frugal Trees (FFTrees).
+#' Create Fast and Frugal Trees (FFTrees)
 #'
 #' @param formula A formula
 #' @param data A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param data.test (Optional) A model testing dataset (same format as data.train)
 #' @param max.levels A number indicating the maximum number of levels considered for the tree.
-#' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test and crit.test are not specified by the user.
-#' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.
+#' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test is not specified by the user.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param do.cart,do.lr logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.
-#' @param verbose A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slow...
+#' @param verbose A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slowly...
 #' @importFrom stats anova predict glm as.formula formula
 #' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
 #' @export
@@ -22,7 +21,6 @@ FFTrees <- function(
                 rank.method = "m",
                 verbose = F,
                 max.levels = 4,
-                hr.weight = .5,
                 do.cart = T,
                 do.lr = T
 ) {
@@ -250,7 +248,6 @@ if(setequal(unique(data[,1]), c(0, 1)) == F) {
 
 cue.accuracies.train <- cuerank(cue.df = cue.train,
                                 criterion.v = crit.train,
-                                hr.weight = hr.weight,
                                 tree.criterion = tree.criterion,
                                 numthresh.method = numthresh.method,
                                 rounding = rounding,
@@ -266,7 +263,6 @@ if(is.null(data.test) == F) {
 
 cue.accuracies.test <- cuerank(cue.df = cue.test,
                                 criterion.v = crit.test,
-                                hr.weight = hr.weight,
                                 tree.criterion = tree.criterion,
                                 numthresh.method = numthresh.method,
                                 rounding = rounding,
@@ -298,7 +294,6 @@ final.result <- grow.FFTrees(
                          formula = formula,
                          data.train = data.train,
                          data.test = data.test,
-                         hr.weight = hr.weight,
                          rank.method = rank.method,
                          numthresh.method = numthresh.method,
                          stopping.rule = stopping.rule,

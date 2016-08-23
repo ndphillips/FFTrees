@@ -94,7 +94,7 @@ if(is.numeric(tree) & tree %in% 1:nrow(x$tree.stats) == F) {
 
 if(class(data) == "character") {
 
-  if(data == "test" & is.null(x$data.test)) {stop("You asked to plot the test data but there are no test data in the fft object")}
+  if(data == "test" & is.null(x$data.test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
 
 }
 

@@ -4,9 +4,9 @@
 \alias{grow.FFTrees}
 \title{Grows fast and frugal trees}
 \usage{
-grow.FFTrees(formula, data.train, data.test = NULL, hr.weight = 0.5,
-  rank.method = "m", numthresh.method = "o", max.levels = 4,
-  stopping.rule = "exemplars", stopping.par = 0.1, verbose = F)
+grow.FFTrees(formula, data.train, data.test = NULL, rank.method = "m",
+  numthresh.method = "o", max.levels = 4, stopping.rule = "exemplars",
+  stopping.par = 0.1, verbose = F)
 }
 \arguments{
 \item{formula}{a formula}
@@ -14,8 +14,6 @@ grow.FFTrees(formula, data.train, data.test = NULL, hr.weight = 0.5,
 \item{data.train}{A training dataset}
 
 \item{data.test}{A testing dataset}
-
-\item{hr.weight}{A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.}
 
 \item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 

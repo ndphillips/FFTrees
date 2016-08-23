@@ -2,7 +2,7 @@
 % Please edit documentation in R/auc_function.R
 \name{auc}
 \alias{auc}
-\title{Calculates AUC (Area under the Curve)}
+\title{Calculates AUC (Area under the Curve) using trapezoidal approximation}
 \usage{
 auc(hr.v, far.v)
 }
@@ -12,6 +12,6 @@ auc(hr.v, far.v)
 \item{far.v}{A vector of false alarm rates}
 }
 \description{
-Calculates AUC (Area under the Curve)
+Calculates AUC (Area under the Curve) using trapezoidal approximation
 }
 

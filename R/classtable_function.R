@@ -1,4 +1,4 @@
-#' Calculates classification statistics from binary prediction and truth vectors
+#' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 #' @param prediction.v A binary vector of predictions
 #' @param criterion.v A binary vector of criterion (true) values
 #' @importFrom stats qnorm

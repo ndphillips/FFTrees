@@ -2,7 +2,7 @@
 % Please edit documentation in R/cartpred_function.R
 \name{cart.pred}
 \alias{cart.pred}
-\title{Calculates predictions from CART}
+\title{Calculates predictions from CART using the rpart package}
 \usage{
 cart.pred(formula, data.train, data.test = NULL)
 }
@@ -14,6 +14,6 @@ cart.pred(formula, data.train, data.test = NULL)
 \item{data.test}{A testing dataset}
 }
 \description{
-Calculates predictions from CART
+Calculates predictions from CART using the rpart package
 }
 

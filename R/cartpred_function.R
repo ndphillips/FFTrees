@@ -1,4 +1,4 @@
-#' Calculates predictions from CART
+#' Calculates predictions from CART using the rpart package
 #' @param formula a formula
 #' @param data.train A training dataset
 #' @param data.test A testing dataset

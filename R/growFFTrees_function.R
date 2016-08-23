@@ -4,7 +4,6 @@
 #' @param data.test A testing dataset
 #' @param max.levels The maximum number of levels in the tree(s)
 #' @param verbose A logical value indicating whether or not to display progress
-#' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both. Different trees will be constructed for each weight in the vector.
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
@@ -19,7 +18,6 @@ grow.FFTrees <- function(
                      formula,
                      data.train,
                      data.test = NULL,
-                     hr.weight = .5,
                      rank.method = "m",
                      numthresh.method = "o",
                      max.levels = 4,
@@ -32,6 +30,7 @@ grow.FFTrees <- function(
   exit.method <- "fixed"
   correction <- .25
   rounding <- 2
+  hr.weight <- .5
 
 
   # Set up dataframes
@@ -65,7 +64,6 @@ grow.FFTrees <- function(
 
   cue.accuracies.train <- cuerank(cue.df = cue.train,
                                   criterion.v = crit.train,
-                                  hr.weight = hr.weight,
                                   tree.criterion = tree.criterion,
                                   numthresh.method = numthresh.method,
                                   rounding = rounding,
@@ -221,7 +219,6 @@ grow.FFTrees <- function(
 
           cue.accuracies.current <-  cuerank(cue.df = cue.train.i.temp,
                                              criterion.v = criterion.v.i[remaining.exemplars],
-                                             hr.weight = hr.weight,
                                              tree.criterion = tree.criterion,
                                              numthresh.method = numthresh.method,
                                              rounding = rounding
