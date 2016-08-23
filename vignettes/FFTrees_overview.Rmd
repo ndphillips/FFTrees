@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{Overview FFTrees}
+  %\VignetteIndexEntry{FFTrees package overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,10 +16,10 @@ library(FFTrees)
 ```
 
 
-## Fast and Frugal Trees (FFTs)
+## Fast and Frugal Trees (FFTrees)
 
 ```{r, fig.width = 6, fig.height = 6, echo = T, fig.align='center', echo = F}
-bcancer.fft <- fft(formula = diagnosis ~.,
+bcancer.fft <- FFTrees(formula = diagnosis ~.,
                    data = breastcancer
                  )
 
@@ -28,19 +28,19 @@ plot(bcancer.fft,
      decision.names = c("Absent", "Present"))
 ```
 
-What is a Fast and Frugal Tree (FFT)? An FFT is a set of rules for making decisions based on very little information (usually 1 to 5 pieces). For example, the tree above uses data from breast cancer patients to decide whether a woman truly has breast cancer or not based on only two pieces of information.
+What is a Fast and Frugal Tree (FFT)? An FFT is a set of rules for making decisions based on very little information (usually 5 or fewer). For example, the tree above uses data from breast cancer patients to decide whether a woman truly has breast cancer or not based on only two pieces of information.
 
 FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently prefereable to more complex decision strategies (such as Logistic Regression) because they rarely overfit data [@gigerenzer2009homo] and are easy to interpret and impliment in real-world decision tasks [@marewski2012heuristic]. They have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
 
-The purpose of the `FFTrees` package is to produce, compare, and display (FFTs). The main function in the package is `fft()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. For additional details and examples, check out the vignettes below:
+The purpose of the `FFTrees` package is to produce, compare, and display (FFTrees). The main function in the package is `FFTrees)` which takes formula `formula` and dataset `data` arguments and returns several FFTrees which attempt to classify training cases into criterion classes. For additional details and examples, check out the vignettes below:
 
 ## Vignettes
 
 To learn more about the package, click the following vignettes:
 
-- [Creating FFTs with fft()](fft_function.html)
-- [Visualizing FFTs with plot()](fft_plot.html)
-- [Lots of example FFTs](fft_examples.html)
+- [Creating FFTs with FFTrees)](FFTrees_function.html)
+- [Visualizing FFTs with plot()](FFTrees_plot.html)
+- [Lots of example FFTs](FFTrees_examples.html)
 
 ## Datasets
 

@@ -14,7 +14,7 @@
 #' @export
 #'
 
-fft <- function(
+FFTrees <- function(
                 formula = NULL,
                 data = NULL,
                 data.test = NULL,
@@ -199,7 +199,7 @@ if(setequal(unique(data[,1]), c(0, 1)) == F) {
 #   training.ex <- train.cases.df[,1] == 1
 #   testing.ex <- test.cases.df[,1] == 1
 #
-#  test.result.ls[[1]] <-  grow.ffts(
+#  test.result.ls[[1]] <-  grow.FFTrees(
 #                             formula = formula,
 #                             data.train = data[training.ex,],
 #                             data.test = data[testing.ex,],
@@ -294,7 +294,7 @@ cue.accuracies <- merge(cue.accuracies.train, cue.accuracies.test)
 
 # GROW THE TREES!
 {
-final.result <- grow.ffts(
+final.result <- grow.FFTrees(
                          formula = formula,
                          data.train = data.train,
                          data.test = data.test,
@@ -332,7 +332,7 @@ if(is.null(final.result$decision.test) == F) {
 }
 
 
-fft.stats <- final.result$trees
+tree.stats <- final.result$trees
 fft.auc <- final.result$auc
 
 
@@ -403,7 +403,7 @@ output.fft <- list(
                   "data.train" = data.train,
                   "data.test" = data.test,
                   "cue.accuracies" = cue.accuracies,
-                  "fft.stats" = fft.stats,
+                  "tree.stats" = tree.stats,
                   "lr.stats" = lr.stats,
                   "cart.stats" = cart.stats,
                   "auc" = auc,
@@ -415,7 +415,7 @@ output.fft <- list(
                   "levelout.test" = final.result$levelout.test
 )
 
-class(output.fft) <- "fft"
+class(output.fft) <- "FFTrees"
 
   return(output.fft)
 

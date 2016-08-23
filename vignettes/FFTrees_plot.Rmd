@@ -1,10 +1,10 @@
 ---
-title: "Visualising trees"
+title: "Visualising FFTrees"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{Visualizing FFTs with plot()}
+  %\VignetteIndexEntry{Visualizing FFTrees with plot()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,7 +25,7 @@ The titanic dataset contains survival statistics of passengers on the Titanic. F
 First, let's create an fft object called `titanic.fft` from the `titanic` dataset.
 
 ```{r}
-titanic.fft <- fft(
+titanic.fft <- FFTrees(
   formula = survived ~.,
   data = titanic
   )
@@ -67,13 +67,13 @@ You can specify additional arguments to the `plot()` command that will change wh
 
 - `tree`: Which tree do you want to plot? You can specify an integer such as `tree = 2` will plot the tree #2 in the fft object, or `tree = "best.train"` which will use the best training tree.
 
-- `data`: Which data do you want to apply the tree to? You can specify `data = "train"` or `data = "test"` to use the training or testing datasets stored in the `fft` object. Alternatively, you can specify a new dataset (e.g.; `data = test.data`. If you specify a new dataset, the function will automatically apply the tree to the new data and calculate performance statitics (using the `predict.fft()` function).
+- `data`: Which data do you want to apply the tree to? You can specify `data = "train"` or `data = "test"` to use the training or testing datasets stored in the `fft` object. Alternatively, you can specify a new dataset (e.g.; `data = test.data`. If you specify a new dataset, the function will automatically apply the tree to the new data and calculate performance statitics (using the `predict.FFTrees()` function).
 
 For example, let's repeat the previous analysis, but now we'll create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50% training set, and a 50% testing set:
 
 ```{r}
 set.seed(100)
-titanic.pred.fft <- fft(formula = survived ~.,
+titanic.pred.fft <- FFTrees(formula = survived ~.,
                         data = titanic,
                         train.p = .5)
 ```

@@ -15,7 +15,7 @@
 #'
 
 
-grow.ffts <- function(
+grow.FFTrees <- function(
                      formula,
                      data.train,
                      data.test = NULL,
@@ -27,8 +27,6 @@ grow.ffts <- function(
                      stopping.par = .1,
                      verbose = F
 ) {
-
-
 
   tree.criterion <- "v"
   exit.method <- "fixed"
@@ -459,7 +457,7 @@ grow.ffts <- function(
 
       for(tree.i in 1:n.trees) {
 
-        tree.i.pred <- predict.fft(
+        tree.i.pred <- predict.FFTrees(
                                   formula = formula,
                                   data = data.test,
                                   level.name.v = trees$level.name[tree.i],
@@ -472,7 +470,7 @@ grow.ffts <- function(
         levelout.test[,tree.i] <- unlist(tree.i.pred$levelout)
         decision.test[,tree.i] <- unlist(tree.i.pred$decision)
 
-        trees[tree.i, paste(c("n", "hi", "mi", "fa", "cr", "hr", "far", "v", "dprime"), ".test", sep = "")] <- c(n.test, tree.i.pred$fft.stats[c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")])
+        trees[tree.i, paste(c("n", "hi", "mi", "fa", "cr", "hr", "far", "v", "dprime"), ".test", sep = "")] <- c(n.test, tree.i.pred$tree.stats[c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")])
       }
 
 
