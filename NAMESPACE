@@ -2,9 +2,8 @@
 
 S3method(plot,FFTrees)
 S3method(predict,FFTrees)
-S3method(predict,fft)
-S3method(print,fft)
-S3method(summary,fft)
+S3method(print,FFTrees)
+S3method(summary,FFTrees)
 export(FFTrees)
 export(FFTrees.guide)
 export(auc)

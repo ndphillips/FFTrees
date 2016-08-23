@@ -457,7 +457,7 @@ grow.FFTrees <- function(
 
       for(tree.i in 1:n.trees) {
 
-        tree.i.pred <- predict.fft(
+        tree.i.pred <- predict.FFTrees(
                                   formula = formula,
                                   data = data.test,
                                   level.name.v = trees$level.name[tree.i],

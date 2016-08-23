@@ -28,7 +28,7 @@ The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT
 
 # See the vignette for details
 
-vignette("fft_plot", package = "FFTrees")
+vignette("FFTrees_plot", package = "FFTrees")
 
 
 

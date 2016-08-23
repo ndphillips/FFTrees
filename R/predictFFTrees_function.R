@@ -3,7 +3,7 @@
 #' @param object (M) An FFTrees object created from the FFTrees() function.
 #' @param data (M) An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param formula a formula
-#' @param which.tree which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
+#' @param tree tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param level.name.v A character indicating the names of the levels in the tree separated by ;. For example "age;sex;occupation"
 #' @param level.threshold.v (M) A character indicating the level thresholds separated by ;. For example "25;female;occupation"
 #' @param level.sigdirection.v (M) A character vector of length n indicating the direction for which exemplars are classified as signals for each cue. Values must be in the set "<" (strictly less than), "<=" (less than or equal to), "=" (equal), "!=" (unequal), ">=" (greater than or equal to), or ">" (strictly greater than)/
@@ -17,7 +17,7 @@ predict.FFTrees <- function(
   object = NULL,
   data = NULL,
   formula = NULL,
-  which.tree = NULL,
+  tree = NULL,
   level.name.v = NULL,
   level.threshold.v = NULL,
   level.sigdirection.v = NULL,
@@ -30,7 +30,7 @@ predict.FFTrees <- function(
 #   object = x
 #   data = data.mf
 #   formula = x$formula
-#   which.tree = which.tree
+#   tree = tree
 #
 #
 #   level.name.v = NULL
@@ -45,7 +45,7 @@ predict.FFTrees <- function(
 #   object = x
 #   data = data.mf
 #   formula = x$formula
-#   which.tree = which.tree
+#   tree = tree
 #
 #   level.name.v = NULL
 #   level.threshold.v = NULL
@@ -54,20 +54,20 @@ predict.FFTrees <- function(
 #   level.class.v = NULL
 
 
-  if(is.null(which.tree)) {
+  if(is.null(tree)) {
 
-    if(is.null(object) == F) {which.tree <- 1:nrow(object$tree.stats)}
-    if(is.null(object) == T) {which.tree <- 1}
+    if(is.null(object) == F) {tree <- 1:nrow(object$tree.stats)}
+    if(is.null(object) == T) {tree <- 1}
 
   }
 
   if(is.null(object) == F) {
 
-    level.name.v <- object$tree.stats$level.name[which.tree]
-    level.class.v <- object$tree.stats$level.class[which.tree]
-    level.exit.v <- object$tree.stats$level.exit[which.tree]
-    level.threshold.v <- object$tree.stats$level.threshold[which.tree]
-    level.sigdirection.v <- object$tree.stats$level.sigdirection[which.tree]
+    level.name.v <- object$tree.stats$level.name[tree]
+    level.class.v <- object$tree.stats$level.class[tree]
+    level.exit.v <- object$tree.stats$level.exit[tree]
+    level.threshold.v <- object$tree.stats$level.threshold[tree]
+    level.sigdirection.v <- object$tree.stats$level.sigdirection[tree]
 
     formula <- object$formula
 
@@ -88,15 +88,15 @@ predict.FFTrees <- function(
   # Loop over trees
 
   n.exemplars <- length(crit.train)
-  n.trees <- length(which.tree)
+  n.trees <- length(tree)
   tree.stats <- NULL
 
   decision.df <- as.data.frame(matrix(NA, nrow = n.exemplars, ncol = n.trees))
   levelout.df <- as.data.frame(matrix(NA, nrow = n.exemplars, ncol = n.trees))
 
-  for(tree.i in which.tree) {
+  for(tree.i in tree) {
 
-    tree.index <- which(tree.i == which.tree)
+    tree.index <- which(tree.i == tree)
 
     level.name.i <-  unlist(strsplit(level.name.v[tree.index], ";"))
     level.class.i <-  unlist(strsplit(level.class.v[tree.index], ";"))
@@ -202,8 +202,8 @@ predict.FFTrees <- function(
 
   }
 
-  names(levelout.df) <- paste("tree.", which.tree, sep = "")
-  names(decision.df) <- paste("tree.", which.tree, sep = "")
+  names(levelout.df) <- paste("tree.", tree, sep = "")
+  names(decision.df) <- paste("tree.", tree, sep = "")
 
 
 tree.auc <- matrix(c(NA, auc(hr.v = tree.stats$hr, far.v = tree.stats$far)), nrow = 2, ncol = 1)

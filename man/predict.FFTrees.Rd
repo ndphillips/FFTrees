@@ -5,7 +5,7 @@
 \title{Applies an existing FFTrees object to a new dataset}
 \usage{
 \method{predict}{FFTrees}(object = NULL, data = NULL, formula = NULL,
-  which.tree = NULL, level.name.v = NULL, level.threshold.v = NULL,
+  tree = NULL, level.name.v = NULL, level.threshold.v = NULL,
   level.sigdirection.v = NULL, level.exit.v = NULL, level.class.v = NULL,
   ...)
 }
@@ -16,7 +16,7 @@
 
 \item{formula}{a formula}
 
-\item{which.tree}{which.tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
+\item{tree}{tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
 \item{level.name.v}{A character indicating the names of the levels in the tree separated by ;. For example "age;sex;occupation"}
 

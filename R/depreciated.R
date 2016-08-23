@@ -8,5 +8,5 @@
 #' @export
 fft <- function(...) {
   .Deprecated("FFTrees", "fft was renamed to FFTrees and is now deprecated.")
-  ddiffusion(...)
+  FFTrees(...)
 }
