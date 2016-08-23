@@ -2,7 +2,7 @@
 % Please edit documentation in R/depreciated.R
 \name{fft}
 \alias{fft}
-\title{Depreciated functions}
+\title{Deprecated functions}
 \usage{
 fft(...)
 }
@@ -10,7 +10,7 @@ fft(...)
 \item{...}{arguments passed from the old functions to the new functions}
 }
 \description{
-These functions have been renamed and depreciated in \pkg{FFTrees}:
+These functions have been renamed and deprecated in \pkg{FFTrees}:
 \code{fft()} (use \code{\link{FFTrees}()})
 }
 \keyword{internal}
