@@ -300,6 +300,7 @@ exit.segment.lty <- 1
 decision.node.cex <- 4
 exit.node.cex <- 4
 
+if(n.levels == 1) {plot.height <- 12}
 if(n.levels == 2) {plot.height <- 12}
 if(n.levels == 3) {plot.height <- 15}
 if(n.levels == 4) {plot.height <- 19}
@@ -308,6 +309,7 @@ if(n.levels >= 5) {plot.height <- 23}
 
 #plot.height <- 5 * (n.levels) + 1
 
+if(n.levels == 1) {plot.width <- 14}
 if(n.levels == 2) {plot.width <- 16}
 if(n.levels == 3) {plot.width <- 20}
 if(n.levels == 4) {plot.width <- 24}
