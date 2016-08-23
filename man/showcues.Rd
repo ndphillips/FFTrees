@@ -9,7 +9,7 @@ showcues(x = NULL, which.data = "train", main = NULL, top = 5,
   "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F", "#9A703E7F"))
 }
 \arguments{
-\item{x}{An FFT object}
+\item{x}{An FFTrees object}
 
 \item{which.data}{A string indicating whether or not to show training ("train") or testing ("test") cue accuracies}
 

@@ -1,6 +1,6 @@
 #' Visualizes cue accuracies in a ROC space
 #'
-#' @param x An FFT object
+#' @param x An FFTrees object
 #' @param which.data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
 #' @param main Main plot description
 #' @param top An integer indicating how many of the top cues to highlight

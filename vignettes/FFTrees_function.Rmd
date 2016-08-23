@@ -1,10 +1,10 @@
 ---
-title: "Creating FFTs with fft()"
+title: "Creating FFTrees"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating FFTs with fft()}
+  %\VignetteIndexEntry{Creating FFTrees}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -36,10 +36,10 @@ heartdisease.train <- heartdisease[samples,]
 heartdisease.test <- heartdisease[samples == 0,]
 ```
 
-We'll create a new fft object called `heart.fft` using the `fft()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
+We'll create a new fft object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
 
 ```{r}
-heart.fft <- fft(
+heart.fft <- FFTrees(
   formula = diagnosis ~.,
   data = heartdisease.train,
   data.test = heartdisease.test
@@ -48,7 +48,7 @@ heart.fft <- fft(
 
 ## Elements of an fft object
 
-As you can see, `fft()` returns an object with the fft class
+As you can see, `FFTrees()` returns an object with the fft class
 
 ```{r}
 class(heart.fft)
@@ -143,7 +143,7 @@ If you want to select specific cues for a tree, just include them in the `formul
 For example, the following tree `heart.as.fft` will only consider the cues `sex` and `age`:
 
 ```{r}
-heart.as.fft <- fft(formula = diagnosis ~ age + sex,
+heart.as.fft <- FFTrees(formula = diagnosis ~ age + sex,
                     data = heartdisease
                     )
 ```
@@ -151,7 +151,7 @@ heart.as.fft <- fft(formula = diagnosis ~ age + sex,
 
 ## Plotting trees
 
-Once you've created an fft object using `fft()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
+Once you've created an fft object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
 
 ```{r, fig.width = 6, fig.height = 6}
 plot(heart.fft,
@@ -164,7 +164,7 @@ See the vignette on `plot.fft` `vignette("fft_plot", package = "fft")` for more 
 
 ## Additional arguments
 
-The `fft()` function has several additional arguments than change how trees are built. Note: Not all of these arguments have fully tested yet!
+The `FFTrees()` function has several additional arguments than change how trees are built. Note: Not all of these arguments have fully tested yet!
 
 - `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Settting `train.p = 1` will fit the trees to the entire dataset (with no testing).
 

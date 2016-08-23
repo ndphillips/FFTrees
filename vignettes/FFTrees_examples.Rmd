@@ -1,10 +1,10 @@
 ---
-title: "Examples of FFTs"
+title: "Examples of FFTrees"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Examples of FFTs}
+  %\VignetteIndexEntry{Examples of FFTrees}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,7 @@ library(FFTrees)
 
 # Examples
 
-Here are some examples of FFTs created from datasets in the `FFTrees` package
+Here are some examples of FFTrees created from datasets in the `FFTrees` package
 
 ## Mushrooms
 
@@ -27,7 +27,7 @@ Let's create some ffts. We'll separate the data into a 50% training and a 50% te
 ```{r}
 set.seed(100) # For replicability of the training / test data split
 
-mushrooms.fft <- fft(formula = poisonous ~.,
+mushrooms.fft <- FFTrees(formula = poisonous ~.,
                      data = mushrooms,
                      train.p = .5)
 ```
@@ -68,7 +68,7 @@ Now, let's say that you talk to a mushroom expert who says that we are using the
 
 ```{r}
 set.seed(100) # for replicability
-mushrooms.ring.fft <- fft(formula = poisonous ~ ringtype + ringnum,
+mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                           data = mushrooms,
                           train.p = .5
                           )
@@ -92,7 +92,7 @@ As we can see, this tree did not perform nearly as well as our earlier one. The 
 The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to predict which flowers are of the class Virginica
 
 ```{r}
-iris.fft <- fft(
+iris.fft <- FFTrees(
   formula = virginica ~.,
   data = iris,
   train.p = .5

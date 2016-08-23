@@ -1,8 +1,8 @@
-# plot.fft
-#' Draws (and creates) a FFT.
+# plot.FFTrees
+#' Draws a FFTrees object.
 #'
-#' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the fft() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
-#' @param x A fft object created from fft()
+#' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the FFTrees() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
+#' @param x A FFTrees object created from FFTrees()
 #' @param data Either a dataframe, or one of two strings 'best.train' or 'best.test'
 #' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise (crit.vec == FALSE) and signal (crit.vec == TRUE) cases.
@@ -22,7 +22,7 @@
 #'
 #'
 
-plot.fft <- function(
+plot.FFTrees <- function(
   x = NULL,
   data = "train",
   tree = "best.train", # Either a number, or "best.train" or "best.test"
@@ -64,9 +64,9 @@ plot.fft <- function(
 
   # Check for problems
 
-  if(class(x) != "fft" & is.null(level.names)) {
+  if(class(x) != "FFTrees" & is.null(level.names)) {
 
-    stop("You did not include a valid fft class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid fft object with fft() or specify the tree directly.")
+    stop("You did not include a valid fft class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid fft object with FFTrees() or specify the tree directly.")
 
   }
 
@@ -78,9 +78,9 @@ plot.fft <- function(
 
   }
 
-  if(is.numeric(tree) & tree %in% 1:nrow(x$fft.stats) == F) {
+  if(is.numeric(tree) & tree %in% 1:nrow(x$tree.stats) == F) {
 
-    stop(paste("You asked for a tree that does not exist. This object has", nrow(x$fft.stats), "trees"))
+    stop(paste("You asked for a tree that does not exist. This object has", nrow(x$tree.stats), "trees"))
 
   }
 
@@ -98,19 +98,19 @@ plot.fft <- function(
 
 if(is.null(x) == F) {
 
-  n.trees <- nrow(x$fft.stats)
+  n.trees <- nrow(x$tree.stats)
 
   if(is.null(tree)) {tree <- "best.train"}
 
   if(tree == "best.train") {
 
-    tree <- which(x$fft.stats$v.train == max(x$fft.stats$v.train))[1]
+    tree <- which(x$tree.stats$v.train == max(x$tree.stats$v.train))[1]
 
   }
 
   if(tree == "best.test") {
 
-    tree <- which(x$fft.stats$v.test == max(x$fft.stats$v.test))[1]
+    tree <- which(x$tree.stats$v.test == max(x$tree.stats$v.test))[1]
   }
 
 
@@ -165,7 +165,7 @@ if(is.null(x) == F) {
 
   # Calculate tree statistics
 
-  output <- predict.fft(object = x,
+  output <- predict.FFTrees(object = x,
                         data = data.mf,
                         formula = x$formula,
                         tree = tree
@@ -174,9 +174,9 @@ if(is.null(x) == F) {
 
   decision.v <- output$decision[,1]
   levelout.v <- output$levelout[,1]
-  level.name.v <- output$fft.stats$level.name[1]
-  level.threshold.v <- output$fft.stats$level.threshold[1]
-  level.sigdirection.v <- output$fft.stats$level.sigdirection[1]
+  level.name.v <- output$tree.stats$level.name[1]
+  level.threshold.v <- output$tree.stats$level.threshold[1]
+  level.sigdirection.v <- output$tree.stats$level.sigdirection[1]
 
 }
 
@@ -1111,7 +1111,7 @@ decision.node.pch <- NA_integer_
 
     if(recalculate) {
 
-      new.stats <- predict.fft(object = x,
+      new.stats <- predict.FFTrees(object = x,
                                formula = x$formula,
                                data = data,
                                tree = 1:n.trees)
@@ -1138,8 +1138,8 @@ decision.node.pch <- NA_integer_
       if(data == "train") {
 
         final.auc <- x$auc[1,1]
-        fft.hr.vec <- x$fft.stats$hr.train
-        fft.far.vec <- x$fft.stats$far.train
+        fft.hr.vec <- x$tree.stats$hr.train
+        fft.far.vec <- x$tree.stats$far.train
         lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
         lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
         cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
@@ -1152,8 +1152,8 @@ decision.node.pch <- NA_integer_
       if(data == "test") {
 
         final.auc <- x$auc[2,1]
-        fft.hr.vec <- x$fft.stats$hr.test
-        fft.far.vec <- x$fft.stats$far.test
+        fft.hr.vec <- x$tree.stats$hr.test
+        fft.far.vec <- x$tree.stats$far.test
         lr.hr <- x$lr.stats$hr.test[x$lr.stats$threshold == .5]
         lr.far <- x$lr.stats$far.test[x$lr.stats$threshold == .5]
         cart.hr <- x$cart.stats$hr.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
@@ -1792,29 +1792,29 @@ par("xpd" = T)
 #
 #       # FFTs
 #
-#       fft.stats <- x$fft.stats[c("tree.num", paste(c("hr.", "far."), type.i, sep = ""))]
+#       tree.stats <- x$tree.stats[c("tree.num", paste(c("hr.", "far."), type.i, sep = ""))]
 #
-#       names(fft.stats) <- c("tree.num", "hr", "far")
+#       names(tree.stats) <- c("tree.num", "hr", "far")
 #
-#       fft.stats <- fft.stats[order(fft.stats$far),]
+#       tree.stats <- tree.stats[order(tree.stats$far),]
 #
 #
 #       # Add individual tree points and labels
 #
-#       points(x = fft.stats$far,
-#              y = fft.stats$hr
+#       points(x = tree.stats$far,
+#              y = tree.stats$hr
 #       )
 #
-#       # text(x = fft.stats$far,
-#       #      y = fft.stats$hr,
-#       #      labels = fft.stats$num,
+#       # text(x = tree.stats$far,
+#       #      y = tree.stats$hr,
+#       #      labels = tree.stats$num,
 #       #      pos = 3
 #       # )
 #
-#       segments(x0 = fft.stats$far[1:(n.trees - 1)],
-#                y0 = fft.stats$hr[1:(n.trees - 1)],
-#                x1 = fft.stats$far[2:(n.trees)],
-#                y1 = fft.stats$hr[2:(n.trees)],
+#       segments(x0 = tree.stats$far[1:(n.trees - 1)],
+#                y0 = tree.stats$hr[1:(n.trees - 1)],
+#                x1 = tree.stats$far[2:(n.trees)],
+#                y1 = tree.stats$hr[2:(n.trees)],
 #                col = my.colors[1],
 #                lwd = line.lwd,
 #                lty = line.lty
@@ -1824,8 +1824,8 @@ par("xpd" = T)
 #
 #       tree.i <- x$best.train.tree
 #
-#       points(x$fft.stats[paste("far.", type.i, sep = "")][tree.i, 1],
-#              x$fft.stats[paste("hr.", type.i, sep = "")][tree.i, 1],
+#       points(x$tree.stats[paste("far.", type.i, sep = "")][tree.i, 1],
+#              x$tree.stats[paste("hr.", type.i, sep = "")][tree.i, 1],
 #              cex = even.point.cex,
 #              pch = point.pch,
 #              lty = point.lty,
