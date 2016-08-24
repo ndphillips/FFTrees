@@ -28,8 +28,8 @@ Let's create some ffts. We'll separate the data into a 50% training and a 50% te
 set.seed(100) # For replicability of the training / test data split
 
 mushrooms.fft <- FFTrees(formula = poisonous ~.,
-                     data = mushrooms,
-                     train.p = .5)
+                         data = mushrooms,
+                         train.p = .5)
 ```
 
 Here's basic information about the trees:
@@ -48,7 +48,7 @@ First, let's look at the individual cue training accuracies with `showcues`:
 showcues(mushrooms.fft, main = "Mushrooms")
 ```
 
-It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final FFT to have no more than these two cues:
+It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final trees to have no more than these two cues:
 
 ### mushrooms FFT
 
@@ -69,9 +69,9 @@ Now, let's say that you talk to a mushroom expert who says that we are using the
 ```{r}
 set.seed(100) # for replicability
 mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
-                          data = mushrooms,
-                          train.p = .5
-                          )
+                              data = mushrooms,
+                              train.p = .5
+                              )
 ```
 
 Here is the final tree:
@@ -93,10 +93,10 @@ The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to
 
 ```{r}
 iris.fft <- FFTrees(
-  formula = virginica ~.,
-  data = iris,
-  train.p = .5
-  )
+                    formula = virginica ~.,
+                    data = iris,
+                    train.p = .5
+                    )
 ```
 
 ### iris cue accuracies
@@ -107,7 +107,7 @@ First, let's look at the individual cue training accuracies with `showcues`:
 showcues(iris.fft)
 ```
 
-It looks like the cues *pet.wid* and *pet.len* are the best predictors. Based on this, we should expect the final FFT will likely use just one or both of these cues
+It looks like the cues *pet.wid* and *pet.len* are the best predictors. Based on this, we should expect the final trees will likely use just one or both of these cues
 
 ### iris FFT
 

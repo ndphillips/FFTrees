@@ -8,18 +8,15 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-test
-test2
-
 ```{r, echo = F, message = F, results = 'hide'}
 library(FFTrees)
 ```
 
-This function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several FFT (more details about the algorithms coming soon...)
+The `FFTrees()` function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several fast and frugal trees which attempt to classify cases into one of two classes based on cues.
 
 ## heartdisease example
 
-Let's start with an example, we'll create FFTs fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
+Let's start with an example, we'll create FFTreess fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
 
 ```{r}
 head(heartdisease)
@@ -36,34 +33,34 @@ heartdisease.train <- heartdisease[samples,]
 heartdisease.test <- heartdisease[samples == 0,]
 ```
 
-We'll create a new fft object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
+We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
 
 ```{r}
 heart.fft <- FFTrees(
-  formula = diagnosis ~.,
-  data = heartdisease.train,
-  data.test = heartdisease.test
-  )
+                    formula = diagnosis ~.,
+                    data = heartdisease.train,
+                    data.test = heartdisease.test
+                    )
 ```
 
-## Elements of an fft object
+## Elements of an FFTrees object
 
-As you can see, `FFTrees()` returns an object with the fft class
+As you can see, `FFTrees()` returns an object with the FFTrees class
 
 ```{r}
 class(heart.fft)
 ```
 
-There are many elements in an fft object, here are their names:
+There are many elements in an FFTrees object, here are their names:
 
 ```{r}
 names(heart.fft)
 ```
 
 
-## Printing an fft object
+## Printing an FFTrees object
 
-You can view basic information about the fft object by printing its name. This will give you a quick summary of the object, includeing how many trees it has, which cues the tree(s) use, and how well they performed.
+You can view basic information about the FFTrees object by printing its name. This will give you a quick summary of the object, includeing how many trees it has, which cues the tree(s) use, and how well they performed.
 
 ```{r}
 heart.fft
@@ -86,18 +83,18 @@ showcues(heart.fft,
 ```
 
 
-### Tree definitions and accuracy statistics: fft.stats
+### Tree definitions and accuracy statistics: tree.stats
 
-The `fft.stats` dataframe contains all tree definitions and training (and possibly test) statistics for all ($2^{max.levels - 1}$) trees. For our `heart.fft` example, there are $2^{4 - 1} = 8$ trees.
+The `tree.stats` dataframe contains all tree definitions and training (and possibly test) statistics for all ($2^{max.levels - 1}$) trees. For our `heart.fft` example, there are $2^{4 - 1} = 8$ trees.
 
 ```{r}
-heart.fft$fft.stats
+heart.fft$tree.stats
 ```
 
 You can also use the generic `summary()` function to get the trees dataframe
 
 ```{r, eval = F}
-summary(heart.fft)  # Same thing as heart.fft$fft.stats
+summary(heart.fft)  # Same thing as heart.fft$tree.stats
 ```
 
 Tree definitions (exit directions, cue order, and cue thresholds) are contained in columns 1 through 6. Training statistics are contained in columns 7:15 and have the `.train` suffix. For our heart disease dataset, it looks like tree 2 had the highest training v (HR - FAR) values. Test statistics are contained in columns 16:24 and have the `.test` suffix. It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
@@ -144,14 +141,14 @@ For example, the following tree `heart.as.fft` will only consider the cues `sex`
 
 ```{r}
 heart.as.fft <- FFTrees(formula = diagnosis ~ age + sex,
-                    data = heartdisease
-                    )
+                        data = heartdisease
+                        )
 ```
 
 
 ## Plotting trees
 
-Once you've created an fft object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
+Once you've created an FFTrees object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
 
 ```{r, fig.width = 6, fig.height = 6}
 plot(heart.fft,
@@ -160,7 +157,7 @@ plot(heart.fft,
      )
 ```
 
-See the vignette on `plot.fft` `vignette("fft_plot", package = "fft")` for more details.
+See the vignette on plotting trees [here](FFTrees_plot.html) for more details on plotting trees.
 
 ## Additional arguments
 
