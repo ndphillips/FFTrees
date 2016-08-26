@@ -1,0 +1,28 @@
+---
+title: "FFTrees Tree Construction Algorithm"
+author: "Nathaniel Phillips"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: fft.bib
+csl: apa.csl
+vignette: >
+  %\VignetteIndexEntry{FFTrees Tree Construction Method}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Tree construction algorithm
+
+The algorithm used to create trees is very simple. It can be summarised in four steps:
+  
+1. For each cue, select a *classification threshold* that maximizes the difference between the hit-rate (HR) and false alarm rate (FAR) of classifications of *all data* based on that cue. If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels. These thresholds are calculated completely independently of all other cues.
+
+2. Rank cues in order of their highest HR - FAR value calculated in step 1.
+
+3. Create all possible trees by varying the exit point at each level to a maximum of 5 levels.
+
+4. Reduce the size of trees by removing lower levels containing less than 5% of the dataset.

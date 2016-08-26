@@ -24,17 +24,6 @@ FFTrees <- function(
                 do.cart = T,
                 do.lr = T
 ) {
-#
-  # formula = diagnosis ~ thickness + chromatin
-  # data = breastcancer
-  # data.test <- NULL
-  # rank.method = "m"
-  # max.levels = 4
-  # verbose = T
-  # hr.weight = .5
-  # do.cart = T
-  # do.lr = T
-  # train.p <- 1
 
 # Set some global parameters
 
@@ -61,6 +50,23 @@ if(is.null(data) |
 
 }
 
+# MAKE SURE TRAINING AND TEST DATAFRAMES ARE SIMILAR
+
+if(is.null(data.test) == F) {
+
+train.names <- names(data)
+test.names <- names(data.test)
+
+if(setequal(train.names, test.names) == F) {
+
+  stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
+
+}
+
+}
+
+
+
 # Convert factors to strings
 
 for(i in 1:ncol(data)) {
@@ -84,18 +90,21 @@ cue.names <- names(data)[2:ncol(data)]
 
 if(is.null(data.test) == F) {
 
-  # TRAINING DATA
 
-  data.train <- data
-  cue.train <- data.train[,2:ncol(data.train)]
-  crit.train <- data.train[,1]
+# TRAINING DATA
 
-  # TESTING DATA
+data.train <- data
+cue.train <- data.train[,2:ncol(data.train)]
+crit.train <- data.train[,1]
 
-  data.test <- model.frame(formula = formula,
-                          data = data.test)
-  cue.test <- data.test[,2:ncol(data.test)]
-  crit.test <- data.test[,1]
+# TESTING DATA
+
+data.test <- model.frame(formula = formula,
+                        data = data.test,
+                        na.action = NULL)
+
+cue.test <- data.test[,2:ncol(data.test)]
+crit.test <- data.test[,1]
 
 }
 if(is.null(data.test) & train.p < 1) {
@@ -159,7 +168,6 @@ cue.test <- data.test[,2:ncol(data.test)]
 crit.test <- data.test[,1]
 
 }
-
 if(is.null(data.test) & train.p == 1) {
 
   data.train <- data
@@ -177,71 +185,11 @@ if(is.null(data.test) & train.p == 1) {
 # Non-binary DV
 if(setequal(unique(data[,1]), c(0, 1)) == F) {
 
-  stop("Warning! Your DV is not binary. Convert to binary (0, 1)")
+  stop("Warning! Your DV is not binary or logical. Convert to 0s and 1s (or FALSE and TRUE)")
 
 }
 
 }
-
-# OLD
-
-# LOOP OVER TRAINING TEST SETS TO DETERMINE COMMON CUES
-# {
-# test.result.ls <- list()
-#
-#
-#   {print("Growing trees!")}
-#
-#   if(do.simulation == T) {
-#
-#   training.ex <- train.cases.df[,1] == 1
-#   testing.ex <- test.cases.df[,1] == 1
-#
-#  test.result.ls[[1]] <-  grow.FFTrees(
-#                             formula = formula,
-#                             data.train = data[training.ex,],
-#                             data.test = data[testing.ex,],
-#                             hr.weight = hr.weight,
-#                             rank.method = rank.method,
-#                             numthresh.method = numthresh.method,
-#                             stopping.rule = stopping.rule,
-#                             stopping.par = stopping.par,
-#                             max.levels = max.levels
-#  )
-#
-#   }
-#
-# # Get most common cues used across training sets
-#
-# cue.freq <- unlist(lapply(1:length(test.result.ls), FUN = function(x) {
-#
-#   all <- test.result.ls[[x]]$trees$level.name
-#
-#   return(all[nchar(all) == max(nchar(all))][1])
-#
-#
-#   }))
-#
-# cue.freq <- paste(cue.freq, collapse = ";")
-# cue.freq <- unlist(strsplit(cue.freq, split = "[;]"))
-# cue.freq.table <- sort(table(cue.freq), decreasing = T)
-#
-# common.cues <- names(cue.freq.table)
-#
-# }
-
-# CREATE FINAL TREE
-
-# Now create a new tree based on all data using common cues from simulation
-
-# Only include 1:max.levels common cues
-#
-# if(length(common.cues) > max.levels) {common.cues <- common.cues[1:max.levels]}
-#
-#
-# common.cue.formula <- paste(common.cues, collapse = " + ")
-# common.cue.formula <- as.formula(paste(crit.name, " ~ ", common.cue.formula, collapse = ""))
-
 
 
 # CALCULATE CUE ACCURACIES
@@ -285,8 +233,6 @@ names(cue.accuracies.test)[1] <- "cue.name"
 }
 
 cue.accuracies <- merge(cue.accuracies.train, cue.accuracies.test)
-
-
 
 # GROW THE TREES!
 {
