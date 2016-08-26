@@ -1617,5 +1617,7 @@ par("xpd" = T)
 }
 
 
+# Reset plotting space
+par(mfrow = c(1, 1))
 
 }
