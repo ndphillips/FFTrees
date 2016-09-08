@@ -6,8 +6,8 @@ A package to create and visualize fast and frugal decision trees (FFTrees)
 
 1.1.6
 
-- Streamlined code to improve cohesion between functions.
-- Training and testing statistics are now always in seperate objects.
+- Streamlined code to improve cohesion between functions. This may cause issues with FFTrees objects created with earlier versions of the package. They will need to be re-created.
+- Training and testing statistics are now always in seperate objects (e.g.; `data$train`, `data$test`) to avoid confusion.
 
 - Bug-fixes
     - `predict.FFTrees()` now works by passing an existing FFTrees object and a new dataset back to FFTrees(). It will use all existing trees in the existing FFTrees object and apply them to the new dataset as a new test dataset.
@@ -23,7 +23,6 @@ A package to create and visualize fast and frugal decision trees (FFTrees)
     - Plotting no longer fails when there is only one branch in the tree.
     - Changed `which.tree` argument in `plot.FFTrees()` to `tree` to conform to blog posts.
     - `predict.FFTrees()` now works better with `tibble` inputs.
-    - 
     
 - Changed the `fft` label to `FFTrees` throughout the package to avoid confusion with fast fourier transform. Thus, the main tree building function is now `FFTrees()` and the new tree object class is `FFTrees`
 
