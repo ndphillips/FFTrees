@@ -45,13 +45,7 @@ heart.fft <- FFTrees(
 
 ## Elements of an FFTrees object
 
-As you can see, `FFTrees()` returns an object with the FFTrees class
-
-```{r}
-class(heart.fft)
-```
-
-There are many elements in an FFTrees object, here are their names:
+`FFTrees()` returns an object with the FFTrees class. There are many elements in an FFTrees object, here are their names:
 
 ```{r}
 names(heart.fft)
@@ -69,7 +63,7 @@ heart.fft
 
 ### Cue accuracy statistics: cue.accuracies
 
-You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. The list contains dataframes with marginal cue accuracies. That is, for each cue, the threshold that maximizes the v-statistic (HR - FAR) is chosen.
+You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. The list contains dataframes with marginal cue accuracies. That is, for each cue, the threshold that maximizes the v-statistic (HR - FAR) in the training dataset is chosen. If the object has test data, you can see the marginal cue accuracies in the test dataset (using the thresholds calculated from the training data):
 
 ```{r}
 heart.fft$cue.accuracies
@@ -79,7 +73,7 @@ You can also view the cue accuracies in an ROC-type plot with `showcues()`:
 
 ```{r fig.width = 8, fig.height = 8}
 showcues(heart.fft, 
-         main = "Heartdisease Cue Accuracy")
+         main = "Heartdisease Cue Accuracy", "test")
 ```
 
 

@@ -27,7 +27,7 @@ if(which.data == "train") {
 
 if(which.data == "test") {
 
-  cue.df <- x$cue.accuracies$train
+  cue.df <- x$cue.accuracies$test
 
 }
 
