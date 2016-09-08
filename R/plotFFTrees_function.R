@@ -28,215 +28,116 @@ plot.FFTrees <- function(
   which.tree = NULL,
   tree = "best.train",
   main = "Data",
+  n.per.ball = NULL,
   decision.names = c("Noise", "Signal"),
   ...
 ) {
 
-  # -------------------------
-  # TESTING VALUES
-  # --------------------------
-
-  #  x <- tree.64
-  # #
-  # data = "train"
-  # tree = "best.train" # Either a number, or "best.train" or "best.test"
-  # description = "Data"
-  # decision.names = c("Noise", "Signal")
-  # main <- "asdf"
-
-level.names <- NULL
-
-
-# Some general parameters
-{
-  do.roc <- F
-  ball.col = c(gray(0), gray(0))
-  ball.bg = c(gray(1), gray(1))
-  ball.pch = c(21, 24)
-  ball.cex = c(1, 1)
-  error.col <- "red"
-  correct.col <- "green"
-  max.label.length <- 10
-  n.per.ball <- NULL
-  final.plot <- 1
-  def.par <- par(no.readonly = TRUE)
-}
-
-# Check for problems and depreciated arguments
-
-if(is.null(which.tree) == F) {
-
-message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
-
-tree <- which.tree
-
-}
-
-if(class(x) != "FFTrees" & is.null(level.names)) {
-
-  stop("You did not include a valid FFTrees class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid FFTrees object with FFTrees() or specify the tree directly.")
-
-}
-
-if(tree == "best.test" & is.null(x$data.test)) {
-
-  print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
-
-  tree <- "best.train"
-
-}
-
-if(is.numeric(tree) & tree %in% 1:nrow(x$tree.stats) == F) {
-
-  stop(paste("You asked for a tree that does not exist. This object has", nrow(x$tree.stats), "trees"))
-
-}
-
-if(class(data) == "character") {
-
-  if(data == "test" & is.null(x$data.test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
-
-}
-
-
 # -------------------------
-# Calculate decision.v and levelout.v (if missing)
+# TESTING VALUES
 # --------------------------
 
-if(is.null(x) == F) {
+n.trees <- nrow(x$tree.stats$train)
 
-n.trees <- nrow(x$tree.stats)
+# Check for problems and depreciated arguments
+{
+  if(is.null(which.tree) == F) {
 
-if(is.null(tree)) {tree <- "best.train"}
+    message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
+
+    tree <- which.tree
+
+  }
+
+  if(class(x) != "FFTrees") {
+
+    stop("You did not include a valid FFTrees class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid FFTrees object with FFTrees() or specify the tree directly.")
+
+  }
+
+  if(tree == "best.test" & is.null(x$data$test)) {
+
+    print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
+
+    tree <- "best.train"
+
+  }
+
+  if(is.numeric(tree) & (tree %in% 1:n.trees) == F) {
+
+    stop(paste("You asked for a tree that does not exist. This object has", n.trees, "trees"))
+
+  }
+
+  if(class(data) == "character") {
+
+    if(data == "test" & is.null(x$data$test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
+
+  }
+}
+
+# DEFINE PLOTTING TREE
 
 if(tree == "best.train") {
 
-  tree <- which(x$tree.stats$v.train == max(x$tree.stats$v.train))[1]
+ tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train$v)]
 
 }
-
 if(tree == "best.test") {
 
-  tree <- which(x$tree.stats$v.test == max(x$tree.stats$v.test))[1]
-}
+ tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test$v)]
 
-# Determine dataset
-
-if(class(data) == "character") {
-
-  recalculate <- F
-
-  if(data == "train") {
-
-  data.mf <- model.frame(formula = x$formula, data = x$data.train)
-  cue.df <- data.mf[,2:ncol(data.mf)]
-  crit.vec <- data.mf[,1]
-  recalculate <- F
-  fitting.type <- "train"
-
-  }
-
-  if(data == "test") {
-
-  data.mf <- model.frame(formula = x$formula, data = x$data.test)
-  cue.df <- data.mf[,2:ncol(data.mf)]
-  crit.vec <- data.mf[,1]
-  recalculate <- F
-  fitting.type <- "test"
-
-  }
-}
-
-if(class(data) == "data.frame") {
-
-  recalculate <- T
-
-  data.mf <- model.frame(formula = x$formula, data = data)
-  cue.df <- data.mf[,2:ncol(data.mf)]
-  crit.vec <- data.mf[,1]
-  recalculate <- T
-  if(identical(data, x$data.train)) {fitting.type <- "train"}
-  if(identical(data, x$data.train) == F) {fitting.type <- "test"}
 
 }
 
-# Convert crit to binary (if necessary)
+# DEFINE CRITICAL OBJECTS
 
-if(setequal(unique(crit.vec), 0)) {
+if(data == "train") {
 
-  stop("Your criterion only has 0 (FALSE) values. The best tree will always predict 0 and won't be plotted.")
+  data.mf <- model.frame(formula = x$formula,
+                         data = x$data$train)
+  criterion.v <- data.mf[,1]
+  decision.v <- x$decision$train[,tree]
+  tree.stats <- x$tree.stats$train
+  level.stats <- x$levelstats$train[x$levelstats$train$tree == tree,]
+  lr.stats <- data.frame("hr" = x$lr$stats$hr.train, "far" = x$lr$stats$far.train)
+  cart.stats <- data.frame("hr" = x$cart$stats$hr.train, "far" = x$cart$stats$far.train)
+  n.exemplars <- nrow(data.mf)
+}
+if(data == "test") {
 
+  data.mf <- model.frame(formula = x$formula,
+                         data = x$data$test)
+  criterion.v <- data.mf[,1]
+  decision.v <- x$decision$test[,tree]
+  tree.stats <- x$tree.stats$test
+  level.stats <- x$levelstats$test[x$levelstats$test$tree == tree,]
+  lr.stats <- data.frame("hr" = x$lr$stats$hr.test, "far" = x$lr$stats$far.test)
+  cart.stats <- data.frame("hr" = x$cart$stats$hr.test, "far" = x$cart$stats$far.test)
+  n.exemplars <- nrow(data.mf)
 }
 
-if(setequal(unique(crit.vec), 1)) {
 
-  stop("Your criterion only has 1 (TRUE) values. The best tree will always predict 1 and won't be plotted.")
-
-}
-
-if(setequal(unique(crit.vec), c(0, 1)) == F) {
-
-stop("The criterion value is not binary (0s and 1s), please fix and try again.")
-
-}
-
-# Calculate tree statistics
-
-output <- predict.FFTrees(object = x,
-                      data = data.mf,
-                      formula = x$formula
+final.stats <- classtable(prediction.v = decision.v,
+                          criterion.v = criterion.v
 )
 
+# ADD LEVEL STATISTICS
+n.levels <- nrow(level.stats)
+# Add marginal classification statistics to level.stats
+level.stats[c("hi.m", "mi.m", "fa.m", "cr.m")] <- NA
+for(i in 1:n.levels) {
 
-decision.v <- output$decision[,tree]
-levelout.v <- output$levelout[,tree]
-level.name.v <- output$tree.stats$level.name[tree]
-level.threshold.v <- output$tree.stats$level.threshold[tree]
-level.sigdirection.v <- output$tree.stats$level.sigdirection[tree]
+  if(i == 1) {
 
-}
+    level.stats[1, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[1, c("hi", "mi", "fa", "cr")]
+  }
 
-# -------------------------
-# Calculate level statistics
-# --------------------------
-{
-n.levels <- length(unlist(strsplit(level.name.v, ";")))
-n.cases <- nrow(cue.df)
+  if(i > 1) {
 
-level.df <- as.data.frame(matrix(NA, nrow = n.levels, ncol = 9))
+    level.stats[i, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[i, c("hi", "mi", "fa", "cr")] - level.stats[i - 1, c("hi", "mi", "fa", "cr")]
+  }
 
-names(level.df) <- c("level.num", "a", "b", "c", "d", "hr", "far", "v", "dprime")
-
-for (level.i in 1:(n.levels)) {
-
-  level.stats <- classtable(prediction.v = decision.v[levelout.v == level.i],
-                            criterion.v = crit.vec[levelout.v == level.i])
-
-  level.df[level.i,] <- c(level.i, level.stats[1:8])
-
-}
-
-level.df$level.name <- unlist(strsplit(level.name.v, ";"))
-level.df$threshold <- unlist(strsplit(level.threshold.v, ";"))
-level.df$sigdirection <- unlist(strsplit(level.sigdirection.v, ";"))
-
-
-
-# Are any levels missing exits? If so, remove them
-
-null.levels <- rowSums(level.df[c("a", "b", "c", "d")]) == 0
-
-if(sum(null.levels == 1) > 0) {
-
-  # print(paste("level(s) ", level.df$level.name[null.levels],
-  #             " appear to have no exits. It (they) will be removed",
-  #             sep = ""))
-
-  level.names <- level.df$level.name[null.levels == FALSE]
-  level.df <- level.df[null.levels == FALSE,]
-  n.levels <- length(level.names)
-
-}
 }
 
 # -------------------------
@@ -245,7 +146,20 @@ if(sum(null.levels == 1) > 0) {
 {
 {
 
-level.df$level.name.t <-  strtrim(level.df$level.name, max.label.length)
+# Some general parameters
+
+  do.roc <- F
+  ball.col = c(gray(0), gray(0))
+  ball.bg = c(gray(1), gray(1))
+  ball.pch = c(21, 24)
+  ball.cex = c(1, 1)
+  error.col <- "red"
+  correct.col <- "green"
+  max.label.length <- 10
+  def.par <- par(no.readonly = TRUE)
+
+
+level.stats$level.name.t <-  strtrim(level.stats$cue, max.label.length)
 
 
 ball.box.width <- 10
@@ -341,12 +255,12 @@ ball.box.fixed.x.shift <- c(ball.box.min.shift.p * plot.width, ball.box.max.shif
 
 if(is.null(n.per.ball)) {
 
-  max.n.side <- max(c(sum(crit.vec == 0), sum(crit.vec == 1)))
+  max.n.side <- max(c(sum(criterion.v == 0), sum(criterion.v == 1)))
 
-  i <- max.n.side / c(1, 5, 10, 50, 100, 1000, 10000)
+  i <- max.n.side / c(1, 5, 10^(1:10))
   i[i > 50] <- 0
 
-  n.per.ball <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
+  n.per.ball <- c(1, 5, 10^(1:10))[which(i == max(i))]
 
 }
 
@@ -548,12 +462,7 @@ segments(0, .95, 1, .95, col = gray(.2, .5), lwd = .5, lty = 1)
 rect(.33, .8, .67, 1.2, col = "white", border = NA)
 
 text(x = .5, y = .95, main, cex = panel.title.cex)
-text(x = .5, y = .80, paste("N = ", n.cases, "", sep = ""), cex = 1.25)
-
-
-final.stats <- classtable(prediction.v = decision.v,
-                          criterion.v = crit.vec
-)
+text(x = .5, y = .80, paste("N = ", n.exemplars, "", sep = ""), cex = 1.25)
 
 n.trueneg <- with(final.stats, cr + fa)
 n.truepos <- with(final.stats, hi + mi)
@@ -594,7 +503,6 @@ par(xpd = F)
 # 2. TREE
 # --------------------------
 {
-
 
   par(mar = c(0, 0, 0, 0))
 
@@ -672,10 +580,6 @@ par(xpd = F)
          labels = c("False\nAlarm", "Hit"),
          pos = c(1, 1), offset = 1)
 
-
-
-
-
     }
 
   # Set initial subplot center
@@ -688,10 +592,10 @@ par(xpd = F)
 
     # Get stats for current level
 
-    a.i <- level.df$a[level.i]
-    b.i <- level.df$b[level.i]
-    c.i <- level.df$c[level.i]
-    d.i <- level.df$d[level.i]
+    hi.i <- level.stats$hi.m[level.i]
+    mi.i <- level.stats$mi.m[level.i]
+    fa.i <- level.stats$fa.m[level.i]
+    cr.i <- level.stats$cr.m[level.i]
 
 
     # If level.i == 1, draw top textbox
@@ -714,7 +618,7 @@ par(xpd = F)
 
       text(x = subplot.center[1],
            y = subplot.center[2] + 2,
-           labels = level.df$level.name.t[level.i],
+           labels = level.stats$level.name.t[level.i],
            cex = label.box.text.cex
       )
 
@@ -730,7 +634,7 @@ par(xpd = F)
 
       # Exit node on left
 
-      if((b.i + d.i) > 0 | level.i == n.levels) {
+      if((mi.i + cr.i) > 0 | level.i == n.levels) {
 
         segments(subplot.center[1],
                  subplot.center[2] + 1,
@@ -752,14 +656,14 @@ par(xpd = F)
 
         # level break label
 
-        pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.df$sigdirection[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
-        neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.df$sigdirection[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+        pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
+        neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
 
 
 
         text(subplot.center[1] - 1,
              subplot.center[2],
-             labels = paste(pos.direction.symbol, " ", level.df$threshold[level.i], sep = ""),
+             labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
              pos = 2, cex = break.label.cex
         )
 
@@ -793,11 +697,11 @@ par(xpd = F)
 
         }
 
-        if(max(c(d.i, b.i)) > 0) {
+        if(max(c(cr.i, mi.i)) > 0) {
 
           add.balls.fun(x.lim = ball.x.lim,
                         y.lim = ball.y.lim,
-                        n.vec = c(d.i, b.i),
+                        n.vec = c(cr.i, mi.i),
                         pch.vec = c(noise.ball.pch, signal.ball.pch),
                         #  bg.vec = c(noise.ball.bg, signal.ball.bg),
                         bg.vec = c(correct.bg, error.bg),
@@ -813,7 +717,7 @@ par(xpd = F)
 
       # New level on left
 
-      if((b.i + d.i) == 0 & level.i != n.levels) {
+      if((mi.i + cr.i) == 0 & level.i != n.levels) {
 
         segments(subplot.center[1],
                  subplot.center[2] + 1,
@@ -833,7 +737,7 @@ par(xpd = F)
 
         text(x = subplot.center[1] - 2,
              y = subplot.center[2] - 2,
-             labels = level.df$level.name.t[level.i + 1],
+             labels = level.stats$level.name.t[level.i + 1],
              cex = label.box.text.cex
         )
 
@@ -849,7 +753,7 @@ par(xpd = F)
 
       # Exit node on right
 
-      if((a.i + c.i) > 0 | level.i == n.levels) {
+      if((hi.i + fa.i) > 0 | level.i == n.levels) {
 
 
         segments(subplot.center[1],
@@ -874,13 +778,13 @@ par(xpd = F)
 
         dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
 
-        pos.direction.symbol <- dir.symbols[which(level.df$sigdirection[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
-        neg.direction.symbol <- dir.symbols[which(level.df$sigdirection[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+        pos.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+        neg.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
 
 
         text(subplot.center[1] + 1,
              subplot.center[2],
-             labels = paste(pos.direction.symbol, " ", level.df$threshold[level.i], sep = ""),
+             labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
              pos = 4, cex = break.label.cex
         )
 
@@ -915,11 +819,11 @@ par(xpd = F)
 
         }
 
-        if(max(c(c.i, a.i)) > 0) {
+        if(max(c(fa.i, hi.i)) > 0) {
 
           add.balls.fun(x.lim = ball.x.lim,
                         y.lim = ball.y.lim,
-                        n.vec = c(c.i, a.i),
+                        n.vec = c(fa.i, hi.i),
                         pch.vec = c(noise.ball.pch, signal.ball.pch),
                         #      bg.vec = c(noise.ball.bg, signal.ball.bg),
                         bg.vec = c(error.bg, correct.bg),
@@ -937,7 +841,7 @@ par(xpd = F)
 
       # New level on right
 
-      if((a.i + c.i) == 0 & level.i != n.levels) {
+      if((hi.i + fa.i) == 0 & level.i != n.levels) {
 
         segments(subplot.center[1],
                  subplot.center[2] + 1,
@@ -958,7 +862,7 @@ par(xpd = F)
 
         text(x = subplot.center[1] + 2,
              y = subplot.center[2] - 2,
-             labels = level.df$level.name.t[level.i + 1],
+             labels = level.stats$level.name.t[level.i + 1],
              cex = label.box.text.cex
         )
 
@@ -973,13 +877,13 @@ par(xpd = F)
     # -----------------------
 
 
-    if((b.i + d.i) > 0 & (a.i + c.i) == 0) {
+    if((mi.i + cr.i) > 0 & (hi.i + fa.i) == 0) {
 
       subplot.center <- c(subplot.center[1] + 2,
                           subplot.center[2] - 4)
     }
 
-    if((b.i + d.i) == 0 & (a.i + c.i) > 0) {
+    if((mi.i + cr.i) == 0 & (hi.i + fa.i) > 0) {
 
       subplot.center <- c(subplot.center[1] - 2,
                           subplot.center[2] - 4)
@@ -995,105 +899,46 @@ par(xpd = F)
 # -----------------------
 {
 
-final.roc.x.loc <- NULL
-final.roc.y.loc <- NULL
-final.noise.balls.center <- NULL
-final.noise.balls.dim <- NULL
-final.sig.balls.center <- NULL
-final.sig.balls.dim <- NULL
-final.miniroc.dim <- NULL
+
+# OBTAIN FINAL STATISTICS
+
+fft.auc <- auc(tree.stats$hr[order(tree.stats$far)], tree.stats$far[order(tree.stats$far)])
+fft.hr.vec <- tree.stats$hr[order(tree.stats$far)]
+fft.far.vec <- tree.stats$far[order(tree.stats$far)]
+lr.hr <- lr.stats$hr
+lr.far <- lr.stats$far
+cart.hr <- cart.stats$hr
+cart.far <- cart.stats$far
 
 
-final.classtable.center <- NULL
-final.spec.center <- NULL
-final.hr.center <- NULL
+# General plotting space
+{
 
-final.dp.loc <- NULL
-
+# PLOTTING PARAMETERS
 header.y.loc <- 1.0
 subheader.y.loc <- .9
 
 header.cex <- 1.2
 subheader.cex <- .9
 
+final.classtable.center <- c(.18, .45)
+final.classtable.dim <- c(.2, .7)
 
+final.spec.center <- c(.35, .45)
+final.spec.dim <- c(.14, .65)
 
-  final.classtable.center <- c(.18, .45)
-  final.classtable.dim <- c(.2, .7)
+final.hr.center <- c(.45, .45)
+final.hr.dim <- c(.14, .65)
 
-  final.spec.center <- c(.35, .45)
-  final.spec.dim <- c(.14, .65)
+final.dp.center <- c(.55, .45)
+final.dp.dim <- c(.14, .65)
 
-  final.hr.center <- c(.45, .45)
-  final.hr.dim <- c(.14, .65)
+final.auc.center <- c(.65, .45)
+final.auc.dim <- c(.14, .65)
 
-  final.dp.center <- c(.55, .45)
-  final.dp.dim <- c(.14, .65)
+final.roc.center <- c(.85, .45)
+final.roc.dim <- c(.2, .65)
 
-  final.auc.center <- c(.65, .45)
-  final.auc.dim <- c(.14, .65)
-
-  final.roc.center <- c(.85, .45)
-  final.roc.dim <- c(.2, .65)
-
-
-
-# Check if new final stats are needed
-
-if(recalculate) {
-
-  new.stats <- predict.FFTrees(object = x,
-                           formula = x$formula,
-                           data = data,
-                           tree = 1:n.trees)
-
-  final.auc <- new.stats$trees.auc
-  fft.hr.vec <- new.stats$trees$hr
-  fft.far.vec <- new.stats$trees$far
-
-  lr.stats <- lr.pred(formula = x$formula,
-                      data.train = x$data.train,
-                      data.test = data)
-
-  lr.hr <- lr.stats[[1]]$hr.test[lr.stats[[1]]$threshold == .5]
-  lr.far <- lr.stats[[1]]$far.test[lr.stats[[1]]$threshold == .5]
-
-  cart.stats <- cart.pred(formula = x$formula, data.train = x$data.train, data.test = data)
-  cart.hr <- cart.stats$cart.acc$hr.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
-  cart.far <- cart.stats$cart.acc$far.test[cart.stats$cart.acc$miss.cost == cart.stats$cart.acc$fa.cost]
-
-}
-
-if(recalculate == F) {
-
-if(data == "train") {
-
-  final.auc <- x$auc[1,1]
-  fft.hr.vec <- x$tree.stats$hr.train
-  fft.far.vec <- x$tree.stats$far.train
-  lr.hr <- x$lr.stats$hr.train[x$lr.stats$threshold == .5]
-  lr.far <- x$lr.stats$far.train[x$lr.stats$threshold == .5]
-  cart.hr <- x$cart.stats$hr.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-  cart.far <- x$cart.stats$far.train[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-
-}
-
-if(data == "test") {
-
-  final.auc <- x$auc[2,1]
-  fft.hr.vec <- x$tree.stats$hr.test
-  fft.far.vec <- x$tree.stats$far.test
-  lr.hr <- x$lr.stats$hr.test[x$lr.stats$threshold == .5]
-  lr.far <- x$lr.stats$far.test[x$lr.stats$threshold == .5]
-  cart.hr <- x$cart.stats$hr.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-  cart.far <- x$cart.stats$far.test[x$cart.stats$miss.cost == x$cart.stats$fa.cost]
-}
-}
-
-
-
-# General plotting space
-{
 par(mar = c(0, 0, 2, 0))
 
 plot(1, xlim = c(0, 1), ylim = c(0, 1),
@@ -1105,8 +950,8 @@ par(xpd = T)
 segments(0, 1.1, 1, 1.1, col = gray(.2, .5), lwd = .5, lty = 1)
 rect(.25, 1, .75, 1.2, col = "white", border = NA)
 
-if(fitting.type == "train") {title.text <- "Performance (Fitting)"}
-if(fitting.type == "test") {title.text <- "Performance (Prediction)"}
+if(data == "train") {title.text <- "Performance (Fitting)"}
+if(data == "test") {title.text <- "Performance (Prediction)"}
 
 text(.5, 1.1, title.text, cex = panel.title.cex)
 par(xpd = F)
@@ -1116,66 +961,8 @@ par(xpd = F)
 # Color function (taken from colorRamp2 function in circlize package)
 col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .2)
 
-
-#  Final Noise Balls
-if(is.null(final.noise.balls.center) == F) {
-
-  text(final.noise.balls.center[1], header.y.loc,
-       paste(decision.names[1], " Classification\n(N = ", final.stats$cr + final.stats$mi, ")", sep = ""),
-       cex = header.cex, font = 3, pos = 1)
-
-
-  add.balls.fun(
-                x.lim = c(final.noise.balls.center[1] - final.noise.balls.dim[1] / 2, final.noise.balls.center[1] + final.noise.balls.dim[1] / 2),
-                y.lim = c(final.noise.balls.center[2] - final.noise.balls.dim[2] / 2, final.noise.balls.center[2] + final.noise.balls.dim[2] / 2),
-                n.vec = c(final.stats$cr, final.stats$mi),
-                pch.vec = c(noise.ball.pch, signal.ball.pch),
-                bg.vec = c(correct.bg, error.bg),
-                col.vec = c(correct.border, error.border),
-                ball.cex = ball.cex,
-                n.per.ball = n.per.ball,
-                upper.text.cex = .7,
-                upper.text.adj = 1
-              )
-
-
-  # text(.07, .22, "Correct\nRejections", pos = 1, adj = 1, cex = 1)
-  # text(.17, .22, "Misses", pos = 1, adj = 0, cex = 1)
-
-  }
-
-  # Final Signal Balls
-
-if(is.null(final.sig.balls.center) == F) {
-
-  text(final.sig.balls.center[1], header.y.loc,
-       paste(decision.names[2], " Classification\n(N = ", final.stats$hi + final.stats$fa, ")", sep = "")
-       , cex = header.cex, font = 3, pos = 1)
-
-
-  add.balls.fun( x.lim = c(final.sig.balls.center[1] - final.sig.balls.dim[1] / 2, final.sig.balls.center[1] + final.sig.balls.dim[1] / 2),
-                 y.lim = c(final.sig.balls.center[2] - final.sig.balls.dim[2] / 2, final.sig.balls.center[2] + final.sig.balls.dim[2] / 2),
-                n.vec = c(final.stats$fa, final.stats$hi),
-                pch.vec = c(noise.ball.pch, signal.ball.pch),
-                #   bg.vec = c(noise.ball.bg, signal.ball.bg),
-                bg.vec = c(error.bg, correct.bg),
-                col.vec = c(error.border, correct.border),
-                n.per.ball = n.per.ball,
-                ball.cex = ball.cex,
-                upper.text.cex = .7,
-                upper.text.adj = 1
-  )
-
-
-
-  # text(.84, .22, "False\nAlarms", pos = 1, adj = 1, cex = 1)
-  # text(.9, .22, "Hits", pos = 1, adj = 0, cex = 1)
-
-}
-
 # Specificity level
-
-if(is.null(final.spec.center) == F) {
+{
 
   rect.top <- final.spec.center[2] + final.spec.dim[2] / 2
   rect.bottom <-  final.spec.center[2] - final.spec.dim[2] / 2
@@ -1215,9 +1002,7 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
 }
 
 # HR level
-
-if(is.null(final.hr.center) == F) {
-
+{
 
   rect.top <- final.hr.center[2] + final.hr.dim[2] / 2
   rect.bottom <-  final.hr.center[2] - final.hr.dim[2] / 2
@@ -1264,8 +1049,7 @@ if(is.null(final.hr.center) == F) {
   }
 
 # DP level
-
-if(is.null(final.dp.center) == F) {
+{
 
   rect.top <- final.dp.center[2] + final.dp.dim[2] / 2
   rect.bottom <-  final.dp.center[2] - final.dp.dim[2] / 2
@@ -1306,8 +1090,7 @@ if(is.null(final.dp.center) == F) {
 }
 
 # AUC level
-
-if(is.null(final.auc.center) == F) {
+{
 
   rect.top <- final.auc.center[2] + final.auc.dim[2] / 2
   rect.bottom <-  final.auc.center[2] - final.auc.dim[2] / 2
@@ -1320,8 +1103,8 @@ if(is.null(final.auc.center) == F) {
   rect(rect.center - rect.width / 2,
        rect.bottom,
        rect.center + rect.width / 2,
-       ((final.auc - .5) / .5) * (rect.top - rect.bottom) + rect.bottom,
-       col = col.fun((final.auc - .5) / .5),
+       ((fft.auc - .5) / .5) * (rect.top - rect.bottom) + rect.bottom,
+       col = col.fun((fft.auc - .5) / .5),
        border = NA
   )
 
@@ -1335,15 +1118,14 @@ if(is.null(final.auc.center) == F) {
 
   text(x = rect.center,
        y = (rect.top + rect.bottom) / 2,
-       labels = round(final.auc, 2),
+       labels = round(fft.auc, 2),
        cex = 1.2,
        font = 1)
 
 }
 
 # Classification table
-
-if(is.null(final.classtable.center) == F) {
+{
 
   final.classtable.x.loc <- c(final.classtable.center[1] - final.classtable.dim[1] / 2, final.classtable.center[1] + final.classtable.dim[1] / 2)
   final.classtable.y.loc <- c(final.classtable.center[2] - final.classtable.dim[2] / 2, final.classtable.center[2] + final.classtable.dim[2] / 2)
@@ -1451,12 +1233,7 @@ if(is.null(final.classtable.center) == F) {
 }
 
 # MiniROC
-
-if(is.null(final.roc.center) == F) {
-
-
-
-
+{
 
   text(final.roc.center[1], header.y.loc, "ROC", pos = 1, cex = header.cex)
 #    text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
@@ -1615,7 +1392,6 @@ par("xpd" = T)
 }
 
 }
-
 
 # Reset plotting space
 par(mfrow = c(1, 1))

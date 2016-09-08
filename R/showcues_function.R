@@ -18,21 +18,17 @@ showcues <- function(x = NULL,
                                 "#9A703E7F")) {
 
 
-cue.df <- x$cue.accuracies
-
-stat.names <- c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")
 
 if(which.data == "train") {
 
-  cue.df <- cue.df[,c("cue.name", "cue.class", "level.threshold", "level.sigdirection", paste(stat.names, ".train", sep = ""))]
-  names(cue.df)[names(cue.df) %in% paste(stat.names, ".train", sep = "")] <- stat.names
+  cue.df <- x$cue.accuracies$train
 
 }
 
 if(which.data == "test") {
 
-  cue.df <- cue.df[,c("cue.name", "cue.class", "level.threshold", "level.sigdirection", paste(stat.names, ".test", sep = ""))]
-  names(cue.df)[names(cue.df) %in% paste(stat.names, ".test", sep = "")] <- stat.names
+  cue.df <- x$cue.accuracies$train
+
 }
 
 rownames(cue.df) <- 1:nrow(cue.df)
@@ -118,10 +114,10 @@ add.text(row.names(cues.top), .54, 0, .4, adj = 0, cex = 1)
 
 # Cue names
 text(.66, .44, "cue", adj = 0, cex = .8)
-add.text(substr(cues.top$cue.name, 1, 10), .65, 0, .4, cex = .8, adj = 1)
+add.text(substr(cues.top$cue, 1, 10), .65, 0, .4, cex = .8, adj = 1)
 
 # Thresholds
-thresh.text <- paste(cues.top$level.sigdirection, cues.top$level.threshold)
+thresh.text <- paste(cues.top$direction, cues.top$threshold)
 thresh.text[nchar(thresh.text) > 15] <- paste(substr(thresh.text[nchar(thresh.text) > 15], start = 1, stop = 12), "...", sep = "")
 add.text(thresh.text, .67, 0, .4, cex = .8, adj = 0)
 

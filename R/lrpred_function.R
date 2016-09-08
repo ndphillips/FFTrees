@@ -3,6 +3,7 @@
 #' @param data.train A training dataset
 #' @param data.test A testing dataset
 #' @param thresholds A vector of decision thresholds
+#' @param lr.model An optional logistic regression model created from glm(family = "binomial")
 #' @importFrom stats model.frame formula glm
 #' @export
 #'
@@ -12,186 +13,205 @@ lr.pred <- function(
   formula,
   data.train,
   data.test = NULL,
+  lr.model = NULL,
   thresholds = .5     #seq(.9, .1, -.1)
 ) {
+
   correction <- .25
 
 
-  # formula = formula
-  # data.train = data.train
-  # data.test = data.test
+if(is.null(data.train) == F) {
 
-  # formula = formula
-  # data.train = data
-  # data.test = data.test
-  #
+data.train <- model.frame(formula = formula,
+                             data = data.train)
+
+# Remove columns with no variance
+data.train <- data.train[,sapply(1:ncol(data.train), FUN = function(x) {length(unique(data.train[,x]))}) > 1]
+
+crit.train <- data.train[,1]
+cue.train <- data.train[,2:ncol(data.train)]
+
+}
+
+if(is.null(data.test) == F) {
+
+  data.test <- model.frame(formula = formula, data = data.test)
+
+  # Restrict testing data to columns in training data
+  data.test <- data.test[,names(data.test) %in% names(data.train)]
+  crit.test <- data.test[,1]
+  cue.test <- data.test[,2:ncol(data.test)]
+
+}
+
+# DETERMINE LR MODEL
 
 
-  data.mf.train <- model.frame(formula = formula,
-                               data = data.train)
 
-  crit.train <- data.mf.train[,1]
+if(is.null(lr.model) == T) {
 
-  if(is.null(data.test) == F) {
+  # Create new LR model
+  lr.train.mod <-  suppressWarnings(glm(formula,
+                                        family = "binomial",
+                                        data = data.train
+                                    ))
 
-    data.mf.test <- model.frame(formula = formula, data = data.test)
-    crit.test <- data.mf.test[,1]
-    data.mf.test <- data.mf.test[,names(data.mf.train)]
+
+} else {
+
+  lr.train.mod <- lr.model
+
+}
+
+## GET FACTOR VALUES
+
+lr.factor.values <- lr.train.mod$xlevels
+
+# LR TRAINING PREDICTIONS
+
+if(is.null(data.train) == F) {
+
+# Look for new factor values
+
+can.predict.mtx <- matrix(NA, nrow = nrow(data.train), ncol = ncol(cue.train))
+
+for(i in 1:ncol(cue.train)) {
+
+  if(class(cue.train[,i]) %in% c("numeric", "logical", "integer")) {can.predict.mtx[,i] <- T}
+
+  if(class(cue.train[,i]) %in% c("factor", "character")) {
+
+    can.predict.mtx[,i] <- paste(cue.train[,i]) %in% lr.factor.values[[which(names(lr.factor.values) == names(cue.train[i]))]]
 
   }
 
-  # Training data
-  {
+}
 
-    # Remove cues with only one value
-    train.df.ex <- sapply(1:ncol(data.train), FUN = function(x) {length(unique(data.train[,x]))})
-    data.train <- data.train[,train.df.ex > 1]
+  can.predict.vec <- rowMeans(can.predict.mtx) == 1
 
-    # Run logistic regression on training set (can be time consuming....)
+  if(any(can.predict.vec == F)) {
 
-    lr.train.mod <- suppressWarnings(glm(formula,
-                                         family = "binomial",
-                                         data = data.train
-    ))
+    warning(paste("LR couldn't predict ",  sum(can.predict.vec == FALSE),
+                  " cases because they contained new factor values. These cases will be predicted to be FALSE",
+                  sep = ""))
+  }
 
+  lr.train.pred <- rep(FALSE, nrow(data.train))
 
-    lr.train.predictions <- suppressWarnings(predict(lr.train.mod,
-                                                     newdata = data.train))
+  # Get training decisions
+  lr.train.pred.t <- suppressWarnings( predict(lr.train.mod,
+                               newdata = data.train[can.predict.vec == T,]
+                              ))
 
-    lr.train.predictions <- 1 / (1 + exp(-lr.train.predictions))
-    lr.train.predictions.bin <- rep(0, length(lr.train.predictions))
-    lr.train.predictions.bin[lr.train.predictions >= .5] <- 1
+  lr.train.pred.t <- 1 / (1 + exp(-lr.train.pred.t))
+  lr.train.pred.t <- lr.train.pred.t > thresholds
 
+  lr.train.pred[can.predict.vec == T] <- lr.train.pred.t
 
-    lr.train.stats <- classtable(prediction.v = lr.train.predictions.bin,
-                                 criterion.v = crit.train)
+  # Calculate training accuracy stats
 
+  lr.train.acc <- classtable(prediction.v = lr.train.pred,
+                               criterion.v = crit.train)
 
-    lr.train.far.v <- rep(NA, length(thresholds))
-    lr.train.hr.v <- rep(NA, length(thresholds))
+}
+if(is.null(data.train) == T) {
 
-    for(threshold.i in thresholds) {
+  lr.train.acc <- classtable(prediction.v = 1, criterion.v = 1)
+  lr.train.acc[1,] <- NA
 
-      lr.train.stats.i <- classtable(prediction.v = lr.train.predictions >= threshold.i,
-                                     criterion.v = crit.train)
+}
 
-      lr.train.hr.v[thresholds == threshold.i] <- lr.train.stats.i$hr
-      lr.train.far.v[thresholds == threshold.i] <- lr.train.stats.i$far
+# LR TEST PREDICTIONS
 
+if(is.null(data.test) == F) {
+
+  # Look for new factor values
+
+  can.predict.mtx <- matrix(NA, nrow = nrow(cue.test), ncol = ncol(cue.test))
+
+  for(i in 1:ncol(cue.test)) {
+
+    if(class(cue.test[,i]) %in% c("numeric", "logical")) {can.predict.mtx[,i] <- T}
+
+    if(class(cue.test[,i]) %in% c("factor", "character")) {
+
+      can.predict.mtx[,i] <- paste(cue.test[,i]) %in% lr.factor.values[[which(names(lr.factor.values) == names(cue.test)[i])]]
 
     }
 
   }
 
-  # Test data
-  {
-    if(is.null(data.test) == F) {
+  can.predict.vec <- rowMeans(can.predict.mtx) == 1
 
-      # Look for new factor values in test set not in training set
+  if(any(can.predict.vec == F)) {
 
-      orig.vals.ls <- lapply(2:ncol(data.mf.train), FUN = function(x) {unique(data.mf.train[,x])})
-
-      can.predict.mtx <- matrix(1, nrow = nrow(data.test), ncol = ncol(data.test) - 1)
-
-      for(i in 1:ncol(can.predict.mtx)) {
-
-        test.vals.i <- data.mf.test[,i + 1]
-
-        if(is.numeric(test.vals.i)) {
-          can.predict.mtx[,i] <- 1} else {
-
-            can.predict.mtx[,i] <- paste(test.vals.i) %in% paste(orig.vals.ls[[i]])
-
-
-          }
-      }
-
-      model.can.predict <- rowMeans(can.predict.mtx) == 1
-
-      if(mean(model.can.predict) != 1) {
-
-        # warning(paste("Linear regression couldn't fit some testing data.", sum(model.can.predict), "out of",
-        #               nrow(data.test), "cases (", round(sum(model.can.predict == 0) / length(model.can.predict), 2) * 100,
-        #               "%) had to be ignored"))
-
-      }
-
-      lr.test.predictions <- suppressWarnings(predict(lr.train.mod,
-                                                      newdata = data.test[model.can.predict,]))
-
-      lr.test.predictions <- 1 / (1 + exp(-lr.test.predictions))
-      lr.test.predictions.bin <- rep(0, length(lr.test.predictions))
-      lr.test.predictions.bin[lr.test.predictions >= .5] <- 1
-
-      lr.test.stats <- classtable(prediction.v = lr.test.predictions.bin,
-                                  criterion.v = crit.test[model.can.predict])
-
-      lr.test.stats$n.exemplars <- length(model.can.predict)
-      lr.test.stats$n.exemplars.can.pred <- sum(model.can.predict)
-      lr.test.stats$p.exemplars.can.pred <- sum(model.can.predict) / length(model.can.predict)
-
-
-
-      lr.test.far.v <- rep(NA, length(thresholds))
-      lr.test.hr.v <- rep(NA, length(thresholds))
-
-      for(threshold.i in thresholds) {
-
-        lr.test.stats.i <- classtable(prediction.v = lr.test.predictions >= threshold.i,
-                                      criterion.v = crit.test[model.can.predict])
-
-        lr.test.hr.v[thresholds == threshold.i] <- lr.test.stats.i$hr
-        lr.test.far.v[thresholds == threshold.i] <- lr.test.stats.i$far
-
-
-      }
-
-
-    }
-
-    if(is.null(data.test)) {
-
-      lr.test.hr.v <- NA
-      lr.test.far.v <- NA
-      lr.auc.test <- NA
-
-    }
+    warning(paste("LR couldn't predict ",  sum(can.predict.vec == FALSE),
+                  " cases because they contained new factor values. These cases will be predicted to be FALSE",
+                  sep = ""))
   }
 
+  lr.test.pred <- rep(FALSE, nrow(data.test))
 
-  # Get AUC
-
-  lr.train.auc <- auc(lr.train.hr.v, lr.train.far.v)
-
-  if(is.null(data.test) == F) {
-
-    lr.test.auc <- auc(lr.test.hr.v, lr.test.far.v)
-
-  } else {
-
-    lr.test.auc <- NA
-
-  }
-
-  lr.auc <- matrix(c(lr.train.auc, lr.test.auc), nrow = 2, ncol = 1)
-  rownames(lr.auc) <- c("train", "test")
-  colnames(lr.auc) <- "lr"
-
-  # Get summary vectors of FAR and HR for all thresholds
-
-  lr.acc <- data.frame("threshold" = thresholds,
-                       "hr.train" = lr.train.hr.v,
-                       "far.train" = lr.train.far.v,
-                       "hr.test" = lr.test.hr.v,
-                       "far.test" = lr.test.far.v
+  # Get training decisions
+  lr.test.pred.t <- suppressWarnings(predict(object = lr.train.mod,
+                             newdata = data.test[can.predict.vec == T,])
   )
 
-  output <- list("accuracy" = lr.acc,
-                 "auc" = lr.auc,
-                 "model" = lr.train.mod)
+  lr.test.pred.t <- 1 / (1 + exp(-lr.test.pred.t))
+  lr.test.pred.t <- lr.test.pred.t > thresholds
+
+  lr.test.pred[can.predict.vec == T] <- lr.test.pred.t
+
+  # Calculate training accuracy stats
+
+  lr.test.acc <- classtable(prediction.v = lr.test.pred,
+                             criterion.v = crit.test)
 
 
-  return(output)
+}
+
+if(is.null(data.test)) {
+
+  lr.test.acc <- classtable(prediction.v = 1, criterion.v = 1)
+  lr.test.acc[1,] <- NA
+
+}
+
+## ORGANIZE
+
+stat.names <- c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")
+names(lr.train.acc)[names(lr.train.acc) %in% stat.names] <- paste(names(lr.train.acc)[names(lr.train.acc) %in% stat.names], ".train", sep = "")
+names(lr.test.acc)[names(lr.test.acc) %in% stat.names] <- paste(names(lr.test.acc)[names(lr.test.acc) %in% stat.names], ".test", sep = "")
+
+lr.acc <- cbind(lr.train.acc, lr.test.acc)
+lr.acc <- lr.acc[order(lr.acc$far.train),]
+lr.acc$threshold <- thresholds
+# AUC
+
+if(is.null(data.train) == F) {
+
+lr.train.auc <- auc(lr.train.acc$hr.train, lr.train.acc$far.train)
+
+} else {lr.train.auc <- NA}
+
+if(is.null(data.test) == F) {
+
+ lr.test.auc <- auc(lr.test.acc$hr.test, lr.test.acc$far.test)
+
+} else {lr.test.auc <- NA}
+
+lr.auc <- matrix(c(lr.train.auc, lr.test.auc), nrow = 2, ncol = 1)
+rownames(lr.auc) <- c("train", "test")
+colnames(lr.auc) <- "lr"
+
+# Get summary vectors of FAR and HR for all thresholds
+
+output <- list("accuracy" = lr.acc,
+               "auc" = lr.auc,
+               "model" = lr.train.mod)
+
+
+return(output)
 
 
 }

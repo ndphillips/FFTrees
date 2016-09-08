@@ -69,7 +69,7 @@ heart.fft
 
 ### Cue accuracy statistics: cue.accuracies
 
-You can obtain marginal cue accuracy statistics from the  `cue.accuracies` dataframe. This dataframe contains the original, marginal cue accuracies. That is, for each cue, the threshold that maximizes the v-statistic (HR - FAR) is chosen.
+You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. The list contains dataframes with marginal cue accuracies. That is, for each cue, the threshold that maximizes the v-statistic (HR - FAR) is chosen.
 
 ```{r}
 heart.fft$cue.accuracies
@@ -118,7 +118,7 @@ The `train.decision.df` and `test.decision.df` contain the raw classification de
 Here are each of the 8 tree decisions for the first 5 training cases.
 
 ```{r}
-heart.fft$decision.train[1:5,]
+heart.fft$decision$train[1:5,]
 ```
 
 
@@ -129,7 +129,7 @@ The `train.levelout.df` and `test.levelout.df` contain the levels at which each 
 Here are the levels at which the first 5 training cases were classified:
 
 ```{r}
-heart.fft$levelout.train[1:5,]
+heart.fft$levelout$train[1:5,]
 ```
 
 

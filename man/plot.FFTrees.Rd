@@ -5,8 +5,8 @@
 \title{Draws a FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", which.tree = NULL,
-  tree = "best.train", main = "Data", decision.names = c("Noise",
-  "Signal"), ...)
+  tree = "best.train", main = "Data", n.per.ball = NULL,
+  decision.names = c("Noise", "Signal"), ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}

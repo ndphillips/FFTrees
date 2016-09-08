@@ -6,7 +6,7 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   rank.method = "m", verbose = F, max.levels = 4, do.cart = T,
-  do.lr = T)
+  do.lr = T, object = NULL)
 }
 \arguments{
 \item{formula}{A formula}
@@ -24,6 +24,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{max.levels}{A number indicating the maximum number of levels considered for the tree.}
 
 \item{do.cart, do.lr}{logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.}
+
+\item{object}{An optional existing FFTrees object (do not specify by hand)}
 }
 \value{
 A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.

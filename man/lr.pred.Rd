@@ -4,7 +4,8 @@
 \alias{lr.pred}
 \title{Calculates predictions from logistic regression}
 \usage{
-lr.pred(formula, data.train, data.test = NULL, thresholds = 0.5)
+lr.pred(formula, data.train, data.test = NULL, lr.model = NULL,
+  thresholds = 0.5)
 }
 \arguments{
 \item{formula}{a formula}
@@ -12,6 +13,8 @@ lr.pred(formula, data.train, data.test = NULL, thresholds = 0.5)
 \item{data.train}{A training dataset}
 
 \item{data.test}{A testing dataset}
+
+\item{lr.model}{An optional logistic regression model created from glm(family = "binomial")}
 
 \item{thresholds}{A vector of decision thresholds}
 }

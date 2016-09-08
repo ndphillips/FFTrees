@@ -92,8 +92,7 @@ As we can see, this tree did not perform nearly as well as our earlier one. The 
 The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to predict which flowers are of the class Virginica
 
 ```{r}
-iris.fft <- FFTrees(
-                    formula = virginica ~.,
+iris.fft <- FFTrees(formula = virginica ~.,
                     data = iris,
                     train.p = .5
                     )

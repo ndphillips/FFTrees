@@ -4,7 +4,8 @@
 \alias{cart.pred}
 \title{Calculates predictions from CART using the rpart package}
 \usage{
-cart.pred(formula, data.train, data.test = NULL)
+cart.pred(formula, data.train, data.test = NULL, cart.model = NULL,
+  cart.mi.cost = 1, cart.fa.cost = 1)
 }
 \arguments{
 \item{formula}{a formula}
@@ -12,6 +13,8 @@ cart.pred(formula, data.train, data.test = NULL)
 \item{data.train}{A training dataset}
 
 \item{data.test}{A testing dataset}
+
+\item{cart.model}{An optional existing cart model}
 }
 \description{
 Calculates predictions from CART using the rpart package

@@ -2,6 +2,7 @@
 #' @param formula a formula
 #' @param data.train A training dataset
 #' @param data.test A testing dataset
+#' @param cart.model An optional existing cart model
 #' @importFrom stats model.frame formula glm
 #' @importFrom rpart rpart
 #' @export
@@ -11,185 +12,206 @@
 cart.pred <- function(
   formula,
   data.train,
-  data.test = NULL
+  data.test = NULL,
+  cart.model = NULL,
+  cart.mi.cost = 1,
+  cart.fa.cost = 1
 ) {
 
 
+if(is.null(data.train) == F) {
+
   data.mf.train <- model.frame(formula = formula, data = data.train)
+  cue.train <- data.mf.train[,2:ncol(data.mf.train)]
   crit.train <- data.mf.train[,1]
 
-  if(is.null(data.test) == F) {
-    data.mf.test <- model.frame(formula = formula, data = data.test)
-    crit.test <- data.mf.test[,1]
-  } else {data.mf.test <- NULL}
+}
 
+if(is.null(data.test) == F) {
 
+  data.mf.test <- model.frame(formula = formula, data = data.test)
+  cue.test <- data.mf.test[,2:ncol(data.mf.test)]
+  crit.test <- data.mf.test[,1]
 
+}
 
-  # Calculate loss df (for ROC curve)
+# DETERMINE CART MODEL
 
-  loss.df <- expand.grid(miss.cost = 1,
-                         fa.cost = 1)
+if(is.null(cart.model) == T) {
 
-  # loss.df <- expand.grid(miss.cost = seq(1, 5, length.out = 3),
-  #                        fa.cost = seq(1, 5, length.out = 3)
-  # )
+# Create new CART model
+cart.train.mod <- rpart::rpart(formula,
+                               data = data.train,
+                               method = "class",
+                               parms = list(loss = matrix(c(0, cart.mi.cost, cart.fa.cost, 0), byrow = T, nrow = 2))
+)
 
-  # Remove some cases where costs are identical
-  loss.df <- loss.df[loss.df$miss.cost != loss.df$fa.cost | loss.df$miss.cost == 1,]
+} else {
 
+ cart.train.mod <- cart.model
 
-  cart.train.acc.ls <- vector("list", length = nrow(loss.df))
+}
 
-  if(is.null(data.test) == F) {cart.test.acc.ls <- vector("list", length = nrow(loss.df))}
+# Determine the cues used by cart model
+cart.cues.used <- as.character(cart.train.mod$frame$var)
+cart.cues.used <- paste(cart.cues.used[cart.cues.used != "<leaf>"], collapse = ";")
+cart.factor.values <- attributes(cart.train.mod)$xlevels
 
+# CART TRAINING PREDICTIONS
+if(is.null(data.train) == F) {
 
-  cart.cues.vec <- c()
+# Look for new factor values
 
-  for(row.i in 1:nrow(loss.df)) {
+can.predict.mtx <- matrix(NA, nrow = nrow(data.train), ncol = ncol(cue.train))
 
-    miss.cost.i <- loss.df$miss.cost[row.i]
-    fa.cost.i <- loss.df$fa.cost[row.i]
+for(i in 1:ncol(cue.train)) {
 
-    # Train cart model
+  if(class(cue.train[,i]) %in% c("numeric", "logical", "integer")) {can.predict.mtx[,i] <- T}
 
-    cart.train.mod.i <- rpart::rpart(formula,
-                                     data = data.train,
-                                     method = "class",
-                                     parms = list(loss = matrix(c(0, miss.cost.i, fa.cost.i, 0), byrow = T, nrow = 2))
-    )
+  if(class(cue.train[,i]) %in% c("factor", "character")) {
 
-    # Determine the cues used by cart model
-
-    cart.cues.used <- as.character(cart.train.mod.i$frame$var)
-    cart.cues.used <- paste(cart.cues.used[cart.cues.used != "<leaf>"], collapse = ";")
-    cart.cues.vec <- c(cart.cues.vec, cart.cues.used)
-
-
-    # Get training decisions
-
-    cart.train.pred.i <- predict(cart.train.mod.i,
-                                 data.train,
-                                 type = "class")
-
-    # Recode to logical
-
-    if("TRUE" %in% paste(cart.train.pred.i)) {cart.train.pred.i <- as.logical(paste(cart.train.pred.i))}
-    if("1" %in% paste(cart.train.pred.i)) {cart.train.pred.i <- as.logical(as.numeric(paste(cart.train.pred.i)))}
-
-
-    # Calculate training accuracy stats
-
-    cart.train.acc.i <- classtable(prediction.v = cart.train.pred.i,
-                                   criterion.v = crit.train)
-
-    cart.train.acc.ls[[row.i]] <- cart.train.acc.i
-
-    if(is.null(data.test) == F) {
-
-      # Get test decisions
-
-      cart.test.pred.i <- predict(cart.train.mod.i,
-                                  data.test,
-                                  type = "class")
-
-      # Recode to logical
-
-      if("TRUE" %in% paste(cart.test.pred.i) | "FALSE" %in% paste(cart.test.pred.i)) {cart.test.pred.i <- as.logical(paste(cart.test.pred.i))}
-      if("1" %in% paste(cart.test.pred.i) | "0" %in% paste(cart.test.pred.i)) {cart.test.pred.i <- as.logical(as.numeric(paste(cart.test.pred.i)))}
-
-
-      cart.test.acc.i <- classtable(prediction.v = cart.test.pred.i,
-                                    criterion.v = crit.test)
-
-      cart.test.acc.ls[[row.i]] <- cart.test.acc.i
-
-
-    }
+    can.predict.mtx[,i] <- paste(cue.train[,i]) %in% cart.factor.values[[which(names(cart.factor.values) == names(cue.train[i]))]]
 
   }
 
-  # SAVE BASIC CART MODEL
+}
 
-  cart.model <- rpart::rpart(formula,
-                             data = data.train,
-                             method = "class"
-  )
+can.predict.vec <- rowMeans(can.predict.mtx) == 1
 
+if(any(can.predict.vec == F)) {
 
-  # Combine training statistics into a df
+warning(paste("CART couldn't predict ",  sum(can.predict.vec == FALSE),
+              " cases because they contained new factor values. These cases will be predicted to be FALSE",
+              sep = ""))
+}
 
-  cart.train.acc.df <- do.call(rbind, cart.train.acc.ls)
-  cart.train.acc.df <- cbind(cart.train.acc.df, loss.df)
+cart.train.pred <- rep(FALSE, nrow(data.train))
 
-  ## Combine cart.train and cart.test
+# Get training decisions
+cart.train.pred.t <- predict(cart.train.mod,
+                             data.train[can.predict.vec == T,],
+                             type = "class")
 
-  cart.train.acc.df <- cart.train.acc.df[c("miss.cost", "fa.cost", "hr", "far", "v", "dprime")]
-  names(cart.train.acc.df) <- c("miss.cost", "fa.cost", "hr.train", "far.train", "v.train", "dprime.train")
+# Recode to logical
 
+if("TRUE" %in% paste(cart.train.pred.t)) {cart.train.pred.t <- as.logical(paste(cart.train.pred.t))}
+if("1" %in% paste(cart.train.pred.t)) {cart.train.pred.t <- as.logical(as.numeric(paste(cart.train.pred.t)))}
 
-  cart.acc <- cbind(cart.train.acc.df,
-                    cart.cues.vec)
+cart.train.pred[can.predict.vec == T] <- cart.train.pred.t
 
+# Calculate training accuracy stats
 
-  if(is.null(data.test) == F) {
-    # Combine test statistics into a df
-    cart.test.acc.df <- do.call(rbind, cart.test.acc.ls)
-    cart.test.acc.df <- cbind(cart.test.acc.df, loss.df)
+cart.train.acc <- classtable(prediction.v = cart.train.pred,
+                               criterion.v = crit.train)
 
-    cart.test.acc.df <- cart.test.acc.df[c("hr", "far", "v", "dprime")]
-    names(cart.test.acc.df) <- c("hr.test", "far.test", "v.test", "dprime.test")
-    cart.auc.test <- auc(cart.test.acc.df$hr.test, cart.test.acc.df$far.test)
+} else {
+
+cart.train.acc <- classtable(prediction.v = 1, criterion.v = 1)
+cart.train.acc[1,] <- NA
+
+}
+
+# CART TESTING PREDICTIONS
+
+if(is.null(data.test) == F) {
+
+  if(is.null(cart.model) == F) {
+
+    cart.train.mod <- cart.model
 
   }
 
-  if(is.null(data.test) == T) {
-    # Combine test statistics into a df
+# Get test decisions
 
-    cart.test.acc.df <- as.data.frame(matrix(NA, nrow = nrow(cart.train.acc.df), ncol =4))
-    names(cart.test.acc.df) <- c("hr.test", "far.test", "v.test", "dprime.test")
+
+# Look for new factor values
+
+can.predict.mtx <- matrix(NA, nrow = nrow(data.test), ncol = ncol(cue.test))
+
+for(i in 1:ncol(cue.test)) {
+
+  if(class(cue.test[,i]) %in% c("numeric", "logical", "integer")) {can.predict.mtx[,i] <- T}
+
+  if(class(cue.test[,i]) %in% c("factor", "character")) {
+
+    can.predict.mtx[,i] <- paste(cue.test[,i]) %in% cart.factor.values[[which(names(cart.factor.values) == names(cue.test[i]))]]
 
   }
 
-  cart.acc <- cbind(cart.acc, cart.test.acc.df)
+}
+
+can.predict.vec <- rowMeans(can.predict.mtx) == 1
+
+if(any(can.predict.vec == F)) {
+
+  warning(paste("CART couldn't predict ",  sum(can.predict.vec == FALSE),
+                " test cases because they contained new factor values. These cases will be predicted to be FALSE",
+                sep = ""))
+}
+
+cart.test.pred <- rep(FALSE, nrow(data.test))
+
+# Get training decisions
+cart.test.pred.t <- predict(cart.train.mod,
+                             data.test[can.predict.vec == T,],
+                             type = "class")
+
+# Recode to logical
+
+if("TRUE" %in% paste(cart.test.pred.t)) {cart.test.pred.t <- as.logical(paste(cart.test.pred.t))}
+if("1" %in% paste(cart.test.pred.t)) {cart.test.pred.t <- as.logical(as.numeric(paste(cart.test.pred.t)))}
+
+cart.test.pred[can.predict.vec == T] <- cart.test.pred.t
 
 
-
-  # Sort in ascending order of FAR
-
-  cart.acc <- cart.acc[order(cart.acc$far.train),]
-
-  # Remove cases with the same result
-
-  dup.rows <- duplicated.data.frame(cart.acc[,-c(1, 2)])
-  cart.acc <- cart.acc[dup.rows == F | (cart.acc$miss.cost == 1 & cart.acc$fa.cost == 1),]
-
-  # Remove cases without cues
-
-  #cart.acc <- cart.acc[cart.acc$cart.cues.vec != "",]
-
-  # Calculate auc
-
-  cart.auc.train <- auc(hr.v = cart.acc$hr.train, far.v = cart.acc$far.train)
+cart.test.acc <- classtable(prediction.v = cart.test.pred,
+                              criterion.v = crit.test)
 
 
-  if(is.null(data.test) == F) {
-    cart.auc.test <- auc(hr.v = cart.acc$hr.test, far.v = cart.acc$far.test)
-  } else {
+} else {
 
-    cart.auc.test <- NA
-  }
+  cart.test.acc <- classtable(prediction.v = 1, criterion.v = 1)
+  cart.test.acc[1,] <- NA
 
-  cart.auc <- matrix(c(cart.auc.train, cart.auc.test), nrow = 2, ncol = 1)
-  colnames(cart.auc) <- "cart"
-  rownames(cart.auc) <- c("train", "test")
+}
 
-  output <- list("accuracy" = cart.acc,
-                 "auc" = cart.auc,
-                 "model" = cart.model
-  )
+# ORGANIZE
 
-  return(output)
+names(cart.train.acc) <- paste(names(cart.train.acc), ".train", sep = "")
+names(cart.test.acc) <- paste(names(cart.test.acc), ".test", sep = "")
 
+cart.acc <- cbind(cart.train.acc, cart.test.acc, cart.cues.used)
+cart.acc <- cart.acc[order(cart.acc$far.train),]
+
+# CALCULATE AUC
+
+if(is.null(data.train) == F) {
+
+cart.auc.train <- auc(hr.v = cart.acc$hr.train, far.v = cart.acc$far.train)
+
+} else {
+
+  cart.auc.train <- NA
+}
+
+if(is.null(data.test) == F) {
+  cart.auc.test <- auc(hr.v = cart.acc$hr.test, far.v = cart.acc$far.test)
+} else {
+
+  cart.auc.test <- NA
+}
+
+cart.auc <- matrix(c(cart.auc.train, cart.auc.test), nrow = 2, ncol = 1)
+colnames(cart.auc) <- "cart"
+rownames(cart.auc) <- c("train", "test")
+
+# SETUP OUTPUT
+
+output <- list("accuracy" = cart.acc,
+               "auc" = cart.auc,
+               "model" = cart.train.mod
+)
+
+return(output)
 
 }

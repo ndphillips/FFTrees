@@ -4,13 +4,14 @@
 \alias{cuerank}
 \title{Calculate the accuracy of all cues in a dataframe}
 \usage{
-cuerank(cue.df = NULL, criterion.v = NULL, tree.criterion = "v",
-  numthresh.method = "o", hr.weight = 0.5, rounding = NULL, verbose = F)
+cuerank(formula = NULL, data = NULL, tree.criterion = "v",
+  numthresh.method = "o", hr.weight = 0.5, rounding = NULL, verbose = F,
+  cue.rules = NULL)
 }
 \arguments{
-\item{cue.df}{A dataframe of cue values}
+\item{formula}{A formula specifying a binary criterion as a function of multiple variables}
 
-\item{criterion.v}{A logical vector of length m containing criterion values for exemplars in cue.df}
+\item{data}{A dataframe containing variables in formula}
 
 \item{tree.criterion}{A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.}
 
@@ -21,9 +22,11 @@ cuerank(cue.df = NULL, criterion.v = NULL, tree.criterion = "v",
 \item{rounding}{An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 
 \item{verbose}{A logical value indicating whether or not to print ongoing diagnostics}
+
+\item{cue.rules}{An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"}
 }
 \value{
-A list with two elements. The first, "cue.stats" is a dataframe containing the classification statistics for every possible cue threshold. The second element, cue.best, contains data for the best performing cue threshold
+A dataframe containing marginal classification statistics for each cue
 }
 \description{
 Calculate the accuracy of all cues in a dataframe
