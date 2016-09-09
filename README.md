@@ -1,5 +1,5 @@
 # FFTrees
-A package to create and visualize fast and frugal decision trees (FFTrees)
+A package to create and visualize Fast and Frugal ecision Trees (FFTrees)
 
 
 ### Package updates
@@ -7,10 +7,11 @@ A package to create and visualize fast and frugal decision trees (FFTrees)
 1.1.6
 
 - Streamlined code to improve cohesion between functions. This may cause issues with FFTrees objects created with earlier versions of the package. They will need to be re-created.
+- Updated, clearer `print.FFTrees()` method to see important info about an FFTrees object.
 - Training and testing statistics are now always in seperate objects (e.g.; `data$train`, `data$test`) to avoid confusion.
 
 - Bug-fixes
-    - `predict.FFTrees()` now works by passing an existing FFTrees object and a new dataset back to FFTrees(). It will use all existing trees in the existing FFTrees object and apply them to the new dataset as a new test dataset.
+    - `predict.FFTrees()` now works much better by passing a new dataset (`data.test`) as a test dataset for an existing FFTrees object.
 
 1.1.5
 
