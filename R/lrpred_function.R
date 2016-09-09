@@ -19,7 +19,6 @@ lr.pred <- function(
 
   correction <- .25
 
-
 if(is.null(data.train) == F) {
 
 data.train <- model.frame(formula = formula,
@@ -32,7 +31,6 @@ crit.train <- data.train[,1]
 cue.train <- data.train[,2:ncol(data.train)]
 
 }
-
 if(is.null(data.test) == F) {
 
   data.test <- model.frame(formula = formula, data = data.test)
@@ -45,8 +43,6 @@ if(is.null(data.test) == F) {
 }
 
 # DETERMINE LR MODEL
-
-
 
 if(is.null(lr.model) == T) {
 
@@ -131,7 +127,7 @@ if(is.null(data.test) == F) {
 
   for(i in 1:ncol(cue.test)) {
 
-    if(class(cue.test[,i]) %in% c("numeric", "logical")) {can.predict.mtx[,i] <- T}
+    if(class(cue.test[,i]) %in% c("numeric", "logical", "integer")) {can.predict.mtx[,i] <- T}
 
     if(class(cue.test[,i]) %in% c("factor", "character")) {
 

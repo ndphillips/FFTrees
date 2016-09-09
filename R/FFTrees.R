@@ -27,7 +27,6 @@ FFTrees <- function(
                 object = NULL
 ) {
 
-
 # Set some global parameters
 
 tree.criterion <- "v"
@@ -222,6 +221,7 @@ data.test <- fac.to.string(data.test)
 data.train <- fac.to.string(data.train)
 cue.train <- fac.to.string(cue.train)
 cue.test <- fac.to.string(cue.test)
+
 }
 
 # Check for missing or bad inputs
@@ -238,7 +238,7 @@ if(is.null(data.train) |
 if(is.null(data.test) == F) {
 
 
-if(setequal(names(data.train), names(data.train)) == F) {
+if(setequal(names(data.train), names(data.test)) == F) {
 
   stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
@@ -261,7 +261,6 @@ if(setequal(crit.train, c(0, 1)) == F) {
 
 # EXTRACT PARAMETERS
 max.levels <- min(max.levels, ncol(data.train) - 1)
-
 
 # CALCULATE CUE ACCURACIES
 {
@@ -321,20 +320,15 @@ tree.growth <- grow.FFTrees(formula = formula,
                             stopping.par = stopping.par,
                             max.levels = max.levels)
 
-tree.definitions <- tree.growth$trees[c("tree", "cues", "nodes", "classes", "exits", "thresholds", "directions")]
+tree.definitions <- tree.growth$tree.definitions
 
 }
 
-if(is.null(object) == F) {
-
-  tree.definitions <- object$tree.stats$train[c("tree", "nodes", "cues", "classes", "exits", "thresholds", "directions")]
-
-}
+if(is.null(object) == F) {tree.definitions <- object$tree.definitions}
 }
 
 ## CALCULATE TREE STATISTICS FROM DEFINITIONS
 {
-
 n.trees <- nrow(tree.definitions)
 
 apply.tree <- function(data,
@@ -557,10 +551,11 @@ output.fft <- list(
                   "formula" = formula,
                   "data" = list("train" = data.train, "test" = data.test),
                   "cue.accuracies" = cue.accuracies,
+                  "tree.definitions" = tree.definitions,
                   "tree.stats" = treestats,
+                  "level.stats" = levelstats,
                   "decision" = decision,
                   "levelout" = levelout,
-                  "levelstats" = levelstats,
                   "auc" = auc,
                   "lr" = list("model" = lr.model, "stats" = lr.stats),
                   "cart" = list("model" = cart.model, "stats" = cart.stats)

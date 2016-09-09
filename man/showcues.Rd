@@ -4,14 +4,14 @@
 \alias{showcues}
 \title{Visualizes cue accuracies in a ROC space}
 \usage{
-showcues(x = NULL, which.data = "train", main = NULL, top = 5,
+showcues(x = NULL, data = "train", main = NULL, top = 5,
   palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F", "#FA6B097F",
   "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F", "#9A703E7F"))
 }
 \arguments{
 \item{x}{An FFTrees object}
 
-\item{which.data}{A string indicating whether or not to show training ("train") or testing ("test") cue accuracies}
+\item{data}{A string indicating whether or not to show training ("train") or testing ("test") cue accuracies}
 
 \item{main}{Main plot description}
 

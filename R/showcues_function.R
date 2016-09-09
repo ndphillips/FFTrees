@@ -1,7 +1,7 @@
 #' Visualizes cue accuracies in a ROC space
 #'
 #' @param x An FFTrees object
-#' @param which.data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
+#' @param data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
 #' @param main Main plot description
 #' @param top An integer indicating how many of the top cues to highlight
 #' @param palette An optional vector of colors
@@ -10,7 +10,7 @@
 #'
 
 showcues <- function(x = NULL,
-                    which.data = "train",
+                    data = "train",
                     main = NULL,
                     top = 5,
                     palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
@@ -18,16 +18,17 @@ showcues <- function(x = NULL,
                                 "#9A703E7F")) {
 
 
-
-if(which.data == "train") {
+if(data == "train") {
 
   cue.df <- x$cue.accuracies$train
 
 }
 
-if(which.data == "test") {
+if(data == "test") {
 
-  cue.df <- x$cue.accuracies$test
+  if(is.null(x$cue.accuracies$test)) {stop("There are no test statistics")}
+
+  if(is.null(x$cue.accuracies$test) == F) {cue.df <- x$cue.accuracies$test}
 
 }
 
@@ -49,14 +50,17 @@ axis(2, at = seq(0, 1, .1), las = 1)
 axis(1, at = seq(0, 1, .1))
 
 
-if(which.data == "test") {mtext("Testing data", 3, line = .5, cex = .8)}
-if(which.data == "train") {mtext("Training data", 3, line = .5, cex = .8)}
+if(data == "test") {mtext("Testing data", 3, line = .5, cex = .8)}
+if(data == "train") {mtext("Training data", 3, line = .5, cex = .8)}
 
+par("xpd" = F)
 
 rect(-100, -100, 100, 100, col = gray(.96))
 abline(h = seq(0, 1, .1), lwd = c(2, 1), col = "white")
 abline(v = seq(0, 1, .1), lwd = c(2, 1), col = "white")
 abline(a = 0, b = 1)
+
+
 
 # Non-top cues
 

@@ -5,7 +5,7 @@
 \title{Calculates predictions from CART using the rpart package}
 \usage{
 cart.pred(formula, data.train, data.test = NULL, cart.model = NULL,
-  cart.mi.cost = 1, cart.fa.cost = 1)
+  cost.mi = 1, cost.fa = 1)
 }
 \arguments{
 \item{formula}{a formula}
@@ -15,6 +15,8 @@ cart.pred(formula, data.train, data.test = NULL, cart.model = NULL,
 \item{data.test}{A testing dataset}
 
 \item{cart.model}{An optional existing cart model}
+
+\item{cost.mi, cost.fa}{Optional costs for misses and false alarms}
 }
 \description{
 Calculates predictions from CART using the rpart package

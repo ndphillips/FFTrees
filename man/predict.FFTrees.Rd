@@ -4,12 +4,12 @@
 \alias{predict.FFTrees}
 \title{Applies an existing FFTrees object to a new dataset}
 \usage{
-\method{predict}{FFTrees}(object = NULL, data = NULL, ...)
+\method{predict}{FFTrees}(object = NULL, data.test = NULL, ...)
 }
 \arguments{
 \item{object}{(M) An FFTrees object created from the FFTrees() function.}
 
-\item{data}{(M) An m x n dataframe containing n cue values for each of the m exemplars.}
+\item{data.test}{(M) A dataframe of test data}
 
 \item{...}{Additional arguments passed on to predict()}
 }

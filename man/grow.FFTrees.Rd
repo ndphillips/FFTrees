@@ -11,6 +11,8 @@ grow.FFTrees(formula, data, rank.method = "m", numthresh.method = "o",
 \arguments{
 \item{formula}{a formula}
 
+\item{data}{A dataset}
+
 \item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
 \item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
@@ -22,10 +24,6 @@ grow.FFTrees(formula, data, rank.method = "m", numthresh.method = "o",
 \item{stopping.par}{A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
 
 \item{verbose}{A logical value indicating whether or not to display progress}
-
-\item{data.mf}{A training dataset}
-
-\item{data.test}{A testing dataset}
 }
 \value{
 A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.

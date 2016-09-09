@@ -27,7 +27,7 @@ The critical dependent variable is `diagnosis` which indicates whether a patient
 Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the test dataset:
 
 ```{r}
-set.seed(100)
+set.seed(100) # For replication
 samples <- sample(c(T, F), size = nrow(heartdisease), replace = T)
 heartdisease.train <- heartdisease[samples,]
 heartdisease.test <- heartdisease[samples == 0,]
@@ -36,8 +36,7 @@ heartdisease.test <- heartdisease[samples == 0,]
 We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
 
 ```{r}
-heart.fft <- FFTrees(
-                    formula = diagnosis ~.,
+heart.fft <- FFTrees(formula = diagnosis ~.,
                     data = heartdisease.train,
                     data.test = heartdisease.test
                     )
@@ -73,70 +72,58 @@ You can also view the cue accuracies in an ROC-type plot with `showcues()`:
 
 ```{r fig.width = 8, fig.height = 8}
 showcues(heart.fft, 
-         main = "Heartdisease Cue Accuracy", "test")
+         main = "Heartdisease Cue Accuracy")
 ```
 
 
-### Tree definitions and accuracy statistics: tree.stats
+### Tree definitions and accuracy statistics
 
-The `tree.stats` dataframe contains all tree definitions and training (and possibly test) statistics for all ($2^{max.levels - 1}$) trees. For our `heart.fft` example, there are $2^{4 - 1} = 8$ trees.
+The `tree.definitions` dataframe contains definitions (cues, classes, exits, thresholds, and directions) of all trees in the object:
 
 ```{r}
-heart.fft$tree.stats
+heart.fft$tree.definitions
 ```
 
-You can also use the generic `summary()` function to get the trees dataframe
-
-```{r, eval = F}
-summary(heart.fft)  # Same thing as heart.fft$tree.stats
-```
-
-Tree definitions (exit directions, cue order, and cue thresholds) are contained in columns 1 through 6. Training statistics are contained in columns 7:15 and have the `.train` suffix. For our heart disease dataset, it looks like tree 2 had the highest training v (HR - FAR) values. Test statistics are contained in columns 16:24 and have the `.test` suffix. It looks like trees 2 and 6 also had the highest test v (HR - FAR) values. 
-
-
-### Area under the curve (AUC): auc
-
-AUC (area under the curve) statistics are in the `auc` dataframe:
+The `tree.stats` list contains classification statistics for all trees applied to both training `tree.stats$train` and test `tree.stats$test` data:
 
 ```{r}
-heart.fft$auc
+heart.fft$tree.stats$train
 ```
 
+### decision
 
-### Other information
+The `decision` list contains the raw classification decisions for each tree for each training (and test) case.
 
-#### train.decision.df, test.decision.df
-
-The `train.decision.df` and `test.decision.df` contain the raw classification decisions for each tree for each training (and test) case.
-
-Here are each of the 8 tree decisions for the first 5 training cases.
+Here are is how each tree classified the first five cases in the training data:
 
 ```{r}
 heart.fft$decision$train[1:5,]
 ```
 
+### levelout
 
-#### train.levelout.df, test.levelout.df
+The `levelout` list contains the levels at which each case was classified for each tree.
 
-The `train.levelout.df` and `test.levelout.df` contain the levels at which each case was classified for each tree.
-
-Here are the levels at which the first 5 training cases were classified:
+Here are the levels at which the first 5 test cases were classified:
 
 ```{r}
-heart.fft$levelout$train[1:5,]
+heart.fft$levelout$test[1:5,]
 ```
 
+### Predicting new data with predict()
 
-## Selecting cues
-
-If you want to select specific cues for a tree, just include them in the `formula` argument.
-
-For example, the following tree `heart.as.fft` will only consider the cues `sex` and `age`:
+Once you've created an FFTrees object, you can use it to predict new data using `predict()`. This will return a new FFTrees object with the new data used as test data. This will overwrite any existing test data in the FFTrees object but will save all training data. In this example, I'll use the `heart.fft` object to make predictions for cases 1 through 50 in the heartdisease dataset:
 
 ```{r}
-heart.as.fft <- FFTrees(formula = diagnosis ~ age + sex,
-                        data = heartdisease
-                        )
+heart.fft <- predict(heart.fft,
+                     data.test = heartdisease[1:50,]
+                     )
+```
+
+When you look at `heart.fft` now, you'll see that the new test data (with 50 cases) are stored as test data:
+
+```{r}
+heart.fft
 ```
 
 

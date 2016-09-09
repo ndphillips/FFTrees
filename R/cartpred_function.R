@@ -3,6 +3,7 @@
 #' @param data.train A training dataset
 #' @param data.test A testing dataset
 #' @param cart.model An optional existing cart model
+#' @param cost.mi,cost.fa Optional costs for misses and false alarms
 #' @importFrom stats model.frame formula glm
 #' @importFrom rpart rpart
 #' @export
@@ -14,8 +15,8 @@ cart.pred <- function(
   data.train,
   data.test = NULL,
   cart.model = NULL,
-  cart.mi.cost = 1,
-  cart.fa.cost = 1
+  cost.mi = 1,
+  cost.fa = 1
 ) {
 
 
@@ -43,7 +44,7 @@ if(is.null(cart.model) == T) {
 cart.train.mod <- rpart::rpart(formula,
                                data = data.train,
                                method = "class",
-                               parms = list(loss = matrix(c(0, cart.mi.cost, cart.fa.cost, 0), byrow = T, nrow = 2))
+                               parms = list(loss = matrix(c(0, cost.mi, cost.fa, 0), byrow = T, nrow = 2))
 )
 
 } else {

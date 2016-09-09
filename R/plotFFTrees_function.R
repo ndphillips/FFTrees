@@ -6,6 +6,7 @@
 #' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param main The main plot label.
+#' @param n.per.icon Number of exemplars per icon
 #' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param ... Currently ignored.
 #' @importFrom stats anova predict formula model.frame
@@ -28,14 +29,14 @@ plot.FFTrees <- function(
   which.tree = NULL,
   tree = "best.train",
   main = "Data",
-  n.per.ball = NULL,
+  n.per.icon = NULL,
   decision.names = c("Noise", "Signal"),
   ...
 ) {
-
 # -------------------------
 # TESTING VALUES
 # --------------------------
+
 
 n.trees <- nrow(x$tree.stats$train)
 
@@ -99,7 +100,7 @@ if(data == "train") {
   criterion.v <- data.mf[,1]
   decision.v <- x$decision$train[,tree]
   tree.stats <- x$tree.stats$train
-  level.stats <- x$levelstats$train[x$levelstats$train$tree == tree,]
+  level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
   lr.stats <- data.frame("hr" = x$lr$stats$hr.train, "far" = x$lr$stats$far.train)
   cart.stats <- data.frame("hr" = x$cart$stats$hr.train, "far" = x$cart$stats$far.train)
   n.exemplars <- nrow(data.mf)
@@ -111,7 +112,7 @@ if(data == "test") {
   criterion.v <- data.mf[,1]
   decision.v <- x$decision$test[,tree]
   tree.stats <- x$tree.stats$test
-  level.stats <- x$levelstats$test[x$levelstats$test$tree == tree,]
+  level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
   lr.stats <- data.frame("hr" = x$lr$stats$hr.test, "far" = x$lr$stats$far.test)
   cart.stats <- data.frame("hr" = x$cart$stats$hr.test, "far" = x$cart$stats$far.test)
   n.exemplars <- nrow(data.mf)
@@ -253,14 +254,14 @@ ball.box.fixed.x.shift <- c(ball.box.min.shift.p * plot.width, ball.box.max.shif
 
 # Determine N per ball
 
-if(is.null(n.per.ball)) {
+if(is.null(n.per.icon)) {
 
   max.n.side <- max(c(sum(criterion.v == 0), sum(criterion.v == 1)))
 
   i <- max.n.side / c(1, 5, 10^(1:10))
   i[i > 50] <- 0
 
-  n.per.ball <- c(1, 5, 10^(1:10))[which(i == max(i))]
+  n.per.icon <- c(1, 5, 10^(1:10))[which(i == max(i))]
 
 }
 
@@ -312,7 +313,7 @@ add.balls.fun <- function(x.lim = c(-10, 0),
                           rev.order = F,
                           box.col = NULL,
                           box.bg = NULL,
-                          n.per.ball = NULL
+                          n.per.icon = NULL
 
 ) {
 
@@ -349,21 +350,21 @@ add.balls.fun <- function(x.lim = c(-10, 0),
 
   # Determine cases per ball
 
-  if(is.null(n.per.ball)) {
+  if(is.null(n.per.icon)) {
 
     max.n.side <- max(c(a.n, b.n))
 
     i <- max.n.side / c(1, 5, 10, 50, 100, 1000, 10000)
     i[i > 50] <- 0
 
-    n.per.ball <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
+    n.per.icon <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
 
   }
 
   # Determine general ball locations
 
-  a.balls <- ceiling(a.n / n.per.ball)
-  b.balls <- ceiling(b.n / n.per.ball)
+  a.balls <- ceiling(a.n / n.per.icon)
+  b.balls <- ceiling(b.n / n.per.icon)
   n.balls <- a.balls + b.balls
 
   a.ball.x.loc <- 0
@@ -473,7 +474,7 @@ text(.5, .65, paste("True ", decision.names[2], sep = ""), pos = 4, cex = 1.2, a
 
 
 #points(.9, .8, pch = 1, cex = 1.2)
-#text(.9, .8, labels = paste(" = ", n.per.ball, " cases", sep = ""), pos = 4)
+#text(.9, .8, labels = paste(" = ", n.per.icon, " cases", sep = ""), pos = 4)
 
 # Show ball examples
 
@@ -487,7 +488,7 @@ add.balls.fun(x.lim = c(.35, .65),
               col.vec = c(noise.ball.col, signal.ball.col),
               ball.cex = ball.cex,
               upper.text.adj = 2,
-              n.per.ball = n.per.ball
+              n.per.icon = n.per.icon
 )
 
 par(xpd = F)
@@ -597,7 +598,6 @@ par(xpd = F)
     fa.i <- level.stats$fa.m[level.i]
     cr.i <- level.stats$cr.m[level.i]
 
-
     # If level.i == 1, draw top textbox
 
     if(level.i == 1) {
@@ -654,30 +654,7 @@ par(xpd = F)
                length = arrow.head.length
         )
 
-        # level break label
 
-        pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
-        neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
-
-
-
-        text(subplot.center[1] - 1,
-             subplot.center[2],
-             labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
-             pos = 2, cex = break.label.cex
-        )
-
-        points(x = subplot.center[1] - 2,
-               y = subplot.center[2] - 2,
-               pch = exit.node.pch,
-               cex = exit.node.cex,
-               bg = exit.node.bg
-        )
-
-        text(x = subplot.center[1] - 2,
-             y = subplot.center[2] - 2,
-             labels =  substr(decision.names[1], 1, 1)
-        )
 
         if(ball.loc == "fixed") {
 
@@ -707,11 +684,35 @@ par(xpd = F)
                         bg.vec = c(correct.bg, error.bg),
                         col.vec = c(correct.border, error.border),
                         freq.text = T,
-                        n.per.ball = n.per.ball,
+                        n.per.icon = n.per.icon,
                         ball.cex = ball.cex
           )
 
         }
+
+        # level break label
+
+        pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
+        neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+
+
+        text.outline(x = subplot.center[1] - 1,
+                     y = subplot.center[2],
+                     labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
+                     pos = 2, cex = break.label.cex, r = .1
+        )
+
+        points(x = subplot.center[1] - 2,
+               y = subplot.center[2] - 2,
+               pch = exit.node.pch,
+               cex = exit.node.cex,
+               bg = exit.node.bg
+        )
+
+        text(x = subplot.center[1] - 2,
+             y = subplot.center[2] - 2,
+             labels =  substr(decision.names[1], 1, 1)
+        )
 
       }
 
@@ -774,31 +775,7 @@ par(xpd = F)
                length = arrow.head.length
         )
 
-        # level break label
 
-        dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
-
-        pos.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
-        neg.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
-
-
-        text(subplot.center[1] + 1,
-             subplot.center[2],
-             labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
-             pos = 4, cex = break.label.cex
-        )
-
-        points(x = subplot.center[1] + 2,
-               y = subplot.center[2] - 2,
-               pch = exit.node.pch,
-               cex = exit.node.cex,
-               bg = exit.node.bg
-        )
-
-        text(x = subplot.center[1] + 2,
-             y = subplot.center[2] - 2,
-             labels = substr(decision.names[2], 1, 1)
-        )
 
 
         if(ball.loc == "fixed") {
@@ -829,11 +806,37 @@ par(xpd = F)
                         bg.vec = c(error.bg, correct.bg),
                         col.vec = c(error.border, correct.border),
                         freq.text = T,
-                        n.per.ball = n.per.ball,
+                        n.per.icon = n.per.icon,
                         ball.cex = ball.cex
           )
 
         }
+
+        # level break label
+
+        dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
+
+        pos.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+        neg.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+
+
+        text.outline(subplot.center[1] + 1,
+                     subplot.center[2],
+                     labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
+                     pos = 4, cex = break.label.cex, r = .1
+        )
+
+        points(x = subplot.center[1] + 2,
+               y = subplot.center[2] - 2,
+               pch = exit.node.pch,
+               cex = exit.node.cex,
+               bg = exit.node.bg
+        )
+
+        text(x = subplot.center[1] + 2,
+             y = subplot.center[2] - 2,
+             labels = substr(decision.names[2], 1, 1)
+        )
 
 
       }
@@ -989,8 +992,7 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
   text(x = rect.center,
        y = (rect.top + rect.bottom) / 2,
        labels = paste(round((1 - final.stats$far), 2) * 100, "%", sep = ""),
-       cex = 1.2,
-       font = 1)
+       cex = 1.2)
 
   text(x = rect.center,
        y = (rect.top + rect.bottom) / 2.2,
@@ -1339,6 +1341,8 @@ par("xpd" = T)
 
   # Add segments and points for all trees but tree
 
+  if(length(roc.order) > 1) {
+
   segments(final.roc.x.loc[1] + c(0, fft.far.vec.ord) * final.roc.dim[1],
            final.roc.y.loc[1] + c(0, fft.hr.vec.ord) * final.roc.dim[2],
            final.roc.x.loc[1] + c(fft.far.vec.ord, 1) * final.roc.dim[1],
@@ -1352,6 +1356,8 @@ par("xpd" = T)
   text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * final.roc.dim[1],
        final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * final.roc.dim[2],
        labels = roc.order[-(which(roc.order == tree))], cex = 1, col = gray(.2))
+
+  }
 
 
   # Add large point for plotted tree

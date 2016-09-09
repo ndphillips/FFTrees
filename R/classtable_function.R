@@ -51,12 +51,14 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {criterion.v <- as.logical(p
 
   result <- data.frame(
     n = length(criterion.v),
-    hi = hi, mi = mi, fa = fa, cr = cr,
+    hi = hi,
+    mi = mi,
+    fa = fa,
+    cr = cr,
     hr = hr,
     far = far,
-    v = v.c.w,
-    dprime = dprime.c.w,
-    hr.weight = hr.weight
+    v = v,
+    dprime = dprime.c
   )
 
   return(result)
