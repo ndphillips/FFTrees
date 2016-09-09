@@ -7,7 +7,7 @@ A package to create and visualize Fast and Frugal decision Trees (FFTrees)
 1.1.6
 
 - Streamlined code to improve cohesion between functions. This may cause issues with FFTrees objects created with earlier versions of the package. They will need to be re-created.
-- Updated, clearer `print.FFTrees()` method to see important info about an FFTrees object.
+- Updated, clearer `print.FFTrees()` method to see important info about an FFTrees object in matrix format.
 - Training and testing statistics are now always in seperate objects (e.g.; `data$train`, `data$test`) to avoid confusion.
 
 - Bug-fixes
