@@ -27,6 +27,18 @@ FFTrees <- function(
                 object = NULL
 ) {
 
+
+object <- FFTrees(diagnosis ~., data = heartdisease)
+data <- NULL
+data.test <- heartdisease
+data.test$diagnosis <- 0
+train.p <- 1
+rank.method <- "m"
+max.levels <- 4
+do.cart <- T
+do.lr <- T
+verbose <- T
+
 # Set some global parameters
 
 tree.criterion <- "v"
@@ -59,10 +71,17 @@ if(is.null(object) == F) {
   cue.train <- data.train[,2:ncol(data.train)]
   crit.train <- data.train[,1]
 
+  crit.name <- names(data.train)[1]
+
   if(is.null(data.test) == F) {
 
     data.test.o <- data.test
 
+    if(setequal(names(data.train), names(data.test)) == F) {
+
+      stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
+
+    }
     data.test <- model.frame(formula = formula,
                              data = data.test.o)
 
@@ -91,6 +110,12 @@ if(is.null(object) == T & train.p == 1) {
   crit.train <- data.train[,1]
 
  if(is.null(data.test) == F) {
+
+   if(setequal(names(data.train), names(data.test)) == F) {
+
+     stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
+
+   }
 
    data.test.o <- data.test
    data.test <- model.frame(formula = formula,
@@ -227,7 +252,7 @@ cue.test <- fac.to.string(cue.test)
 # Check for missing or bad inputs
 {
 if(is.null(data.train) |
-   "data.frame" %in% class(data) == F) {
+   "data.frame" %in% class(data.train) == F) {
 
   stop("Please specify a valid dataframe object in data")
 
@@ -252,7 +277,7 @@ if(setequal(names(data.train), names(data.test)) == F) {
 # Non-binary DV
 if(setequal(crit.train, c(0, 1)) == F) {
 
-  stop("Warning! Your DV is not binary or logical. Convert to 0s and 1s (or FALSE and TRUE)")
+  stop("Warning! The dependent variable in your training data is either not binary or logical, or does not have variance. Convert to 0s and 1s (or FALSE and TRUE)")
 
 }
 
@@ -285,7 +310,7 @@ cue.accuracies.train <- object$cue.accuracies$train
 
 }
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == F & sd(crit.test) > 0) {
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
@@ -298,7 +323,7 @@ cue.accuracies.test <- cuerank(formula = formula,
 
 }
 
-if(is.null(data.test)) {
+if(is.null(data.test) | sd(crit.test) == 0) {
 
 cue.accuracies.test <- NULL
 
@@ -455,6 +480,7 @@ if(is.null(data.train) == T) {
   levelstats.train <- NULL
   treestats.train <- NULL
   tree.auc.train <- NA
+
 }
 
 if(is.null(data.test) == F) {
@@ -465,6 +491,15 @@ decision.test <- test.results$decision
 levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
+
+if(any(is.na(test.results$treestats$hr)) == T) {
+
+  tree.auc.test <- NA
+
+}
+
+if(all(is.finite(test.results$treestats$hr))) {
+
 tree.auc.test <- auc(hr.v = test.results$treestats$hr, far.v = test.results$treestats$far)
 
 }
@@ -476,6 +511,9 @@ if(is.null(data.test) == T) {
   levelstats.test <- NULL
   treestats.test <- NULL
   tree.auc.test <- NA
+
+}
+
 }
 
 decision <- list("train" = decision.train, "test" = decision.test)
@@ -496,7 +534,6 @@ lr.acc <- lr.pred(formula = formula,
                data.train = data.train,
                data.test = data.test
                )
-
 
 lr.stats <- lr.acc$accuracy
 lr.auc <- lr.acc$auc

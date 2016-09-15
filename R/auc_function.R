@@ -6,7 +6,6 @@
 
 auc <- function(hr.v, far.v) {
 
-
   hr.order <- order(hr.v)
 
   hr.v <- hr.v[hr.order]
@@ -15,11 +14,12 @@ auc <- function(hr.v, far.v) {
   hr.v <- c(0, hr.v, 1)
   far.v <- c(0, far.v, 1)
 
-
   # Remove bad (i.e.. non-increasing values)
 
   hr.v.n <- hr.v[1]
   far.v.n <- far.v[1]
+
+  if(all(is.finite(hr.v) & is.finite(far.v))) {
 
   for(i in 2:length(hr.v)) {
 
@@ -41,7 +41,10 @@ auc <- function(hr.v, far.v) {
   auc.i <- sum((far.v[2:n] - far.v[1:(n - 1)]) * hr.v[1:(n - 1)] +
     (far.v[2:n] - far.v[1:(n - 1)]) * (hr.v[2:(n)] - hr.v[1:(n-1)]) / 2)
 
+  } else {
 
+    auc.i <- NA
+}
 
   return(auc.i)
 

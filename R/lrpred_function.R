@@ -31,6 +31,7 @@ crit.train <- data.train[,1]
 cue.train <- data.train[,2:ncol(data.train)]
 
 }
+
 if(is.null(data.test) == F) {
 
   data.test <- model.frame(formula = formula, data = data.test)
@@ -110,6 +111,7 @@ for(i in 1:ncol(cue.train)) {
                                criterion.v = crit.train)
 
 }
+
 if(is.null(data.train) == T) {
 
   lr.train.acc <- classtable(prediction.v = 1, criterion.v = 1)
@@ -182,6 +184,7 @@ names(lr.test.acc)[names(lr.test.acc) %in% stat.names] <- paste(names(lr.test.ac
 lr.acc <- cbind(lr.train.acc, lr.test.acc)
 lr.acc <- lr.acc[order(lr.acc$far.train),]
 lr.acc$threshold <- thresholds
+
 # AUC
 
 if(is.null(data.train) == F) {
@@ -190,7 +193,7 @@ lr.train.auc <- auc(lr.train.acc$hr.train, lr.train.acc$far.train)
 
 } else {lr.train.auc <- NA}
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == F & all(is.finite(lr.test.acc$hr.test))) {
 
  lr.test.auc <- auc(lr.test.acc$hr.test, lr.test.acc$far.test)
 
