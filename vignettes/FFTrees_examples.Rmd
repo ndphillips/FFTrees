@@ -22,14 +22,18 @@ Here are some examples of FFTrees created from datasets in the `FFTrees` package
 
 The `mushrooms` dataset contains data about mushrooms (see `?mushrooms` for details). The goal of our model is to predict which mushrooms are poisonous based on `r ncol(mushrooms) - 1` cues ranging from the mushroom's odor, color, etc. 
 
-Let's create some ffts. We'll separate the data into a 50% training and a 50% testing dataset with the `train.p = .5` argument:
+Let's create some trees. We'll start by creating a training and test dataset:
 
 ```{r}
 set.seed(100) # For replicability of the training / test data split
+train.samples <- sample(nrow(mushrooms), size = 4000)
+mushrooms.train <- mushrooms[train.samples, ]
+mushrooms.test <- mushrooms[setdiff(1:nrow(mushrooms), train.samples), ]
 
 mushrooms.fft <- FFTrees(formula = poisonous ~.,
-                         data = mushrooms,
-                         train.p = .5)
+                         data = mushrooms.train,
+                         data.test = mushrooms.test
+                         )
 ```
 
 Here's basic information about the trees:
@@ -48,7 +52,7 @@ First, let's look at the individual cue training accuracies with `showcues`:
 showcues(mushrooms.fft, main = "Mushrooms")
 ```
 
-It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final trees to have no more than these two cues:
+It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final trees to use just these cues.
 
 ### mushrooms FFT
 
@@ -62,15 +66,14 @@ plot(mushrooms.fft,
      )
 ```
 
-Indeed, it looks like the best tree only uses the *odor* and *sporepc* cues. In our test dataset, the tree had a false alarm rate of 0% (1 - specificity), a hit rate of 85%, and a d-prime of 2.27.
+Indeed, it looks like the best tree only uses the *odor* and *sporepc* cues. In our test dataset, the tree had a false alarm rate of 0% (1 - specificity), and a hit rate of 85%.
 
 Now, let's say that you talk to a mushroom expert who says that we are using the wrong cues. According to her, the best predictors for poisonous mushrooms are *ringtype* and *ringnum*. Let's build a set of trees with these cues and see how they perform relative to our initial tree:
 
 ```{r}
-set.seed(100) # for replicability
 mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
-                              data = mushrooms,
-                              train.p = .5
+                              data = mushrooms.train,
+                              data.test = mushrooms.test
                               )
 ```
 
@@ -84,17 +87,16 @@ plot(mushrooms.ring.fft,
      )
 ```
 
-As we can see, this tree did not perform nearly as well as our earlier one. The new d-prime is only 0.84. 
+As we can see, this tree did not perform nearly as well as our earlier one.
 
 
 ## Iris
 
-The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to predict which flowers are of the class Virginica
+The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to predict which flowers are of the class Virginica. In this example, we'll create trees using the entire dataset (without an explicit test dataset)
 
 ```{r}
 iris.fft <- FFTrees(formula = virginica ~.,
-                    data = iris,
-                    train.p = .5
+                    data = iris
                     )
 ```
 
@@ -114,24 +116,22 @@ Now let's plot the best tree applied to the test dataset
 
 ```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
 plot(iris.fft, 
-     data = "test", 
      description = "Iris FFT",
      decision.names = c("Not V", "Virginica")
      )
 ```
 
-Indeed, it looks like the best tree only uses the *pet.wid* and *pet.len* cues. In our test dataset, the tree had a false alarm rate of 2% (1 - specificity), a hit rate of 100%, and a d-prime of 2.15.
+Indeed, it looks like the best tree only uses the *pet.wid* and *pet.len* cues. In our test dataset, the tree had a false alarm rate of 6% (1 - specificity) and a hit rate of 100%.
 
-Now, this tree did quite well, but what if someone wants a tree with the maximum possible hit-rate. If we look at the ROC plot in the bottom right corder of the plot above, we can see that tree #6 has a hit-rate of 100%. Let's look at that tree:
+Now, this tree did quite well, but what if someone wants a tree with the lowest possible false alarm rate. If we look at the ROC plot in the bottom left corner of the plot above, we can see that tree #2 has a false alarm rate close to 0%. Let's look at that tree:
 
 ```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
 plot(iris.fft, 
-     data = "test", 
      description = "Iris FFT",
      decision.names = c("Not V", "Virginica"),
-     tree = 6     # Show tree #6
+     tree = 2     # Show tree #6
      )
 ```
 
-As you can see, this tree does indeed have a maximum hit-rate. However, it comes at a high cost to specificity. 
+As you can see, this tree does indeed have a lower false alarm rate of 2%. However, it comes at a cost of a lower hit-rate. 
 

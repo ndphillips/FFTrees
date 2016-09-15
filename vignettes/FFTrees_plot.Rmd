@@ -14,11 +14,11 @@ vignette: >
 library(FFTrees)
 ```
 
-You can visualise FFTrees objects in one of two ways: First, you can visualise cue accuracies with `showcues()`. Second, you can visualise individual trees and peformance statistics by applying the `plot()` function to an `FFTrees` object. 
+You can visualize FFTrees objects in one of two ways: First, you can visualize cue accuracies with `showcues()`. Second, you can visualize individual trees and performance statistics by applying the `plot()` function to an `FFTrees` object. 
 
 ## The titanic dataset
 
-The titanic dataset contains survival statistics of passengers on the Titanic. For each passsenger, we know what passenger class (s)he was, his/her age, his/her sex, and whether or not (s)he survived. 
+The titanic dataset contains survival statistics of passengers on the Titanic. For each passenger, we know what passenger class (s)he was, his/her age, his/her sex, and whether or not (s)he survived. 
 
 Here is how the first few rows of the dataframe look:
 
@@ -41,7 +41,7 @@ titanic.fft <- FFTrees(formula = survived ~.,
 
 ## Visualising cue accuracies
 
-You can visualise individual cue accuracies (specifically their hit rates and false alarm rates) using the `showcues()` function. Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
+You can visualize individual cue accuracies (specifically their hit rates and false alarm rates) using the `showcues()` function. Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
 
 ```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
 showcues(titanic.fft,
@@ -74,12 +74,12 @@ You can specify additional arguments to the `plot()` command that will change wh
 
 - `tree`: Which tree do you want to plot? You can specify an integer such as `tree = 2` will plot the tree #2 in the FFTrees object, or `tree = "best.train"` which will use the best training tree.
 
-- `data`: Which data do you want to apply the tree to? You can specify `data = "train"` or `data = "test"` to use the training or testing datasets stored in the `FFTrees` object. Alternatively, you can specify a new dataset (e.g.; `data = test.data`. If you specify a new dataset, the function will automatically apply the tree to the new data and calculate performance statitics (using the `predict.FFTrees()` function).
+- `data`: Which data do you want to apply the tree to? You can specify `data = "train"` or `data = "test"` to use the training or testing datasets stored in the `FFTrees` object. Alternatively, you can specify a new dataset (e.g.; `data = test.data`. If you specify a new dataset, the function will automatically apply the tree to the new data and calculate performance statistics (using the `predict.FFTrees()` function).
 
-For example, let's repeat the previous analysis, but now we'll create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50% training set, and a 50% testing set:
+For example, let's repeat the previous analysis, but now we'll create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50% training set, and a 50% testing set (note: you could also define an explicit test data set with the `data.test` argument)
 
 ```{r}
-set.seed(100)
+set.seed(100) # For replicability of the training/test split
 titanic.pred.fft <- FFTrees(formula = survived ~.,
                             data = titanic,
                             train.p = .5)
@@ -117,3 +117,7 @@ plot(titanic.pred.fft,
 ```
 
 Tree #4 was able to increase the testing hit-rate up to 65%, but at a cost of a lower specificity of 70%.
+
+### Additional arguments
+
+- `n.per.icon`: You can adjust the number of exemplars represented by each icon using the `n.per.icon` argument. For example, `n.per.icon = 10` will force each icon to represent 10 cases.

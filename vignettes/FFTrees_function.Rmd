@@ -16,13 +16,13 @@ The `FFTrees()` function is at the heart of the `FFTrees` package. The function 
 
 ## heartdisease example
 
-Let's start with an example, we'll create FFTreess fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
+Let's start with an example, we'll create FFTrees fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
 
 ```{r}
 head(heartdisease)
 ```
 
-The critical dependent variable is `diagnosis` which indicates whether a patient has heart diesease or not. The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors.
+The critical dependent variable is `diagnosis` which indicates whether a patient has heart disease or not. The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors.
 
 Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the test dataset:
 
@@ -33,7 +33,7 @@ heartdisease.train <- heartdisease[samples,]
 heartdisease.test <- heartdisease[samples == 0,]
 ```
 
-We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent varaibles with `formula = diagnosis ~ .`:
+We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent variables with `formula = diagnosis ~ .`:
 
 ```{r}
 heart.fft <- FFTrees(formula = diagnosis ~.,
@@ -53,7 +53,7 @@ names(heart.fft)
 
 ## Printing an FFTrees object
 
-You can view basic information about the FFTrees object by printing its name. This will give you a quick summary of the object, includeing how many trees it has, which cues the tree(s) use, and how well they performed.
+You can view basic information about the FFTrees object by printing its name. This will give you a quick summary of the object, including how many trees it has, which cues the tree(s) use, and how well they performed.
 
 ```{r}
 heart.fft
@@ -127,7 +127,7 @@ heart.fft
 ```
 
 
-## Plotting trees
+## Visualising trees
 
 Once you've created an FFTrees object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
 
@@ -138,12 +138,18 @@ plot(heart.fft,
      )
 ```
 
-See the vignette on plotting trees [here](FFTrees_plot.html) for more details on plotting trees.
+You can also visualize the individual cue accuracies with the `showcues()` function:
+
+```{r fig.width = 5, fig.height = 5}
+showcues(heart.fft)
+```
+
+See the vignette on plotting trees [here](FFTrees_plot.html) for more details on visualizing trees.
 
 ## Additional arguments
 
 The `FFTrees()` function has several additional arguments than change how trees are built. Note: Not all of these arguments have fully tested yet!
 
-- `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Settting `train.p = 1` will fit the trees to the entire dataset (with no testing).
+- `train.p`: What percent of the data should be used for training? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Setting `train.p = 1` will fit the trees to the entire dataset (with no testing).
 
 - `rank.method`: As trees are being built, should cues be selected based on their marginal accuracy (`rank.method = "m"`) applied to the entire dataset, or on their conditional accuracy (`rank.method = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses.
