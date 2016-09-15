@@ -9,7 +9,7 @@
 #' @param do.cart,do.lr logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.
 #' @param verbose A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slowly...
 #' @param object An optional existing FFTrees object (do not specify by hand)
-#' @importFrom stats anova predict glm as.formula formula
+#' @importFrom stats anova predict glm as.formula formula sd
 #' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
 #' @export
 #'
@@ -27,17 +27,6 @@ FFTrees <- function(
                 object = NULL
 ) {
 
-
-object <- FFTrees(diagnosis ~., data = heartdisease)
-data <- NULL
-data.test <- heartdisease
-data.test$diagnosis <- 0
-train.p <- 1
-rank.method <- "m"
-max.levels <- 4
-do.cart <- T
-do.lr <- T
-verbose <- T
 
 # Set some global parameters
 
@@ -111,7 +100,7 @@ if(is.null(object) == T & train.p == 1) {
 
  if(is.null(data.test) == F) {
 
-   if(setequal(names(data.train), names(data.test)) == F) {
+   if(setequal(names(data.train.o), names(data.test)) == F) {
 
      stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
@@ -503,6 +492,7 @@ if(all(is.finite(test.results$treestats$hr))) {
 tree.auc.test <- auc(hr.v = test.results$treestats$hr, far.v = test.results$treestats$far)
 
 }
+}
 
 if(is.null(data.test) == T) {
 
@@ -514,7 +504,7 @@ if(is.null(data.test) == T) {
 
 }
 
-}
+
 
 decision <- list("train" = decision.train, "test" = decision.test)
 levelout <- list("train" = levelout.train, "test" = levelout.test)
