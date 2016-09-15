@@ -4,6 +4,11 @@ A package to create and visualize Fast and Frugal decision Trees (FFTrees)
 
 ### Package updates
 
+1.1.7
+
+- Bug-fixes
+   - You can (and should!) now have a column of NAs for the criterion in test datasets to represent data where the criterion is unknown.
+
 1.1.6
 
 - Streamlined code to improve cohesion between functions. This may cause issues with FFTrees objects created with earlier versions of the package. They will need to be re-created.
