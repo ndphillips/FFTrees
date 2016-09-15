@@ -27,7 +27,6 @@ FFTrees <- function(
                 object = NULL
 ) {
 
-
 # Set some global parameters
 
 tree.criterion <- "v"
@@ -71,8 +70,10 @@ if(is.null(object) == F) {
       stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
     }
+
     data.test <- model.frame(formula = formula,
-                             data = data.test.o)
+                             data = data.test.o,
+                             na.action = NULL)
 
     cue.test <- data.test[,2:ncol(data.test)]
     crit.test <- data.test[,1]
@@ -95,6 +96,7 @@ if(is.null(object) == T & train.p == 1) {
   data.train.o <- data
   data.train <- model.frame(formula = formula,
                             data = data.train.o)
+
   cue.train <- data.train[,2:ncol(data.train)]
   crit.train <- data.train[,1]
 
@@ -108,7 +110,9 @@ if(is.null(object) == T & train.p == 1) {
 
    data.test.o <- data.test
    data.test <- model.frame(formula = formula,
-                            data = data.test)
+                            data = data.test,
+                            na.action = NULL)
+
    cue.test <- data.test[,2:ncol(data.test)]
    crit.test <- data.test[,1]
 
@@ -299,7 +303,9 @@ cue.accuracies.train <- object$cue.accuracies$train
 
 }
 
-if(is.null(data.test) == F & sd(crit.test) > 0) {
+if(is.null(data.test) == F & all(is.finite(crit.test)) & is.finite(sd(crit.test))) {
+
+  if(sd(crit.test) > 0) {
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
@@ -309,10 +315,17 @@ cue.accuracies.test <- cuerank(formula = formula,
                                 verbose = verbose,
                                 cue.rules = cue.accuracies.train
 )
+}
+
+  if(sd(crit.test) == 0) {
+
+    cue.accuracies.test <- NULL
+
+  }
 
 }
 
-if(is.null(data.test) | sd(crit.test) == 0) {
+if(is.null(data.test) == T | any(is.finite(crit.test)) == F | is.finite(sd(crit.test)) == F) {
 
 cue.accuracies.test <- NULL
 
@@ -350,7 +363,7 @@ apply.tree <- function(data,
                        tree.definitions
                        ) {
 
-  criterion.v <- model.frame(formula = formula, data = data)[,1]
+  criterion.v <- model.frame(formula = formula, data = data, na.action = NULL)[,1]
 
   n.exemplars <- nrow(data)
   n.trees <- nrow(tree.definitions)

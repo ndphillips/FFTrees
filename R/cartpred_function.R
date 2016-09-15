@@ -22,7 +22,7 @@ cart.pred <- function(
 
 if(is.null(data.train) == F) {
 
-  data.mf.train <- model.frame(formula = formula, data = data.train)
+  data.mf.train <- model.frame(formula = formula, data = data.train, na.action = NULL)
   cue.train <- data.mf.train[,2:ncol(data.mf.train)]
   crit.train <- data.mf.train[,1]
 
@@ -30,7 +30,7 @@ if(is.null(data.train) == F) {
 
 if(is.null(data.test) == F) {
 
-  data.mf.test <- model.frame(formula = formula, data = data.test)
+  data.mf.test <- model.frame(formula = formula, data = data.test, na.action = NULL)
   cue.test <- data.mf.test[,2:ncol(data.mf.test)]
   crit.test <- data.mf.test[,1]
 
