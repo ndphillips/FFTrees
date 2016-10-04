@@ -1,5 +1,5 @@
 # FFTrees
-A package to create and visualize Fast and Frugal decision Trees (FFTrees)
+An R package to create and visualize fast and frugal decision trees (FFTrees)
 
 
 ### Package updates
