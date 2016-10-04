@@ -9,12 +9,11 @@
 #'
 
 
-lr.pred <- function(
-  formula,
-  data.train,
-  data.test = NULL,
-  lr.model = NULL,
-  thresholds = .5     #seq(.9, .1, -.1)
+lr.pred <- function(formula,
+                    data.train,
+                    data.test = NULL,
+                    lr.model = NULL,
+                    thresholds = .5     #seq(.9, .1, -.1)
 ) {
 
   correction <- .25
@@ -29,6 +28,13 @@ data.train <- data.train[,sapply(1:ncol(data.train), FUN = function(x) {length(u
 
 crit.train <- data.train[,1]
 cue.train <- data.train[,2:ncol(data.train)]
+
+if(ncol(data.train) == 2) {
+
+  cue.train <- data.frame(cue.train)
+  names(cue.train) <- names(data.train)[2]
+
+}
 
 }
 

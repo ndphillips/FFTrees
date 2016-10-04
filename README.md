@@ -8,6 +8,7 @@ A package to create and visualize Fast and Frugal decision Trees (FFTrees)
 
 - Bug-fixes
    - You can (and should!) now have a column of NAs for the criterion in test datasets to represent data where the criterion is unknown.
+   - `FFTrees()` now supports a single predictor (e.g.; `formula = diagnosis ~ age`) which previously did not work.
 
 1.1.6
 

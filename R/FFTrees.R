@@ -14,17 +14,16 @@
 #' @export
 #'
 
-FFTrees <- function(
-                formula = NULL,
-                data = NULL,
-                data.test = NULL,
-                train.p = 1,
-                rank.method = "m",
-                verbose = F,
-                max.levels = 4,
-                do.cart = T,
-                do.lr = T,
-                object = NULL
+FFTrees <- function(formula = NULL,
+                    data = NULL,
+                    data.test = NULL,
+                    train.p = 1,
+                    rank.method = "m",
+                    verbose = F,
+                    max.levels = 4,
+                    do.cart = T,
+                    do.lr = T,
+                    object = NULL
 ) {
 
 # Set some global parameters
@@ -57,6 +56,13 @@ if(is.null(object) == F) {
                             data = data.train.o)
 
   cue.train <- data.train[,2:ncol(data.train)]
+
+  if(ncol(data.train) == 2) {
+
+    cue.train <- data.frame(cue.train)
+
+  }
+
   crit.train <- data.train[,1]
 
   crit.name <- names(data.train)[1]
@@ -98,6 +104,13 @@ if(is.null(object) == T & train.p == 1) {
                             data = data.train.o)
 
   cue.train <- data.train[,2:ncol(data.train)]
+
+  if(ncol(data.train) == 2) {
+
+    cue.train <- data.frame(cue.train)
+
+  }
+
   crit.train <- data.train[,1]
 
  if(is.null(data.test) == F) {
@@ -534,9 +547,8 @@ rownames(tree.auc) = c("train", "test")
 if(do.lr) {
 
 lr.acc <- lr.pred(formula = formula,
-               data.train = data.train,
-               data.test = data.test
-               )
+                 data.train = data.train,
+                 data.test = data.test)
 
 lr.stats <- lr.acc$accuracy
 lr.auc <- lr.acc$auc
@@ -587,8 +599,7 @@ if(do.cart == F) {
 
 auc <- cbind(tree.auc, lr.auc, cart.auc)
 
-output.fft <- list(
-                  "formula" = formula,
+output.fft <- list("formula" = formula,
                   "data" = list("train" = data.train, "test" = data.test),
                   "cue.accuracies" = cue.accuracies,
                   "tree.definitions" = tree.definitions,

@@ -23,7 +23,6 @@ grow.FFTrees <- function(formula,
                          verbose = F
 ) {
 
-
 tree.criterion <- "v"
 exit.method <- "fixed"
 correction <- .25
@@ -37,6 +36,14 @@ data.o <- data
 
 data <- model.frame(formula = formula, data = data)
 cue.df <- data[,2:ncol(data)]
+
+if(ncol(data) == 2) {
+
+  cue.df <- data.frame(cue.df)
+  names(cue.df) <- names(data)[2]
+
+}
+
 criterion.v <- data[,1]
 crit.name <- names(data)[1]
 n.cues <- ncol(cue.df)
@@ -50,8 +57,7 @@ cue.accuracies <- cuerank(formula = formula,
                         tree.criterion = tree.criterion,
                         numthresh.method = numthresh.method,
                         rounding = rounding,
-                        verbose = verbose
-)
+                        verbose = verbose)
 
 # ----------
 # GROW TREES
@@ -63,16 +69,22 @@ cue.accuracies <- cuerank(formula = formula,
 # SETUP TREES
 # create tree.dm (exit values and n.levels)
 
-expand.ls <- lapply(1:(max.levels - 1), FUN = function(x) {return(c(0, 1))})
-expand.ls[[length(expand.ls) + 1]] <- .5
-names(expand.ls) <- c(paste("exit.", 1:(max.levels - 1), sep = ""),
-                    paste("exit.", max.levels, sep = "")
-)
+if(max.levels > 1) {
 
-tree.dm <- expand.grid(
-expand.ls,
-stringsAsFactors = F
-)
+  expand.ls <- lapply(1:(max.levels - 1), FUN = function(x) {return(c(0, 1))})
+  expand.ls[[length(expand.ls) + 1]] <- .5
+  names(expand.ls) <- c(paste("exit.", 1:(max.levels - 1), sep = ""),
+                      paste("exit.", max.levels, sep = ""))
+
+  tree.dm <- expand.grid(
+  expand.ls,
+  stringsAsFactors = F)
+}
+
+if(max.levels == 1) {
+  tree.dm <- data.frame("exit.1" = .5)
+}
+
 
 tree.dm$tree.num <- 1:nrow(tree.dm)
 n.trees <- nrow(tree.dm)
@@ -110,8 +122,7 @@ level.stats = data.frame("level" = NA,
                          "class" = NA,
                          "threshold" = NA,
                          "direction" = NA,
-                         "exit" = NA
-)
+                         "exit" = NA)
 
 level.stat.names <- names(classtable(1, 1))
 level.stats[level.stat.names] <- NA
@@ -445,12 +456,10 @@ tree.definitions <- trees[,c("tree", "cues", "nodes", "classes", "exits", "thres
 tree.stats <- trees[,c("tree", names(classtable(1, 1)))]
 
 
-output <- list(
-               tree.definitions = tree.definitions,
+output <- list(tree.definitions = tree.definitions,
                tree.stats = tree.stats,
                levelout = levelout,
-               decision = decision
-               )
+               decision = decision)
 
 return(output)
 
