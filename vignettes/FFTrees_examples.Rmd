@@ -32,8 +32,7 @@ mushrooms.test <- mushrooms[setdiff(1:nrow(mushrooms), train.samples), ]
 
 mushrooms.fft <- FFTrees(formula = poisonous ~.,
                          data = mushrooms.train,
-                         data.test = mushrooms.test
-                         )
+                         data.test = mushrooms.test)
 ```
 
 Here's basic information about the trees:
@@ -62,8 +61,7 @@ Now let's plot the best tree applied to the test dataset
 plot(mushrooms.fft, 
      data = "test", 
      description = "Mushrooms FFT",
-     decision.names = c("Safe", "Poisonous")
-     )
+     decision.names = c("Safe", "Poisonous"))
 ```
 
 Indeed, it looks like the best tree only uses the *odor* and *sporepc* cues. In our test dataset, the tree had a false alarm rate of 0% (1 - specificity), and a hit rate of 85%.
@@ -96,8 +94,7 @@ The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to
 
 ```{r}
 iris.fft <- FFTrees(formula = virginica ~.,
-                    data = iris
-                    )
+                    data = iris)
 ```
 
 ### iris cue accuracies
@@ -117,8 +114,7 @@ Now let's plot the best tree applied to the test dataset
 ```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
 plot(iris.fft, 
      description = "Iris FFT",
-     decision.names = c("Not V", "Virginica")
-     )
+     decision.names = c("Not V", "Virginica"))
 ```
 
 Indeed, it looks like the best tree only uses the *pet.wid* and *pet.len* cues. In our test dataset, the tree had a false alarm rate of 6% (1 - specificity) and a hit rate of 100%.
@@ -129,8 +125,7 @@ Now, this tree did quite well, but what if someone wants a tree with the lowest 
 plot(iris.fft, 
      description = "Iris FFT",
      decision.names = c("Not V", "Virginica"),
-     tree = 2     # Show tree #6
-     )
+     tree = 2)     # Show tree #6
 ```
 
 As you can see, this tree does indeed have a lower false alarm rate of 2%. However, it comes at a cost of a lower hit-rate. 

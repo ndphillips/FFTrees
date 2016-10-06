@@ -23,6 +23,15 @@ grow.FFTrees <- function(formula,
                          verbose = F
 ) {
 
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # rank.method = "c"
+  # numthresh.method = "o"
+  # max.levels = 4
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # verbose = F
+
 tree.criterion <- "v"
 exit.method <- "fixed"
 correction <- .25
@@ -139,31 +148,6 @@ asif.stats <- data.frame("level" = 1:n.levels,
 # Starting values
 grow.tree <- T
 current.level <- 0
-
-# Apply break function
-apply.break <- function(direction,
-                      threshold.val,
-                      cue.v,
-                      cue.class
-) {
-
-
-if(is.character(threshold.val)) {threshold.val <- unlist(strsplit(threshold.val, ","))}
-
-if(cue.class %in% c("numeric", "integer")) {threshold.val <- as.numeric(threshold.val)}
-
-
-if(direction == "!=") {output <- (cue.v %in% threshold.val) == F}
-if(direction == "=") {output <- cue.v %in% threshold.val}
-if(direction == "<") {output <- cue.v < threshold.val}
-if(direction == "<=") {output <- cue.v <= threshold.val}
-if(direction == ">") {output <- cue.v > threshold.val}
-if(direction == ">=") {output <- cue.v >= threshold.val}
-
-
-return(output)
-
-}
 
 # ------------------
 # Grow Tree!
