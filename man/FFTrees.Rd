@@ -5,8 +5,8 @@
 \title{Create Fast and Frugal Trees (FFTrees)}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  rank.method = "m", repeat.cues = TRUE, verbose = F, max.levels = 4,
-  do.cart = T, do.lr = T, object = NULL)
+  rank.method = "m", repeat.cues = TRUE, hr.weight = 0.5, verbose = F,
+  max.levels = 4, do.cart = T, do.lr = T, object = NULL)
 }
 \arguments{
 \item{formula}{A formula}
@@ -20,6 +20,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. The "c" method will take longer and may be prone to overfitting.}
 
 \item{repeat.cues}{A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.}
+
+\item{hr.weight}{A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
 
 \item{verbose}{A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slowly...}
 

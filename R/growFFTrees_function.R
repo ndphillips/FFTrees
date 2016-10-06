@@ -32,7 +32,7 @@ tree.criterion <- "v"
 exit.method <- "fixed"
 correction <- .25
 rounding <- 2
-hr.weight <- .5
+
 
 
 # Set up dataframes
@@ -192,15 +192,15 @@ far.vec <- cue.accuracies.current$far
 
 if(tree.criterion == "v") {
 
-  weighted.v.vec <- hr.vec * hr.weight - far.vec * (1 - hr.vec)
-  best.cue.index <- which(weighted.v.vec == weighted.v.vec)
+  weighted.v.vec <- hr.vec * hr.weight - far.vec * (1 - hr.weight)
+  best.cue.index <- which(weighted.v.vec == max(weighted.v.vec))
 
 }
 
 if(substr(tree.criterion, 1, 1) == "d") {
 
-  weighted.d.vec <- qnorm(hr.vec) * hr.weight - qnorm(far.vec) * (1 - hr.vec)
-  best.cue.index <- which(weighted.d.vec == weighted.d.vec)
+  weighted.d.vec <- qnorm(hr.vec) * hr.weight - qnorm(far.vec) * (1 - hr.weight)
+  best.cue.index <- which(weighted.d.vec == max(weighted.d.vec))
 
 }
 
