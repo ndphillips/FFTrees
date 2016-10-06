@@ -5,7 +5,7 @@
 \title{Calculate the accuracy of all cues in a dataframe}
 \usage{
 cuerank(formula = NULL, data = NULL, tree.criterion = "v",
-  numthresh.method = "o", hr.weight = 0.5, rounding = NULL, verbose = F,
+  numthresh.method = "o", rounding = NULL, verbose = F,
   cue.rules = NULL)
 }
 \arguments{
@@ -16,8 +16,6 @@ cuerank(formula = NULL, data = NULL, tree.criterion = "v",
 \item{tree.criterion}{A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.}
 
 \item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
-
-\item{hr.weight}{A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both.}
 
 \item{rounding}{An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 

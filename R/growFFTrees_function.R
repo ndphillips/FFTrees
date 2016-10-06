@@ -3,9 +3,9 @@
 #' @param data A dataset
 #' @param max.levels The maximum number of levels in the tree(s)
 #' @param verbose A logical value indicating whether or not to display progress
-#' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param repeat.cues A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.
+#' @param hr.weight A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for ranking cues in the tree.
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
 #' @param stopping.par A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @importFrom stats anova predict glm as.formula
@@ -18,7 +18,7 @@ grow.FFTrees <- function(formula,
                          data,
                          rank.method = "m",
                          repeat.cues = TRUE,
-                         numthresh.method = "o",
+                         hr.weight = .5,
                          max.levels = 4,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
@@ -26,6 +26,8 @@ grow.FFTrees <- function(formula,
 ) {
 #
 
+
+numthresh.method <- "o"
 tree.criterion <- "v"
 exit.method <- "fixed"
 correction <- .25
@@ -183,8 +185,25 @@ cue.accuracies.current <-  cuerank(formula = formula,
 
 }
 
-# GET NEXT CUE
-best.cue.index <- which(cue.accuracies.current[tree.criterion] == max(cue.accuracies.current[tree.criterion], na.rm = T))
+# GET NEXT CUE BASED ON WEIGHTED HR AND FAR
+
+hr.vec <- cue.accuracies.current$hr
+far.vec <- cue.accuracies.current$far
+
+if(tree.criterion == "v") {
+
+  weighted.v.vec <- hr.vec * hr.weight - far.vec * (1 - hr.vec)
+  best.cue.index <- which(weighted.v.vec == weighted.v.vec)
+
+}
+
+if(substr(tree.criterion, 1, 1) == "d") {
+
+  weighted.d.vec <- qnorm(hr.vec) * hr.weight - qnorm(far.vec) * (1 - hr.vec)
+  best.cue.index <- which(weighted.d.vec == weighted.d.vec)
+
+}
+
 new.cue <- cue.accuracies.current$cue[best.cue.index]
 if(length(new.cue) > 1) {new.cue <- new.cue[sample(1:length(new.cue), size = 1)]}
 

@@ -316,7 +316,6 @@ if(is.null(object)) {
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
                                 tree.criterion = tree.criterion,
-                                numthresh.method = numthresh.method,
                                 rounding = rounding,
                                 verbose = verbose
 )
@@ -336,7 +335,6 @@ if(is.null(data.test) == F & all(is.finite(crit.test)) & is.finite(sd(crit.test)
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
                                 tree.criterion = tree.criterion,
-                                numthresh.method = numthresh.method,
                                 rounding = rounding,
                                 verbose = verbose,
                                 cue.rules = cue.accuracies.train
@@ -369,7 +367,6 @@ tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
                             rank.method = rank.method,
                             repeat.cues = repeat.cues,
-                            numthresh.method = numthresh.method,
                             stopping.rule = stopping.rule,
                             stopping.par = stopping.par,
                             max.levels = max.levels)

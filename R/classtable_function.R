@@ -8,14 +8,12 @@
 classtable <- function(prediction.v,
                        criterion.v) {
 
-
   N <- length(criterion.v)
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {prediction.v <- as.logical(paste(prediction.v))}
 if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {criterion.v <- as.logical(paste(criterion.v))}
 
   correction <- .25
-  hr.weight <- .5
 
   hi <- sum(prediction.v == 1 & criterion.v == 1)
   mi <- sum(prediction.v == 0 & criterion.v == 1)
@@ -43,7 +41,6 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {criterion.v <- as.logical(p
   far <- fa.c / (cr.c + fa.c)
 
   v <- hr - far
-
 
   dprime <- qnorm(hr) - qnorm(far)
 

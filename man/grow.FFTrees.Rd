@@ -5,7 +5,7 @@
 \title{Grows fast and frugal trees}
 \usage{
 grow.FFTrees(formula, data, rank.method = "m", repeat.cues = TRUE,
-  numthresh.method = "o", max.levels = 4, stopping.rule = "exemplars",
+  hr.weight = 0.5, max.levels = 4, stopping.rule = "exemplars",
   stopping.par = 0.1, verbose = F)
 }
 \arguments{
@@ -17,7 +17,7 @@ grow.FFTrees(formula, data, rank.method = "m", repeat.cues = TRUE,
 
 \item{repeat.cues}{A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.}
 
-\item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
+\item{hr.weight}{A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for ranking cues in the tree.}
 
 \item{max.levels}{The maximum number of levels in the tree(s)}
 

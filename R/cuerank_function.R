@@ -5,7 +5,6 @@
 #' @param data A dataframe containing variables in formula
 #' @param tree.criterion A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
-#' @param hr.weight A number between 0 and 1 indicating how much weight to give to increasing hit rates versus avoiding false alarms. 1 means maximizing HR and ignoring FAR, while 0 does the opposite. The default of 0.5 gives equal weight to both.
 #' @param rounding An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param verbose A logical value indicating whether or not to print ongoing diagnostics
 #' @param cue.rules An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
@@ -19,7 +18,6 @@ cuerank <- function(formula = NULL,
                     data = NULL,
                     tree.criterion = "v",
                     numthresh.method = "o",
-                    hr.weight = .5,
                     rounding = NULL,
                     verbose = F,
                     cue.rules = NULL
