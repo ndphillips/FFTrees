@@ -30,18 +30,6 @@ cuerank <- function(formula = NULL,
 # TESTING GROUNDS
 # -----
 
-  # formula <- diagnosis ~.
-  # data <- heartdisease[1:75,]
-  #
-  # cue.df <- heartdisease
-  # criterion.v <- heartdisease$diagnosis
-  # tree.criterion <- "v"
-  # numthresh.method <- "o"
-  # hr.weight <- .5
-  # correction <- .25
-  # rounding <- 2
-  # cue.rules <- NULL
-
 
   # EXTRACT FORMULA VARIABLES
 
@@ -55,16 +43,6 @@ cuerank <- function(formula = NULL,
     names(cue.df) <- names(data.mf)[2]
 
   }
-
-  #
-  #
-  #
-  # cue.df = fds.63.cues
-  # criterion.v = fds.63.crit
-  # tree.criterion = "v"
-  # hr.weight = .5
-  # correction = 0
-  #
 
 
 # GLOBAL VARIABLES (could be updated later)

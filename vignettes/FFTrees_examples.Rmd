@@ -71,8 +71,7 @@ Now, let's say that you talk to a mushroom expert who says that we are using the
 ```{r}
 mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                               data = mushrooms.train,
-                              data.test = mushrooms.test
-                              )
+                              data.test = mushrooms.test)
 ```
 
 Here is the final tree:
@@ -81,8 +80,7 @@ Here is the final tree:
 plot(mushrooms.ring.fft, 
      data = "test", 
      description = "Mushrooms (Ring only) FFT",
-     decision.names = c("Safe", "Poisonous")
-     )
+     decision.names = c("Safe", "Poisonous"))
 ```
 
 As we can see, this tree did not perform nearly as well as our earlier one.

@@ -5,6 +5,7 @@
 #' @param verbose A logical value indicating whether or not to display progress
 #' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
 #' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
+#' @param repeat.cues A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
 #' @param stopping.par A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @importFrom stats anova predict glm as.formula
@@ -16,21 +17,14 @@
 grow.FFTrees <- function(formula,
                          data,
                          rank.method = "m",
+                         repeat.cues = TRUE,
                          numthresh.method = "o",
                          max.levels = 4,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
                          verbose = F
 ) {
-
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # rank.method = "c"
-  # numthresh.method = "o"
-  # max.levels = 4
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # verbose = F
+#
 
 tree.criterion <- "v"
 exit.method <- "fixed"
@@ -169,24 +163,29 @@ cue.accuracies.current <- cue.accuracies.original[(cue.accuracies.original$cue %
 
 if(rank.method == "c") {
 
+data.r <- data[remaining.exemplars, ]
+
+# If cues canNOT be repeated, then remove old cues as well
+if(repeat.cues == FALSE) {
+
 remaining.cues.index <- (names(cue.df) %in% level.stats$cue) == F
 remaining.cues <- names(cue.df)[remaining.cues.index]
+data.r <- data.r[, c(crit.name, remaining.cues)]
 
-# REDUCED DATASET WITH REMAINING EXEMPLARS AND CUES
-data.r <- data[remaining.exemplars, c(crit.name, remaining.cues)]
+}
 
+# Calculate new cue accuracies
 cue.accuracies.current <-  cuerank(formula = formula,
                                    data = data.r,
                                    tree.criterion = tree.criterion,
                                    numthresh.method = numthresh.method,
-                                   rounding = rounding
-)
+                                   rounding = rounding)
 
 }
 
 # GET NEXT CUE
-best.cue.dfndex <- which(cue.accuracies.current[tree.criterion] == max(cue.accuracies.current[tree.criterion], na.rm = T))
-new.cue <- cue.accuracies.current$cue[best.cue.dfndex]
+best.cue.index <- which(cue.accuracies.current[tree.criterion] == max(cue.accuracies.current[tree.criterion], na.rm = T))
+new.cue <- cue.accuracies.current$cue[best.cue.index]
 if(length(new.cue) > 1) {new.cue <- new.cue[sample(1:length(new.cue), size = 1)]}
 
 new.cue.stats <- cue.accuracies.current[cue.accuracies.current$cue == new.cue,]
@@ -209,8 +208,7 @@ level.stats$exit[current.level] <- current.exit
 cue.decisions <- apply.break(direction = new.direction,
                                  threshold.val = new.threshold,
                                  cue.v = data[[new.cue]],
-                                 cue.class = new.cue.stats$class
-)
+                                 cue.class = new.cue.stats$class)
 
 cue.classtable <- classtable(prediction.v = cue.decisions,
                                  criterion.v = criterion.v)

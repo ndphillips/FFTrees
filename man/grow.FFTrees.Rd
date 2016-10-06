@@ -4,9 +4,9 @@
 \alias{grow.FFTrees}
 \title{Grows fast and frugal trees}
 \usage{
-grow.FFTrees(formula, data, rank.method = "m", numthresh.method = "o",
-  max.levels = 4, stopping.rule = "exemplars", stopping.par = 0.1,
-  verbose = F)
+grow.FFTrees(formula, data, rank.method = "m", repeat.cues = TRUE,
+  numthresh.method = "o", max.levels = 4, stopping.rule = "exemplars",
+  stopping.par = 0.1, verbose = F)
 }
 \arguments{
 \item{formula}{a formula}
@@ -14,6 +14,8 @@ grow.FFTrees(formula, data, rank.method = "m", numthresh.method = "o",
 \item{data}{A dataset}
 
 \item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
+
+\item{repeat.cues}{A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.}
 
 \item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
 

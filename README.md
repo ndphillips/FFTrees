@@ -6,6 +6,8 @@ An R package to create and visualize fast and frugal decision trees (FFTrees)
 
 1.1.7
 
+- Trees can now use the same cue multiple times within a tree. To do this, set `rank.method = "c"` and `repeat.cues == TRUE`.
+
 - Bug-fixes
    - You can (and should!) now have a column of NAs for the criterion in test datasets to represent data where the criterion is unknown.
    - `FFTrees()` now supports a single predictor (e.g.; `formula = diagnosis ~ age`) which previously did not work.
