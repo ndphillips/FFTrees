@@ -5,8 +5,8 @@
 #' @param data.test (Optional) A model testing dataset (same format as data.train)
 #' @param max.levels A number indicating the maximum number of levels considered for the tree.
 #' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test is not specified by the user.
-#' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. The "c" method will take longer and may be prone to overfitting.
-#' @param repeat.cues A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.
+#' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
+#' @param repeat.cues A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when rank.method = 'c'.
 #' @param hr.weight A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
 #' @param do.cart,do.lr logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.
 #' @param verbose A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slowly...
@@ -29,8 +29,6 @@ FFTrees <- function(formula = NULL,
                     do.lr = T,
                     object = NULL
 ) {
-
-
 
 # Set some global parameters
 

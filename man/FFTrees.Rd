@@ -17,9 +17,9 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{train.p}{A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test is not specified by the user.}
 
-\item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. The "c" method will take longer and may be prone to overfitting.}
+\item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.}
 
-\item{repeat.cues}{A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when `rank.method = 'c'.}
+\item{repeat.cues}{A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when rank.method = 'c'.}
 
 \item{hr.weight}{A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
 
