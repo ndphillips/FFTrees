@@ -5,6 +5,6 @@
 
 FFTrees.guide <- function() {
 
-  vignette("FFTrees_overview", package = "FFTrees")
+  vignette("guide", package = "FFTrees")
 
 }
