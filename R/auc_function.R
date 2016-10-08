@@ -2,6 +2,12 @@
 #' @param hr.v a vector of hit rates
 #' @param far.v A vector of false alarm rates
 #' @export
+#' @examples
+#'
+#' # Calculate the AUC for a vector of hit rates and false alarm rates
+#'
+#' auc(hr.v = c(.1, .3, .5, .7), far.v = c(.05, .1, .15, .3))
+#'
 #'
 
 auc <- function(hr.v, far.v) {

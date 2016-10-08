@@ -14,4 +14,18 @@ classtable(prediction.v, criterion.v)
 \description{
 Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 }
+\examples{
+
+
+ # classification statistics for 5 cases
+classtable(prediction.v = c(0, 0, 0, 1, 1),
+           criterion.v = c(0, 0, 1, 0, 1))
+
+# Same as above, but now is perfect
+classtable(prediction.v = c(0, 0, 1, 0, 1),
+           criterion.v = c(0, 0, 1, 0, 1))
+
+
+
+}
 

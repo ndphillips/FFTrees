@@ -21,4 +21,14 @@ cart.pred(formula, data.train, data.test = NULL, cart.model = NULL,
 \description{
 Calculates predictions from CART using the rpart package
 }
+\examples{
+
+# Fit CART for the mushrooms dataset
+
+mushrooms.cart <- cart.pred(formula = poisonous ~.,
+                            data.train = mushrooms)
+
+
+
+}
 

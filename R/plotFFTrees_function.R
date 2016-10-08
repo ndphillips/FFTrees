@@ -15,9 +15,17 @@
 #' @export
 #' @examples
 #'
+#' # Create FFTrees of the heart disease data
+#' heart.fft <- FFTrees(formula = diagnosis ~.,
+#' data = heartdisease)
 #'
-#' # See the vignette for details
+#' # Visualise the tree
+#' plot(heart.fft,
+#'      main = "Heart Disease Diagnosis",
+#'      decision.names = c("Absent", "Present"))
 #'
+#'
+#' # See the vignette for more details
 #' vignette("FFTrees_plot", package = "FFTrees")
 #'
 #'

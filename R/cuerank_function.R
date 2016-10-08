@@ -1,5 +1,4 @@
-# cuerank
-#'   Calculate the accuracy of all cues in a dataframe
+#' Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.
 #'
 #' @param formula A formula specifying a binary criterion as a function of multiple variables
 #' @param data A dataframe containing variables in formula
@@ -9,8 +8,15 @@
 #' @param verbose A logical value indicating whether or not to print ongoing diagnostics
 #' @param cue.rules An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
 #' @importFrom stats median
-#' @return A dataframe containing marginal classification statistics for each cue
+#' @return A dataframe containing best thresholds and marginal classification statistics for each cue
 #' @export
+#' @examples
+#'
+#'  # What are the best thresholds for each cue in the mushrooms dataset?
+#'  mushrooms.cues <- cuerank(formula = poisonous ~.,
+#'                            data = mushrooms)
+#'
+#'
 #'
 
 

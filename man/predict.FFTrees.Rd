@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictFFTrees_function.R
 \name{predict.FFTrees}
 \alias{predict.FFTrees}
-\title{Applies an existing FFTrees object to a new dataset}
+\title{Applies an existing FFTrees object to a new (test) data set}
 \usage{
 \method{predict}{FFTrees}(object = NULL, data.test = NULL, ...)
 }
@@ -17,6 +17,28 @@
 An FFTrees object
 }
 \description{
-Applies an existing FFTrees object to a new dataset
+Applies an existing FFTrees object to a new (test) data set
+}
+\examples{
+
+
+  # Create an FFTrees object from 200 cases from thethe breastcancer dataset
+
+  breastcancer.fft <- FFTrees(formula = diagnosis ~.,
+                              data = breastcancer[1:300,])
+
+  # Currently the object only contains training data
+  breastcancer.fft
+
+  # Now add the rest of the dataset as test data using predict
+  #
+  breastcancer.fft <- predict(breastcancer.fft,
+  data.test = breastcancer[301:nrow(breastcancer),])
+
+  # Now the new data are stored as test data
+  breastcancer.fft
+
+
+
 }
 

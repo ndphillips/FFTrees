@@ -2,7 +2,7 @@
 % Please edit documentation in R/cuerank_function.R
 \name{cuerank}
 \alias{cuerank}
-\title{Calculate the accuracy of all cues in a dataframe}
+\title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
 \usage{
 cuerank(formula = NULL, data = NULL, tree.criterion = "v",
   numthresh.method = "o", rounding = NULL, verbose = F,
@@ -24,9 +24,18 @@ cuerank(formula = NULL, data = NULL, tree.criterion = "v",
 \item{cue.rules}{An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"}
 }
 \value{
-A dataframe containing marginal classification statistics for each cue
+A dataframe containing best thresholds and marginal classification statistics for each cue
 }
 \description{
-Calculate the accuracy of all cues in a dataframe
+Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.
+}
+\examples{
+
+ # What are the best thresholds for each cue in the mushrooms dataset?
+ mushrooms.cues <- cuerank(formula = poisonous ~.,
+                           data = mushrooms)
+
+
+
 }
 

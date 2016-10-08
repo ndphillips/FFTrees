@@ -28,9 +28,33 @@ grow.FFTrees(formula, data, rank.method = "m", repeat.cues = TRUE,
 \item{verbose}{A logical value indicating whether or not to display progress}
 }
 \value{
-A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
+A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
 }
 \description{
 Grows fast and frugal trees
+}
+\examples{
+
+ titanic.trees <- grow.FFTrees(formula = survived ~.,
+                                   data = titanic)
+
+# Tree definitions are stored in tree.definitions
+
+titanic.trees$tree.definitions
+
+# Tree classification statistics are in tree.stats
+
+titanic.trees$tree.stats
+
+# The level at which each exemplar is classified for each tree is in levelout
+
+titanic.trees$levelout
+
+# The decision for each exemplar for each tree is in decision
+
+titanic.trees$decision
+
+
+
 }
 

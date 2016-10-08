@@ -9,8 +9,30 @@
 #' @param stopping.rule A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
 #' @param stopping.par A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @importFrom stats anova predict glm as.formula
-#' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
+#' @return A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
 #' @export
+#' @examples
+#'
+#'  titanic.trees <- grow.FFTrees(formula = survived ~.,
+#'                                    data = titanic)
+#'
+#' # Tree definitions are stored in tree.definitions
+#'
+#' titanic.trees$tree.definitions
+#'
+#' # Tree classification statistics are in tree.stats
+#'
+#' titanic.trees$tree.stats
+#'
+#' # The level at which each exemplar is classified for each tree is in levelout
+#'
+#' titanic.trees$levelout
+#'
+#' # The decision for each exemplar for each tree is in decision
+#'
+#' titanic.trees$decision
+#'
+#'
 #'
 
 

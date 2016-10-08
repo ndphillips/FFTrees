@@ -7,8 +7,15 @@
 #' @importFrom stats model.frame formula glm
 #' @importFrom rpart rpart
 #' @export
+#' @examples
 #'
-
+#' # Fit CART for the mushrooms dataset
+#'
+#' mushrooms.cart <- cart.pred(formula = poisonous ~.,
+#'                             data.train = mushrooms)
+#'
+#'
+#'
 
 cart.pred <- function(formula,
                       data.train,

@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{An FFTrees object}
 
-\item{...}{Additional arguments}
+\item{...}{Additional arguments (currently ignored)}
 }
 \description{
 Returns a summary of an fft object

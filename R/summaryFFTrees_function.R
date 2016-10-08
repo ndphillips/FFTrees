@@ -1,6 +1,6 @@
 #' Returns a summary of an fft object
 #' @param object An FFTrees object
-#' @param ... Additional arguments
+#' @param ... Additional arguments (currently ignored)
 #' @export
 #'
 

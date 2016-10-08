@@ -14,4 +14,12 @@ auc(hr.v, far.v)
 \description{
 Calculates AUC (Area under the Curve) using trapezoidal approximation
 }
+\examples{
+
+# Calculate the AUC for a vector of hit rates and false alarm rates
+
+auc(hr.v = c(.1, .3, .5, .7), far.v = c(.05, .1, .15, .3))
+
+
+}
 
