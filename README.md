@@ -1,5 +1,11 @@
+[![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/FFTrees)](http://cran.r-project.org/package=FFFtrees)
+[![Rdoc](http://www.rdocumentation.org/badges/version/FFTrees)](http://www.rdocumentation.org/packages/FFTrees)
+[![Downloads](http://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](http://www.r-pkg.org/pkg/FFTrees)
+
 # FFTrees
 An R package to create and visualize fast and frugal decision trees (FFTrees)
+
 
 
 ### Package updates
