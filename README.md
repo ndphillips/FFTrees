@@ -13,7 +13,7 @@ plot(titanic.fft,
      decision.names = c("Died", "Survived"))
 ```
 
-![](https://dl.dropboxusercontent.com/u/7618380/titanic_fft.png)
+![](https://dl.dropboxusercontent.com/u/7618380/titanicfft.png)
 
 
 
