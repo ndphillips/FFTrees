@@ -6,8 +6,12 @@
 # FFTrees
 An R package to create and visualize Fast and Frugal decision trees (FFTrees) like this one below:
 
-```
-titanic.fft <- FFTrees(survived ~., data = titanic)
+```R
+# Create the trees
+titanic.fft <- FFTrees(survived ~., 
+                       data = titanic)
+                       
+# Plot the best tree
 plot(titanic.fft,
      main = "Surviving the Titanic", 
      decision.names = c("Died", "Survived"))
