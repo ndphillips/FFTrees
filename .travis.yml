@@ -1,0 +1,32 @@
+## See https://github.com/metacran/r-builder for details.
+
+language: R
+sudo: required
+cache: packages
+
+r_check_args: "--no-examples"
+r_build_args: "-no-build-vignettes"
+
+env:
+  global:
+    - R_CHECK_ARGS = "--no-examples"
+    - R_BUILD_ARGS =  "--no-build-vignettes"
+
+before_install:
+  - curl -OL https://raw.githubusercontent.com/metacran/r-builder/master/pkg-build.sh
+  - chmod 755 pkg-build.sh
+  - ./pkg-build.sh bootstrap
+
+install:
+  - ./pkg-build.sh install_deps
+
+script:
+  - ./pkg-build.sh run_tests
+
+after_failure:
+  - ./pkg-build.sh dump_logs
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
