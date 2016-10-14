@@ -4,7 +4,16 @@
 [![Downloads](http://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](http://www.r-pkg.org/pkg/FFTrees)
 
 # FFTrees
-An R package to create and visualize fast and frugal decision trees (FFTrees)
+An R package to create and visualize Fast and Frugal decision trees (FFTrees) like this one below:
+
+```
+titanic.fft <- FFTrees(survived ~., data = titanic)
+plot(titanic.fft,
+     main = "Surviving the Titanic", 
+     decision.names = c("Died", "Survived"))
+```
+
+![](https://dl.dropboxusercontent.com/u/7618380/titanic_fft.png)
 
 
 
