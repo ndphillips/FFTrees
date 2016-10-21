@@ -417,8 +417,8 @@ add.balls.fun <- function(x.lim = c(-10, 0),
 
   if(freq.text) {
 
-    text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, b.n, pos = 4, cex = freq.text.cex)
-    text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, a.n, pos = 2, cex = freq.text.cex)
+    text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, prettyNum(b.n, big.mark = ","), pos = 4, cex = freq.text.cex)
+    text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, prettyNum(a.n, big.mark = ","), pos = 2, cex = freq.text.cex)
 
   }
 
@@ -472,7 +472,7 @@ segments(0, .95, 1, .95, col = gray(.2, .5), lwd = .5, lty = 1)
 rect(.33, .8, .67, 1.2, col = "white", border = NA)
 
 text(x = .5, y = .95, main, cex = panel.title.cex)
-text(x = .5, y = .80, paste("N = ", n.exemplars, "", sep = ""), cex = 1.25)
+text(x = .5, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25)
 
 n.trueneg <- with(final.stats, cr + fa)
 n.truepos <- with(final.stats, hi + mi)
@@ -927,7 +927,7 @@ header.y.loc <- 1.0
 subheader.y.loc <- .9
 
 header.cex <- 1.2
-subheader.cex <- .9
+subheader.cex <- 1
 
 
 par(mar = c(0, 0, 2, 0))
@@ -958,7 +958,7 @@ lloc <- data.frame(
   center.x = c(.18, seq(.35, .65, length.out = 5), .85),
   center.y = c(.45, .45, .45, .45, .45, .45, .45),
   width =    c(.2, rep(.05, 5), .2),
-  height =   c(.7, rep(.6, 5), .65),
+  height =   c(.7, rep(.6, 5), .7),
   value = c(NA, 1 - final.stats$far, final.stats$hr, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
   value.name = c(NA, pretty.dec(1 - final.stats$far), pretty.dec(final.stats$hr), pretty.dec(with(final.stats, (cr + hi) / n)),
                  round(final.stats$dprime, 2), round(fft.auc, 2), NA
@@ -1000,11 +1000,11 @@ lloc <- data.frame(
 
 
   text(x = final.classtable.x.loc[1] - .02,
-       y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = .8,
+       y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
        decision.names[1], srt = 90)
 
   text(x = final.classtable.x.loc[1] - .02,
-       y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = .8,
+       y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
        decision.names[2], srt = 90)
 
   text(x = final.classtable.x.loc[1] - .05,
@@ -1015,22 +1015,19 @@ lloc <- data.frame(
 
   text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-       final.stats$cr, cex = 1.5)
+       prettyNum(final.stats$cr, big.mark = ","), cex = 1.5)
 
   text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-       final.stats$mi, cex = 1.5)
+       prettyNum(final.stats$mi, big.mark = ","), cex = 1.5)
 
   text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-       final.stats$fa, cex = 1.5)
-
+       prettyNum(final.stats$fa, big.mark = ","), cex = 1.5)
 
   text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-       final.stats$hi, cex = 1.5)
-
-
+       prettyNum(final.stats$hi, big.mark = ","), cex = 1.5)
 
   # Add symbols
 
@@ -1182,13 +1179,13 @@ add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
   final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element == "roc"] / 2,lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element == "roc"] / 2)
   final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2,lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
 
-  # Plot border
+# Plot bg
 
-  rect(final.roc.x.loc[1],
-       final.roc.y.loc[1],
-       final.roc.x.loc[2],
-       final.roc.y.loc[2],
-       border = gray(.5, .5), col = gray(.94))
+rect(final.roc.x.loc[1],
+     final.roc.y.loc[1],
+     final.roc.x.loc[2],
+     final.roc.y.loc[2],
+     border = gray(.5, .5), col = gray(.94))
 
   # Gridlines
 # Horizontal
@@ -1196,7 +1193,7 @@ add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
           y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)[2:10],
           x1 = rep(final.roc.x.loc[2], 9),
           y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)[2:10],
-          lty = 1, col = gray(1), lwd = c(1.25, .5)
+          lty = 1, col = gray(1), lwd = c(1.25, .5), lend = 3
           )
 
  # Vertical
@@ -1204,8 +1201,17 @@ add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
           x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)[2:10],
           y1 = rep(final.roc.y.loc[2], 9),
           x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)[2:10],
-          lty = 1, col = gray(1), lwd = c(1.25, .5)
+          lty = 1, col = gray(1), lwd = c(1.25, .5), lend = 3
  )
+
+ # Plot border
+
+ rect(final.roc.x.loc[1],
+      final.roc.y.loc[1],
+      final.roc.x.loc[2],
+      final.roc.y.loc[2],
+      border = gray(.5))
+
 
 
 
