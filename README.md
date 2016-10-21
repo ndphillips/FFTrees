@@ -23,6 +23,11 @@ plot(titanic.fft,
 
 ### Package updates
 
+1.1.9
+
+- Bug-fixes
+    - Fixed a bug where levels with no classifications are not plotted correctly.
+
 1.1.7
 
 - Trees can now use the same cue multiple times within a tree. To do this, set `rank.method = "c"` and `repeat.cues = TRUE`.

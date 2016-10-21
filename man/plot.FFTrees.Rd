@@ -4,16 +4,14 @@
 \alias{plot.FFTrees}
 \title{Draws a FFTrees object.}
 \usage{
-\method{plot}{FFTrees}(x = NULL, data = "train", which.tree = NULL,
-  tree = "best.train", main = "Data", n.per.icon = NULL,
-  decision.names = c("Noise", "Signal"), ...)
+\method{plot}{FFTrees}(x = NULL, data = "train", tree = "best.train",
+  main = "Data", n.per.icon = NULL, decision.names = c("Noise", "Signal"),
+  which.tree = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
 
 \item{data}{Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.}
-
-\item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
 
 \item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
@@ -22,6 +20,8 @@
 \item{n.per.icon}{Number of exemplars per icon}
 
 \item{decision.names}{A string vector of length 2 indicating the content-specific name for noise and signal cases.}
+
+\item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
 
 \item{...}{Currently ignored.}
 }
