@@ -930,23 +930,6 @@ subheader.y.loc <- .9
 header.cex <- 1.2
 subheader.cex <- .9
 
-final.classtable.center <- c(.18, .45)
-final.classtable.dim <- c(.2, .7)
-
-final.spec.center <- c(.35, .45)
-final.spec.dim <- c(.14, .65)
-
-final.hr.center <- c(.45, .45)
-final.hr.dim <- c(.14, .65)
-
-final.dp.center <- c(.55, .45)
-final.dp.dim <- c(.14, .65)
-
-final.auc.center <- c(.65, .45)
-final.auc.dim <- c(.14, .65)
-
-final.roc.center <- c(.85, .45)
-final.roc.dim <- c(.2, .65)
 
 par(mar = c(0, 0, 2, 0))
 
@@ -967,180 +950,32 @@ par(xpd = F)
 
 }
 
-# Color function (taken from colorRamp2 function in circlize package)
-col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .2)
 
-# Specificity level
-{
+pretty.dec <- function(x) {return(paste(round(x, 2) * 100, "%", sep = ""))}
 
-  rect.top <- final.spec.center[2] + final.spec.dim[2] / 2
-  rect.bottom <-  final.spec.center[2] - final.spec.dim[2] / 2
-  rect.center <-  final.spec.center[1]
-  rect.width <- final.spec.dim[1] / 2
-
-  text(rect.center, header.y.loc, "Spec", cex = header.cex, pos = 1)
-
-spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
-                                       colors = c("red", "yellow", "green"),
-                                       transparency = .3)
-
-  rect(rect.center - rect.width / 2,
-       rect.bottom,
-       rect.center + rect.width / 2,
-       (1 - final.stats$far) * (rect.top - rect.bottom) + rect.bottom,
-       col = spec.level.fun(1 - final.stats$far),
-       border = NA
+lloc <- data.frame(
+  element = c("classtable", "spec", "hr", "pc", "dp", "auc", "roc"),
+  long.name = c("Classification Table", "Spec", "Hit\nRate", "Correct", "D'", "AUC", "ROC"),
+  center.x = c(.18, seq(.35, .65, length.out = 5), .85),
+  center.y = c(.45, .45, .45, .45, .45, .45, .45),
+  width =    c(.2, rep(.05, 5), .2),
+  height =   c(.7, rep(.65, 5), .65),
+  value = c(NA, 1 - final.stats$far, final.stats$hr, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
+  value.name = c(NA, pretty.dec(1 - final.stats$far), pretty.dec(final.stats$hr), pretty.dec(with(final.stats, (cr + hi) / n)),
+                 round(final.stats$dprime, 2), round(fft.auc, 2), NA
   )
+)
 
-  rect(rect.center - rect.width / 2, rect.bottom, rect.center + rect.width / 2, rect.top, border = gray(.5, .5))
-
-
-  text(x = rect.center,
-       y = (rect.top + rect.bottom) / 2,
-       labels = paste(round((1 - final.stats$far), 2) * 100, "%", sep = ""),
-       cex = 1.2)
-
-  text(x = rect.center,
-       y = (rect.top + rect.bottom) / 2.2,
-       labels = paste(final.stats$cr, " / ", (final.stats$cr + final.stats$fa), sep = ""),
-       cex = .8,
-       font = 1,
-       pos = 1)
-
-}
-
-# HR level
-{
-
-  rect.top <- final.hr.center[2] + final.hr.dim[2] / 2
-  rect.bottom <-  final.hr.center[2] - final.hr.dim[2] / 2
-  rect.center <-  final.hr.center[1]
-  rect.width <- final.hr.dim[1] / 2
-
-    text(rect.center, header.y.loc, "Hit Rate", cex = header.cex, pos= 1)
-
-    hr.level.fun <- circlize::colorRamp2(c(0, .5, 1),
-                                           colors = c("red", "yellow", "green"),
-                                           transparency = .3)
-
-    # Colored Fill
-    rect(rect.center - rect.width / 2,
-         rect.bottom,
-         rect.center + rect.width / 2,
-         (final.stats$hr) * (rect.top - rect.bottom) + rect.bottom,
-         col = hr.level.fun(final.stats$hr),
-         border = NA
-    )
-
-    # Border
-    rect(rect.center - rect.width / 2,
-         rect.bottom,
-         rect.center + rect.width / 2,
-         rect.top,
-         border = gray(.5, .5))
-
-
-    text(x = rect.center,
-         y = (rect.top + rect.bottom) / 2,
-         labels = paste(round((final.stats$hr), 2) * 100, "%", sep = ""),
-         cex = 1.2,
-         font = 1)
-
-    text(x = rect.center,
-         y = (rect.top + rect.bottom) / 2.2,
-         labels = paste(final.stats$hi, " / ", (final.stats$hi + final.stats$mi), sep = ""),
-         cex = .8,
-         font = 1,
-         pos = 1)
-
-
-  }
-
-# DP level
-{
-
-  rect.top <- final.dp.center[2] + final.dp.dim[2] / 2
-  rect.bottom <-  final.dp.center[2] - final.dp.dim[2] / 2
-  rect.center <-  final.dp.center[1]
-  rect.width <- final.dp.dim[1] / 2
-
-  text(rect.center, header.y.loc, "D'", cex = header.cex, pos= 1)
-
-
-  max.dprime <- 1.5
-  if(final.stats$dprime > max.dprime) {dprime.r <- max.dprime}
-  if(final.stats$dprime < max.dprime) {dprime.r <- final.stats$dprime}
-
-
-  # Colored Fill
-  rect(rect.center - rect.width / 2,
-       rect.bottom,
-       rect.center + rect.width / 2,
-       (dprime.r / max.dprime) * (rect.top - rect.bottom) + rect.bottom,
-       col = col.fun(dprime.r / max.dprime),
-       border = NA
-  )
-
-  # Border
-  rect(rect.center - rect.width / 2,
-       rect.bottom,
-       rect.center + rect.width / 2,
-       rect.top,
-       border = gray(.5, .5))
-
-
-  text(x = rect.center,
-       y = (rect.top + rect.bottom) / 2,
-       labels = round((final.stats$dprime), 2),
-       cex = 1.2,
-       font = 1)
-
-}
-
-# AUC level
-{
-
-  rect.top <- final.auc.center[2] + final.auc.dim[2] / 2
-  rect.bottom <-  final.auc.center[2] - final.auc.dim[2] / 2
-  rect.center <-  final.auc.center[1]
-  rect.width <- final.auc.dim[1] / 2
-
-  text(rect.center, header.y.loc, "AUC", cex = header.cex, pos= 1)
-
-  # Colored Fill
-  rect(rect.center - rect.width / 2,
-       rect.bottom,
-       rect.center + rect.width / 2,
-       ((fft.auc - .5) / .5) * (rect.top - rect.bottom) + rect.bottom,
-       col = col.fun((fft.auc - .5) / .5),
-       border = NA
-  )
-
-  # Border
-  rect(rect.center - rect.width / 2,
-       rect.bottom,
-       rect.center + rect.width / 2,
-       rect.top,
-       border = gray(.5, .5))
-
-
-  text(x = rect.center,
-       y = (rect.top + rect.bottom) / 2,
-       labels = round(fft.auc, 2),
-       cex = 1.2,
-       font = 1)
-
-}
 
 # Classification table
 {
 
-  final.classtable.x.loc <- c(final.classtable.center[1] - final.classtable.dim[1] / 2, final.classtable.center[1] + final.classtable.dim[1] / 2)
-  final.classtable.y.loc <- c(final.classtable.center[2] - final.classtable.dim[2] / 2, final.classtable.center[2] + final.classtable.dim[2] / 2)
+  final.classtable.x.loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
+  final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
 
   rect(final.classtable.x.loc[1], final.classtable.y.loc[1],
        final.classtable.x.loc[2], final.classtable.y.loc[2]
-       )
+  )
 
   segments(mean(final.classtable.x.loc), final.classtable.y.loc[1], mean(final.classtable.x.loc), final.classtable.y.loc[2], col = gray(.5))
   segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(.5))
@@ -1153,7 +988,7 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
   # text(x = mean(mean(final.classtable.x.loc)),
   #      y = subheader.y.loc,
   #      "Truth", pos = 1, cex = subheader.cex)
-#   text(mean(mean(final.classtable.x.loc)), subheader.y.loc, "Decision", pos = 1)
+  #   text(mean(mean(final.classtable.x.loc)), subheader.y.loc, "Decision", pos = 1)
 
 
   text(x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
@@ -1162,12 +997,12 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
 
   text(x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-      decision.names[2])
+       decision.names[2])
 
 
   text(x = final.classtable.x.loc[1] - .02,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = .8,
-      decision.names[1], srt = 90)
+       decision.names[1], srt = 90)
 
   text(x = final.classtable.x.loc[1] - .02,
        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = .8,
@@ -1240,15 +1075,109 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
 
 }
 
+
+# Color function (taken from colorRamp2 function in circlize package)
+col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .2)
+
+
+add.level.fun <- function(name, sub = "", max.val = 1, min.val = 0, ok.val = .5, bottom.text = "") {
+
+rect.center.x <- lloc$center.x[lloc$element == name]
+rect.center.y <- lloc$center.y[lloc$element == name]
+rect.height <- lloc$height[lloc$element == name]
+rect.width <- lloc$width[lloc$element == name]
+
+rect.bottom.y <- rect.center.y - rect.height / 2
+rect.top.y <- rect.center.y + rect.height / 2
+
+rect.left.x <- rect.center.x - rect.width / 2
+rect.right.x <- rect.center.x + rect.width / 2
+
+long.name <- lloc$long.name[lloc$element == name]
+value <- lloc$value[lloc$element == name]
+value.name <- lloc$value.name[lloc$element == name]
+
+
+spec.level.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
+                                       colors = c("red", "yellow", "green"),
+                                       transparency = .3)
+
+# Add value text
+text(rect.center.x,
+     header.y.loc,
+     long.name,
+     cex = header.cex, pos = 1)
+
+
+
+# Add filling
+
+rect(rect.left.x,
+     rect.bottom.y,
+     rect.right.x,
+     rect.bottom.y + min(c(1, (value / max.val))) * rect.height,
+     col = spec.level.fun(lloc$value[lloc$element == name]),
+     border = NA
+)
+
+# Add level border
+
+rect(rect.left.x,
+     rect.bottom.y,
+     rect.right.x,
+     rect.top.y,
+     border = gray(.5, .5))
+
+
+# Add value text
+
+text(x = rect.center.x,
+     y = rect.center.y,
+     labels = lloc$value.name[lloc$element == name],
+     cex = 1.2)
+
+# Add subtext
+
+text(x = rect.center.x,
+     y = rect.center.y - .05,
+     labels = sub,
+     cex = .8,
+     font = 1,
+     pos = 1)
+
+# Add bottom text
+
+text(x = rect.center.x,
+     y = rect.bottom.y,
+     labels = bottom.text,
+     pos = 1)
+
+
+}
+
+paste(final.stats$cr, "/", 1, collapse = "")
+
+add.level.fun("spec") #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+add.level.fun("hr") #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+
+# Min acc
+
+min.acc <- max(mean(criterion.v), 1 - mean(criterion.v))
+
+add.level.fun("pc", min.val = min.acc, bottom.text = pretty.dec(min.acc)) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("dp", min.val = 0, max.val = 3, ok.val = 1)
+add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
+
+
 # MiniROC
 {
 
-  text(final.roc.center[1], header.y.loc, "ROC", pos = 1, cex = header.cex)
+  text(lloc$center.x[lloc$element == "roc"], header.y.loc, "ROC", pos = 1, cex = header.cex)
 #    text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
 
 
-  final.roc.x.loc <- c(final.roc.center[1] - final.roc.dim[1] / 2, final.roc.center[1] + final.roc.dim[1] / 2)
-  final.roc.y.loc <- c(final.roc.center[2] - final.roc.dim[2] / 2, final.roc.center[2] + final.roc.dim[2] / 2)
+  final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element == "roc"] / 2,lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element == "roc"] / 2)
+  final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2,lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
 
   # Plot border
 
@@ -1256,8 +1185,23 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
        final.roc.y.loc[1],
        final.roc.x.loc[2],
        final.roc.y.loc[2],
-       border = gray(.5, .5))
+       border = gray(.5, .5), col = gray(.94))
 
+  # Gridlines
+
+ segments(x0 = rep(final.roc.x.loc[1], 8),
+          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 10)[2:9],
+          x1 = rep(final.roc.x.loc[2], 8),
+          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 10)[2:9],
+          lty = 1, col = gray(1), lwd = c(1.25, .5)
+          )
+
+ segments(y0 = rep(final.roc.y.loc[1], 8),
+          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 10)[2:9],
+          y1 = rep(final.roc.y.loc[2], 8),
+          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 10)[2:9],
+          lty = 1, col = gray(1), lwd = c(1.25, .5)
+ )
 
   # Axis labels
 
@@ -1281,28 +1225,28 @@ spec.level.fun <- circlize::colorRamp2(c(0, .5,  1),
   ## CART and LR
 {
 
-  points(final.roc.x.loc[1] + cart.far * final.roc.dim[1],
-         final.roc.y.loc[1] + cart.hr * final.roc.dim[2],
+  points(final.roc.x.loc[1] + cart.far * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + cart.hr * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2, col = transparent("red", .3),
          bg = transparent("red", .7))
 
-  points(final.roc.x.loc[1] + cart.far * final.roc.dim[1],
-         final.roc.y.loc[1] + cart.hr * final.roc.dim[2],
+  points(final.roc.x.loc[1] + cart.far * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + cart.hr * lloc$height[lloc$element == "roc"],
          pch = "C", cex = .9, col = gray(.2))
 
 par("xpd" = F)
 
-points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
-   final.roc.y.loc[1] + .6 * final.roc.dim[2],
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+   final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
    pch = 21, cex = 2, col = transparent("red", .3),
    bg = transparent("red", .7))
 
-points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
-   final.roc.y.loc[1] + .6 * final.roc.dim[2],
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+   final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
    pch = "C", cex = .9, col = gray(.2))
 
-text(final.roc.x.loc[1] + 1.13 * final.roc.dim[1],
- final.roc.y.loc[1] + .6 * final.roc.dim[2],
+text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+ final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
 labels = " CART", adj = 0, cex = .9)
 
 par("xpd" = T)
@@ -1311,28 +1255,28 @@ par("xpd" = T)
 
   ## LR
 
-  points(final.roc.x.loc[1] + lr.far * final.roc.dim[1],
-         final.roc.y.loc[1] + lr.hr * final.roc.dim[2],
+  points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2, col = transparent("blue", .3),
          bg = transparent("blue", .7))
 
-  points(final.roc.x.loc[1] + lr.far * final.roc.dim[1],
-         final.roc.y.loc[1] + lr.hr * final.roc.dim[2],
+  points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
          pch = "L", cex = .9, col = gray(.2))
 
   par("xpd" = F)
 
-  points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
-         final.roc.y.loc[1] + .4 * final.roc.dim[2],
+  points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2, col = transparent("blue", .3),
          bg = transparent("blue", .7))
 
-  points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
-         final.roc.y.loc[1] + .4 * final.roc.dim[2],
+  points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
          pch = "L", cex = .9, col = gray(.2))
 
-  text(final.roc.x.loc[1] + 1.13 * final.roc.dim[1],
-       final.roc.y.loc[1] + .4 * final.roc.dim[2],
+  text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
        labels = " LR", adj = 0, cex = .9)
 
   par("xpd" = T)
@@ -1349,18 +1293,18 @@ par("xpd" = T)
 
   if(length(roc.order) > 1) {
 
-  segments(final.roc.x.loc[1] + c(0, fft.far.vec.ord) * final.roc.dim[1],
-           final.roc.y.loc[1] + c(0, fft.hr.vec.ord) * final.roc.dim[2],
-           final.roc.x.loc[1] + c(fft.far.vec.ord, 1) * final.roc.dim[1],
-           final.roc.y.loc[1] + c(fft.hr.vec.ord, 1) * final.roc.dim[2], lwd = 1, col = gray(.5, .5))
+  segments(final.roc.x.loc[1] + c(0, fft.far.vec.ord) * lloc$width[lloc$element == "roc"],
+           final.roc.y.loc[1] + c(0, fft.hr.vec.ord) * lloc$height[lloc$element == "roc"],
+           final.roc.x.loc[1] + c(fft.far.vec.ord, 1) * lloc$width[lloc$element == "roc"],
+           final.roc.y.loc[1] + c(fft.hr.vec.ord, 1) * lloc$height[lloc$element == "roc"], lwd = 1, col = gray(.5, .5))
 
-  points(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * final.roc.dim[1],
-         final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * final.roc.dim[2],
+  points(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2.5, col = transparent("green", .3),
          bg = transparent("white", .5))
 
-  text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * final.roc.dim[1],
-       final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * final.roc.dim[2],
+  text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
        labels = roc.order[-(which(roc.order == tree))], cex = 1, col = gray(.2))
 
   }
@@ -1368,31 +1312,31 @@ par("xpd" = T)
 
   # Add large point for plotted tree
 
-  points(final.roc.x.loc[1] + fft.far.vec[tree] * final.roc.dim[1],
-         final.roc.y.loc[1] + fft.hr.vec[tree] * final.roc.dim[2],
-         pch = 21, cex = 2.5, col = transparent("green", .3),
-         bg = transparent("green", .7), lwd = 3)
+  points(final.roc.x.loc[1] + fft.far.vec[tree] * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + fft.hr.vec[tree] * lloc$height[lloc$element == "roc"],
+         pch = 21, cex = 4, col = gray(1), #col = transparent("green", .3),
+         bg = transparent("green", .5), lwd = 1)
 
-  text(final.roc.x.loc[1] + fft.far.vec[tree] * final.roc.dim[1],
-         final.roc.y.loc[1] + fft.hr.vec[tree] * final.roc.dim[2],
-        labels = tree, cex = 1, col = gray(.2))
+  text(final.roc.x.loc[1] + fft.far.vec[tree] * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + fft.hr.vec[tree] * lloc$height[lloc$element == "roc"],
+        labels = tree, cex = 1.5, col = gray(.2), font = 2)
 
 
 
 
   par("xpd" = F)
 
-  points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
-         final.roc.y.loc[1] + .8 * final.roc.dim[2],
+  points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2, col = transparent("green", .3),
          bg = transparent("green", .7))
 
-  points(final.roc.x.loc[1] + 1.1 * final.roc.dim[1],
-         final.roc.y.loc[1] + .8 * final.roc.dim[2],
+  points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
          pch = "#", cex = .9, col = gray(.2))
 
-  text(final.roc.x.loc[1] + 1.13 * final.roc.dim[1],
-       final.roc.y.loc[1] + .8 * final.roc.dim[2],
+  text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
        labels = " FFT", adj = 0, cex = .9)
 
   par("xpd" = T)
