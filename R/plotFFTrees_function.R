@@ -230,10 +230,10 @@ error.colfun <- circlize::colorRamp2(c(0, 50, 100),
 correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
                            colors = c("white", "green", "black"))
 
-error.bg <- transparent(error.colfun(25), .3)
-error.border <-  transparent(error.colfun(75), .3)
-correct.bg <- transparent(correct.colfun(25), .3)
-correct.border <-  transparent(correct.colfun(75), .3)
+error.bg <- transparent(error.colfun(35), .2)
+error.border <-  transparent(error.colfun(65), .1)
+correct.bg <- transparent(correct.colfun(35), .2)
+correct.border <-  transparent(correct.colfun(65), .1)
 
 max.cex <- 6
 min.cex <- 1
@@ -313,7 +313,7 @@ add.balls.fun <- function(x.lim = c(-10, 0),
                           ball.cex = 1,
                           bg.vec = ball.bg,
                           col.vec = ball.col,
-                          ball.lwd = .5,
+                          ball.lwd = .7,
                           freq.text = T,
                           freq.text.cex = 1.2,
                           upper.text = "",
@@ -478,7 +478,6 @@ n.trueneg <- with(final.stats, cr + fa)
 n.truepos <- with(final.stats, hi + mi)
 
 text(.5, .65, paste("True ", decision.names[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
-
 text(.5, .65, paste("True ", decision.names[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
 
 
@@ -530,9 +529,9 @@ plot(1,
 # Add  frame
 
 par(xpd = T)
-segments(-plot.width, 0, - plot.width * .2, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-segments(plot.width, 0, plot.width * .2, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-text(x = 0, y = 0, paste("Tree (#", tree, ")", sep = ""), cex = panel.title.cex)
+segments(-plot.width, 0, - plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
+segments(plot.width, 0, plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
+text(x = 0, y = 0, paste("Tree #", tree, " (of ", n.trees, ")", sep = ""), cex = panel.title.cex)
 
 par(xpd = F)
 
@@ -955,11 +954,11 @@ pretty.dec <- function(x) {return(paste(round(x, 2) * 100, "%", sep = ""))}
 
 lloc <- data.frame(
   element = c("classtable", "spec", "hr", "pc", "dp", "auc", "roc"),
-  long.name = c("Classification Table", "Spec", "Hit\nRate", "Correct", "D'", "AUC", "ROC"),
+  long.name = c("Classification Table", "Spec", "Hit-Rate", "Correct", "D'", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 5), .85),
   center.y = c(.45, .45, .45, .45, .45, .45, .45),
   width =    c(.2, rep(.05, 5), .2),
-  height =   c(.7, rep(.65, 5), .65),
+  height =   c(.7, rep(.6, 5), .65),
   value = c(NA, 1 - final.stats$far, final.stats$hr, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
   value.name = c(NA, pretty.dec(1 - final.stats$far), pretty.dec(final.stats$hr), pretty.dec(with(final.stats, (cr + hi) / n)),
                  round(final.stats$dprime, 2), round(fft.auc, 2), NA
@@ -1110,31 +1109,35 @@ text(rect.center.x,
 
 
 
+value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect.height
+
 # Add filling
 
 rect(rect.left.x,
      rect.bottom.y,
      rect.right.x,
-     rect.bottom.y + min(c(1, (value / max.val))) * rect.height,
-     col = spec.level.fun(lloc$value[lloc$element == name]),
-     border = NA
+     value.height,
+     col = gray(.5, .5),
+    # col = spec.level.fun(lloc$value[lloc$element == name]),
+     border = gray(.1, .5)
 )
 
 # Add level border
 
-rect(rect.left.x,
-     rect.bottom.y,
-     rect.right.x,
-     rect.top.y,
-     border = gray(.5, .5))
+# rect(rect.left.x,
+#      rect.bottom.y,
+#      rect.right.x,
+#      rect.top.y,
+#      border = gray(.5, .5))
 
 
 # Add value text
 
 text(x = rect.center.x,
-     y = rect.center.y,
+     y = value.height, #rect.top.y,
      labels = lloc$value.name[lloc$element == name],
-     cex = 1.2)
+     cex = 1.5,
+     pos = 3)
 
 # Add subtext
 
@@ -1164,7 +1167,7 @@ add.level.fun("hr") #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final
 
 min.acc <- max(mean(criterion.v), 1 - mean(criterion.v))
 
-add.level.fun("pc", min.val = min.acc, bottom.text = pretty.dec(min.acc)) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("pc", min.val = min.acc, bottom.text = paste("BL = ", pretty.dec(min.acc), sep = "")) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 add.level.fun("dp", min.val = 0, max.val = 3, ok.val = 1)
 add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
 
@@ -1188,20 +1191,23 @@ add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
        border = gray(.5, .5), col = gray(.94))
 
   # Gridlines
-
- segments(x0 = rep(final.roc.x.loc[1], 8),
-          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 10)[2:9],
-          x1 = rep(final.roc.x.loc[2], 8),
-          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 10)[2:9],
+# Horizontal
+ segments(x0 = rep(final.roc.x.loc[1], 9),
+          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)[2:10],
+          x1 = rep(final.roc.x.loc[2], 9),
+          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)[2:10],
           lty = 1, col = gray(1), lwd = c(1.25, .5)
           )
 
- segments(y0 = rep(final.roc.y.loc[1], 8),
-          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 10)[2:9],
-          y1 = rep(final.roc.y.loc[2], 8),
-          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 10)[2:9],
+ # Vertical
+ segments(y0 = rep(final.roc.y.loc[1], 9),
+          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)[2:10],
+          y1 = rep(final.roc.y.loc[2], 9),
+          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)[2:10],
           lty = 1, col = gray(1), lwd = c(1.25, .5)
  )
+
+
 
   # Axis labels
 
@@ -1209,17 +1215,21 @@ add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
        c(final.roc.y.loc[1], final.roc.y.loc[1]) - .05,
        labels = c(0, 1))
 
-  text(c(final.roc.x.loc[1], final.roc.x.loc[1]) - .02,
-       c(final.roc.y.loc[1],  final.roc.y.loc[2]),
-       labels = c(0,  1))
+  text(c(final.roc.x.loc[1], final.roc.x.loc[1], final.roc.x.loc[1]) - .02,
+       c(final.roc.y.loc[1], mean(final.roc.y.loc[1:2]), final.roc.y.loc[2]),
+       labels = c(0,.5, 1))
 
   text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, "FAR (1 - Spec)")
-  text(final.roc.x.loc[1] - .02, mean(final.roc.y.loc), "HR")
+  text(final.roc.x.loc[1] - .04, mean(final.roc.y.loc), "HR", srt = 90)
 
 
   # Diagonal
 
-  segments(final.roc.x.loc[1], final.roc.y.loc[1], final.roc.x.loc[2], final.roc.y.loc[2], lty = 2)
+  segments(final.roc.x.loc[1],
+           final.roc.y.loc[1],
+           final.roc.x.loc[2],
+           final.roc.y.loc[2],
+           lty = 2)
 
 
   ## CART and LR

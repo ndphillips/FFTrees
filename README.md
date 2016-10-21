@@ -25,6 +25,8 @@ plot(titanic.fft,
 
 1.1.9
 
+- Cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls)
+
 - Bug-fixes
     - Fixed a bug where levels with no classifications are not plotted correctly.
 
