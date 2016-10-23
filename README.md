@@ -25,6 +25,8 @@ plot(titanic.fft,
 
 1.1.9
 
+- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument.
+
 - Cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls)
 
 - Bug-fixes
