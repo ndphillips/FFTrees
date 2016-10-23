@@ -2,6 +2,7 @@
 #'
 #' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the FFTrees() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
 #' @param x A FFTrees object created from \code{"FFTrees()"}
+#' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
 #' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
 #' @param decision.names A string vector of length 2 indicating the content-specific name for noise and signal cases.
@@ -34,6 +35,7 @@
 plot.FFTrees <- function(
   x = NULL,
   data = "train",
+  what = 'tree',
   tree = "best.train",
   main = "Data",
   n.per.icon = NULL,
@@ -41,11 +43,12 @@ plot.FFTrees <- function(
   which.tree = NULL,
   ...
 ) {
-# -------------------------
-# TESTING VALUES
-# --------------------------
 
+# If what == cues, then send inputs to showcues()
+if(what == 'cues') {showcues(x = x, data = data, main = main)}
 
+# If what == tree, then plot the tree!
+if(what == 'tree') {
 
 n.trees <- nrow(x$tree.stats$train)
 
@@ -129,8 +132,7 @@ if(data == "test") {
 
 
 final.stats <- classtable(prediction.v = decision.v,
-                          criterion.v = criterion.v
-)
+                          criterion.v = criterion.v)
 
 # ADD LEVEL STATISTICS
 n.levels <- nrow(level.stats)
@@ -165,7 +167,7 @@ for(i in 1:n.levels) {
   ball.cex = c(1, 1)
   error.col <- "red"
   correct.col <- "green"
-  max.label.length <- 10
+  max.label.length <- 100
   def.par <- par(no.readonly = TRUE)
 
 
@@ -196,7 +198,7 @@ plotting.parameters.df <- data.frame(
   n.levels = 1:6,
   plot.height = c(10, 12, 15, 19, 23, 25),
   plot.width = c(14, 16, 20, 24, 28, 32),
-  label.box.text.cex = c(1.7, 1.7, 1.5, 1.25, 1, 1),
+  label.box.text.cex = c(1.5, 1.5, 1.25, 1, 1, 1),
   break.label.cex = c(1.5, 1.5, 1.25, 1, .75, .5)
 )
 
@@ -452,6 +454,16 @@ add.balls.fun <- function(x.lim = c(-10, 0),
 
 
 }
+
+label.cex.fun <- function(i, label.box.text.cex = 2) {
+
+  i <- nchar(i)
+
+  label.box.text.cex * i ^ -.25
+
+}
+
+
 }
 
 layout(matrix(1:3, nrow = 3, ncol = 1),
@@ -599,6 +611,8 @@ subplot.center <- c(0, -4)
 
 for(level.i in 1:n.levels) {
 
+current.cue <- paste(level.stats$cue[level.i])
+
 # Get stats for current level
 {
 hi.i <- level.stats$hi.m[level.i]
@@ -625,10 +639,12 @@ if(level.i == 1) {
          pch = decision.node.pch
   )
 
+
+
   text(x = subplot.center[1],
        y = subplot.center[2] + 2,
-       labels = level.stats$level.name.t[level.i],
-       cex = label.box.text.cex
+       labels = current.cue,
+       cex = label.box.text.cex, font = 2#label.cex.fun(current.cue, label.box.text.cex = label.box.text.cex)
   )
 
 
@@ -746,7 +762,7 @@ if(level.stats$exit[level.i] %in% c(1)) {
   text(x = subplot.center[1] - 2,
        y = subplot.center[2] - 2,
        labels = level.stats$level.name.t[level.i + 1],
-       cex = label.box.text.cex
+       cex = label.box.text.cex, font = 2
   )
 
 }
@@ -872,7 +888,7 @@ if(level.stats$exit[level.i] %in% 0) {
   text(x = subplot.center[1] + 2,
        y = subplot.center[2] - 2,
        labels = level.stats$level.name.t[level.i + 1],
-       cex = label.box.text.cex
+       cex = label.box.text.cex, font = 2
   )
 
 
@@ -926,8 +942,8 @@ cart.far <- cart.stats$far
 header.y.loc <- 1.0
 subheader.y.loc <- .9
 
-header.cex <- 1.2
-subheader.cex <- 1
+header.cex <- 1.1
+subheader.cex <- .9
 
 
 par(mar = c(0, 0, 2, 0))
@@ -1330,12 +1346,12 @@ par("xpd" = T)
 
   points(final.roc.x.loc[1] + fft.far.vec[tree] * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.hr.vec[tree] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 4, col = gray(1), #col = transparent("green", .3),
-         bg = transparent("green", .5), lwd = 1)
+         pch = 21, cex = 3, col = gray(1), #col = transparent("green", .3),
+         bg = transparent("green", .3), lwd = 1)
 
   text(final.roc.x.loc[1] + fft.far.vec[tree] * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.hr.vec[tree] * lloc$height[lloc$element == "roc"],
-        labels = tree, cex = 1.5, col = gray(.2), font = 2)
+        labels = tree, cex = 1.25, col = gray(.2), font = 2)
 
 
 
@@ -1368,5 +1384,6 @@ par("xpd" = T)
 # Reset plotting space
 par(mfrow = c(1, 1))
 par(mar = c(5, 4, 4, 1) + .1)
+}
 
 }

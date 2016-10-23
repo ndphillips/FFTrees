@@ -33,20 +33,29 @@ cuerank <- function(formula = NULL,
 
 # TESTING GROUNDS
 # -----
+#
+# formula <- diagnosis ~.
+# data = breastcancer
+# tree.criterion = "v"
+# numthresh.method = "o"
+# rounding = NULL
+# verbose = F
+# cue.rules = NULL
 
 
-  # EXTRACT FORMULA VARIABLES
+# EXTRACT FORMULA VARIABLES
 
-  data.mf <- model.frame(formula = formula, data = data)
-  criterion.v <- data.mf[,1]
-  cue.df <- data.mf[,2:ncol(data.mf)]
+data.mf <- model.frame(formula = formula,
+                       data = data)
+criterion.v <- data.mf[,1]
+cue.df <- data.mf[,2:ncol(data.mf)]
 
-  if(class(cue.df) != "data.frame") {
+if(class(cue.df) != "data.frame") {
 
-    cue.df <- data.frame(cue.df)
-    names(cue.df) <- names(data.mf)[2]
+  cue.df <- data.frame(cue.df)
+  names(cue.df) <- names(data.mf)[2]
 
-  }
+}
 
 
 # GLOBAL VARIABLES (could be updated later)
@@ -339,13 +348,13 @@ for(cue.i in 1:n.cues) {
 
   }
 
-
-
   best.result <- cue.stats[best.result.index,]
 
   if(cue.i == 1) {cuerank.df <- best.result}
   if(cue.i > 1) {cuerank.df <- rbind(cuerank.df, best.result)}
 }
+
+rownames(cuerank.df) <- sapply(cuerank.df$cue, FUN = function(x) {which(names(data) == x)})
 
 return(cuerank.df)
 

@@ -1,15 +1,15 @@
-text.outline <- function(x, y, labels = 'test', col = 'black', bg = 'white', r = 0.02, h = 1, w = 1, cex = 1, adj = .5, pos = NULL){
+text.outline <- function(x, y, labels = 'test', col = 'black', font = 1, bg = 'white', r = 0.02, h = 1, w = 1, cex = 1, adj = .5, pos = NULL){
 
   # Draw background
   is <- seq(0, 2 * pi, length = 72)
   for(i in is){
     xn = x + cos(i) * r * w
     yn = y + sin(i) * r * h
-    text(xn, yn, labels = labels, col = bg, cex = cex, adj = adj, pos = pos)
+    text(xn, yn, labels = labels, col = bg, cex = cex, adj = adj, pos = pos, font = font)
   }
 
   # Foreground
-  text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos)
+  text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
 }
 
 

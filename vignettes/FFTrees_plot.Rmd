@@ -34,18 +34,18 @@ First, let's create an FFTrees object called `titanic.fft` from the `titanic` da
 
 ```{r}
 titanic.fft <- FFTrees(formula = survived ~.,
-                       data = titanic
-                       )
+                       data = titanic)
 ```
 
 
 ## Visualising cue accuracies
 
-You can visualize individual cue accuracies (specifically their hit rates and false alarm rates) using the `showcues()` function. Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
+You can visualize individual cue accuracies (specifically their hit rates and false alarm rates) by including the `what = 'cues'` argument within the `plot()` function. Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
 
 ```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
-showcues(titanic.fft,
-         main = "Titanic cue accuracy")
+plot(titanic.fft,
+     main = "Titanic cue accuracy",
+     what = 'cues')
 ```
 
 Wow. None of the cues did very well on their own. Good performing cues should be in the top left hand of the graph (i.e.; low false alarm rate and high hit rate). It looks like the best cue was `sex`, followed by `class`. `age` was a pretty terrible cue.

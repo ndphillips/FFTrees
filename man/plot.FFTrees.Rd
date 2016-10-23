@@ -4,14 +4,16 @@
 \alias{plot.FFTrees}
 \title{Draws a FFTrees object.}
 \usage{
-\method{plot}{FFTrees}(x = NULL, data = "train", tree = "best.train",
-  main = "Data", n.per.icon = NULL, decision.names = c("Noise", "Signal"),
-  which.tree = NULL, ...)
+\method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
+  tree = "best.train", main = "Data", n.per.icon = NULL,
+  decision.names = c("Noise", "Signal"), which.tree = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
 
 \item{data}{Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.}
+
+\item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.}
 
 \item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 

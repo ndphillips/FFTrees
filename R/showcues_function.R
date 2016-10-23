@@ -16,7 +16,14 @@ showcues <- function(x = NULL,
                     palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
                                 "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
                                 "#9A703E7F")) {
-
+#
+# x <- a
+#   data = "train"
+#   main = NULL
+#   top = 5
+#   palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
+#               "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
+#               "#9A703E7F")
 
 if(data == "train") {
 
@@ -27,15 +34,11 @@ if(data == "train") {
 if(data == "test") {
 
   if(is.null(x$cue.accuracies$test)) {stop("There are no test statistics")}
-
   if(is.null(x$cue.accuracies$test) == F) {cue.df <- x$cue.accuracies$test}
 
 }
 
-rownames(cue.df) <- 1:nrow(cue.df)
-
 if(nrow(cue.df) < top) {top <- nrow(cue.df)}
-
 
 # GENERAL PLOTTING SPACE
 
@@ -89,59 +92,76 @@ with(cues.top,
 
 
 # Bottom right label
+location.df <- data.frame(element = c("points", "point.num", "cue.name", "cue.thresh", "hr", "far"),
+                          x.loc = c(.53, .55, .69, .7, .88, .96),
+                          adj = c(.5, 0, 1, 0, .5, .5),
+                          cex = c(1, 1, 1, 1, 1, 1)
+                          )
 
-rect(.5, -.2, 1.02, .47,
+y.loc <- seq(.05, .4, length.out = top)
+header.y <- .45
+label.cex <- .8
+
+# Background
+rect(.5, .0, 1.02, .48,
      col = transparent("white", trans.val = .1),
-     border = NA)
+     border = gray(.2))
 
-# Top Points
-with(cues.top,
-     points(rep(.52, top), seq(0, .4, length.out = top),
-            pch = 21,
-            bg = palette,
-            col = "white", cex = 1.5)
-     )
+# Column labels
 
-add.text <- function(labels, x, y.min, y.max, cex = .7, adj = 1) {
+text(x = c(mean(c(location.df$x.loc[location.df$element == "cue.name"],
+           location.df$x.loc[location.df$element == "cue.thresh"])),
+           location.df$x.loc[location.df$element == "hr"],
+           location.df$x.loc[location.df$element == "far"]),
+     y = header.y,
+     labels = c("Cue", "HR", "FAR"), font = 2, cex = label.cex)
 
-  text(rep(x, top),
-       seq(y.min, y.max, length.out = top),
-       labels,
-       cex = cex,
-       adj = adj
-  )
-
-}
+# Points
+points(x = rep(subset(location.df, element == "points")$x.loc, top),
+      y = y.loc,
+      pch = 21,
+      bg = palette,
+      col = "white", cex = 1.5)
 
 # Cue numbers
-add.text(row.names(cues.top), .54, 0, .4, adj = 0, cex = 1)
+text(x = rep(subset(location.df, element == "point.num")$x.loc, top),
+     y = y.loc,
+     labels = row.names(cues.top),
+     adj = subset(location.df, element == "point.num")$adj,
+     cex = label.cex)
+
 
 # Cue names
-text(.66, .44, "cue", adj = 0, cex = .8)
-add.text(substr(cues.top$cue, 1, 10), .65, 0, .4, cex = .8, adj = 1)
+text(x = rep(subset(location.df, element == "cue.name")$x.loc, top),
+     y = y.loc,
+     labels = cues.top$cue,
+     adj = subset(location.df, element == "cue.name")$adj,
+     cex = label.cex)
 
 # Thresholds
 thresh.text <- paste(cues.top$direction, cues.top$threshold)
-thresh.text[nchar(thresh.text) > 15] <- paste(substr(thresh.text[nchar(thresh.text) > 15], start = 1, stop = 12), "...", sep = "")
-add.text(thresh.text, .67, 0, .4, cex = .8, adj = 0)
-
-# HR and FAR stats
-#add.text(round(cues.top$v, 2), .85, 0, .4, cex = .8)
-#text(.85, .44, "v", adj = 1, cex = .8)
-
-add.text(round(cues.top$hr, 2), .92, 0, .4, cex = .8)
-add.text(round(cues.top$far, 2), .99, 0, .4, cex = .8)
-text(.92, .44, "HR", adj = 1, cex = .8)
-text(.99, .44, "FAR", adj = 1, cex = .8)
+thresh.text[nchar(thresh.text) > 10] <- paste(substr(thresh.text[nchar(thresh.text) > 10], start = 1, stop = 10), "...", sep = "")
 
 
-# connection lines
-#
-# segments(x0 = cues.top$far,
-#          y0 = cues.top$hr,
-#          x1 = rep(.62, top),
-#          y1 = seq(0, .4, length.out = top),
-#          col = gray(.9)
-# )
+text(x = rep(subset(location.df, element == "cue.thresh")$x.loc, top),
+     y = y.loc,
+     labels = thresh.text,
+     adj = subset(location.df, element == "cue.thresh")$adj,
+     cex = label.cex)
+
+# HR
+text(x = rep(subset(location.df, element == "hr")$x.loc, top),
+     y = y.loc,
+     labels = round(cues.top$hr, 2),
+     adj = subset(location.df, element == "hr")$adj,
+     cex = label.cex)
+
+# HR
+
+text(x = rep(subset(location.df, element == "far")$x.loc, top),
+     y = y.loc,
+     labels = round(cues.top$far, 2),
+     adj = subset(location.df, element == "far")$adj,
+     cex = label.cex)
 
 }
