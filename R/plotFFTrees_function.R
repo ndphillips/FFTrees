@@ -514,6 +514,33 @@ add.balls.fun(x.lim = c(.35, .65),
 par(xpd = F)
 
 
+# Add p.signal level
+
+signal.p <- mean(criterion.v)
+
+signal.rect.ylim <- c(.1, .6)
+text(.675, signal.rect.ylim[2],
+     labels = paste("p(", decision.names[2], ")", sep = ""),
+     pos = 3, cex = 1.2)
+
+rect(.65, signal.rect.ylim[1], .7, signal.rect.ylim[2])
+rect(.65, signal.rect.ylim[1], .7, signal.rect.ylim[1] + signal.p * diff(signal.rect.ylim), col = gray(.5, .5), border = NA)
+
+if(signal.p < .0001) {signal.p.text <- "<0.01%"} else {
+
+  signal.p.text <- paste(round(signal.p * 100, 2), "%", sep = "")
+}
+
+
+text(.7, signal.rect.ylim[1] + signal.p * diff(signal.rect.ylim),
+     labels = signal.p.text,
+     pos = 4, cex = 1.2)
+
+
+
+
+
+
 
 
 
@@ -1132,7 +1159,7 @@ rect(rect.left.x,
      value.height,
      col = gray(.5, .5),
     # col = spec.level.fun(lloc$value[lloc$element == name]),
-     border = gray(.1, .5)
+     border = "black"
 )
 
 # Add level border
@@ -1201,7 +1228,8 @@ rect(final.roc.x.loc[1],
      final.roc.y.loc[1],
      final.roc.x.loc[2],
      final.roc.y.loc[2],
-     border = gray(.5, .5), col = gray(.94))
+     border = "black",
+     col = gray(.94))
 
   # Gridlines
 # Horizontal
