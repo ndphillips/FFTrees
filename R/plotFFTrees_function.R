@@ -514,29 +514,49 @@ add.balls.fun(x.lim = c(.35, .65),
 par(xpd = F)
 
 
-# Add p.signal level
+# Add p.signal and p.noise levels
 
 signal.p <- mean(criterion.v)
+noise.p <- 1 - mean(criterion.v)
 
-signal.rect.ylim <- c(.1, .6)
-text(.675, signal.rect.ylim[2],
+p.rect.ylim <- c(.1, .6)
+
+# p.signal level
+
+text(x =.675, y = p.rect.ylim[2],
      labels = paste("p(", decision.names[2], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-rect(.65, signal.rect.ylim[1], .7, signal.rect.ylim[2])
-rect(.65, signal.rect.ylim[1], .7, signal.rect.ylim[1] + signal.p * diff(signal.rect.ylim), col = gray(.5, .5), border = NA)
+rect(.65, p.rect.ylim[1], .7, p.rect.ylim[2], col = gray(1, .5))
+rect(.65, p.rect.ylim[1], .7, p.rect.ylim[1] + signal.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
 
-if(signal.p < .0001) {signal.p.text <- "<0.01%"} else {
+if(signal.p < .0001) {signal.p.text <- "<1%"} else {
 
-  signal.p.text <- paste(round(signal.p * 100, 2), "%", sep = "")
+  signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
 }
 
-
-text(.7, signal.rect.ylim[1] + signal.p * diff(signal.rect.ylim),
+text(.7, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
      labels = signal.p.text,
      pos = 4, cex = 1.2)
 
 
+# p.noise level
+
+text(x = .325, y = p.rect.ylim[2],
+     labels = paste("p(", decision.names[1], ")", sep = ""),
+     pos = 3, cex = 1.2)
+
+rect(.3, p.rect.ylim[1], .35, p.rect.ylim[2], col = gray(1, .5))
+rect(.3, p.rect.ylim[1], .35, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+
+if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
+
+  noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
+}
+
+text(.3, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+     labels = noise.p.text,
+     pos = 2, cex = 1.2)
 
 
 
