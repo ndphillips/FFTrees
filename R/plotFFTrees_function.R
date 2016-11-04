@@ -1156,10 +1156,11 @@ lloc <- data.frame(
 {
 
 # Color function (taken from colorRamp2 function in circlize package)
-col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .2)
+col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .1)
 
 
-add.level.fun <- function(name, sub = "",
+add.level.fun <- function(name,
+                          sub = "",
                           max.val = 1,
                           min.val = 0,
                           ok.val = .5,
@@ -1180,10 +1181,12 @@ long.name <- lloc$long.name[lloc$element == name]
 value <- lloc$value[lloc$element == name]
 value.name <- lloc$value.name[lloc$element == name]
 
+#
+# level.col.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
+#                                        colors = c("firebrick2", "yellow", "green4"),
+#                                        transparency = .1)
 
-spec.level.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
-                                       colors = c("red", "yellow", "green"),
-                                       transparency = .3)
+level.col.fun <- function(x) {gray(.7)}
 
 text.outline(x = rect.center.x,
              y = header.y.loc,
@@ -1195,11 +1198,15 @@ value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val
 
 # Add filling
 
+value.s <- min(value / max.val, 1)
+
+
 rect(rect.left.x,
      rect.bottom.y,
      rect.right.x,
      value.height,
-     col = gray(.5, .5),
+     col = level.col.fun(value.s),
+     #col = gray(.5, .5),
     # col = spec.level.fun(lloc$value[lloc$element == name]),
      border = "black"
 )
@@ -1252,26 +1259,26 @@ segments(x0 = lloc$center.x[lloc$element == "spec"] - lloc$width[lloc$element ==
          lty = 1, lwd = .75
          )
 
-add.level.fun("spec") #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
-add.level.fun("hr") #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+add.level.fun("hr", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
 # Min acc
 
 min.acc <- max(mean(criterion.v), 1 - mean(criterion.v))
 
-add.level.fun("pc", min.val = 0) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("pc", min.val = 0, ok.val = .5) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
 # Add baseline to pc level
 
 segments(x0 = lloc$center.x[lloc$element == "pc"] - lloc$width[lloc$element == "pc"] / 2,
-         y0 = lloc$height[lloc$element == "pc"] * min.acc,
+         y0 = (lloc$center.y[lloc$element == "pc"] - lloc$height[lloc$element == "pc"] / 2) +  lloc$height[lloc$element == "pc"] * min.acc,
          x1 = lloc$center.x[lloc$element == "pc"] + lloc$width[lloc$element == "pc"] / 2,
-         y1 = lloc$height[lloc$element == "pc"] * min.acc,
+         y1 = (lloc$center.y[lloc$element == "pc"] - lloc$height[lloc$element == "pc"] / 2) +  lloc$height[lloc$element == "pc"] * min.acc,
          lty = 1
          )
 
 text(x = lloc$center.x[lloc$element == "pc"],
-     y = lloc$height[lloc$element == "pc"] * min.acc,
+     y =(lloc$center.y[lloc$element == "pc"] - lloc$height[lloc$element == "pc"] / 2) +  lloc$height[lloc$element == "pc"] * min.acc,
      labels = "BL", pos = 1)
 
     #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
