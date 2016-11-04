@@ -298,7 +298,7 @@ signal.ball.bg <- ball.bg[2]
 
 arrow.lty <- 1
 arrow.lwd <- 1
-arrow.length <- 3
+arrow.length <- 2.5
 arrow.head.length <- .1
 arrow.col <- gray(.5)
 
@@ -1438,7 +1438,7 @@ par("xpd" = T)
   points(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2.5, col = transparent("green", .3),
-         bg = transparent("white", .5))
+         bg = transparent("white", .1))
 
   text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
