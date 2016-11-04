@@ -44,6 +44,17 @@ plot.FFTrees <- function(
   ...
 ) {
 
+  # x = FFTrees(diagnosis ~., data = heartdisease)
+  # data = "train"
+  # what = 'tree'
+  # tree = "best.train"
+  # main = "Data"
+  # n.per.icon = NULL
+  # decision.names = c("Noise", "Signal")
+  # which.tree = NULL
+  #
+
+
 # If what == cues, then send inputs to showcues()
 if(what == 'cues') {showcues(x = x, data = data, main = main)}
 
@@ -541,22 +552,22 @@ text(.7, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
 
 
 # p.noise level
-
-text(x = .325, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[1], ")", sep = ""),
-     pos = 3, cex = 1.2)
-
-rect(.3, p.rect.ylim[1], .35, p.rect.ylim[2], col = gray(1, .5))
-rect(.3, p.rect.ylim[1], .35, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
-
-if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
-
-  noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
-}
-
-text(.3, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-     labels = noise.p.text,
-     pos = 2, cex = 1.2)
+#
+# text(x = .325, y = p.rect.ylim[2],
+#      labels = paste("p(", decision.names[1], ")", sep = ""),
+#      pos = 3, cex = 1.2)
+#
+# rect(.3, p.rect.ylim[1], .35, p.rect.ylim[2], col = gray(1, .5))
+# rect(.3, p.rect.ylim[1], .35, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+#
+# if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
+#
+#   noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
+# }
+#
+# text(.3, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+#      labels = noise.p.text,
+#      pos = 2, cex = 1.2)
 
 
 
@@ -1015,13 +1026,19 @@ par(xpd = F)
 
 pretty.dec <- function(x) {return(paste(round(x, 2) * 100, "%", sep = ""))}
 
+level.max.height <- .7
+level.width <- .05
+level.center.y <- .45
+level.bottom <- level.center.y - level.max.height / 2
+level.top <- level.center.y + level.max.height / 2
+
 lloc <- data.frame(
   element = c("classtable", "spec", "hr", "pc", "dp", "auc", "roc"),
   long.name = c("Classification Table", "Spec", "Hit-Rate", "Correct", "D'", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 5), .85),
-  center.y = c(.45, .45, .45, .45, .45, .45, .45),
-  width =    c(.2, rep(.05, 5), .2),
-  height =   c(.7, rep(.6, 5), .7),
+  center.y = rep(level.center.y, 7),
+  width =    c(.2, rep(level.width, 5), .2),
+  height =   c(.7, rep(level.max.height, 5), .7),
   value = c(NA, 1 - final.stats$far, final.stats$hr, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
   value.name = c(NA, pretty.dec(1 - final.stats$far), pretty.dec(final.stats$hr), pretty.dec(with(final.stats, (cr + hi) / n)),
                  round(final.stats$dprime, 2), round(fft.auc, 2), NA
@@ -1135,11 +1152,18 @@ lloc <- data.frame(
 }
 
 
+# Levels
+{
+
 # Color function (taken from colorRamp2 function in circlize package)
 col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .2)
 
 
-add.level.fun <- function(name, sub = "", max.val = 1, min.val = 0, ok.val = .5, bottom.text = "") {
+add.level.fun <- function(name, sub = "",
+                          max.val = 1,
+                          min.val = 0,
+                          ok.val = .5,
+                          bottom.text = "") {
 
 rect.center.x <- lloc$center.x[lloc$element == name]
 rect.center.y <- lloc$center.y[lloc$element == name]
@@ -1161,13 +1185,11 @@ spec.level.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
                                        colors = c("red", "yellow", "green"),
                                        transparency = .3)
 
-# Add value text
-text(rect.center.x,
-     header.y.loc,
-     long.name,
-     cex = header.cex, pos = 1)
-
-
+text.outline(x = rect.center.x,
+             y = header.y.loc,
+             labels = long.name,
+             pos = 1, cex = header.cex, r = .02
+)
 
 value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect.height
 
@@ -1193,11 +1215,12 @@ rect(rect.left.x,
 
 # Add value text
 
-text(x = rect.center.x,
-     y = value.height, #rect.top.y,
-     labels = lloc$value.name[lloc$element == name],
-     cex = 1.5,
-     pos = 3)
+text.outline(x = rect.center.x,
+             y = value.height,
+             labels = lloc$value.name[lloc$element == name],
+             pos = 3, cex = 1.5, r = .008
+)
+
 
 # Add subtext
 
@@ -1220,6 +1243,15 @@ text(x = rect.center.x,
 
 paste(final.stats$cr, "/", 1, collapse = "")
 
+# Add 100% reference line
+
+segments(x0 = lloc$center.x[lloc$element == "spec"] - lloc$width[lloc$element == "spec"] * .8,
+         y0 = level.top,
+         x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
+         y1 = level.top,
+         lty = 1, lwd = .75
+         )
+
 add.level.fun("spec") #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 add.level.fun("hr") #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
@@ -1227,10 +1259,28 @@ add.level.fun("hr") #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final
 
 min.acc <- max(mean(criterion.v), 1 - mean(criterion.v))
 
-add.level.fun("pc", min.val = min.acc, bottom.text = paste("BL = ", pretty.dec(min.acc), sep = "")) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("pc", min.val = 0) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+
+# Add baseline to pc level
+
+segments(x0 = lloc$center.x[lloc$element == "pc"] - lloc$width[lloc$element == "pc"] / 2,
+         y0 = lloc$height[lloc$element == "pc"] * min.acc,
+         x1 = lloc$center.x[lloc$element == "pc"] + lloc$width[lloc$element == "pc"] / 2,
+         y1 = lloc$height[lloc$element == "pc"] * min.acc,
+         lty = 1
+         )
+
+text(x = lloc$center.x[lloc$element == "pc"],
+     y = lloc$height[lloc$element == "pc"] * min.acc,
+     labels = "BL", pos = 1)
+
+    #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
+
+
+
 add.level.fun("dp", min.val = 0, max.val = 3, ok.val = 1)
 add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
-
+}
 
 # MiniROC
 {
