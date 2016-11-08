@@ -29,6 +29,20 @@ FFTrees <- function(formula = NULL,
                     do.lr = T,
                     object = NULL
 ) {
+  # formula = NULL
+  # data.test = data.test
+  #
+  # data = object$data$train
+  # object = object
+  #
+  # train.p = 1
+  # rank.method = "m"
+  # repeat.cues = TRUE
+  # hr.weight = .5
+  # verbose = F
+  # max.levels = 4
+  # do.cart = T
+  # do.lr = T
 
 # Set some global parameters
 
@@ -469,9 +483,13 @@ colnames(lr.auc) <- "lr"
 
 if(do.cart) {
 
+if(is.null(object)) {cart.model <- NULL}
+if(is.null(object) == FALSE) {cart.model <- object$cart$model}
+
 cart.acc <- cart.pred(formula = formula,
                       data.train = data.train,
-                      data.test = data.test
+                      data.test = data.test,
+                      cart.model = cart.model
 )
 
 cart.stats <- cart.acc$accuracy

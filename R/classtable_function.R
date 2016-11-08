@@ -20,12 +20,23 @@
 classtable <- function(prediction.v,
                        criterion.v) {
 
-  N <- length(criterion.v)
+
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {prediction.v <- as.logical(paste(prediction.v))}
 if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {criterion.v <- as.logical(paste(criterion.v))}
 
   correction <- .25
+
+  # Remove NA values
+
+  prediction.v <- prediction.v[is.finite(criterion.v)]
+  criterion.v <- criterion.v[is.finite(criterion.v)]
+
+
+  N <- length(criterion.v)
+
+  if(N > 0) {
+
 
   hi <- sum(prediction.v == 1 & criterion.v == 1)
   mi <- sum(prediction.v == 0 & criterion.v == 1)
@@ -55,6 +66,21 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {criterion.v <- as.logical(p
   v <- hr - far
 
   dprime <- qnorm(hr) - qnorm(far)
+
+  }
+
+  if(N == 0) {
+
+    hi <- NA
+    mi <- NA
+    fa <- NA
+    cr <- NA
+    hr <- NA
+    far <- NA
+    v <- NA
+    dprime <- NA
+
+  }
 
   result <- data.frame(
     n = N,

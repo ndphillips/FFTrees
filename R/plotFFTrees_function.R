@@ -534,7 +534,7 @@ p.rect.ylim <- c(.1, .6)
 
 # p.signal level
 
-text(x =.675, y = p.rect.ylim[2],
+text(x =.7, y = p.rect.ylim[2],
      labels = paste("p(", decision.names[2], ")", sep = ""),
      pos = 3, cex = 1.2)
 
@@ -551,23 +551,23 @@ text(.7, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
      pos = 4, cex = 1.2)
 
 
-# p.noise level
-#
-# text(x = .325, y = p.rect.ylim[2],
-#      labels = paste("p(", decision.names[1], ")", sep = ""),
-#      pos = 3, cex = 1.2)
-#
-# rect(.3, p.rect.ylim[1], .35, p.rect.ylim[2], col = gray(1, .5))
-# rect(.3, p.rect.ylim[1], .35, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
-#
-# if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
-#
-#   noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
-# }
-#
-# text(.3, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-#      labels = noise.p.text,
-#      pos = 2, cex = 1.2)
+#p.noise level
+
+text(x = .3, y = p.rect.ylim[2],
+     labels = paste("p(", decision.names[1], ")", sep = ""),
+     pos = 3, cex = 1.2)
+
+rect(.3, p.rect.ylim[1], .35, p.rect.ylim[2], col = gray(1, .5))
+rect(.3, p.rect.ylim[1], .35, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+
+if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
+
+  noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
+}
+
+text(.3, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+     labels = noise.p.text,
+     pos = 2, cex = 1.2)
 
 
 
@@ -1199,14 +1199,23 @@ value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val
 # Add filling
 
 value.s <- min(value / max.val, 1)
+#
+# delta <- 1
+# gamma <- .5
+#
+# value.col.scale <- delta * value.s ^ gamma / (delta * value.s ^ gamma + (1 - value.s) ^ gamma)
+# value.col <- gray(value.col.scale)
 
+value.col <- gray(.2, .2)
+
+#plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
 rect(rect.left.x,
      rect.bottom.y,
      rect.right.x,
      value.height,
-     col = level.col.fun(value.s),
-     #col = gray(.5, .5),
+     #col = level.col.fun(value.s),
+     col = value.col,
     # col = spec.level.fun(lloc$value[lloc$element == name]),
      border = "black"
 )

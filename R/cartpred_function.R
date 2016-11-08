@@ -23,8 +23,23 @@ cart.pred <- function(formula,
                       cart.model = NULL,
                       cost.mi = 1,
                       cost.fa = 1) {
+  # formula = formula
+  # data.train = data.train
+  # data.test = data.test
+  # cart.model = cart.model
+  #
+  # cost.mi = 1
+  # cost.fa = 1
 
-if(is.null(data.train) == F) {
+  # formula = formula
+  # data.train = data.train
+  # data.test = data.test
+  #
+  # cart.model = NULL
+  # cost.mi = 1
+  # cost.fa = 1
+
+if(is.null(data.train) == FALSE) {
 
   data.mf.train <- model.frame(formula = formula,
                                data = data.train,
@@ -41,7 +56,7 @@ if(is.null(data.train) == F) {
 
 }
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
 
   data.mf.test <- model.frame(formula = formula, data = data.test, na.action = NULL)
   cue.test <- data.mf.test[,2:ncol(data.mf.test)]
@@ -57,7 +72,7 @@ if(is.null(data.test) == F) {
 
 # DETERMINE CART MODEL
 
-if(is.null(cart.model) == T) {
+if(is.null(cart.model) == TRUE) {
 
 # Create new CART model
 cart.train.mod <- rpart::rpart(formula,
@@ -79,7 +94,7 @@ cart.cues.used <- paste(cart.cues.used[cart.cues.used != "<leaf>"], collapse = "
 cart.factor.values <- attributes(cart.train.mod)$xlevels
 
 # CART TRAINING PREDICTIONS
-if(is.null(data.train) == F) {
+if(is.null(data.train) == FALSE) {
 
 # Look for new factor values
 
@@ -134,9 +149,9 @@ cart.train.acc[1,] <- NA
 
 # CART TESTING PREDICTIONS
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
 
-  if(is.null(cart.model) == F) {
+  if(is.null(cart.model) == FALSE) {
 
     cart.train.mod <- cart.model
 
@@ -146,7 +161,7 @@ if(is.null(data.test) == F) {
 
 
 # Look for new factor values
-
+{
 can.predict.mtx <- matrix(NA, nrow = nrow(data.test), ncol = ncol(cue.test))
 
 for(i in 1:ncol(cue.test)) {
@@ -169,8 +184,10 @@ if(any(can.predict.vec == F)) {
                 " test cases because they contained new factor values. These cases will be predicted to be FALSE",
                 sep = ""))
 }
+}
 
 cart.test.pred <- rep(FALSE, nrow(data.test))
+
 
 # Get training decisions
 cart.test.pred.t <- predict(cart.train.mod,
@@ -206,20 +223,23 @@ cart.acc <- cart.acc[order(cart.acc$far.train),]
 
 # CALCULATE AUC
 
-if(is.null(data.train) == F) {
+if(is.null(data.train) == FALSE) {
 
 cart.auc.train <- auc(hr.v = cart.acc$hr.train, far.v = cart.acc$far.train)
 
 } else {
 
   cart.auc.train <- NA
+
 }
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
+
   cart.auc.test <- auc(hr.v = cart.acc$hr.test, far.v = cart.acc$far.test)
 } else {
 
   cart.auc.test <- NA
+
 }
 
 cart.auc <- matrix(c(cart.auc.train, cart.auc.test), nrow = 2, ncol = 1)
