@@ -534,38 +534,38 @@ p.rect.ylim <- c(.1, .6)
 
 # p.signal level
 
-text(x =.7, y = p.rect.ylim[2],
+text(x = .8, y = p.rect.ylim[2],
      labels = paste("p(", decision.names[2], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-rect(.675, p.rect.ylim[1], .725, p.rect.ylim[2], col = gray(1, .5))
-rect(.675, p.rect.ylim[1], .725, p.rect.ylim[1] + signal.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+rect(.775, p.rect.ylim[1], .825, p.rect.ylim[2], col = gray(1, .5))
+rect(.775, p.rect.ylim[1], .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
 
 if(signal.p < .0001) {signal.p.text <- "<1%"} else {
 
   signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
 }
 
-text(.725, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
      labels = signal.p.text,
      pos = 4, cex = 1.2)
 
 
 #p.noise level
 
-text(x = .3, y = p.rect.ylim[2],
+text(x = .2, y = p.rect.ylim[2],
      labels = paste("p(", decision.names[1], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-rect(.275, p.rect.ylim[1], .325, p.rect.ylim[2], col = gray(1, .5))
-rect(.275, p.rect.ylim[1], .325, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2], col = gray(1, .5))
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
 
 if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
 
   noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
 }
 
-text(.275, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
      labels = noise.p.text,
      pos = 2, cex = 1.2)
 
