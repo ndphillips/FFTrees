@@ -44,7 +44,6 @@ cuerank <- function(formula = NULL,
 
 
 # EXTRACT FORMULA VARIABLES
-
 data.mf <- model.frame(formula = formula,
                        data = data)
 criterion.v <- data.mf[,1]
@@ -61,7 +60,7 @@ if(class(cue.df) != "data.frame") {
 # GLOBAL VARIABLES (could be updated later)
 
 correction <- .25
-max.numcat <- 20
+max.numcat <- 20        # Maximum number of numeric thresholds to consider
 n.cues <- ncol(cue.df)
 
 # CHECK cue.rules

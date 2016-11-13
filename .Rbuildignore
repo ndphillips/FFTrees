@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^NEWS\.md$
 ^\.travis\.yml$
+^javascripts
+^params\.json
+^stylesheets
+^index\.html
