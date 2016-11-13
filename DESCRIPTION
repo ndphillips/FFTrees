@@ -17,7 +17,7 @@ Imports:
     rpart,
     MASS,
     circlize,
-    graphics
+    graphics,snowfall,igraph
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 5.0.1

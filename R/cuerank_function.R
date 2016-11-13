@@ -33,13 +33,13 @@ cuerank <- function(formula = NULL,
 # TESTING GROUNDS
 # -----
 #
-formula <- diagnosis ~.
-data = heartdisease
-tree.criterion = "v"
-numthresh.method = "o"
-rounding = NULL
-verbose = F
-cue.rules = NULL
+# formula <- diagnosis ~.
+# data = heartdisease
+# tree.criterion = "v"
+# numthresh.method = "o"
+# rounding = NULL
+# verbose = F
+# cue.rules = NULL
 
 
 # EXTRACT FORMULA VARIABLES
