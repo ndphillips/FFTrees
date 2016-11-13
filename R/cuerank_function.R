@@ -33,18 +33,19 @@ cuerank <- function(formula = NULL,
 # TESTING GROUNDS
 # -----
 #
-# formula <- diagnosis ~.
-# data = breastcancer
-# tree.criterion = "v"
-# numthresh.method = "o"
-# rounding = NULL
-# verbose = F
-# cue.rules = NULL
+formula <- diagnosis ~.
+data = heartdisease
+tree.criterion = "v"
+numthresh.method = "o"
+rounding = NULL
+verbose = F
+cue.rules = NULL
 
 
 # EXTRACT FORMULA VARIABLES
 data.mf <- model.frame(formula = formula,
                        data = data)
+
 criterion.v <- data.mf[,1]
 cue.df <- data.mf[,2:ncol(data.mf)]
 
@@ -100,6 +101,12 @@ for(cue.i in 1:n.cues) {
 
         cue.levels <- seq(min(cue.v), max(cue.v), length.out = max.numcat)
 
+      if(setequal(cue.v, round(cue.v, 0))) {
+
+        cue.levels <- unique(round(cue.levels, 0))
+
+      }
+
         }
 
     }
@@ -110,7 +117,7 @@ for(cue.i in 1:n.cues) {
 
     }
 
-    if(is.null(cue.rules) == F) {
+    if(is.null(cue.rules) == FALSE) {
 
       cue.levels <- as.numeric(cue.rules$threshold[cue.rules$cue == cue])
 
@@ -138,7 +145,6 @@ for(cue.i in 1:n.cues) {
     }
 
   }
-
 
   cue.n <- length(cue.levels)
   accuracy.names <- names(classtable(c(1, 0, 1), c(1, 1, 0)))
@@ -256,7 +262,7 @@ for(cue.i in 1:n.cues) {
 
     }
 
-    if(is.null(cue.rules) == F) {
+    if(is.null(cue.rules) == FALSE) {
 
     direction.vec <- cue.rules$direction[cue.rules$cue == cue]
 
