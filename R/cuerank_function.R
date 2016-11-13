@@ -19,7 +19,6 @@
 #'
 #'
 
-
 cuerank <- function(formula = NULL,
                     data = NULL,
                     tree.criterion = "v",
