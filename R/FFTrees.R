@@ -67,7 +67,7 @@ if(is.null(object) == F) {
 # DEFINE TESTING AND TRAINING DATA
 {
 
-if(is.null(object) == F) {
+if(is.null(object) == FALSE) {
 
   data.train.o <- object$data$train
   data.train <- model.frame(formula = formula,

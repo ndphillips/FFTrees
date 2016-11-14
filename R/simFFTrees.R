@@ -18,7 +18,7 @@
 #' train.5m <- simFFTrees(formula = diagnosis ~.,
 #                         data = breastcancer,
 #                         train.p = .5,
-#                         sim = 10,
+#                         sim = 5,
 #                         rank.method = "m",
 #'                        cpus = 1)
 #'
@@ -32,19 +32,9 @@ simFFTrees <- function(formula = NULL,
                        train.p = .5,
                        rank.method = "m",
                        hr.weight = .5,
-                       verbose = TRUE,
+                       verbose = FALSE,
                        cpus = 1
 ) {
-#
-#   formula = diagnosis ~.
-#   data = heartdisease
-#   max.levels = 5
-#   sim = 100
-#   train.p = .5
-#   rank.method = "m"
-#   hr.weight = .5
-#   verbose = T
-#   cpus = 4
 
 sim.result.df <- data.frame(
   sim = 1:sim,
@@ -55,12 +45,14 @@ sim.result.df <- data.frame(
 # getsim.fun does one training split and returns tree statistics
 getsim.fun <- function(i) {
 
-result.i <- FFTrees(formula = formula,
+result.i <- FFTrees::FFTrees(formula = formula,
                     data = data,
+                    data.test = NULL,
                     train.p = train.p,
                     max.levels = max.levels,
                     rank.method = rank.method,
                     hr.weight = hr.weight,
+                    object = NULL,
                     do.cart = FALSE,
                     do.lr = FALSE)
 

@@ -5,7 +5,7 @@
 \title{Generates and summarises many FFTrees objects from multiple training stes}
 \usage{
 simFFTrees(formula = NULL, data = NULL, max.levels = 5, sim = 10,
-  train.p = 0.5, rank.method = "m", hr.weight = 0.5, verbose = TRUE,
+  train.p = 0.5, rank.method = "m", hr.weight = 0.5, verbose = FALSE,
   cpus = 1)
 }
 \arguments{
