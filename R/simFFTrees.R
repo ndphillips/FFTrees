@@ -1,4 +1,4 @@
-#' Generates and summarises many FFTrees objects from multiple training stes
+#' Generates and summarises many FFTrees objects from multiple training sets
 #'
 #' @param formula A formula specifying a binary criterion as a function of multiple variables
 #' @param data A dataframe containing variables in formula

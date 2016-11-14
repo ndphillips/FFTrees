@@ -60,7 +60,9 @@ rounding <- 2
 
 data.o <- data
 
-data <- model.frame(formula = formula, data = data)
+data <- model.frame(formula = formula,
+                    data = data)
+
 cue.df <- data[,2:ncol(data)]
 
 if(ncol(data) == 2) {

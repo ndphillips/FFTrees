@@ -115,7 +115,7 @@ if(is.null(object) == FALSE) {
 
 }
 
-if(is.null(object) == T & train.p == 1) {
+if(is.null(object) == TRUE & train.p == 1) {
 
   data.train.o <- data
   data.train <- model.frame(formula = formula,
@@ -164,12 +164,12 @@ if(is.null(object) == T & train.p == 1) {
 ## TRAINING / TESTING RANDOM SPLIT
 if(is.null(data.test) & train.p < 1) {
 
-  if(is.null(object) == F) {
+  if(is.null(object) == FALSE) {
 
     data.train.o <- object$data$train
   }
 
-  if(is.null(object) == T) {
+  if(is.null(object) == TRUE) {
 
     data.train.o <- data
 
@@ -177,6 +177,7 @@ if(is.null(data.test) & train.p < 1) {
 
   data.train <- model.frame(formula = formula,
                             data = data.train.o)
+
   cue.train <- data.train[,2:ncol(data.train)]
   crit.train <- data.train[,1]
 
