@@ -1,13 +1,13 @@
 #' Generates and summarises many FFTrees objects from multiple training sets
 #'
-#' @param formula A formula specifying a binary criterion as a function of multiple variables
-#' @param data A dataframe containing variables in formula
-#' @param max.levels A number indicating the maximum number of levels considered for the tree.
+#' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
+#' @param data dataframe. A dataframe containing variables in formula
+#' @param max.levels integer. Maximum number of levels considered for the trees.
 #' @param sim integer. Number of simulations to perform.
-#' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test is not specified by the user.
-#' @param rank.method rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
-#' @param hr.weight A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
-#' @param verbose A logical value indicating whether or not to print progress reports.
+#' @param train.p numeric. What percentage of the data to use for training in simulations.
+#' @param rank.method string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
+#' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
+#' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)
 #' @importFrom stats median formula
 #' @importFrom graphics text points segments plot
