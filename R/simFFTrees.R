@@ -16,15 +16,14 @@
 #' @examples
 #'
 #' train.5m <- simFFTrees(formula = diagnosis ~.,
-#                         data = breastcancer,
-#                         train.p = .5,
-#                         sim = 5,
-#                         rank.method = "m",
-#'                        cpus = 1)
+#'                         data = breastcancer,
+#'                         train.p = .5,
+#'                         sim = 5,
+#'                         rank.method = "m",
+#'                         cpus = 1)
 #'
 #'
 #'
-
 simFFTrees <- function(formula = NULL,
                        data = NULL,
                        max.levels = 5,

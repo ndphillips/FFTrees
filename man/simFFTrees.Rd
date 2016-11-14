@@ -2,7 +2,7 @@
 % Please edit documentation in R/simFFTrees.R
 \name{simFFTrees}
 \alias{simFFTrees}
-\title{Generates and summarises many FFTrees objects from multiple training stes}
+\title{Generates and summarises many FFTrees objects from multiple training sets}
 \usage{
 simFFTrees(formula = NULL, data = NULL, max.levels = 5, sim = 10,
   train.p = 0.5, rank.method = "m", hr.weight = 0.5, verbose = FALSE,
@@ -31,11 +31,15 @@ simFFTrees(formula = NULL, data = NULL, max.levels = 5, sim = 10,
 A dataframe containing best thresholds and marginal classification statistics for each cue
 }
 \description{
-Generates and summarises many FFTrees objects from multiple training stes
+Generates and summarises many FFTrees objects from multiple training sets
 }
 \examples{
 
 train.5m <- simFFTrees(formula = diagnosis ~.,
+                        data = breastcancer,
+                        train.p = .5,
+                        sim = 5,
+                        rank.method = "m",
                        cpus = 1)
 
 
