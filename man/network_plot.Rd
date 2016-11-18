@@ -4,7 +4,7 @@
 \alias{network_plot}
 \title{Creates a network plot. Code taken from Dirk Wulff (www.dirkwulff.org)}
 \usage{
-network_plot(edges, nodesize = 0.7, edgesize = 2, mincon = 0)
+network_plot(edges, nodesize = 0.1, edgesize = 1, mincon = 0)
 }
 \arguments{
 \item{edges}{dataframe. A dataframe showing}

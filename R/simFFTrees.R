@@ -31,11 +31,11 @@ simFFTrees <- function(formula = NULL,
                        train.p = .5,
                        rank.method = "m",
                        hr.weight = .5,
-                       verbose = FALSE,
+                       verbose = TRUE,
                        cpus = 1
 ) {
 
-sim.result.df <- data.frame(
+simulations <- data.frame(
   sim = 1:sim,
   cues = rep(NA, sim),
   thresholds = rep(NA, sim)
@@ -63,9 +63,9 @@ return(treestats.i)
 
 if(cpus == 1) {
 
-  result.ls <- lapply(1:nrow(sim.result.df), FUN = function(x) {
+  result.ls <- lapply(1:nrow(simulations), FUN = function(x) {
 
-    if(verbose) {print(x)}
+    if(verbose) {print(paste0(x, " of ", nrow(simulations)))}
     return(getsim.fun(x))
 
     })
@@ -74,8 +74,8 @@ if(cpus == 1) {
 
 if(cpus > 1) {
 
-  snowfall::sfInit(parallel = TRUE, cpus = cpus)
-  snowfall::sfExport("sim.result.df")
+  suppressMessages(snowfall::sfInit(parallel = TRUE, cpus = cpus))
+  snowfall::sfExport("simulations")
   snowfall::sfLibrary(FFTrees)
   snowfall::sfExport("formula")
   snowfall::sfExport("data")
@@ -85,12 +85,12 @@ if(cpus > 1) {
   snowfall::sfExport("rank.method")
   snowfall::sfExport("hr.weight")
 
-  result.ls <- snowfall::sfClusterApplySR(1:nrow(sim.result.df), fun = getsim.fun, perUpdate = 1)
-  snowfall::sfStop()
+  result.ls <- snowfall::sfClusterApplySR(1:nrow(simulations), fun = getsim.fun, perUpdate = 1)
+  suppressMessages(snowfall::sfStop())
 
   }
 
-# Append final results to sim.result.df
+# Append final results to simulations
 
 best.tree.v <- sapply(1:length(result.ls), FUN = function(x) {
 
@@ -102,32 +102,66 @@ best.tree.v <- sapply(1:length(result.ls), FUN = function(x) {
 
 })
 
-sim.result.df$cues <- sapply(1:length(result.ls),
+simulations$cues <- sapply(1:length(result.ls),
                              FUN = function(x) {result.ls[[x]]$train$cues[best.tree.v[x]]})
 
-sim.result.df$thresholds <- sapply(1:length(result.ls),
+simulations$thresholds <- sapply(1:length(result.ls),
                              FUN = function(x) {result.ls[[x]]$train$thresholds[best.tree.v[x]]})
 
-sim.result.df$train.v <- sapply(1:length(result.ls),
-                                   FUN = function(x) {result.ls[[x]]$train$v[best.tree.v[x]]})
-
-sim.result.df$train.hr <- sapply(1:length(result.ls),
+simulations$train.hr <- sapply(1:length(result.ls),
                                 FUN = function(x) {result.ls[[x]]$train$hr[best.tree.v[x]]})
 
-sim.result.df$train.far <- sapply(1:length(result.ls),
+simulations$train.far <- sapply(1:length(result.ls),
                                  FUN = function(x) {result.ls[[x]]$train$far[best.tree.v[x]]})
 
-sim.result.df$test.v <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$test$v[best.tree.v[x]]})
+simulations$train.v <- sapply(1:length(result.ls),
+                              FUN = function(x) {result.ls[[x]]$train$v[best.tree.v[x]]})
 
-sim.result.df$test.hr <- sapply(1:length(result.ls),
+simulations$train.dprime <- qnorm(simulations$train.hr) - qnorm(simulations$train.far)
+
+
+simulations$test.hr <- sapply(1:length(result.ls),
                                FUN = function(x) {result.ls[[x]]$test$hr[best.tree.v[x]]})
 
-sim.result.df$test.far <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$test$hr[best.tree.v[x]]})
-output <- sim.result.df
+simulations$test.far <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$test$far[best.tree.v[x]]})
 
+simulations$test.v <- sapply(1:length(result.ls),
+                             FUN = function(x) {result.ls[[x]]$test$v[best.tree.v[x]]})
 
-return(output)
+simulations$test.dprime <- qnorm(simulations$test.hr) - qnorm(simulations$test.far)
+
+# Get overall cue frequencies
+
+frequencies <- table(unlist(strsplit(simulations$cues, ";")))
+
+# Get connections from simulation
+{
+## get unique values
+
+unique.cues <- unique(unlist(strsplit(simulations$cues, ";")))
+
+connections <- expand.grid("cue1" = unique.cues,
+                        "cue2" = unique.cues,
+                        stringsAsFactors = FALSE)
+
+for(i in 1:nrow(connections)) {
+
+  N <- sum(sapply(1:length(simulations$cues), FUN = function(x) {
+
+    connections[i, 1] %in% unlist(strsplit(simulations$cues[x], ";")) &
+    connections[i, 2] %in% unlist(strsplit(simulations$cues[x], ";"))
+
+  }))
+
+  connections$N[i] <- N
+
+}
+}
+
+return(list("simulations" = simulations,
+            "frequencies" = frequencies,
+            "connections" = connections
+            ))
 
 }
