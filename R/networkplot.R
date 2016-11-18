@@ -5,7 +5,7 @@
 #' @param edgesize numeric. Edgesize adjustment
 #' @param mincon integer. Minimum connection cutoff
 #' @importFrom igraph graph_from_data_frame get.vertex.attribute layout_with_dh
-#' @importFrom graphics text points segments plot lines plot.new plot.window
+#' @importFrom graphics text points segments plot lines plot.new plot.window barplot
 #' @export
 #'
 #'
@@ -94,15 +94,15 @@ locations <- igraph::layout_with_dh(g)
   # Add points
 
   for(i in 1:length(cue.names)){
-    #  points(l[i,1] + .04, l[i, 2] - .04, cex = cnt[v[i]]**nodesize, pch = 16, col = 'grey50')
+    #  points(l[i,1] + .04, l[i, 2] - .04, cex = frequencies[v[i]]**nodesize, pch = 16, col = 'grey50')
 
-    freq.i <- cnt[names(cnt) == cue.names[i]]
+    freq.i <- frequencies[names(frequencies) == cue.names[i]]
 
-    relfreq.i <- freq.i / sum(cnt)
+    relfreq.i <- freq.i / sum(frequencies)
 
     points(x = locations[i, 1],
            y = locations[i, 2],
-           cex = cnt[cue.names[i]] * nodesize,
+           cex = frequencies[cue.names[i]] * nodesize,
            pch = 21,
            col = "black",
            bg = gray(1 - relfreq.i))
@@ -114,7 +114,7 @@ locations <- igraph::layout_with_dh(g)
     text(x = locations[i, 1],
          y = locations[i, 2],
          labels = cue.names[i],
-         cex = cnt[cue.names[i]] ^ .08 - .4)
+         cex = frequencies[cue.names[i]] ^ .08 - .4)
   }
 
 }
