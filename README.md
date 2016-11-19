@@ -25,6 +25,8 @@ plot(titanic.fft,
 
 1.1.9
 
+- Added random forests for comparison in `FFTrees()` using the `randomForest` package. Predictions from random forests are now also shown in `plot.FFTrees()`.
+
 - `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new FFTrees object.
 
 - You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. This replaces the former `showcues()` function.
