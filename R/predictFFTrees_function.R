@@ -4,7 +4,7 @@
 #' @param data A dataframe of test data
 #' @param tree Which tree in the FFTrees object should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.
 #' @param ... Additional arguments passed on to \code{predict()}
-#' @return An FFTrees object
+#' @return A logical vector of predictions
 #' @export
 #' @examples
 #'
