@@ -2,32 +2,30 @@
 % Please edit documentation in R/FFTrees.R
 \name{FFTrees}
 \alias{FFTrees}
-\title{Create Fast and Frugal Trees (FFTrees)}
+\title{Creates a Fast and Frugal Trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  rank.method = "m", repeat.cues = TRUE, hr.weight = 0.5, verbose = F,
-  max.levels = 4, do.cart = T, do.lr = T, object = NULL)
+  rank.method = "m", hr.weight = 0.5, verbose = FALSE, max.levels = 4,
+  do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, object = NULL)
 }
 \arguments{
 \item{formula}{A formula}
 
-\item{data}{A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
+\item{data}{dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
 
-\item{data.test}{(Optional) A model testing dataset (same format as data.train)}
+\item{data.test}{dataframe. An optional model testing dataset (same format as data.train)}
 
-\item{train.p}{A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test is not specified by the user.}
+\item{train.p}{numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.}
 
-\item{rank.method}{A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.}
+\item{rank.method}{character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.}
 
-\item{repeat.cues}{A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when rank.method = 'c'.}
+\item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
 
-\item{hr.weight}{A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
+\item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...}
 
-\item{verbose}{A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slowly...}
+\item{max.levels}{integer. The maximum number of levels considered for the tree.}
 
-\item{max.levels}{A number indicating the maximum number of levels considered for the tree.}
-
-\item{do.cart, do.lr}{logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.}
+\item{do.cart, do.lr, do.rf}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.}
 
 \item{object}{An optional existing FFTrees object (do not specify by hand)}
 }
@@ -35,6 +33,6 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
 }
 \description{
-Create Fast and Frugal Trees (FFTrees)
+Creates a Fast and Frugal Trees (FFTrees) object.
 }
 

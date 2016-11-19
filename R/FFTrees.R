@@ -20,12 +20,12 @@ FFTrees <- function(formula = NULL,
                     data.test = NULL,
                     train.p = 1,
                     rank.method = "m",
-                    repeat.cues = TRUE,
                     hr.weight = .5,
                     verbose = FALSE,
                     max.levels = 4,
                     do.cart = TRUE,
                     do.lr = TRUE,
+                    do.rf = TRUE,
                     object = NULL
 ) {
   # formula = NULL
@@ -38,7 +38,7 @@ FFTrees <- function(formula = NULL,
   # rank.method = "m"
   # repeat.cues = TRUE
   # hr.weight = .5
-  # verbose = F
+  # verbose = FALSE
   # max.levels = 4
   # do.cart = T
   # do.lr = T
@@ -334,7 +334,7 @@ cue.accuracies.train <- object$cue.accuracies$train
 
 }
 
-if(is.null(data.test) = FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test))) {
+if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test))) {
 
   if(sd(crit.test) > 0) {
 
@@ -355,7 +355,7 @@ cue.accuracies.test <- cuerank(formula = formula,
 
 }
 
-if(is.null(data.test) = TRUE | any(is.finite(crit.test)) = FALSE | is.finite(sd(crit.test)) == FALSE) {
+if(is.null(data.test) == TRUE | any(is.finite(crit.test)) == FALSE | is.finite(sd(crit.test)) == FALSE) {
 
 cue.accuracies.test <- NULL
 
