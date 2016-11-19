@@ -1519,7 +1519,7 @@ par("xpd" = T)
 
   text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
-       labels = " FFTrees", adj = 0, cex = .9)
+       labels = " FFT", adj = 0, cex = .9)
 
   par("xpd" = T)
 

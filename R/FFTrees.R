@@ -28,22 +28,24 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     object = NULL
 ) {
+#
+#   formula = survived ~.
+#   data = titanic
+#   train.p = .5
+#
+#
+# #
+#   data.test = NULL
+#   rank.method = "m"
+#   hr.weight = .5
+#   verbose = FALSE
+#   max.levels = 4
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   object = NULL
 
 
-  formula = area ~.
-  data = forestfires
-  train.p = .5
-
-
-  data.test = NULL
-  rank.method = "m"
-  hr.weight = .5
-  verbose = FALSE
-  max.levels = 4
-  do.cart = TRUE
-  do.lr = TRUE
-  do.rf = TRUE
-  object = NULL
 
 # Set some global parameters
 

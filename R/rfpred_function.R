@@ -28,6 +28,8 @@ if(is.null(data.train) == FALSE) {
                                data = data.train,
                                na.action = NULL)
 
+  crit.train <- data.mf.train[,1]
+
 }
 
 if(is.null(data.test) == FALSE) {
@@ -35,6 +37,8 @@ if(is.null(data.test) == FALSE) {
     data.mf.test <- model.frame(formula = formula,
                                  data = data.test,
                                  na.action = NULL)
+
+    crit.test <- data.mf.test[,1]
 
 }
 
@@ -56,7 +60,8 @@ if(is.null(data.test) == FALSE) {
 
 for(i in 1:ncol(data.mf.train)) {
 
-    if(class(data.mf.train[,i]) %in% c("character", "factor", "logical")) {
+    if(class(data.mf.train[,i]) %in% c("character", "factor", "logical") |
+       length(unique(data.mf.train[,i])) <= 2) {
 
 levels.i <- levels.ls[[i]]
 
@@ -76,7 +81,9 @@ if(is.null(data.test) == FALSE) {
 
   for(i in 1:ncol(data.mf.test)) {
 
-    if(class(data.mf.test[,i]) %in% c("character", "factor", "logical")) {
+    if(class(data.mf.test[,i]) %in% c("character", "factor", "logical") |
+       length(unique(data.mf.test[,i])) <= 2
+       ) {
 
       levels.i <- levels.ls[[i]]
 
@@ -152,7 +159,7 @@ if("1" %in% paste(rf.test.pred)) {rf.test.pred <- as.logical(as.numeric(paste(rf
 
 
 rf.test.acc <- classtable(prediction.v = rf.test.pred,
-                              criterion.v = crit.test)
+                          criterion.v = crit.test)
 
 
 } else {
