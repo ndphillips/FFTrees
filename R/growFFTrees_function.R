@@ -460,7 +460,7 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
 if(sum(duplicate.trees == F) > 1) {
   # sort trees by far
 
-  tree.far.order <- order(trees$far)
+  tree.far.order <- order(trees$far, trees$hr)
 
   trees <- trees[tree.far.order, ]
   levelout <- levelout[,tree.far.order]
