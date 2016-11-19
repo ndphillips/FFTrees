@@ -702,7 +702,7 @@ if(level.i == 1) {
   text(x = subplot.center[1],
        y = subplot.center[2] + 2,
        labels = current.cue,
-       cex = label.box.text.cex, font = 2#label.cex.fun(current.cue, label.box.text.cex = label.box.text.cex)
+       cex = label.box.text.cex#label.cex.fun(current.cue, label.box.text.cex = label.box.text.cex)
   )
 
 
@@ -820,7 +820,7 @@ if(level.stats$exit[level.i] %in% c(1)) {
   text(x = subplot.center[1] - 2,
        y = subplot.center[2] - 2,
        labels = level.stats$level.name.t[level.i + 1],
-       cex = label.box.text.cex, font = 2
+       cex = label.box.text.cex
   )
 
 }
@@ -946,7 +946,7 @@ if(level.stats$exit[level.i] %in% 0) {
   text(x = subplot.center[1] + 2,
        y = subplot.center[2] - 2,
        labels = level.stats$level.name.t[level.i + 1],
-       cex = label.box.text.cex, font = 2
+       cex = label.box.text.cex
   )
 
 
