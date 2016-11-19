@@ -1,15 +1,14 @@
-#' Create Fast and Frugal Trees (FFTrees)
+#' Creates a Fast and Frugal Trees (FFTrees) object.
 #'
 #' @param formula A formula
-#' @param data A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
-#' @param data.test (Optional) A model testing dataset (same format as data.train)
-#' @param max.levels A number indicating the maximum number of levels considered for the tree.
-#' @param train.p A number between 0 and 1 indicating what percentage of the data to use for training. This only applies when data.test is not specified by the user.
-#' @param rank.method A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
-#' @param repeat.cues A logical value indicating whether or not to allow repeated cues in the tree. Only relevant when rank.method = 'c'.
-#' @param hr.weight A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
-#' @param do.cart,do.lr logical values indicating whether or not to evaluate logistic regression and/or CART on the data for comparison.
-#' @param verbose A logical value indicating whether or not to print progress reports. Can be helpful for diagnosis when the function is running slowly...
+#' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
+#' @param data.test dataframe. An optional model testing dataset (same format as data.train)
+#' @param max.levels integer. The maximum number of levels considered for the tree.
+#' @param train.p numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.
+#' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
+#' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
+#' @param do.cart,do.lr,do.rf logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.
+#' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...
 #' @param object An optional existing FFTrees object (do not specify by hand)
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
@@ -23,10 +22,10 @@ FFTrees <- function(formula = NULL,
                     rank.method = "m",
                     repeat.cues = TRUE,
                     hr.weight = .5,
-                    verbose = F,
+                    verbose = FALSE,
                     max.levels = 4,
-                    do.cart = T,
-                    do.lr = T,
+                    do.cart = TRUE,
+                    do.lr = TRUE,
                     object = NULL
 ) {
   # formula = NULL
@@ -46,6 +45,7 @@ FFTrees <- function(formula = NULL,
 
 # Set some global parameters
 
+repeat.cues <- TRUE
 tree.criterion <- "v"
 stopping.rule <- "exemplars"
 stopping.par <- .1
@@ -58,7 +58,7 @@ exit.method <- "fixed"
 # EXTRACT OBJECTS FROM EXISTING FFTrees OBJECT
 
 # GET FORMULA
-if(is.null(object) == F) {
+if(is.null(object) == FALSE) {
 
   formula <- object$formula
 
@@ -85,11 +85,11 @@ if(is.null(object) == FALSE) {
 
   crit.name <- names(data.train)[1]
 
-  if(is.null(data.test) == F) {
+  if(is.null(data.test) == FALSE) {
 
     data.test.o <- data.test
 
-    if(setequal(names(data.train), names(data.test)) == F) {
+    if(setequal(names(data.train), names(data.test)) == FALSE) {
 
       stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
@@ -131,9 +131,9 @@ if(is.null(object) == TRUE & train.p == 1) {
 
   crit.train <- data.train[,1]
 
- if(is.null(data.test) == F) {
+ if(is.null(data.test) == FALSE) {
 
-   if(setequal(names(data.train.o), names(data.test)) == F) {
+   if(setequal(names(data.train.o), names(data.test)) == FALSE) {
 
      stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
@@ -252,7 +252,7 @@ if(is.null(data.test) & train.p < 1) {
 {
 fac.to.string <- function(x) {
 
-  if(is.null(x) == F) {
+  if(is.null(x) == FALSE) {
 
     for(i in 1:ncol(x)) {
 
@@ -277,7 +277,7 @@ cue.test <- fac.to.string(cue.test)
 # Check for missing or bad inputs
 {
 if(is.null(data.train) |
-   "data.frame" %in% class(data.train) == F) {
+   "data.frame" %in% class(data.train) == FALSE) {
 
   stop("Please specify a valid dataframe object in data")
 
@@ -285,10 +285,10 @@ if(is.null(data.train) |
 }
 # MAKE SURE TRAINING AND TEST DATAFRAMES ARE SIMILAR
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
 
 
-if(setequal(names(data.train), names(data.test)) == F) {
+if(setequal(names(data.train), names(data.test)) == FALSE) {
 
   stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
@@ -300,7 +300,7 @@ if(setequal(names(data.train), names(data.test)) == F) {
 ## VALIDITY CHECKS
 {
 # Non-binary DV
-if(setequal(crit.train, c(0, 1)) == F) {
+if(setequal(crit.train, c(0, 1)) == FALSE) {
 
   stop("Warning! The dependent variable in your training data is either not binary or logical, or does not have variance. Convert to 0s and 1s (or FALSE and TRUE)")
 
@@ -328,13 +328,13 @@ cue.accuracies.train <- cuerank(formula = formula,
 
 }
 
-if(is.null(object) == F) {
+if(is.null(object) == FALSE) {
 
 cue.accuracies.train <- object$cue.accuracies$train
 
 }
 
-if(is.null(data.test) == F & all(is.finite(crit.test)) & is.finite(sd(crit.test))) {
+if(is.null(data.test) = FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test))) {
 
   if(sd(crit.test) > 0) {
 
@@ -355,7 +355,7 @@ cue.accuracies.test <- cuerank(formula = formula,
 
 }
 
-if(is.null(data.test) == T | any(is.finite(crit.test)) == F | is.finite(sd(crit.test)) == F) {
+if(is.null(data.test) = TRUE | any(is.finite(crit.test)) = FALSE | is.finite(sd(crit.test)) == FALSE) {
 
 cue.accuracies.test <- NULL
 
@@ -382,14 +382,14 @@ tree.definitions <- tree.growth$tree.definitions
 
 }
 
-if(is.null(object) == F) {tree.definitions <- object$tree.definitions}
+if(is.null(object) == FALSE) {tree.definitions <- object$tree.definitions}
 }
 
 ## CALCULATE TREE STATISTICS FROM DEFINITIONS
 {
 n.trees <- nrow(tree.definitions)
 
-if(is.null(data.train) == F) {
+if(is.null(data.train) == FALSE) {
 
 train.results <- apply.tree(data.train, formula, tree.definitions)
 
@@ -401,7 +401,7 @@ treestats.train <- train.results$treestats
 tree.auc.train <- auc(hr.v = train.results$treestats$hr, far.v = train.results$treestats$far)
 }
 
-if(is.null(data.train) == T) {
+if(is.null(data.train) == TRUE) {
 
   decision.train <- NULL
   levelout.train <- NULL
@@ -411,7 +411,7 @@ if(is.null(data.train) == T) {
 
 }
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
 
 test.results <- apply.tree(data.test, formula, tree.definitions)
 
@@ -420,7 +420,7 @@ levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
 
-if(any(is.na(test.results$treestats$hr)) == T) {
+if(any(is.na(test.results$treestats$hr)) == TRUE) {
 
   tree.auc.test <- NA
 
@@ -433,7 +433,7 @@ tree.auc.test <- auc(hr.v = test.results$treestats$hr, far.v = test.results$tree
 }
 }
 
-if(is.null(data.test) == T) {
+if(is.null(data.test) == TRUE) {
 
   decision.test <- NULL
   levelout.test <- NULL
@@ -467,7 +467,7 @@ lr.model <- lr.acc$model
 
 }
 
-if(do.lr == F) {
+if(do.lr == FALSE) {
 
 lr.acc <- NULL; lr.stats <- NULL ; lr.model <- NULL
 
@@ -499,7 +499,7 @@ cart.model <- cart.acc$model
 
 }
 
-if(do.cart == F) {
+if(do.cart == FALSE) {
 
   cart.acc <- NULL ; cart.stats <- NULL ; cart.model <- NULL
 
