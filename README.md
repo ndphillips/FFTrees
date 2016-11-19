@@ -27,7 +27,7 @@ plot(titanic.fft,
 
 - `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new FFTrees object.
 
-- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument.
+- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. This replaces the former `showcues()` function.
 
 - Cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls)
 
