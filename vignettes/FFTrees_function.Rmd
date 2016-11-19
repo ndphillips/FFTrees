@@ -38,8 +38,7 @@ We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` funct
 ```{r}
 heart.fft <- FFTrees(formula = diagnosis ~.,
                     data = heartdisease.train,
-                    data.test = heartdisease.test
-                    )
+                    data.test = heartdisease.test)
 ```
 
 ## Elements of an FFTrees object
@@ -68,11 +67,12 @@ You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. 
 heart.fft$cue.accuracies
 ```
 
-You can also view the cue accuracies in an ROC-type plot with `showcues()`:
+You can also view the cue accuracies in an ROC-type plot with `plot()` combined with the `what = "cues"` argument:
 
 ```{r fig.width = 8, fig.height = 8}
-showcues(heart.fft, 
-         main = "Heartdisease Cue Accuracy")
+plot(heart.fft, 
+     main = "Heartdisease Cue Accuracy",
+     what = "cues")
 ```
 
 
@@ -112,18 +112,11 @@ heart.fft$levelout$test[1:5,]
 
 ### Predicting new data with predict()
 
-Once you've created an FFTrees object, you can use it to predict new data using `predict()`. This will return a new FFTrees object with the new data used as test data. This will overwrite any existing test data in the FFTrees object but will save all training data. In this example, I'll use the `heart.fft` object to make predictions for cases 1 through 50 in the heartdisease dataset:
+Once you've created an FFTrees object, you can use it to predict new data using `predict()`. To specify which tree to In this example, I'll use the `heart.fft` object to make predictions for cases 1 through 50 in the heartdisease dataset:
 
 ```{r}
-heart.fft <- predict(heart.fft,
-                     data.test = heartdisease[1:50,]
-                     )
-```
-
-When you look at `heart.fft` now, you'll see that the new test data (with 50 cases) are stored as test data:
-
-```{r}
-heart.fft
+predict(heart.fft,
+        data = heartdisease[1:50,])
 ```
 
 
@@ -134,8 +127,7 @@ Once you've created an FFTrees object using `FFTrees()` you can visualize the tr
 ```{r, fig.width = 6, fig.height = 6}
 plot(heart.fft,
      main = "Heart Disease",
-     decision.names = c("Healthy", "Disease")
-     )
+     decision.names = c("Healthy", "Disease"))
 ```
 
 You can also visualize the individual cue accuracies with the `showcues()` function:

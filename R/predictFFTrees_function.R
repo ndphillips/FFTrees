@@ -1,8 +1,9 @@
 #' Applies an existing FFTrees object to a new (test) data set
 #'
-#' @param object (M) An FFTrees object created from the FFTrees() function.
-#' @param data.test (M) A dataframe of test data
-#' @param ... Additional arguments passed on to predict()
+#' @param object An FFTrees object created from the FFTrees() function.
+#' @param data A dataframe of test data
+#' @param tree Which tree in the FFTrees object should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.
+#' @param ... Additional arguments passed on to \code{predict()}
 #' @return An FFTrees object
 #' @export
 #' @examples
@@ -13,33 +14,33 @@
 #'   breastcancer.fft <- FFTrees(formula = diagnosis ~.,
 #'                               data = breastcancer[1:300,])
 #'
-#'   # Currently the object only contains training data
-#'   breastcancer.fft
+#'  # Predict results for remaining data
+#'   predict(breastcancer.fft,
+#'   data = breastcancer[301:nrow(breastcancer),])
 #'
-#'   # Now add the rest of the dataset as test data using predict
-#'   #
-#'   breastcancer.fft <- predict(breastcancer.fft,
-#'   data.test = breastcancer[301:nrow(breastcancer),])
-#'
-#'   # Now the new data are stored as test data
-#'   breastcancer.fft
 #'
 #'
 #'
 
 predict.FFTrees <- function(
   object = NULL,
-  data.test = NULL,
+  data = NULL,
+  tree = "best.train",
   ...
 ) {
 
+  if (tree == "best.train") {
 
+    tree <- which(object$tree.stats$train$v == max(object$tree.stats$train$v))
 
-  new.result <- FFTrees(data.test = data.test,
-                        data = object$data$train,
-                        object = object
-  )
+  }
 
-  return(new.result)
+  predictions <- apply.tree(formula = object$formula,
+                            data = data,
+                            tree.definitions = object$tree.definitions)
+
+  predictions <- predictions$decision[,tree]
+
+  return(predictions)
 
 }

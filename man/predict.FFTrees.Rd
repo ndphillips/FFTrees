@@ -4,14 +4,17 @@
 \alias{predict.FFTrees}
 \title{Applies an existing FFTrees object to a new (test) data set}
 \usage{
-\method{predict}{FFTrees}(object = NULL, data.test = NULL, ...)
+\method{predict}{FFTrees}(object = NULL, data = NULL, tree = "best.train",
+  ...)
 }
 \arguments{
-\item{object}{(M) An FFTrees object created from the FFTrees() function.}
+\item{object}{An FFTrees object created from the FFTrees() function.}
 
-\item{data.test}{(M) A dataframe of test data}
+\item{data}{A dataframe of test data}
 
-\item{...}{Additional arguments passed on to predict()}
+\item{tree}{Which tree in the FFTrees object should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.}
+
+\item{...}{Additional arguments passed on to \code{predict()}}
 }
 \value{
 An FFTrees object
@@ -27,16 +30,10 @@ Applies an existing FFTrees object to a new (test) data set
   breastcancer.fft <- FFTrees(formula = diagnosis ~.,
                               data = breastcancer[1:300,])
 
-  # Currently the object only contains training data
-  breastcancer.fft
+ # Predict results for remaining data
+  predict(breastcancer.fft,
+  data = breastcancer[301:nrow(breastcancer),])
 
-  # Now add the rest of the dataset as test data using predict
-  #
-  breastcancer.fft <- predict(breastcancer.fft,
-  data.test = breastcancer[301:nrow(breastcancer),])
-
-  # Now the new data are stored as test data
-  breastcancer.fft
 
 
 
