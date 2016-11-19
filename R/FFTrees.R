@@ -28,20 +28,22 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     object = NULL
 ) {
-  # formula = NULL
-  # data.test = data.test
-  #
-  # data = object$data$train
-  # object = object
-  #
-  # train.p = 1
-  # rank.method = "m"
-  # repeat.cues = TRUE
-  # hr.weight = .5
-  # verbose = FALSE
-  # max.levels = 4
-  # do.cart = T
-  # do.lr = T
+
+
+  formula = area ~.
+  data = forestfires
+  train.p = .5
+
+
+  data.test = NULL
+  rank.method = "m"
+  hr.weight = .5
+  verbose = FALSE
+  max.levels = 4
+  do.cart = TRUE
+  do.lr = TRUE
+  do.rf = TRUE
+  object = NULL
 
 # Set some global parameters
 
@@ -510,9 +512,39 @@ if(do.cart == FALSE) {
 }
 }
 
+# rf
+{
+
+  if(do.rf) {
+
+    if(is.null(object)) {rf.model <- NULL}
+    if(is.null(object) == FALSE) {rf.model <- object$rf$model}
+
+    rf.acc <- rf.pred(formula = formula,
+                      data.train = data.train,
+                      data.test = data.test,
+                      rf.model = rf.model)
+
+    rf.stats <- rf.acc$accuracy
+    rf.auc <- rf.acc$auc
+    rf.model <- rf.acc$model
+
+  }
+
+  if(do.rf == FALSE) {
+
+    rf.acc <- NULL ; rf.stats <- NULL ; rf.model <- NULL
+
+    rf.auc <- matrix(NA, nrow = 2, ncol =1)
+    rownames(rf.auc) <- c("train", "test")
+    colnames(rf.auc) <- "rf"
+
+  }
+}
+
 # Get AUC matrix
 
-auc <- cbind(tree.auc, lr.auc, cart.auc)
+auc <- cbind(tree.auc, lr.auc, cart.auc, rf.auc)
 
 output.fft <- list("formula" = formula,
                   "data" = list("train" = data.train, "test" = data.test),
@@ -524,7 +556,8 @@ output.fft <- list("formula" = formula,
                   "levelout" = levelout,
                   "auc" = auc,
                   "lr" = list("model" = lr.model, "stats" = lr.stats),
-                  "cart" = list("model" = cart.model, "stats" = cart.stats)
+                  "cart" = list("model" = cart.model, "stats" = cart.stats),
+                  "rf" = list("model" = rf.model, "stats" = rf.stats)
 )
 
 class(output.fft) <- "FFTrees"

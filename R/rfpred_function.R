@@ -21,23 +21,6 @@ rf.pred <- function(formula,
                     data.test = NULL,
                     rf.model = NULL) {
 
-  # formula = diagnosis ~.
-  #
-  # heartdisease.2 <- heartdisease[sample(nrow(heartdisease)),]
-  # data.train = heartdisease.2[1:150,]
-  # data.test = heartdisease.2[151:303,]
-  # rf.model = NULL
-  #
-  # cost.mi = 1
-  # cost.fa = 1
-
-  # formula = formula
-  # data.train = data.train
-  # data.test = data.test
-  #
-  # rf.model = NULL
-  # cost.mi = 1
-  # cost.fa = 1
 
 if(is.null(data.train) == FALSE) {
 
@@ -45,34 +28,44 @@ if(is.null(data.train) == FALSE) {
                                data = data.train,
                                na.action = NULL)
 
+}
 
-  data.mf.train[,1] <- as.factor(data.mf.train[,1])
+if(is.null(data.test) == FALSE) {
+
+    data.mf.test <- model.frame(formula = formula,
+                                 data = data.test,
+                                 na.action = NULL)
+
+}
 
   # Convert character cues to factors
 
-  for(i in 1:ncol(data.mf.train)) {
+levels.ls <- lapply(1:ncol(data.mf.train),
+                    FUN = function(x) {
 
-    if(class(data.mf.train[,i]) == "character") {
+if(is.null(data.test)) {
+  return(unique(data.mf.train[,x]))
+}
 
-      data.mf.train[,i] <- as.factor(data.mf.train[,i])
+
+if(is.null(data.test) == FALSE) {
+  return(unique(c(data.mf.train[,x], data.mf.test[,x])))
+}
+
+})
+
+for(i in 1:ncol(data.mf.train)) {
+
+    if(class(data.mf.train[,i]) %in% c("character", "factor", "logical")) {
+
+levels.i <- levels.ls[[i]]
+
+      data.mf.train[,i] <- factor(paste(data.mf.train[,i]),
+                                  levels = levels.i)
+
     }
 
   }
-
-
-  cue.train <- data.mf.train[,2:ncol(data.mf.train)]
-  crit.train <- data.mf.train[,1]
-
-  if(ncol(data.mf.train) == 2) {
-
-    cue.train <- data.frame(cue.train)
-    names(cue.train) <- names(data.mf.train)[2]
-
-  }
-
-
-
-}
 
 if(is.null(data.test) == FALSE) {
 
@@ -80,26 +73,17 @@ if(is.null(data.test) == FALSE) {
                               data = data.test,
                               na.action = NULL)
 
-  data.mf.test[,1] <- as.factor(data.mf.test[,1])
-
 
   for(i in 1:ncol(data.mf.test)) {
 
-    if(class(data.mf.test[,i]) == "character") {
+    if(class(data.mf.test[,i]) %in% c("character", "factor", "logical")) {
 
-      data.mf.test[,i] <- as.factor(data.mf.test[,i])
+      levels.i <- levels.ls[[i]]
+
+      data.mf.test[,i] <- factor(data.mf.test[,i],
+                                 levels = levels.i)
 
     }
-
-  }
-
-  cue.test <- data.mf.test[,2:ncol(data.mf.test)]
-  crit.test <- data.mf.test[,1]
-
-  if(ncol(data.mf.test) == 2) {
-
-    cue.test <- data.frame(cue.test)
-    names(cue.test) <- names(data.mf.test)[2]
 
   }
 

@@ -126,6 +126,8 @@ if(data == "train") {
   level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
   lr.stats <- data.frame("hr" = x$lr$stats$hr.train, "far" = x$lr$stats$far.train)
   cart.stats <- data.frame("hr" = x$cart$stats$hr.train, "far" = x$cart$stats$far.train)
+  rf.stats <- data.frame("hr" = x$rf$stats$hr.train, "far" = x$rf$stats$far.train)
+
   n.exemplars <- nrow(data.mf)
 }
 if(data == "test") {
@@ -138,6 +140,8 @@ if(data == "test") {
   level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
   lr.stats <- data.frame("hr" = x$lr$stats$hr.test, "far" = x$lr$stats$far.test)
   cart.stats <- data.frame("hr" = x$cart$stats$hr.test, "far" = x$cart$stats$far.test)
+  rf.stats <- data.frame("hr" = x$rf$stats$hr.test, "far" = x$rf$stats$far.test)
+
   n.exemplars <- nrow(data.mf)
 }
 
@@ -991,7 +995,8 @@ lr.hr <- lr.stats$hr
 lr.far <- lr.stats$far
 cart.hr <- cart.stats$hr
 cart.far <- cart.stats$far
-
+rf.hr <- rf.stats$hr
+rf.far <- rf.stats$far
 
 # General plotting space
 {
@@ -1371,6 +1376,8 @@ rect(final.roc.x.loc[1],
   ## CART and LR
 {
 
+  # CART
+
   points(final.roc.x.loc[1] + cart.far * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.hr * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2, col = transparent("red", .3),
@@ -1396,36 +1403,65 @@ text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
 labels = " CART", adj = 0, cex = .9)
 
 par("xpd" = T)
-#points(1.1, .6, )
 
 
-  ## LR
 
-  points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2, col = transparent("blue", .3),
-         bg = transparent("blue", .7))
+## LR
 
-  points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
-         pch = "L", cex = .9, col = gray(.2))
+points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
+       pch = 21, cex = 2, col = transparent("blue", .3),
+       bg = transparent("blue", .7))
 
-  par("xpd" = F)
+points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
+       pch = "L", cex = .9, col = gray(.2))
 
-  points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2, col = transparent("blue", .3),
-         bg = transparent("blue", .7))
+par("xpd" = F)
 
-  points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
-         pch = "L", cex = .9, col = gray(.2))
-
-  text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
-       labels = " LR", adj = 0, cex = .9)
+       pch = 21, cex = 2, col = transparent("blue", .3),
+       bg = transparent("blue", .7))
 
-  par("xpd" = T)
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
+       pch = "L", cex = .9, col = gray(.2))
+
+text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+     final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
+     labels = " LR", adj = 0, cex = .9)
+
+par("xpd" = T)
+
+
+## rf
+
+points(final.roc.x.loc[1] + rf.far * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + rf.hr * lloc$height[lloc$element == "roc"],
+       pch = 21, cex = 2, col = transparent("purple", .3),
+       bg = transparent("purple", .7))
+
+points(final.roc.x.loc[1] + rf.far * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + rf.hr * lloc$height[lloc$element == "roc"],
+       pch = "R", cex = .9, col = gray(.2))
+
+par("xpd" = F)
+
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
+       pch = 21, cex = 2, col = transparent("purple", .3),
+       bg = transparent("purple", .7))
+
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
+       pch = "R", cex = .9, col = gray(.2))
+
+text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+     final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
+     labels = " RF", adj = 0, cex = .9)
+
+par("xpd" = T)
 
   }
   ## FFT
@@ -1483,7 +1519,7 @@ par("xpd" = T)
 
   text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
-       labels = " FFT", adj = 0, cex = .9)
+       labels = " FFTrees", adj = 0, cex = .9)
 
   par("xpd" = T)
 
