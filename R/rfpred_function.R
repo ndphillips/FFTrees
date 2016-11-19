@@ -19,19 +19,17 @@
 rf.pred <- function(formula,
                     data.train,
                     data.test = NULL,
-                    rf.model = NULL,
-                    cost.mi = 1,
-                    cost.fa = 1) {
+                    rf.model = NULL) {
 
-  formula = diagnosis ~.
-
-  heartdisease.2 <- heartdisease[sample(nrow(heartdisease)),]
-  data.train = heartdisease.2[1:150,]
-  data.test = heartdisease.2[151:303,]
-  rf.model = NULL
-
-  cost.mi = 1
-  cost.fa = 1
+  # formula = diagnosis ~.
+  #
+  # heartdisease.2 <- heartdisease[sample(nrow(heartdisease)),]
+  # data.train = heartdisease.2[1:150,]
+  # data.test = heartdisease.2[151:303,]
+  # rf.model = NULL
+  #
+  # cost.mi = 1
+  # cost.fa = 1
 
   # formula = formula
   # data.train = data.train

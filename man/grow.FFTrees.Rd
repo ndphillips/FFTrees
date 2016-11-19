@@ -4,7 +4,7 @@
 \alias{grow.FFTrees}
 \title{Grows fast and frugal trees}
 \usage{
-grow.FFTrees(formula, data, rank.method = "m", repeat.cues = TRUE,
+\method{grow}{FFTrees}(formula, data, rank.method = "m", repeat.cues = TRUE,
   hr.weight = 0.5, max.levels = 4, stopping.rule = "exemplars",
   stopping.par = 0.1, verbose = F)
 }

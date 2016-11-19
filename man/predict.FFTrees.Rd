@@ -17,7 +17,7 @@
 \item{...}{Additional arguments passed on to \code{predict()}}
 }
 \value{
-An FFTrees object
+A logical vector of predictions
 }
 \description{
 Applies an existing FFTrees object to a new (test) data set

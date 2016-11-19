@@ -19,6 +19,7 @@ Imports:
     circlize,
     graphics,
     snowfall,
+    randomForest,
     igraph,
     snow
 License: CC0
