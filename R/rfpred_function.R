@@ -20,7 +20,12 @@ rf.pred <- function(formula,
                     data.train,
                     data.test = NULL,
                     rf.model = NULL) {
-
+#
+#
+  # formula = formula
+  # data.train = data.train
+  # data.test = data.test
+  # rf.model = rf.model
 
 if(is.null(data.train) == FALSE) {
 

@@ -1259,7 +1259,6 @@ text(x = rect.center.x,
      labels = bottom.text,
      pos = 1)
 
-
 }
 
 paste(final.stats$cr, "/", 1, collapse = "")
