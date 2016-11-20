@@ -44,6 +44,19 @@ rounding <- 2
 exit.method <- "fixed"
 
 
+# Check for missing / invalid inputs
+
+if(is.null(data)) {stop("Please specify a dataframe in data")}
+if(is.null(formula) | class(formula) != "formula") {stop("Please specify a valid formula")}
+
+crit.name <- paste(formula)[2]
+
+if(crit.name %in% names(data) == FALSE) {
+
+  stop(paste0("The criterion variable ", crit.name, " is not in the data."))}
+
+
+
 # EXTRACT OBJECTS FROM EXISTING FFTrees OBJECT
 
 # GET FORMULA
@@ -291,7 +304,7 @@ if(setequal(names(data.train), names(data.test)) == FALSE) {
 # Non-binary DV
 if(setequal(crit.train, c(0, 1)) == FALSE) {
 
-  stop("Warning! The dependent variable in your training data is either not binary or logical, or does not have variance. Convert to 0s and 1s (or FALSE and TRUE)")
+  stop(paste0("The criterion ", crit.name, " is either not binary or logical, or does not have variance"))
 
 }
 

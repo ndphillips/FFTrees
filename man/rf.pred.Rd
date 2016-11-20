@@ -9,9 +9,9 @@ rf.pred(formula, data.train, data.test = NULL, rf.model = NULL)
 \arguments{
 \item{formula}{a formula}
 
-\item{data.train}{A training dataset}
+\item{data.train}{dataframe. A training dataset}
 
-\item{data.test}{A testing dataset}
+\item{data.test}{dataframe. A testing dataset}
 
 \item{rf.model}{An optional existing random forests model}
 }

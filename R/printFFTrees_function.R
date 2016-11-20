@@ -1,7 +1,7 @@
 #' Prints summary information from an FFTrees object
 #'
 #' @description Printing function for an FFTrees object
-#' @param x A FFTrees object created from FFTrees()
+#' @param x FFTrees. A FFTrees object created from FFTrees()
 #' @param ... additional arguments passed to print.
 #' @export
 
@@ -70,8 +70,8 @@ if(is.null(x$tree.stats$test)) {
 
 
 
-summary.text <- paste("An FFTrees object containing ", n.trees, " trees using ", n.cues.used,
-                      " predictors {", cues.used, "}", sep = "")
+summary.text <- paste("", n.trees, " trees using ", n.cues.used,
+                      " predictors {", paste(cues.used, collapse = ", "), "}", sep = "")
 
 if(is.null(test.auc)) {
 

@@ -35,8 +35,6 @@ auc <- function(hr.v, far.v) {
       far.v.n <- c(far.v.n, far.v[i])
 
     }
-
-
   }
 
   hr.v <- hr.v.n

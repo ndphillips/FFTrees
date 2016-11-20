@@ -10,13 +10,13 @@ cart.pred(formula, data.train, data.test = NULL, cart.model = NULL,
 \arguments{
 \item{formula}{a formula}
 
-\item{data.train}{A training dataset}
+\item{data.train}{dataframe. A training dataset}
 
-\item{data.test}{A testing dataset}
+\item{data.test}{dataframe. A testing dataset}
 
-\item{cart.model}{An optional existing cart model}
+\item{cart.model}{rpart. An optional existing rpart model}
 
-\item{cost.mi, cost.fa}{Optional costs for misses and false alarms}
+\item{cost.mi, cost.fa}{numeric. Optional costs for misses and false alarms}
 }
 \description{
 Calculates predictions from CART using the rpart package

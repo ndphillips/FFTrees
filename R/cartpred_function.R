@@ -1,9 +1,9 @@
 #' Calculates predictions from CART using the rpart package
 #' @param formula a formula
-#' @param data.train A training dataset
-#' @param data.test A testing dataset
-#' @param cart.model An optional existing cart model
-#' @param cost.mi,cost.fa Optional costs for misses and false alarms
+#' @param data.train dataframe. A training dataset
+#' @param data.test dataframe. A testing dataset
+#' @param cart.model rpart. An optional existing rpart model
+#' @param cost.mi,cost.fa numeric. Optional costs for misses and false alarms
 #' @importFrom stats model.frame formula glm
 #' @importFrom rpart rpart
 #' @export

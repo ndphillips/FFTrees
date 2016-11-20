@@ -7,7 +7,7 @@
 \method{print}{FFTrees}(x = NULL, ...)
 }
 \arguments{
-\item{x}{A FFTrees object created from FFTrees()}
+\item{x}{FFTrees. A FFTrees object created from FFTrees()}
 
 \item{...}{additional arguments passed to print.}
 }

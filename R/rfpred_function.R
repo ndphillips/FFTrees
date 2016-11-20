@@ -1,7 +1,7 @@
 #' Calculates predictions from Random Forests using the randomForest package
 #' @param formula a formula
-#' @param data.train A training dataset
-#' @param data.test A testing dataset
+#' @param data.train dataframe. A training dataset
+#' @param data.test dataframe. A testing dataset
 #' @param rf.model An optional existing random forests model
 #' @importFrom stats model.frame formula glm
 #' @importFrom randomForest randomForest
@@ -20,12 +20,6 @@ rf.pred <- function(formula,
                     data.train,
                     data.test = NULL,
                     rf.model = NULL) {
-#
-#
-  # formula = formula
-  # data.train = data.train
-  # data.test = data.test
-  # rf.model = rf.model
 
 if(is.null(data.train) == FALSE) {
 
@@ -47,7 +41,9 @@ if(is.null(data.test) == FALSE) {
 
 }
 
-  # Convert character cues to factors
+# Convert character cues to factors and ensure that
+#  both training and test data columns have the same factor
+#  values.
 
 levels.ls <- lapply(1:ncol(data.mf.train),
                     FUN = function(x) {
@@ -206,8 +202,6 @@ if(is.null(data.test) == FALSE) {
 rf.auc <- matrix(c(rf.auc.train, rf.auc.test), nrow = 2, ncol = 1)
 colnames(rf.auc) <- "rf"
 rownames(rf.auc) <- c("train", "test")
-
-# SETUP OUTPUT
 
 output <- list("accuracy" = rf.acc,
                "auc" = rf.auc,
