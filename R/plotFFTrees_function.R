@@ -1209,9 +1209,9 @@ delta <- 1
 gamma <- .5
 
 value.col.scale <- delta * value.s ^ gamma / (delta * value.s ^ gamma + (1 - value.s) ^ gamma)
-value.col <- gray(1 - value.col.scale * .5)
+# value.col <- gray(1 - value.col.scale * .5)
 
-#value.col <- gray(.2, .2)
+value.col <- gray(.5, .5)
 
 #plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
@@ -1324,18 +1324,18 @@ rect(final.roc.x.loc[1],
   # Gridlines
 # Horizontal
  segments(x0 = rep(final.roc.x.loc[1], 9),
-          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)[2:10],
+          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 6)[2:10],
           x1 = rep(final.roc.x.loc[2], 9),
-          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)[2:10],
-          lty = 1, col = gray(1), lwd = c(1.25, .5), lend = 3
+          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 6)[2:10],
+          lty = 1, col = gray(1), lwd = c(1.25), lend = 3
           )
 
  # Vertical
  segments(y0 = rep(final.roc.y.loc[1], 9),
-          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)[2:10],
+          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 6)[2:10],
           y1 = rep(final.roc.y.loc[2], 9),
-          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)[2:10],
-          lty = 1, col = gray(1), lwd = c(1.25, .5), lend = 3
+          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 6)[2:10],
+          lty = 1, col = gray(1), lwd = c(1.25), lend = 3
  )
 
  # Plot border
@@ -1390,7 +1390,7 @@ par("xpd" = F)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
    final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
-   pch = 21, cex = 2, col = transparent("red", .3),
+   pch = 21, cex = 2.5, col = transparent("red", .3),
    bg = transparent("red", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
@@ -1399,7 +1399,7 @@ points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
  final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
-labels = " CART", adj = 0, cex = .9)
+labels = "  CART", adj = 0, cex = .9)
 
 par("xpd" = T)
 
@@ -1420,7 +1420,7 @@ par("xpd" = F)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2, col = transparent("blue", .3),
+       pch = 21, cex = 2.5, col = transparent("blue", .3),
        bg = transparent("blue", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
@@ -1429,7 +1429,7 @@ points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
      final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
-     labels = " LR", adj = 0, cex = .9)
+     labels = "  LR", adj = 0, cex = .9)
 
 par("xpd" = T)
 
@@ -1449,7 +1449,7 @@ par("xpd" = F)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2, col = transparent("purple", .3),
+       pch = 21, cex = 2.5, col = transparent("purple", .3),
        bg = transparent("purple", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
@@ -1458,7 +1458,7 @@ points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
      final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
-     labels = " RF", adj = 0, cex = .9)
+     labels = "  RF", adj = 0, cex = .9)
 
 par("xpd" = T)
 
@@ -1509,7 +1509,7 @@ par("xpd" = T)
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2, col = transparent("green", .3),
+         pch = 21, cex = 2.5, col = transparent("green", .3),
          bg = transparent("green", .7))
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
@@ -1518,7 +1518,7 @@ par("xpd" = T)
 
   text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
-       labels = " FFT", adj = 0, cex = .9)
+       labels = "  FFT", adj = 0, cex = .9)
 
   par("xpd" = T)
 
