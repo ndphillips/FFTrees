@@ -6,7 +6,7 @@
 \usage{
 simFFTrees(formula = NULL, data = NULL, max.levels = 5, sim = 10,
   train.p = 0.5, rank.method = "m", hr.weight = 0.5, verbose = TRUE,
-  cpus = 1)
+  cpus = 1, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -26,6 +26,8 @@ simFFTrees(formula = NULL, data = NULL, max.levels = 5, sim = 10,
 \item{verbose}{logical. Should progress reports be printed?}
 
 \item{cpus}{integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)}
+
+\item{do.lr, do.cart, do.rf}{logical. Should regression, cart, and/or random forests be calculated for comparison?}
 }
 \value{
 A dataframe containing best thresholds and marginal classification statistics for each cue

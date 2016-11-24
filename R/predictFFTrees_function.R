@@ -32,6 +32,7 @@ predict.FFTrees <- function(
   if (tree == "best.train") {
 
     tree <- which(object$tree.stats$train$v == max(object$tree.stats$train$v))
+    if(length(tree) > 1) {tree <- sample(tree, 1)}
 
   }
 

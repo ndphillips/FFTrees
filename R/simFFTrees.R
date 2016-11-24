@@ -8,6 +8,7 @@
 #' @param rank.method string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
+#' @param do.lr,do.cart,do.rf logical. Should regression, cart, and/or random forests be calculated for comparison?
 #' @param cpus integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)
 #' @importFrom stats median formula
 #' @importFrom graphics text points segments plot
@@ -32,7 +33,10 @@ simFFTrees <- function(formula = NULL,
                        rank.method = "m",
                        hr.weight = .5,
                        verbose = TRUE,
-                       cpus = 1
+                       cpus = 1,
+                       do.lr = TRUE,
+                       do.cart = TRUE,
+                       do.rf = TRUE
 ) {
 
 simulations <- data.frame(
@@ -45,19 +49,46 @@ simulations <- data.frame(
 getsim.fun <- function(i) {
 
 result.i <- FFTrees::FFTrees(formula = formula,
-                    data = data,
-                    data.test = NULL,
-                    train.p = train.p,
-                    max.levels = max.levels,
-                    rank.method = rank.method,
-                    hr.weight = hr.weight,
-                    object = NULL,
-                    do.cart = FALSE,
-                    do.lr = FALSE)
+                              data = data,
+                              data.test = NULL,
+                              train.p = train.p,
+                              max.levels = max.levels,
+                              rank.method = rank.method,
+                              hr.weight = hr.weight,
+                              object = NULL,
+                              do.cart = do.cart,
+                              do.lr = do.lr,
+                              do.rf = do.rf)
 
-treestats.i <- result.i$tree.stats
+decisions.i <- predict(result.i, data)
 
-return(treestats.i)
+tree.stats.i <- result.i$tree.stats
+comp.stats.i <- c()
+
+if(do.lr) {
+lr.stats.i <- result.i$lr$stats
+names(lr.stats.i) <- paste0("lr.", names(lr.stats.i))
+comp.stats.i <- c(comp.stats.i, lr.stats.i)
+}
+
+if(do.cart) {
+  cart.stats.i <- result.i$cart$stats
+  names(cart.stats.i) <- paste0("cart.", names(cart.stats.i))
+  comp.stats.i <- c(comp.stats.i, cart.stats.i)
+  }
+
+if(do.rf) {
+  rf.stats.i <- result.i$rf$stats
+  names(rf.stats.i) <- paste0("rf.", names(rf.stats.i))
+  comp.stats.i <- c(comp.stats.i, rf.stats.i)
+}
+
+comp.stats.i <- unlist(comp.stats.i)
+
+return(list("trees" = tree.stats.i,
+            "decisions" = decisions.i,
+            "competitors" = comp.stats.i
+            ))
 
 }
 
@@ -81,6 +112,9 @@ if(cpus > 1) {
   snowfall::sfExport("data")
   snowfall::sfExport("max.levels")
   snowfall::sfExport("train.p")
+  snowfall::sfExport("do.lr")
+  snowfall::sfExport("do.rf")
+  snowfall::sfExport("do.cart")
   snowfall::sfExport("max.levels")
   snowfall::sfExport("rank.method")
   snowfall::sfExport("hr.weight")
@@ -94,7 +128,7 @@ if(cpus > 1) {
 
 best.tree.v <- sapply(1:length(result.ls), FUN = function(x) {
 
-  best.tree.i <- which(result.ls[[x]]$train$v == max(result.ls[[x]]$train$v))
+  best.tree.i <- which(result.ls[[x]]$trees$train$v == max(result.ls[[x]]$trees$train$v))
 
   if(length(best.tree.i) > 1) {best.tree.i <- sample(best.tree.i, 1)}
 
@@ -102,37 +136,44 @@ best.tree.v <- sapply(1:length(result.ls), FUN = function(x) {
 
 })
 
+sapply(1:length(result.ls), FUN = function(x) {length(result.ls[[x]]$decisions)})
+
+decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(x) {
+
+  return(result.ls[[x]]$decisions)
+
+})), nrow = nrow(data), ncol = sim)
+
 simulations$cues <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$train$cues[best.tree.v[x]]})
+                             FUN = function(x) {result.ls[[x]]$trees$train$cues[best.tree.v[x]]})
 
 simulations$thresholds <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$train$thresholds[best.tree.v[x]]})
+                             FUN = function(x) {result.ls[[x]]$trees$train$thresholds[best.tree.v[x]]})
 
-simulations$train.hr <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$train$hr[best.tree.v[x]]})
+simulations$hr.train <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$train$hr[best.tree.v[x]]})
 
-simulations$train.far <- sapply(1:length(result.ls),
-                                 FUN = function(x) {result.ls[[x]]$train$far[best.tree.v[x]]})
+simulations$far.train <- sapply(1:length(result.ls),
+                                 FUN = function(x) {result.ls[[x]]$trees$train$far[best.tree.v[x]]})
 
-simulations$train.v <- sapply(1:length(result.ls),
-                              FUN = function(x) {result.ls[[x]]$train$v[best.tree.v[x]]})
+simulations$v.train <- sapply(1:length(result.ls),
+                              FUN = function(x) {result.ls[[x]]$trees$train$v[best.tree.v[x]]})
 
-simulations$train.dprime <- qnorm(simulations$train.hr) - qnorm(simulations$train.far)
+simulations$dprime.train <- qnorm(simulations$hr.train) - qnorm(simulations$far.train)
 
 
-simulations$test.hr <- sapply(1:length(result.ls),
-                               FUN = function(x) {result.ls[[x]]$test$hr[best.tree.v[x]]})
+simulations$hr.test <- sapply(1:length(result.ls),
+                               FUN = function(x) {result.ls[[x]]$trees$test$hr[best.tree.v[x]]})
 
-simulations$test.far <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$test$far[best.tree.v[x]]})
+simulations$far.test <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$test$far[best.tree.v[x]]})
 
-simulations$test.v <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$test$v[best.tree.v[x]]})
+simulations$v.test <- sapply(1:length(result.ls),
+                             FUN = function(x) {result.ls[[x]]$trees$test$v[best.tree.v[x]]})
 
-simulations$test.dprime <- qnorm(simulations$test.hr) - qnorm(simulations$test.far)
+simulations$dprime.test <- qnorm(simulations$hr.test) - qnorm(simulations$far.test)
 
 # Get overall cue frequencies
-
 frequencies <- table(unlist(strsplit(simulations$cues, ";")))
 
 # Get connections from simulation
@@ -159,9 +200,41 @@ for(i in 1:nrow(connections)) {
 }
 }
 
-return(list("simulations" = simulations,
-            "frequencies" = frequencies,
-            "connections" = connections
-            ))
+# Get competition results
+competitors <- as.data.frame(t(sapply(1:length(result.ls), FUN = function(x) {result.ls[[x]]$competitors})))
+
+if(do.lr) {
+
+  lr.sim <- competitors[,grepl("lr", names(competitors))]
+  names(lr.sim) <- gsub("lr.", replacement = "", x = names(lr.sim))
+
+} else {lr.sim <- NULL}
+
+if(do.cart) {
+
+  cart.sim <- competitors[,grepl("cart", names(competitors))]
+  names(cart.sim) <- gsub("cart.", replacement = "", x = names(cart.sim))
+
+} else {cart.sim <- NULL}
+
+
+if(do.rf) {
+
+  rf.sim <- competitors[,grepl("rf", names(competitors))]
+  names(rf.sim) <- gsub("rf.", replacement = "", x = names(rf.sim))
+
+} else {rf.sim <- NULL}
+
+# Summarise output
+
+output <-list("tree.sim" = simulations,
+              "decisions" = decisions,
+              "frequencies" = frequencies,
+              "connections" = connections,
+              "lr.sim" = lr.sim,
+              "cart.sim" = cart.sim,
+              "rf.sim" = rf.sim)
+
+return(output)
 
 }
