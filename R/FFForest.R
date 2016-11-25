@@ -17,26 +17,26 @@
 #' @examples
 #'
 #' train.5m <- FFForest(formula = diagnosis ~.,
-#'                         data = breastcancer,
-#'                         train.p = .5,
-#'                         sim = 5,
-#'                         rank.method = "m",
-#'                         cpus = 1)
+#'                      data = breastcancer,
+#'                      train.p = .5,
+#'                      sim = 5,
+#'                      rank.method = "m",
+#'                      cpus = 1)
 #'
 #'
 #'
 FFForest <- function(formula = NULL,
-                       data = NULL,
-                       max.levels = 5,
-                       sim = 10,
-                       train.p = .5,
-                       rank.method = "m",
-                       hr.weight = .5,
-                       verbose = TRUE,
-                       cpus = 1,
-                       do.lr = TRUE,
-                       do.cart = TRUE,
-                       do.rf = TRUE
+                     data = NULL,
+                     max.levels = 5,
+                     sim = 10,
+                     train.p = .5,
+                     rank.method = "m",
+                     hr.weight = .5,
+                     verbose = TRUE,
+                     cpus = 1,
+                     do.lr = TRUE,
+                     do.cart = TRUE,
+                     do.rf = TRUE
 ) {
 
 simulations <- data.frame(

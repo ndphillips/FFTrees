@@ -106,7 +106,7 @@ locations <- igraph::layout_with_dh(g)
 
     points(x = locations[i, 1],
            y = locations[i, 2],
-           cex = frequencies[cue.names[i]] * nodesize,
+           cex = relfreq.i * nodesize,
            pch = 21,
            col = "black",
            bg = gray(1 - relfreq.i))
