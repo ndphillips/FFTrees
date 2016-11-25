@@ -1,9 +1,10 @@
 #' Creates a network plot. Code taken from Dirk Wulff (www.dirkwulff.org)
 #'
-#' @param edges dataframe. A dataframe showing
+#' @param x FFForest. An FFForest object created from FFForest()
 #' @param nodesize numeric. Nodesize adjustment
 #' @param edgesize numeric. Edgesize adjustment
 #' @param mincon integer. Minimum connection cutoff
+#' @param ... currently ignored
 #' @importFrom igraph graph_from_data_frame get.vertex.attribute layout_with_dh
 #' @importFrom graphics text points segments plot lines plot.new plot.window barplot
 #' @export
@@ -11,12 +12,15 @@
 #'
 #'
 #'
-network_plot = function(edges,
-                        nodesize = .1,
-                        edgesize = 1,
-                        mincon = 0) {
+plot.FFForest = function(x,
+                         nodesize = .1,
+                         edgesize = 1,
+                         mincon = 0,
+                         ...) {
 
 par(ask = TRUE)
+
+edges <- x$connections
 # Get overall frequencies
 {
   frequencies <- c()
@@ -43,7 +47,7 @@ barplot(height = frequencies / sum(frequencies),
         col = gray(1 - frequencies / sum(frequencies)))
 
 mtext(names(frequencies), side = 2, at = bp.vals[,1], las = 1, line = 1)
-mtext("Proportion of simulations where cue was used in FFTrees", side = 3, cex = .8, font = 3)
+mtext("Proportion of simulations where cue was used in FFForest", side = 3, cex = .8, font = 3)
 
 text(frequencies / sum(frequencies), bp.vals[,1], pos = 4,
      labels = paste0(round(frequencies / sum(frequencies) * 100, 1), "%"))

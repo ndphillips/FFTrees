@@ -1,4 +1,4 @@
-#' Generates and summarises many FFTrees objects from multiple training sets
+#' Creates a forest of fast and frugal decision trees
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
@@ -16,7 +16,7 @@
 #' @export
 #' @examples
 #'
-#' train.5m <- simFFTrees(formula = diagnosis ~.,
+#' train.5m <- FFForest(formula = diagnosis ~.,
 #'                         data = breastcancer,
 #'                         train.p = .5,
 #'                         sim = 5,
@@ -25,7 +25,7 @@
 #'
 #'
 #'
-simFFTrees <- function(formula = NULL,
+FFForest <- function(formula = NULL,
                        data = NULL,
                        max.levels = 5,
                        sim = 10,
@@ -234,6 +234,8 @@ output <-list("tree.sim" = simulations,
               "lr.sim" = lr.sim,
               "cart.sim" = cart.sim,
               "rf.sim" = rf.sim)
+
+class(output) <- "FFForest"
 
 return(output)
 
