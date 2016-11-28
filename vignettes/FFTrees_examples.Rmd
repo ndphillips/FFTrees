@@ -45,10 +45,10 @@ mushrooms.fft
 
 ### mushrooms cue accuracies
 
-First, let's look at the individual cue training accuracies with `showcues`:
+First, let's look at the individual cue training accuracies with `plot()`:
 
 ```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
-showcues(mushrooms.fft, main = "Mushrooms")
+plot(mushrooms.fft, main = "Mushrooms", what = "cues")
 ```
 
 It looks like the cues *oder* and *sporepc* are the best predictors. in fact, the single cue *odor* has a hit rate of 97% and a false alarm rate of 0%! Based on this, we should expect the final trees to use just these cues.
@@ -100,7 +100,7 @@ iris.fft <- FFTrees(formula = virginica ~.,
 First, let's look at the individual cue training accuracies with `showcues`:
 
 ```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
-showcues(iris.fft)
+plot(iris.fft, what = "cues")
 ```
 
 It looks like the cues *pet.wid* and *pet.len* are the best predictors. Based on this, we should expect the final trees will likely use just one or both of these cues
