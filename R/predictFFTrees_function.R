@@ -1,4 +1,4 @@
-#' Applies an existing FFTrees object to a new (test) data set
+#' Predict new data with an FFTrees object
 #'
 #' @param object An FFTrees object created from the FFTrees() function.
 #' @param data A dataframe of test data
