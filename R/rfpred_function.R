@@ -27,6 +27,10 @@ if(is.null(data.train) == FALSE) {
                                data = data.train,
                                na.action = NULL)
 
+
+  # Convert dv to vactor
+  data.mf.train[,1] <- as.factor(data.mf.train[,1])
+
   crit.train <- data.mf.train[,1]
 
 }
@@ -36,6 +40,9 @@ if(is.null(data.test) == FALSE) {
     data.mf.test <- model.frame(formula = formula,
                                  data = data.test,
                                  na.action = NULL)
+
+    # Convert dv to vactor
+    data.mf.train[,1] <- as.factor(data.mf.train[,1])
 
     crit.test <- data.mf.test[,1]
 
@@ -61,8 +68,7 @@ if(is.null(data.test) == FALSE) {
 
 for(i in 1:ncol(data.mf.train)) {
 
-    if(class(data.mf.train[,i]) %in% c("character", "factor", "logical") |
-       length(unique(data.mf.train[,i])) <= 2) {
+    if(class(data.mf.train[,i]) %in% c("character", "factor", "logical")) {
 
 levels.i <- levels.ls[[i]]
 
@@ -79,12 +85,9 @@ if(is.null(data.test) == FALSE) {
                               data = data.test,
                               na.action = NULL)
 
-
   for(i in 1:ncol(data.mf.test)) {
 
-    if(class(data.mf.test[,i]) %in% c("character", "factor", "logical") |
-       length(unique(data.mf.test[,i])) <= 2
-       ) {
+    if(class(data.mf.test[,i]) %in% c("character", "factor", "logical")) {
 
       levels.i <- levels.ls[[i]]
 
@@ -94,7 +97,6 @@ if(is.null(data.test) == FALSE) {
     }
 
   }
-
 
 }
 
@@ -128,7 +130,7 @@ if("1" %in% paste(rf.train.pred)) {rf.train.pred <- as.logical(as.numeric(paste(
 # Calculate training accuracy stats
 
 rf.train.acc <- classtable(prediction.v = rf.train.pred,
-                               criterion.v = crit.train)
+                           criterion.v = crit.train)
 
 } else {
 
@@ -165,7 +167,8 @@ rf.test.acc <- classtable(prediction.v = rf.test.pred,
 
 } else {
 
-  rf.test.acc <- classtable(prediction.v = 1, criterion.v = 1)
+  rf.test.acc <- classtable(prediction.v = 1,
+                            criterion.v = 1)
   rf.test.acc[1,] <- NA
 
 }
