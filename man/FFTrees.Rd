@@ -5,8 +5,9 @@
 \title{Creates a Fast and Frugal Trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  rank.method = "m", hr.weight = 0.5, verbose = FALSE, max.levels = 4,
-  do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, object = NULL)
+  rank.method = "m", hr.weight = 0.5, max.levels = 4,
+  tree.definitions = NULL, verbose = FALSE, do.cart = TRUE,
+  do.lr = TRUE, do.rf = TRUE, object = NULL)
 }
 \arguments{
 \item{formula}{A formula}
@@ -21,9 +22,11 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
 
-\item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...}
-
 \item{max.levels}{integer. The maximum number of levels considered for the tree.}
+
+\item{tree.definitions}{dataframe. An optional hard-coded definition of trees. See details.}
+
+\item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...}
 
 \item{do.cart, do.lr, do.rf}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.}
 

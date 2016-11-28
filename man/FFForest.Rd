@@ -4,18 +4,21 @@
 \alias{FFForest}
 \title{Creates a forest of fast and frugal decision trees}
 \usage{
-FFForest(formula = NULL, data = NULL, max.levels = 5, sim = 10,
-  train.p = 0.5, rank.method = "m", hr.weight = 0.5, verbose = TRUE,
-  cpus = 1, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE)
+FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
+  ntree = 10, train.p = 0.5, rank.method = "m", hr.weight = 0.5,
+  verbose = TRUE, cpus = 1, do.lr = TRUE, do.cart = TRUE,
+  do.rf = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
 
 \item{data}{dataframe. A dataframe containing variables in formula}
 
+\item{data.test}{dataframe. An optional dataframe of test data}
+
 \item{max.levels}{integer. Maximum number of levels considered for the trees.}
 
-\item{sim}{integer. Number of simulations to perform.}
+\item{ntree}{integer. Number of simulations to perform.}
 
 \item{train.p}{numeric. What percentage of the data to use for training in simulations.}
 
@@ -38,11 +41,10 @@ Creates a forest of fast and frugal decision trees
 \examples{
 
 train.5m <- FFForest(formula = diagnosis ~.,
-                        data = breastcancer,
-                        train.p = .5,
-                        sim = 5,
-                        rank.method = "m",
-                        cpus = 1)
+                     data = breastcancer,
+                     train.p = .5,
+                     ntree = 5,
+                     cpus = 1)
 
 
 

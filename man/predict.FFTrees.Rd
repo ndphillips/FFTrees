@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictFFTrees_function.R
 \name{predict.FFTrees}
 \alias{predict.FFTrees}
-\title{Applies an existing FFTrees object to a new (test) data set}
+\title{Predict new data with an FFTrees object}
 \usage{
 \method{predict}{FFTrees}(object = NULL, data = NULL, tree = "best.train",
   ...)
@@ -20,7 +20,7 @@
 A logical vector of predictions
 }
 \description{
-Applies an existing FFTrees object to a new (test) data set
+Predict new data with an FFTrees object
 }
 \examples{
 
