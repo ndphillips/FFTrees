@@ -123,6 +123,77 @@ locations <- igraph::layout_with_dh(g)
 
 }
 
+# ROC
+{
+
+plot(1, xlim = c(0, 1),
+     ylim = c(0, 1),
+     xlab = "FAR",
+     ylab = "HR",
+     type = "n",
+     main = "ROC Curve", yaxt = "n", xaxt = "n")
+
+  axis(side = 2, at = seq(0, 1, .1), las = 1)
+  axis(side = 1, at = seq(0, 1, .1), las = 1)
+
+  abline(h = seq(0, 1, .1),
+         v = seq(0, 1, .1),
+         lwd = c(.75, .25), col = gray(.5, .5))
+
+points(x$tree.sim$far.test,
+       x$tree.sim$hr.test,
+       pch = 16,
+       col = transparent("green", .8))
+
+
+
+points(x$cart.sim$far.test, x$cart.sim$hr.test,
+       pch = 16,
+       col = transparent("red", .8))
+
+points(x$rf.sim$far.test, x$rf.sim$hr.test,
+       pch = 16,
+       col = transparent("purple", .8))
+
+points(median(x$tree.sim$far.test),
+       median(x$tree.sim$hr.test),
+       pch = "+",
+       cex = 2,
+       col = "white")
+
+points(median(x$tree.sim$far.test),
+       median(x$tree.sim$hr.test),
+       pch = "+",
+       cex = 1.5,
+       col = transparent("green", 0))
+
+points(median(x$cart.sim$far.test),
+       median(x$cart.sim$hr.test),
+       pch = "+",
+       cex = 2,
+       col = "white")
+
+points(median(x$cart.sim$far.test),
+       median(x$cart.sim$hr.test),
+       pch = "+",
+       cex = 1.5,
+       col = "red")
+
+points(median(x$rf.sim$far.test),
+       median(x$rf.sim$hr.test),
+       pch = "+",
+       cex = 2,
+       col = transparent("white", 0))
+
+points(median(x$rf.sim$far.test),
+       median(x$rf.sim$hr.test),
+       pch = "+",
+       cex = 1.5,
+       col = 'purple')
+
+}
+
+
 par(ask = FALSE)
 
 }
