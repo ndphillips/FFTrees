@@ -27,12 +27,7 @@ if(is.null(data.train) == FALSE) {
                                data = data.train,
                                na.action = NULL)
 
-
-  # Convert dv to vactor
-  data.mf.train[,1] <- as.factor(data.mf.train[,1])
-
   crit.train <- data.mf.train[,1]
-
 }
 
 if(is.null(data.test) == FALSE) {
@@ -41,11 +36,7 @@ if(is.null(data.test) == FALSE) {
                                  data = data.test,
                                  na.action = NULL)
 
-    # Convert dv to vactor
-    data.mf.train[,1] <- as.factor(data.mf.train[,1])
-
     crit.test <- data.mf.test[,1]
-
 }
 
 # Convert character cues to factors and ensure that
@@ -97,6 +88,18 @@ if(is.null(data.test) == FALSE) {
     }
 
   }
+
+}
+
+# Convert criterion to factor
+
+dv.vals <- unique(data.mf.train[,1])
+
+data.mf.train[,1] <- factor(data.mf.train[,1], levels = dv.vals)
+
+if(is.null(data.test) == FALSE) {
+
+  data.mf.test[,1] <- factor(data.mf.test[,1], levels = dv.vals)
 
 }
 
