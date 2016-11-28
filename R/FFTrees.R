@@ -7,6 +7,7 @@
 #' @param train.p numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.
 #' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
+#' @param tree.definitions dataframe. An optional hard-coded definition of trees. See details.
 #' @param do.cart,do.lr,do.rf logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...
 #' @param object An optional existing FFTrees object (do not specify by hand)
@@ -21,16 +22,31 @@ FFTrees <- function(formula = NULL,
                     train.p = 1,
                     rank.method = "m",
                     hr.weight = .5,
-                    verbose = FALSE,
                     max.levels = 4,
+                    tree.definitions = NULL,
+                    verbose = FALSE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
                     object = NULL
 ) {
+#
 
-
-
+  #
+  #
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # data.test = NULL
+  # train.p = 1
+  # rank.method = "m"
+  # hr.weight = .5
+  # max.levels = 4
+  # tree.definitions = NULL
+  # verbose = FALSE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # object = NULL
 
 # Set some global parameters
 
@@ -124,6 +140,7 @@ if(is.null(object) == TRUE & train.p == 1) {
                             data = data.train.o)
 
   cue.train <- data.train[,2:ncol(data.train)]
+crit.train <- data.train[,1]
 
   if(ncol(data.train) == 2) {
 
@@ -185,7 +202,7 @@ if(is.null(data.test) & train.p < 1) {
 
   # create 'training testing' sets of size train.p * nrow(data.train)
 
-  continue <- T
+  continue <- TRUE
   run.i <- 0
 
   # Create train and test set
@@ -369,7 +386,7 @@ cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.t
 
 # GET TREE DEFINITIONS
 {
-if(is.null(object)) {
+if(is.null(object) & is.null(tree.definitions)) {
 
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
@@ -385,6 +402,7 @@ tree.definitions <- tree.growth$tree.definitions
 }
 
 if(is.null(object) == FALSE) {tree.definitions <- object$tree.definitions}
+
 }
 
 ## CALCULATE TREE STATISTICS FROM DEFINITIONS
@@ -393,14 +411,17 @@ n.trees <- nrow(tree.definitions)
 
 if(is.null(data.train) == FALSE) {
 
-train.results <- apply.tree(data.train, formula, tree.definitions)
+train.results <- apply.tree(data.train,
+                            formula,
+                            tree.definitions)
 
 decision.train <- train.results$decision
 levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 
-tree.auc.train <- auc(hr.v = train.results$treestats$hr, far.v = train.results$treestats$far)
+tree.auc.train <- auc(hr.v = train.results$treestats$hr,
+                      far.v = train.results$treestats$far)
 }
 
 if(is.null(data.train) == TRUE) {
@@ -415,7 +436,9 @@ if(is.null(data.train) == TRUE) {
 
 if(is.null(data.test) == FALSE) {
 
-test.results <- apply.tree(data.test, formula, tree.definitions)
+test.results <- apply.tree(data.test,
+                           formula,
+                           tree.definitions)
 
 decision.test <- test.results$decision
 levelout.test <- test.results$levelout
