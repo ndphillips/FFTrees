@@ -2,8 +2,9 @@
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
+#' @param data.test dataframe. An optional dataframe of test data
 #' @param max.levels integer. Maximum number of levels considered for the trees.
-#' @param sim integer. Number of simulations to perform.
+#' @param ntree integer. Number of simulations to perform.
 #' @param train.p numeric. What percentage of the data to use for training in simulations.
 #' @param rank.method string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
@@ -19,16 +20,16 @@
 #' train.5m <- FFForest(formula = diagnosis ~.,
 #'                      data = breastcancer,
 #'                      train.p = .5,
-#'                      sim = 5,
-#'                      rank.method = "m",
+#'                      ntree = 5,
 #'                      cpus = 1)
 #'
 #'
 #'
 FFForest <- function(formula = NULL,
                      data = NULL,
+                     data.test = NULL,
                      max.levels = 5,
-                     sim = 10,
+                     ntree = 10,
                      train.p = .5,
                      rank.method = "m",
                      hr.weight = .5,
@@ -38,11 +39,42 @@ FFForest <- function(formula = NULL,
                      do.cart = TRUE,
                      do.rf = TRUE
 ) {
+#
+
+  # formula = diagnosis~.
+  # data = fertility.train
+  # data.test = fertility.test
+  # ntree = 40
+  # cpus = 4
+
+
+  # max.levels = 5
+  # sim = 10
+  # train.p = .5
+  # rank.method = "m"
+  # hr.weight = .5
+  # verbose = TRUE
+  # cpus = 1
+  # do.lr = TRUE
+  # do.cart = TRUE
+  # do.rf = TRUE
+
+data.mf <- model.frame(formula = formula,
+                       data = data)
+
+
+if(is.null(data.test) == FALSE) {
+
+  data.mf.test <- model.frame(formula = formula, data = data.test)
+
+}
+
+criterion.v <- data.mf[,1]
 
 simulations <- data.frame(
-  sim = 1:sim,
-  cues = rep(NA, sim),
-  thresholds = rep(NA, sim)
+  sim = 1:ntree,
+  cues = rep(NA, ntree),
+  thresholds = rep(NA, ntree)
 )
 
 # getsim.fun does one training split and returns tree statistics
@@ -142,13 +174,24 @@ decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(x) {
 
   return(result.ls[[x]]$decisions)
 
-})), nrow = nrow(data), ncol = sim)
+})), nrow = nrow(data), ncol = ntree)
 
 simulations$cues <- sapply(1:length(result.ls),
                              FUN = function(x) {result.ls[[x]]$trees$train$cues[best.tree.v[x]]})
 
 simulations$thresholds <- sapply(1:length(result.ls),
                              FUN = function(x) {result.ls[[x]]$trees$train$thresholds[best.tree.v[x]]})
+
+simulations$directions <- sapply(1:length(result.ls),
+                                 FUN = function(x) {result.ls[[x]]$trees$train$directions[best.tree.v[x]]})
+
+
+simulations$classes <- sapply(1:length(result.ls),
+                                 FUN = function(x) {result.ls[[x]]$trees$train$classes[best.tree.v[x]]})
+
+simulations$exits <- sapply(1:length(result.ls),
+                              FUN = function(x) {result.ls[[x]]$trees$train$exits[best.tree.v[x]]})
+
 
 simulations$hr.train <- sapply(1:length(result.ls),
                                 FUN = function(x) {result.ls[[x]]$trees$train$hr[best.tree.v[x]]})
@@ -200,6 +243,65 @@ for(i in 1:nrow(connections)) {
 }
 }
 
+# Get training performance
+FFForest.Train.Decisions <- rowMeans(decisions) >= .5
+
+train.stats <- classtable(FFForest.Train.Decisions, criterion.v)
+
+# Get testing performance
+if(is.null(data.test) == FALSE) {
+
+FFForest.Test.Decisions <- sapply(1:nrow(simulations), FUN = function(x) {
+
+  pred <- apply.tree(data.test,
+                     formula = formula,
+                     tree.definitions = simulations[x,])$decision
+
+
+})
+
+FFForest.Test.Decisions <- rowMeans(FFForest.Test.Decisions) >= .5
+
+test.stats <- classtable(prediction.v = FFForest.Test.Decisions,
+                         criterion.v = data.mf.test[,1])
+
+}
+if(is.null(data.test)) {test.stats <- NULL}
+
+forest.stats <- list(train = train.stats, test = test.stats)
+
+
+# Get single surrogate tree with highest agreement with FFForest
+{
+FFForest.Decisions <- rowMeans(decisions) >= .5
+
+# Get agreement
+criterion <- data.mf[,1]
+FFForest.Decisions.neg <- FFForest.Decisions[criterion == 0]
+FFForest.Decisions.pos <- FFForest.Decisions[criterion == 1]
+
+agreement <- matrix(as.numeric(decisions) == rep(FFForest.Decisions, times = ncol(decisions)),
+                    nrow = nrow(decisions), ncol = ncol(decisions))
+
+agree.pos <- colMeans(agreement[criterion == 1,])
+agree.neg <- colMeans(agreement[criterion == 0,])
+
+agree.combined <- (agree.pos + agree.neg) / 2
+
+surrogate.tree <- which(agree.combined == max(agree.combined))
+
+if(length(surrogate.tree) > 1) {surrogate.tree <- sample(surrogate.tree, size = 1)}
+
+surrogate.tree.definition <- simulations[surrogate.tree, c("cues", "thresholds", "directions", "classes", "exits")]
+surrogate.tree.definition$tree <- 1
+
+# Create new FFTrees object from surrogate tree
+
+surrogate.FFTrees <- FFTrees(formula = formula,
+                             data = data,
+                             tree.definitions = surrogate.tree.definition)
+}
+
 # Get competition results
 competitors <- as.data.frame(t(sapply(1:length(result.ls), FUN = function(x) {result.ls[[x]]$competitors})))
 
@@ -225,12 +327,16 @@ if(do.rf) {
 
 } else {rf.sim <- NULL}
 
+
 # Summarise output
 
-output <-list("tree.sim" = simulations,
+output <-list("formula" = formula,
+              "tree.sim" = simulations,
               "decisions" = decisions,
               "frequencies" = frequencies,
               "connections" = connections,
+              "surrogate" = surrogate.FFTrees,
+              "forest.stats" = forest.stats,
               "lr.sim" = lr.sim,
               "cart.sim" = cart.sim,
               "rf.sim" = rf.sim)
