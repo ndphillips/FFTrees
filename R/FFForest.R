@@ -4,8 +4,8 @@
 #' @param data dataframe. A dataframe containing variables in formula
 #' @param data.test dataframe. An optional dataframe of test data
 #' @param max.levels integer. Maximum number of levels considered for the trees.
-#' @param ntree integer. Number of simulations to perform.
-#' @param train.p numeric. What percentage of the data to use for training in simulations.
+#' @param ntree integer. Number of trees to create.
+#' @param train.p numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.
 #' @param rank.method string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
@@ -17,7 +17,7 @@
 #' @export
 #' @examples
 #'
-#' train.5m <- FFForest(formula = diagnosis ~.,
+#' cancer.fff <- FFForest(formula = diagnosis ~.,
 #'                      data = breastcancer,
 #'                      train.p = .5,
 #'                      ntree = 5,
@@ -253,7 +253,7 @@ if(is.null(data.test) == FALSE) {
 
 FFForest.Test.Decisions <- sapply(1:nrow(simulations), FUN = function(x) {
 
-  pred <- apply.tree(data.test,
+  pred <- apply.tree(data = data.test,
                      formula = formula,
                      tree.definitions = simulations[x,])$decision
 
