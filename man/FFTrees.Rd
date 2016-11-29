@@ -40,7 +40,9 @@ This is the workhorse function for the FFTrees package.
 }
 \details{
 Here are the main elements of the output:
+
 \code{cue.accuracies}: a dataframe containing the marginal accuracies of each cue given a threshold that maximizes hr - far.
+
 \code{tree.definitions}: a dataframe specifying the definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons.
 }
 
