@@ -18,10 +18,19 @@
 #' @export
 #' @details
 #' Here are the main elements of the output:
-#'
-#' \code{cue.accuracies}: a dataframe containing the marginal accuracies of each cue given a threshold that maximizes hr - far.
-#'
-#' \code{tree.definitions}: a dataframe specifying the definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons.
+#' \describe{
+#'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far.}
+#'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons.}
+#'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
+#'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
+#'   \item{decision}{Classification decisions for each case (rows) and each tree (columns). Training and test data are stored separately.}
+#'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
+#'   \item{auc}{Area under the curve statistics}
+#'   \item{lr}{Logistic regression model (without regularisation) and classification statistics.}
+#'   \item{cart}{CART model and classification statistics}
+#'   \item{rf}{Random Forest model and classification statistics}
+#'   }
+
 
 FFTrees <- function(formula = NULL,
                     data = NULL,
