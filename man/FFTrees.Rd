@@ -16,26 +16,27 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{data.test}{dataframe. An optional testing dataset with the same structure as data.}
 
-\item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified. For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.}
+\item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.}
 
 \item{rank.method}{character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take longer and may be prone to overfitting.}
 
 \item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.}
 
-\item{max.levels}{integer. The maximum number of levels considered for the trees. Default is 5.}
+\item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
 
-\item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...}
+\item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
 
 \item{do.cart, do.lr, do.rf}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.}
 
-\item{object}{An optional existing FFTrees object (do not specify by hand)}
+\item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 }
 \value{
-A list with the following elements
+An \code{FFTrees} object with the following elements
 
 \describe{
+  \item{data, data.test}{The original training and test data.}
   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far for the training data. These are calculated using the \code{cuerank()} function.}
   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
@@ -47,9 +48,22 @@ A list with the following elements
   }
 }
 \description{
-This is the workhorse function for the FFTrees package. It creates a set of fast and frugal decision trees trained on a training dataset and tested on an optional test dataset.
+This is the workhorse function for the \code{FFTrees} package. It creates a set of fast and frugal decision trees trained on a training dataset and tested on an optional test dataset.
 }
 \details{
 \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
+}
+\examples{
+
+ # Create ffts for heart disease
+ heart.fft <- FFTrees(formula = diagnosis ~.,
+                      data = heartdisease)
+
+ # Print the result for summary info
+ heart.fft
+
+ # Plot the best tree
+ plot(heart.fft)
+
 }
 
