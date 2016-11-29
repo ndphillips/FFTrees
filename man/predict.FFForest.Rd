@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictFFForest_function.R
 \name{predict.FFForest}
 \alias{predict.FFForest}
-\title{Predict data from an FFForest object}
+\title{Predict outcoms from a test dataset using an FFForest object}
 \usage{
 \method{predict}{FFForest}(object = NULL, data = NULL, threshold = 0.5,
   ...)
@@ -20,6 +20,6 @@
 A logical vector of predictions
 }
 \description{
-Predict data from an FFForest object
+Predict outcoms from a test dataset using an FFForest object
 }
 

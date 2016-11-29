@@ -2,7 +2,7 @@
 % Please edit documentation in R/showcues_function.R
 \name{showcues}
 \alias{showcues}
-\title{Visualizes cue accuracies in a ROC space}
+\title{Visualizes cue accuracies from an FFTrees object in a ROC space}
 \usage{
 showcues(x = NULL, data = "train", main = NULL, top = 5,
   palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F", "#FA6B097F",
@@ -20,6 +20,6 @@ showcues(x = NULL, data = "train", main = NULL, top = 5,
 \item{palette}{An optional vector of colors}
 }
 \description{
-Visualizes cue accuracies in a ROC space
+Visualizes cue accuracies from an FFTrees object in a ROC space
 }
 

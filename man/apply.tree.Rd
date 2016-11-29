@@ -11,12 +11,23 @@ apply.tree(data, formula, tree.definitions)
 
 \item{formula}{A formula}
 
-\item{tree.definitions}{dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, thresholds, directions, exits.}
+\item{tree.definitions}{dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.}
 }
 \value{
-A list of length 4.
+A list of length 4 containing
 }
 \description{
 Applies a fast and frugal tree to a dataset.
+}
+\examples{
+
+
+  tree.definitions <- data.frame("tree" = 1,
+                                 "cues" = "sex;age",
+                                 "thresholds" = "male;adult",
+                                 "directions" = "=;="
+                                 )
+
+
 }
 
