@@ -1,14 +1,14 @@
 #' Creates a Fast and Frugal Trees (FFTrees) object.
 #'
-#' This is the workhorse function for the FFTrees package.
+#' This is the workhorse function for the FFTrees package. It creates a set of fast and frugal decision trees trained on a training dataset and tested on an optional test dataset.
 #'
 #' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Default is 5.
-#' @param train.p numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.
+#' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified. For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
-#' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
+#' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees. See details.
 #' @param do.cart,do.lr,do.rf logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...
@@ -17,6 +17,9 @@
 #' @return A list, see details
 #' @export
 #' @details
+#'
+#' \code{tree.definitions} should be a dataframe with at least 4 columns: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit.
+#'
 #' Here are the main elements of the output:
 #' \describe{
 #'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far.}

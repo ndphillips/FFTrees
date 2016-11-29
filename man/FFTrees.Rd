@@ -16,11 +16,11 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{data.test}{dataframe. An optional testing dataset with the same structure as data.}
 
-\item{train.p}{numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.}
+\item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified. For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.}
 
 \item{rank.method}{character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.}
 
-\item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
+\item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.}
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Default is 5.}
 
@@ -36,9 +36,11 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 A list, see details
 }
 \description{
-This is the workhorse function for the FFTrees package.
+This is the workhorse function for the FFTrees package. It creates a set of fast and frugal decision trees trained on a training dataset and tested on an optional test dataset.
 }
 \details{
+\code{tree.definitions} should be a dataframe with at least 4 columns: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit.
+
 Here are the main elements of the output:
 \describe{
   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far.}
