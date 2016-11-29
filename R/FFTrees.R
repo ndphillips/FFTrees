@@ -7,32 +7,32 @@
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Default is 5.
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified. For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
-#' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
+#' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take longer and may be prone to overfitting.
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.
-#' @param tree.definitions dataframe. An optional hard-coded definition of trees. See details.
+#' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.cart,do.lr,do.rf logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...
 #' @param object An optional existing FFTrees object (do not specify by hand)
 #' @importFrom stats anova predict glm as.formula formula sd
-#' @return A list, see details
+#' @return A list with the following elements
+#'
+#' \describe{
+#'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far for the training data. These are calculated using the \code{cuerank()} function.}
+#'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
+#'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
+#'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
+#'   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
+#'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
+#'   \item{auc}{Area under the curve statistics}
+#'   \item{lr, cart, rf}{Logistic regression, CART, and random forest models and classification statistics trained on the same data as the fast and frugal trees.}
+#'   }
+#'
 #' @export
 #' @details
 #'
-#' \code{tree.definitions} should be a dataframe with at least 4 columns: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit.
+#' \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
 #'
-#' Here are the main elements of the output:
-#' \describe{
-#'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far.}
-#'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons.}
-#'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
-#'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
-#'   \item{decision}{Classification decisions for each case (rows) and each tree (columns). Training and test data are stored separately.}
-#'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
-#'   \item{auc}{Area under the curve statistics}
-#'   \item{lr}{Logistic regression model (without regularisation) and classification statistics.}
-#'   \item{cart}{CART model and classification statistics}
-#'   \item{rf}{Random Forest model and classification statistics}
-#'   }
+
 
 
 FFTrees <- function(formula = NULL,
