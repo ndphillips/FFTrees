@@ -243,10 +243,11 @@ if(is.null(data.test) & train.p < 1) {
     model.can.predict <- rowMeans(can.predict.mtx) == 1
 
 
+    # Do the training and test data valid?
     if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 &
-       mean(crit.test.i > 0) & mean(crit.test.i < 1) & all(model.can.predict)) {continue <- F}
+       mean(crit.test.i > 0) & mean(crit.test.i < 1) & all(model.can.predict)) {continue <- FALSE}
 
-    if(run.i == 50) {print("I'm having a hard time coming up with valid training and test data.train.mfsets...You may need to stop the processor and create them manually")}
+    if(run.i == 100) {stop("I could not create valid training and test data sets. This is likely due to sparse data. You'll have to create them manually.")}
 
   }
 
@@ -411,9 +412,9 @@ n.trees <- nrow(tree.definitions)
 
 if(is.null(data.train) == FALSE) {
 
-train.results <- apply.tree(data.train,
-                            formula,
-                            tree.definitions)
+train.results <- apply.tree(data = data.train,
+                            formula = formula,
+                            tree.definitions = tree.definitions)
 
 decision.train <- train.results$decision
 levelout.train <- train.results$levelout
@@ -436,9 +437,9 @@ if(is.null(data.train) == TRUE) {
 
 if(is.null(data.test) == FALSE) {
 
-test.results <- apply.tree(data.test,
-                           formula,
-                           tree.definitions)
+test.results <- apply.tree(data = data.test,
+                           formula = formula,
+                           tree.definitions = tree.definitions)
 
 decision.test <- test.results$decision
 levelout.test <- test.results$levelout

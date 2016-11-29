@@ -1,4 +1,4 @@
-#' Predict data from an FFForest object
+#' Predict outcoms from a test dataset using an FFForest object
 #'
 #' @param object FFForest. An FFForest object created from the FFForest() function.
 #' @param data dataframe. A dataframe of test data

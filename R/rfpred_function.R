@@ -11,7 +11,7 @@
 #' # Fit rf for the mushrooms dataset
 #'
 #' mushrooms.rf <- rf.pred(formula = poisonous ~.,
-#'                             data.train = mushrooms)
+#'                         data.train = mushrooms)
 #'
 #'
 #'

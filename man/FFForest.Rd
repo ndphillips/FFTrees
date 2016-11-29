@@ -18,9 +18,9 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{max.levels}{integer. Maximum number of levels considered for the trees.}
 
-\item{ntree}{integer. Number of simulations to perform.}
+\item{ntree}{integer. Number of trees to create.}
 
-\item{train.p}{numeric. What percentage of the data to use for training in simulations.}
+\item{train.p}{numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.}
 
 \item{rank.method}{string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.}
 
@@ -40,7 +40,7 @@ Creates a forest of fast and frugal decision trees
 }
 \examples{
 
-train.5m <- FFForest(formula = diagnosis ~.,
+cancer.fff <- FFForest(formula = diagnosis ~.,
                      data = breastcancer,
                      train.p = .5,
                      ntree = 5,

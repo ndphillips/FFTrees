@@ -1,4 +1,4 @@
-#' Visualizes cue accuracies in a ROC space
+#' Visualizes cue accuracies from an FFTrees object in a ROC space
 #'
 #' @param x An FFTrees object
 #' @param data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies

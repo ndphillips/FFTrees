@@ -11,7 +11,7 @@ apply.tree(data, formula, tree.definitions)
 
 \item{formula}{A formula}
 
-\item{tree.definitions}{dataframe. A dataframe defining the tree structure(s)}
+\item{tree.definitions}{dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, thresholds, directions, exits.}
 }
 \value{
 A list of length 4.
