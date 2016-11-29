@@ -1,5 +1,7 @@
 #' Creates a forest of fast and frugal decision trees
 #'
+#' This function is currently in development. The idea is to generate a random forest of fast and frugal trees from many splits of the training dataset.
+#'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
 #' @param data.test dataframe. An optional dataframe of test data
@@ -11,16 +13,14 @@
 #' @param verbose logical. Should progress reports be printed?
 #' @param do.lr,do.cart,do.rf logical. Should regression, cart, and/or random forests be calculated for comparison?
 #' @param cpus integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)
-#' @importFrom stats median formula
-#' @importFrom graphics text points segments plot
-#' @return A dataframe containing best thresholds and marginal classification statistics for each cue
+#' @importFrom stats  formula
+#' @return An object of class \code{FFForest} with the following elements...
 #' @export
 #' @examples
 #'
 #' cancer.fff <- FFForest(formula = diagnosis ~.,
 #'                      data = breastcancer,
-#'                      train.p = .5,
-#'                      ntree = 5,
+#'                      ntree = 10,
 #'                      cpus = 1)
 #'
 #'
@@ -299,6 +299,7 @@ surrogate.tree.definition$tree <- 1
 
 surrogate.FFTrees <- FFTrees(formula = formula,
                              data = data,
+                             data.test = data.test,
                              tree.definitions = surrogate.tree.definition)
 }
 

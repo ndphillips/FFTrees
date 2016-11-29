@@ -143,17 +143,21 @@ plot(1, xlim = c(0, 1),
 points(x$tree.sim$far.test,
        x$tree.sim$hr.test,
        pch = 16,
-       col = transparent("green", .8))
+       col = "green",
+       cex = .5)
 
 
-
-points(x$cart.sim$far.test, x$cart.sim$hr.test,
+points(x$cart.sim$far.test,
+       x$cart.sim$hr.test,
        pch = 16,
-       col = transparent("red", .8))
+       col = "red",
+       cex = .5)
 
-points(x$rf.sim$far.test, x$rf.sim$hr.test,
+points(x$rf.sim$far.test,
+       x$rf.sim$hr.test,
        pch = 16,
-       col = transparent("purple", .8))
+       col = "purple",
+       cex = .5)
 
 points(median(x$tree.sim$far.test),
        median(x$tree.sim$hr.test),
