@@ -2,9 +2,18 @@
 #'
 #' @param formula A formula
 #' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
-#' @param tree.definitions dataframe. A dataframe defining the tree structure(s)
-#' @return A list of length 4.
+#' @param tree.definitions dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.
+#' @return A list of length 4 containing
 #' @export
+#' @examples
+#'
+#'
+#'   tree.definitions <- data.frame("tree" = 1,
+#'                                  "cues" = "sex;age",
+#'                                  "thresholds" = "male;adult",
+#'                                  "directions" = "=;="
+#'                                  )
+#'
 #'
 
 apply.tree <- function(data,
@@ -49,29 +58,28 @@ apply.tree <- function(data,
       cue.i <- cue.v[level.i]
       class.i <- class.v[level.i]
       direction.i <- direction.v[level.i]
-      exit.i <- exit.v[level.i]
+      exit.i <- as.numeric(exit.v[level.i])
       threshold.i <- threshold.v[level.i]
 
       cue.values <- data[[cue.i]]
 
       unclassified.cases <- which(is.na(decision[,tree.i]))
-      classified.cases <- which(is.na(decision[,tree.i]) == F)
+      classified.cases <- which(is.na(decision[,tree.i]) == FALSE)
 
 
       if(is.character(threshold.i)) {threshold.i <- unlist(strsplit(threshold.i, ","))}
 
       if(class.i %in% c("numeric", "integer")) {threshold.i <- as.numeric(threshold.i)}
 
-      if(direction.i == "!=") {current.decisions <- (cue.values %in% threshold.i) == F}
+      if(direction.i == "!=") {current.decisions <- (cue.values %in% threshold.i) == FALSE}
       if(direction.i == "=") {current.decisions <- cue.values %in% threshold.i}
       if(direction.i == "<") {current.decisions <- cue.values < threshold.i}
       if(direction.i == "<=") {current.decisions <- cue.values <= threshold.i}
       if(direction.i == ">") {current.decisions <- cue.values > threshold.i}
       if(direction.i == ">=") {current.decisions <- cue.values >= threshold.i}
 
-
-      if(exit.i == 0) {classify.now <- current.decisions == F & is.na(decision[,tree.i])}
-      if(exit.i == 1) {classify.now <- current.decisions == T & is.na(decision[,tree.i])}
+      if(exit.i == 0) {classify.now <- current.decisions == FALSE & is.na(decision[,tree.i])}
+      if(exit.i == 1) {classify.now <- current.decisions == TRUE & is.na(decision[,tree.i])}
       if(exit.i == .5) {classify.now <- is.na(decision[,tree.i])}
 
 
