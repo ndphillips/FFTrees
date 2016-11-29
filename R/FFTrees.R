@@ -1,9 +1,11 @@
 #' Creates a Fast and Frugal Trees (FFTrees) object.
 #'
-#' @param formula A formula
-#' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
-#' @param data.test dataframe. An optional model testing dataset (same format as data.train)
-#' @param max.levels integer. The maximum number of levels considered for the tree.
+#' This is the workhorse function for the FFTrees package.
+#'
+#' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
+#' @param data dataframe. A training dataset.
+#' @param data.test dataframe. An optional testing dataset with the same structure as data.
+#' @param max.levels integer. The maximum number of levels considered for the trees. Default is 5.
 #' @param train.p numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.
 #' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. However, the "c" method will take longer and may be prone to overfitting.
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.
@@ -12,9 +14,12 @@
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly...
 #' @param object An optional existing FFTrees object (do not specify by hand)
 #' @importFrom stats anova predict glm as.formula formula sd
-#' @return A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
+#' @return A list, see details
 #' @export
-#'
+#' @details
+#' Here are the main elements of the output:
+#' \code{cue.accuracies}: a dataframe containing the marginal accuracies of each cue given a threshold that maximizes hr - far.
+#' \code{tree.definitions}: a dataframe specifying the definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons.
 
 FFTrees <- function(formula = NULL,
                     data = NULL,

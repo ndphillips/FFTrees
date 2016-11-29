@@ -10,11 +10,11 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   do.lr = TRUE, do.rf = TRUE, object = NULL)
 }
 \arguments{
-\item{formula}{A formula}
+\item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
 
-\item{data}{dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
+\item{data}{dataframe. A training dataset.}
 
-\item{data.test}{dataframe. An optional model testing dataset (same format as data.train)}
+\item{data.test}{dataframe. An optional testing dataset with the same structure as data.}
 
 \item{train.p}{numeric. What percentage of the data to use for training. This only applies when data.test is not specified by the user.}
 
@@ -22,7 +22,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms.}
 
-\item{max.levels}{integer. The maximum number of levels considered for the tree.}
+\item{max.levels}{integer. The maximum number of levels considered for the trees. Default is 5.}
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees. See details.}
 
@@ -33,9 +33,14 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{object}{An optional existing FFTrees object (do not specify by hand)}
 }
 \value{
-A list of length 3. The first element "tree.acc" is a dataframe containing the final statistics of all trees. The second element "cue.accuracies" shows the accuracies of all cues. The third element "tree.class.ls" is a list with n.trees elements, where each element shows the final decisions for each tree for each exemplar.
+A list, see details
 }
 \description{
-Creates a Fast and Frugal Trees (FFTrees) object.
+This is the workhorse function for the FFTrees package.
+}
+\details{
+Here are the main elements of the output:
+\code{cue.accuracies}: a dataframe containing the marginal accuracies of each cue given a threshold that maximizes hr - far.
+\code{tree.definitions}: a dataframe specifying the definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons.
 }
 
