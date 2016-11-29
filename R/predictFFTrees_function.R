@@ -1,4 +1,4 @@
-#' Predict new data with an FFTrees object
+#' Predict new data from an FFTrees object
 #'
 #' @param object An FFTrees object created from the FFTrees() function.
 #' @param data A dataframe of test data
@@ -9,17 +9,21 @@
 #' @examples
 #'
 #'
-#'   # Create an FFTrees object from 200 cases from thethe breastcancer dataset
+#'   # Create training and test data
 #'
-#'   breastcancer.fft <- FFTrees(formula = diagnosis ~.,
-#'                               data = breastcancer[1:300,])
+#'   set.seed(100)
+#'   breastcancer <- breastcancer[sample(nrow(breastcancer)),]
+#'   breast.train <- breastcancer[1:150,]
+#'   breast.test <- breastcancer[151:303,]
 #'
-#'  # Predict results for remaining data
-#'   predict(breastcancer.fft,
-#'   data = breastcancer[301:nrow(breastcancer),])
+#'   # Create an FFTrees object from the training data
 #'
+#'   breast.fft <- FFTrees(formula = diagnosis ~.,
+#'                               data = breast.train)
 #'
-#'
+#'  # Predict results for test data
+#'   breast.fft.pred <- predict(breast.fft,
+#'                              data = breast.test)
 #'
 
 predict.FFTrees <- function(
