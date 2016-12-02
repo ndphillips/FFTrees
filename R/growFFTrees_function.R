@@ -458,8 +458,9 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
   trees$tree <- 1:nrow(trees)
   trees <- trees[,c(which(names(trees) == "tree"), which(names(trees) != "tree"))]
 
-  levelout <- levelout[,duplicate.trees == FALSE]
-  decision <- decision[,duplicate.trees == FALSE]
+  levelout <- levelout[,duplicate.trees == FALSE, drop = FALSE]
+  decision <- decision[,duplicate.trees == FALSE, drop = FALSE]
+
 
 # sort trees by far then by hr
 
@@ -468,8 +469,8 @@ if(nrow(trees) > 0) {
   tree.far.order <- order(trees$far, trees$hr)
 
   trees <- trees[tree.far.order, ]
-  levelout <- levelout[, tree.far.order]
-  decision <- decision[, tree.far.order]
+  levelout <- levelout[, tree.far.order, drop = FALSE]
+  decision <- decision[, tree.far.order, drop = FALSE]
   colnames(levelout) <- paste("tree.", 1:ncol(levelout), sep = "")
   colnames(decision) <- paste("tree.", 1:ncol(decision), sep = "")
 

@@ -41,21 +41,7 @@ FFForest <- function(formula = NULL,
                      do.svm = TRUE
 ) {
 #
-
-  # formula = diagnosis ~.
-  # data = breastcancer
-  # ntree = 5
-  # train.p = .1
-  # cpus = 1
-  # max.levels = 5
-  # rank.method = "m"
-  # hr.weight = .5
-  # verbose = TRUE
-  # cpus = 1
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
+#
 
 data.mf <- model.frame(formula = formula,
                        data = data)
@@ -81,11 +67,11 @@ getsim.fun <- function(i) {
 result.i <- FFTrees::FFTrees(formula = formula,
                               data = data,
                               data.test = NULL,
+                              object = NULL,
                               train.p = train.p,
                               max.levels = max.levels,
                               rank.method = rank.method,
                               hr.weight = hr.weight,
-                              object = NULL,
                               do.cart = do.cart,
                               do.lr = do.lr,
                               do.rf = do.rf,

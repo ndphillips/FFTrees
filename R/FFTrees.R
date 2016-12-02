@@ -64,6 +64,7 @@ FFTrees <- function(formula = NULL,
                     object = NULL
 ) {
 
+
 # Set some global parameters
 
 repeat.cues <- TRUE
