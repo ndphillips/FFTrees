@@ -33,17 +33,16 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 \item{do.lr, do.cart, do.rf}{logical. Should regression, cart, and/or random forests be calculated for comparison?}
 }
 \value{
-A dataframe containing best thresholds and marginal classification statistics for each cue
+An object of class \code{FFForest} with the following elements...
 }
 \description{
-Creates a forest of fast and frugal decision trees
+This function is currently in development. The idea is to generate a random forest of fast and frugal trees from many splits of the training dataset.
 }
 \examples{
 
 cancer.fff <- FFForest(formula = diagnosis ~.,
                      data = breastcancer,
-                     train.p = .5,
-                     ntree = 5,
+                     ntree = 10,
                      cpus = 1)
 
 

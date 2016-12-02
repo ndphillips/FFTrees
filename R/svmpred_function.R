@@ -132,7 +132,7 @@ if(is.null(data.train) == FALSE) {
 
 # Get training decisions
 svm.train.pred <- predict(svm.train.mod,
-                           data = data.mf.train)
+                          data = data.mf.train)
 
 # Recode to logical
 

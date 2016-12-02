@@ -22,7 +22,8 @@ Imports:
     snowfall,
     randomForest,
     igraph,
-    snow
+    snow,
+    e1071
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 5.0.1

@@ -7,7 +7,7 @@
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   rank.method = "m", hr.weight = 0.5, max.levels = 4,
   tree.definitions = NULL, verbose = FALSE, do.cart = TRUE,
-  do.lr = TRUE, do.rf = TRUE, object = NULL)
+  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, object = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -28,7 +28,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
 
-\item{do.cart, do.lr, do.rf}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.}
+\item{do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.}
 
 \item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 }
