@@ -21,7 +21,6 @@ svm.pred <- function(formula,
                      data.test = NULL,
                      svm.model = NULL) {
 
-
 if(is.null(data.train) == FALSE) {
 
   data.mf.train <- model.frame(formula = formula,
@@ -92,6 +91,16 @@ if(is.null(data.test) == FALSE) {
 
 }
 
+# Remove factor values with only one level
+
+ok.cols <- sapply(1:ncol(data.mf.train), FUN = function(x) {
+
+  length(unique(data.mf.train[,x])) > 1
+
+})
+
+data.mf.train <- data.mf.train[,ok.cols]
+
 # Convert criterion to factor
 
 dv.vals <- unique(data.mf.train[,1])
@@ -110,8 +119,7 @@ if(is.null(svm.model) == TRUE) {
 
 # Create new svm model
 svm.train.mod <- e1071::svm(formula,
-                            data = data.mf.train
-                            )
+                            data = data.mf.train)
 
 } else {
 
