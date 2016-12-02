@@ -7,7 +7,7 @@
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
   ntree = 10, train.p = 0.5, rank.method = "m", hr.weight = 0.5,
   verbose = TRUE, cpus = 1, do.lr = TRUE, do.cart = TRUE,
-  do.rf = TRUE)
+  do.rf = TRUE, do.svm = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -30,7 +30,7 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{cpus}{integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)}
 
-\item{do.lr, do.cart, do.rf}{logical. Should regression, cart, and/or random forests be calculated for comparison?}
+\item{do.lr, do.cart, do.rf, do.svm}{logical. Should regression, cart, random forests and/or support vector machines be calculated for comparison?}
 }
 \value{
 An object of class \code{FFForest} with the following elements...

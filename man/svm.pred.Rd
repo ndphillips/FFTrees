@@ -4,7 +4,7 @@
 \alias{svm.pred}
 \title{Calculates predictions from support vector machines using the e1071 package}
 \usage{
-svm.pred(formula, data.train, data.test = NULL, svm.model = NULL)
+\method{svm}{pred}(formula, data.train, data.test = NULL, svm.model = NULL)
 }
 \arguments{
 \item{formula}{a formula}
@@ -22,8 +22,8 @@ Calculates predictions from support vector machines using the e1071 package
 
 # Fit svm for the mushrooms dataset
 
-mushrooms.svm <- svm.pred(formula = poisonous ~.,
-                          data.train = mushrooms)
+#mushrooms.svm <- svm.pred(formula = poisonous ~.,
+#                           data.train = mushrooms)
 
 
 

@@ -11,7 +11,7 @@
 #' @param rank.method string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
-#' @param do.lr,do.cart,do.rf logical. Should regression, cart, and/or random forests be calculated for comparison?
+#' @param do.lr,do.cart,do.rf,do.svm logical. Should regression, cart, random forests and/or support vector machines be calculated for comparison?
 #' @param cpus integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)
 #' @importFrom stats  formula
 #' @return An object of class \code{FFForest} with the following elements...
@@ -37,7 +37,8 @@ FFForest <- function(formula = NULL,
                      cpus = 1,
                      do.lr = TRUE,
                      do.cart = TRUE,
-                     do.rf = TRUE
+                     do.rf = TRUE,
+                     do.svm = TRUE
 ) {
 #
 
@@ -90,7 +91,8 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               object = NULL,
                               do.cart = do.cart,
                               do.lr = do.lr,
-                              do.rf = do.rf)
+                              do.rf = do.rf,
+                              do.svm = do.svm)
 
 decisions.i <- predict(result.i, data)
 
@@ -328,6 +330,13 @@ if(do.rf) {
 
 } else {rf.sim <- NULL}
 
+if(do.svm) {
+
+  svm.sim <- competitors[,grepl("svm", names(competitors))]
+  names(svm.sim) <- gsub("svm.", replacement = "", x = names(svm.sim))
+
+} else {svm.sim <- NULL}
+
 
 # Summarise output
 
@@ -340,7 +349,8 @@ output <-list("formula" = formula,
               "forest.stats" = forest.stats,
               "lr.sim" = lr.sim,
               "cart.sim" = cart.sim,
-              "rf.sim" = rf.sim)
+              "rf.sim" = rf.sim,
+              "svm.sim" = svm.sim)
 
 class(output) <- "FFForest"
 

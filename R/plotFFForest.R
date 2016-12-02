@@ -159,6 +159,12 @@ points(x$rf.sim$far.test,
        col = "purple",
        cex = .5)
 
+points(x$svm.sim$far.test,
+       x$svm.sim$hr.test,
+       pch = 16,
+       col = "orange",
+       cex = .5)
+
 points(median(x$tree.sim$far.test),
        median(x$tree.sim$hr.test),
        pch = "+",
@@ -194,6 +200,18 @@ points(median(x$rf.sim$far.test),
        pch = "+",
        cex = 1.5,
        col = 'purple')
+
+points(median(x$svm.sim$far.test),
+       median(x$svm.sim$hr.test),
+       pch = "+",
+       cex = 2,
+       col = transparent("white", 0))
+
+points(median(x$svm.sim$far.test),
+       median(x$svm.sim$hr.test),
+       pch = "+",
+       cex = 1.5,
+       col = 'orange')
 
 }
 
