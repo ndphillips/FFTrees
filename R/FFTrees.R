@@ -10,7 +10,7 @@
 #' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take longer and may be prone to overfitting.
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param do.cart,do.lr,do.rf logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests.
+#' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
 #' @importFrom stats anova predict glm as.formula formula sd
@@ -60,6 +60,7 @@ FFTrees <- function(formula = NULL,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
+                    do.svm = TRUE,
                     object = NULL
 ) {
 #
@@ -598,6 +599,36 @@ if(do.cart == FALSE) {
   }
 }
 
+# svm
+{
+
+  if(do.svm) {
+
+    if(is.null(object)) {svm.model <- NULL}
+    if(is.null(object) == FALSE) {svm.model <- object$svm$model}
+
+    svm.acc <- svm.pred(formula = formula,
+                      data.train = data.train,
+                      data.test = data.test,
+                      svm.model = svm.model)
+
+    svm.stats <- svm.acc$accuracy
+    svm.auc <- svm.acc$auc
+    svm.model <- svm.acc$model
+
+  }
+
+  if(do.svm == FALSE) {
+
+    svm.acc <- NULL ; svm.stats <- NULL ; svm.model <- NULL
+
+    svm.auc <- matrix(NA, nrow = 2, ncol =1)
+    rownames(svm.auc) <- c("train", "test")
+    colnames(svm.auc) <- "svm"
+
+  }
+}
+
 # Get AUC matrix
 
 auc <- cbind(tree.auc, lr.auc, cart.auc, rf.auc)
@@ -613,7 +644,8 @@ output.fft <- list("formula" = formula,
                   "auc" = auc,
                   "lr" = list("model" = lr.model, "stats" = lr.stats),
                   "cart" = list("model" = cart.model, "stats" = cart.stats),
-                  "rf" = list("model" = rf.model, "stats" = rf.stats)
+                  "rf" = list("model" = rf.model, "stats" = rf.stats),
+                  "svm" = list("model" = svm.model, "stats" = svm.stats)
 )
 
 class(output.fft) <- "FFTrees"
