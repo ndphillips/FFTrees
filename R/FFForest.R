@@ -42,16 +42,12 @@ FFForest <- function(formula = NULL,
 ) {
 #
 
-  # formula = diagnosis~.
-  # data = fertility.train
-  # data.test = fertility.test
-  # ntree = 40
-  # cpus = 4
-
-
+  # formula = diagnosis ~.
+  # data = breastcancer
+  # ntree = 5
+  # train.p = .1
+  # cpus = 1
   # max.levels = 5
-  # sim = 10
-  # train.p = .5
   # rank.method = "m"
   # hr.weight = .5
   # verbose = TRUE
@@ -59,6 +55,7 @@ FFForest <- function(formula = NULL,
   # do.lr = TRUE
   # do.cart = TRUE
   # do.rf = TRUE
+  # do.svm = TRUE
 
 data.mf <- model.frame(formula = formula,
                        data = data)
@@ -117,6 +114,12 @@ if(do.rf) {
   comp.stats.i <- c(comp.stats.i, rf.stats.i)
 }
 
+if(do.svm) {
+  svm.stats.i <- result.i$svm$stats
+  names(svm.stats.i) <- paste0("svm.", names(svm.stats.i))
+  comp.stats.i <- c(comp.stats.i, svm.stats.i)
+}
+
 comp.stats.i <- unlist(comp.stats.i)
 
 return(list("trees" = tree.stats.i,
@@ -149,6 +152,7 @@ if(cpus > 1) {
   snowfall::sfExport("do.lr")
   snowfall::sfExport("do.rf")
   snowfall::sfExport("do.cart")
+  snowfall::sfExport("do.svm")
   snowfall::sfExport("max.levels")
   snowfall::sfExport("rank.method")
   snowfall::sfExport("hr.weight")
