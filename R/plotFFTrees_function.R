@@ -44,7 +44,7 @@ plot.FFTrees <- function(
   ...
 ) {
 
-  # x = FFTrees(diagnosis ~., data = heartdisease)
+  # x = heart.fft2
   # data = "train"
   # what = 'tree'
   # tree = "best.train"
@@ -52,7 +52,7 @@ plot.FFTrees <- function(
   # n.per.icon = NULL
   # decision.names = c("Noise", "Signal")
   # which.tree = NULL
-  #
+
 
 
 # If what == cues, then send inputs to showcues()
@@ -127,6 +127,7 @@ if(data == "train") {
   lr.stats <- data.frame("hr" = x$lr$stats$hr.train, "far" = x$lr$stats$far.train)
   cart.stats <- data.frame("hr" = x$cart$stats$hr.train, "far" = x$cart$stats$far.train)
   rf.stats <- data.frame("hr" = x$rf$stats$hr.train, "far" = x$rf$stats$far.train)
+  svm.stats <- data.frame("hr" = x$svm$stats$hr.train, "far" = x$svm$stats$far.train)
 
   n.exemplars <- nrow(data.mf)
 }
@@ -141,6 +142,7 @@ if(data == "test") {
   lr.stats <- data.frame("hr" = x$lr$stats$hr.test, "far" = x$lr$stats$far.test)
   cart.stats <- data.frame("hr" = x$cart$stats$hr.test, "far" = x$cart$stats$far.test)
   rf.stats <- data.frame("hr" = x$rf$stats$hr.test, "far" = x$rf$stats$far.test)
+  svm.stats <- data.frame("hr" = x$svm$stats$hr.test, "far" = x$svm$stats$far.test)
 
   n.exemplars <- nrow(data.mf)
 }
@@ -719,7 +721,7 @@ if(level.i == 1) {
 {
 # Exit node on left
 
-if(level.stats$exit[level.i] %in% c(0, .5)) {
+if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %in% c("0", ".5")) {
 
   segments(subplot.center[1],
            subplot.center[2] + 1,
@@ -803,7 +805,7 @@ if(level.stats$exit[level.i] %in% c(0, .5)) {
 
 # New level on left
 
-if(level.stats$exit[level.i] %in% c(1)) {
+if(level.stats$exit[level.i] %in% c(1) | paste(level.stats$exit[level.i]) %in% c("1")) {
 
   segments(subplot.center[1],
            subplot.center[2] + 1,
@@ -838,7 +840,7 @@ if(level.stats$exit[level.i] %in% c(1)) {
 
 # Exit node on right
 
-if(level.stats$exit[level.i] %in% c(1, .5)) {
+if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %in% c("1", ".5")) {
 
 
   segments(subplot.center[1],
@@ -928,7 +930,7 @@ if(level.stats$exit[level.i] %in% c(1, .5)) {
 
 # New level on right
 
-if(level.stats$exit[level.i] %in% 0) {
+if(level.stats$exit[level.i] %in% 0 | paste(level.stats$exit[level.i]) %in% c("0")) {
 
   segments(subplot.center[1],
            subplot.center[2] + 1,
@@ -997,6 +999,8 @@ cart.hr <- cart.stats$hr
 cart.far <- cart.stats$far
 rf.hr <- rf.stats$hr
 rf.far <- rf.stats$far
+svm.hr <- svm.stats$hr
+svm.far <- svm.stats$far
 
 # General plotting space
 {
@@ -1461,6 +1465,37 @@ text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
      labels = "  RF", adj = 0, cex = .9)
 
 par("xpd" = T)
+
+
+
+## svm
+
+points(final.roc.x.loc[1] + svm.far * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + svm.hr * lloc$height[lloc$element == "roc"],
+       pch = 21, cex = 2, col = transparent("orange", .3),
+       bg = transparent("orange", .7))
+
+points(final.roc.x.loc[1] + svm.far * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + svm.hr * lloc$height[lloc$element == "roc"],
+       pch = "S", cex = .9, col = gray(.2))
+
+par("xpd" = F)
+
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + 0 * lloc$height[lloc$element == "roc"],
+       pch = 21, cex = 2.5, col = transparent("purple", .3),
+       bg = transparent("orange", .7))
+
+points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + 0 * lloc$height[lloc$element == "roc"],
+       pch = "S", cex = .9, col = gray(.2))
+
+text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+     final.roc.y.loc[1] + 0 * lloc$height[lloc$element == "roc"],
+     labels = "  SVM", adj = 0, cex = .9)
+
+par("xpd" = T)
+
 
   }
   ## FFT
