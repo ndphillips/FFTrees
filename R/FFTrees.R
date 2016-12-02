@@ -63,23 +63,6 @@ FFTrees <- function(formula = NULL,
                     do.svm = TRUE,
                     object = NULL
 ) {
-#
-
-  #
-  #
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # data.test = NULL
-  # train.p = 1
-  # rank.method = "m"
-  # hr.weight = .5
-  # max.levels = 4
-  # tree.definitions = NULL
-  # verbose = FALSE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # object = NULL
 
 # Set some global parameters
 
