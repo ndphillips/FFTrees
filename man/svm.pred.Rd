@@ -22,8 +22,8 @@ Calculates predictions from support vector machines using the e1071 package
 
 # Fit svm for the mushrooms dataset
 
-#mushrooms.svm <- svm.pred(formula = poisonous ~.,
-#                           data.train = mushrooms)
+mushrooms.svm <- svm.pred(formula = poisonous ~.,
+                          data.train = mushrooms)
 
 
 
