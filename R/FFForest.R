@@ -43,6 +43,21 @@ FFForest <- function(formula = NULL,
 #
 #
 
+  # formula = criterion ~.
+  # data = adults
+  # data.test = NULL
+  # max.levels = 5
+  # ntree = 10
+  # train.p = .1
+  # rank.method = "m"
+  # hr.weight = .5
+  # verbose = TRUE
+  # cpus = 1
+  # do.lr = TRUE
+  # do.cart = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+
 data.mf <- model.frame(formula = formula,
                        data = data)
 

@@ -25,9 +25,9 @@ plot(titanic.fft,
 
 1.1.9
 
-- Added `FFForest()`, A function for creating forests of FFTrees, and `plot.FFForest()`, for visualizing forests of FFTrees.
+- Added `FFForest()`, A function for creating forests of ffts, and `plot.FFForest()`, for visualizing forests of ffts.
 
-- Added random forests for comparison in `FFTrees()` using the `randomForest` package. Predictions from random forests are now also shown in `plot.FFTrees()`.
+- Added random forests and support vector machines for comparison in `FFTrees()` using the `randomForest` and `e1071` packages.
 
 - `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new FFTrees object.
 

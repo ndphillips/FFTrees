@@ -64,6 +64,31 @@ FFTrees <- function(formula = NULL,
                     object = NULL
 ) {
 
+  # formula = criterion ~.
+  # data = adults
+  # data.test = NULL
+  # max.levels = 5
+  # ntree = 10
+  # train.p = .1
+  # rank.method = "m"
+  # hr.weight = .5
+  # verbose = TRUE
+  # cpus = 1
+  # do.lr = TRUE
+  # do.cart = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # rank.method = "m"
+  # hr.weight = .5
+  # max.levels = 4
+  # tree.definitions = NULL
+  # verbose = FALSE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # object = NULL
+
 
 # Set some global parameters
 
