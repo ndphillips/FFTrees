@@ -240,6 +240,10 @@ if(is.null(data.test) & train.p < 1) {
     data.train.i <- data.train[train.exemplars.i,]
     data.test.i <- data.train[test.exemplars.i,]
 
+     ## FORCE TEST AND TRAINING SET TO HAVE SAME FACTOR VALUES
+    force.factor <- FALSE
+
+    if(force.factor == TRUE) {
     orig.vals.ls <- lapply(1:ncol(data.train.i), FUN = function(x) {unique(data.train.i[,x])})
 
     can.predict.mtx <- matrix(1, nrow = nrow(data.test.i), ncol = ncol(data.test.i))
@@ -258,7 +262,9 @@ if(is.null(data.test) & train.p < 1) {
     }
 
     model.can.predict <- rowMeans(can.predict.mtx) == 1
+    }
 
+    if(force.factor == FALSE) {model.can.predict <- TRUE}
 
     # Do the training and test data valid?
     if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 &
