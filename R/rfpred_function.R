@@ -21,6 +21,7 @@ rf.pred <- function(formula,
                     data.test = NULL,
                     rf.model = NULL) {
 
+
 if(is.null(data.train) == FALSE) {
 
   data.mf.train <- model.frame(formula = formula,
@@ -43,53 +44,34 @@ if(is.null(data.test) == FALSE) {
 #  both training and test data columns have the same factor
 #  values.
 
-levels.ls <- lapply(1:ncol(data.mf.train),
-                    FUN = function(x) {
+  # Ensure training and test data have complete factor levels
+  for(col.i in 1:ncol(data.mf.train)) {
 
-if(is.null(data.test)) {
-  return(unique(data.mf.train[,x]))
-}
+    if(any(c("factor", "character") %in% class(data.mf.train[,col.i]))) {
 
+      levels.i <- paste(unique(data.mf.train[,col.i]))
 
-if(is.null(data.test) == FALSE) {
-  return(unique(c(data.mf.train[,x], data.mf.test[,x])))
-}
+      if(is.null(data.test) == FALSE) {
 
-})
+        test.index <- names(data.test) == names(data.mf.train)[col.i]
 
-for(i in 1:ncol(data.mf.train)) {
+        levels.i <- c(levels.i, paste(unique(data.test[,test.index])))
 
-    if(class(data.mf.train[,i]) %in% c("character", "factor", "logical")) {
+      }
 
-levels.i <- levels.ls[[i]]
+      levels.i <- unique(levels.i)
 
-      data.mf.train[,i] <- factor(paste(data.mf.train[,i]),
-                                  levels = levels.i)
+      data.mf.train[,col.i] <- factor(data.mf.train[,col.i], levels = levels.i)
 
-    }
+      if(is.null(data.mf.test) == FALSE) {
 
-  }
+        data.mf.test[,test.index] <- factor(data.mf.test[,test.index], levels = levels.i)
 
-if(is.null(data.test) == FALSE) {
-
-  data.mf.test <- model.frame(formula = formula,
-                              data = data.test,
-                              na.action = NULL)
-
-  for(i in 1:ncol(data.mf.test)) {
-
-    if(class(data.mf.test[,i]) %in% c("character", "factor", "logical")) {
-
-      levels.i <- levels.ls[[i]]
-
-      data.mf.test[,i] <- factor(data.mf.test[,i],
-                                 levels = levels.i)
+      }
 
     }
 
   }
-
-}
 
 # Convert criterion to factor
 

@@ -18,7 +18,7 @@ lr.pred <- function(formula,
 
   correction <- .25
 
-if(is.null(data.train) == F) {
+if(is.null(data.train) == FALSE) {
 
 data.train <- model.frame(formula = formula,
                              data = data.train)
@@ -38,7 +38,7 @@ if(ncol(data.train) == 2) {
 
 }
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
 
   data.test <- model.frame(formula = formula, data = data.test)
 
@@ -49,9 +49,40 @@ if(is.null(data.test) == F) {
 
 }
 
-# DETERMINE LR MODEL
+# Ensure training and test data have complete factor levels
+for(col.i in 1:ncol(data.train)) {
 
-if(is.null(lr.model) == T) {
+  if(any(c("factor", "character") %in% class(data.train[,col.i]))) {
+
+    levels.i <- paste(unique(data.train[,col.i]))
+
+    if(is.null(data.test) == FALSE) {
+
+      test.index <- names(data.test) == names(data.train)[col.i]
+
+      levels.i <- c(levels.i, paste(unique(data.test[,test.index])))
+
+    }
+
+    levels.i <- unique(levels.i)
+
+    data.train[,col.i] <- factor(data.train[,col.i], levels = levels.i)
+
+
+  if(is.null(data.test) == FALSE) {
+
+    data.test[,test.index] <- factor(data.test[,test.index], levels = levels.i)
+
+  }
+
+
+
+}
+
+}
+
+# DETERMINE LR MODEL
+if(is.null(lr.model) == TRUE) {
 
   # Create new LR model
   lr.train.mod <-  suppressWarnings(glm(formula,
@@ -72,7 +103,7 @@ lr.factor.values <- lr.train.mod$xlevels
 
 # LR TRAINING PREDICTIONS
 
-if(is.null(data.train) == F) {
+if(is.null(data.train) == FALSE) {
 
 # Look for new factor values
 
@@ -109,7 +140,7 @@ for(i in 1:ncol(cue.train)) {
   lr.train.pred.t <- 1 / (1 + exp(-lr.train.pred.t))
   lr.train.pred.t <- lr.train.pred.t > thresholds
 
-  lr.train.pred[can.predict.vec == T] <- lr.train.pred.t
+  lr.train.pred[can.predict.vec == TRUE] <- lr.train.pred.t
 
   # Calculate training accuracy stats
 
@@ -118,7 +149,7 @@ for(i in 1:ncol(cue.train)) {
 
 }
 
-if(is.null(data.train) == T) {
+if(is.null(data.train) == TRUE) {
 
   lr.train.acc <- classtable(prediction.v = 1, criterion.v = 1)
   lr.train.acc[1,] <- NA
@@ -127,7 +158,7 @@ if(is.null(data.train) == T) {
 
 # LR TEST PREDICTIONS
 
-if(is.null(data.test) == F) {
+if(is.null(data.test) == FALSE) {
 
   # Look for new factor values
 
@@ -147,7 +178,7 @@ if(is.null(data.test) == F) {
 
   can.predict.vec <- rowMeans(can.predict.mtx) == 1
 
-  if(any(can.predict.vec == F)) {
+  if(any(can.predict.vec == FALSE)) {
 
     warning(paste("LR couldn't predict ",  sum(can.predict.vec == FALSE),
                   " cases because they contained new factor values. These cases will be predicted to be FALSE",
@@ -164,7 +195,7 @@ if(is.null(data.test) == F) {
   lr.test.pred.t <- 1 / (1 + exp(-lr.test.pred.t))
   lr.test.pred.t <- lr.test.pred.t > thresholds
 
-  lr.test.pred[can.predict.vec == T] <- lr.test.pred.t
+  lr.test.pred[can.predict.vec == TRUE] <- lr.test.pred.t
 
   # Calculate training accuracy stats
 
@@ -193,13 +224,13 @@ lr.acc$threshold <- thresholds
 
 # AUC
 
-if(is.null(data.train) == F) {
+if(is.null(data.train) == FALSE) {
 
 lr.train.auc <- auc(lr.train.acc$hr.train, lr.train.acc$far.train)
 
 } else {lr.train.auc <- NA}
 
-if(is.null(data.test) == F & all(is.finite(lr.test.acc$hr.test))) {
+if(is.null(data.test) == FALSE & all(is.finite(lr.test.acc$hr.test))) {
 
  lr.test.auc <- auc(lr.test.acc$hr.test, lr.test.acc$far.test)
 

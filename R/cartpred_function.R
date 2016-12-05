@@ -23,11 +23,14 @@ cart.pred <- function(formula,
                       cart.model = NULL,
                       cost.mi = 1,
                       cost.fa = 1) {
-  # formula = formula
-  # data.train = data.train
-  # data.test = data.test
-  # cart.model = cart.model
   #
+  # formula = poisonous ~.
+  # data.train = mushrooms[1:10,]
+  # data.test = mushrooms[11:nrow(mushrooms),]
+  #
+  #
+  # cart.model = NULL
+  # #
   # cost.mi = 1
   # cost.fa = 1
 
@@ -69,6 +72,36 @@ if(is.null(data.test) == FALSE) {
   }
 
 }
+
+  # Ensure training and test data have complete factor levels
+  for(col.i in 1:ncol(data.train)) {
+
+    if(any(c("factor", "character") %in% class(data.train[,col.i]))) {
+
+      levels.i <- paste(unique(data.train[,col.i]))
+
+      if(is.null(data.test) == FALSE) {
+
+        test.index <- names(data.test) == names(data.train)[col.i]
+
+        levels.i <- c(levels.i, paste(unique(data.test[,test.index])))
+
+      }
+
+      levels.i <- unique(levels.i)
+
+      data.train[,col.i] <- factor(data.train[,col.i], levels = levels.i)
+
+
+      if(is.null(data.test) == FALSE) {
+
+        data.test[,test.index] <- factor(data.test[,test.index], levels = levels.i)
+
+      }
+
+    }
+
+  }
 
 # DETERMINE CART MODEL
 
