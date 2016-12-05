@@ -27,8 +27,8 @@ cart.pred <- function(formula,
   # formula = poisonous ~.
   # data.train = mushrooms[1:10,]
   # data.test = mushrooms[11:nrow(mushrooms),]
-  #
-  #
+  # #
+  # #
   # cart.model = NULL
   # #
   # cost.mi = 1
@@ -44,31 +44,31 @@ cart.pred <- function(formula,
 
 if(is.null(data.train) == FALSE) {
 
-  data.mf.train <- model.frame(formula = formula,
+  data.train <- model.frame(formula = formula,
                                data = data.train,
                                na.action = NULL)
 
-  cue.train <- data.mf.train[,2:ncol(data.mf.train)]
-  crit.train <- data.mf.train[,1]
+  cue.train <- data.train[,2:ncol(data.train)]
+  crit.train <- data.train[,1]
 
-  if(ncol(data.mf.train) == 2) {
+  if(ncol(data.train) == 2) {
 
     cue.train <- data.frame(cue.train)
-    names(cue.train) <- names(data.mf.train)[2]
+    names(cue.train) <- names(data.train)[2]
     }
 
 }
 
 if(is.null(data.test) == FALSE) {
 
-  data.mf.test <- model.frame(formula = formula, data = data.test, na.action = NULL)
-  cue.test <- data.mf.test[,2:ncol(data.mf.test)]
-  crit.test <- data.mf.test[,1]
+  data.test <- model.frame(formula = formula, data = data.test, na.action = NULL)
+  cue.test <- data.test[,2:ncol(data.test)]
+  crit.test <- data.test[,1]
 
-  if(ncol(data.mf.test) == 2) {
+  if(ncol(data.test) == 2) {
 
     cue.test <- data.frame(cue.test)
-    names(cue.test) <- names(data.mf.test)[2]
+    names(cue.test) <- names(data.test)[2]
   }
 
 }

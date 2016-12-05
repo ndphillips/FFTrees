@@ -28,20 +28,20 @@ svm.pred <- function(formula,
 
 if(is.null(data.train) == FALSE) {
 
-  data.mf.train <- model.frame(formula = formula,
+  data.train <- model.frame(formula = formula,
                                data = data.train,
                                na.action = NULL)
 
-  crit.train <- data.mf.train[,1]
+  crit.train <- data.train[,1]
 }
 
 if(is.null(data.test) == FALSE) {
 
-    data.mf.test <- model.frame(formula = formula,
+    data.test <- model.frame(formula = formula,
                                  data = data.test,
                                  na.action = NULL)
 
-    crit.test <- data.mf.test[,1]
+    crit.test <- data.test[,1]
 }
 
 # Convert character cues to factors and ensure that
@@ -49,15 +49,15 @@ if(is.null(data.test) == FALSE) {
 #  values.
 
 # Ensure training and test data have complete factor levels
-for(col.i in 1:ncol(data.mf.train)) {
+for(col.i in 1:ncol(data.train)) {
 
-  if(any(c("factor", "character") %in% class(data.mf.train[,col.i]))) {
+  if(any(c("factor", "character") %in% class(data.train[,col.i]))) {
 
-    levels.i <- paste(unique(data.mf.train[,col.i]))
+    levels.i <- paste(unique(data.train[,col.i]))
 
     if(is.null(data.test) == FALSE) {
 
-      test.index <- names(data.test) == names(data.mf.train)[col.i]
+      test.index <- names(data.test) == names(data.train)[col.i]
 
       levels.i <- c(levels.i, paste(unique(data.test[,test.index])))
 
@@ -65,11 +65,11 @@ for(col.i in 1:ncol(data.mf.train)) {
 
     levels.i <- unique(levels.i)
 
-    data.mf.train[,col.i] <- factor(data.mf.train[,col.i], levels = levels.i)
+    data.train[,col.i] <- factor(data.train[,col.i], levels = levels.i)
 
-    if(is.null(data.mf.test) == FALSE) {
+    if(is.null(data.test) == FALSE) {
 
-      data.mf.test[,test.index] <- factor(data.mf.test[,test.index], levels = levels.i)
+      data.test[,test.index] <- factor(data.test[,test.index], levels = levels.i)
 
     }
 
@@ -77,26 +77,25 @@ for(col.i in 1:ncol(data.mf.train)) {
 
 }
 
-
 # Remove factor values with only one level
 
-ok.cols <- sapply(1:ncol(data.mf.train), FUN = function(x) {
+ok.cols <- sapply(1:ncol(data.train), FUN = function(x) {
 
-  length(unique(data.mf.train[,x])) > 1
+  length(unique(data.train[,x])) > 1
 
 })
 
-data.mf.train <- data.mf.train[,ok.cols]
+data.train <- data.train[,ok.cols]
 
 # Convert criterion to factor
 
-dv.vals <- unique(data.mf.train[,1])
+dv.vals <- unique(data.train[,1])
 
-data.mf.train[,1] <- factor(data.mf.train[,1], levels = dv.vals)
+data.train[,1] <- factor(data.train[,1], levels = dv.vals)
 
 if(is.null(data.test) == FALSE) {
 
-  data.mf.test[,1] <- factor(data.mf.test[,1], levels = dv.vals)
+  data.test[,1] <- factor(data.test[,1], levels = dv.vals)
 
 }
 
@@ -106,7 +105,7 @@ if(is.null(svm.model) == TRUE) {
 
 # Create new svm model
 svm.train.mod <- e1071::svm(formula,
-                            data = data.mf.train)
+                            data = data.train)
 
 } else {
 
@@ -119,7 +118,7 @@ if(is.null(data.train) == FALSE) {
 
 # Get training decisions
 svm.train.pred <- predict(svm.train.mod,
-                          data = data.mf.train)
+                          data = data.train)
 
 # Recode to logical
 
@@ -152,7 +151,7 @@ if(is.null(data.test) == FALSE) {
 
 # Get training decisions
 svm.test.pred <- predict(svm.train.mod,
-                        data.mf.test)
+                        data.test)
 
 # Recode to logical
 
