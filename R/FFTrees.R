@@ -63,31 +63,31 @@ FFTrees <- function(formula = NULL,
                     do.svm = TRUE,
                     object = NULL
 ) {
-
-  # formula = criterion ~.
-  # data = adults
-  # data.test = NULL
-  # max.levels = 5
-  # ntree = 10
-  # train.p = .1
-  # rank.method = "m"
-  # hr.weight = .5
-  # verbose = TRUE
-  # cpus = 1
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # rank.method = "m"
-  # hr.weight = .5
-  # max.levels = 4
-  # tree.definitions = NULL
-  # verbose = FALSE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # object = NULL
+#
+#   formula = criterion ~.
+#   data = audiology
+#   data.test = NULL
+#   max.levels = 5
+#   ntree = 10
+#   train.p = .1
+#   rank.method = "m"
+#   hr.weight = .5
+#   verbose = TRUE
+#   cpus = 1
+#   do.lr = TRUE
+#   do.cart = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   rank.method = "m"
+#   hr.weight = .5
+#   max.levels = 4
+#   tree.definitions = NULL
+#   verbose = FALSE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   object = NULL
 
 
 # Set some global parameters
@@ -469,7 +469,7 @@ levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 
-tree.auc.train <- auc(hr.v = train.results$treestats$hr,
+tree.auc.train <- FFTrees::auc(hr.v = train.results$treestats$hr,
                       far.v = train.results$treestats$far)
 }
 
@@ -502,7 +502,7 @@ if(any(is.na(test.results$treestats$hr)) == TRUE) {
 
 if(all(is.finite(test.results$treestats$hr))) {
 
-tree.auc.test <- auc(hr.v = test.results$treestats$hr, far.v = test.results$treestats$far)
+tree.auc.test <- FFTrees::auc(hr.v = test.results$treestats$hr, far.v = test.results$treestats$far)
 
 }
 }
