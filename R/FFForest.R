@@ -98,25 +98,25 @@ tree.stats.i <- result.i$tree.stats
 comp.stats.i <- c()
 
 if(do.lr) {
-lr.stats.i <- result.i$lr$stats
+lr.stats.i <- result.i$comp$lr$stats
 names(lr.stats.i) <- paste0("lr.", names(lr.stats.i))
 comp.stats.i <- c(comp.stats.i, lr.stats.i)
 }
 
 if(do.cart) {
-  cart.stats.i <- result.i$cart$stats
+  cart.stats.i <- result.i$comp$cart$stats
   names(cart.stats.i) <- paste0("cart.", names(cart.stats.i))
   comp.stats.i <- c(comp.stats.i, cart.stats.i)
   }
 
 if(do.rf) {
-  rf.stats.i <- result.i$rf$stats
+  rf.stats.i <- result.i$comp$rf$stats
   names(rf.stats.i) <- paste0("rf.", names(rf.stats.i))
   comp.stats.i <- c(comp.stats.i, rf.stats.i)
 }
 
 if(do.svm) {
-  svm.stats.i <- result.i$svm$stats
+  svm.stats.i <- result.i$comp$svm$stats
   names(svm.stats.i) <- paste0("svm.", names(svm.stats.i))
   comp.stats.i <- c(comp.stats.i, svm.stats.i)
 }

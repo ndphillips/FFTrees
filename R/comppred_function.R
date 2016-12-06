@@ -5,7 +5,7 @@
 #' @param formula a formula
 #' @param data.train dataframe. A training dataset
 #' @param data.test dataframe. A testing dataset
-#' @param algorithm string. An algorithm in the set "cart", "lr", "svm", "rf"
+#' @param algorithm string. An algorithm in the set "cart" -- decision trees, "lr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests
 #' @importFrom stats model.frame formula glm model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
@@ -18,22 +18,22 @@
 #'
 #' mushrooms.lr.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
-#'                                data.test = mushrooms[101:nrow(mushrooms)],
+#'                                data.test = mushrooms[101:nrow(mushrooms),],
 #'                                algorithm = "lr")
 #'
 #' mushrooms.cart.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
-#'                                data.test = mushrooms[101:nrow(mushrooms)],
+#'                                data.test = mushrooms[101:nrow(mushrooms),],
 #'                                algorithm = "cart")
 #'
 #' mushrooms.rf.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
-#'                                data.test = mushrooms[101:nrow(mushrooms)],
+#'                                data.test = mushrooms[101:nrow(mushrooms),],
 #'                                algorithm = "rf")
 #'
 #' mushrooms.svm.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
-#'                                data.test = mushrooms[101:nrow(mushrooms)],
+#'                                data.test = mushrooms[101:nrow(mushrooms),],
 #'                                algorithm = "svm")
 #'
 #'

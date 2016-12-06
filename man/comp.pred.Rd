@@ -24,22 +24,22 @@ This function is a wrapper for many classification algorithms such as CART (rpar
 
 mushrooms.lr.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],
-                               data.test = mushrooms[101:nrow(mushrooms)],
+                               data.test = mushrooms[101:nrow(mushrooms),],
                                algorithm = "lr")
 
 mushrooms.cart.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],
-                               data.test = mushrooms[101:nrow(mushrooms)],
+                               data.test = mushrooms[101:nrow(mushrooms),],
                                algorithm = "cart")
 
 mushrooms.rf.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],
-                               data.test = mushrooms[101:nrow(mushrooms)],
+                               data.test = mushrooms[101:nrow(mushrooms),],
                                algorithm = "rf")
 
 mushrooms.svm.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],
-                               data.test = mushrooms[101:nrow(mushrooms)],
+                               data.test = mushrooms[101:nrow(mushrooms),],
                                algorithm = "svm")
 
 

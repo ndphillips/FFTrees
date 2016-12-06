@@ -23,7 +23,8 @@ Imports:
     randomForest,
     igraph,
     snow,
-    e1071
+    e1071,
+    glmnet
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 5.0.1

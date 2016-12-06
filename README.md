@@ -25,6 +25,8 @@ plot(titanic.fft,
 
 1.1.9
 
+- Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp.pred()` wrapper function.
+
 - Added `FFForest()`, A function for creating forests of ffts, and `plot.FFForest()`, for visualizing forests of ffts.
 
 - Added random forests and support vector machines for comparison in `FFTrees()` using the `randomForest` and `e1071` packages.
