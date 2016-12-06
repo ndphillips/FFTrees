@@ -1540,7 +1540,7 @@ par("xpd" = T)
 
 
 
-  par("xpd" = F)
+  par("xpd" = FALSE)
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
@@ -1555,7 +1555,7 @@ par("xpd" = T)
        final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
        labels = "  FFT", adj = 0, cex = .9)
 
-  par("xpd" = T)
+  par("xpd" = TRUE)
 
 
 }
