@@ -64,30 +64,30 @@ FFTrees <- function(formula = NULL,
                     object = NULL
 ) {
 #
-#   formula = criterion ~.
-#   data = audiology
-#   data.test = NULL
-#   max.levels = 5
-#   ntree = 10
-#   train.p = .1
-#   rank.method = "m"
-#   hr.weight = .5
-#   verbose = TRUE
-#   cpus = 1
-#   do.lr = TRUE
-#   do.cart = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   rank.method = "m"
-#   hr.weight = .5
-#   max.levels = 4
-#   tree.definitions = NULL
-#   verbose = FALSE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   object = NULL
+  formula = diagnosis ~.
+  data = heartdisease
+  data.test = NULL
+  max.levels = 5
+  ntree = 10
+  train.p = .1
+  rank.method = "m"
+  hr.weight = .5
+  verbose = TRUE
+  cpus = 1
+  do.lr = TRUE
+  do.cart = TRUE
+  do.rf = TRUE
+  do.svm = TRUE
+  rank.method = "m"
+  hr.weight = .5
+  max.levels = 4
+  tree.definitions = NULL
+  verbose = FALSE
+  do.cart = TRUE
+  do.lr = TRUE
+  do.rf = TRUE
+  do.svm = TRUE
+  object = NULL
 
 
 # Set some global parameters
@@ -531,9 +531,10 @@ rownames(tree.auc) = c("train", "test")
 {
 if(do.lr) {
 
-lr.acc <- lr.pred(formula = formula,
-                 data.train = data.train,
-                 data.test = data.test)
+lr.acc <- comp.pred(formula = formula,
+                     data.train = data.train,
+                     data.test = data.test,
+                    algorithm = "lr")
 
 lr.stats <- lr.acc$accuracy
 lr.auc <- lr.acc$auc
@@ -543,7 +544,9 @@ lr.model <- lr.acc$model
 
 if(do.lr == FALSE) {
 
-lr.acc <- NULL; lr.stats <- NULL ; lr.model <- NULL
+lr.acc <- NULL
+lr.stats <- NULL
+lr.model <- NULL
 
 lr.auc <- matrix(NA, nrow = 2, ncol =1)
 rownames(lr.auc) <- c("train", "test")
@@ -558,13 +561,10 @@ colnames(lr.auc) <- "lr"
 
 if(do.cart) {
 
-if(is.null(object)) {cart.model <- NULL}
-if(is.null(object) == FALSE) {cart.model <- object$cart$model}
-
-cart.acc <- cart.pred(formula = formula,
+cart.acc <- comp.pred(formula = formula,
                       data.train = data.train,
                       data.test = data.test,
-                      cart.model = cart.model
+                      algorithm = "cart"
 )
 
 cart.stats <- cart.acc$accuracy
@@ -575,7 +575,9 @@ cart.model <- cart.acc$model
 
 if(do.cart == FALSE) {
 
-  cart.acc <- NULL ; cart.stats <- NULL ; cart.model <- NULL
+  cart.acc <- NULL
+  cart.stats <- NULL
+  cart.model <- NULL
 
   cart.auc <- matrix(NA, nrow = 2, ncol =1)
   rownames(cart.auc) <- c("train", "test")
@@ -589,13 +591,10 @@ if(do.cart == FALSE) {
 
   if(do.rf) {
 
-    if(is.null(object)) {rf.model <- NULL}
-    if(is.null(object) == FALSE) {rf.model <- object$rf$model}
-
-    rf.acc <- rf.pred(formula = formula,
+    rf.acc <- comp.pred(formula = formula,
                       data.train = data.train,
                       data.test = data.test,
-                      rf.model = rf.model)
+                      algorithm = "rf")
 
     rf.stats <- rf.acc$accuracy
     rf.auc <- rf.acc$auc
@@ -605,7 +604,9 @@ if(do.cart == FALSE) {
 
   if(do.rf == FALSE) {
 
-    rf.acc <- NULL ; rf.stats <- NULL ; rf.model <- NULL
+    rf.acc <- NULL
+    rf.stats <- NULL
+    rf.model <- NULL
 
     rf.auc <- matrix(NA, nrow = 2, ncol =1)
     rownames(rf.auc) <- c("train", "test")
@@ -619,23 +620,21 @@ if(do.cart == FALSE) {
 
   if(do.svm) {
 
-    if(is.null(object)) {svm.model <- NULL}
-    if(is.null(object) == FALSE) {svm.model <- object$svm$model}
-
-    svm.acc <- svm.pred(formula = formula,
+    svm.acc <- comp.pred(formula = formula,
                       data.train = data.train,
                       data.test = data.test,
-                      svm.model = svm.model)
+                      algorithm = "svm")
 
     svm.stats <- svm.acc$accuracy
     svm.auc <- svm.acc$auc
     svm.model <- svm.acc$model
-
   }
 
   if(do.svm == FALSE) {
 
-    svm.acc <- NULL ; svm.stats <- NULL ; svm.model <- NULL
+    svm.acc <- NULL
+    svm.stats <- NULL
+    svm.model <- NULL
 
     svm.auc <- matrix(NA, nrow = 2, ncol =1)
     rownames(svm.auc) <- c("train", "test")
@@ -646,7 +645,7 @@ if(do.cart == FALSE) {
 
 # Get AUC matrix
 
-auc <- cbind(tree.auc, lr.auc, cart.auc, rf.auc)
+auc <- cbind(tree.auc, lr.auc, cart.auc, rf.auc, svm.auc)
 
 output.fft <- list("formula" = formula,
                   "data" = list("train" = data.train, "test" = data.test),
@@ -657,10 +656,10 @@ output.fft <- list("formula" = formula,
                   "decision" = decision,
                   "levelout" = levelout,
                   "auc" = auc,
-                  "lr" = list("model" = lr.model, "stats" = lr.stats),
-                  "cart" = list("model" = cart.model, "stats" = cart.stats),
-                  "rf" = list("model" = rf.model, "stats" = rf.stats),
-                  "svm" = list("model" = svm.model, "stats" = svm.stats)
+                  "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
+                                "cart" = list("model" = cart.model, "stats" = cart.stats),
+                                "rf" = list("model" = rf.model, "stats" = rf.stats),
+                                "svm" = list("model" = svm.model, "stats" = svm.stats))
 )
 
 class(output.fft) <- "FFTrees"
