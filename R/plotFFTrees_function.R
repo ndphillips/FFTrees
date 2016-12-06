@@ -43,15 +43,16 @@ plot.FFTrees <- function(
   which.tree = NULL,
   ...
 ) {
-
-  # x = heart.fft2
-  # data = "train"
-  # what = 'tree'
-  # tree = "best.train"
-  # main = "Data"
-  # n.per.icon = NULL
-  # decision.names = c("Noise", "Signal")
-  # which.tree = NULL
+#
+#   x <- x
+#
+#   data = "train"
+#   what = 'tree'
+#   tree = "best.train"
+#   main = "Data"
+#   n.per.icon = NULL
+#   decision.names = c("Noise", "Signal")
+#   which.tree = NULL
 
 
 
@@ -124,10 +125,10 @@ if(data == "train") {
   decision.v <- x$decision$train[,tree]
   tree.stats <- x$tree.stats$train
   level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
-  lr.stats <- data.frame("hr" = x$lr$stats$hr.train, "far" = x$lr$stats$far.train)
-  cart.stats <- data.frame("hr" = x$cart$stats$hr.train, "far" = x$cart$stats$far.train)
-  rf.stats <- data.frame("hr" = x$rf$stats$hr.train, "far" = x$rf$stats$far.train)
-  svm.stats <- data.frame("hr" = x$svm$stats$hr.train, "far" = x$svm$stats$far.train)
+  lr.stats <- data.frame("hr" = x$comp$lr$stats$hr.train, "far" = x$comp$lr$stats$far.train)
+  cart.stats <- data.frame("hr" = x$comp$cart$stats$hr.train, "far" = x$comp$cart$stats$far.train)
+  rf.stats <- data.frame("hr" = x$comp$rf$stats$hr.train, "far" = x$comp$rf$stats$far.train)
+  svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.train, "far" = x$comp$svm$stats$far.train)
 
   n.exemplars <- nrow(data.mf)
 }
@@ -139,10 +140,10 @@ if(data == "test") {
   decision.v <- x$decision$test[,tree]
   tree.stats <- x$tree.stats$test
   level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
-  lr.stats <- data.frame("hr" = x$lr$stats$hr.test, "far" = x$lr$stats$far.test)
-  cart.stats <- data.frame("hr" = x$cart$stats$hr.test, "far" = x$cart$stats$far.test)
-  rf.stats <- data.frame("hr" = x$rf$stats$hr.test, "far" = x$rf$stats$far.test)
-  svm.stats <- data.frame("hr" = x$svm$stats$hr.test, "far" = x$svm$stats$far.test)
+  lr.stats <- data.frame("hr" = x$comp$lr$stats$hr.test, "far" = x$comp$lr$stats$far.test)
+  cart.stats <- data.frame("hr" = x$comp$cart$stats$hr.test, "far" = x$comp$cart$stats$far.test)
+  rf.stats <- data.frame("hr" = x$comp$rf$stats$hr.test, "far" = x$comp$rf$stats$far.test)
+  svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.test, "far" = x$comp$svm$stats$far.test)
 
   n.exemplars <- nrow(data.mf)
 }
@@ -1376,7 +1377,7 @@ rect(final.roc.x.loc[1],
            lty = 2)
 
 
-  ## CART and LR
+  ## COMPETITIVE ALGORITHMS
 {
 
   # CART
@@ -1498,6 +1499,7 @@ par("xpd" = T)
 
 
   }
+
   ## FFT
 {
   roc.order <- order(fft.far.vec)

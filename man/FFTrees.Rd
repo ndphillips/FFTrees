@@ -44,7 +44,7 @@ An \code{FFTrees} object with the following elements
   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
   \item{auc}{Area under the curve statistics}
-  \item{lr, cart, rf}{Logistic regression, CART, and random forest models and classification statistics trained on the same data as the fast and frugal trees.}
+  \item{comp}{Logistic regression, CART, and random forest models and classification statistics trained on the same data as the fast and frugal trees.}
   }
 }
 \description{
