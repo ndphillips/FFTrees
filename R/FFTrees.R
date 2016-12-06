@@ -64,8 +64,8 @@ FFTrees <- function(formula = NULL,
                     object = NULL
 ) {
 #
-  # formula = diagnosis ~.
-  # data = heartdisease
+  # formula = criterion ~.
+  # data = automobile
   # data.test = NULL
   # max.levels = 5
   # ntree = 10
