@@ -44,7 +44,7 @@ FFForest <- function(formula = NULL,
 #
 
   # formula = criterion ~.
-  # data = adults
+  # data = arrhythmia
   # data.test = NULL
   # max.levels = 5
   # ntree = 10
