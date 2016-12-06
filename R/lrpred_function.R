@@ -214,7 +214,7 @@ if(is.null(data.test)) {
 
 ## ORGANIZE
 
-stat.names <- c("hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")
+stat.names <- c("n", "hi", "mi", "fa", "cr", "hr", "far", "v", "dprime")
 names(lr.train.acc)[names(lr.train.acc) %in% stat.names] <- paste(names(lr.train.acc)[names(lr.train.acc) %in% stat.names], ".train", sep = "")
 names(lr.test.acc)[names(lr.test.acc) %in% stat.names] <- paste(names(lr.test.acc)[names(lr.test.acc) %in% stat.names], ".test", sep = "")
 
