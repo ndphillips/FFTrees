@@ -8,7 +8,7 @@
 #' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param main character. The main plot label.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
-#' @param stats logical. Should statistical information be plotted?
+#' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
 #' @param n.per.icon Number of exemplars per icon
 #' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param ... Currently ignored.
