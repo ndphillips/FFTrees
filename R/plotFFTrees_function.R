@@ -223,6 +223,7 @@ decision.node.cex <- 4
 exit.node.cex <- 4
 panel.title.cex <- 2
 
+if(stats == TRUE) {
 
 plotting.parameters.df <- data.frame(
   n.levels = 1:6,
@@ -231,6 +232,20 @@ plotting.parameters.df <- data.frame(
   label.box.text.cex = c(1.5, 1.5, 1.25, 1, 1, 1),
   break.label.cex = c(1.5, 1.5, 1.25, 1, .75, .5)
 )
+
+}
+
+if(stats == FALSE) {
+
+  plotting.parameters.df <- data.frame(
+    n.levels = 1:6,
+    plot.height = c(10, 12, 15, 19, 23, 25),
+    plot.width = c(14, 16, 20, 24, 28, 32) * .75,
+    label.box.text.cex = c(1.5, 1.5, 1.25, 1, 1, 1),
+    break.label.cex = c(1.5, 1.5, 1.25, 1, .75, .5)
+  )
+
+}
 
 if(n.levels < 6) {
 
@@ -632,7 +647,12 @@ if(stats == TRUE) {
 par(mar = c(0, 0, 0, 0))
 }
 
-if(stats == FALSE) {par(mar = c(5, 4, 4, 1) +  .1)}
+if(stats == FALSE) {
+
+  par(mar = c(5, 4, 4, 1) +  .1)
+
+
+  }
 
 # Setup plotting space
 
@@ -650,7 +670,14 @@ plot(1,
 par(xpd = T)
 segments(-plot.width, 0, - plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
 segments(plot.width, 0, plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-text(x = 0, y = 0, paste("Tree #", tree, " (of ", n.trees, ")", sep = ""), cex = panel.title.cex)
+
+if(stats == TRUE) {
+
+text(x = 0, y = 0,
+     paste("Tree #", tree, " (of ", n.trees, ")", sep = ""),
+     cex = panel.title.cex)
+
+}
 
 par(xpd = F)
 
