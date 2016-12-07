@@ -13,7 +13,7 @@ comp.pred(formula, data.train, data.test = NULL, algorithm = NULL)
 
 \item{data.test}{dataframe. A testing dataset}
 
-\item{algorithm}{string. An algorithm in the set "cart", "lr", "svm", "rf"}
+\item{algorithm}{string. An algorithm in the set "cart" -- decision trees, "lr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests}
 }
 \description{
 This function is a wrapper for many classification algorithms such as CART (rpart::rpart), regularised logistic regression (glmnet::glmnet), support vector machines (svm::svm) and random forests (randomForest::randomForest)

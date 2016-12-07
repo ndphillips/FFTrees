@@ -6,7 +6,8 @@
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
   tree = "best.train", main = "Data", n.per.icon = NULL,
-  decision.names = c("Noise", "Signal"), which.tree = NULL, ...)
+  decision.names = c("Noise", "Signal"), which.tree = NULL, comp = TRUE,
+  ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -17,13 +18,15 @@
 
 \item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
 
-\item{main}{The main plot label.}
+\item{main}{character. The main plot label.}
 
 \item{n.per.icon}{Number of exemplars per icon}
 
-\item{decision.names}{A string vector of length 2 indicating the content-specific name for noise and signal cases.}
+\item{decision.names}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
 
 \item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
+
+\item{comp}{logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)}
 
 \item{...}{Currently ignored.}
 }

@@ -127,10 +127,14 @@ if(data == "train") {
   decision.v <- x$decision$train[,tree]
   tree.stats <- x$tree.stats$train
   level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
+
+  if(comp == TRUE) {
+
   lr.stats <- data.frame("hr" = x$comp$lr$stats$hr.train, "far" = x$comp$lr$stats$far.train)
   cart.stats <- data.frame("hr" = x$comp$cart$stats$hr.train, "far" = x$comp$cart$stats$far.train)
   rf.stats <- data.frame("hr" = x$comp$rf$stats$hr.train, "far" = x$comp$rf$stats$far.train)
   svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.train, "far" = x$comp$svm$stats$far.train)
+}
 
   n.exemplars <- nrow(data.mf)
 }
@@ -142,10 +146,15 @@ if(data == "test") {
   decision.v <- x$decision$test[,tree]
   tree.stats <- x$tree.stats$test
   level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
+
+  if(comp == TRUE) {
+
   lr.stats <- data.frame("hr" = x$comp$lr$stats$hr.test, "far" = x$comp$lr$stats$far.test)
   cart.stats <- data.frame("hr" = x$comp$cart$stats$hr.test, "far" = x$comp$cart$stats$far.test)
   rf.stats <- data.frame("hr" = x$comp$rf$stats$hr.test, "far" = x$comp$rf$stats$far.test)
   svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.test, "far" = x$comp$svm$stats$far.test)
+
+  }
 
   n.exemplars <- nrow(data.mf)
 }
@@ -645,9 +654,6 @@ par(xpd = F)
        cex = 1.2, font = 3
   )
 
-  # Quotation marks
-#   text(- plot.width * .7,  -plot.height * .07, "'  '", cex = 2)
-
   points(c(- plot.width * .7, - plot.width * .5),
          c(-plot.height * .125, -plot.height * .125),
          pch = c(noise.ball.pch, signal.ball.pch),
@@ -658,21 +664,15 @@ par(xpd = F)
 
   text(c(- plot.width * .7, - plot.width * .5),
        c(-plot.height * .125, -plot.height * .125),
-       labels = c("Correct\nRejection", "Miss"),
+       labels = c("Correct Rejection", "Miss"),
        pos = c(1, 1), offset = 1)
 
-
-
-
   # Signal panel
-
 
   text(plot.width * .6, -plot.height * .05,
        paste("Decide ", decision.names[2], sep = ""),
        cex = 1.2, font = 3
   )
-
-
 
   points(c(plot.width * .5, plot.width * .7),
          c(-plot.height * .125, -plot.height * .125),
@@ -684,7 +684,7 @@ par(xpd = F)
 
   text(c(plot.width * .5, plot.width * .7),
        c(-plot.height * .125, -plot.height * .125),
-       labels = c("False\nAlarm", "Hit"),
+       labels = c("False Alarm", "Hit"),
        pos = c(1, 1), offset = 1)
 
   }
@@ -1184,7 +1184,6 @@ lloc <- data.frame(
 
 }
 
-
 # Levels
 {
 
@@ -1297,7 +1296,7 @@ segments(x0 = lloc$center.x[lloc$element == "spec"] - lloc$width[lloc$element ==
          y0 = level.top,
          x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
          y1 = level.top,
-         lty = 1, lwd = .75
+         lty = 3, lwd = .75
          )
 
 add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
@@ -1404,7 +1403,7 @@ rect(final.roc.x.loc[1],
   label.loc <- c(.1, .3, .5, .7, .9)
 
   ## COMPETITIVE ALGORITHMS
-{
+  if(comp == TRUE) {
 
   # CART
 
@@ -1566,8 +1565,8 @@ par("xpd" = T)
         labels = tree, cex = 1.25, col = gray(.2), font = 2)
 
 
-
-
+  # Labels
+  if(comp == TRUE) {
   par("xpd" = FALSE)
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
@@ -1584,7 +1583,7 @@ par("xpd" = T)
        labels = "  FFT", adj = 0, cex = .9)
 
   par("xpd" = TRUE)
-
+}
 
 }
 

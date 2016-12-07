@@ -27,15 +27,17 @@ plot(titanic.fft,
 
 - Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp.pred()` wrapper function.
 
-- Added `FFForest()`, A function for creating forests of ffts, and `plot.FFForest()`, for visualizing forests of ffts.
+- Added `FFForest()`, a function for creating forests of ffts, and `plot.FFForest()`, for visualizing forests of ffts. This function is very much still in development.
 
 - Added random forests and support vector machines for comparison in `FFTrees()` using the `randomForest` and `e1071` packages.
+
+- Changed logistic regression algorithm from the default `glm()` version to `glmnet()` for a regularized version.
 
 - `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new FFTrees object.
 
 - You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. This replaces the former `showcues()` function.
 
-- Cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls)
+- Many cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls). You can also control whether the results from competing algorithms are displayed or not with the `comp` argument.
 
 - Bug-fixes
     - Fixed a bug where levels with no classifications are not plotted correctly.
