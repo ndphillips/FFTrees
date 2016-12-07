@@ -8,7 +8,7 @@ An R package to create and visualize Fast and Frugal decision trees (FFTrees) li
 
 ```R
 # Create the trees
-titanic.fft <- FFTrees(survived ~., 
+titanic.fft <- FFTrees(formula = survived ~., 
                        data = titanic)
                        
 # Plot the best tree
