@@ -8,6 +8,7 @@
 #' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param main character. The main plot label.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
+#' @param stats logical. Should statistical information be plotted?
 #' @param n.per.icon Number of exemplars per icon
 #' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param ... Currently ignored.
@@ -43,6 +44,7 @@ plot.FFTrees <- function(
   decision.names = c("Noise", "Signal"),
   which.tree = NULL,
   comp = TRUE,
+  stats = TRUE,
   ...
 ) {
 #
@@ -158,7 +160,6 @@ if(data == "test") {
 
   n.exemplars <- nrow(data.mf)
 }
-
 
 final.stats <- classtable(prediction.v = decision.v,
                           criterion.v = criterion.v)
@@ -495,13 +496,20 @@ label.cex.fun <- function(i, label.box.text.cex = 2) {
 
 }
 
+if(stats == TRUE) {
+
 layout(matrix(1:3, nrow = 3, ncol = 1),
        widths = c(6),
        heights = c(1.2, 3, 1.8))
 
+}
+
+
 # -------------------------
 # 1: Initial Frequencies
 # --------------------------
+
+if(stats == TRUE) {
 {
 
 par(mar = c(0, 0, 1, 0))
@@ -614,13 +622,17 @@ text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
 
 
 }
+}
 
 # -------------------------
 # 2. TREE
 # --------------------------
 {
-
+if(stats == TRUE) {
 par(mar = c(0, 0, 0, 0))
+}
+
+if(stats == FALSE) {par(mar = c(5, 4, 4, 1) +  .1)}
 
 # Setup plotting space
 
@@ -654,6 +666,8 @@ par(xpd = F)
        cex = 1.2, font = 3
   )
 
+  # Noise Balls
+if(stats == TRUE) {
   points(c(- plot.width * .7, - plot.width * .5),
          c(-plot.height * .125, -plot.height * .125),
          pch = c(noise.ball.pch, signal.ball.pch),
@@ -667,12 +681,15 @@ par(xpd = F)
        labels = c("Correct Rejection", "Miss"),
        pos = c(1, 1), offset = 1)
 
-  # Signal panel
+}
 
+  # Signal panel
   text(plot.width * .6, -plot.height * .05,
        paste("Decide ", decision.names[2], sep = ""),
        cex = 1.2, font = 3
   )
+
+  if(stats == TRUE) {
 
   points(c(plot.width * .5, plot.width * .7),
          c(-plot.height * .125, -plot.height * .125),
@@ -687,6 +704,7 @@ par(xpd = F)
        labels = c("False Alarm", "Hit"),
        pos = c(1, 1), offset = 1)
 
+  }
   }
 
 # Set initial subplot center
@@ -783,7 +801,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   }
 
-  if(max(c(cr.i, mi.i)) > 0) {
+  if(max(c(cr.i, mi.i)) > 0 & stats == TRUE) {
 
     add.balls.fun(x.lim = ball.x.lim,
                   y.lim = ball.y.lim,
@@ -904,7 +922,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   }
 
-  if(max(c(fa.i, hi.i)) > 0) {
+  if(max(c(fa.i, hi.i)) > 0 & stats == TRUE) {
 
     add.balls.fun(x.lim = ball.x.lim,
                   y.lim = ball.y.lim,
@@ -1007,8 +1025,9 @@ if(level.stats$exit[level.i] == 1) {
 # -----------------------
 # 3. CUMULATIVE PERFORMANCE
 # -----------------------
-{
 
+if(stats == TRUE) {
+{
 
 # OBTAIN FINAL STATISTICS
 
@@ -1062,9 +1081,10 @@ par(xpd = F)
 
 pretty.dec <- function(x) {return(paste(round(x, 2) * 100, "%", sep = ""))}
 
-level.max.height <- .7
+level.max.height <- .65
 level.width <- .05
 level.center.y <- .45
+#level.bottom <- .1
 level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
@@ -1074,7 +1094,7 @@ lloc <- data.frame(
   center.x = c(.18, seq(.35, .65, length.out = 5), .85),
   center.y = rep(level.center.y, 7),
   width =    c(.2, rep(level.width, 5), .2),
-  height =   c(.7, rep(level.max.height, 5), .7),
+  height =   c(.65, rep(level.max.height, 5), .65),
   value = c(NA, 1 - final.stats$far, final.stats$hr, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
   value.name = c(NA, pretty.dec(1 - final.stats$far), pretty.dec(final.stats$hr), pretty.dec(with(final.stats, (cr + hi) / n)),
                  round(final.stats$dprime, 2), round(fft.auc, 2), NA
@@ -1592,6 +1612,7 @@ par("xpd" = T)
 
 }
 
+}
 # Reset plotting space
 par(mfrow = c(1, 1))
 par(mar = c(5, 4, 4, 1) + .1)
