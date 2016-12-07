@@ -225,6 +225,17 @@ crit.train <- data.train[,1]
 ## TRAINING / TESTING RANDOM SPLIT
 if(is.null(data.test) & train.p < 1) {
 
+
+  # UPDATE
+
+  # randomly sort the original data
+  # loop over the rows. Assign the first row to the training data and the second row to the test data
+  # Look at the next row, would it fill an empty factor slot for the training data? if yes, then assign to training. If no, then assign to test.
+  # repeat until all slots are filled for both training and test.
+  # assign the remaining cases proportionally to training and test
+
+
+
   if(is.null(object) == FALSE) {
 
     data.train.o <- object$data$train

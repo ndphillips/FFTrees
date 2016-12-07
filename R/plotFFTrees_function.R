@@ -5,8 +5,9 @@
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
 #' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
-#' @param decision.names A string vector of length 2 indicating the content-specific name for noise and signal cases.
-#' @param main The main plot label.
+#' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
+#' @param main character. The main plot label.
+#' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
 #' @param n.per.icon Number of exemplars per icon
 #' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param ... Currently ignored.
@@ -41,6 +42,7 @@ plot.FFTrees <- function(
   n.per.icon = NULL,
   decision.names = c("Noise", "Signal"),
   which.tree = NULL,
+  comp = TRUE,
   ...
 ) {
 #
@@ -545,8 +547,19 @@ text(x = .8, y = p.rect.ylim[2],
      labels = paste("p(", decision.names[2], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-rect(.775, p.rect.ylim[1], .825, p.rect.ylim[2], col = gray(1, .5))
-rect(.775, p.rect.ylim[1], .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+#Outline
+rect(.775, p.rect.ylim[1],
+     .825, p.rect.ylim[2], col = gray(1, .5))
+
+#Filling
+rect(.775, p.rect.ylim[1],
+     .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+     col = gray(.5, .25), border = NA)
+
+# Filltop
+segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+         .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+         col = gray(.5, 1))
 
 if(signal.p < .0001) {signal.p.text <- "<1%"} else {
 
@@ -564,8 +577,16 @@ text(x = .2, y = p.rect.ylim[2],
      labels = paste("p(", decision.names[1], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2], col = gray(1, .5))
-rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim), col = gray(.5, .5), border = NA)
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
+     col = gray(1, .5))
+
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+     col = gray(.5, .25), border = NA)
+
+# Filltop
+segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+         .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+         col = gray(.5, 1))
 
 if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
 
@@ -994,6 +1015,9 @@ if(level.stats$exit[level.i] == 1) {
 fft.auc <- auc(tree.stats$hr[order(tree.stats$far)], tree.stats$far[order(tree.stats$far)])
 fft.hr.vec <- tree.stats$hr[order(tree.stats$far)]
 fft.far.vec <- tree.stats$far[order(tree.stats$far)]
+
+if(comp == TRUE) {
+
 lr.hr <- lr.stats$hr
 lr.far <- lr.stats$far
 cart.hr <- cart.stats$hr
@@ -1003,12 +1027,14 @@ rf.far <- rf.stats$far
 svm.hr <- svm.stats$hr
 svm.far <- svm.stats$far
 
+}
+
 # General plotting space
 {
 
 # PLOTTING PARAMETERS
 header.y.loc <- 1.0
-subheader.y.loc <- .9
+subheader.y.loc <- .925
 
 header.cex <- 1.1
 subheader.cex <- .9
@@ -1070,15 +1096,11 @@ lloc <- data.frame(
   segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(.5))
 
 
+  # Column titles
+
   text(x = mean(mean(final.classtable.x.loc)),
        y = header.y.loc,
        "Truth", pos = 1, cex = header.cex)
-
-  # text(x = mean(mean(final.classtable.x.loc)),
-  #      y = subheader.y.loc,
-  #      "Truth", pos = 1, cex = subheader.cex)
-  #   text(mean(mean(final.classtable.x.loc)), subheader.y.loc, "Decision", pos = 1)
-
 
   text(x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
@@ -1088,6 +1110,7 @@ lloc <- data.frame(
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
        decision.names[2])
 
+# Row titles
 
   text(x = final.classtable.x.loc[1] - .02,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
@@ -1216,7 +1239,7 @@ gamma <- .5
 value.col.scale <- delta * value.s ^ gamma / (delta * value.s ^ gamma + (1 - value.s) ^ gamma)
 # value.col <- gray(1 - value.col.scale * .5)
 
-value.col <- gray(.5, .5)
+value.col <- gray(.5, .25)
 
 #plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
@@ -1377,6 +1400,9 @@ rect(final.roc.x.loc[1],
            lty = 2)
 
 
+
+  label.loc <- c(.1, .3, .5, .7, .9)
+
   ## COMPETITIVE ALGORITHMS
 {
 
@@ -1391,22 +1417,22 @@ rect(final.roc.x.loc[1],
          final.roc.y.loc[1] + cart.hr * lloc$height[lloc$element == "roc"],
          pch = "C", cex = .9, col = gray(.2))
 
-par("xpd" = F)
+par("xpd" = FALSE)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-   final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
+   final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
    pch = 21, cex = 2.5, col = transparent("red", .3),
    bg = transparent("red", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-   final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
+   final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
    pch = "C", cex = .9, col = gray(.2))
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
- final.roc.y.loc[1] + .6 * lloc$height[lloc$element == "roc"],
+ final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
 labels = "  CART", adj = 0, cex = .9)
 
-par("xpd" = T)
+par("xpd" = TRUE)
 
 
 
@@ -1424,16 +1450,16 @@ points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
 par("xpd" = F)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
+       final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2.5, col = transparent("blue", .3),
        bg = transparent("blue", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
+       final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
        pch = "L", cex = .9, col = gray(.2))
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
-     final.roc.y.loc[1] + .4 * lloc$height[lloc$element == "roc"],
+     final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
      labels = "  LR", adj = 0, cex = .9)
 
 par("xpd" = T)
@@ -1453,16 +1479,16 @@ points(final.roc.x.loc[1] + rf.far * lloc$width[lloc$element == "roc"],
 par("xpd" = F)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
+       final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2.5, col = transparent("purple", .3),
        bg = transparent("purple", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
+       final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
        pch = "R", cex = .9, col = gray(.2))
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
-     final.roc.y.loc[1] + .2 * lloc$height[lloc$element == "roc"],
+     final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
      labels = "  RF", adj = 0, cex = .9)
 
 par("xpd" = T)
@@ -1483,16 +1509,16 @@ points(final.roc.x.loc[1] + svm.far * lloc$width[lloc$element == "roc"],
 par("xpd" = F)
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + 0 * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2.5, col = transparent("purple", .3),
+       final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
+       pch = 21, cex = 2.5, col = transparent("orange", .3),
        bg = transparent("orange", .7))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + 0 * lloc$height[lloc$element == "roc"],
+       final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
        pch = "S", cex = .9, col = gray(.2))
 
 text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
-     final.roc.y.loc[1] + 0 * lloc$height[lloc$element == "roc"],
+     final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
      labels = "  SVM", adj = 0, cex = .9)
 
 par("xpd" = T)
@@ -1545,16 +1571,16 @@ par("xpd" = T)
   par("xpd" = FALSE)
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
+         final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2.5, col = transparent("green", .3),
          bg = transparent("green", .7))
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
+         final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],
          pch = "#", cex = .9, col = gray(.2))
 
   text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + .8 * lloc$height[lloc$element == "roc"],
+       final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],
        labels = "  FFT", adj = 0, cex = .9)
 
   par("xpd" = TRUE)
