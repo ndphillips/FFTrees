@@ -7,7 +7,7 @@
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
   tree = "best.train", main = "Data", n.per.icon = NULL,
   decision.names = c("Noise", "Signal"), which.tree = NULL, comp = TRUE,
-  ...)
+  stats = TRUE, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -27,6 +27,8 @@
 \item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
 
 \item{comp}{logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)}
+
+\item{stats}{logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.}
 
 \item{...}{Currently ignored.}
 }
