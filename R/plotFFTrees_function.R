@@ -679,6 +679,15 @@ text(x = 0, y = 0,
 
 }
 
+if(stats == FALSE) {
+if(main == "Data") {main <- ""}
+  mtext(text = main, side = 3, cex = 2)
+  # text(x = 0, y = 0,
+  #      paste("Tree #", tree, " (of ", n.trees, ")", sep = ""),
+  #      cex = panel.title.cex)
+
+}
+
 par(xpd = F)
 
 
