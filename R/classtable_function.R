@@ -62,13 +62,20 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
 
   }
 
-
+  # Hit-rate
   hr <- hi.c / (hi.c + mi.c)
+
+  # False-alarm rate
   far <- fa.c / (cr.c + fa.c)
 
-  v <- hr - far
+  # Percent correct
+  pc <- (hi.c + cr.c) / (hi.c + cr.c + mi.c + fa.c)
 
-  dprime <- qnorm(hr) - qnorm(far)
+  # v (HR - FAR)
+  v <- hr.c - far.c
+
+  # d-prime
+  dprime <- qnorm(hr.c) - qnorm(far.c)
 
   }
 
@@ -80,6 +87,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     cr <- NA
     hr <- NA
     far <- NA
+    pc <- NA
     v <- NA
     dprime <- NA
 
@@ -93,6 +101,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     cr = cr,
     hr = hr,
     far = far,
+    pc = pc,
     v = v,
     dprime = dprime)
 
