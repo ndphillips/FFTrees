@@ -63,16 +63,18 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   }
 
   # Hit-rate
-  hr <- hi.c / (hi.c + mi.c)
+  hr <- hi / (hi + mi)
+  hr.c <- hi.c / (hi.c + mi.c)
 
   # False-alarm rate
-  far <- fa.c / (cr.c + fa.c)
+  far <- fa / (cr + fa)
+  far.c <- fa.c / (cr.c + fa.c)
 
   # Percent correct
-  pc <- (hi.c + cr.c) / (hi.c + cr.c + mi.c + fa.c)
+  pc <- (hi + cr) / (hi + cr + mi + fa)
 
   # v (HR - FAR)
-  v <- hr.c - far.c
+  v <- hr - far
 
   # d-prime
   dprime <- qnorm(hr.c) - qnorm(far.c)
