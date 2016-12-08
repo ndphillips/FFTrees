@@ -71,7 +71,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   far.c <- fa.c / (cr.c + fa.c)
 
   # Percent correct
-  pc <- (hi + cr) / (hi + cr + mi + fa)
+  cor <- (hi + cr) / (hi + cr + mi + fa)
 
   # v (HR - FAR)
   v <- hr - far
@@ -89,7 +89,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     cr <- NA
     hr <- NA
     far <- NA
-    pc <- NA
+    cor <- NA
     v <- NA
     dprime <- NA
 
@@ -103,7 +103,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     cr = cr,
     hr = hr,
     far = far,
-    pc = pc,
+    cor = cor,
     v = v,
     dprime = dprime)
 

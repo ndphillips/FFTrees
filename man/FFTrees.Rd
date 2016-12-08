@@ -5,7 +5,7 @@
 \title{Creates a Fast and Frugal Trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  rank.method = "m", hr.weight = 0.5, max.levels = 4,
+  rank.method = "m", goal = "v", hr.weight = 0.5, max.levels = 4,
   tree.definitions = NULL, verbose = FALSE, do.cart = TRUE,
   do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, object = NULL)
 }
@@ -20,7 +20,9 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{rank.method}{character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take longer and may be prone to overfitting.}
 
-\item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.}
+\item{goal}{character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions}
+
+\item{hr.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})}
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
 

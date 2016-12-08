@@ -5,8 +5,8 @@
 \title{Grows fast and frugal trees}
 \usage{
 grow.FFTrees(formula, data, rank.method = "m", hr.weight = 0.5,
-  max.levels = 4, stopping.rule = "exemplars", stopping.par = 0.1,
-  verbose = F, ...)
+  goal = "v", max.levels = 4, stopping.rule = "exemplars",
+  stopping.par = 0.1, verbose = FALSE, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -17,9 +17,11 @@ grow.FFTrees(formula, data, rank.method = "m", hr.weight = 0.5,
 
 \item{hr.weight}{numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.}
 
+\item{goal}{character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions}
+
 \item{max.levels}{integer. The maximum number of levels in the tree(s)}
 
-\item{stopping.rule}{character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.}
+\item{stopping.rule}{character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.}
 
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
 

@@ -4,24 +4,23 @@
 \alias{cuerank}
 \title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
 \usage{
-cuerank(formula = NULL, data = NULL, tree.criterion = "v",
-  numthresh.method = "o", rounding = NULL, verbose = F,
-  cue.rules = NULL)
+cuerank(formula = NULL, data = NULL, goal = "v", numthresh.method = "o",
+  rounding = NULL, verbose = F, cue.rules = NULL)
 }
 \arguments{
-\item{formula}{A formula specifying a binary criterion as a function of multiple variables}
+\item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
 
-\item{data}{A dataframe containing variables in formula}
+\item{data}{dataframe. A dataframe containing variables in formula}
 
-\item{tree.criterion}{A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.}
+\item{goal}{character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions}
 
-\item{numthresh.method}{A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
+\item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
 
-\item{rounding}{An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
+\item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 
-\item{verbose}{A logical value indicating whether or not to print ongoing diagnostics}
+\item{verbose}{logical. A logical value indicating whether or not to print ongoing diagnostics}
 
-\item{cue.rules}{An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"}
+\item{cue.rules}{dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"}
 }
 \value{
 A dataframe containing best thresholds and marginal classification statistics for each cue

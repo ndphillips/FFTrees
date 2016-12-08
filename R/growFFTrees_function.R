@@ -3,8 +3,9 @@
 #' @param data dataframe. A dataset
 #' @param max.levels integer. The maximum number of levels in the tree(s)
 #' @param rank.method character. A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
+#' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.
-#' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the tree.criterion statistic is less than a specified level.
+#' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param verbose logical.  Should tree growing progress be displayed?
 #' @param ... Currently ignored
@@ -38,17 +39,28 @@ grow.FFTrees <- function(formula,
                          data,
                          rank.method = "m",
                          hr.weight = .5,
+                         goal = "v",
                          max.levels = 4,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
-                         verbose = F,
+                         verbose = FALSE,
                          ...
 ) {
+
+  # formula <- diagnosis ~.
+  # data = heartdisease
+  # rank.method = "m"
+  # hr.weight = .5
+  # goal = "correct"
+  # max.levels = 4
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # verbose = F
+
 
 # Some global variables which could be changed later.
 repeat.cues <- TRUE
 numthresh.method <- "o"
-tree.criterion <- "v"
 exit.method <- "fixed"
 correction <- .25
 rounding <- 2
@@ -76,7 +88,7 @@ n.cues <- ncol(cue.df)
 
 cue.accuracies <- cuerank(formula = formula,
                           data = data,
-                          tree.criterion = tree.criterion,
+                          goal = goal,
                           numthresh.method = numthresh.method,
                           rounding = rounding,
                           verbose = verbose)
@@ -202,7 +214,7 @@ data.r <- data.r[, c(crit.name, remaining.cues)]
 # Calculate new cue accuracies
 cue.accuracies.current <-  cuerank(formula = formula,
                                    data = data.r,
-                                   tree.criterion = tree.criterion,
+                                   goal = goal,
                                    numthresh.method = numthresh.method,
                                    rounding = rounding)
 
@@ -212,18 +224,26 @@ cue.accuracies.current <-  cuerank(formula = formula,
 
 hr.vec <- cue.accuracies.current$hr
 far.vec <- cue.accuracies.current$far
+cor.vec <- cue.accuracies.current$cor
 
-if(tree.criterion == "v") {
+
+if(goal == "v") {
 
   weighted.v.vec <- hr.vec * hr.weight - far.vec * (1 - hr.weight)
   best.cue.index <- which(weighted.v.vec == max(weighted.v.vec))
 
 }
 
-if(substr(tree.criterion, 1, 1) == "d") {
+if(substr(goal, 1, 1) == "d") {
 
   weighted.d.vec <- qnorm(hr.vec) * hr.weight - qnorm(far.vec) * (1 - hr.weight)
   best.cue.index <- which(weighted.d.vec == max(weighted.d.vec))
+
+}
+
+if(substr(goal, 1, 1) == "c") {
+
+  best.cue.index <- which(cor.vec == max(cor.vec))
 
 }
 

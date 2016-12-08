@@ -8,7 +8,8 @@
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take longer and may be prone to overfitting.
-#' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees.
+#' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
+#' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
@@ -53,6 +54,7 @@ FFTrees <- function(formula = NULL,
                     data.test = NULL,
                     train.p = 1,
                     rank.method = "m",
+                    goal = "v",
                     hr.weight = .5,
                     max.levels = 4,
                     tree.definitions = NULL,
@@ -64,13 +66,13 @@ FFTrees <- function(formula = NULL,
                     object = NULL
 ) {
 #
-  # formula = criterion ~.
-  # data = automobile
+  # formula = diagnosis ~.
+  # data = heartdisease
   # data.test = NULL
   # max.levels = 5
-  # ntree = 10
   # train.p = .1
   # rank.method = "m"
+  # goal = "v"
   # hr.weight = .5
   # verbose = TRUE
   # cpus = 1
@@ -93,7 +95,6 @@ FFTrees <- function(formula = NULL,
 # Set some global parameters
 
 repeat.cues <- TRUE
-tree.criterion <- "v"
 stopping.rule <- "exemplars"
 stopping.par <- .1
 correction <- .25
@@ -400,7 +401,7 @@ if(is.null(object)) {
 
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
-                                tree.criterion = tree.criterion,
+                                goal = goal,
                                 rounding = rounding,
                                 verbose = verbose
 )
@@ -419,7 +420,7 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
-                                tree.criterion = tree.criterion,
+                                goal = goal,
                                 rounding = rounding,
                                 verbose = verbose,
                                 cue.rules = cue.accuracies.train
@@ -451,6 +452,7 @@ if(is.null(object) & is.null(tree.definitions)) {
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
                             rank.method = rank.method,
+                            goal = goal,
                             repeat.cues = repeat.cues,
                             stopping.rule = stopping.rule,
                             stopping.par = stopping.par,
@@ -481,7 +483,7 @@ levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 
 tree.auc.train <- FFTrees::auc(hr.v = train.results$treestats$hr,
-                      far.v = train.results$treestats$far)
+                               far.v = train.results$treestats$far)
 }
 
 if(is.null(data.train) == TRUE) {
@@ -545,7 +547,7 @@ if(do.lr) {
 lr.acc <- comp.pred(formula = formula,
                      data.train = data.train,
                      data.test = data.test,
-                    algorithm = "lr")
+                     algorithm = "lr")
 
 lr.stats <- lr.acc$accuracy
 lr.auc <- lr.acc$auc
@@ -666,6 +668,7 @@ output.fft <- list("formula" = formula,
                   "level.stats" = levelstats,
                   "decision" = decision,
                   "levelout" = levelout,
+                  "params" = list("rank.method" = rank.method, "goal" = goal),
                   "auc" = auc,
                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),

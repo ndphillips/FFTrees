@@ -1,12 +1,12 @@
 #' Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.
 #'
-#' @param formula A formula specifying a binary criterion as a function of multiple variables
-#' @param data A dataframe containing variables in formula
-#' @param tree.criterion A string indicating how to rank cues. "v" = HR - FAR, "d" = d-prime.
-#' @param numthresh.method A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
-#' @param rounding An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
-#' @param verbose A logical value indicating whether or not to print ongoing diagnostics
-#' @param cue.rules An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
+#' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
+#' @param data dataframe. A dataframe containing variables in formula
+#' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
+#' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.
+#' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
+#' @param verbose logical. A logical value indicating whether or not to print ongoing diagnostics
+#' @param cue.rules dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
 #' @importFrom stats median
 #' @return A dataframe containing best thresholds and marginal classification statistics for each cue
 #' @export
@@ -21,7 +21,7 @@
 
 cuerank <- function(formula = NULL,
                     data = NULL,
-                    tree.criterion = "v",
+                    goal = "v",
                     numthresh.method = "o",
                     rounding = NULL,
                     verbose = F,
@@ -30,12 +30,20 @@ cuerank <- function(formula = NULL,
 ) {
 
 
+  # formula = formula
+  # data = data
+  # goal = criterion
+  # numthresh.method = numthresh.method
+  # rounding = rounding
+  # verbose = verbose
+  # cue.rules = NULL
+
 # TESTING GROUNDS
 # -----
 #
 # formula <- diagnosis ~.
 # data = heartdisease
-# tree.criterion = "v"
+# goal = "v"
 # numthresh.method = "o"
 # rounding = NULL
 # verbose = F
@@ -63,11 +71,17 @@ correction <- .25
 max.numcat <- 20        # Maximum number of numeric thresholds to consider
 n.cues <- ncol(cue.df)
 
+
+# Adjust inputs
+if(substr(goal, 1, 1) == "c") {goal <- "cor"}
+if(substr(goal, 1, 1) == "v") {goal <- "v"}
+if(substr(goal, 1, 1) == "d") {goal <- "dprime"}
+
 # CHECK cue.rules
 
-if(is.null(cue.rules) == F) {
+if(is.null(cue.rules) == FALSE) {
 
-if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == F) {
+if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == FALSE) {
 
   stop("You specified a cue.rules object but the object does not contain critical columns. Look at the descriptions for cue.rules and try again")
 
@@ -202,7 +216,7 @@ for(cue.i in 1:n.cues) {
 
 
         # Rank cues
-        cue.stats.o <- cue.stats.o[order(cue.stats.o[tree.criterion], decreasing = T),]
+        cue.stats.o <- cue.stats.o[order(cue.stats.o[goal], decreasing = TRUE),]
         cue.stats.o$rank <- 1:nrow(cue.stats.o)
 
       }
@@ -229,8 +243,8 @@ for(cue.i in 1:n.cues) {
 
         joint.cue.vec <- cue.v %in% levels.i
 
-        if(direction.i == "=") {pred.vec <- joint.cue.vec == T}
-        if(direction.i == "!=") {pred.vec <- joint.cue.vec == F}
+        if(direction.i == "=") {pred.vec <- joint.cue.vec == TRUE}
+        if(direction.i == "!=") {pred.vec <- joint.cue.vec == FALSE}
 
 
         classtable.temp <- classtable(prediction.v = pred.vec,
@@ -313,13 +327,13 @@ for(cue.i in 1:n.cues) {
 
       # Determine best direction for level.i
 
-      best.acc <- max(direction.accuracy.df[tree.criterion], na.rm = T)
-      best.acc.index <- which(direction.accuracy.df[tree.criterion] == best.acc)
+
+      best.acc <- max(direction.accuracy.df[goal], na.rm = TRUE)
+      best.acc.index <- which(direction.accuracy.df[goal] == best.acc)
 
       if(length(best.acc.index) > 1) {best.acc.index <- sample(best.acc.index, size = 1)}
 
       best.level.stats <- direction.accuracy.df[best.acc.index,]
-
 
       cue.stats[cue.levels == level.i, names(best.level.stats)] <- best.level.stats
 
@@ -327,7 +341,7 @@ for(cue.i in 1:n.cues) {
 
   }
 
-  if((class %in% c("factor", "character", "logical", "numeric", "integer")) == F) {
+  if((class %in% c("factor", "character", "logical", "numeric", "integer")) == FALSE) {
 
     direction.i <- NA
     v.i <-  NA
@@ -344,7 +358,7 @@ for(cue.i in 1:n.cues) {
 
   # Get best threshold
 
-  best.result.index <- which(cue.stats[tree.criterion] == max(cue.stats[tree.criterion]))
+  best.result.index <- which(cue.stats[goal] == max(cue.stats[goal]))
 
   if(length(best.result.index) > 1) {
 
