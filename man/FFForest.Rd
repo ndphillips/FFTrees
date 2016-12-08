@@ -5,9 +5,9 @@
 \title{Creates a forest of fast and frugal decision trees}
 \usage{
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
-  ntree = 10, train.p = 0.5, rank.method = "m", hr.weight = 0.5,
-  verbose = TRUE, cpus = 1, do.lr = TRUE, do.cart = TRUE,
-  do.rf = TRUE, do.svm = TRUE)
+  ntree = 10, train.p = 0.5, rank.method = "m", goal = "v",
+  hr.weight = 0.5, verbose = TRUE, cpus = 1, do.lr = TRUE,
+  do.cart = TRUE, do.rf = TRUE, do.svm = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -23,6 +23,8 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 \item{train.p}{numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.}
 
 \item{rank.method}{string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.}
+
+\item{goal}{character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions}
 
 \item{hr.weight}{numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)}
 
