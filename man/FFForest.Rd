@@ -30,7 +30,7 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{verbose}{logical. Should progress reports be printed?}
 
-\item{cpus}{integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)}
+\item{cpus}{integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.}
 
 \item{do.lr, do.cart, do.rf, do.svm}{logical. Should regression, cart, random forests and/or support vector machines be calculated for comparison?}
 }

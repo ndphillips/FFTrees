@@ -12,7 +12,7 @@
 #' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
-#' @param cpus integer. Number of cpus to use (any value larger than 1 will initiate parallel calculations in snowfall)
+#' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.lr,do.cart,do.rf,do.svm logical. Should regression, cart, random forests and/or support vector machines be calculated for comparison?
 #' @importFrom stats  formula
 #' @return An object of class \code{FFForest} with the following elements...

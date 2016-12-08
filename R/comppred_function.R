@@ -45,6 +45,7 @@ comp.pred <- function(formula,
                      algorithm = NULL) {
 
 
+
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'lr', 'cart', 'svm', 'rf'")}
 
@@ -134,19 +135,28 @@ comp.pred <- function(formula,
     x.train <- suppressWarnings(as.matrix(data.frame(data.train[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
 
     # Create new LR model
-    train.mod <-  suppressWarnings(glmnet::cv.glmnet(x.train,
+    train.mod <- try(train.mod <-  suppressWarnings(glmnet::cv.glmnet(x.train,
                                                         y = as.factor(data.train[,1]),
                                                         family = "binomial"
-    ))
+    )), silent = TRUE)
 
+
+    if(class(train.mod) == "try.error") {
+
+      pred.train <- NULL
+
+      }
+
+    if(class(train.mod) == "cv.glmnet") {
 
     pred.train <- round(as.vector(predict(train.mod,
                                           x.train,
                                           type = "response",
                                           a = train.mod$lambda.min)), 0)
 
+   }
 
-    if(is.null(data.test) == FALSE) {
+    if(is.null(data.test) == FALSE & class(train.mod) == "cv.glmnet") {
 
       # Set up training data with factor matrix
 
@@ -222,6 +232,8 @@ comp.pred <- function(formula,
 
   # Convert predictions to logical if necessary
 
+  if(is.null(pred.train) == FALSE) {
+
   if("TRUE" %in% paste(pred.train)) {pred.train <- as.logical(paste(pred.train))}
   if("1" %in% paste(pred.train)) {pred.train <- as.logical(as.numeric(paste(pred.train)))}
 
@@ -233,7 +245,16 @@ comp.pred <- function(formula,
     acc.train <- classtable(prediction.v = pred.train,
                            criterion.v = crit.train)
 
-  if(is.null(data.test) == FALSE) {
+  }
+
+  if(is.null(pred.train)) {
+
+    acc.train <- classtable(c(1, 1, 0), c(0, 0, 1))
+    acc.train[1,] <- NA
+
+  }
+
+  if(is.null(data.test) == FALSE & is.null(pred.test) == FALSE) {
 
     acc.test <- classtable(prediction.v = pred.test,
                            criterion.v = crit.test)
