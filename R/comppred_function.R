@@ -45,7 +45,6 @@ comp.pred <- function(formula,
                      algorithm = NULL) {
 
 
-
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'lr', 'cart', 'svm', 'rf'")}
 
@@ -73,6 +72,11 @@ comp.pred <- function(formula,
 
   # Remove columns with no variance in training data
 
+  if(length(unique(data.all[train.cases,1])) == 1) {do.test <- FALSE} else {do.test <- TRUE}
+  }
+  
+  if(do.test) {
+  
   ok.cols <- sapply(1:ncol(data.all), FUN = function(x) {length(unique(data.all[train.cases,x])) > 1})
   data.all <- data.all[,ok.cols]
 
@@ -98,7 +102,7 @@ comp.pred <- function(formula,
     crit.test <- data.all[test.cases,1]
 
   }
-  }
+  
 
   # Get pred.train, pred.test from each model
 
@@ -141,7 +145,7 @@ comp.pred <- function(formula,
     )), silent = TRUE)
 
 
-    if(class(train.mod) == "try.error") {
+    if(class(train.mod) == "try-error") {
 
       pred.train <- NULL
 
@@ -158,7 +162,7 @@ comp.pred <- function(formula,
 
     if(is.null(data.test) == FALSE & class(train.mod) == "cv.glmnet") {
 
-      # Set up training data with factor matrix
+      # Set up test data with factor matrix
 
       col.classes <- sapply(1:ncol(data.test), FUN = function(x) {class(data.test[,x])})
       fact.names <- names(data.test)[col.classes == "factor"]
@@ -229,7 +233,8 @@ comp.pred <- function(formula,
     } else {pred.test <- NULL}
 
   }
-
+}
+  
   # Convert predictions to logical if necessary
 
   if(is.null(pred.train) == FALSE) {
@@ -254,7 +259,7 @@ comp.pred <- function(formula,
 
   }
 
-  if(is.null(data.test) == FALSE & is.null(pred.test) == FALSE) {
+  if(is.null(pred.train) == FALSE & is.null(pred.test) == FALSE) {
 
     acc.test <- classtable(prediction.v = pred.test,
                            criterion.v = crit.test)
@@ -266,6 +271,16 @@ comp.pred <- function(formula,
 
   }
 
+
+  if(do.test == FALSE) {
+    
+    acc.train <- classtable(c(1, 0, 1), c(0, 1, 1))
+    acc.train[1, ] <- NA
+    
+    acc.test <- classtable(c(1, 0, 1), c(0, 1, 1))
+    acc.test[1, ] <- NA
+  }
+    
   # ORGANIZE
 
   names(acc.train) <- paste(names(acc.train), ".train", sep = "")
@@ -276,7 +291,7 @@ comp.pred <- function(formula,
 
   # CALCULATE AUC
 
-  if(is.null(data.train) == FALSE) {
+  if(is.null(data.train) == FALSE & do.test == TRUE) {
 
     auc.train <- FFTrees::auc(hr.v = acc$hr.train, far.v = acc$far.train)
 
@@ -286,7 +301,7 @@ comp.pred <- function(formula,
 
   }
 
-  if(is.null(data.test) == FALSE) {
+  if(is.null(data.test) == FALSE & do.test == TRUE) {
 
     auc.test <- FFTrees::auc(hr.v = acc$hr.test, far.v = acc$far.test)
 
@@ -299,6 +314,8 @@ comp.pred <- function(formula,
   model.auc <- matrix(c(auc.train, auc.test), nrow = 2, ncol = 1)
   colnames(model.auc) <- algorithm
   rownames(model.auc) <- c("train", "test")
+
+  
 
   output <- list("accuracy" = acc,
                  "auc" = model.auc,
