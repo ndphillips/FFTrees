@@ -44,6 +44,12 @@ comp.pred <- function(formula,
                      data.test = NULL,
                      algorithm = NULL) {
 
+  # train.p <- .05
+  # formula = criterion ~.
+  # audiology <- audiology[sample(nrow(audiology)),]
+  # data.train <- audiology[1:floor(train.p * nrow(audiology)),]
+  # data.test <- audiology[(floor(train.p * nrow(audiology)) + 1):nrow(audiology),]
+  # algorithm <- "rf"
 
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'lr', 'cart', 'svm', 'rf'")}
@@ -316,7 +322,7 @@ comp.pred <- function(formula,
   rownames(model.auc) <- c("train", "test")
 
   
-
+acc
   output <- list("accuracy" = acc,
                  "auc" = model.auc,
                  "model" = train.mod,
