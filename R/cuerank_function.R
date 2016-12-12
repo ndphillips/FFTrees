@@ -110,18 +110,13 @@ for(cue.i in 1:n.cues) {
     if(numthresh.method == "o" & is.null(cue.rules)) {
 
       cue.levels <- sort(unique(unlist(cue.v)))
-
       if(length(cue.levels) > max.numcat) {
 
-        cue.levels <- seq(min(cue.v), max(cue.v), length.out = max.numcat)
-
-      if(setequal(cue.v, round(cue.v, 0))) {
-
-        cue.levels <- unique(round(cue.levels, 0))
+        indicies <- round(seq(1, length(cue.levels), length.out = max.numcat), 0)
+        cue.levels <- cue.levels[indicies]
 
       }
 
-        }
 
     }
 
@@ -137,7 +132,6 @@ for(cue.i in 1:n.cues) {
 
     }
 
-
     if(!is.null(rounding)) {cue.levels <- round(cue.levels, digits = rounding)}
 
     cue.levels <- cue.levels[duplicated(cue.levels) == FALSE]
@@ -152,7 +146,7 @@ for(cue.i in 1:n.cues) {
 
     }
 
-    if(is.null(cue.rules) == F) {
+    if(is.null(cue.rules) == FALSE) {
 
       cue.levels <- cue.rules$threshold[cue.rules$cue == cue]
 
@@ -214,7 +208,6 @@ for(cue.i in 1:n.cues) {
 
         }
 
-
         # Rank cues
         cue.stats.o <- cue.stats.o[order(cue.stats.o[goal], decreasing = TRUE),]
         cue.stats.o$rank <- 1:nrow(cue.stats.o)
@@ -272,7 +265,7 @@ for(cue.i in 1:n.cues) {
 
     if(is.null(cue.rules)) {
 
-    direction.vec <- c("<", "<=", ">", ">=")
+    direction.vec <- c("<", ">")
 
     }
 
@@ -327,7 +320,6 @@ for(cue.i in 1:n.cues) {
 
       # Determine best direction for level.i
 
-
       best.acc <- max(direction.accuracy.df[goal], na.rm = TRUE)
       best.acc.index <- which(direction.accuracy.df[goal] == best.acc)
 
@@ -370,6 +362,7 @@ for(cue.i in 1:n.cues) {
 
   if(cue.i == 1) {cuerank.df <- best.result}
   if(cue.i > 1) {cuerank.df <- rbind(cuerank.df, best.result)}
+
 }
 
 rownames(cuerank.df) <- sapply(cuerank.df$cue, FUN = function(x) {which(names(data) == x)})
