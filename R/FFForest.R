@@ -209,6 +209,9 @@ simulations$hr.train <- sapply(1:length(result.ls),
 simulations$far.train <- sapply(1:length(result.ls),
                                  FUN = function(x) {result.ls[[x]]$trees$train$far[best.tree.v[x]]})
 
+simulations$cor.train <- sapply(1:length(result.ls),
+                              FUN = function(x) {result.ls[[x]]$trees$train$cor[best.tree.v[x]]})
+
 simulations$v.train <- sapply(1:length(result.ls),
                               FUN = function(x) {result.ls[[x]]$trees$train$v[best.tree.v[x]]})
 
@@ -220,6 +223,9 @@ simulations$hr.test <- sapply(1:length(result.ls),
 
 simulations$far.test <- sapply(1:length(result.ls),
                                 FUN = function(x) {result.ls[[x]]$trees$test$far[best.tree.v[x]]})
+
+simulations$cor.test <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$test$cor[best.tree.v[x]]})
 
 simulations$v.test <- sapply(1:length(result.ls),
                              FUN = function(x) {result.ls[[x]]$trees$test$v[best.tree.v[x]]})
