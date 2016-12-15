@@ -1168,17 +1168,22 @@ lloc <- data.frame(
 
 # Row titles
 
-  text(x = final.classtable.x.loc[1] - .02,
+  text(x = final.classtable.x.loc[1] - .03,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[1], srt = 90)
+       decision.names[1])
 
-  text(x = final.classtable.x.loc[1] - .02,
+  text(x = final.classtable.x.loc[1] - .03,
        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[2], srt = 90)
+       decision.names[2])
 
-  text(x = final.classtable.x.loc[1] - .05,
+
+  text(x = final.classtable.x.loc[1] - .065,
        y = mean(final.classtable.y.loc), cex = header.cex,
-       "Decision", srt = 90, pos = 3)
+       "Decision")
+
+  # text(x = final.classtable.x.loc[1] - .05,
+  #      y = mean(final.classtable.y.loc), cex = header.cex,
+  #      "Decision", srt = 90, pos = 3)
 
   # Add final frequencies
 
@@ -1276,11 +1281,18 @@ value.name <- lloc$value.name[lloc$element == name]
 
 level.col.fun <- function(x) {gray(.7)}
 
-text.outline(x = rect.center.x,
+
+
+text(x = rect.center.x,
              y = header.y.loc,
              labels = long.name,
-             pos = 1, cex = header.cex, r = .02
-)
+             pos = 1, cex = header.cex)
+#
+# text.outline(x = rect.center.x,
+#              y = header.y.loc,
+#              labels = long.name,
+#              pos = 1, cex = header.cex, r = .02
+# )
 
 value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect.height
 
