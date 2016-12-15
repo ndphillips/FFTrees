@@ -1168,13 +1168,13 @@ lloc <- data.frame(
 
 # Row titles
 
-  text(x = final.classtable.x.loc[1] - .03,
+  text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[1])
+       decision.names[1], adj = 1)
 
-  text(x = final.classtable.x.loc[1] - .03,
+  text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[2])
+       decision.names[2], adj = 1)
 
 
   text(x = final.classtable.x.loc[1] - .065,
