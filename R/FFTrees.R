@@ -67,32 +67,24 @@ FFTrees <- function(formula = NULL,
                     object = NULL
 ) {
 #
-  # formula = formula
-  # data = data
-  # train.p = train.p.i
-  # rank.method = rank.method
-  # goal = goal
-  # data.test = NULL
-  # max.levels = 5
-  # rank.method = "m"
-  # hr.weight = .5
-  # verbose = TRUE
-  # cpus = 1
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # rank.method = "m"
-  # hr.weight = .5
-  # max.levels = 4
-  # tree.definitions = NULL
-  # verbose = FALSE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # object = NULL
 
+# #
+#   formula = poisonous ~.
+#   data = mushrooms.train
+#   data.test = mushrooms.test
+# #
+#   train.p = 1
+#   rank.method = "m"
+#   goal = "v"
+#   hr.weight = .5
+#   max.levels = 4
+#   tree.definitions = NULL
+#   verbose = FALSE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   object = NULL
 
 # Set some global parameters
 

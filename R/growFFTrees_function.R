@@ -114,7 +114,7 @@ if(max.levels > 1) {
 
   tree.dm <- expand.grid(
   expand.ls,
-  stringsAsFactors = F)
+  stringsAsFactors = FALSE)
 
 }
 
@@ -442,6 +442,9 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
 
   trees <- as.data.frame(matrix(NA, nrow = n.trees, ncol = 7))
   names(trees) <- c("tree", "cues", "nodes", "classes", "exits", "thresholds", "directions")
+
+  level.stats.df$class <- substr(level.stats.df$class, 1, 1)
+
 
   for(i in 1:n.trees) {
 

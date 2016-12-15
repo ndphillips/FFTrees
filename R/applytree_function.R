@@ -69,7 +69,7 @@ apply.tree <- function(data,
 
       if(is.character(threshold.i)) {threshold.i <- unlist(strsplit(threshold.i, ","))}
 
-      if(class.i %in% c("numeric", "integer")) {threshold.i <- as.numeric(threshold.i)}
+      if(substr(class.i, 1, 1) %in% c("n", "i")) {threshold.i <- as.numeric(threshold.i)}
 
       if(direction.i == "!=") {current.decisions <- (cue.values %in% threshold.i) == FALSE}
       if(direction.i == "=") {current.decisions <- cue.values %in% threshold.i}

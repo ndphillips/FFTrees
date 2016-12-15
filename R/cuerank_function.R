@@ -105,7 +105,7 @@ for(cue.i in 1:n.cues) {
 
   # Step 0B: Determine cue levels
 
-  if(class %in% c("numeric", "integer")) {
+  if(substr(class, 1, 1) %in% c("n", "i")) {
 
     if(numthresh.method == "o" & is.null(cue.rules)) {
 
@@ -138,7 +138,7 @@ for(cue.i in 1:n.cues) {
 
   }
 
-  if((class %in% c("numeric", "integer")) == FALSE) {
+  if((substr(class, 1, 1) %in% c("n", "i")) == FALSE) {
 
     if(is.null(cue.rules)) {
 
@@ -161,7 +161,7 @@ for(cue.i in 1:n.cues) {
 
   # FACTORS
 
-  if(class %in% c("factor", "character", "logical")) {
+  if(substr(class, 1, 1) %in% c("f", "c", "l")) {
 
     if(is.null(cue.rules)) {
 
@@ -261,7 +261,7 @@ for(cue.i in 1:n.cues) {
 
   # NUMERIC
 
-  if(class %in% c("numeric", "integer")) {
+  if(substr(class, 1, 1) %in% c("n", "i")) {
 
     if(is.null(cue.rules)) {
 
@@ -333,7 +333,7 @@ for(cue.i in 1:n.cues) {
 
   }
 
-  if((class %in% c("factor", "character", "logical", "numeric", "integer")) == FALSE) {
+  if((substr(class, 1, 1) %in% c("f", "c", "l", "n", "i")) == FALSE) {
 
     direction.i <- NA
     v.i <-  NA
