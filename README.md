@@ -25,6 +25,8 @@ plot(titanic.fft,
 
 1.1.9
 
+- The `rank.method` argument is now depricated. Use `algorithm` instead.
+
 - Added `stats` argument to `plot.FFTrees()`. When `stats = FALSE`, only the tree will be plotted without reference to any statistical output.
 
 - Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp.pred()` wrapper function.

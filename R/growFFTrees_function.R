@@ -2,12 +2,13 @@
 #' @param formula formula. A formula
 #' @param data dataframe. A dataset
 #' @param max.levels integer. The maximum number of levels in the tree(s)
-#' @param rank.method character. A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
+#' @param algorithm character. A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param verbose logical.  Should tree growing progress be displayed?
+#' @param rank.method depricated arguments
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula
 #' @return A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
@@ -37,19 +38,20 @@
 #'
 grow.FFTrees <- function(formula,
                          data,
-                         rank.method = "m",
+                         algorithm = "m",
                          hr.weight = .5,
                          goal = "v",
                          max.levels = 4,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
                          verbose = FALSE,
+                         rank.method = NULL,
                          ...
 ) {
 
   # formula <- diagnosis ~.
   # data = heartdisease
-  # rank.method = "m"
+  # algorithm = "m"
   # hr.weight = .5
   # goal = "correct"
   # max.levels = 4
@@ -57,6 +59,15 @@ grow.FFTrees <- function(formula,
   # stopping.par = .1
   # verbose = F
 
+
+
+if(is.null(rank.method) == FALSE) {
+
+  warning("The argument rank.method is depricated. Use algorithm instead.")
+
+  algorithm <- rank.method
+
+}
 
 # Some global variables which could be changed later.
 repeat.cues <- TRUE
@@ -192,13 +203,13 @@ remaining.exemplars <- is.na(decision.v)
 
 # Step 1) Determine cue for current level
 
-if(rank.method == "m") {
+if(algorithm == "m") {
 
 cue.accuracies.current <- cue.accuracies.original[(cue.accuracies.original$cue %in% level.stats$cue) == FALSE,]
 
 }
 
-if(rank.method == "c") {
+if(algorithm == "c") {
 
 data.r <- data[remaining.exemplars, ]
 

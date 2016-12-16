@@ -7,13 +7,14 @@
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
-#' @param rank.method character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
+#' @param algorithm character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
 #' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
+#' @param rank.method depricated arguments.
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return An \code{FFTrees} object with the following elements
 #'
@@ -26,7 +27,7 @@
 #'   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
 #'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
 #'   \item{auc}{Area under the curve statistics}
-#'   \item{params}{A list of control parameters (e.g.; \code{rank.method}, \code{goal})}
+#'   \item{params}{A list of control parameters (e.g.; \code{algorithm}, \code{goal})}
 #'   \item{comp}{Logistic regression, CART, and random forest models and classification statistics trained on the same data as the fast and frugal trees.}
 #'   }
 #'
@@ -54,7 +55,7 @@ FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
                     train.p = 1,
-                    rank.method = "m",
+                    algorithm = "m",
                     goal = "v",
                     hr.weight = .5,
                     max.levels = 4,
@@ -64,7 +65,8 @@ FFTrees <- function(formula = NULL,
                     do.lr = TRUE,
                     do.rf = TRUE,
                     do.svm = TRUE,
-                    object = NULL
+                    object = NULL,
+                    rank.method = NULL
 ) {
 #
 
@@ -74,7 +76,7 @@ FFTrees <- function(formula = NULL,
 #   data.test = mushrooms.test
 # #
 #   train.p = 1
-#   rank.method = "m"
+#   algorithm = "m"
 #   goal = "v"
 #   hr.weight = .5
 #   max.levels = 4
@@ -85,6 +87,16 @@ FFTrees <- function(formula = NULL,
 #   do.rf = TRUE
 #   do.svm = TRUE
 #   object = NULL
+
+
+
+if(is.null(rank.method) == FALSE) {
+
+  warning("The argument rank.method is depricated. Use algorithm instead.")
+
+  algorithm <- rank.method
+
+}
 
 # Set some global parameters
 
@@ -445,7 +457,7 @@ if(is.null(object) & is.null(tree.definitions)) {
 
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
-                            rank.method = rank.method,
+                            algorithm = algorithm,
                             goal = goal,
                             repeat.cues = repeat.cues,
                             stopping.rule = stopping.rule,
@@ -663,7 +675,7 @@ output.fft <- list("formula" = formula,
                   "decision" = decision,
                   "levelout" = levelout,
                   "auc" = auc,
-                  "params" = list("rank.method" = rank.method, "goal" = goal, "hr.weight" = hr.weight, "max.levels" = max.levels),
+                  "params" = list("algorithm" = algorithm, "goal" = goal, "hr.weight" = hr.weight, "max.levels" = max.levels),
                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),

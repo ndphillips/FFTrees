@@ -8,12 +8,13 @@
 #' @param max.levels integer. Maximum number of levels considered for the trees.
 #' @param ntree integer. Number of trees to create.
 #' @param train.p numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.
-#' @param rank.method string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
+#' @param algorithm string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
 #' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.lr,do.cart,do.rf,do.svm logical. Should regression, cart, random forests and/or support vector machines be calculated for comparison?
+#' @param rank.method depricated arguments
 #' @importFrom stats  formula
 #' @return An object of class \code{FFForest} with the following elements...
 #' @export
@@ -32,7 +33,7 @@ FFForest <- function(formula = NULL,
                      max.levels = 5,
                      ntree = 10,
                      train.p = .5,
-                     rank.method = "m",
+                     algorithm = "m",
                      goal = "v",
                      hr.weight = .5,
                      verbose = TRUE,
@@ -40,7 +41,8 @@ FFForest <- function(formula = NULL,
                      do.lr = TRUE,
                      do.cart = TRUE,
                      do.rf = TRUE,
-                     do.svm = TRUE
+                     do.svm = TRUE,
+                     rank.method = NULL
 ) {
 #
 #
@@ -51,7 +53,7 @@ FFForest <- function(formula = NULL,
   # max.levels = 5
   # ntree = 10
   # train.p = .1
-  # rank.method = "m"
+  # algorithm = "m"
   # hr.weight = .5
   # verbose = TRUE
   # cpus = 1
@@ -59,6 +61,17 @@ FFForest <- function(formula = NULL,
   # do.cart = TRUE
   # do.rf = TRUE
   # do.svm = TRUE
+
+# Check for depricated arguments
+
+if(is.null(rank.method) == FALSE) {
+
+  warning("The argument rank.method is depricated. Use algorithm instead.")
+
+  algorithm <- rank.method
+
+}
+
 
 data.mf <- model.frame(formula = formula,
                        data = data)
@@ -87,7 +100,7 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               object = NULL,
                               train.p = train.p,
                               max.levels = max.levels,
-                              rank.method = rank.method,
+                              algorithm = algorithm,
                               goal = goal,
                               hr.weight = hr.weight,
                               do.cart = do.cart,
@@ -158,7 +171,7 @@ if(cpus > 1) {
   snowfall::sfExport("do.cart")
   snowfall::sfExport("do.svm")
   snowfall::sfExport("max.levels")
-  snowfall::sfExport("rank.method")
+  snowfall::sfExport("algorithm")
   snowfall::sfExport("hr.weight")
 
   result.ls <- snowfall::sfClusterApplySR(1:nrow(simulations), fun = getsim.fun, perUpdate = 1)
