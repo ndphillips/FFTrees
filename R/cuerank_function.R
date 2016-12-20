@@ -7,7 +7,7 @@
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param verbose logical. A logical value indicating whether or not to print ongoing diagnostics
 #' @param cue.rules dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
-#' @importFrom stats median
+#' @importFrom stats median var
 #' @return A dataframe containing best thresholds and marginal classification statistics for each cue
 #' @export
 #' @examples
@@ -29,14 +29,6 @@ cuerank <- function(formula = NULL,
 
 ) {
 
-
-  # formula = formula
-  # data = data
-  # goal = criterion
-  # numthresh.method = numthresh.method
-  # rounding = rounding
-  # verbose = verbose
-  # cue.rules = NULL
 
 # TESTING GROUNDS
 # -----
@@ -63,6 +55,16 @@ if(class(cue.df) != "data.frame") {
   names(cue.df) <- names(data.mf)[2]
 
 }
+
+# Make sure there is variance in the criterion!
+
+if(var(criterion.v) == 0) {
+
+  stop("There is no variance in the criterion!")
+
+}
+
+if(var(criterion.v) > 0) {
 
 
 # GLOBAL VARIABLES (could be updated later)
@@ -368,5 +370,6 @@ for(cue.i in 1:n.cues) {
 rownames(cuerank.df) <- sapply(cuerank.df$cue, FUN = function(x) {which(names(data) == x)})
 
 return(cuerank.df)
+}
 
 }

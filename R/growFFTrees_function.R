@@ -10,7 +10,7 @@
 #' @param verbose logical. Should tree growing progress be displayed?
 #' @param rank.method depricated arguments
 #' @param ... Currently ignored
-#' @importFrom stats anova predict glm as.formula
+#' @importFrom stats anova predict glm as.formula var
 #' @return A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
 #' @export
 #' @examples
@@ -49,15 +49,15 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 
-  # formula <- diagnosis ~.
-  # data = heartdisease
-  # algorithm = "m"
-  # hr.weight = .5
-  # goal = "correct"
-  # max.levels = 4
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # verbose = F
+  # formula = formula
+  # data = data.train
+  # algorithm = algorithm
+  # goal = goal
+  # repeat.cues = repeat.cues
+  # stopping.rule = stopping.rule
+  # stopping.par = stopping.par
+  # max.levels = max.levels
+  # hr.weight = hr.weight
 
 
 
@@ -201,6 +201,7 @@ current.level <- current.level + 1
 current.exit <- level.exits.v.i[current.level]
 remaining.exemplars <- is.na(decision.v)
 
+
 # Step 1) Determine cue for current level
 
 if(algorithm == "m") {
@@ -221,6 +222,9 @@ remaining.cues <- names(cue.df)[remaining.cues.index]
 data.r <- data.r[, c(crit.name, remaining.cues)]
 
 }
+
+# If there is no variance in the criterion, then stop growth!
+if(var(data.r[,1]) == 0) {grow.tree <- FALSE ; break}
 
 # Calculate new cue accuracies
 cue.accuracies.current <-  cuerank(formula = formula,
@@ -298,7 +302,7 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
 asif.stats[current.level, c("hr", "far", "v")] <-  asif.classtable[1, c("hr", "far", "v")]
 
 # If ASIF classification is perfect, then stop!
-if(asif.stats$v[current.level] == 1) {break}
+if(asif.stats$v[current.level] == 1) {grow.tree <- FALSE}
 
 if(current.level == 1) {
 
@@ -365,12 +369,15 @@ n.remaining <- sum(remaining.exemplars)
 if(n.remaining > 0 & current.level != n.cues & exit.method == "fixed") {
 
   if(current.level < n.levels) {grow.tree <- TRUE}
-  if(current.level == n.levels) {grow.tree <- FALSE}
+  if(current.level == n.levels) {grow.tree <- FALSE ; break}
 
 }
 if(n.remaining == 0 | current.level == n.cues) {break}
 if(stopping.rule == "exemplars" & n.remaining < stopping.par * nrow(cue.df)) {break}
 if(stopping.rule == "levels" & current.level == stopping.par) {break}
+
+
+if(algorithm == "c" & sd(criterion.v[remaining.exemplars]) == 0) {break}
 
 # Set up next level stats
 level.stats[current.level + 1,] <- NA

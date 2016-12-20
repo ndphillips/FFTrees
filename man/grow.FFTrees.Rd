@@ -2,7 +2,7 @@
 % Please edit documentation in R/growFFTrees_function.R
 \name{grow.FFTrees}
 \alias{grow.FFTrees}
-\title{Grows fast and frugal trees}
+\title{Grows fast and frugal trees using an algorithm specified by \code{algorithm}.}
 \usage{
 grow.FFTrees(formula, data, algorithm = "m", hr.weight = 0.5, goal = "v",
   max.levels = 4, stopping.rule = "exemplars", stopping.par = 0.1,
@@ -25,7 +25,7 @@ grow.FFTrees(formula, data, algorithm = "m", hr.weight = 0.5, goal = "v",
 
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
 
-\item{verbose}{logical.  Should tree growing progress be displayed?}
+\item{verbose}{logical. Should tree growing progress be displayed?}
 
 \item{rank.method}{depricated arguments}
 
@@ -35,12 +35,12 @@ grow.FFTrees(formula, data, algorithm = "m", hr.weight = 0.5, goal = "v",
 A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
 }
 \description{
-Grows fast and frugal trees
+Grows fast and frugal trees using an algorithm specified by \code{algorithm}.
 }
 \examples{
 
  titanic.trees <- grow.FFTrees(formula = survived ~.,
-                                   data = titanic)
+                               data = titanic)
 
 # Tree definitions are stored in tree.definitions
 

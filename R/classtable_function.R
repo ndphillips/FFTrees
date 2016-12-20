@@ -35,7 +35,6 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   prediction.v <- prediction.v[is.finite(criterion.v)]
   criterion.v <- criterion.v[is.finite(criterion.v)]
 
-
   N <- length(criterion.v)
 
   if(N > 0) {
@@ -46,12 +45,12 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   cr <- sum(prediction.v == 0 & criterion.v == 0, na.rm = TRUE)
 
 
-  if((hi + mi) == 0 | (cr + fa) == 0) {
+  if(hi == 0 | mi == 0 | cr == 0 | fa == 0) {
 
-    hi.c <- hi + correction
-    mi.c <- mi + correction
-    fa.c <- fa + correction
-    cr.c <- cr + correction
+    hi.c <- hi + .5
+    mi.c <- mi + .5
+    fa.c <- fa + .5
+    cr.c <- cr + .5
 
   } else {
 
