@@ -17,7 +17,7 @@ showcues <- function(x = NULL,
                                 "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
                                 "#9A703E7F")) {
 #
-# x <- a
+# x
 #   data = "train"
 #   main = NULL
 #   top = 5
@@ -92,10 +92,10 @@ with(cues.top,
 
 
 # Bottom right label
-location.df <- data.frame(element = c("points", "point.num", "cue.name", "cue.thresh", "hr", "far"),
-                          x.loc = c(.53, .55, .69, .7, .88, .96),
-                          adj = c(.5, 0, 1, 0, .5, .5),
-                          cex = c(1, 1, 1, 1, 1, 1)
+location.df <- data.frame(element = c("points", "point.num", "cue.name", "cue.thresh", "hr", "far", "v"),
+                          x.loc = c(.53, .55, .67, .68, .83, .9, .97),
+                          adj = c(.5, 0, 1, 0, .5, .5, .5),
+                          cex = c(1, 1, 1, 1, 1, 1, 1)
                           )
 
 y.loc <- seq(.05, .4, length.out = top)
@@ -112,9 +112,10 @@ rect(.5, .0, 1.02, .48,
 text(x = c(mean(c(location.df$x.loc[location.df$element == "cue.name"],
            location.df$x.loc[location.df$element == "cue.thresh"])),
            location.df$x.loc[location.df$element == "hr"],
-           location.df$x.loc[location.df$element == "far"]),
+           location.df$x.loc[location.df$element == "far"],
+           location.df$x.loc[location.df$element == "v"]),
      y = header.y,
-     labels = c("Cue", "HR", "FAR"), font = 2, cex = label.cex)
+     labels = c("Cue", "HR", "FAR", "v"), font = 2, cex = label.cex)
 
 # Points
 points(x = rep(subset(location.df, element == "points")$x.loc, top),
@@ -156,12 +157,21 @@ text(x = rep(subset(location.df, element == "hr")$x.loc, top),
      adj = subset(location.df, element == "hr")$adj,
      cex = label.cex)
 
-# HR
+# FAR
 
 text(x = rep(subset(location.df, element == "far")$x.loc, top),
      y = y.loc,
      labels = round(cues.top$far, 2),
      adj = subset(location.df, element == "far")$adj,
      cex = label.cex)
+
+# v
+
+text(x = rep(subset(location.df, element == "v")$x.loc, top),
+     y = y.loc,
+     labels = round(cues.top$v, 2),
+     adj = subset(location.df, element == "v")$adj,
+     cex = label.cex)
+
 
 }

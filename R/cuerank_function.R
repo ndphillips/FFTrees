@@ -33,13 +33,13 @@ cuerank <- function(formula = NULL,
 # TESTING GROUNDS
 # -----
 #
-# formula <- diagnosis ~.
-# data = heartdisease
-# goal = "v"
-# numthresh.method = "o"
-# rounding = NULL
-# verbose = F
-# cue.rules = NULL
+formula <- diagnosis ~.
+data = heartdisease
+goal = "v"
+numthresh.method = "o"
+rounding = NULL
+verbose = F
+cue.rules = NULL
 
 
 # EXTRACT FORMULA VARIABLES
@@ -367,7 +367,7 @@ for(cue.i in 1:n.cues) {
 
 }
 
-rownames(cuerank.df) <- sapply(cuerank.df$cue, FUN = function(x) {which(names(data) == x)})
+rownames(cuerank.df) <- 1:nrow(cuerank.df)
 
 return(cuerank.df)
 }
