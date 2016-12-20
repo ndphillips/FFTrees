@@ -44,23 +44,6 @@ FFForest <- function(formula = NULL,
                      do.svm = TRUE,
                      rank.method = NULL
 ) {
-#
-#
-
-  # formula = criterion ~.
-  # data = arrhythmia
-  # data.test = NULL
-  # max.levels = 5
-  # ntree = 10
-  # train.p = .1
-  # algorithm = "m"
-  # hr.weight = .5
-  # verbose = TRUE
-  # cpus = 1
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
 
 # Check for depricated arguments
 

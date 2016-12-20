@@ -68,30 +68,6 @@ FFTrees <- function(formula = NULL,
                     object = NULL,
                     rank.method = NULL
 ) {
-#
-
-
-  # formula = fds.63.crit ~ .
-  # data = subset(fds.63.data,
-  #               subset = is.finite(fds.63.crit))
-  # algorithm = "c"
-  # max.levels = 4
-  # verbose = T
-  # data.test = NULL
-  # train.p = 1
-  #
-  # goal = "v"
-  # hr.weight = .5
-  #
-  # tree.definitions = NULL
-  # verbose = FALSE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # object = NULL
-  # rank.method = NULL
-
 
 if(is.null(rank.method) == FALSE) {
 
