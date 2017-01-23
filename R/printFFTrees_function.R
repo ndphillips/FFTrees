@@ -104,10 +104,10 @@ if(is.null(test.auc) == F) {
 
 }
 
-accuracy.text <- paste("Best training tree: #", best.train.tree, ", using ", best.train.cues.n, " cues {", best.train.cues, "}", sep = "")
+accuracy.text <- paste("Best training tree: #", best.train.tree, ", using ", best.train.cues.n, " cues {", best.train.cues, "}:", sep = "")
 
 print(summary.text)
-print(auc.text)
+#print(auc.text)
 print(accuracy.text)
 print(summary.df)
 

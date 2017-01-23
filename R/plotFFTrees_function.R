@@ -668,10 +668,12 @@ plot(1,
 # Add  frame
 
 par(xpd = T)
-segments(-plot.width, 0, - plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-segments(plot.width, 0, plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
+
 
 if(stats == TRUE) {
+
+segments(-plot.width, 0, - plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
+segments(plot.width, 0, plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
 
 text(x = 0, y = 0,
      paste("Tree #", tree, " (of ", n.trees, ")", sep = ""),
@@ -680,11 +682,10 @@ text(x = 0, y = 0,
 }
 
 if(stats == FALSE) {
+
 if(main == "Data") {main <- ""}
   mtext(text = main, side = 3, cex = 2)
-  # text(x = 0, y = 0,
-  #      paste("Tree #", tree, " (of ", n.trees, ")", sep = ""),
-  #      cex = panel.title.cex)
+
 
 }
 
@@ -693,17 +694,11 @@ par(xpd = F)
 
 
 # Create Noise and Signal panels
-{
 
-  # Noise Panel
-
-  text(- plot.width * .6, -plot.height * .05,
-       paste("Decide ", decision.names[1], sep = ""),
-       cex = 1.2, font = 3
-  )
+if(stats == TRUE) {
 
   # Noise Balls
-if(stats == TRUE) {
+
   points(c(- plot.width * .7, - plot.width * .5),
          c(-plot.height * .125, -plot.height * .125),
          pch = c(noise.ball.pch, signal.ball.pch),
@@ -717,7 +712,14 @@ if(stats == TRUE) {
        labels = c("Correct Rejection", "Miss"),
        pos = c(1, 1), offset = 1)
 
-}
+
+  # Noise Panel
+
+  text(- plot.width * .6, -plot.height * .05,
+       paste("Decide ", decision.names[1], sep = ""),
+       cex = 1.2, font = 3
+  )
+
 
   # Signal panel
   text(plot.width * .6, -plot.height * .05,
@@ -725,7 +727,6 @@ if(stats == TRUE) {
        cex = 1.2, font = 3
   )
 
-  if(stats == TRUE) {
 
   points(c(plot.width * .5, plot.width * .7),
          c(-plot.height * .125, -plot.height * .125),
@@ -740,7 +741,6 @@ if(stats == TRUE) {
        labels = c("False Alarm", "Hit"),
        pos = c(1, 1), offset = 1)
 
-  }
   }
 
 # Set initial subplot center
@@ -817,6 +817,12 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
          length = arrow.head.length
   )
 
+  # Decision text
+
+  text(x = subplot.center[1] - 2 - arrow.length / 2,
+       y = subplot.center[2] - 1.8,
+       labels = paste0("'", decision.names[1], "'"),
+       pos = 3, font = 3)
 
 
   if(ball.loc == "fixed") {
@@ -936,6 +942,13 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
          col = arrow.col,
          length = arrow.head.length
   )
+
+  # Decision text
+
+  text(x = subplot.center[1] + 2 + arrow.length / 2,
+       y = subplot.center[2] - 1.8,
+       labels = paste0("'", decision.names[2], "'"),
+       pos = 3, font = 3)
 
 
 
