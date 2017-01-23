@@ -1125,14 +1125,14 @@ level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
 lloc <- data.frame(
-  element = c("classtable", "spec", "hr", "pc", "dp", "auc", "roc"),
-  long.name = c("Classification Table", "Spec", "Hit-Rate", "Correct", "D'", "AUC", "ROC"),
+  element = c("classtable", "sens", "spec", "pc", "dp", "auc", "roc"),
+  long.name = c("Classification Table", "Sens", "Spec", "Correct", "D'", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 5), .85),
   center.y = rep(level.center.y, 7),
   width =    c(.2, rep(level.width, 5), .2),
   height =   c(.65, rep(level.max.height, 5), .65),
-  value = c(NA, 1 - final.stats$far, final.stats$hr, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
-  value.name = c(NA, pretty.dec(1 - final.stats$far), pretty.dec(final.stats$hr), pretty.dec(with(final.stats, (cr + hi) / n)),
+  value = c(NA, final.stats$hr, 1 - final.stats$far, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
+  value.name = c(NA, pretty.dec(final.stats$hr), pretty.dec(1 - final.stats$far),  pretty.dec(with(final.stats, (cr + hi) / n)),
                  round(final.stats$dprime, 2), round(fft.auc, 2), NA
   )
 )
@@ -1360,7 +1360,7 @@ paste(final.stats$cr, "/", 1, collapse = "")
 
 # Add 100% reference line
 
-segments(x0 = lloc$center.x[lloc$element == "spec"] - lloc$width[lloc$element == "spec"] * .8,
+segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element == "sens"] * .8,
          y0 = level.top,
          x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
          y1 = level.top,
@@ -1368,7 +1368,7 @@ segments(x0 = lloc$center.x[lloc$element == "spec"] - lloc$width[lloc$element ==
          )
 
 add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
-add.level.fun("hr", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
 # Min acc
 
@@ -1442,8 +1442,6 @@ rect(final.roc.x.loc[1],
       border = gray(.5))
 
 
-
-
   # Axis labels
 
   text(c(final.roc.x.loc[1], final.roc.x.loc[2]),
@@ -1454,9 +1452,8 @@ rect(final.roc.x.loc[1],
        c(final.roc.y.loc[1], mean(final.roc.y.loc[1:2]), final.roc.y.loc[2]),
        labels = c(0,.5, 1))
 
-  text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, "FAR (1 - Spec)")
-  text(final.roc.x.loc[1] - .04, mean(final.roc.y.loc), "HR", srt = 90)
-
+  text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, "1 - Specificity")
+  text(final.roc.x.loc[1] - .04, mean(final.roc.y.loc), "Sensitivity", srt = 90)
 
   # Diagonal
 
@@ -1465,8 +1462,6 @@ rect(final.roc.x.loc[1],
            final.roc.x.loc[2],
            final.roc.y.loc[2],
            lty = 2)
-
-
 
   label.loc <- c(.1, .3, .5, .7, .9)
 
@@ -1500,7 +1495,6 @@ text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
 labels = "  CART", adj = 0, cex = .9)
 
 par("xpd" = TRUE)
-
 
 
 ## LR

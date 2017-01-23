@@ -10,41 +10,51 @@ print.FFTrees <- function(
   ...
 ) {
 
-cues.used <- paste(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))), collapse = ",")
-n.cues.used <- length(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))))
+n.trees <- nrow(x$tree.stats$train)
 n.cues.total <- ncol(x$data$train) - 1
 n.train.ex <- nrow(x$data$train)
-n.trees <- nrow(x$tree.stats$train)
 
 best.train.tree <- min(x$tree.stats$train$tree[x$tree.stats$train$v == max(x$tree.stats$train$v)])
+
+best.train.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues[best.train.tree], ";"))), collapse = ",")
+best.train.cues.n <- length(unique(unlist(strsplit(best.train.cues, ","))))
+
+#
+all.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))), collapse = ",")
+all.cues.n <- length(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))))
+
+
 best.train.hr <- round(x$tree.stats$train$hr[best.train.tree], 2)
 best.train.far <- round(x$tree.stats$train$far[best.train.tree], 2)
+best.train.spec <- 1 - round(x$tree.stats$train$far[best.train.tree], 2)
 best.train.dp <- round(x$tree.stats$train$dprime[best.train.tree], 2)
+best.train.v <- round(x$tree.stats$train$hr[best.train.tree] - x$tree.stats$train$far[best.train.tree], 2)
+
 train.auc <- round(x$auc$FFTrees[1], 2)
 train.pcorrect <- round((x$tree.stats$train$hi[best.train.tree] + x$tree.stats$train$cr[best.train.tree]) / x$tree.stats$train$n[best.train.tree], 2)
 
-if(is.null(x$tree.stats$test) == F) {
+if(is.null(x$tree.stats$test) == FALSE) {
 
 n.test.ex <- nrow(x$data$test)
 best.test.hr <- round(x$tree.stats$test$hr[best.train.tree], 2)
 best.test.far <- round(x$tree.stats$test$far[best.train.tree], 2)
+best.test.spec <- 1 - round(x$tree.stats$test$far[best.train.tree], 2)
 best.test.dp <- round(x$tree.stats$test$dprime[best.train.tree], 2)
+
 test.auc <- round(x$auc$FFTrees[2], 2)
 test.pcorrect <- round((x$tree.stats$test$hi[best.train.tree] + x$tree.stats$test$cr[best.train.tree]) / x$tree.stats$test$n[best.train.tree], 2)
 
 summary.df <- data.frame("train" = c(n.train.ex,
                                      train.pcorrect,
+                                     best.train.dp,
                                      best.train.hr,
-                                     best.train.far,
-                                     best.train.dp),
+                                     best.train.spec),
                          "test" = c(n.test.ex,
                                     test.pcorrect,
+                                    best.test.dp,
                                     best.test.hr,
-                                    best.test.far,
-                                    best.test.dp)
+                                    best.test.spec)
 )
-
-rownames(summary.df) <- c("n", "p(Correct)", "Hit Rate (HR)", "False Alarm Rate (FAR)", "d-prime")
 
 }
 
@@ -54,24 +64,25 @@ if(is.null(x$tree.stats$test)) {
   best.test.hr <- "--"
   best.test.far <- "--"
   best.test.dp <- "--"
+  best.test.spec <- "--"
   test.auc <- "--"
   test.pcorrect <- "--"
 
   summary.df <- data.frame("train" = c(n.train.ex,
                                        train.pcorrect,
+                                       best.train.dp,
                                        best.train.hr,
-                                       best.train.far,
-                                       best.train.dp)
+                                       best.train.spec)
   )
 
-  rownames(summary.df) <- c("n", "p(Correct)", "Hit Rate (HR)", "False Alarm Rate (FAR)", "d-prime")
 
 }
 
+rownames(summary.df) <- c("n", "correct", "d-prime", "sens", "spec")
 
 
-summary.text <- paste("", n.trees, " trees using ", n.cues.used,
-                      " predictors {", paste(cues.used, collapse = ", "), "}", sep = "")
+summary.text <- paste("FFTrees object containing ", n.trees, " trees using up to ", all.cues.n,
+                      " predictors of an original ", n.cues.total, sep = "")
 
 if(is.null(test.auc)) {
 
@@ -85,7 +96,7 @@ if(is.null(test.auc) == F) {
 
 }
 
-accuracy.text <- paste("My favorite training tree is #", best.train.tree, ", here is how it performed:", sep = "")
+accuracy.text <- paste("Best training tree: #", best.train.tree, ", using ", best.train.cues.n, " cues {", best.train.cues, "}", sep = "")
 
 print(summary.text)
 print(auc.text)
