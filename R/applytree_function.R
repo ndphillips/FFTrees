@@ -66,7 +66,6 @@ apply.tree <- function(data,
       unclassified.cases <- which(is.na(decision[,tree.i]))
       classified.cases <- which(is.na(decision[,tree.i]) == FALSE)
 
-
       if(is.character(threshold.i)) {threshold.i <- unlist(strsplit(threshold.i, ","))}
 
       if(substr(class.i, 1, 1) %in% c("n", "i")) {threshold.i <- as.numeric(threshold.i)}
@@ -100,7 +99,11 @@ apply.tree <- function(data,
 
     level.stats.ls[[tree.i]] <- level.stats.df.i
 
+
   }
+
+
+
 
   levelstats <- do.call("rbind", args = level.stats.ls)
 
@@ -111,6 +114,15 @@ apply.tree <- function(data,
   maxlevs <- paste(rownames(tapply(levelstats$level, levelstats$tree, FUN = which.max)), tapply(levelstats$level, levelstats$tree, FUN = which.max), sep = ".")
   treestats <- cbind(tree.definitions, levelstats[helper %in% maxlevs, names(level.i.stats)])
   rownames(treestats) <- 1:nrow(treestats)
+
+
+  # Add frugality to treestats
+  #   frugality is the number of cues looked up for each case divided by the maximum possible
+
+  n.lookups <- colSums(levelout)
+  max.lookups <- nrow(data) * ncol(data)
+
+  treestats$frugality <- 1 - n.lookups / max.lookups
 
   return(list("decision" = decision,
               "levelout" = levelout,

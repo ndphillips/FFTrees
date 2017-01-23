@@ -29,6 +29,7 @@ best.train.far <- round(x$tree.stats$train$far[best.train.tree], 2)
 best.train.spec <- 1 - round(x$tree.stats$train$far[best.train.tree], 2)
 best.train.dp <- round(x$tree.stats$train$dprime[best.train.tree], 2)
 best.train.v <- round(x$tree.stats$train$hr[best.train.tree] - x$tree.stats$train$far[best.train.tree], 2)
+best.train.frugality <- round(x$tree.stats$train$frugality[best.train.tree], 2)
 
 train.auc <- round(x$auc$FFTrees[1], 2)
 train.pcorrect <- round((x$tree.stats$train$hi[best.train.tree] + x$tree.stats$train$cr[best.train.tree]) / x$tree.stats$train$n[best.train.tree], 2)
@@ -40,16 +41,20 @@ best.test.hr <- round(x$tree.stats$test$hr[best.train.tree], 2)
 best.test.far <- round(x$tree.stats$test$far[best.train.tree], 2)
 best.test.spec <- 1 - round(x$tree.stats$test$far[best.train.tree], 2)
 best.test.dp <- round(x$tree.stats$test$dprime[best.train.tree], 2)
+best.test.frugality <- round(x$tree.stats$test$frugality[best.train.tree], 2)
+
 
 test.auc <- round(x$auc$FFTrees[2], 2)
 test.pcorrect <- round((x$tree.stats$test$hi[best.train.tree] + x$tree.stats$test$cr[best.train.tree]) / x$tree.stats$test$n[best.train.tree], 2)
 
 summary.df <- data.frame("train" = c(n.train.ex,
+                                     best.train.frugality,
                                      train.pcorrect,
                                      best.train.dp,
                                      best.train.hr,
                                      best.train.spec),
                          "test" = c(n.test.ex,
+                                    best.test.frugality,
                                     test.pcorrect,
                                     best.test.dp,
                                     best.test.hr,
@@ -61,6 +66,8 @@ summary.df <- data.frame("train" = c(n.train.ex,
 if(is.null(x$tree.stats$test)) {
 
   n.test.ex <- 0
+  best.test.frugality <- "--"
+
   best.test.hr <- "--"
   best.test.far <- "--"
   best.test.dp <- "--"
@@ -69,6 +76,7 @@ if(is.null(x$tree.stats$test)) {
   test.pcorrect <- "--"
 
   summary.df <- data.frame("train" = c(n.train.ex,
+                                       best.test.frugality,
                                        train.pcorrect,
                                        best.train.dp,
                                        best.train.hr,
@@ -78,7 +86,7 @@ if(is.null(x$tree.stats$test)) {
 
 }
 
-rownames(summary.df) <- c("n", "correct", "d-prime", "sens", "spec")
+rownames(summary.df) <- c("n", "frugality", "correct", "d-prime", "sens", "spec")
 
 
 summary.text <- paste("FFTrees object containing ", n.trees, " trees using up to ", all.cues.n,
