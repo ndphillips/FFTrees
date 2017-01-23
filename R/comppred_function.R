@@ -5,7 +5,7 @@
 #' @param formula a formula
 #' @param data.train dataframe. A training dataset
 #' @param data.test dataframe. A testing dataset
-#' @param algorithm string. An algorithm in the set "cart" -- decision trees, "lr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests
+#' @param algorithm string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests
 #' @importFrom stats model.frame formula glm model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
@@ -16,10 +16,10 @@
 #'
 #' # Fit many alternative algorithms to the mushrooms dataset
 #'
-#' mushrooms.lr.pred <- comp.pred(formula = poisonous ~.,
+#' mushrooms.rlr.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
 #'                                data.test = mushrooms[101:nrow(mushrooms),],
-#'                                algorithm = "lr")
+#'                                algorithm = "rlr")
 #'
 #' mushrooms.cart.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
@@ -44,15 +44,8 @@ comp.pred <- function(formula,
                      data.test = NULL,
                      algorithm = NULL) {
 
-  # train.p <- .05
-  # formula = criterion ~.
-  # audiology <- audiology[sample(nrow(audiology)),]
-  # data.train <- audiology[1:floor(train.p * nrow(audiology)),]
-  # data.test <- audiology[(floor(train.p * nrow(audiology)) + 1):nrow(audiology),]
-  # algorithm <- "rf"
-
   if(is.null(formula)) {stop("You must enter a valid formula")}
-  if(is.null(algorithm)) {stop("You must specify one of the following models: 'lr', 'cart', 'svm', 'rf'")}
+  if(is.null(algorithm)) {stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")}
 
   # SETUP
   {
@@ -80,13 +73,13 @@ comp.pred <- function(formula,
 
   if(length(unique(data.all[train.cases,1])) == 1) {do.test <- FALSE} else {do.test <- TRUE}
   }
-  
+
   if(do.test) {
-  
+
   ok.cols <- sapply(1:ncol(data.all), FUN = function(x) {length(unique(data.all[train.cases,x])) > 1})
   data.all <- data.all[,ok.cols]
 
-  # Convert character columnns to factors
+  # Convert character columns to factors
   for(col.i in 1:ncol(data.all)) {
 
     if(any(c("logical", "character", "factor") %in% class(data.all[,col.i]))) {
@@ -108,9 +101,37 @@ comp.pred <- function(formula,
     crit.test <- data.all[test.cases,1]
 
   }
-  
+
 
   # Get pred.train, pred.test from each model
+
+  if(algorithm == "lr") {
+
+    train.mod <- suppressWarnings(glm(formula, data.train, family = "binomial"))
+
+    pred.train <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.train))), 0))
+
+    if(is.null(data.test) == FALSE) {
+
+    # will lr work?
+
+      will.work <- try(suppressMessages(suppressWarnings(predict(train.mod, data.test))))
+
+      if("numeric" %in% class(will.work)) {
+
+        pred.test <- round(1 / (1 + exp(-predict(train.mod, data.test))), 0)
+
+
+      } else {
+
+        pred.test <- NULL
+
+      }
+
+    } else {pred.test <- NULL}
+
+
+  }
 
   if(algorithm == "svm") {
 
@@ -132,7 +153,7 @@ comp.pred <- function(formula,
 
   }
 
-  if(algorithm == "lr") {
+  if(algorithm == "rlr") {
 
     # Set up training data with factor matrix
 
@@ -144,7 +165,7 @@ comp.pred <- function(formula,
     xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.train)[,-1])
     x.train <- suppressWarnings(as.matrix(data.frame(data.train[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
 
-    # Create new LR model
+    # Create new rLR model
     train.mod <- try(train.mod <-  suppressWarnings(glmnet::cv.glmnet(x.train,
                                                         y = as.factor(data.train[,1]),
                                                         family = "binomial"
@@ -193,8 +214,8 @@ comp.pred <- function(formula,
 
     # Create new CART model
     train.mod <- rpart::rpart(formula,
-                                   data = data.train,
-                                   method = "class"
+                              data = data.train,
+                              method = "class"
     )
 
     pred.train <- predict(train.mod,
@@ -221,8 +242,7 @@ comp.pred <- function(formula,
     data.train[,1] <- factor(data.train[,1])
 
     train.mod <- randomForest::randomForest(formula,
-                                            data = data.train
-    )
+                                            data = data.train)
 
     # Get training decisions
     pred.train <- predict(train.mod,
@@ -239,8 +259,9 @@ comp.pred <- function(formula,
     } else {pred.test <- NULL}
 
   }
+
 }
-  
+
   # Convert predictions to logical if necessary
 
   if(is.null(pred.train) == FALSE) {
@@ -279,14 +300,14 @@ comp.pred <- function(formula,
 
 
   if(do.test == FALSE) {
-    
+
     acc.train <- classtable(c(1, 0, 1), c(0, 1, 1))
     acc.train[1, ] <- NA
-    
+
     acc.test <- classtable(c(1, 0, 1), c(0, 1, 1))
     acc.test[1, ] <- NA
   }
-    
+
   # ORGANIZE
 
   names(acc.train) <- paste(names(acc.train), ".train", sep = "")
@@ -321,8 +342,6 @@ comp.pred <- function(formula,
   colnames(model.auc) <- algorithm
   rownames(model.auc) <- c("train", "test")
 
-  
-acc
   output <- list("accuracy" = acc,
                  "auc" = model.auc,
                  "model" = train.mod,

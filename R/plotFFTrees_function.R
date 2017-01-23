@@ -240,7 +240,7 @@ if(stats == FALSE) {
   plotting.parameters.df <- data.frame(
     n.levels = 1:6,
     plot.height = c(10, 12, 15, 19, 23, 25),
-    plot.width = c(14, 16, 20, 24, 28, 32) * .75,
+    plot.width = c(14, 16, 20, 24, 28, 32) * .5,
     label.box.text.cex = c(1.5, 1.5, 1.25, 1, 1, 1),
     break.label.cex = c(1.5, 1.5, 1.25, 1, .75, .5)
   )

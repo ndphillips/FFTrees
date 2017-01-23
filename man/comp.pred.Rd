@@ -13,7 +13,7 @@ comp.pred(formula, data.train, data.test = NULL, algorithm = NULL)
 
 \item{data.test}{dataframe. A testing dataset}
 
-\item{algorithm}{string. An algorithm in the set "cart" -- decision trees, "lr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests}
+\item{algorithm}{string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests}
 }
 \description{
 This function is a wrapper for many classification algorithms such as CART (rpart::rpart), regularised logistic regression (glmnet::glmnet), support vector machines (svm::svm) and random forests (randomForest::randomForest)
@@ -22,10 +22,10 @@ This function is a wrapper for many classification algorithms such as CART (rpar
 
 # Fit many alternative algorithms to the mushrooms dataset
 
-mushrooms.lr.pred <- comp.pred(formula = poisonous ~.,
+mushrooms.rlr.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],
                                data.test = mushrooms[101:nrow(mushrooms),],
-                               algorithm = "lr")
+                               algorithm = "rlr")
 
 mushrooms.cart.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],

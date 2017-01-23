@@ -11,7 +11,7 @@
 #' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
+#' @param do.cart,do.lr,do.rf,do.svm,do.rlr logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
 #' @param rank.method depricated arguments.
@@ -63,6 +63,7 @@ FFTrees <- function(formula = NULL,
                     verbose = FALSE,
                     do.cart = TRUE,
                     do.lr = TRUE,
+                    do.rlr = TRUE,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     object = NULL,
@@ -574,6 +575,35 @@ colnames(lr.auc) <- "lr"
 
 }
 
+# rLR
+{
+  if(do.rlr) {
+
+    rlr.acc <- comp.pred(formula = formula,
+                        data.train = data.train,
+                        data.test = data.test,
+                        algorithm = "rlr")
+
+    rlr.stats <- rlr.acc$accuracy
+    rlr.auc <- rlr.acc$auc
+    rlr.model <- rlr.acc$model
+
+  }
+
+  if(do.rlr == FALSE) {
+
+    rlr.acc <- NULL
+    rlr.stats <- NULL
+    rlr.model <- NULL
+
+    rlr.auc <- matrix(NA, nrow = 2, ncol =1)
+    rownames(lr.auc) <- c("train", "test")
+    colnames(lr.auc) <- "rlr"
+
+  }
+
+}
+
 # CART
 {
 
@@ -678,6 +708,7 @@ output.fft <- list("formula" = formula,
                   "params" = list("algorithm" = algorithm, "goal" = goal, "hr.weight" = hr.weight, "max.levels" = max.levels),
                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
+                                "rlr" = list("model" = rlr.model, "stats" = rlr.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
                                 "svm" = list("model" = svm.model, "stats" = svm.stats))
 )
