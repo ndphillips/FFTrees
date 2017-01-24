@@ -21,6 +21,11 @@ apply.tree <- function(data,
                        tree.definitions
 ) {
 
+  #
+  # data = data.train
+  # formula = formula
+  # tree.definitions = tree.definitions
+  #
   criterion.v <- model.frame(formula = formula,
                              data = data,
                              na.action = NULL)[,1]
