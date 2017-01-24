@@ -70,24 +70,24 @@ FFTrees <- function(formula = NULL,
                     rank.method = NULL
 ) {
 
-  formula <- diagnosis ~.
-  data = heartdisease
-
-
-  data.test = NULL
-  train.p = 1
-  algorithm = "m"
-  goal = "v"
-  hr.weight = .5
-  max.levels = 4
-  tree.definitions = NULL
-  verbose = FALSE
-  do.cart = TRUE
-  do.lr = TRUE
-  do.rf = TRUE
-  do.svm = TRUE
-  object = NULL
-  rank.method = NULL
+  # formula <- diagnosis ~.
+  # data = heartdisease
+  #
+  #
+  # data.test = NULL
+  # train.p = 1
+  # algorithm = "m"
+  # goal = "v"
+  # hr.weight = .5
+  # max.levels = 4
+  # tree.definitions = NULL
+  # verbose = FALSE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # object = NULL
+  # rank.method = NULL
 
 
 if(is.null(rank.method) == FALSE) {
