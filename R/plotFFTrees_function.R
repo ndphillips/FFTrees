@@ -47,18 +47,6 @@ plot.FFTrees <- function(
   stats = TRUE,
   ...
 ) {
-#
-#   x <- x
-#
-#   data = "train"
-#   what = 'tree'
-#   tree = "best.train"
-#   main = "Data"
-#   n.per.icon = NULL
-#   decision.names = c("Noise", "Signal")
-#   which.tree = NULL
-
-
 
 # If what == cues, then send inputs to showcues()
 if(what == 'cues') {showcues(x = x, data = data, main = main)}
@@ -161,8 +149,7 @@ if(data == "test") {
   n.exemplars <- nrow(data.mf)
 }
 
-final.stats <- classtable(prediction.v = decision.v,
-                          criterion.v = criterion.v)
+final.stats <- tree.stats[tree,]
 
 # ADD LEVEL STATISTICS
 n.levels <- nrow(level.stats)
@@ -820,9 +807,9 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
   # Decision text
 
   text(x = subplot.center[1] - 2 - arrow.length / 2,
-       y = subplot.center[2] - 1.8,
+       y = subplot.center[2] - 2.2,
        labels = paste0("'", decision.names[1], "'"),
-       pos = 3, font = 3)
+       pos = 1, font = 3)
 
 
   if(ball.loc == "fixed") {
@@ -946,11 +933,9 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
   # Decision text
 
   text(x = subplot.center[1] + 2 + arrow.length / 2,
-       y = subplot.center[2] - 1.8,
+       y = subplot.center[2] - 2.2,
        labels = paste0("'", decision.names[2], "'"),
-       pos = 3, font = 3)
-
-
+       pos = 1, font = 3)
 
 
   if(ball.loc == "fixed") {
@@ -1138,14 +1123,14 @@ level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
 lloc <- data.frame(
-  element = c("classtable", "sens", "spec", "pc", "dp", "auc", "roc"),
-  long.name = c("Classification Table", "Sens", "Spec", "Correct", "D'", "AUC", "ROC"),
-  center.x = c(.18, seq(.35, .65, length.out = 5), .85),
-  center.y = rep(level.center.y, 7),
-  width =    c(.2, rep(level.width, 5), .2),
-  height =   c(.65, rep(level.max.height, 5), .65),
-  value = c(NA, final.stats$hr, 1 - final.stats$far, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
-  value.name = c(NA, pretty.dec(final.stats$hr), pretty.dec(1 - final.stats$far),  pretty.dec(with(final.stats, (cr + hi) / n)),
+  element = c("classtable", "frugality", "sens", "spec", "pc", "dp", "auc", "roc"),
+  long.name = c("Classification Table", "Frugality", "Sens", "Spec", "Correct", "D'", "AUC", "ROC"),
+  center.x = c(.18, seq(.35, .65, length.out = 6), .85),
+  center.y = rep(level.center.y, 8),
+  width =    c(.2, rep(level.width, 6), .2),
+  height =   c(.65, rep(level.max.height, 6), .65),
+  value = c(NA, final.stats$frugality, final.stats$hr, 1 - final.stats$far, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
+  value.name = c(NA, pretty.dec(final.stats$frugality), pretty.dec(final.stats$hr), pretty.dec(1 - final.stats$far),  pretty.dec(with(final.stats, (cr + hi) / n)),
                  round(final.stats$dprime, 2), round(fft.auc, 2), NA
   )
 )
@@ -1379,6 +1364,8 @@ segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element ==
          y1 = level.top,
          lty = 3, lwd = .75
          )
+
+add.level.fun("frugality", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
 add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))

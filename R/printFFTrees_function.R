@@ -76,7 +76,7 @@ if(is.null(x$tree.stats$test)) {
   test.pcorrect <- "--"
 
   summary.df <- data.frame("train" = c(n.train.ex,
-                                       best.test.frugality,
+                                       best.train.frugality,
                                        train.pcorrect,
                                        best.train.dp,
                                        best.train.hr,
