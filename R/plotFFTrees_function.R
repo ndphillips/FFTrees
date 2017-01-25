@@ -125,6 +125,7 @@ if(data == "train") {
   n.exemplars <- x$data.desc$train$cases
   n.pos <- x$data.desc$train$n.pos
   n.neg <- x$data.desc$train$n.neg
+  mcpc <- x$tree.stats$train$mcpc[tree]
   crit.br <- x$data.desc$train$criterion.br
 
 }
@@ -147,6 +148,7 @@ if(data == "test") {
   n.exemplars <- x$data.desc$test$cases
   n.pos <- x$data.desc$test$n.pos
   n.neg <- x$data.desc$test$n.neg
+  mcpc <- x$tree.stats$test$mcpc[tree]
   crit.br <- x$data.desc$test$criterion.br
 
 }
@@ -1280,8 +1282,6 @@ value.name <- lloc$value.name[lloc$element == name]
 #                                        colors = c("firebrick2", "yellow", "green4"),
 #                                        transparency = .1)
 
-level.col.fun <- function(x) {gray(.7)}
-
 
 
 text(x = rect.center.x,
@@ -1307,7 +1307,7 @@ gamma <- .5
 value.col.scale <- delta * value.s ^ gamma / (delta * value.s ^ gamma + (1 - value.s) ^ gamma)
 # value.col <- gray(1 - value.col.scale * .5)
 
-value.col <- gray(.5, .25)
+value.col <- gray(1, .25)
 
 #plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
@@ -1365,10 +1365,14 @@ segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element ==
          y0 = level.top,
          x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
          y1 = level.top,
-         lty = 3, lwd = .75
-         )
+         lty = 3, lwd = .75)
 
 add.level.fun("frugality", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+text(lloc$center.x[lloc$element == "frugality"],
+     lloc$center.y[lloc$element == "frugality"],
+     labels = paste0("mcpc\n", round(mcpc, 2)))
+
 
 add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))

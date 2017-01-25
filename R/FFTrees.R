@@ -122,8 +122,6 @@ if(crit.name %in% names(data) == FALSE) {
 
   stop(paste0("The criterion variable ", crit.name, " is not in the data."))}
 
-
-
 # EXTRACT OBJECTS FROM EXISTING FFTrees OBJECT
 
 # GET FORMULA

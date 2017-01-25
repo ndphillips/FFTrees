@@ -22,10 +22,6 @@ This function is a wrapper for many classification algorithms such as CART (rpar
 
 # Fit many alternative algorithms to the mushrooms dataset
 
-mushrooms.rlr.pred <- comp.pred(formula = poisonous ~.,
-                               data.train = mushrooms[1:100,],
-                               data.test = mushrooms[101:nrow(mushrooms),],
-                               algorithm = "rlr")
 
 mushrooms.cart.pred <- comp.pred(formula = poisonous ~.,
                                data.train = mushrooms[1:100,],

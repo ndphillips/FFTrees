@@ -129,6 +129,10 @@ apply.tree <- function(data,
 
   treestats$frugality <- 1 - n.lookups / max.lookups
 
+  # Add mean cues per case (mcpc)
+
+  treestats$mcpc <- colMeans(levelout)
+
   return(list("decision" = decision,
               "levelout" = levelout,
               "levelstats" = levelstats,

@@ -20,6 +20,7 @@ classtable <- function(prediction.v,
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
 
   prediction.v <- as.logical(paste(prediction.v))
+
 }
 
 if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {

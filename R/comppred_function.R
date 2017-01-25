@@ -16,10 +16,6 @@
 #'
 #' # Fit many alternative algorithms to the mushrooms dataset
 #'
-#' mushrooms.rlr.pred <- comp.pred(formula = poisonous ~.,
-#'                                data.train = mushrooms[1:100,],
-#'                                data.test = mushrooms[101:nrow(mushrooms),],
-#'                                algorithm = "rlr")
 #'
 #' mushrooms.cart.pred <- comp.pred(formula = poisonous ~.,
 #'                                data.train = mushrooms[1:100,],
@@ -119,7 +115,7 @@ comp.pred <- function(formula,
 
       if("numeric" %in% class(will.work)) {
 
-        pred.test <- round(1 / (1 + exp(-predict(train.mod, data.test))), 0)
+        pred.test <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.test))), 0))
 
 
       } else {
@@ -153,62 +149,62 @@ comp.pred <- function(formula,
 
   }
 
-  if(algorithm == "rlr") {
-
-    # Set up training data with factor matrix
-
-    col.classes <- sapply(1:ncol(data.train), FUN = function(x) {class(data.train[,x])})
-    fact.names <- names(data.train)[col.classes == "factor"]
-    crit.name <- names(data.train)[1]
-
-    fact.formula <- as.formula(paste(crit.name, "~", paste(fact.names, collapse = "+")))
-    xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.train)[,-1])
-    x.train <- suppressWarnings(as.matrix(data.frame(data.train[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
-
-    # Create new rLR model
-    train.mod <- try(train.mod <-  suppressWarnings(glmnet::cv.glmnet(x.train,
-                                                        y = as.factor(data.train[,1]),
-                                                        family = "binomial"
-    )), silent = TRUE)
-
-
-    if(class(train.mod) == "try-error") {
-
-      pred.train <- NULL
-
-      }
-
-    if(class(train.mod) == "cv.glmnet") {
-
-    pred.train <- round(as.vector(predict(train.mod,
-                                          x.train,
-                                          type = "response",
-                                          a = train.mod$lambda.min)), 0)
-
-   }
-
-    if(is.null(data.test) == FALSE & class(train.mod) == "cv.glmnet") {
-
-      # Set up test data with factor matrix
-
-      col.classes <- sapply(1:ncol(data.test), FUN = function(x) {class(data.test[,x])})
-      fact.names <- names(data.test)[col.classes == "factor"]
-      crit.name <- names(data.test)[1]
-
-      fact.formula <- as.formula(paste(crit.name, "~", paste(fact.names, collapse = "+")))
-      xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.test)[,-1])
-      x.test <- suppressWarnings(as.matrix(data.frame(data.test[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
-
-      pred.test <- round(as.vector(predict(train.mod,
-                                           x.test,
-                                           type = "response",
-                                           a = train.mod$lambda.min)), 0)
-
-
-    } else {pred.test <- NULL}
-
-
-  }
+  # if(algorithm == "rlr") {
+  #
+  #   # Set up training data with factor matrix
+  #
+  #   col.classes <- sapply(1:ncol(data.train), FUN = function(x) {class(data.train[,x])})
+  #   fact.names <- names(data.train)[col.classes == "factor"]
+  #   crit.name <- names(data.train)[1]
+  #
+  #   fact.formula <- as.formula(paste(crit.name, "~", paste(fact.names, collapse = "+")))
+  #   xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.train)[,-1])
+  #   x.train <- suppressWarnings(as.matrix(data.frame(data.train[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
+  #
+  #   # Create new rLR model
+  #   train.mod <- try(train.mod <-  suppressWarnings(glmnet::cv.glmnet(x.train,
+  #                                                       y = as.factor(data.train[,1]),
+  #                                                       family = "binomial"
+  #   )), silent = TRUE)
+  #
+  #
+  #   if(class(train.mod) == "try-error") {
+  #
+  #     pred.train <- NULL
+  #
+  #     }
+  #
+  #   if(class(train.mod) == "cv.glmnet") {
+  #
+  #   pred.train <- round(as.vector(predict(train.mod,
+  #                                         x.train,
+  #                                         type = "response",
+  #                                         a = train.mod$lambda.min)), 0)
+  #
+  #  }
+  #
+  #   if(is.null(data.test) == FALSE & class(train.mod) == "cv.glmnet") {
+  #
+  #     # Set up test data with factor matrix
+  #
+  #     col.classes <- sapply(1:ncol(data.test), FUN = function(x) {class(data.test[,x])})
+  #     fact.names <- names(data.test)[col.classes == "factor"]
+  #     crit.name <- names(data.test)[1]
+  #
+  #     fact.formula <- as.formula(paste(crit.name, "~", paste(fact.names, collapse = "+")))
+  #     xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.test)[,-1])
+  #     x.test <- suppressWarnings(as.matrix(data.frame(data.test[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
+  #
+  #     pred.test <- round(as.vector(predict(train.mod,
+  #                                          x.test,
+  #                                          type = "response",
+  #                                          a = train.mod$lambda.min)), 0)
+  #
+  #
+  #   } else {pred.test <- NULL}
+  #
+  #
+  # }
 
   if(algorithm == "cart") {
 
