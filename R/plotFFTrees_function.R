@@ -554,67 +554,68 @@ par(xpd = F)
 
 
 # Add p.signal and p.noise levels
-
-signal.p <- mean(criterion.v)
-noise.p <- 1 - mean(criterion.v)
-
-p.rect.ylim <- c(.1, .6)
-
-# p.signal level
-
-text(x = .8, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[2], ")", sep = ""),
-     pos = 3, cex = 1.2)
-
-#Outline
-rect(.775, p.rect.ylim[1],
-     .825, p.rect.ylim[2], col = gray(1, .5))
-
-#Filling
-rect(.775, p.rect.ylim[1],
-     .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-     col = gray(.5, .25), border = NA)
-
-# Filltop
-segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-         .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-         col = gray(.5, 1))
-
-if(signal.p < .0001) {signal.p.text <- "<1%"} else {
-
-  signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
-}
-
-text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-     labels = signal.p.text,
-     pos = 4, cex = 1.2)
-
-
-#p.noise level
-
-text(x = .2, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[1], ")", sep = ""),
-     pos = 3, cex = 1.2)
-
-rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
-     col = gray(1, .5))
-
-rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-     col = gray(.5, .25), border = NA)
-
-# Filltop
-segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-         .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-         col = gray(.5, 1))
-
-if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
-
-  noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
-}
-
-text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-     labels = noise.p.text,
-     pos = 2, cex = 1.2)
+#
+# signal.p <- mean(criterion.v)
+# noise.p <- 1 - mean(criterion.v)
+#
+# p.rect.ylim <- c(.1, .6)
+#
+# # p.signal level
+#
+# text(x = .8, y = p.rect.ylim[2],
+#      labels = paste("p(", decision.names[2], ")", sep = ""),
+#      pos = 3, cex = 1.2)
+#
+# #Outline
+# rect(.775, p.rect.ylim[1],
+#      .825, p.rect.ylim[2], col = gray(1, .5))
+#
+# #Filling
+# rect(.775, p.rect.ylim[1],
+#      .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+#      col = gray(.5, .25), border = NA)
+#
+# # Filltop
+# segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+#          .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+#          col = gray(.5, 1))
+#
+# if(signal.p < .0001) {signal.p.text <- "<1%"} else {
+#
+#   signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
+#
+# }
+#
+# text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+#      labels = signal.p.text,
+#      pos = 4, cex = 1.2)
+#
+#
+# #p.noise level
+#
+# text(x = .2, y = p.rect.ylim[2],
+#      labels = paste("p(", decision.names[1], ")", sep = ""),
+#      pos = 3, cex = 1.2)
+#
+# rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
+#      col = gray(1, .5))
+#
+# rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+#      col = gray(.5, .25), border = NA)
+#
+# # Filltop
+# segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+#          .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+#          col = gray(.5, 1))
+#
+# if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
+#
+#   noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
+# }
+#
+# text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+#      labels = noise.p.text,
+#      pos = 2, cex = 1.2)
 
 
 
@@ -806,7 +807,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   # Decision text
 
-  text(x = subplot.center[1] - 2 - arrow.length / 2,
+  text(x = subplot.center[1] - 2 - arrow.length * .7,
        y = subplot.center[2] - 2.2,
        labels = paste0("'", decision.names[1], "'"),
        pos = 1, font = 3)
@@ -932,7 +933,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   # Decision text
 
-  text(x = subplot.center[1] + 2 + arrow.length / 2,
+  text(x = subplot.center[1] + 2 + arrow.length * .7,
        y = subplot.center[2] - 2.2,
        labels = paste0("'", decision.names[2], "'"),
        pos = 1, font = 3)
@@ -1158,21 +1159,21 @@ lloc <- data.frame(
 
   text(x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-       decision.names[1])
+       decision.names[2])
 
   text(x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-       decision.names[2])
+       decision.names[1])
 
 # Row titles
 
   text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[1], adj = 1)
+       decision.names[2], adj = 1)
 
   text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[2], adj = 1)
+       decision.names[1], adj = 1)
 
 
   text(x = final.classtable.x.loc[1] - .065,
@@ -1185,59 +1186,59 @@ lloc <- data.frame(
 
   # Add final frequencies
 
-  text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
+  text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
+       final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
        prettyNum(final.stats$cr, big.mark = ","), cex = 1.5)
 
-  text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-       prettyNum(final.stats$mi, big.mark = ","), cex = 1.5)
-
   text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-       prettyNum(final.stats$fa, big.mark = ","), cex = 1.5)
+       prettyNum(final.stats$mi, big.mark = ","), cex = 1.5)
 
   text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
+       final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
+       prettyNum(final.stats$fa, big.mark = ","), cex = 1.5)
+
+  text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
+       final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
        prettyNum(final.stats$hi, big.mark = ","), cex = 1.5)
 
   # Add symbols
 
-  points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
-         final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+  points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
+         final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
          pch = noise.ball.pch, bg = correct.bg, col = correct.border, cex = ball.cex)
 
-  points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
-         final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
-         pch = signal.ball.pch, bg = correct.bg, cex = ball.cex, col = correct.border)
-
   points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
-         final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
-         pch = noise.ball.pch, bg = error.bg, col = error.border, cex = ball.cex)
+         final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+         pch = signal.ball.pch, bg = correct.bg, cex = ball.cex, col = correct.border)
 
   points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
          final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+         pch = noise.ball.pch, bg = error.bg, col = error.border, cex = ball.cex)
+
+  points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
+         final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
          pch = signal.ball.pch, bg = error.bg, col = error.border, cex = ball.cex)
 
 
 
   # Labels
 
-  text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+  text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
+       final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
        "Cor Rej", cex = 1, font = 3, adj = 0)
 
-  text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+  text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
+       final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
        "Miss", cex = 1, font = 3, adj = 0)
 
 
-  text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
+  text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
+       final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
        "False Al", cex = 1, font = 3, adj = 0)
 
-  text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
-       final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
+  text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
+       final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
        "Hit", cex = 1, font = 3, adj = 0)
 
 
