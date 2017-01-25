@@ -14,7 +14,7 @@
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.lr,do.cart,do.rf,do.svm logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?
-#' @param rank.method depricated arguments
+#' @param rank.method,hr.weight depricated arguments
 #' @importFrom stats  formula
 #' @return An object of class \code{FFForest} with the following elements...
 #' @export
@@ -42,7 +42,8 @@ FFForest <- function(formula = NULL,
                      do.cart = TRUE,
                      do.rf = TRUE,
                      do.svm = TRUE,
-                     rank.method = NULL
+                     rank.method = NULL,
+                     hr.weight = NULL
 ) {
 
   # formula = diagnosis ~.
@@ -72,7 +73,13 @@ if(is.null(rank.method) == FALSE) {
   algorithm <- rank.method
 
 }
+if(is.null(hr.weight) == FALSE) {
 
+    warning("The argument hr.weight is depricated. Use sens.weight instead.")
+
+    sens.weight <- hr.weight
+
+  }
 
 data.mf <- model.frame(formula = formula,
                        data = data)

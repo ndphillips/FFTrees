@@ -23,7 +23,9 @@ plot(titanic.fft,
 
 ### Package updates
 
-1.1.9
+1.2.0
+
+- Changed wording of statistics throughout package. `hr` (hit rate) and `far` (false alarm rate) are now `sens` for sensitivity, and `spec` for specificity (1 - false alarm rate)
 
 - The `rank.method` argument is now depricated. Use `algorithm` instead.
 
