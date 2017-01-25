@@ -136,5 +136,3 @@ apply.tree <- function(data,
   ))
 
 }
-
-

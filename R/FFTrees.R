@@ -11,7 +11,7 @@
 #' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
 #' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param do.cart,do.lr,do.rf,do.svm,do.rlr logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
+#' @param do.cart,do.lr,do.rf,do.svmlogical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
@@ -64,32 +64,32 @@ FFTrees <- function(formula = NULL,
                     verbose = FALSE,
                     do.cart = TRUE,
                     do.lr = TRUE,
-                    do.rlr = TRUE,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     store.data = FALSE,
                     object = NULL,
                     rank.method = NULL
 ) {
-
-  # formula <- diagnosis ~.
-  # data = heartdisease
-  #
-  #
-  # data.test = NULL
-  # train.p = 1
-  # algorithm = "m"
-  # goal = "v"
-  # hr.weight = .5
-  # max.levels = 4
-  # tree.definitions = NULL
-  # verbose = FALSE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # object = NULL
-  # rank.method = NULL
+#
+#   formula <- diagnosis ~.
+#   data = heartdisease
+#
+#
+#   data.test = NULL
+#   train.p = .5
+#   algorithm = "m"
+#   goal = "v"
+#   hr.weight = .5
+#   max.levels = 4
+#   tree.definitions = NULL
+#   verbose = FALSE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
 
 
 if(is.null(rank.method) == FALSE) {
@@ -191,7 +191,7 @@ if(is.null(object) == TRUE & train.p == 1) {
                             data = data.train.o)
 
   cue.train <- data.train[,2:ncol(data.train)]
-crit.train <- data.train[,1]
+  crit.train <- data.train[,1]
 
   if(ncol(data.train) == 2) {
 
@@ -244,17 +244,8 @@ if(is.null(data.test) & train.p < 1) {
   # assign the remaining cases proportionally to training and test
 
 
+  data.train.o <- data
 
-  if(is.null(object) == FALSE) {
-
-    data.train.o <- object$data$train
-  }
-
-  if(is.null(object) == TRUE) {
-
-    data.train.o <- data
-
-  }
 
   data.train <- model.frame(formula = formula,
                             data = data.train.o)
@@ -577,35 +568,6 @@ colnames(lr.auc) <- "lr"
 
 }
 
-# rLR
-{
-  if(do.rlr) {
-
-    rlr.acc <- comp.pred(formula = formula,
-                        data.train = data.train,
-                        data.test = data.test,
-                        algorithm = "rlr")
-
-    rlr.stats <- rlr.acc$accuracy
-    rlr.auc <- rlr.acc$auc
-    rlr.model <- rlr.acc$model
-
-  }
-
-  if(do.rlr == FALSE) {
-
-    rlr.acc <- NULL
-    rlr.stats <- NULL
-    rlr.model <- NULL
-
-    rlr.auc <- matrix(NA, nrow = 2, ncol =1)
-    rownames(lr.auc) <- c("train", "test")
-    colnames(lr.auc) <- "rlr"
-
-  }
-
-}
-
 # CART
 {
 
@@ -705,9 +667,32 @@ if(store.data) {data.ls <- list("train" = data.train, "test" = data.test)} else 
 
 }
 
+# Data descriptions
+
+data.desc <- list("train" = data.frame("cases" = nrow(cue.train),
+                                       "features" = ncol(cue.train),
+                                       "n.pos" = sum(crit.train),
+                                       "n.neg" = sum(crit.train == 0),
+                                       "criterion.br" = mean(crit.train)),
+                  "test" = data.frame("cases" = NA,
+                                      "features" = NA,
+                                      "n.pos" = NA,
+                                      "n.neg" = NA,
+                                      "criterion.br" = NA))
+
+if(is.null(data.test) == FALSE) {
+
+  data.desc[[2]] <- data.frame("cases" = nrow(cue.test),
+                               "features" = ncol(cue.test),
+                               "n.pos" = sum(crit.test),
+                               "n.neg" = sum(crit.test == 0),
+                               "criterion.br" = mean(crit.test))
+
+}
+
 
 output.fft <- list("formula" = formula,
-                  "data" = data.ls,
+                   "data.desc" = data.desc,
                   "cue.accuracies" = cue.accuracies,
                   "tree.definitions" = tree.definitions,
                   "tree.stats" = treestats,
@@ -718,9 +703,9 @@ output.fft <- list("formula" = formula,
                   "params" = list("algorithm" = algorithm, "goal" = goal, "hr.weight" = hr.weight, "max.levels" = max.levels),
                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
-                                "rlr" = list("model" = rlr.model, "stats" = rlr.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
-                                "svm" = list("model" = svm.model, "stats" = svm.stats))
+                                "svm" = list("model" = svm.model, "stats" = svm.stats)),
+                  "data" = data.ls
 )
 
 class(output.fft) <- "FFTrees"

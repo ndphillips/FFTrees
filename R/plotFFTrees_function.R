@@ -58,7 +58,7 @@ n.trees <- nrow(x$tree.stats$train)
 
 # Check for problems and depreciated arguments
 {
-  if(is.null(which.tree) == F) {
+  if(is.null(which.tree) == FALSE) {
 
     message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
 
@@ -72,7 +72,7 @@ n.trees <- nrow(x$tree.stats$train)
 
   }
 
-  if(tree == "best.test" & is.null(x$data$test)) {
+  if(tree == "best.test" & is.null(x$tree.stats$test)) {
 
     print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
 
@@ -88,7 +88,7 @@ n.trees <- nrow(x$tree.stats$train)
 
   if(class(data) == "character") {
 
-    if(data == "test" & is.null(x$data$test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
+    if(data == "test" & is.null(x$tree.stats$test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
 
   }
 }
@@ -104,16 +104,12 @@ if(tree == "best.test") {
 
  tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test$v)]
 
-
 }
 
 # DEFINE CRITICAL OBJECTS
 
 if(data == "train") {
 
-  data.mf <- model.frame(formula = x$formula,
-                         data = x$data$train)
-  criterion.v <- data.mf[,1]
   decision.v <- x$decision$train[,tree]
   tree.stats <- x$tree.stats$train
   level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
@@ -126,13 +122,15 @@ if(data == "train") {
   svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.train, "far" = x$comp$svm$stats$far.train)
 }
 
-  n.exemplars <- nrow(data.mf)
+  n.exemplars <- x$data.desc$train$cases
+  n.pos <- x$data.desc$train$n.pos
+  n.neg <- x$data.desc$train$n.neg
+  crit.br <- x$data.desc$train$criterion.br
+
 }
 if(data == "test") {
 
-  data.mf <- model.frame(formula = x$formula,
-                         data = x$data$test)
-  criterion.v <- data.mf[,1]
+
   decision.v <- x$decision$test[,tree]
   tree.stats <- x$tree.stats$test
   level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
@@ -146,7 +144,11 @@ if(data == "test") {
 
   }
 
-  n.exemplars <- nrow(data.mf)
+  n.exemplars <- x$data.desc$test$cases
+  n.pos <- x$data.desc$test$n.pos
+  n.neg <- x$data.desc$test$n.neg
+  crit.br <- x$data.desc$test$criterion.br
+
 }
 
 final.stats <- tree.stats[tree,]
@@ -299,7 +301,7 @@ ball.box.fixed.x.shift <- c(ball.box.min.shift.p * plot.width, ball.box.max.shif
 
 if(is.null(n.per.icon)) {
 
-  max.n.side <- max(c(sum(criterion.v == 0), sum(criterion.v == 1)))
+  max.n.side <- max(c(n.pos, n.neg))
 
   i <- max.n.side / c(1, 5, 10^(1:10))
   i[i > 50] <- 0
@@ -1373,7 +1375,7 @@ add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.
 
 # Min acc
 
-min.acc <- max(mean(criterion.v), 1 - mean(criterion.v))
+min.acc <- max(crit.br, 1 - crit.br)
 
 add.level.fun("pc", min.val = 0, ok.val = .5) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 

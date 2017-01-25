@@ -11,8 +11,8 @@ print.FFTrees <- function(
 ) {
 
 n.trees <- nrow(x$tree.stats$train)
-n.cues.total <- ncol(x$data$train) - 1
-n.train.ex <- nrow(x$data$train)
+n.cues.total <- x$data.desc$train$features
+n.train.ex <- x$data.desc$train$cases
 
 best.train.tree <- min(x$tree.stats$train$tree[x$tree.stats$train$v == max(x$tree.stats$train$v)])
 
@@ -36,7 +36,7 @@ train.pcorrect <- round((x$tree.stats$train$hi[best.train.tree] + x$tree.stats$t
 
 if(is.null(x$tree.stats$test) == FALSE) {
 
-n.test.ex <- nrow(x$data$test)
+n.test.ex <- x$data.desc$test$cases
 best.test.hr <- round(x$tree.stats$test$hr[best.train.tree], 2)
 best.test.far <- round(x$tree.stats$test$far[best.train.tree], 2)
 best.test.spec <- 1 - round(x$tree.stats$test$far[best.train.tree], 2)
