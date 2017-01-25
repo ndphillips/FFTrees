@@ -7,8 +7,7 @@
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
   ntree = 10, train.p = 0.5, algorithm = "m", goal = "v",
   hr.weight = 0.5, verbose = TRUE, cpus = 1, do.lr = TRUE,
-  do.rlr = TRUE, do.cart = TRUE, do.rf = TRUE, do.svm = TRUE,
-  rank.method = NULL)
+  do.cart = TRUE, do.rf = TRUE, do.svm = TRUE, rank.method = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -33,7 +32,7 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{cpus}{integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.}
 
-\item{do.lr, do.cart, do.rf, do.svm, do.rlr}{logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?}
+\item{do.lr, do.cart, do.rf, do.svm}{logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?}
 
 \item{rank.method}{depricated arguments}
 }

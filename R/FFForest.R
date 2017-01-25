@@ -13,7 +13,7 @@
 #' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
-#' @param do.lr,do.cart,do.rf,do.svm,do.rlr logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?
+#' @param do.lr,do.cart,do.rf,do.svm logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?
 #' @param rank.method depricated arguments
 #' @importFrom stats  formula
 #' @return An object of class \code{FFForest} with the following elements...
@@ -39,7 +39,6 @@ FFForest <- function(formula = NULL,
                      verbose = TRUE,
                      cpus = 1,
                      do.lr = TRUE,
-                     do.rlr = TRUE,
                      do.cart = TRUE,
                      do.rf = TRUE,
                      do.svm = TRUE,
@@ -89,7 +88,6 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               hr.weight = hr.weight,
                               do.cart = do.cart,
                               do.lr = do.lr,
-                              do.rlr = do.rlr,
                               do.rf = do.rf,
                               do.svm = do.svm)
 
@@ -104,11 +102,7 @@ names(lr.stats.i) <- paste0("lr.", names(lr.stats.i))
 comp.stats.i <- c(comp.stats.i, lr.stats.i)
 }
 
-if(do.rlr) {
-  rlr.stats.i <- result.i$comp$rlr$stats
-  names(rlr.stats.i) <- paste0("rlr.", names(rlr.stats.i))
-  comp.stats.i <- c(comp.stats.i, rlr.stats.i)
-}
+
 
 if(do.cart) {
   cart.stats.i <- result.i$comp$cart$stats
@@ -158,7 +152,6 @@ if(cpus > 1) {
   snowfall::sfExport("max.levels")
   snowfall::sfExport("train.p")
   snowfall::sfExport("do.lr")
-  snowfall::sfExport("do.rlr")
   snowfall::sfExport("do.rf")
   snowfall::sfExport("do.cart")
   snowfall::sfExport("do.svm")
@@ -334,12 +327,7 @@ if(do.lr) {
 
 } else {lr.sim <- NULL}
 
-if(do.rlr) {
 
-  rlr.sim <- competitors[,grepl("rlr", names(competitors))]
-  names(rlr.sim) <- gsub("rlr.", replacement = "", x = names(rlr.sim))
-
-} else {rlr.sim <- NULL}
 
 if(do.cart) {
 
@@ -374,7 +362,6 @@ output <-list("formula" = formula,
               "surrogate" = surrogate.FFTrees,
               "forest.stats" = forest.stats,
               "lr.sim" = lr.sim,
-              "rlr.sim" = rlr.sim,
               "cart.sim" = cart.sim,
               "rf.sim" = rf.sim,
               "svm.sim" = svm.sim)

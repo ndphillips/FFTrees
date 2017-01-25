@@ -31,7 +31,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
 
-\item{do.cart, do.lr, do.rf, do.svmlogical.}{Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.}
+\item{do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.}
 
 \item{store.data}{logical. Should training / test data be stored in the object? Default is FALSE.}
 
