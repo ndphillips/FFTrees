@@ -4,7 +4,8 @@
 \alias{plot.FFForest}
 \title{Creates a network plot. Code taken from Dirk Wulff (www.dirkwulff.org)}
 \usage{
-\method{plot}{FFForest}(x, nodesize = 0.1, edgesize = 1, mincon = 0, ...)
+\method{plot}{FFForest}(x, nodesize = 0.25, edgesize = 0.5, mincon = 0,
+  ...)
 }
 \arguments{
 \item{x}{FFForest. An FFForest object created from FFForest()}

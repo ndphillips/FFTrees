@@ -10,60 +10,62 @@ print.FFTrees <- function(
   ...
 ) {
 
+goal <- x$params$goal
+
 n.trees <- nrow(x$tree.stats$train)
 n.cues.total <- x$data.desc$train$features
 n.train.ex <- x$data.desc$train$cases
 
-best.train.tree <- min(x$tree.stats$train$tree[x$tree.stats$train$v == max(x$tree.stats$train$v)])
+train.tree <- min(x$tree.stats$train$tree[x$tree.stats$train[[goal]] == max(x$tree.stats$train[[goal]])])
 
-best.train.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues[best.train.tree], ";"))), collapse = ",")
-best.train.cues.n <- length(unique(unlist(strsplit(best.train.cues, ","))))
+train.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues[train.tree], ";"))), collapse = ",")
+train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
 #
 all.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))), collapse = ",")
 all.cues.n <- length(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))))
 
 
-best.train.hr <- round(x$tree.stats$train$hr[best.train.tree], 2)
-best.train.far <- round(x$tree.stats$train$far[best.train.tree], 2)
-best.train.spec <- 1 - round(x$tree.stats$train$far[best.train.tree], 2)
-best.train.dp <- round(x$tree.stats$train$dprime[best.train.tree], 2)
-best.train.v <- round(x$tree.stats$train$hr[best.train.tree] - x$tree.stats$train$far[best.train.tree], 2)
-best.train.frugality <- round(x$tree.stats$train$frugality[best.train.tree], 2)
-best.train.mcpc <- round(mean(x$levelout$train[,best.train.tree]), 2)
+train.sens <- round(x$tree.stats$train$sens[train.tree], 2)
+train.far <- round(x$tree.stats$train$far[train.tree], 2)
+train.spec <- 1 - round(x$tree.stats$train$far[train.tree], 2)
+train.dp <- round(x$tree.stats$train$dprime[train.tree], 2)
+train.bacc <- round(x$tree.stats$train$bacc[train.tree], 2)
+train.frugality <- round(x$tree.stats$train$frugality[train.tree], 2)
+train.mcpc <- round(mean(x$levelout$train[,train.tree]), 2)
 
 
 train.auc <- round(x$auc$FFTrees[1], 2)
-train.pcorrect <- round((x$tree.stats$train$hi[best.train.tree] + x$tree.stats$train$cr[best.train.tree]) / x$tree.stats$train$n[best.train.tree], 2)
+train.acc <- round((x$tree.stats$train$hi[train.tree] + x$tree.stats$train$cr[train.tree]) / x$tree.stats$train$n[train.tree], 2)
 
 if(is.null(x$tree.stats$test) == FALSE) {
 
 n.test.ex <- x$data.desc$test$cases
-best.test.hr <- round(x$tree.stats$test$hr[best.train.tree], 2)
-best.test.far <- round(x$tree.stats$test$far[best.train.tree], 2)
-best.test.spec <- 1 - round(x$tree.stats$test$far[best.train.tree], 2)
-best.test.dp <- round(x$tree.stats$test$dprime[best.train.tree], 2)
-best.test.frugality <- round(x$tree.stats$test$frugality[best.train.tree], 2)
-best.test.mcpc <- round(mean(x$levelout$test[,best.train.tree]), 2)
+test.sens <- round(x$tree.stats$test$sens[train.tree], 2)
+test.far <- round(x$tree.stats$test$far[train.tree], 2)
+test.spec <- 1 - round(x$tree.stats$test$far[train.tree], 2)
+test.bacc <- round(x$tree.stats$test$bacc[train.tree], 2)
+test.frugality <- round(x$tree.stats$test$frugality[train.tree], 2)
+test.mcpc <- round(mean(x$levelout$test[,train.tree]), 2)
 
 
 test.auc <- round(x$auc$FFTrees[2], 2)
-test.pcorrect <- round((x$tree.stats$test$hi[best.train.tree] + x$tree.stats$test$cr[best.train.tree]) / x$tree.stats$test$n[best.train.tree], 2)
+test.acc <- round((x$tree.stats$test$hi[train.tree] + x$tree.stats$test$cr[train.tree]) / x$tree.stats$test$n[train.tree], 2)
 
 summary.df <- data.frame("train" = c(n.train.ex,
-                                     best.train.frugality,
-                                     best.train.mcpc,
-                                     train.pcorrect,
-                                     best.train.dp,
-                                     best.train.hr,
-                                     best.train.spec),
+                                     train.frugality,
+                                     train.mcpc,
+                                     train.acc,
+                                     train.bacc,
+                                     train.sens,
+                                     train.spec),
                          "test" = c(n.test.ex,
-                                    best.test.frugality,
-                                    best.test.mcpc,
-                                    test.pcorrect,
-                                    best.test.dp,
-                                    best.test.hr,
-                                    best.test.spec)
+                                    test.frugality,
+                                    test.mcpc,
+                                    test.acc,
+                                    test.bacc,
+                                    test.sens,
+                                    test.spec)
 )
 
 }
@@ -71,28 +73,28 @@ summary.df <- data.frame("train" = c(n.train.ex,
 if(is.null(x$tree.stats$test)) {
 
   n.test.ex <- 0
-  best.test.frugality <- "--"
-  best.test.mcpc <- "--"
-  best.test.hr <- "--"
-  best.test.far <- "--"
-  best.test.dp <- "--"
-  best.test.spec <- "--"
+  test.frugality <- "--"
+  test.mcpc <- "--"
+  test.sens <- "--"
+  test.far <- "--"
+  test.spec <- "--"
   test.auc <- "--"
-  test.pcorrect <- "--"
+  test.acc <- "--"
+  test.bacc <- "--"
 
   summary.df <- data.frame("train" = c(n.train.ex,
-                                       best.train.frugality,
-                                       best.train.mcpc,
-                                       train.pcorrect,
-                                       best.train.dp,
-                                       best.train.hr,
-                                       best.train.spec)
+                                       train.frugality,
+                                       train.mcpc,
+                                       train.acc,
+                                       train.bacc,
+                                       train.sens,
+                                       train.spec)
   )
 
 
 }
 
-rownames(summary.df) <- c("n", "frugality", "mcpc", "correct", "d-prime", "sens", "spec")
+rownames(summary.df) <- c("n", "frugality", "mcpc", "acc", "bacc", "sens", "spec")
 
 
 summary.text <- paste("FFTrees object containing ", n.trees, " trees using up to ", all.cues.n,
@@ -110,7 +112,7 @@ if(is.null(test.auc) == F) {
 
 }
 
-accuracy.text <- paste("Best training tree: #", best.train.tree, ", using ", best.train.cues.n, " cues {", best.train.cues, "}:", sep = "")
+accuracy.text <- paste("Best training tree: #", train.tree, ", using ", train.cues.n, " cues {", train.cues, "}:", sep = "")
 
 print(summary.text)
 #print(auc.text)

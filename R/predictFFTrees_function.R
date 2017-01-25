@@ -1,8 +1,8 @@
-#' Predict new data from an FFTrees object
+#' Predict new data from an FFTrees x
 #'
 #' @param object An FFTrees object created from the FFTrees() function.
 #' @param data A dataframe of test data
-#' @param tree Which tree in the FFTrees object should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.
+#' @param tree Which tree in the FFTrees x should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.
 #' @param ... Additional arguments passed on to \code{predict()}
 #' @return A logical vector of predictions
 #' @export
@@ -16,7 +16,7 @@
 #'   breast.train <- breastcancer[1:150,]
 #'   breast.test <- breastcancer[151:303,]
 #'
-#'   # Create an FFTrees object from the training data
+#'   # Create an FFTrees x from the training data
 #'
 #'   breast.fft <- FFTrees(formula = diagnosis ~.,
 #'                               data = breast.train)
@@ -33,9 +33,15 @@ predict.FFTrees <- function(
   ...
 ) {
 
+  # x <- result.i
+  # data = data
+  # tree <- "best.train"
+  #
+  goal <- object$params$goal
+
   if (tree == "best.train") {
 
-    tree <- which(object$tree.stats$train$v == max(object$tree.stats$train$v))
+    tree <- which(object$tree.stats$train[[goal]] == max(object$tree.stats$train[[goal]]))
     if(length(tree) > 1) {tree <- sample(tree, 1)}
 
   }

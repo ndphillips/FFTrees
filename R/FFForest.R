@@ -9,8 +9,8 @@
 #' @param ntree integer. Number of trees to create.
 #' @param train.p numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.
 #' @param algorithm string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
-#' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
-#' @param hr.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
+#' @param sens.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.lr,do.cart,do.rf,do.svm logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?
@@ -34,8 +34,8 @@ FFForest <- function(formula = NULL,
                      ntree = 10,
                      train.p = .5,
                      algorithm = "m",
-                     goal = "v",
-                     hr.weight = .5,
+                     goal = "bacc",
+                     sens.weight = .5,
                      verbose = TRUE,
                      cpus = 1,
                      do.lr = TRUE,
@@ -44,6 +44,24 @@ FFForest <- function(formula = NULL,
                      do.svm = TRUE,
                      rank.method = NULL
 ) {
+
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # data.test = NULL
+  # max.levels = 5
+  # ntree = 10
+  # train.p = .5
+  # algorithm = "m"
+  # goal = "bacc"
+  # sens.weight = .5
+  # verbose = TRUE
+  # cpus = 1
+  # do.lr = TRUE
+  # do.cart = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # rank.method = NULL
+
 
 # Check for depricated arguments
 
@@ -85,7 +103,7 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               max.levels = max.levels,
                               algorithm = algorithm,
                               goal = goal,
-                              hr.weight = hr.weight,
+                              sens.weight = sens.weight,
                               do.cart = do.cart,
                               do.lr = do.lr,
                               do.rf = do.rf,
@@ -157,7 +175,7 @@ if(cpus > 1) {
   snowfall::sfExport("do.svm")
   snowfall::sfExport("max.levels")
   snowfall::sfExport("algorithm")
-  snowfall::sfExport("hr.weight")
+  snowfall::sfExport("sens.weight")
 
   result.ls <- snowfall::sfClusterApplySR(1:nrow(simulations), fun = getsim.fun, perUpdate = 1)
   suppressMessages(snowfall::sfStop())
@@ -166,9 +184,9 @@ if(cpus > 1) {
 
 # Append final results to simulations
 
-best.tree.v <- sapply(1:length(result.ls), FUN = function(x) {
+best.tree.v <- sapply(1:length(result.ls), FUN = function(i) {
 
-  best.tree.i <- which(result.ls[[x]]$trees$train$v == max(result.ls[[x]]$trees$train$v))
+  best.tree.i <- which(result.ls[[i]]$trees$train[[goal]] == max(result.ls[[i]]$trees$train[[goal]]))
 
   if(length(best.tree.i) > 1) {best.tree.i <- sample(best.tree.i, 1)}
 
@@ -176,11 +194,11 @@ best.tree.v <- sapply(1:length(result.ls), FUN = function(x) {
 
 })
 
-sapply(1:length(result.ls), FUN = function(x) {length(result.ls[[x]]$decisions)})
+#sapply(1:length(result.ls), FUN = function(i) {length(result.ls[[i]]$decisions)})
 
-decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(x) {
+decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(i) {
 
-  return(result.ls[[x]]$decisions)
+  return(result.ls[[i]]$decisions)
 
 })), nrow = nrow(data), ncol = ntree)
 
@@ -201,34 +219,37 @@ simulations$exits <- sapply(1:length(result.ls),
                               FUN = function(x) {result.ls[[x]]$trees$train$exits[best.tree.v[x]]})
 
 
-simulations$hr.train <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$train$hr[best.tree.v[x]]})
+simulations$sens.train <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$train$sens[best.tree.v[x]]})
+
+simulations$spec.train <- sapply(1:length(result.ls),
+                                 FUN = function(x) {result.ls[[x]]$trees$train$spec[best.tree.v[x]]})
 
 simulations$far.train <- sapply(1:length(result.ls),
                                  FUN = function(x) {result.ls[[x]]$trees$train$far[best.tree.v[x]]})
 
-simulations$cor.train <- sapply(1:length(result.ls),
-                              FUN = function(x) {result.ls[[x]]$trees$train$cor[best.tree.v[x]]})
+simulations$acc.train <- sapply(1:length(result.ls),
+                              FUN = function(x) {result.ls[[x]]$trees$train$acc[best.tree.v[x]]})
 
-simulations$v.train <- sapply(1:length(result.ls),
-                              FUN = function(x) {result.ls[[x]]$trees$train$v[best.tree.v[x]]})
-
-simulations$dprime.train <- qnorm(simulations$hr.train) - qnorm(simulations$far.train)
+simulations$bacc.train <- sapply(1:length(result.ls),
+                              FUN = function(x) {result.ls[[x]]$trees$train$bacc[best.tree.v[x]]})
 
 
-simulations$hr.test <- sapply(1:length(result.ls),
-                               FUN = function(x) {result.ls[[x]]$trees$test$hr[best.tree.v[x]]})
+simulations$sens.test <- sapply(1:length(result.ls),
+                               FUN = function(x) {result.ls[[x]]$trees$test$sens[best.tree.v[x]]})
+
+simulations$spec.test <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$test$spec[best.tree.v[x]]})
 
 simulations$far.test <- sapply(1:length(result.ls),
                                 FUN = function(x) {result.ls[[x]]$trees$test$far[best.tree.v[x]]})
 
-simulations$cor.test <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$test$cor[best.tree.v[x]]})
+simulations$acc.test <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$test$acc[best.tree.v[x]]})
 
-simulations$v.test <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$trees$test$v[best.tree.v[x]]})
+simulations$bacc.test <- sapply(1:length(result.ls),
+                             FUN = function(x) {result.ls[[x]]$trees$test$bacc[best.tree.v[x]]})
 
-simulations$dprime.test <- qnorm(simulations$hr.test) - qnorm(simulations$far.test)
 
 # Get overall cue frequencies
 frequencies <- table(unlist(strsplit(simulations$cues, ";")))

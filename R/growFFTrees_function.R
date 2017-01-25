@@ -3,8 +3,8 @@
 #' @param data dataframe. A dataset
 #' @param max.levels integer. The maximum number of levels in the tree(s)
 #' @param algorithm character. A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
-#' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
-#' @param hr.weight numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy
+#' @param sens.weight numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param verbose logical. Should tree growing progress be displayed?
@@ -39,8 +39,8 @@
 grow.FFTrees <- function(formula,
                          data,
                          algorithm = "m",
-                         hr.weight = .5,
-                         goal = "v",
+                         sens.weight = .5,
+                         goal = "bacc",
                          max.levels = 4,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
@@ -49,15 +49,7 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 
-  # formula = formula
-  # data = data.train
-  # algorithm = algorithm
-  # goal = goal
-  # repeat.cues = repeat.cues
-  # stopping.rule = stopping.rule
-  # stopping.par = stopping.par
-  # max.levels = max.levels
-  # hr.weight = hr.weight
+
 
 
 
@@ -182,10 +174,10 @@ level.stats[level.stat.names] <- NA
 #   classified at the current level (i.e; if the tree stopped here)
 
 asif.stats <- data.frame("level" = 1:n.levels,
-                         "hr" = NA,
-                         "far" = NA,
-                         "v" = NA,
-                         "v.change" = NA)
+                         "sens" = NA,
+                         "spec" = NA,
+                         "bacc" = NA,
+                         "goal.change" = NA)
 
 # Starting values
 grow.tree <- TRUE
@@ -235,30 +227,24 @@ cue.accuracies.current <-  cuerank(formula = formula,
 
 }
 
-# GET NEXT CUE BASED ON WEIGHTED HR AND FAR
+# GET NEXT CUE BASED ON WEIGHTED SENS AND SPEC
 
-hr.vec <- cue.accuracies.current$hr
-far.vec <- cue.accuracies.current$far
-cor.vec <- cue.accuracies.current$cor
+sens.vec <- cue.accuracies.current$sens
+spec.vec <- cue.accuracies.current$spec
+acc.vec <- cue.accuracies.current$acc
+bacc.vec <- cue.accuracies.current$bacc
 
+if(goal == "bacc") {
 
-if(goal == "v") {
-
-  weighted.v.vec <- hr.vec * hr.weight - far.vec * (1 - hr.weight)
-  best.cue.index <- which(weighted.v.vec == max(weighted.v.vec))
-
-}
-
-if(substr(goal, 1, 1) == "d") {
-
-  weighted.d.vec <- qnorm(hr.vec) * hr.weight - qnorm(far.vec) * (1 - hr.weight)
-  best.cue.index <- which(weighted.d.vec == max(weighted.d.vec))
+  weighted.bacc.vec <- (sens.vec * sens.weight + spec.vec * (1 - sens.weight)) / 2
+  best.cue.index <- which(weighted.bacc.vec == max(weighted.bacc.vec))
 
 }
 
-if(substr(goal, 1, 1) == "c") {
 
-  best.cue.index <- which(cor.vec == max(cor.vec))
+if(substr(goal, 1, 1) == "acc") {
+
+  best.cue.index <- which(acc.vec == max(acc.vec))
 
 }
 
@@ -299,21 +285,21 @@ as.if.decision.v[remaining.exemplars] <- cue.decisions[remaining.exemplars]
 asif.classtable <- classtable(prediction.v = as.if.decision.v,
                               criterion.v = criterion.v)
 
-asif.stats[current.level, c("hr", "far", "v")] <-  asif.classtable[1, c("hr", "far", "v")]
+asif.stats[current.level, c("sens", "spec", "bacc")] <-  asif.classtable[1, c("sens", "spec", "bacc")]
 
 # If ASIF classification is perfect, then stop!
-if(asif.stats$v[current.level] == 1) {grow.tree <- FALSE}
+if(asif.stats[[goal]][current.level] == 1) {grow.tree <- FALSE}
 
 if(current.level == 1) {
 
-  asif.stats$v.change[1] <- asif.classtable$v
+  asif.stats$goal.change[1] <- asif.classtable[[goal]]
 
 }
 
 if(current.level > 1) {
 
-  v.change <- asif.stats$v[current.level] - asif.stats$v[current.level - 1]
-  asif.stats$v.change[current.level] <- v.change
+  goal.change <- asif.stats[[goal]][current.level] - asif.stats[[goal]][current.level - 1]
+  asif.stats$goal.change[current.level] <- goal.change
 
 }
 
@@ -507,11 +493,11 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
 
 if(nrow(trees) > 0) {
 
-  tree.far.order <- order(trees$far, trees$hr)
+  tree.order <- order(-trees$spec, trees$sens)
 
-  trees <- trees[tree.far.order, ]
-  levelout <- levelout[, tree.far.order, drop = FALSE]
-  decision <- decision[, tree.far.order, drop = FALSE]
+  trees <- trees[tree.order, ]
+  levelout <- levelout[, tree.order, drop = FALSE]
+  decision <- decision[, tree.order, drop = FALSE]
   colnames(levelout) <- paste("tree.", 1:ncol(levelout), sep = "")
   colnames(decision) <- paste("tree.", 1:ncol(decision), sep = "")
 

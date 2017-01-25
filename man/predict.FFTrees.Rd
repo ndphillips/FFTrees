@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictFFTrees_function.R
 \name{predict.FFTrees}
 \alias{predict.FFTrees}
-\title{Predict new data from an FFTrees object}
+\title{Predict new data from an FFTrees x}
 \usage{
 \method{predict}{FFTrees}(object = NULL, data = NULL, tree = "best.train",
   ...)
@@ -12,7 +12,7 @@
 
 \item{data}{A dataframe of test data}
 
-\item{tree}{Which tree in the FFTrees object should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.}
+\item{tree}{Which tree in the FFTrees x should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.}
 
 \item{...}{Additional arguments passed on to \code{predict()}}
 }
@@ -20,7 +20,7 @@
 A logical vector of predictions
 }
 \description{
-Predict new data from an FFTrees object
+Predict new data from an FFTrees x
 }
 \examples{
 
@@ -32,7 +32,7 @@ Predict new data from an FFTrees object
   breast.train <- breastcancer[1:150,]
   breast.test <- breastcancer[151:303,]
 
-  # Create an FFTrees object from the training data
+  # Create an FFTrees x from the training data
 
   breast.fft <- FFTrees(formula = diagnosis ~.,
                               data = breast.train)

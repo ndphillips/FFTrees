@@ -4,12 +4,12 @@
 \alias{auc}
 \title{Calculates AUC (Area under the Curve) using trapezoidal approximation}
 \usage{
-auc(hr.v, far.v)
+auc(sens.v, spec.v)
 }
 \arguments{
-\item{hr.v}{a vector of hit rates}
+\item{sens.v}{a vector of sensitivities}
 
-\item{far.v}{A vector of false alarm rates}
+\item{spec.v}{A vector of specificities}
 }
 \description{
 Calculates AUC (Area under the Curve) using trapezoidal approximation
@@ -18,7 +18,7 @@ Calculates AUC (Area under the Curve) using trapezoidal approximation
 
 # Calculate the AUC for a vector of hit rates and false alarm rates
 
-auc(hr.v = c(.1, .3, .5, .7), far.v = c(.05, .1, .15, .3))
+auc(sens.v = c(.1, .3, .5, .7), spec.v = c(.05, .1, .15, .3))
 
 
 }

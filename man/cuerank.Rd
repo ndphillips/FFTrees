@@ -4,15 +4,16 @@
 \alias{cuerank}
 \title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
 \usage{
-cuerank(formula = NULL, data = NULL, goal = "v", numthresh.method = "o",
-  rounding = NULL, verbose = F, cue.rules = NULL)
+cuerank(formula = NULL, data = NULL, goal = "bacc",
+  numthresh.method = "o", rounding = NULL, verbose = F,
+  cue.rules = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
 
 \item{data}{dataframe. A dataframe containing variables in formula}
 
-\item{goal}{character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions}
+\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime}
 
 \item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
 

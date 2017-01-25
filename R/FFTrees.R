@@ -8,8 +8,8 @@
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param algorithm character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
-#' @param goal character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions
-#' @param hr.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
+#' @param sens.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
@@ -57,8 +57,8 @@ FFTrees <- function(formula = NULL,
                     data.test = NULL,
                     train.p = 1,
                     algorithm = "m",
-                    goal = "v",
-                    hr.weight = .5,
+                    goal = "bacc",
+                    sens.weight = .5,
                     max.levels = 4,
                     tree.definitions = NULL,
                     verbose = FALSE,
@@ -71,15 +71,15 @@ FFTrees <- function(formula = NULL,
                     rank.method = NULL
 ) {
 #
-#   formula <- diagnosis ~.
-#   data = heartdisease
+#
+#   formula = poisonous ~.
+#   data = mushrooms.train
+#   data.test = mushrooms.test
 #
 #
-#   data.test = NULL
-#   train.p = .5
 #   algorithm = "m"
-#   goal = "v"
-#   hr.weight = .5
+#   goal = "bacc"
+#   sens.weight = .5
 #   max.levels = 4
 #   tree.definitions = NULL
 #   verbose = FALSE
@@ -182,7 +182,7 @@ if(is.null(object) == FALSE) {
 
 }
 
-if(is.null(object) == TRUE & train.p == 1) {
+if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
 
   data.train.o <- data
   data.train <- model.frame(formula = formula,
@@ -454,7 +454,7 @@ tree.growth <- grow.FFTrees(formula = formula,
                             stopping.rule = stopping.rule,
                             stopping.par = stopping.par,
                             max.levels = max.levels,
-                            hr.weight = hr.weight)
+                            sens.weight = sens.weight)
 
 tree.definitions <- tree.growth$tree.definitions
 
@@ -479,8 +479,8 @@ levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 
-tree.auc.train <- FFTrees::auc(hr.v = train.results$treestats$hr,
-                               far.v = train.results$treestats$far)
+tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
+                               spec.v = train.results$treestats$spec)
 }
 
 if(is.null(data.train) == TRUE) {
@@ -504,15 +504,16 @@ levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
 
-if(any(is.na(test.results$treestats$hr)) == TRUE) {
+if(any(is.na(test.results$treestats$sens)) == TRUE) {
 
   tree.auc.test <- NA
 
 }
 
-if(all(is.finite(test.results$treestats$hr))) {
+if(all(is.finite(test.results$treestats$sens))) {
 
-tree.auc.test <- FFTrees::auc(hr.v = test.results$treestats$hr, far.v = test.results$treestats$far)
+tree.auc.test <- FFTrees::auc(sens.v = test.results$treestats$sens,
+                              spec.v = test.results$treestats$spec)
 
 }
 }
@@ -698,7 +699,7 @@ output.fft <- list("formula" = formula,
                   "decision" = decision,
                   "levelout" = levelout,
                   "auc" = auc,
-                  "params" = list("algorithm" = algorithm, "goal" = goal, "hr.weight" = hr.weight, "max.levels" = max.levels),
+                  "params" = list("algorithm" = algorithm, "goal" = goal, "sens.weight" = sens.weight, "max.levels" = max.levels),
                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),

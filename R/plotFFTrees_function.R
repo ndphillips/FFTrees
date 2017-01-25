@@ -4,7 +4,7 @@
 #' @param x A FFTrees object created from \code{"FFTrees()"}
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
-#' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"
+#' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
 #' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param main character. The main plot label.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
@@ -48,6 +48,18 @@ plot.FFTrees <- function(
   ...
 ) {
 
+#
+#
+#   data = "train"
+#   what = 'tree'
+#   tree = "best.train"
+#   main = "Data"
+#   n.per.icon = NULL
+#   decision.names = c("Noise", "Signal")
+#   which.tree = NULL
+#   comp = TRUE
+#   stats = TRUE
+
 # If what == cues, then send inputs to showcues()
 if(what == 'cues') {showcues(x = x, data = data, main = main)}
 
@@ -55,6 +67,7 @@ if(what == 'cues') {showcues(x = x, data = data, main = main)}
 if(what == 'tree') {
 
 n.trees <- nrow(x$tree.stats$train)
+goal <- x$params$goal
 
 # Check for problems and depreciated arguments
 {
@@ -97,12 +110,12 @@ n.trees <- nrow(x$tree.stats$train)
 
 if(tree == "best.train") {
 
- tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train$v)]
+ tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train[[goal]])]
 
 }
 if(tree == "best.test") {
 
- tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test$v)]
+ tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test[[goal]])]
 
 }
 
@@ -116,10 +129,11 @@ if(data == "train") {
 
   if(comp == TRUE) {
 
-  lr.stats <- data.frame("hr" = x$comp$lr$stats$hr.train, "far" = x$comp$lr$stats$far.train)
-  cart.stats <- data.frame("hr" = x$comp$cart$stats$hr.train, "far" = x$comp$cart$stats$far.train)
-  rf.stats <- data.frame("hr" = x$comp$rf$stats$hr.train, "far" = x$comp$rf$stats$far.train)
-  svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.train, "far" = x$comp$svm$stats$far.train)
+  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.train, "spec" = x$comp$lr$stats$spec.train)
+  cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.train, "spec" = x$comp$cart$stats$spec.train)
+  rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.train, "spec" = x$comp$rf$stats$spec.train)
+  svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.train, "spec" = x$comp$svm$stats$spec.train)
+
 }
 
   n.exemplars <- x$data.desc$train$cases
@@ -138,10 +152,10 @@ if(data == "test") {
 
   if(comp == TRUE) {
 
-  lr.stats <- data.frame("hr" = x$comp$lr$stats$hr.test, "far" = x$comp$lr$stats$far.test)
-  cart.stats <- data.frame("hr" = x$comp$cart$stats$hr.test, "far" = x$comp$cart$stats$far.test)
-  rf.stats <- data.frame("hr" = x$comp$rf$stats$hr.test, "far" = x$comp$rf$stats$far.test)
-  svm.stats <- data.frame("hr" = x$comp$svm$stats$hr.test, "far" = x$comp$svm$stats$far.test)
+  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.test, "spec" = x$comp$lr$stats$spec.test)
+  cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.test, "spec" = x$comp$cart$stats$spec.test)
+  rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.test, "spec" = x$comp$rf$stats$spec.test)
+  svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.test, "spec" = x$comp$svm$stats$spec.test)
 
   }
 
@@ -330,14 +344,14 @@ arrow.col <- gray(.5)
 
 # Final stats
 
-far.circle.x <- .4
+spec.circle.x <- .4
 dprime.circle.x <- .5
-hr.circle.x <- .6
+sens.circle.x <- .6
 
 stat.circle.y <- .3
 
-hr.circle.col <- "green"
-far.circle.col <- "red"
+sens.circle.col <- "green"
+spec.circle.col <- "red"
 dprime.circle.col <- "blue"
 stat.outer.circle.col <- gray(.5)
 
@@ -1070,20 +1084,20 @@ if(stats == TRUE) {
 
 # OBTAIN FINAL STATISTICS
 
-fft.auc <- auc(tree.stats$hr[order(tree.stats$far)], tree.stats$far[order(tree.stats$far)])
-fft.hr.vec <- tree.stats$hr[order(tree.stats$far)]
-fft.far.vec <- tree.stats$far[order(tree.stats$far)]
+fft.auc <- auc(tree.stats$sens[order(tree.stats$spec)], tree.stats$spec[order(tree.stats$spec)])
+fft.sens.vec <- tree.stats$sens[order(tree.stats$spec)]
+fft.spec.vec <- tree.stats$spec[order(tree.stats$spec)]
 
 if(comp == TRUE) {
 
-lr.hr <- lr.stats$hr
-lr.far <- lr.stats$far
-cart.hr <- cart.stats$hr
-cart.far <- cart.stats$far
-rf.hr <- rf.stats$hr
-rf.far <- rf.stats$far
-svm.hr <- svm.stats$hr
-svm.far <- svm.stats$far
+lr.sens <- lr.stats$sens
+lr.spec <- lr.stats$spec
+cart.sens <- cart.stats$sens
+cart.spec <- cart.stats$spec
+rf.sens <- rf.stats$sens
+rf.spec <- rf.stats$spec
+svm.sens <- svm.stats$sens
+svm.spec <- svm.stats$spec
 
 }
 
@@ -1128,15 +1142,15 @@ level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
 lloc <- data.frame(
-  element = c("classtable", "frugality", "sens", "spec", "pc", "dp", "auc", "roc"),
-  long.name = c("Classification Table", "Frugality", "Sens", "Spec", "Correct", "D'", "AUC", "ROC"),
+  element = c("classtable", "frugality", "sens", "spec", "acc", "bacc", "auc", "roc"),
+  long.name = c("Classification Table", "Frugality", "Sens", "Spec", "Correct", "Bacc", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 6), .85),
   center.y = rep(level.center.y, 8),
   width =    c(.2, rep(level.width, 6), .2),
   height =   c(.65, rep(level.max.height, 6), .65),
-  value = c(NA, final.stats$frugality, final.stats$hr, 1 - final.stats$far, with(final.stats, (cr + hi) / n), final.stats$dprime, fft.auc, NA),
-  value.name = c(NA, pretty.dec(final.stats$frugality), pretty.dec(final.stats$hr), pretty.dec(1 - final.stats$far),  pretty.dec(with(final.stats, (cr + hi) / n)),
-                 round(final.stats$dprime, 2), round(fft.auc, 2), NA
+  value = c(NA, final.stats$frugality, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, fft.auc, NA),
+  value.name = c(NA, pretty.dec(final.stats$frugality), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(with(final.stats, (cr + hi) / n)),
+                 round(final.stats$bacc, 2), round(fft.auc, 2), NA
   )
 )
 
@@ -1381,26 +1395,25 @@ add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.
 
 min.acc <- max(crit.br, 1 - crit.br)
 
-add.level.fun("pc", min.val = 0, ok.val = .5) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("acc", min.val = 0, ok.val = .5) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
 # Add baseline to pc level
 
-segments(x0 = lloc$center.x[lloc$element == "pc"] - lloc$width[lloc$element == "pc"] / 2,
-         y0 = (lloc$center.y[lloc$element == "pc"] - lloc$height[lloc$element == "pc"] / 2) +  lloc$height[lloc$element == "pc"] * min.acc,
-         x1 = lloc$center.x[lloc$element == "pc"] + lloc$width[lloc$element == "pc"] / 2,
-         y1 = (lloc$center.y[lloc$element == "pc"] - lloc$height[lloc$element == "pc"] / 2) +  lloc$height[lloc$element == "pc"] * min.acc,
-         lty = 1
-         )
+segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
+         y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+         x1 = lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2,
+         y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+         lty = 1)
 
-text(x = lloc$center.x[lloc$element == "pc"],
-     y =(lloc$center.y[lloc$element == "pc"] - lloc$height[lloc$element == "pc"] / 2) +  lloc$height[lloc$element == "pc"] * min.acc,
+text(x = lloc$center.x[lloc$element == "acc"],
+     y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
      labels = "BL", pos = 1)
 
     #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
 
 
 
-add.level.fun("dp", min.val = 0, max.val = 3, ok.val = 1)
+add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5)
 add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
 }
 
@@ -1477,13 +1490,13 @@ rect(final.roc.x.loc[1],
 
   # CART
 
-  points(final.roc.x.loc[1] + cart.far * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + cart.hr * lloc$height[lloc$element == "roc"],
+  points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2, col = transparent("red", .3),
          bg = transparent("red", .7))
 
-  points(final.roc.x.loc[1] + cart.far * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + cart.hr * lloc$height[lloc$element == "roc"],
+  points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
          pch = "C", cex = .9, col = gray(.2))
 
 par("xpd" = FALSE)
@@ -1506,13 +1519,13 @@ par("xpd" = TRUE)
 
 ## LR
 
-points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
+points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2, col = transparent("blue", .3),
        bg = transparent("blue", .7))
 
-points(final.roc.x.loc[1] + lr.far * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + lr.hr * lloc$height[lloc$element == "roc"],
+points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
        pch = "L", cex = .9, col = gray(.2))
 
 par("xpd" = F)
@@ -1535,13 +1548,13 @@ par("xpd" = T)
 
 ## rf
 
-points(final.roc.x.loc[1] + rf.far * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + rf.hr * lloc$height[lloc$element == "roc"],
+points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2, col = transparent("purple", .3),
        bg = transparent("purple", .7))
 
-points(final.roc.x.loc[1] + rf.far * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + rf.hr * lloc$height[lloc$element == "roc"],
+points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
        pch = "R", cex = .9, col = gray(.2))
 
 par("xpd" = F)
@@ -1565,13 +1578,13 @@ par("xpd" = T)
 
 ## svm
 
-points(final.roc.x.loc[1] + svm.far * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + svm.hr * lloc$height[lloc$element == "roc"],
+points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2, col = transparent("orange", .3),
        bg = transparent("orange", .7))
 
-points(final.roc.x.loc[1] + svm.far * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + svm.hr * lloc$height[lloc$element == "roc"],
+points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
        pch = "S", cex = .9, col = gray(.2))
 
 par("xpd" = F)
@@ -1596,41 +1609,41 @@ par("xpd" = T)
 
   ## FFT
 {
-  roc.order <- order(fft.far.vec)
+  roc.order <- order(fft.spec.vec, decreasing = TRUE)
 
-  fft.hr.vec.ord <- fft.hr.vec[roc.order]
-  fft.far.vec.ord <- fft.far.vec[roc.order]
+  fft.sens.vec.ord <- fft.sens.vec[roc.order]
+  fft.spec.vec.ord <- fft.spec.vec[roc.order]
 
   # Add segments and points for all trees but tree
 
   if(length(roc.order) > 1) {
 
-  segments(final.roc.x.loc[1] + c(0, fft.far.vec.ord) * lloc$width[lloc$element == "roc"],
-           final.roc.y.loc[1] + c(0, fft.hr.vec.ord) * lloc$height[lloc$element == "roc"],
-           final.roc.x.loc[1] + c(fft.far.vec.ord, 1) * lloc$width[lloc$element == "roc"],
-           final.roc.y.loc[1] + c(fft.hr.vec.ord, 1) * lloc$height[lloc$element == "roc"], lwd = 1, col = gray(.5, .5))
+  segments(final.roc.x.loc[1] + c(0, 1 - fft.spec.vec.ord) * lloc$width[lloc$element == "roc"],
+           final.roc.y.loc[1] + c(0, fft.sens.vec.ord) * lloc$height[lloc$element == "roc"],
+           final.roc.x.loc[1] + c(1 - fft.spec.vec.ord, 1) * lloc$width[lloc$element == "roc"],
+           final.roc.y.loc[1] + c(fft.sens.vec.ord, 1) * lloc$height[lloc$element == "roc"], lwd = 1, col = gray(.5, .5))
 
-  points(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
+  points(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 2.5, col = transparent("green", .3),
          bg = transparent("white", .1))
 
-  text(final.roc.x.loc[1] + fft.far.vec.ord[-(which(roc.order == tree))] * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + fft.hr.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
-       labels = roc.order[-(which(roc.order == tree))], cex = 1, col = gray(.2))
+  text(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
+       final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
+       labels = roc.order[rev(which(roc.order != tree))], cex = 1, col = gray(.2))
 
   }
 
 
   # Add large point for plotted tree
 
-  points(final.roc.x.loc[1] + fft.far.vec[tree] * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + fft.hr.vec[tree] * lloc$height[lloc$element == "roc"],
+  points(final.roc.x.loc[1] + (1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + fft.sens.vec[tree] * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 3, col = gray(1), #col = transparent("green", .3),
          bg = transparent("green", .3), lwd = 1)
 
-  text(final.roc.x.loc[1] + fft.far.vec[tree] * lloc$width[lloc$element == "roc"],
-         final.roc.y.loc[1] + fft.hr.vec[tree] * lloc$height[lloc$element == "roc"],
+  text(final.roc.x.loc[1] + (1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"],
+         final.roc.y.loc[1] + fft.sens.vec[tree] * lloc$height[lloc$element == "roc"],
         labels = tree, cex = 1.25, col = gray(.2), font = 2)
 
 

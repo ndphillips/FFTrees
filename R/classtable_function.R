@@ -62,22 +62,25 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
 
   }
 
-  # Hit-rate
-  hr <- hi / (hi + mi)
-  hr.c <- hi.c / (hi.c + mi.c)
+  # Sensitivity
+  sens <- hi / (hi + mi)
+  sens.c <- hi.c / (hi.c + mi.c)
 
   # False-alarm rate
   far <- fa / (cr + fa)
   far.c <- fa.c / (cr.c + fa.c)
 
-  # Percent correct
-  cor <- (hi + cr) / (hi + cr + mi + fa)
+  # Specificity
+  spec <- 1 - far
 
-  # v (HR - FAR)
-  v <- hr - far
+  # Percent correct
+  acc <- (hi + cr) / (hi + cr + mi + fa)
+
+  # bacc (sens - FAR)
+  bacc <- (sens + spec) / 2
 
   # d-prime
-  dprime <- qnorm(hr.c) - qnorm(far.c)
+  dprime <- qnorm(sens.c) - qnorm(far.c)
 
   }
 
@@ -87,10 +90,11 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     mi <- NA
     fa <- NA
     cr <- NA
-    hr <- NA
+    sens <- NA
+    spec <- NA
     far <- NA
-    cor <- NA
-    v <- NA
+    acc <- NA
+    bacc <- NA
     dprime <- NA
 
   }
@@ -101,10 +105,11 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     mi = mi,
     fa = fa,
     cr = cr,
-    hr = hr,
+    sens = sens,
+    spec = 1 - far,
     far = far,
-    cor = cor,
-    v = v,
+    acc = acc,
+    bacc = bacc,
     dprime = dprime)
 
   return(result)

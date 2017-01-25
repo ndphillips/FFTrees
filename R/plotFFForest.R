@@ -13,8 +13,8 @@
 #'
 #'
 plot.FFForest = function(x,
-                         nodesize = .1,
-                         edgesize = 1,
+                         nodesize = .25,
+                         edgesize = .5,
                          mincon = 0,
                          ...) {
 
@@ -106,7 +106,7 @@ locations <- igraph::layout_with_dh(g)
 
     points(x = locations[i, 1],
            y = locations[i, 2],
-           cex = relfreq.i * nodesize,
+           cex = relfreq.i * 100 * nodesize,
            pch = 21,
            col = "black",
            bg = gray(1 - relfreq.i))
@@ -123,97 +123,97 @@ locations <- igraph::layout_with_dh(g)
 
 }
 
-# ROC
-{
-
-plot(1, xlim = c(0, 1),
-     ylim = c(0, 1),
-     xlab = "FAR",
-     ylab = "HR",
-     type = "n",
-     main = "ROC Curve", yaxt = "n", xaxt = "n")
-
-  axis(side = 2, at = seq(0, 1, .1), las = 1)
-  axis(side = 1, at = seq(0, 1, .1), las = 1)
-
-  abline(h = seq(0, 1, .1),
-         v = seq(0, 1, .1),
-         lwd = c(.75, .25), col = gray(.5, .5))
-
-points(x$tree.sim$far.test,
-       x$tree.sim$hr.test,
-       pch = 16,
-       col = "green",
-       cex = .5)
-
-
-points(x$cart.sim$far.test,
-       x$cart.sim$hr.test,
-       pch = 16,
-       col = "red",
-       cex = .5)
-
-points(x$rf.sim$far.test,
-       x$rf.sim$hr.test,
-       pch = 16,
-       col = "purple",
-       cex = .5)
-
-points(x$svm.sim$far.test,
-       x$svm.sim$hr.test,
-       pch = 16,
-       col = "orange",
-       cex = .5)
-
-points(median(x$tree.sim$far.test),
-       median(x$tree.sim$hr.test),
-       pch = "+",
-       cex = 2,
-       col = "white")
-
-points(median(x$tree.sim$far.test),
-       median(x$tree.sim$hr.test),
-       pch = "+",
-       cex = 1.5,
-       col = transparent("green", 0))
-
-points(median(x$cart.sim$far.test),
-       median(x$cart.sim$hr.test),
-       pch = "+",
-       cex = 2,
-       col = "white")
-
-points(median(x$cart.sim$far.test),
-       median(x$cart.sim$hr.test),
-       pch = "+",
-       cex = 1.5,
-       col = "red")
-
-points(median(x$rf.sim$far.test),
-       median(x$rf.sim$hr.test),
-       pch = "+",
-       cex = 2,
-       col = transparent("white", 0))
-
-points(median(x$rf.sim$far.test),
-       median(x$rf.sim$hr.test),
-       pch = "+",
-       cex = 1.5,
-       col = 'purple')
-
-points(median(x$svm.sim$far.test),
-       median(x$svm.sim$hr.test),
-       pch = "+",
-       cex = 2,
-       col = transparent("white", 0))
-
-points(median(x$svm.sim$far.test),
-       median(x$svm.sim$hr.test),
-       pch = "+",
-       cex = 1.5,
-       col = 'orange')
-
-}
+# # ROC
+# {
+#
+# plot(1, xlim = c(0, 1),
+#      ylim = c(0, 1),
+#      xlab = "FAR",
+#      ylab = "HR",
+#      type = "n",
+#      main = "ROC Curve", yaxt = "n", xaxt = "n")
+#
+#   axis(side = 2, at = seq(0, 1, .1), las = 1)
+#   axis(side = 1, at = seq(0, 1, .1), las = 1)
+#
+#   abline(h = seq(0, 1, .1),
+#          v = seq(0, 1, .1),
+#          lwd = c(.75, .25), col = gray(.5, .5))
+#
+# points(x$tree.sim$far.test,
+#        x$tree.sim$hr.test,
+#        pch = 16,
+#        col = "green",
+#        cex = .5)
+#
+#
+# points(x$cart.sim$far.test,
+#        x$cart.sim$hr.test,
+#        pch = 16,
+#        col = "red",
+#        cex = .5)
+#
+# points(x$rf.sim$far.test,
+#        x$rf.sim$hr.test,
+#        pch = 16,
+#        col = "purple",
+#        cex = .5)
+#
+# points(x$svm.sim$far.test,
+#        x$svm.sim$hr.test,
+#        pch = 16,
+#        col = "orange",
+#        cex = .5)
+#
+# points(median(x$tree.sim$far.test),
+#        median(x$tree.sim$hr.test),
+#        pch = "+",
+#        cex = 2,
+#        col = "white")
+#
+# points(median(x$tree.sim$far.test),
+#        median(x$tree.sim$hr.test),
+#        pch = "+",
+#        cex = 1.5,
+#        col = transparent("green", 0))
+#
+# points(median(x$cart.sim$far.test),
+#        median(x$cart.sim$hr.test),
+#        pch = "+",
+#        cex = 2,
+#        col = "white")
+#
+# points(median(x$cart.sim$far.test),
+#        median(x$cart.sim$hr.test),
+#        pch = "+",
+#        cex = 1.5,
+#        col = "red")
+#
+# points(median(x$rf.sim$far.test),
+#        median(x$rf.sim$hr.test),
+#        pch = "+",
+#        cex = 2,
+#        col = transparent("white", 0))
+#
+# points(median(x$rf.sim$far.test),
+#        median(x$rf.sim$hr.test),
+#        pch = "+",
+#        cex = 1.5,
+#        col = 'purple')
+#
+# points(median(x$svm.sim$far.test),
+#        median(x$svm.sim$hr.test),
+#        pch = "+",
+#        cex = 2,
+#        col = transparent("white", 0))
+#
+# points(median(x$svm.sim$far.test),
+#        median(x$svm.sim$hr.test),
+#        pch = "+",
+#        cex = 1.5,
+#        col = 'orange')
+#
+# }
 
 
 par(ask = FALSE)

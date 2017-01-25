@@ -1,49 +1,51 @@
 #' Calculates AUC (Area under the Curve) using trapezoidal approximation
-#' @param hr.v a vector of hit rates
-#' @param far.v A vector of false alarm rates
+#' @param sens.v a vector of sensitivities
+#' @param spec.v A vector of specificities
 #' @export
 #' @examples
 #'
 #' # Calculate the AUC for a vector of hit rates and false alarm rates
 #'
-#' auc(hr.v = c(.1, .3, .5, .7), far.v = c(.05, .1, .15, .3))
+#' auc(sens.v = c(.1, .3, .5, .7), spec.v = c(.05, .1, .15, .3))
 #'
 #'
 
-auc <- function(hr.v, far.v) {
+auc <- function(sens.v, spec.v) {
 
-  hr.order <- order(hr.v)
+  far.v <- 1 - spec.v
 
-  hr.v <- hr.v[hr.order]
+  hr.order <- order(sens.v)
+
+  sens.v <- sens.v[hr.order]
   far.v <- far.v[hr.order]
 
-  hr.v <- c(0, hr.v, 1)
+  sens.v <- c(0, sens.v, 1)
   far.v <- c(0, far.v, 1)
 
   # Remove bad (i.e.. non-increasing values)
 
-  hr.v.n <- hr.v[1]
+  sens.v.n <- sens.v[1]
   far.v.n <- far.v[1]
 
-  if(all(is.finite(hr.v) & is.finite(far.v))) {
+  if(all(is.finite(sens.v) & is.finite(far.v))) {
 
-  for(i in 2:length(hr.v)) {
+  for(i in 2:length(sens.v)) {
 
-    if(hr.v[i] >= hr.v.n[length(hr.v.n)] & far.v[i] >= far.v.n[length(far.v.n)]) {
+    if(sens.v[i] >= sens.v.n[length(sens.v.n)] & far.v[i] >= far.v.n[length(far.v.n)]) {
 
-      hr.v.n <- c(hr.v.n, hr.v[i])
+      sens.v.n <- c(sens.v.n, sens.v[i])
       far.v.n <- c(far.v.n, far.v[i])
 
     }
   }
 
-  hr.v <- hr.v.n
+  sens.v <- sens.v.n
   far.v <- far.v.n
-  n <- length(hr.v)
+  n <- length(sens.v)
 
 
-  auc.i <- sum((far.v[2:n] - far.v[1:(n - 1)]) * hr.v[1:(n - 1)] +
-    (far.v[2:n] - far.v[1:(n - 1)]) * (hr.v[2:(n)] - hr.v[1:(n-1)]) / 2)
+  auc.i <- sum((far.v[2:n] - far.v[1:(n - 1)]) * sens.v[1:(n - 1)] +
+    (far.v[2:n] - far.v[1:(n - 1)]) * (sens.v[2:(n)] - sens.v[1:(n-1)]) / 2)
 
   } else {
 

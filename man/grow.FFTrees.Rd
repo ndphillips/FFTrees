@@ -4,9 +4,9 @@
 \alias{grow.FFTrees}
 \title{Grows fast and frugal trees using an algorithm specified by \code{algorithm}.}
 \usage{
-grow.FFTrees(formula, data, algorithm = "m", hr.weight = 0.5, goal = "v",
-  max.levels = 4, stopping.rule = "exemplars", stopping.par = 0.1,
-  verbose = FALSE, rank.method = NULL, ...)
+grow.FFTrees(formula, data, algorithm = "m", sens.weight = 0.5,
+  goal = "bacc", max.levels = 4, stopping.rule = "exemplars",
+  stopping.par = 0.1, verbose = FALSE, rank.method = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -15,9 +15,9 @@ grow.FFTrees(formula, data, algorithm = "m", hr.weight = 0.5, goal = "v",
 
 \item{algorithm}{character. A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
-\item{hr.weight}{numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.}
+\item{sens.weight}{numeric. A value between 0 and 1 indicating how much weight to give to maximizing hit rates versus minimizing false alarm rates. Used for selecting cue thresholds and ranking cues in the tree.}
 
-\item{goal}{character. A string indicating the statistic to maximize: "v" = HR - FAR, "d" = d-prime, "c" = correct decisions}
+\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy}
 
 \item{max.levels}{integer. The maximum number of levels in the tree(s)}
 

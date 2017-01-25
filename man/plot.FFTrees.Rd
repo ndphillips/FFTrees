@@ -16,7 +16,7 @@
 
 \item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.}
 
-\item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (HR - FAR), use "best.train" or "best.test"}
+\item{tree}{An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"}
 
 \item{main}{character. The main plot label.}
 

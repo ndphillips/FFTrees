@@ -39,6 +39,12 @@ comp.pred <- function(formula,
                      data.train,
                      data.test = NULL,
                      algorithm = NULL) {
+#
+#
+#   formula = formula
+#   data.train = data.train
+#   data.test = data.test
+#   algorithm = "lr"
 
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")}
@@ -289,7 +295,7 @@ comp.pred <- function(formula,
   } else {
 
     acc.test <- classtable(prediction.v = 1,
-                               criterion.v = 1)
+                           criterion.v = 1)
     acc.test[1,] <- NA
 
   }
@@ -310,13 +316,14 @@ comp.pred <- function(formula,
   names(acc.test) <- paste(names(acc.test), ".test", sep = "")
 
   acc <- cbind(acc.train, acc.test)
-  acc <- acc[order(acc$far.train),]
+  acc <- acc[order(acc$spec.train),]
 
   # CALCULATE AUC
 
   if(is.null(data.train) == FALSE & do.test == TRUE) {
 
-    auc.train <- FFTrees::auc(hr.v = acc$hr.train, far.v = acc$far.train)
+    auc.train <- FFTrees::auc(sens.v = acc$sens.train,
+                              spec.v = acc$spec.train)
 
   } else {
 
@@ -326,7 +333,7 @@ comp.pred <- function(formula,
 
   if(is.null(data.test) == FALSE & do.test == TRUE) {
 
-    auc.test <- FFTrees::auc(hr.v = acc$hr.test, far.v = acc$far.test)
+    auc.test <- FFTrees::auc(sens.v = acc$sens.test, spec.v = acc$spec.test)
 
   } else {
 
