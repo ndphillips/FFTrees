@@ -48,17 +48,6 @@ plot.FFTrees <- function(
   ...
 ) {
 
-#
-#
-#   data = "train"
-#   what = 'tree'
-#   tree = "best.train"
-#   main = "Data"
-#   n.per.icon = NULL
-#   decision.names = c("Noise", "Signal")
-#   which.tree = NULL
-#   comp = TRUE
-#   stats = TRUE
 
 # If what == cues, then send inputs to showcues()
 if(what == 'cues') {showcues(x = x, data = data, main = main)}
@@ -144,7 +133,6 @@ if(data == "train") {
 
 }
 if(data == "test") {
-
 
   decision.v <- x$decision$test[,tree]
   tree.stats <- x$tree.stats$test
@@ -573,8 +561,8 @@ par(xpd = F)
 
 # Add p.signal and p.noise levels
 
-signal.p <- mean(criterion.v)
-noise.p <- 1 - mean(criterion.v)
+signal.p <- x$data.desc[[data]]$criterion.br
+noise.p <- 1 - x$data.desc[[data]]$criterion.br
 
 p.rect.ylim <- c(.1, .6)
 
@@ -1084,9 +1072,9 @@ if(stats == TRUE) {
 
 # OBTAIN FINAL STATISTICS
 
-fft.auc <- auc(tree.stats$sens[order(tree.stats$spec)], tree.stats$spec[order(tree.stats$spec)])
-fft.sens.vec <- tree.stats$sens[order(tree.stats$spec)]
-fft.spec.vec <- tree.stats$spec[order(tree.stats$spec)]
+fft.auc <- auc(tree.stats$sens, tree.stats$spec)
+fft.sens.vec <- tree.stats$sens
+fft.spec.vec <- tree.stats$spec
 
 if(comp == TRUE) {
 
@@ -1609,7 +1597,8 @@ par("xpd" = T)
 
   ## FFT
 {
-  roc.order <- order(fft.spec.vec, decreasing = TRUE)
+
+  roc.order <- 1:n.trees
 
   fft.sens.vec.ord <- fft.sens.vec[roc.order]
   fft.spec.vec.ord <- fft.spec.vec[roc.order]
@@ -1630,7 +1619,7 @@ par("xpd" = T)
 
   text(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
-       labels = roc.order[rev(which(roc.order != tree))], cex = 1, col = gray(.2))
+       labels = roc.order[which(roc.order != tree)], cex = 1, col = gray(.2))
 
   }
 

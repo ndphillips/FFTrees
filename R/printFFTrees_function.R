@@ -47,14 +47,14 @@ test.frugality <-  round(x$tree.stats$test$frugality[tree], 2)
 test.mcpc <- round(x$tree.stats$test$mcpc[tree], 2)
 test.auc <- round(x$auc$FFTrees[1], 2)
 
-summary.df <- data.frame("train" = c(n.train.ex,
+summary.df <- data.frame("train" = c(train.n,
                                      train.frugality,
                                      train.mcpc,
                                      train.acc,
                                      train.bacc,
                                      train.sens,
                                      train.spec),
-                         "test" = c(n.test.ex,
+                         "test" = c(test.n,
                                     test.frugality,
                                     test.mcpc,
                                     test.acc,
@@ -67,7 +67,7 @@ summary.df <- data.frame("train" = c(n.train.ex,
 
 if(is.null(x$tree.stats$test)) {
 
-  n.test.ex <- 0
+  test.n <- 0
   test.frugality <- "--"
   test.mcpc <- "--"
   test.sens <- "--"
@@ -77,7 +77,7 @@ if(is.null(x$tree.stats$test)) {
   test.acc <- "--"
   test.bacc <- "--"
 
-  summary.df <- data.frame("train" = c(n.train.ex,
+  summary.df <- data.frame("train" = c(train.n,
                                        train.frugality,
                                        train.mcpc,
                                        train.acc,

@@ -70,26 +70,7 @@ FFTrees <- function(formula = NULL,
                     object = NULL,
                     rank.method = NULL
 ) {
-#
-#
-#   formula = poisonous ~.
-#   data = mushrooms.train
-#   data.test = mushrooms.test
-#
-#
-#   algorithm = "m"
-#   goal = "bacc"
-#   sens.weight = .5
-#   max.levels = 4
-#   tree.definitions = NULL
-#   verbose = FALSE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
+
 
 
 if(is.null(rank.method) == FALSE) {

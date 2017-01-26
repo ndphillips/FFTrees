@@ -50,9 +50,6 @@ grow.FFTrees <- function(formula,
 ) {
 
 
-
-
-
 if(is.null(rank.method) == FALSE) {
 
   warning("The argument rank.method is depricated. Use algorithm instead.")
@@ -493,7 +490,7 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
 
 if(nrow(trees) > 0) {
 
-  tree.order <- order(-trees$spec, trees$sens)
+  tree.order <- order(1 - trees$spec, trees$sens)
 
   trees <- trees[tree.order, ]
   levelout <- levelout[, tree.order, drop = FALSE]
