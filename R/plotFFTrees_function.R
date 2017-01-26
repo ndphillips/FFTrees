@@ -1472,8 +1472,8 @@ rect(final.roc.x.loc[1],
        c(final.roc.y.loc[1], mean(final.roc.y.loc[1:2]), final.roc.y.loc[2]),
        labels = c(0,.5, 1))
 
-  text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, "1 - Specificity")
-  text(final.roc.x.loc[1] - .04, mean(final.roc.y.loc), "Sensitivity", srt = 90)
+  text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, "1 - Specificity (FAR)")
+  text(final.roc.x.loc[1] - .04, mean(final.roc.y.loc), "Sensitivity (HR)", srt = 90)
 
   # Diagonal
 
