@@ -572,68 +572,68 @@ par(xpd = F)
 
 
 # Add p.signal and p.noise levels
-#
-# signal.p <- mean(criterion.v)
-# noise.p <- 1 - mean(criterion.v)
-#
-# p.rect.ylim <- c(.1, .6)
-#
-# # p.signal level
-#
-# text(x = .8, y = p.rect.ylim[2],
-#      labels = paste("p(", decision.names[2], ")", sep = ""),
-#      pos = 3, cex = 1.2)
-#
-# #Outline
-# rect(.775, p.rect.ylim[1],
-#      .825, p.rect.ylim[2], col = gray(1, .5))
-#
-# #Filling
-# rect(.775, p.rect.ylim[1],
-#      .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-#      col = gray(.5, .25), border = NA)
-#
-# # Filltop
-# segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-#          .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-#          col = gray(.5, 1))
-#
-# if(signal.p < .0001) {signal.p.text <- "<1%"} else {
-#
-#   signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
-#
-# }
-#
-# text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-#      labels = signal.p.text,
-#      pos = 4, cex = 1.2)
-#
-#
-# #p.noise level
-#
-# text(x = .2, y = p.rect.ylim[2],
-#      labels = paste("p(", decision.names[1], ")", sep = ""),
-#      pos = 3, cex = 1.2)
-#
-# rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
-#      col = gray(1, .5))
-#
-# rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-#      col = gray(.5, .25), border = NA)
-#
-# # Filltop
-# segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-#          .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-#          col = gray(.5, 1))
-#
-# if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
-#
-#   noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
-# }
-#
-# text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-#      labels = noise.p.text,
-#      pos = 2, cex = 1.2)
+
+signal.p <- mean(criterion.v)
+noise.p <- 1 - mean(criterion.v)
+
+p.rect.ylim <- c(.1, .6)
+
+# p.signal level
+
+text(x = .8, y = p.rect.ylim[2],
+     labels = paste("p(", decision.names[2], ")", sep = ""),
+     pos = 3, cex = 1.2)
+
+#Outline
+rect(.775, p.rect.ylim[1],
+     .825, p.rect.ylim[2], col = gray(1, .5))
+
+#Filling
+rect(.775, p.rect.ylim[1],
+     .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+     col = gray(.5, .25), border = NA)
+
+# Filltop
+segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+         .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+         col = gray(.5, 1))
+
+if(signal.p < .0001) {signal.p.text <- "<1%"} else {
+
+  signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
+
+}
+
+text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+     labels = signal.p.text,
+     pos = 4, cex = 1.2)
+
+
+#p.noise level
+
+text(x = .2, y = p.rect.ylim[2],
+     labels = paste("p(", decision.names[1], ")", sep = ""),
+     pos = 3, cex = 1.2)
+
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
+     col = gray(1, .5))
+
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+     col = gray(.5, .25), border = NA)
+
+# Filltop
+segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+         .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+         col = gray(.5, 1))
+
+if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
+
+  noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
+}
+
+text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+     labels = noise.p.text,
+     pos = 2, cex = 1.2)
 
 
 
