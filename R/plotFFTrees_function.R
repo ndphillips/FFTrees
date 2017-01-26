@@ -1137,8 +1137,8 @@ lloc <- data.frame(
   width =    c(.2, rep(level.width, 6), .2),
   height =   c(.65, rep(level.max.height, 6), .65),
   value = c(NA, final.stats$frugality, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, fft.auc, NA),
-  value.name = c(NA, pretty.dec(final.stats$frugality), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(with(final.stats, (cr + hi) / n)),
-                 round(final.stats$bacc, 2), round(fft.auc, 2), NA
+  value.name = c(NA, pretty.dec(final.stats$frugality), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
+                 pretty.dec(final.stats$bacc), pretty.dec(fft.auc), NA
   )
 )
 
