@@ -47,7 +47,7 @@ if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 if(is.null(main)) {main <- "Marginal Cue Accuracies"}
 
 plot(1, xlim = c(0, 1), ylim  = c(0, 1), type = "n",
-     xlab = "1 - Specificity", ylab = "Sensitivity", main = main,
+     xlab = "1 - Specificity (FAR)", ylab = "Sensitivity (HR)", main = main,
      yaxt = "n", xaxt = "n"
 )
 
