@@ -22,6 +22,7 @@ plot.FFForest = function(x,
   par(mfrow = c(1, 2))
 
 edges <- x$connections
+edges <- edges[edges[,3] >= mincon,]
 edges$line.lwd <- with(edges, N / sum(N))
 edges$line.lwd <- with(edges, (line.lwd - min(line.lwd)) / (max(line.lwd) - min(line.lwd)) * (line.cex.lim[2] - line.cex.lim[1]) + line.cex.lim[1])
 
@@ -62,7 +63,7 @@ text(frequencies / sum(frequencies), bp.vals[,1], pos = 4,
 {
   par(mar = c(5, 4, 4, 1) + .1)
 # Remove lower bound connections
-edges <- edges[edges[,3] >= mincon,]
+
 
 g <- igraph::graph_from_data_frame(edges, directed = FALSE)
 
