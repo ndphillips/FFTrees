@@ -102,7 +102,7 @@ locations <- locations[rev(match(igraph::get.vertex.attribute(g)$name, cue.names
           y = c(locations[is[1], 2], locations[is[2], 2]),
           lwd = edges$line.lwd[i],
           lty = 1,
-          col = 'grey50')
+          col = gray(1 - edges$line.lwd[i] / max(edges$line.lwd), alpha = .5))
 
   }
 
