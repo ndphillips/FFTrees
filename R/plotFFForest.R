@@ -61,6 +61,7 @@ text(frequencies / sum(frequencies), bp.vals[,1], pos = 4,
 
 # Network plot
 {
+  par(xpd = TRUE)
   par(mar = c(5, 4, 4, 1) + .1)
 # Remove lower bound connections
 
@@ -140,12 +141,12 @@ locations <- locations[rev(match(igraph::get.vertex.attribute(g)$name, cue.names
 
 }
 
+par(xpd = TRUE)
+
+
 # Heatplot
 #
 # p <- ggplot(edges, aes(cue1, cue2)) + geom_tile(aes(fill = N),
 #                                colour = "white") + scale_fill_gradient(low = "white",high = "steelblue")
-
-
-
 
 }
