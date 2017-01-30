@@ -1,8 +1,8 @@
 #' Creates a network plot. Code taken from Dirk Wulff (www.dirkwulff.org)
 #'
 #' @param x FFForest. An FFForest object created from FFForest()
-#' @param nodesize numeric. Nodesize adjustment
-#' @param edgesize numeric. Edgesize adjustment
+#' @param node.cex.lim numeric. Nodesize adjustment
+#' @param line.cex.lim numeric. Edgesize adjustment
 #' @param mincon integer. Minimum connection cutoff
 #' @param ... currently ignored
 #' @importFrom igraph graph_from_data_frame get.vertex.attribute layout_with_dh
@@ -13,16 +13,20 @@
 #'
 #'
 plot.FFForest = function(x,
-                         nodesize = .25,
-                         edgesize = .5,
+                         node.cex.lim = c(1, 10),
+                         line.cex.lim = c(.3, 5),
                          mincon = 0,
                          ...) {
 
-par(ask = TRUE)
+
+  par(mfrow = c(1, 2))
 
 edges <- x$connections
+edges$line.lwd <- with(edges, N / sum(N))
+edges$line.lwd <- with(edges, (line.lwd - min(line.lwd)) / (max(line.lwd) - min(line.lwd)) * (line.cex.lim[2] - line.cex.lim[1]) + line.cex.lim[1])
+
 # Get overall frequencies
-{
+
   frequencies <- c()
 
   for (i in 1:nrow(edges)) {
@@ -32,7 +36,8 @@ edges <- x$connections
   }
 
   frequencies <- sort(table(frequencies))
-}
+  node.cex <- (frequencies - min(frequencies)) / (max(frequencies) - min(frequencies)) * (node.cex.lim[2] - node.cex.lim[1]) + node.cex.lim[1]
+
 
 # Barplot
 {
@@ -47,10 +52,10 @@ barplot(height = frequencies / sum(frequencies),
         col = gray(1 - frequencies / sum(frequencies)))
 
 mtext(names(frequencies), side = 2, at = bp.vals[,1], las = 1, line = 1)
-mtext("Proportion of simulations where cue was used in FFForest", side = 3, cex = .8, font = 3)
+mtext("Importance", side = 1, cex = 1.5, line = 3)
 
 text(frequencies / sum(frequencies), bp.vals[,1], pos = 4,
-     labels = paste0(round(frequencies / sum(frequencies) * 100, 1), "%"))
+     labels = paste0(round(frequencies / sum(frequencies) * 100, 0), "%"))
 }
 
 # Network plot
@@ -89,7 +94,7 @@ locations <- igraph::layout_with_dh(g)
 
     lines(x = c(locations[is[1], 1], locations[is[2], 1]),
           y = c(locations[is[1], 2], locations[is[2], 2]),
-          lwd = edges[i ,3] ^ edgesize - .3,
+          lwd = edges$line.lwd[i],
           lty = 1,
           col = 'grey50')
 
@@ -104,118 +109,44 @@ locations <- igraph::layout_with_dh(g)
 
     relfreq.i <- freq.i / sum(frequencies)
 
+    # White mask
+
+    # points(x = locations[i, 1],
+    #        y = locations[i, 2],
+    #        cex = mean(node.cex.lim),
+    #        pch = 16,
+    #        col = yarrr::transparent("white", .2))
+
+    #bg = gray(1 - relfreq.i))
+
     points(x = locations[i, 1],
            y = locations[i, 2],
-           cex = relfreq.i * 100 * nodesize,
+           cex = node.cex[names(node.cex) == cue.names[i]],
            pch = 21,
-           col = "black",
-           bg = gray(1 - relfreq.i))
+           lwd = 5,
+           col = yarrr::piratepal("basel", trans = .1, length.out = nrow(locations))[i],
+           bg = yarrr::transparent("white", trans = .2))
+           #bg = gray(1 - relfreq.i))
   }
 
   # Add text
 
   for(i in 1:length(cue.names)){
-    text(x = locations[i, 1],
-         y = locations[i, 2],
-         labels = cue.names[i],
-         cex = frequencies[cue.names[i]] ^ .08 - .4)
+    text.outline(x = locations[i, 1],
+                 y = locations[i, 2],
+                 labels = cue.names[i],
+                 cex = frequencies[cue.names[i]] ^ .08 - .4,
+                 r = .004)
   }
 
 }
 
-# # ROC
-# {
+# Heatplot
 #
-# plot(1, xlim = c(0, 1),
-#      ylim = c(0, 1),
-#      xlab = "FAR",
-#      ylab = "HR",
-#      type = "n",
-#      main = "ROC Curve", yaxt = "n", xaxt = "n")
-#
-#   axis(side = 2, at = seq(0, 1, .1), las = 1)
-#   axis(side = 1, at = seq(0, 1, .1), las = 1)
-#
-#   abline(h = seq(0, 1, .1),
-#          v = seq(0, 1, .1),
-#          lwd = c(.75, .25), col = gray(.5, .5))
-#
-# points(x$tree.sim$far.test,
-#        x$tree.sim$hr.test,
-#        pch = 16,
-#        col = "green",
-#        cex = .5)
-#
-#
-# points(x$cart.sim$far.test,
-#        x$cart.sim$hr.test,
-#        pch = 16,
-#        col = "red",
-#        cex = .5)
-#
-# points(x$rf.sim$far.test,
-#        x$rf.sim$hr.test,
-#        pch = 16,
-#        col = "purple",
-#        cex = .5)
-#
-# points(x$svm.sim$far.test,
-#        x$svm.sim$hr.test,
-#        pch = 16,
-#        col = "orange",
-#        cex = .5)
-#
-# points(median(x$tree.sim$far.test),
-#        median(x$tree.sim$hr.test),
-#        pch = "+",
-#        cex = 2,
-#        col = "white")
-#
-# points(median(x$tree.sim$far.test),
-#        median(x$tree.sim$hr.test),
-#        pch = "+",
-#        cex = 1.5,
-#        col = transparent("green", 0))
-#
-# points(median(x$cart.sim$far.test),
-#        median(x$cart.sim$hr.test),
-#        pch = "+",
-#        cex = 2,
-#        col = "white")
-#
-# points(median(x$cart.sim$far.test),
-#        median(x$cart.sim$hr.test),
-#        pch = "+",
-#        cex = 1.5,
-#        col = "red")
-#
-# points(median(x$rf.sim$far.test),
-#        median(x$rf.sim$hr.test),
-#        pch = "+",
-#        cex = 2,
-#        col = transparent("white", 0))
-#
-# points(median(x$rf.sim$far.test),
-#        median(x$rf.sim$hr.test),
-#        pch = "+",
-#        cex = 1.5,
-#        col = 'purple')
-#
-# points(median(x$svm.sim$far.test),
-#        median(x$svm.sim$hr.test),
-#        pch = "+",
-#        cex = 2,
-#        col = transparent("white", 0))
-#
-# points(median(x$svm.sim$far.test),
-#        median(x$svm.sim$hr.test),
-#        pch = "+",
-#        cex = 1.5,
-#        col = 'orange')
-#
-# }
+# p <- ggplot(edges, aes(cue1, cue2)) + geom_tile(aes(fill = N),
+#                                colour = "white") + scale_fill_gradient(low = "white",high = "steelblue")
 
 
-par(ask = FALSE)
+
 
 }

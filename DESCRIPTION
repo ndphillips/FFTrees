@@ -15,14 +15,15 @@ LazyData: TRUE
 Depends: R(>= 2.10)
 Imports:
     rpart,
+    yarrr,
     MASS,
     circlize,
     mlbench,
     graphics,
-    snowfall,
     randomForest,
     igraph,
     snow,
+    snowfall,
     e1071,
     glmnet
 License: CC0

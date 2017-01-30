@@ -15,6 +15,7 @@
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
+#' @importFrom yarrr transparent piratepal
 #' @export
 #' @examples
 #'
