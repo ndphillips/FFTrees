@@ -46,23 +46,6 @@ FFForest <- function(formula = NULL,
                      hr.weight = NULL
 ) {
 
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # data.test = NULL
-  # max.levels = 5
-  # ntree = 10
-  # train.p = .5
-  # algorithm = "m"
-  # goal = "bacc"
-  # sens.weight = .5
-  # verbose = TRUE
-  # cpus = 1
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # rank.method = NULL
-
 
 # Check for depricated arguments
 

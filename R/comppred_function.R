@@ -6,6 +6,7 @@
 #' @param data.train dataframe. A training dataset
 #' @param data.test dataframe. A testing dataset
 #' @param algorithm string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests
+#' @param new.factors string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #' @importFrom stats model.frame formula glm model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
@@ -38,13 +39,10 @@
 comp.pred <- function(formula,
                      data.train,
                      data.test = NULL,
-                     algorithm = NULL) {
-#
-#
-#   formula = formula
-#   data.train = data.train
-#   data.test = data.test
-#   algorithm = "lr"
+                     algorithm = NULL,
+                     new.factors = "exclude") {
+
+
 
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")}
@@ -71,9 +69,13 @@ comp.pred <- function(formula,
   data.all <- model.frame(formula = formula,
                           data = data.all)
 
+  train.crit <- data.all[train.cases,1]
+
   # Remove columns with no variance in training data
 
   if(length(unique(data.all[train.cases,1])) == 1) {do.test <- FALSE} else {do.test <- TRUE}
+
+
   }
 
   if(do.test) {
@@ -89,6 +91,7 @@ comp.pred <- function(formula,
       data.all[,col.i] <- factor(data.all[,col.i])}
 
   }
+  }
 
   # Get data, cue, crit objects
 
@@ -96,39 +99,118 @@ comp.pred <- function(formula,
   cue.train <- data.all[train.cases, -1]
   crit.train <- data.all[train.cases, 1]
 
-  if(is.null(data.test) == FALSE) {
 
-    data.test <- data.all[test.cases,]
-    cue.test <- data.all[test.cases,-1]
-    crit.test <- data.all[test.cases,1]
+  if(algorithm == "lr") {
+
+
+    train.mod <- suppressWarnings(glm(formula, data.train, family = "binomial"))
+    pred.train <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.train))), 0))
 
   }
+
+  if(algorithm == "svm") {
+    train.mod <- e1071::svm(formula,
+                            data = data.train, type = "C")
+
+    pred.train <- predict(train.mod,
+                          data = data.train)
+
+
+  }
+
+  if(algorithm == "cart") {
+    # Create new CART model
+    train.mod <- rpart::rpart(formula,
+                              data = data.train,
+                              method = "class"
+    )
+
+    pred.train <- predict(train.mod,
+                          data.train,
+                          type = "class")
+
+
+  }
+
+  if(algorithm == "rf") {
+
+    data.train[,1] <- factor(data.train[,1])
+
+    train.mod <- randomForest::randomForest(formula,
+                                            data = data.train)
+
+    # Get training decisions
+    pred.train <- predict(train.mod,
+                          data.train)
+
+
+  }
+
+  if(is.null(data.test) == FALSE) {
+
+
+    data.test <- data.all[test.cases, ]
+    cue.test <- data.all[test.cases, -1]
+    crit.test <- data.all[test.cases, 1]
+
+
+    # Check for new factor values
+
+    factor.ls <- lapply(1:ncol(data.train), FUN = function(x) {unique(data.train[,x])})
+
+    cannot.pred.mtx <- matrix(0, nrow = nrow(data.test), ncol = ncol(data.test))
+
+    for(i in 1:ncol(cannot.pred.mtx)) {
+
+      if(any(class(data.test[,i]) %in% c("factor", "character"))) {
+
+        cannot.pred.mtx[,i] <- data.test[,i] %in% factor.ls[[i]] == FALSE
+
+      }
+
+    }
+
+    cannot.pred.v <- rowSums(cannot.pred.mtx) > 0
+
+    if(any(cannot.pred.v)) {
+
+    if(substr(new.factors, 1, 1) == "e" & algorithm == "lr") {
+
+      warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by glm() due to new factor values. These cases will be excluded"))
+
+      data.test <- data.test[cannot.pred.v == FALSE,]
+      cue.test <- cue.test[cannot.pred.v == FALSE,]
+      crit.test <- crit.test[cannot.pred.v == FALSE]
+
+    }
+
+   if(substr(new.factors, 1, 1) == "b" & algorithm == "lr") {
+
+     warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by glm() due to new factor values. They will be predicted to be", mean(train.crit) > .5))
+
+   }
+    }
 
 
   # Get pred.train, pred.test from each model
 
   if(algorithm == "lr") {
 
-    train.mod <- suppressWarnings(glm(formula, data.train, family = "binomial"))
-
-    pred.train <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.train))), 0))
 
     if(is.null(data.test) == FALSE) {
 
-    # will lr work?
+      if(any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
 
-      will.work <- try(suppressMessages(suppressWarnings(predict(train.mod, data.test))))
-
-      if("numeric" %in% class(will.work)) {
-
-        pred.test <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.test))), 0))
-
+        pred.test <- rep(0, nrow(data.test))
+        pred.test[cannot.pred.v] <- mean(train.crit) > .5
+        pred.test[cannot.pred.v == FALSE] <- round(1 / (1 + exp(-predict(train.mod, data.test[cannot.pred.v == FALSE,]))), 0)
 
       } else {
 
-        pred.test <- NULL
+        pred.test <- round(1 / (1 + exp(-predict(train.mod, data.test[cannot.pred.v == FALSE,]))), 0)
 
       }
+
 
     } else {pred.test <- NULL}
 
@@ -146,9 +228,19 @@ comp.pred <- function(formula,
 
     if(is.null(data.test) == FALSE) {
 
-    # Get training decisions
-    pred.test <- predict(train.mod,
-                             data.test)
+      pred.test <- predict(train.mod, data.test)
+
+      # if(any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
+      #
+      #   pred.test <- rep(0, nrow(data.test))
+      #   pred.test[cannot.pred.v] <- mean(train.crit) > .5
+      #   pred.test[cannot.pred.v == FALSE] <- predict(train.mod, data.test[cannot.pred.v == FALSE,])
+      #
+      # } else {
+      #
+      #   pred.test <- predict(train.mod, data.test[cannot.pred.v == FALSE,])
+      #
+      # }
 
 
     } else {pred.test <- NULL}
@@ -214,23 +306,20 @@ comp.pred <- function(formula,
 
   if(algorithm == "cart") {
 
-    # Create new CART model
-    train.mod <- rpart::rpart(formula,
-                              data = data.train,
-                              method = "class"
-    )
-
-    pred.train <- predict(train.mod,
-                          data.train,
-                          type = "class")
-
-
 
     if(is.null(data.test) == FALSE) {
 
-      pred.test <- predict(train.mod,
-                           data.test,
-                           type = "class")
+      if(any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
+
+        pred.test <- rep(0, nrow(data.test))
+        pred.test[cannot.pred.v] <- mean(train.crit) > .5
+        pred.test[cannot.pred.v == FALSE] <- predict(train.mod, data.test[cannot.pred.v == FALSE,], type = "class")
+
+      } else {
+
+        pred.test <- predict(train.mod, data.test[cannot.pred.v == FALSE,], type = "class")
+
+      }
 
 
 
@@ -241,28 +330,31 @@ comp.pred <- function(formula,
 
   if(algorithm == "rf") {
 
-    data.train[,1] <- factor(data.train[,1])
-
-    train.mod <- randomForest::randomForest(formula,
-                                            data = data.train)
-
-    # Get training decisions
-    pred.train <- predict(train.mod,
-                          data.train)
-
 
     if(is.null(data.test) == FALSE) {
 
-      crit.test <- factor(data.test[,1])
+      crit.test <- as.factor(crit.test)
 
-      pred.test <- predict(train.mod,
-                           data.test)
+      pred.test <- predict(train.mod, data.test)
+
+      # if(any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
+      #
+      #   pred.test <- rep(0, nrow(data.test))
+      #   pred.test[cannot.pred.v] <- mean(train.crit) > .5
+      #   pred.test[cannot.pred.v == FALSE] <- predict(train.mod, data.test[cannot.pred.v == FALSE,])
+      #
+      # } else {
+      #
+      #   pred.test <- predict(train.mod, data.test[cannot.pred.v == FALSE,])
+      #
+      # }
+
+
 
     } else {pred.test <- NULL}
-
   }
 
-}
+} else {pred.test <- NULL}
 
   # Convert predictions to logical if necessary
 
@@ -299,6 +391,7 @@ comp.pred <- function(formula,
     acc.test[1,] <- NA
 
   }
+
 
 
   if(do.test == FALSE) {
