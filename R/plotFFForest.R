@@ -66,9 +66,14 @@ edges <- edges[edges[,3] >= mincon,]
 
 g <- igraph::graph_from_data_frame(edges, directed = FALSE)
 
-cue.names <- igraph::get.vertex.attribute(g)$name
 # l <- igraph::layout_with_fr(g)
 locations <- igraph::layout_with_dh(g)
+
+
+# Reorder cue.names and locations by frequencies
+cue.names <- names(frequencies)
+locations <- locations[rev(match(igraph::get.vertex.attribute(g)$name, cue.names)),]
+
 
   # Setup plotting region
   plot.new()
@@ -109,15 +114,6 @@ locations <- igraph::layout_with_dh(g)
 
     relfreq.i <- freq.i / sum(frequencies)
 
-    # White mask
-
-    # points(x = locations[i, 1],
-    #        y = locations[i, 2],
-    #        cex = mean(node.cex.lim),
-    #        pch = 16,
-    #        col = yarrr::transparent("white", .2))
-
-    #bg = gray(1 - relfreq.i))
 
     points(x = locations[i, 1],
            y = locations[i, 2],
@@ -127,17 +123,19 @@ locations <- igraph::layout_with_dh(g)
            col = yarrr::piratepal("basel", trans = .1, length.out = nrow(locations))[i],
            bg = yarrr::transparent("white", trans = .2))
            #bg = gray(1 - relfreq.i))
+
   }
 
-  # Add text
+  for(i in 1:length(cue.names)) {
 
-  for(i in 1:length(cue.names)){
     text.outline(x = locations[i, 1],
                  y = locations[i, 2],
                  labels = cue.names[i],
                  cex = frequencies[cue.names[i]] ^ .08 - .4,
                  r = .004)
+
   }
+
 
 }
 
