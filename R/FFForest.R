@@ -47,6 +47,7 @@ FFForest <- function(formula = NULL,
 ) {
 
 
+
 # Check for depricated arguments
 
 if(is.null(rank.method) == FALSE) {
@@ -224,6 +225,9 @@ simulations$acc.train <- sapply(1:length(result.ls),
 simulations$bacc.train <- sapply(1:length(result.ls),
                               FUN = function(x) {result.ls[[x]]$trees$train$bacc[best.tree.v[x]]})
 
+
+simulations$n.test <- sapply(1:length(result.ls),
+                                FUN = function(x) {result.ls[[x]]$trees$test$n[best.tree.v[x]]})
 
 simulations$sens.test <- sapply(1:length(result.ls),
                                FUN = function(x) {result.ls[[x]]$trees$test$sens[best.tree.v[x]]})

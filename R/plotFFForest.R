@@ -4,6 +4,7 @@
 #' @param node.cex.lim numeric. Nodesize adjustment
 #' @param line.cex.lim numeric. Edgesize adjustment
 #' @param mincon integer. Minimum connection cutoff
+#' @param lo string. The layout of the network plot. Either 'kk' (Kamada-Kawai, the default), 'dh' (Davidson-Harel) or 'fr' (Fruchterman-Reingold)
 #' @param ... currently ignored
 #' @importFrom igraph graph_from_data_frame get.vertex.attribute layout_with_dh
 #' @importFrom graphics text points segments plot lines plot.new plot.window barplot
@@ -16,6 +17,7 @@ plot.FFForest = function(x,
                          node.cex.lim = c(1, 10),
                          line.cex.lim = c(.3, 5),
                          mincon = 0,
+                         lo = "kk",
                          ...) {
 
 
@@ -68,8 +70,9 @@ text(frequencies / sum(frequencies), bp.vals[,1], pos = 4,
 
 g <- igraph::graph_from_data_frame(edges, directed = FALSE)
 
-# l <- igraph::layout_with_fr(g)
-locations <- igraph::layout_with_dh(g)
+if(lo == "kk") {locations <- igraph::layout_with_kk(g)}
+if(lo == "dh") {locations <- igraph::layout_with_dh(g)}
+if(lo == "fr") {locations <- igraph::layout_with_fr(g)}
 
 
 # Reorder cue.names and locations by frequencies
