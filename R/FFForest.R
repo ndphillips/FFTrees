@@ -45,7 +45,25 @@ FFForest <- function(formula = NULL,
                      rank.method = NULL,
                      hr.weight = NULL
 ) {
-
+#
+#
+#   formula = diagnosis ~.
+#   data = heartdisease
+#   max.levels = 5
+#   ntree = 100
+#   train.p = .5
+#   algorithm = "m"
+#   goal = "bacc"
+#   sens.weight = .5
+#   verbose = TRUE
+#   cpus = 4
+#   do.lr = TRUE
+#   do.cart = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   rank.method = NULL
+#   hr.weight = NULL
+#
 
 
 # Check for depricated arguments
@@ -157,6 +175,7 @@ if(cpus > 1) {
   snowfall::sfExport("simulations")
   snowfall::sfLibrary(FFTrees)
   snowfall::sfExport("formula")
+  snowfall::sfExport("goal")
   snowfall::sfExport("data")
   snowfall::sfExport("max.levels")
   snowfall::sfExport("train.p")
@@ -185,64 +204,41 @@ best.tree.v <- sapply(1:length(result.ls), FUN = function(i) {
 
 })
 
-#sapply(1:length(result.ls), FUN = function(i) {length(result.ls[[i]]$decisions)})
-
 decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(i) {
 
   return(result.ls[[i]]$decisions)
 
 })), nrow = nrow(data), ncol = ntree)
 
-simulations$cues <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$trees$train$cues[best.tree.v[x]]})
+# Tree definitions
 
-simulations$thresholds <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$trees$train$thresholds[best.tree.v[x]]})
+for(stat.i in c("cues", "thresholds", "directions", "classes", "exits")) {
 
-simulations$directions <- sapply(1:length(result.ls),
-                                 FUN = function(x) {result.ls[[x]]$trees$train$directions[best.tree.v[x]]})
+  simulations[[stat.i]] <- sapply(1:length(result.ls),
+                                  FUN = function(x) {
 
+                                    result.ls[[x]]$trees$train[[stat.i]][best.tree.v[x]]})
 
-simulations$classes <- sapply(1:length(result.ls),
-                                 FUN = function(x) {result.ls[[x]]$trees$train$classes[best.tree.v[x]]})
-
-simulations$exits <- sapply(1:length(result.ls),
-                              FUN = function(x) {result.ls[[x]]$trees$train$exits[best.tree.v[x]]})
+}
 
 
-simulations$sens.train <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$train$sens[best.tree.v[x]]})
+# Train stats
 
-simulations$spec.train <- sapply(1:length(result.ls),
-                                 FUN = function(x) {result.ls[[x]]$trees$train$spec[best.tree.v[x]]})
-
-simulations$far.train <- sapply(1:length(result.ls),
-                                 FUN = function(x) {result.ls[[x]]$trees$train$far[best.tree.v[x]]})
-
-simulations$acc.train <- sapply(1:length(result.ls),
-                              FUN = function(x) {result.ls[[x]]$trees$train$acc[best.tree.v[x]]})
-
-simulations$bacc.train <- sapply(1:length(result.ls),
-                              FUN = function(x) {result.ls[[x]]$trees$train$bacc[best.tree.v[x]]})
+for(stat.i in c("n", "hi", "mi", "fa", "acc", "bacc", "dprime", "frugality", "mcpc")) {
 
 
-simulations$n.test <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$test$n[best.tree.v[x]]})
+  simulations[[paste0(stat.i, ".train")]] <- sapply(1:length(result.ls),
+                                  FUN = function(x) {
 
-simulations$sens.test <- sapply(1:length(result.ls),
-                               FUN = function(x) {result.ls[[x]]$trees$test$sens[best.tree.v[x]]})
+                                    result.ls[[x]]$trees$train[[stat.i]][best.tree.v[x]]})
 
-simulations$spec.test <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$test$spec[best.tree.v[x]]})
+  simulations[[paste0(stat.i, ".test")]] <- sapply(1:length(result.ls),
+                                                    FUN = function(x) {
 
-simulations$far.test <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$test$far[best.tree.v[x]]})
+                                                      result.ls[[x]]$trees$test[[stat.i]][best.tree.v[x]]})
 
-simulations$acc.test <- sapply(1:length(result.ls),
-                                FUN = function(x) {result.ls[[x]]$trees$test$acc[best.tree.v[x]]})
+}
 
-simulations$bacc.test <- sapply(1:length(result.ls),
-                             FUN = function(x) {result.ls[[x]]$trees$test$bacc[best.tree.v[x]]})
 
 
 # Get overall cue frequencies
