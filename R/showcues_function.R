@@ -10,20 +10,20 @@
 #'
 
 showcues <- function(x = NULL,
-                    data = "train",
-                    main = NULL,
-                    top = 5,
-                    palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
-                                "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
-                                "#9A703E7F")) {
-#
-# x
-#   data = "train"
-#   main = NULL
-#   top = 5
-#   palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F",
-#               "#FA6B097F", "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F",
-#               "#9A703E7F")
+                      data = "train",
+                      main = NULL,
+                      top = 5,
+                      palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
+                                  "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
+                      )) {
+  # x = breast.fft
+  # data = "train"
+  # main = NULL
+  # top = 5
+  # palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
+  #             "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
+  # )
+
 
 goal <- x$params$goal
 
@@ -42,12 +42,18 @@ if(data == "test") {
 
 if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 
+cue.df$rank <- rank(-cue.df$bacc)
+
+cue.df <- cue.df[order(cue.df$rank),]
+
+cue.df$col <- rep(palette, length.out = nrow(cue.df))
+
 # GENERAL PLOTTING SPACE
 
-if(is.null(main)) {main <- "Marginal Cue Accuracies"}
+if(is.null(main)) {main <- "Individual Cue Accuracies"}
 
 plot(1, xlim = c(0, 1), ylim  = c(0, 1), type = "n",
-     xlab = "1 - Specificity (FAR)", ylab = "Sensitivity (HR)", main = main,
+     xlab = "1 - Specificity", ylab = "Sensitivity", main = main,
      yaxt = "n", xaxt = "n"
 )
 
@@ -55,104 +61,123 @@ axis(2, at = seq(0, 1, .1), las = 1)
 axis(1, at = seq(0, 1, .1))
 
 
-if(data == "test") {mtext("Testing data", 3, line = .5, cex = .8)}
-if(data == "train") {mtext("Training data", 3, line = .5, cex = .8)}
+if(data == "test") {mtext("Testing", 3, line = .5, cex = 1)}
+if(data == "train") {mtext("Training", 3, line = .5, cex = 1)}
 
 par("xpd" = FALSE)
 
-rect(-100, -100, 100, 100, col = gray(.96))
-abline(h = seq(0, 1, .1), lwd = c(2, 1), col = "white")
-abline(v = seq(0, 1, .1), lwd = c(2, 1), col = "white")
-abline(a = 0, b = 1)
+# rect(-100, -100, 100, 100, col = gray(.96))
+ abline(h = seq(0, 1, .1), lwd = c(.75, .3), col = gray(.85))
+ abline(v = seq(0, 1, .1), lwd = c(.75, .3), col = gray(.85))
+ abline(a = 0, b = 1, col = gray(.7), lty = 1)
 
 # Non-top cues
 
-cues.nontop <- cue.df[rank(-cue.df[[goal]]) > top,]
+if(any(cue.df$rank > top)) {
 
-if(nrow(cues.nontop) > 0) {
-
-with(cues.nontop, points(1 - spec, sens, cex = 1))
-
-with(cues.nontop,
-       text(1 - spec, sens, labels = row.names(cues.nontop),
-            pos = 3, cex = .8))
-
+with(subset(cue.df, rank > top), points(1 - spec, sens, cex = 1))
+with(subset(cue.df, rank > top), text(1 - spec, sens,
+                                      labels = rank,
+                                      pos = 3,
+                                      cex = .8))
 }
 
 # Top x cues
 
-cues.top <- cue.df[rank(-cue.df[[goal]]) <= top,]
-cues.top <- cues.top[order(cues.top[[goal]]),]
 
-with(cues.top,
-     points(1 - spec, sens, pch = 21, bg = palette, col = "white", cex = 2, lwd = 2))
+ with(subset(cue.df, rank <= top),
+      points(x = 1 - spec, y = sens,
+             col = col,
+             bg = gray(1, alpha = .5),
+             lwd = 2, cex = 3, pch = 21)
+      )
 
-with(cues.top,
-     text(1 - spec, sens, labels = row.names(cues.top), pos = 3))
+ with(subset(cue.df, rank <= top), text(1 - spec, sens,
+                                       labels = rank,
+                                      # pos = 3,
+                                       cex = 1))
 
 
 # Bottom right label
 location.df <- data.frame(element = c("points", "point.num", "cue.name", "cue.thresh", "sens", "spec", "bacc"),
-                          x.loc = c(.53, .55, .67, .68, .83, .9, .97),
+                          x.loc = c(.5, .5, .67, .68, .83, .9, .97),
                           adj = c(.5, 0, 1, 0, .5, .5, .5),
                           cex = c(1, 1, 1, 1, 1, 1, 1)
                           )
 
-y.loc <- seq(.05, .4, length.out = top)
-header.y <- .45
+cue.box.x0 <- .45
+cue.box.x1 <- 1.02
+cue.box.y0 <- 0
+cue.box.y1 <- .43
+
+cue.lab.h <- (cue.box.y1 - cue.box.y0) / top
+
+cue.lab.y <- rev(seq((cue.box.y0 + cue.lab.h / 2), cue.box.y1 - cue.lab.h / 2, length.out = top))
+cue.sep.y <- seq(cue.box.y0 + cue.lab.h, cue.box.y1 - cue.lab.h, length.out = top - 1)
+
+header.y <- mean(c(cue.box.y1, .48))
 label.cex <- .8
 
 # Background
-rect(.5, .0, 1.02, .48,
+rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
      col = transparent("white", trans.val = .1),
      border = gray(.2))
 
 # Column labels
 
-text(x = c(mean(c(location.df$x.loc[location.df$element == "cue.name"],
+text(x = c(subset(location.df, element == "point.num")$x.loc,
+           mean(c(location.df$x.loc[location.df$element == "cue.name"],
            location.df$x.loc[location.df$element == "cue.thresh"])),
            location.df$x.loc[location.df$element == "sens"],
            location.df$x.loc[location.df$element == "spec"],
            location.df$x.loc[location.df$element == "bacc"]),
      y = header.y,
-     labels = c("Cue", "Sens", "Spec", "bacc"), font = 2, cex = label.cex)
+     labels = c("rank", "cue + thresh", "sens", "spec", "bacc"),
+     font = 1, cex = label.cex)
+
+segments(cue.box.x0, cue.box.y1, 1.02, cue.box.y1)
+
+segments(rep(cue.box.x0, 4), cue.sep.y, rep(1.02, 4), cue.sep.y, lty = 3)
+
 
 # Points
-points(x = rep(subset(location.df, element == "points")$x.loc, top),
-      y = y.loc,
+points(x = rep(subset(location.df, element == "point.num")$x.loc, top),
+      y = cue.lab.y,
       pch = 21,
-      bg = palette,
-      col = "white", cex = 1.5)
+      col = cue.df$col[1:top],
+      bg = "white",
+      lwd = 2,
+      cex = 3)
 
 # Cue numbers
 text(x = rep(subset(location.df, element == "point.num")$x.loc, top),
-     y = y.loc,
-     labels = row.names(cues.top),
-     adj = subset(location.df, element == "point.num")$adj,
+     y = cue.lab.y,
+     labels = cue.df$rank[1:top],
+   #  adj = subset(location.df, element == "point.num")$adj,
      cex = label.cex)
 
 
 # Cue names
 text(x = rep(subset(location.df, element == "cue.name")$x.loc, top),
-     y = y.loc,
-     labels = cues.top$cue,
+     y = cue.lab.y,
+     labels = cue.df$cue[cue.df$rank <= top],
      adj = subset(location.df, element == "cue.name")$adj,
      cex = label.cex)
 
 # Thresholds
-thresh.text <- paste(cues.top$direction, cues.top$threshold)
+thresh.text <- paste(cue.df$direction[cue.df$rank <= top], cue.df$threshold[cue.df$rank <= top])
 thresh.text[nchar(thresh.text) > 10] <- paste(substr(thresh.text[nchar(thresh.text) > 10], start = 1, stop = 10), "...", sep = "")
 
 
 text(x = rep(subset(location.df, element == "cue.thresh")$x.loc, top),
-     y = y.loc,
+     y = cue.lab.y,
      labels = thresh.text,
      adj = subset(location.df, element == "cue.thresh")$adj,
      cex = label.cex)
 
 # HR
 text(x = rep(subset(location.df, element == "sens")$x.loc, top),
-     y = y.loc,
+     y = cue.lab.y,
      labels = round(cues.top$sens, 2),
      adj = subset(location.df, element == "sens")$adj,
      cex = label.cex)
@@ -160,7 +185,7 @@ text(x = rep(subset(location.df, element == "sens")$x.loc, top),
 # FAR
 
 text(x = rep(subset(location.df, element == "spec")$x.loc, top),
-     y = y.loc,
+     y = cue.lab.y,
      labels = round(cues.top$spec, 2),
      adj = subset(location.df, element == "spec")$adj,
      cex = label.cex)
@@ -168,7 +193,7 @@ text(x = rep(subset(location.df, element == "spec")$x.loc, top),
 # v
 
 text(x = rep(subset(location.df, element == "bacc")$x.loc, top),
-     y = y.loc,
+     y = cue.lab.y,
      labels = round(cues.top$bacc, 2),
      adj = subset(location.df, element == "bacc")$adj,
      cex = label.cex)
