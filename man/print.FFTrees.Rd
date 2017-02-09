@@ -14,4 +14,3 @@
 \description{
 Printing function for an FFTrees object
 }
-

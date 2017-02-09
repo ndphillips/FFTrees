@@ -22,4 +22,3 @@ A logical vector of predictions
 \description{
 Predict outcoms from a test dataset using an FFForest object
 }
-

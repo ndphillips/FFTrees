@@ -15,4 +15,3 @@ iris
 Iris data set
 }
 \keyword{datasets}
-

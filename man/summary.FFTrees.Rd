@@ -14,4 +14,3 @@
 \description{
 Returns a summary of an fft object
 }
-

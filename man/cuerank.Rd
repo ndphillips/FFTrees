@@ -38,4 +38,3 @@ Calculate the marginal accuracy of all cues in a dataframe. For each cue, the th
 
 
 }
-

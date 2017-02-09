@@ -23,4 +23,3 @@ blood
 Blood donation dataset
 }
 \keyword{datasets}
-

@@ -14,4 +14,3 @@ These functions have been renamed and deprecated in \pkg{FFTrees}:
 \code{fft()} (use \code{\link{FFTrees}()})
 }
 \keyword{internal}
-

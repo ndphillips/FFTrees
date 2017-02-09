@@ -23,4 +23,3 @@
 \description{
 Creates a network plot. Code taken from Dirk Wulff (www.dirkwulff.org)
 }
-

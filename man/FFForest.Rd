@@ -53,4 +53,3 @@ cancer.fff <- FFForest(formula = diagnosis ~.,
 
 
 }
-

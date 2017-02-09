@@ -74,4 +74,3 @@ This is the workhorse function for the \code{FFTrees} package. It creates a set 
  plot(heart.fft)
 
 }
-

@@ -23,4 +23,3 @@ titanic
 A dataset indicating who survived on the Titanic
 }
 \keyword{datasets}
-

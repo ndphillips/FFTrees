@@ -15,4 +15,3 @@ creditapproval
 Credit approval data
 }
 \keyword{datasets}
-

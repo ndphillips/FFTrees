@@ -16,4 +16,3 @@ factclean(data.train, data.test, show.warning = T)
 \description{
 Does miscellaneous cleaning of prediction datasets
 }
-

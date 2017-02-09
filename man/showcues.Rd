@@ -5,8 +5,8 @@
 \title{Visualizes cue accuracies from an FFTrees object in a ROC space}
 \usage{
 showcues(x = NULL, data = "train", main = NULL, top = 5,
-  palette = c("#0C5BB07F", "#EE00117F", "#15983D7F", "#EC579A7F", "#FA6B097F",
-  "#149BED7F", "#A1C7207F", "#FEC10B7F", "#16A08C7F", "#9A703E7F"))
+  palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
+  "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"))
 }
 \arguments{
 \item{x}{An FFTrees object}
@@ -22,4 +22,3 @@ showcues(x = NULL, data = "train", main = NULL, top = 5,
 \description{
 Visualizes cue accuracies from an FFTrees object in a ROC space
 }
-

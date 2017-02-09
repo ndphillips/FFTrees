@@ -24,4 +24,3 @@ classtable(prediction.v = c(0, 0, 0, 1, 1),
 
 
 }
-

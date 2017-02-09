@@ -15,4 +15,3 @@ voting
 Voting data set
 }
 \keyword{datasets}
-

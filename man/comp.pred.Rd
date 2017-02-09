@@ -44,4 +44,3 @@ mushrooms.svm.pred <- comp.pred(formula = poisonous ~.,
 
 
 }
-

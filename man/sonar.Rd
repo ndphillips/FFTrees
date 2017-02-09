@@ -15,4 +15,3 @@ sonar
 Sonar data set
 }
 \keyword{datasets}
-

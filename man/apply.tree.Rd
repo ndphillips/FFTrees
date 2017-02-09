@@ -30,4 +30,3 @@ Applies a fast and frugal tree to a dataset.
 
 
 }
-

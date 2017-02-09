@@ -9,4 +9,3 @@ FFTrees.guide()
 \description{
 Opens the FFTrees package guide
 }
-

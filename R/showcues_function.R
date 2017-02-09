@@ -178,7 +178,7 @@ text(x = rep(subset(location.df, element == "cue.thresh")$x.loc, top),
 # HR
 text(x = rep(subset(location.df, element == "sens")$x.loc, top),
      y = cue.lab.y,
-     labels = round(cues.top$sens, 2),
+     labels = round(cue.df$sens[cue.df$rank <= top], 2),
      adj = subset(location.df, element == "sens")$adj,
      cex = label.cex)
 
@@ -186,7 +186,7 @@ text(x = rep(subset(location.df, element == "sens")$x.loc, top),
 
 text(x = rep(subset(location.df, element == "spec")$x.loc, top),
      y = cue.lab.y,
-     labels = round(cues.top$spec, 2),
+     labels = round(cue.df$spec[cue.df$rank <= top], 2),
      adj = subset(location.df, element == "spec")$adj,
      cex = label.cex)
 
@@ -194,7 +194,7 @@ text(x = rep(subset(location.df, element == "spec")$x.loc, top),
 
 text(x = rep(subset(location.df, element == "bacc")$x.loc, top),
      y = cue.lab.y,
-     labels = round(cues.top$bacc, 2),
+     labels = round(cue.df$bacc[cue.df$rank <= top], 2),
      adj = subset(location.df, element == "bacc")$adj,
      cex = label.cex)
 

@@ -28,4 +28,3 @@ car
 Car acceptability data
 }
 \keyword{datasets}
-

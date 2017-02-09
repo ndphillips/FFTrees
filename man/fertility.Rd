@@ -15,4 +15,3 @@ fertility
 Fertility data set
 }
 \keyword{datasets}
-

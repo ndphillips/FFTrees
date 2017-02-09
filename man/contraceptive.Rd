@@ -31,4 +31,3 @@ contraceptive
 Contraceptive use data
 }
 \keyword{datasets}
-

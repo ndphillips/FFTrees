@@ -53,4 +53,3 @@ vignette("FFTrees_plot", package = "FFTrees")
 
 
 }
-

@@ -42,4 +42,3 @@ Predict new data from an FFTrees x
                              data = breast.test)
 
 }
-

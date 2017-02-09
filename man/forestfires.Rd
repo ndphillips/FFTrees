@@ -34,4 +34,3 @@ forestfires
 A dataset of forest fire statistics.
 }
 \keyword{datasets}
-

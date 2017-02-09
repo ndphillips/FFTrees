@@ -15,4 +15,3 @@ wine
 Chemical and tasting data from wines in North Portugal
 }
 \keyword{datasets}
-

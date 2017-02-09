@@ -36,4 +36,3 @@ income
 Census Data used to predict who has an income greater than 50K
 }
 \keyword{datasets}
-

@@ -41,4 +41,3 @@ mushrooms
 Mushrooms dataset
 }
 \keyword{datasets}
-

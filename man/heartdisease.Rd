@@ -35,4 +35,3 @@ heartdisease
 Data for 303 patients tested for heart disease
 }
 \keyword{datasets}
-
