@@ -16,13 +16,14 @@ showcues <- function(x = NULL,
                       palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
                                   "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
                       )) {
-  # x = breast.fft
-  # data = "train"
-  # main = NULL
-  # top = 5
-  # palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
-  #             "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
-  # )
+
+  # x <- iris.fft
+  #  data = "train"
+  #   main = NULL
+  #   top = 5
+  #   palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
+  #               "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
+  #   )
 
 
 goal <- x$params$goal
@@ -42,7 +43,7 @@ if(data == "test") {
 
 if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 
-cue.df$rank <- rank(-cue.df$bacc)
+cue.df$rank <- rank(-cue.df$bacc, ties.method = "first")
 
 cue.df <- cue.df[order(cue.df$rank),]
 
@@ -57,18 +58,18 @@ plot(1, xlim = c(0, 1), ylim  = c(0, 1), type = "n",
      yaxt = "n", xaxt = "n"
 )
 
-axis(2, at = seq(0, 1, .1), las = 1)
-axis(1, at = seq(0, 1, .1))
+axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
+axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
 
 
-if(data == "test") {mtext("Testing", 3, line = .5, cex = 1)}
-if(data == "train") {mtext("Training", 3, line = .5, cex = 1)}
+#if(data == "test") {mtext("Testing", 3, line = .5, cex = 1)}
+#if(data == "train") {mtext("Training", 3, line = .5, cex = 1)}
 
 par("xpd" = FALSE)
 
-# rect(-100, -100, 100, 100, col = gray(.96))
- abline(h = seq(0, 1, .1), lwd = c(.75, .3), col = gray(.85))
- abline(v = seq(0, 1, .1), lwd = c(.75, .3), col = gray(.85))
+ rect(-100, -100, 100, 100, col = gray(.96))
+ abline(h = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1))
+ abline(v = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1))
  abline(a = 0, b = 1, col = gray(.7), lty = 1)
 
 # Non-top cues
@@ -79,23 +80,28 @@ with(subset(cue.df, rank > top), points(1 - spec, sens, cex = 1))
 with(subset(cue.df, rank > top), text(1 - spec, sens,
                                       labels = rank,
                                       pos = 3,
-                                      cex = .8))
+                                      cex = .8,
+                                      pch = 21,
+                                      bg = "white"))
 }
 
 # Top x cues
 
+for (i in top:1) {
 
- with(subset(cue.df, rank <= top),
+ with(subset(cue.df, rank == i),
       points(x = 1 - spec, y = sens,
              col = col,
-             bg = gray(1, alpha = .5),
+             bg = gray(1, alpha = 1),
              lwd = 2, cex = 3, pch = 21)
       )
 
- with(subset(cue.df, rank <= top), text(1 - spec, sens,
+ with(subset(cue.df, rank == i), text(1 - spec, sens,
                                        labels = rank,
                                       # pos = 3,
                                        cex = 1))
+
+}
 
 
 # Bottom right label
