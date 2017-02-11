@@ -1480,13 +1480,13 @@ rect(final.roc.x.loc[1],
 
   points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2,
+         pch = 21, cex = 1.75,
          col = transparent("red", .1),
          bg = transparent("red", .9), lwd = 1)
 
   points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
-         pch = "C", cex = .9, col = gray(.2), lwd = 1)
+         pch = "C", cex = .7, col = gray(.2), lwd = 1)
 
 par("xpd" = FALSE)
 
@@ -1511,13 +1511,13 @@ par("xpd" = TRUE)
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2,
+       pch = 21, cex = 1.75,
        col = transparent("blue", .1),
        bg = transparent("blue", .9))
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
-       pch = "L", cex = .9, col = gray(.2))
+       pch = "L", cex = .7, col = gray(.2))
 
 par("xpd" = F)
 
@@ -1542,13 +1542,13 @@ par("xpd" = T)
 
 points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2,
+       pch = 21, cex = 1.75,
        col = transparent("purple", .1),
        bg = transparent("purple", .9))
 
 points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
-       pch = "R", cex = .9, col = gray(.2))
+       pch = "R", cex = .7, col = gray(.2))
 
 par("xpd" = F)
 
@@ -1574,13 +1574,13 @@ par("xpd" = T)
 
 points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2,
+       pch = 21, cex = 1.75,
        col = transparent("orange", .1),
        bg = transparent("orange", .9))
 
 points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
-       pch = "S", cex = .9, col = gray(.2))
+       pch = "S", cex = .7, col = gray(.2))
 
 par("xpd" = F)
 
