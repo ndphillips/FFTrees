@@ -1422,24 +1422,23 @@ rect(final.roc.x.loc[1],
      final.roc.y.loc[1],
      final.roc.x.loc[2],
      final.roc.y.loc[2],
-     border = "black",
-     col = gray(.94))
+     col = gray(1))
 
   # Gridlines
 # Horizontal
  segments(x0 = rep(final.roc.x.loc[1], 9),
-          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 6)[2:10],
+          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
           x1 = rep(final.roc.x.loc[2], 9),
-          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 6)[2:10],
-          lty = 1, col = gray(1), lwd = c(1.25), lend = 3
+          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+          lty = 1, col = gray(.8), lwd = c(.5), lend = 3
           )
 
  # Vertical
  segments(y0 = rep(final.roc.y.loc[1], 9),
-          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 6)[2:10],
+          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
           y1 = rep(final.roc.y.loc[2], 9),
-          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 6)[2:10],
-          lty = 1, col = gray(1), lwd = c(1.25), lend = 3
+          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+          lty = 1, col = gray(.8), lwd = c(.5), lend = 3
  )
 
  # Plot border
@@ -1470,7 +1469,7 @@ rect(final.roc.x.loc[1],
            final.roc.y.loc[1],
            final.roc.x.loc[2],
            final.roc.y.loc[2],
-           lty = 2)
+           lty = 3)
 
   label.loc <- c(.1, .3, .5, .7, .9)
 
@@ -1611,7 +1610,9 @@ par("xpd" = T)
   segments(final.roc.x.loc[1] + c(0, 1 - fft.spec.vec.ord) * lloc$width[lloc$element == "roc"],
            final.roc.y.loc[1] + c(0, fft.sens.vec.ord) * lloc$height[lloc$element == "roc"],
            final.roc.x.loc[1] + c(1 - fft.spec.vec.ord, 1) * lloc$width[lloc$element == "roc"],
-           final.roc.y.loc[1] + c(fft.sens.vec.ord, 1) * lloc$height[lloc$element == "roc"], lwd = 1, col = gray(.5, .5))
+           final.roc.y.loc[1] + c(fft.sens.vec.ord, 1) * lloc$height[lloc$element == "roc"],
+           lwd = 1.5,
+           col = gray(.3))
 
   points(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
