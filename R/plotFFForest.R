@@ -21,7 +21,8 @@ plot.FFForest = function(x,
                          ...) {
 
 
-  # palette <- "basel"
+
+   palette <- "basel"
   #
   # x <- heart.fff
   # node.cex.lim = c(1, 10)
