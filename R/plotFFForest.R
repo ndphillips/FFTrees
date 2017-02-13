@@ -21,6 +21,15 @@ plot.FFForest = function(x,
                          ...) {
 
 
+  # palette <- "basel"
+  #
+  # x <- heart.fff
+  # node.cex.lim = c(1, 10)
+  # line.cex.lim = c(.3, 5)
+  # mincon = 0
+  # lo = "kk"
+
+
   par(mfrow = c(1, 2))
 
 edges <- x$connections
@@ -41,6 +50,8 @@ edges$line.lwd <- with(edges, (line.lwd - min(line.lwd)) / (max(line.lwd) - min(
   frequencies <- sort(table(frequencies))
   node.cex <- (frequencies - min(frequencies)) / (max(frequencies) - min(frequencies)) * (node.cex.lim[2] - node.cex.lim[1]) + node.cex.lim[1]
 
+  palette <- yarrr::piratepal(palette, length.out = length(frequencies), trans = .4)
+
 
 # Barplot
 {
@@ -52,7 +63,9 @@ par(mar = c(5, 8, 4, 1) + .1)
 barplot(height = frequencies / sum(frequencies),
         xlab = "", main = "", yaxt = "n",
         beside = FALSE, xlim = c(0, 1), horiz = TRUE,
-        col = gray(1 - frequencies / sum(frequencies)))
+        col = palette[length(frequencies):1]
+      #  col = gray(1 - frequencies / sum(frequencies))
+        )
 
 mtext(names(frequencies), side = 2, at = bp.vals[,1], las = 1, line = 1)
 mtext("Importance", side = 1, cex = 1.5, line = 3)
@@ -125,7 +138,7 @@ locations <- locations[rev(match(igraph::get.vertex.attribute(g)$name, cue.names
            cex = node.cex[names(node.cex) == cue.names[i]],
            pch = 21,
            lwd = 5,
-           col = yarrr::piratepal("basel", trans = .1, length.out = nrow(locations))[i],
+           col = palette[length(frequencies) - i + 1],
            bg = yarrr::transparent("white", trans = .2))
            #bg = gray(1 - relfreq.i))
 

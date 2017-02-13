@@ -4,9 +4,7 @@
 \alias{showcues}
 \title{Visualizes cue accuracies from an FFTrees object in a ROC space}
 \usage{
-showcues(x = NULL, data = "train", main = NULL, top = 5,
-  palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
-  "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"))
+showcues(x = NULL, data = "train", main = NULL, top = 5)
 }
 \arguments{
 \item{x}{An FFTrees object}
@@ -16,8 +14,6 @@ showcues(x = NULL, data = "train", main = NULL, top = 5,
 \item{main}{Main plot description}
 
 \item{top}{An integer indicating how many of the top cues to highlight}
-
-\item{palette}{An optional vector of colors}
 }
 \description{
 Visualizes cue accuracies from an FFTrees object in a ROC space

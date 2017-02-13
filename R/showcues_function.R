@@ -4,7 +4,6 @@
 #' @param data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
 #' @param main Main plot description
 #' @param top An integer indicating how many of the top cues to highlight
-#' @param palette An optional vector of colors
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @export
 #'
@@ -12,10 +11,24 @@
 showcues <- function(x = NULL,
                       data = "train",
                       main = NULL,
-                      top = 5,
-                      palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
-                                  "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
-                      )) {
+                      top = 5) {
+
+  # x <- heart.fft
+  # data <- "train"
+  # main <- NULL
+  # top <- 5
+
+  palette <- "basel"
+
+  if(palette %in% yarrr::piratepal("names")) {
+
+    palette <- yarrr::piratepal(palette, length.out = top, trans = .1)
+
+  } else {
+
+    palette <- rep(palette, length.out = top)
+
+  }
 
   # x <- iris.fft
   #  data = "train"
