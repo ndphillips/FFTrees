@@ -5,6 +5,7 @@
 #' @param line.cex.lim numeric. Edgesize adjustment
 #' @param mincon integer. Minimum connection cutoff
 #' @param lo string. The layout of the network plot. Either 'kk' (Kamada-Kawai, the default), 'dh' (Davidson-Harel) or 'fr' (Fruchterman-Reingold)
+#' @param palette string. A string vector of colors
 #' @param ... currently ignored
 #' @importFrom igraph graph_from_data_frame get.vertex.attribute layout_with_dh
 #' @importFrom graphics text points segments plot lines plot.new plot.window barplot
@@ -18,17 +19,9 @@ plot.FFForest = function(x,
                          line.cex.lim = c(.3, 5),
                          mincon = 0,
                          lo = "kk",
+                         palette = NULL,
                          ...) {
 
-
-
-   palette <- "basel"
-  #
-  # x <- heart.fff
-  # node.cex.lim = c(1, 10)
-  # line.cex.lim = c(.3, 5)
-  # mincon = 0
-  # lo = "kk"
 
 
   par(mfrow = c(1, 2))
@@ -51,7 +44,14 @@ edges$line.lwd <- with(edges, (line.lwd - min(line.lwd)) / (max(line.lwd) - min(
   frequencies <- sort(table(frequencies))
   node.cex <- (frequencies - min(frequencies)) / (max(frequencies) - min(frequencies)) * (node.cex.lim[2] - node.cex.lim[1]) + node.cex.lim[1]
 
-  palette <- yarrr::piratepal(palette, length.out = length(frequencies), trans = .4)
+  # Colors
+
+  if(is.null(palette)) {
+
+    palette <- yarrr::piratepal("basel", length.out = length(frequencies), trans = .4)} else {
+
+      palette <- rep(palette, length.out = length(frequencies))}
+
 
 
 # Barplot

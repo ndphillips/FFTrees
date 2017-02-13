@@ -5,7 +5,7 @@
 \title{Creates a network plot. Code taken from Dirk Wulff (www.dirkwulff.org)}
 \usage{
 \method{plot}{FFForest}(x, node.cex.lim = c(1, 10), line.cex.lim = c(0.3,
-  5), mincon = 0, lo = "kk", ...)
+  5), mincon = 0, lo = "kk", palette = NULL, ...)
 }
 \arguments{
 \item{x}{FFForest. An FFForest object created from FFForest()}
@@ -17,6 +17,8 @@
 \item{mincon}{integer. Minimum connection cutoff}
 
 \item{lo}{string. The layout of the network plot. Either 'kk' (Kamada-Kawai, the default), 'dh' (Davidson-Harel) or 'fr' (Fruchterman-Reingold)}
+
+\item{palette}{string. A string vector of colors}
 
 \item{...}{currently ignored}
 }
