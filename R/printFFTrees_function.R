@@ -1,7 +1,7 @@
-#' Prints summary information from an FFTrees object
+#' Prints summary information from an FFTrees x
 #'
-#' @description Printing function for an FFTrees object
-#' @param x FFTrees. A FFTrees object created from FFTrees()
+#' @description Printing function for an FFTrees x
+#' @param x FFTrees. A FFTrees x created from FFTrees()
 #' @param ... additional arguments passed to print.
 #' @export
 

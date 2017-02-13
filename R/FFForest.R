@@ -375,7 +375,13 @@ output <-list("formula" = formula,
               "lr.sim" = lr.sim,
               "cart.sim" = cart.sim,
               "rf.sim" = rf.sim,
-              "svm.sim" = svm.sim)
+              "svm.sim" = svm.sim,
+              "params" = list("train.p" = train.p,
+                              "ntree" = ntree,
+                              "max.levels" = max.levels,
+                              "algorithm" = algorithm,
+                              "goal" = goal,
+                              "sens.weight" = sens.weight))
 
 class(output) <- "FFForest"
 

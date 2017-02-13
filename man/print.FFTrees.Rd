@@ -2,15 +2,15 @@
 % Please edit documentation in R/printFFTrees_function.R
 \name{print.FFTrees}
 \alias{print.FFTrees}
-\title{Prints summary information from an FFTrees object}
+\title{Prints summary information from an FFTrees x}
 \usage{
 \method{print}{FFTrees}(x = NULL, ...)
 }
 \arguments{
-\item{x}{FFTrees. A FFTrees object created from FFTrees()}
+\item{x}{FFTrees. A FFTrees x created from FFTrees()}
 
 \item{...}{additional arguments passed to print.}
 }
 \description{
-Printing function for an FFTrees object
+Printing function for an FFTrees x
 }
