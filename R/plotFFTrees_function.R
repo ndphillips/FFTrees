@@ -1132,7 +1132,7 @@ level.top <- level.center.y + level.max.height / 2
 
 lloc <- data.frame(
   element = c("classtable", "frugality", "sens", "spec", "acc", "bacc", "auc", "roc"),
-  long.name = c("Classification Table", "Frug", "Sens", "Spec", "Acc", "Bacc", "AUC", "ROC"),
+  long.name = c("Classification Table", "frug", "sens", "spec", "acc", "bacc", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 6), .85),
   center.y = rep(level.center.y, 8),
   width =    c(.2, rep(level.width, 6), .2),
