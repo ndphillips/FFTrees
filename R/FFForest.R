@@ -224,7 +224,7 @@ for(stat.i in c("cues", "thresholds", "directions", "classes", "exits")) {
 
 # Train stats
 
-for(stat.i in c("n", "hi", "mi", "fa", "sens", "spec", "acc", "bacc", "dprime", "frugality", "mcpc")) {
+for(stat.i in c("n", "hi", "mi", "fa", "sens", "spec", "acc", "bacc", "dprime", "pci", "mcu")) {
 
 
   simulations[[paste0(stat.i, ".train")]] <- sapply(1:length(result.ls),

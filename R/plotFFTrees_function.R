@@ -129,7 +129,7 @@ if(data == "train") {
   n.exemplars <- x$data.desc$train$cases
   n.pos <- x$data.desc$train$n.pos
   n.neg <- x$data.desc$train$n.neg
-  mcpc <- x$tree.stats$train$mcpc[tree]
+  mcu <- x$tree.stats$train$mcu[tree]
   crit.br <- x$data.desc$train$criterion.br
 
 }
@@ -151,7 +151,7 @@ if(data == "test") {
   n.exemplars <- x$data.desc$test$cases
   n.pos <- x$data.desc$test$n.pos
   n.neg <- x$data.desc$test$n.neg
-  mcpc <- x$tree.stats$test$mcpc[tree]
+  mcu <- x$tree.stats$test$mcu[tree]
   crit.br <- x$data.desc$test$criterion.br
 
 }
@@ -1131,14 +1131,14 @@ level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
 lloc <- data.frame(
-  element = c("classtable", "frugality", "sens", "spec", "acc", "bacc", "auc", "roc"),
+  element = c("classtable", "pci", "sens", "spec", "acc", "bacc", "auc", "roc"),
   long.name = c("Classification Table", "frug", "sens", "spec", "acc", "bacc", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 6), .85),
   center.y = rep(level.center.y, 8),
   width =    c(.2, rep(level.width, 6), .2),
   height =   c(.65, rep(level.max.height, 6), .65),
-  value = c(NA, final.stats$frugality, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, fft.auc, NA),
-  value.name = c(NA, pretty.dec(final.stats$frugality), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
+  value = c(NA, final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, fft.auc, NA),
+  value.name = c(NA, pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
                  pretty.dec(final.stats$bacc), pretty.dec(fft.auc), NA
   )
 )
@@ -1370,11 +1370,11 @@ segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element ==
          y1 = level.top,
          lty = 3, lwd = .75)
 
-add.level.fun("frugality", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+add.level.fun("pci", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
-text(lloc$center.x[lloc$element == "frugality"],
-     lloc$center.y[lloc$element == "frugality"],
-     labels = paste0("mcpc\n", round(mcpc, 2)))
+text(lloc$center.x[lloc$element == "pci"],
+     lloc$center.y[lloc$element == "pci"],
+     labels = paste0("mcu\n", round(mcu, 2)))
 
 
 add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))

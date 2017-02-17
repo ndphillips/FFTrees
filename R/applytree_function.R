@@ -121,17 +121,17 @@ apply.tree <- function(data,
   rownames(treestats) <- 1:nrow(treestats)
 
 
-  # Add frugality to treestats
-  #   frugality is the number of cues looked up for each case divided by the maximum possible
+  # Add pci to treestats
+  #   pci is the number of cues looked up for each case divided by the maximum possible
 
   n.lookups <- colSums(levelout)
   max.lookups <- nrow(data) * ncol(data)
 
-  treestats$frugality <- 1 - n.lookups / max.lookups
+  treestats$pci <- 1 - n.lookups / max.lookups
 
-  # Add mean cues per case (mcpc)
+  # Add mean cues per case (mcu)
 
-  treestats$mcpc <- colMeans(levelout)
+  treestats$mcu <- colMeans(levelout)
 
   return(list("decision" = decision,
               "levelout" = levelout,
