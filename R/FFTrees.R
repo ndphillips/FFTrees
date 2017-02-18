@@ -21,7 +21,7 @@
 #'
 #' \describe{
 #'   \item{data, data.test}{The original training and test data.}
-#'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes hr - far for the training data. These are calculated using the \code{cuerank()} function.}
+#'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes balanced accuracy for the training data. These are calculated using the \code{cuerank()} function.}
 #'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
 #'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
 #'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
@@ -48,6 +48,7 @@
 #'
 #'  # Plot the best tree
 #'  plot(heart.fft)
+#'
 #'
 
 
