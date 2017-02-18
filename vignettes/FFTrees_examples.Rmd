@@ -86,13 +86,13 @@ plot(mushrooms.ring.fft,
 As we can see, this tree did not perform nearly as well as our earlier one.
 
 
-## Iris
+## Iris.v
 
-The `iris` dataset contains data about 150 flowers (see `?iris`). Our goal is to predict which flowers are of the class Virginica. In this example, we'll create trees using the entire dataset (without an explicit test dataset)
+The `iris.v` dataset contains data about 150 flowers (see `?iris.v`). Our goal is to predict which flowers are of the class Virginica. In this example, we'll create trees using the entire dataset (without an explicit test dataset)
 
 ```{r}
 iris.fft <- FFTrees(formula = virginica ~.,
-                    data = iris)
+                    data = iris.v)
 ```
 
 ### iris cue accuracies

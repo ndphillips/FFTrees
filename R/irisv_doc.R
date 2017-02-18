@@ -6,4 +6,4 @@
 #' @source https://archive.ics.uci.edu/ml/datasets/Iris
 #'
 #'
-"iris"
+"iris.v"
