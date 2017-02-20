@@ -1,6 +1,6 @@
 ---
-title: "Overview of the FFTrees Package"
-author: "Nathaniel Phillips"
+title: "FFTrees: Fast and frugal decision trees"
+author: "Nathaniel D. Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -13,26 +13,31 @@ vignette: >
 
 ```{r, echo = F, message = F, results = 'hide'}
 library(FFTrees)
+library(knitr)
 ```
-
 
 ## Fast and Frugal Trees (FFTrees)
 
-```{r, fig.width = 6, fig.height = 6, echo = T, fig.align='center', echo = F}
-bcancer.fft <- FFTrees(formula = diagnosis ~.,
-                       data = breastcancer
-                       )
+```{r fig.align = "center", out.width="250px", echo = FALSE}
+knitr::include_graphics("../inst/FFTrees_Logo.jpg")
+```
 
-plot(bcancer.fft,
-     main = "Breast Cancer",
+
+
+```{r, fig.width = 7, fig.height = 7, echo = T, fig.align='center', echo = FALSE}
+heart.fft <- FFTrees(formula = diagnosis ~.,
+                     data = heartdisease)
+
+plot(heart.fft,
+     main = "Heart Disease",
      decision.names = c("Absent", "Present"))
 ```
 
-What are Fast and Frugal Trees (FFTrees)? A FFTree is a set of rules for making decisions based on very little information (usually 5 or fewer). For example, the tree above uses data from breast cancer patients to decide whether a woman truly has breast cancer or not based on only two pieces of information.
+What are fast and frugal trees (FFTrees)? An FFT is a set of rules for making decisions based on very little information (usually 5 or fewer). For example, the tree above uses data from to decide whether a patient truly has heart disease or not based on up to 3 pieces of information.
 
 FFTrees are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently preferable to more complex decision strategies (such as Logistic Regression) because they rarely over-fit data [@gigerenzer2009homo] and are easy to interpret and implement in real-world decision tasks [@marewski2012heuristic]. They have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
 
-The purpose of the `FFTrees` package is to produce, compare, and display FFTrees. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTrees which attempt to classify training cases into criterion classes. For additional details and examples, check out the vignettes below:
+The purpose of the `FFTrees` package is to produce, compare, and display FFTs. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. For additional details and examples, check out the vignettes below:
 
 ## Vignettes
 
@@ -56,6 +61,6 @@ The package contains several datasets taken from the [UCI Machine Learning Repos
 
 ## Contact
 
-This package is constantly being updated. The latest developer version is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). For comments, tips, additional references, and bug reports, please add an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues). For movie recommendations, email me at Nathaniel.D.Phillips.is@gmail.com.
+This package is constantly being updated. The latest developer version is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). For comments, tips, additional references, and bug reports, please add an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues) or email me at Nathaniel.D.Phillips.is@gmail.com
 
 ## Bibliography
