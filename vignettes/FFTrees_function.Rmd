@@ -1,5 +1,5 @@
 ---
-title: "Creating FFTrees"
+title: "Creating FFTs"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -124,16 +124,10 @@ predict(heart.fft,
 
 Once you've created an FFTrees object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
 
-```{r, fig.width = 6, fig.height = 6}
+```{r, fig.width = 7, fig.height = 7}
 plot(heart.fft,
      main = "Heart Disease",
      decision.names = c("Healthy", "Disease"))
-```
-
-You can also visualize the individual cue accuracies with the `showcues()` function:
-
-```{r fig.width = 5, fig.height = 5}
-showcues(heart.fft)
 ```
 
 See the vignette on plotting trees [here](FFTrees_plot.html) for more details on visualizing trees.
