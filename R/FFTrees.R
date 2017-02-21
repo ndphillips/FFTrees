@@ -82,6 +82,26 @@ if(is.null(rank.method) == FALSE) {
 
 }
 
+if(is.null(tree.definitions) == FALSE) {
+
+  for(i in 1:ncol(tree.definitions)) {
+
+    if(class(tree.definitions[,i]) == "factor") {tree.definitions[,i] <- paste(tree.definitions[,i])}
+  }
+
+
+  # Check for invalid exits
+
+  exit.vals <- unlist(strsplit(tree.definitions$exits, ";"))
+
+  if(any(exit.vals %in% c("0", "1", "0.5", ".5") == FALSE)) {
+
+    stop(paste0("You specified an invalid exit value of ", exit.vals[exit.vals %in% c("0", "1", "0.5", ".5") == FALSE], " in tree.definitions. Use only 0, 1 or .5"))
+
+  }
+
+}
+
 # Set some global parameters
 
 repeat.cues <- TRUE
