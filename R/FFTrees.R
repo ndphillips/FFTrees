@@ -385,6 +385,13 @@ if(setequal(crit.train, c(0, 1)) == FALSE) {
 
 }
 
+  # Missing values
+  if(any(is.finite(crit.train) == FALSE)) {
+
+    stop(paste0("The criterion ", crit.name, " has missing values"))
+
+  }
+
 }
 }
 
