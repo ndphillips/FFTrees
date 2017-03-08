@@ -49,7 +49,26 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 
+  # formula = diagnosis ~.
+  # data <- heartdisease
+  # algorithm = "m"
+  # sens.weight = .5
+  # goal = "bacc"
+  # max.levels = 4
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # verbose = FALSE
+  # rank.method = NULL
 
+
+  # Some global variables which could be changed later.
+  repeat.cues <- TRUE
+  numthresh.method <- "o"
+  exit.method <- "fixed"
+  correction <- .25
+  rounding <- 2
+
+# Check for depricated arguments
 if(is.null(rank.method) == FALSE) {
 
   warning("The argument rank.method is depricated. Use algorithm instead.")
@@ -58,28 +77,18 @@ if(is.null(rank.method) == FALSE) {
 
 }
 
-# Some global variables which could be changed later.
-repeat.cues <- TRUE
-numthresh.method <- "o"
-exit.method <- "fixed"
-correction <- .25
-rounding <- 2
 
 # Set up dataframes
-data <- model.frame(formula = formula,
-                    data = data)
 
-cue.df <- data[,2:ncol(data)]
+# data.mf contains only criterion and predictors
+data.mf <- model.frame(formula = formula,
+                       data = data)
 
-if(ncol(data) == 2) {
+# cue.df contains cues
+cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
 
-  cue.df <- data.frame(cue.df)
-  names(cue.df) <- names(data)[2]
-
-}
-
-criterion.v <- data[,1]
-crit.name <- names(data)[1]
+criterion.v <- data.mf[,1]
+crit.name <- names(data.mf)[1]
 n.cues <- ncol(cue.df)
 
 # ----------
@@ -87,7 +96,7 @@ n.cues <- ncol(cue.df)
 # ----------
 
 cue.accuracies <- cuerank(formula = formula,
-                          data = data,
+                          data = data.mf,
                           goal = goal,
                           numthresh.method = numthresh.method,
                           rounding = rounding,
@@ -98,7 +107,7 @@ cue.accuracies <- cuerank(formula = formula,
 # ----------
 {
 
-  if(verbose) {print("Growing trees..")}
+if(verbose) {print("Growing trees..")}
 
 # SETUP TREES
 # create tree.dm which contains exit values for max.levels
@@ -151,7 +160,6 @@ level.exits.v.i <- unlist(tree.dm[tree.i, grepl("exit.", names(tree.dm))])
 n.levels <- length(level.exits.v.i)
 
 ## Set up placeholders
-
 cue.accuracies.original <- cue.accuracies
 decision.v <- rep(NA, length(criterion.v))
 levelout.v <- rep(NA, length(criterion.v))
@@ -193,39 +201,41 @@ remaining.exemplars <- is.na(decision.v)
 
 # Step 1) Determine cue for current level
 
+# Marginal algorithm
 if(algorithm == "m") {
 
+# Get accuracies of un-used cues
 cue.accuracies.current <- cue.accuracies.original[(cue.accuracies.original$cue %in% level.stats$cue) == FALSE,]
 
 }
 
+# Conditional algorithm
 if(algorithm == "c") {
 
-data.r <- data[remaining.exemplars, ]
+data.mf.r <- data.mf[remaining.exemplars, ]
 
 # If cues can NOT be repeated, then remove old cues as well
 if(repeat.cues == FALSE) {
 
 remaining.cues.index <- (names(cue.df) %in% level.stats$cue) == FALSE
 remaining.cues <- names(cue.df)[remaining.cues.index]
-data.r <- data.r[, c(crit.name, remaining.cues)]
+data.mf.r <- data.mf.r[, c(crit.name, remaining.cues)]
 
 }
 
 # If there is no variance in the criterion, then stop growth!
-if(var(data.r[,1]) == 0) {grow.tree <- FALSE ; break}
+if(var(data.mf.r[,1]) == 0) {grow.tree <- FALSE ; break}
 
-# Calculate new cue accuracies
+# Calculate cue accuracies with remaining exemplars
 cue.accuracies.current <-  cuerank(formula = formula,
-                                   data = data.r,
+                                   data = data.mf.r,
                                    goal = goal,
                                    numthresh.method = numthresh.method,
                                    rounding = rounding)
 
 }
 
-# GET NEXT CUE BASED ON WEIGHTED SENS AND SPEC
-
+# Get next cue based on weighted sensitivity and specificity
 sens.vec <- cue.accuracies.current$sens
 spec.vec <- cue.accuracies.current$spec
 acc.vec <- cue.accuracies.current$acc
@@ -246,7 +256,9 @@ if(substr(goal, 1, 1) == "acc") {
 }
 
 new.cue <- cue.accuracies.current$cue[best.cue.index]
-if(length(new.cue) > 1) {new.cue <- new.cue[sample(1:length(new.cue), size = 1)]}
+
+# Only take one cue
+if(length(new.cue) > 1) {new.cue <- new.cue[1]}
 
 new.cue.stats <- cue.accuracies.current[cue.accuracies.current$cue == new.cue,]
 new.class <- new.cue.stats$class
@@ -263,10 +275,9 @@ level.stats$direction[current.level] <- new.direction
 level.stats$exit[current.level] <- current.exit
 
 # Get decisions for current cue
-
 cue.decisions <- apply.break(direction = new.direction,
                              threshold.val = new.threshold,
-                             cue.v = data[[new.cue]],
+                             cue.v = data.mf[[new.cue]],
                              cue.class = new.cue.stats$class)
 
 # Statistics for current decisions
@@ -275,7 +286,6 @@ cue.classtable <- classtable(prediction.v = cue.decisions,
 
 # How would classifications look if all remaining exemplars
 #   were classified at the current level?
-
 as.if.decision.v <- decision.v
 as.if.decision.v[remaining.exemplars] <- cue.decisions[remaining.exemplars]
 
@@ -389,7 +399,7 @@ decision.index <- is.na(decision.v)
 
 current.decisions <- apply.break(direction = new.direction,
                                  threshold.val = new.threshold,
-                                 cue.v = data[[last.cue]],
+                                 cue.v = data.mf[[last.cue]],
                                  cue.class = new.class
 )
 

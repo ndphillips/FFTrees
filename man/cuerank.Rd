@@ -5,7 +5,7 @@
 \title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
 \usage{
 cuerank(formula = NULL, data = NULL, goal = "bacc",
-  numthresh.method = "o", rounding = NULL, verbose = F,
+  numthresh.method = "o", rounding = NULL, verbose = FALSE,
   cue.rules = NULL)
 }
 \arguments{

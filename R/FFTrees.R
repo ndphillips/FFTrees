@@ -73,6 +73,23 @@ FFTrees <- function(formula = NULL,
 ) {
 
 
+  # formula = poisonous ~.
+  # data = mushrooms.train
+  # data.test = mushrooms.test
+  # train.p = 1
+  # algorithm = "m"
+  # goal = "bacc"
+  # sens.weight = .5
+  # max.levels = 4
+  # tree.definitions = NULL
+  # verbose = FALSE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
 
 if(is.null(rank.method) == FALSE) {
 
@@ -113,20 +130,19 @@ rounding <- 2
 exit.method <- "fixed"
 
 
-# Check for missing / invalid inputs
-
+# Is there training data?
 if(is.null(data)) {stop("Please specify a dataframe in data")}
+
+# Is there a valid formula?
 if(is.null(formula) | class(formula) != "formula") {stop("Please specify a valid formula")}
 
+# Does the named criterion exist?
 crit.name <- paste(formula)[2]
-
 if(crit.name %in% names(data) == FALSE) {
 
   stop(paste0("The criterion variable ", crit.name, " is not in the data."))}
 
-# EXTRACT OBJECTS FROM EXISTING FFTrees OBJECT
-
-# GET FORMULA
+# If there is an existing FFTrees object, then get the formula
 if(is.null(object) == FALSE) {
 
   formula <- object$formula
