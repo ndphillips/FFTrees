@@ -2,7 +2,7 @@
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
-#' @param goal character. A strig indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param verbose logical. A logical value indicating whether or not to print ongoing diagnostics
