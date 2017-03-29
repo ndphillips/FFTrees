@@ -29,6 +29,8 @@ cuerank <- function(formula = NULL,
 
 ) {
 
+
+
 # GLOBAL VARIABLES (could be updated later)
 max.numcat <- 20        # Maximum number of numeric thresholds to consider
 

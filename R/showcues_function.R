@@ -2,6 +2,7 @@
 #'
 #' @param x An FFTrees object
 #' @param data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
+#' @param cue.accuracies dataframe. An optional dataframe specifying cue accuracies directly (without specifying an FFTrees object x)
 #' @param main Main plot description
 #' @param top An integer indicating how many of the top cues to highlight
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -9,14 +10,10 @@
 #'
 
 showcues <- function(x = NULL,
-                      data = "train",
-                      main = NULL,
-                      top = 5) {
-
-  # x <- heart.fft
-  # data <- "train"
-  # main <- NULL
-  # top <- 5
+                     data = "train",
+                     cue.accuracies = NULL,
+                     main = NULL,
+                     top = 5) {
 
   palette <- "basel"
 
@@ -30,14 +27,8 @@ showcues <- function(x = NULL,
 
   }
 
-  # x <- iris.fft
-  #  data = "train"
-  #   main = NULL
-  #   top = 5
-  #   palette = c("#0C5BB0CC", "#EE0011CC", "#15983DCC", "#EC579ACC", "#FA6B09CC",
-  #               "#149BEDCC", "#A1C720CC", "#FEC10BCC", "#16A08CCC", "#9A703ECC"
-  #   )
 
+if(is.null(x) == FALSE) {
 
 goal <- x$params$goal
 
@@ -53,6 +44,15 @@ if(data == "test") {
   if(is.null(x$cue.accuracies$test) == FALSE) {cue.df <- x$cue.accuracies$test}
 
 }
+
+}
+
+if(is.null(x) & is.null(cue.accuracies) == FALSE) {
+
+  cue.df <- cue.accuracies
+
+}
+
 
 if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 

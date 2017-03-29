@@ -41,9 +41,8 @@ The purpose of the `FFTrees` package is to produce, compare, and display FFTs. T
 
 ## Vignettes
 
-To learn more about the package, click the following vignettes:
-
 - [Creating FFTrees with FFTrees()](FFTrees_function.html)
+- [How FFTrees grows trees](FFTrees_algorithm.html)
 - [Visualizing FFTrees with plot()](FFTrees_plot.html)
 - [Lots of example FFTrees](FFTrees_examples.html)
 

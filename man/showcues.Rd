@@ -4,12 +4,15 @@
 \alias{showcues}
 \title{Visualizes cue accuracies from an FFTrees object in a ROC space}
 \usage{
-showcues(x = NULL, data = "train", main = NULL, top = 5)
+showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL,
+  top = 5)
 }
 \arguments{
 \item{x}{An FFTrees object}
 
 \item{data}{A string indicating whether or not to show training ("train") or testing ("test") cue accuracies}
+
+\item{cue.accuracies}{dataframe. An optional dataframe specifying cue accuracies directly (without specifying an FFTrees object x)}
 
 \item{main}{Main plot description}
 

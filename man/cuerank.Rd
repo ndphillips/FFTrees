@@ -15,7 +15,7 @@ cuerank(formula = NULL, data = NULL, goal = "bacc",
 
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime}
 
-\item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the tree criterion.}
+\item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,}
 
 \item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 

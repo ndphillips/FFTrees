@@ -1,28 +1,132 @@
 ---
-title: "FFTrees Tree Construction Algorithm"
+title: "FFTrees tree construction algorithms"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{FFTrees Tree Construction Method}
+  %\VignetteIndexEntry{FFTrees tree construction algorithms}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(FFTrees)
 ```
 
-## Tree construction algorithm
+## Default FFT construction algorithm "m"
 
-The algorithm used to create trees is very simple. It can be summarised in four steps:
+Trees are built using the wrapper function `FFTrees.R` which calls the functions `cuerank()` and `grow.FFTrees()` to complete the steps of creating the trees. The default algorithm used to create trees `algorithm = "m"`is very simple. It can be summarised in four steps. 
+
+|     Step| Function|Description |
+|:-----|:----|:----------------------------------------------------|
+|  1|    `cuerank`|For each cue, claculate a *classification threshold* that maximizes the balanced accuracy (average of sensitivity and specificity) of classifications of *all data* based on that cue (that is, ignoring all other cues). If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels.
+     |
+| 2|    `grow.FFTrees()`|Rank cues in order of their highest balanced accuracy value calculated using the classification threshold determined in step 1
+     |
+|  3|    `grow.FFTrees()`|Create all possible trees by varying the exit direction (left or right) at each level to a maximum of X levels (default of `max.levels = 4`).     |
+|  4|    `grow.FFTrees()`|Reduce the size of trees by removing (pruning) lower levels containing less than X\% (default of `stopping.par = .10`) of the cases in the original data.|
+
+Table: 4 Steps in growing FFTs using the `algorithm = "m"` algorithm.
+
+## Example: Heart Disease
+
+First, we'll calculate a classification threshold for each cue using `cuerank()`:
+
+```{r, message = FALSE}
+heartdisease.ca <- FFTrees::cuerank(formula = diagnosis ~., 
+                                    data = heartdisease)
+
+# Print key results
+heartdisease.ca[c("cue", "threshold", "direction", "bacc")]
+```
+
+Here, we see the best decision threshold for each cue that maximizes its balanced accuracy (`bacc`) when applied to the entire dataset (independently of other cues). For example, for the age cue, the best threshold is `r with(heartdisease.ca, paste("age", direction[cue == "age"], threshold[cue == "age"]))` which leads to a balanced accuracy of 0.63. In other words, if we only had the age cue, then the best decision is: "If age > 55, predict heart disease, otherwise, predict no heart disease".
+
+Let's confirm that this threshold makes sense. To do this, we can plot the bacc value for all possible thresholds as in Figure \@ref(fig:agethreshold):
+
+```{r agethreshold, fig.width = 6, fig.height = 6, fig.align='center', echo = FALSE, fig.cap="Plotting the balanced accuracy of each decision threshold for the age cue."}
+# Age thresholds to test
+ages.to.test <- seq(20, to = 90, by = 5)
+
+# Calculate balanced accuracy for each threshold
+y <- sapply(ages.to.test, FUN = function(x) {
   
-1. For each cue, select a *classification threshold* that maximizes the difference between the hit-rate (HR) and false alarm rate (FAR) of classifications of *all data* based on that cue. If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels. These thresholds are calculated completely independently of all other cues.
+  decisions <- heartdisease$age > x
+  
+  sens <- mean(decisions[heartdisease$diagnosis == 1] == 1)
+  spec <- mean(decisions[heartdisease$diagnosis == 0] == 0)
+  
+  bacc <- (sens + spec) / 2
+  
+  return(bacc)
 
-2. Rank cues in order of their highest HR - FAR value calculated in step 1.
+})
 
-3. Create all possible trees by varying the exit point at each level to a maximum of 5 levels.
+plot(ages.to.test, y, 
+     type = "b", 
+     xlab = "age threshold", 
+     ylab = "balanced accuracy (bacc)", ylim = c(.5, .7))
 
-4. Reduce the size of trees by removing lower levels containing less than 5% of the dataset.
+grid()
+
+text(55, 
+     y[ages.to.test == 55], 
+     labels = paste("age = 55, bacc = ", round(y[ages.to.test == 55], 2)), 
+     pos = 3)
+```
+
+Next, the cues are ranked by their balanced accuracy. Let's do that with the heart disease cues:
+
+```{r}
+# Rank heartdisease cues by balanced accuracy
+heartdisease.ca <- heartdisease.ca[order(heartdisease.ca$bacc, decreasing = TRUE),]
+
+# Print the key columns
+heartdisease.ca[c("cue", "threshold", "direction", "bacc")]
+```
+
+Now, we can see that the top five cues are `thal`, `cp`, `ca`, `thalach` and `exang`. Because ffts rarely exceed 5 cues, we can expect that the trees will use a subset (not necessarily all) of these 5 cues.
+
+We can also plot the cue accuracies in ROC space using the `showcues()` function:
+
+```{r, fig.width = 7, fig.height = 7, fig.align = 'center', fig.cap = "Cue accuracies for the heartdisease dataset. The top 5 cues in terms of balanced accuracy are highlighted."}
+# Show the accuracy of cues in ROC space
+showcues(cue.accuracies = heartdisease.ca)
+```
+
+Next, `grow.FFTrees()` will grow several trees from these cues using different exit structures:
+
+```{r}
+# Grow FFTs
+heartdisease.ffts <- grow.FFTrees(formula = diagnosis ~., 
+                                  data = heartdisease)
+
+# Print the tree definitions
+heartdisease.ffts$tree.definitions
+```
+
+Here, we see that we have 7 different trees, each using some combination of the top 5 cues we identified earlier. For example, tree 1 uses the top 4 cues, while tree 3 uses only the top 3 cues. Why is that? The reason is that the algorithm also *prunes* lower branches of the tree if there are too few cases classified at lower levels. By default, the algorithm will remove any lower leves that classfify fewer than 10\% of the original cases. The pruning criteria can be controlled using the `stopping.rule`, `stopping.par` and `max.levels` arguments in `grow.FFTrees()`
+
+Now let's use the wrapper function `FFTrees()` to create the trees all at once. We will then plot tree #4 which, according to our results above, should contain the cues `thal, cp, ca`"
+
+```{r, fig.width = 5, fig.height = 5, message = FALSE, fig.align = "center"}
+library(FFTrees)
+
+# Create trees
+heart.fft <- FFTrees(formula = diagnosis ~., data = heartdisease)
+
+# Plot tree # 4
+plot(heart.fft, 
+     stats = FALSE,    # Don't include statistics
+     tree = 4)
+```
+
+
+
+
+### Alternative algorithms
+
+- `algorithm = "c"`: The `"c"` algorithm is identical to the `"m"` algorithm with one (important) exception: In `algorithm = "c"`, the thresholds and rankings of cues are recalculated for each level in the FFT conditioned on the exemplars that were *not* classified at higher leves in the tree. For example, in the `heartdisease` data, using `algorithm = "c"` would first classify some cases using the `thal` cue at the first level, and would then calculate new accuracies for the remaining cues on the remaining cases that were not yet classified. This algorithm is appropriate for datasets where cue validities systematically differ for different (and predictable) subsets of data. However, because it calculates cue thresholds for increasingly smaller samples of data as the tree grows, it is also, potentially, more prone to overfitting compared to `algorithm = "m"`
