@@ -5,10 +5,9 @@
 \title{Draws a FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = "Data", n.per.icon = NULL,
-  decision.names = c("Noise", "Signal"), cue.cex = NULL,
-  threshold.cex = NULL, which.tree = NULL, comp = TRUE, stats = TRUE,
-  ...)
+  tree = "best.train", main = "Data", decision.names = c("Noise",
+  "Signal"), cue.cex = NULL, threshold.cex = NULL, comp = TRUE,
+  stats = TRUE, n.per.icon = NULL, which.tree = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -21,19 +20,19 @@
 
 \item{main}{character. The main plot label.}
 
-\item{n.per.icon}{Number of exemplars per icon}
-
 \item{decision.names}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
 
 \item{cue.cex}{numeric. A numeric vector specifying the size of the cue labels.}
 
 \item{threshold.cex}{numeric. A numeric vector specifying the size of the decision thresholds.}
 
-\item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
-
 \item{comp}{logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)}
 
 \item{stats}{logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.}
+
+\item{n.per.icon}{Number of exemplars per icon}
+
+\item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
 
 \item{...}{Currently ignored.}
 }

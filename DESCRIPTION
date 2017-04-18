@@ -1,7 +1,7 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Compare Fast and Frugal Decision Trees
-Version: 1.2.0
+Version: 1.2.1
 Date: 2017-4-18
 Authors@R: person("Nathaniel", "Phillips", email = "Nathaniel.D.Phillips.is@gmail.com",
                   role = c("aut", "cre"))

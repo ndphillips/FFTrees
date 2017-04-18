@@ -44,12 +44,12 @@ plot.FFTrees <- function(
   tree = "best.train",
   main = "Data",
   decision.names = c("Noise", "Signal"),
-  n.per.icon = NULL,
   cue.cex = NULL,
   threshold.cex = NULL,
-  which.tree = NULL,
   comp = TRUE,
   stats = TRUE,
+  n.per.icon = NULL,
+  which.tree = NULL,
   ...
 ) {
 
