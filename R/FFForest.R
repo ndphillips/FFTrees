@@ -20,11 +20,12 @@
 #' @export
 #' @examples
 #'
+#'\dontrun{
 #' cancer.fff <- FFForest(formula = diagnosis ~.,
 #'                      data = breastcancer,
 #'                      ntree = 10,
 #'                      cpus = 1)
-#'
+#'}
 #'
 #'
 FFForest <- function(formula = NULL,

@@ -89,8 +89,8 @@ par("xpd" = FALSE)
 
 if(any(cue.df$rank > top)) {
 
-with(subset(cue.df, rank > top), points(1 - spec, sens, cex = 1))
-with(subset(cue.df, rank > top), text(1 - spec, sens,
+with(cue.df[cue.df$rank > top,], points(1 - spec, sens, cex = 1))
+with(cue.df[cue.df$rank > top,],  text(1 - spec, sens,
                                       labels = rank,
                                       pos = 3,
                                       cex = .8,
@@ -102,14 +102,14 @@ with(subset(cue.df, rank > top), text(1 - spec, sens,
 
 for (i in top:1) {
 
- with(subset(cue.df, rank == i),
+  with(cue.df[cue.df$rank == i,] ,
       points(x = 1 - spec, y = sens,
              col = col,
              bg = gray(1, alpha = 1),
              lwd = 2, cex = 3, pch = 21)
       )
 
- with(subset(cue.df, rank == i), text(1 - spec, sens,
+  with(cue.df[cue.df$rank == i,], text(1 - spec, sens,
                                        labels = rank,
                                       # pos = 3,
                                        cex = 1))
@@ -144,7 +144,7 @@ rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
 
 # Column labels
 
-text(x = c(subset(location.df, element == "point.num")$x.loc,
+text(x = c(location.df[location.df$element == "point.num",]$x.loc,
            mean(c(location.df$x.loc[location.df$element == "cue.name"],
            location.df$x.loc[location.df$element == "cue.thresh"])),
            location.df$x.loc[location.df$element == "sens"],
@@ -160,7 +160,7 @@ segments(rep(cue.box.x0, 4), cue.sep.y, rep(1.02, 4), cue.sep.y, lty = 3)
 
 
 # Points
-points(x = rep(subset(location.df, element == "point.num")$x.loc, top),
+points(x = rep(location.df[location.df$element == "point.num",]$x.loc, top),
       y = cue.lab.y,
       pch = 21,
       col = cue.df$col[1:top],
@@ -169,7 +169,7 @@ points(x = rep(subset(location.df, element == "point.num")$x.loc, top),
       cex = 3)
 
 # Cue numbers
-text(x = rep(subset(location.df, element == "point.num")$x.loc, top),
+text(x = rep(location.df[location.df$element == "point.num",]$x.loc, top),
      y = cue.lab.y,
      labels = cue.df$rank[1:top],
    #  adj = subset(location.df, element == "point.num")$adj,
@@ -177,10 +177,10 @@ text(x = rep(subset(location.df, element == "point.num")$x.loc, top),
 
 
 # Cue names
-text(x = rep(subset(location.df, element == "cue.name")$x.loc, top),
+text(x = rep(location.df[location.df$element == "cue.name",]$x.loc, top),
      y = cue.lab.y,
      labels = cue.df$cue[cue.df$rank <= top],
-     adj = subset(location.df, element == "cue.name")$adj,
+     adj = location.df[location.df$element == "cue.name",]$adj,
      cex = label.cex)
 
 # Thresholds
@@ -188,33 +188,33 @@ thresh.text <- paste(cue.df$direction[cue.df$rank <= top], cue.df$threshold[cue.
 thresh.text[nchar(thresh.text) > 10] <- paste(substr(thresh.text[nchar(thresh.text) > 10], start = 1, stop = 10), "...", sep = "")
 
 
-text(x = rep(subset(location.df, element == "cue.thresh")$x.loc, top),
+text(x = rep(location.df[location.df$element == "cue.thresh",]$x.loc, top),
      y = cue.lab.y,
      labels = thresh.text,
-     adj = subset(location.df, element == "cue.thresh")$adj,
+     adj = location.df[location.df$element == "cue.thresh",]$adj,
      cex = label.cex)
 
 # HR
-text(x = rep(subset(location.df, element == "sens")$x.loc, top),
+text(x = rep(location.df[location.df$element == "sens",]$x.loc, top),
      y = cue.lab.y,
      labels = round(cue.df$sens[cue.df$rank <= top], 2),
-     adj = subset(location.df, element == "sens")$adj,
+     adj = location.df[location.df$element == "sens",]$adj,
      cex = label.cex)
 
 # FAR
 
-text(x = rep(subset(location.df, element == "spec")$x.loc, top),
+text(x = rep(location.df[location.df$element == "spec",]$x.loc, top),
      y = cue.lab.y,
      labels = round(cue.df$spec[cue.df$rank <= top], 2),
-     adj = subset(location.df, element == "spec")$adj,
+     adj = location.df[location.df$element == "spec",]$adj,
      cex = label.cex)
 
 # v
 
-text(x = rep(subset(location.df, element == "bacc")$x.loc, top),
+text(x = rep(location.df[location.df$element == "bacc",]$x.loc, top),
      y = cue.lab.y,
      labels = round(cue.df$bacc[cue.df$rank <= top], 2),
-     adj = subset(location.df, element == "bacc")$adj,
+     adj = location.df[location.df$element == "bacc",]$adj,
      cex = label.cex)
 
 

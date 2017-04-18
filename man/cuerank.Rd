@@ -31,10 +31,11 @@ Calculate the marginal accuracy of all cues in a dataframe. For each cue, the th
 }
 \examples{
 
+\dontrun{
  # What are the best thresholds for each cue in the mushrooms dataset?
  mushrooms.cues <- cuerank(formula = poisonous ~.,
                            data = mushrooms)
-
+}
 
 
 }

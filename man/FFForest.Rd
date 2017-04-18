@@ -45,11 +45,12 @@ This function is currently in development. The idea is to generate a random fore
 }
 \examples{
 
+\dontrun{
 cancer.fff <- FFForest(formula = diagnosis ~.,
                      data = breastcancer,
                      ntree = 10,
                      cpus = 1)
-
+}
 
 
 }
