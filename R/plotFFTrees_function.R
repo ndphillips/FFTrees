@@ -4,8 +4,10 @@
 #' @param x A FFTrees object created from \code{"FFTrees()"}
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
-#' @param tree An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
+#' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
 #' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
+#' @param cue.cex numeric. A numeric vector specifying the size of the cue labels.
+#' @param threshold.cex numeric. A numeric vector specifying the size of the decision thresholds.
 #' @param main character. The main plot label.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
 #' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
@@ -43,6 +45,8 @@ plot.FFTrees <- function(
   main = "Data",
   n.per.icon = NULL,
   decision.names = c("Noise", "Signal"),
+  cue.cex = NULL,
+  threshold.cex = NULL,
   which.tree = NULL,
   comp = TRUE,
   stats = TRUE,
@@ -217,14 +221,43 @@ decision.node.cex <- 4
 exit.node.cex <- 4
 panel.title.cex <- 2
 
+# Set cue label size
+
+if(is.null(cue.cex)) {
+
+  cue.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
+
+} else {
+
+  if(length(cue.cex) < 6) {cue.cex <- rep(cue.cex, length.out = 6)}
+
+}
+
+# Set break label size
+
+if(is.null(threshold.cex)) {
+
+  threshold.cex <- c(1.5, 1.5, 1.25, 1, .75, .5)
+
+} else {
+
+  if(length(threshold.cex) < 6) {threshold.cex <- rep(threshold.cex, length.out = 6)}
+
+}
+
+
+
+
+
 if(stats == TRUE) {
+
 
 plotting.parameters.df <- data.frame(
   n.levels = 1:6,
   plot.height = c(10, 12, 15, 19, 23, 25),
   plot.width = c(14, 16, 20, 24, 28, 32),
-  label.box.text.cex = c(1.5, 1.5, 1.25, 1, 1, 1),
-  break.label.cex = c(1.5, 1.5, 1.25, 1, .75, .5)
+  label.box.text.cex = cue.cex,
+  break.label.cex = threshold.cex
 )
 
 }
@@ -235,8 +268,8 @@ if(stats == FALSE) {
     n.levels = 1:6,
     plot.height = c(10, 12, 15, 19, 23, 25),
     plot.width = c(14, 16, 20, 24, 28, 32) * .5,
-    label.box.text.cex = c(1.5, 1.5, 1.25, 1, 1, 1),
-    break.label.cex = c(1.5, 1.5, 1.25, 1, .75, .5)
+    label.box.text.cex = cue.cex,
+    break.label.cex = threshold.cex
   )
 
 }
@@ -244,7 +277,7 @@ if(stats == FALSE) {
 if(n.levels < 6) {
 
 label.box.text.cex <- plotting.parameters.df$label.box.text.cex[n.levels]
-break.label.cex <- plotting.parameters.df$label.box.text.cex[n.levels]
+break.label.cex <- plotting.parameters.df$break.label.cex[n.levels]
 plot.height <- plotting.parameters.df$plot.height[n.levels]
 plot.width <- plotting.parameters.df$plot.width[n.levels]
 
@@ -254,7 +287,7 @@ plot.width <- plotting.parameters.df$plot.width[n.levels]
 if(n.levels >= 6) {
 
   label.box.text.cex <- plotting.parameters.df$label.box.text.cex[6]
-  break.label.cex <- plotting.parameters.df$label.box.text.cex[6]
+  break.label.cex <- plotting.parameters.df$break.label.cex[6]
   plot.height <- plotting.parameters.df$plot.height[6]
   plot.width <- plotting.parameters.df$plot.width[6]
 
@@ -662,7 +695,7 @@ plot(1,
 
 # Add  frame
 
-par(xpd = T)
+par(xpd = TRUE)
 
 
 if(stats == TRUE) {
@@ -684,7 +717,7 @@ if(main == "Data") {main <- ""}
 
 }
 
-par(xpd = F)
+par(xpd = FALSE)
 
 
 
