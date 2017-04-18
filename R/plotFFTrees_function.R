@@ -2,13 +2,13 @@
 #'
 #' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the FFTrees() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
 #' @param x A FFTrees object created from \code{"FFTrees()"}
-#' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
+#' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
+#' @param main character. The main plot label.
 #' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param cue.cex numeric. A numeric vector specifying the size of the cue labels.
 #' @param threshold.cex numeric. A numeric vector specifying the size of the decision thresholds.
-#' @param main character. The main plot label.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
 #' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
 #' @param n.per.icon Number of exemplars per icon
@@ -43,8 +43,8 @@ plot.FFTrees <- function(
   what = 'tree',
   tree = "best.train",
   main = "Data",
-  n.per.icon = NULL,
   decision.names = c("Noise", "Signal"),
+  n.per.icon = NULL,
   cue.cex = NULL,
   threshold.cex = NULL,
   which.tree = NULL,
