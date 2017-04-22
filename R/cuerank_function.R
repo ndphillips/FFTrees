@@ -30,6 +30,13 @@ cuerank <- function(formula = NULL,
 
 ) {
 
+  formula = diagnosis ~.
+  data = heartdisease
+  goal = "bacc"
+  numthresh.method = "o"
+  rounding = NULL
+  verbose = FALSE
+  cue.rules = NULL
 
 
 # GLOBAL VARIABLES (could be updated later)
@@ -154,7 +161,7 @@ for(cue.i in 1:n.cues) {
   cue.n <- length(cue.levels)
 
   # Names of accuracy measures
-  accuracy.names <- names(classtable(c(1, 0, 1), c(1, 1, 0)))
+  accuracy.names <- names(classtableC(c(1, 0, 1), c(1, 1, 0)))
 
   # Step 1A: Determine best direction and threshold for all cues
 
@@ -198,11 +205,10 @@ for(cue.i in 1:n.cues) {
           if(direction.i == "=") {pred.vec <- cue.v == cue.level.i}
           if(direction.i == "!=") {pred.vec <- cue.v != cue.level.i}
 
-          classtable.temp <- classtable(prediction.v = pred.vec,
-                                        criterion.v = criterion.v)
+          classtable.temp <- classtableC(pred = pred.vec, crit = criterion.v)
 
 
-          cue.stats.o[cue.stats.o$threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
+          cue.stats.o[cue.stats.o$threshold == cue.level.i, names(classtable.temp)] <- unlist(classtable.temp)
 
         }
 
@@ -238,11 +244,10 @@ for(cue.i in 1:n.cues) {
         if(direction.i == "!=") {pred.vec <- joint.cue.vec == FALSE}
 
 
-        classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v)
+        classtable.temp <- classtableC(pred = pred.vec, crit = criterion.v)
 
 
-        cue.stats[row.index.i, accuracy.names] <- classtable.temp
+        cue.stats[row.index.i, accuracy.names] <- unlist(classtable.temp)
 
 
       }
@@ -304,10 +309,10 @@ for(cue.i in 1:n.cues) {
         if(direction.i == ">") {pred.vec <- cue.v > level.i}
         if(direction.i == ">=") {pred.vec <- cue.v >= level.i}
 
-        classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v)
+        classtable.temp <- classtableC(pred = pred.vec,
+                                       crit = criterion.v)
 
-        direction.accuracy.df[which(direction.i == direction.vec), names(classtable.temp)] <- classtable.temp
+        direction.accuracy.df[which(direction.i == direction.vec), names(classtable.temp)] <- unlist(classtable.temp)
 
       }
 
@@ -340,6 +345,9 @@ for(cue.i in 1:n.cues) {
     cr.i <- NA
 
   }
+
+  # Remove rows with non-finite goal values
+  cue.stats[,goal][is.finite(unlist(cue.stats[goal])) == FALSE] <- 0
 
   # Get thresholds that maximizes goal
   best.result.index <- which(cue.stats[goal] == max(cue.stats[goal]))[1]

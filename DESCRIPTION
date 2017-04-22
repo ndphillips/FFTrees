@@ -24,7 +24,8 @@ Imports:
     snow,
     snowfall,
     e1071,
-    glmnet
+    glmnet, Rcpp
+LinkingTo: Rcpp
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 6.0.1
