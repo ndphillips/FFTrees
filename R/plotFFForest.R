@@ -23,8 +23,9 @@ plot.FFForest = function(x,
                          ...) {
 
 
+trees.n <- nrow(x$tree.sim)
 
-  par(mfrow = c(1, 2))
+par(mfrow = c(1, 2))
 
 edges <- x$connections
 edges <- edges[edges[,3] >= mincon,]
@@ -33,16 +34,10 @@ edges$line.lwd <- with(edges, (line.lwd - min(line.lwd)) / (max(line.lwd) - min(
 
 # Get overall frequencies
 
-  frequencies <- c()
+frequencies <- x$frequencies
 
-  for (i in 1:nrow(edges)) {
-
-    frequencies <- c(frequencies, rep(edges[i, 1], times = edges[i, 3]), rep(edges[i, 2], times = edges[i, 3]))
-
-  }
-
-  frequencies <- sort(table(frequencies))
-  node.cex <- (frequencies - min(frequencies)) / (max(frequencies) - min(frequencies)) * (node.cex.lim[2] - node.cex.lim[1]) + node.cex.lim[1]
+frequencies <- sort(frequencies)
+node.cex <- (frequencies - min(frequencies)) / (max(frequencies) - min(frequencies)) * (node.cex.lim[2] - node.cex.lim[1]) + node.cex.lim[1]
 
   # Colors
 
@@ -56,12 +51,12 @@ edges$line.lwd <- with(edges, (line.lwd - min(line.lwd)) / (max(line.lwd) - min(
 
 # Barplot
 {
-bp.vals <- barplot(rev(frequencies / sum(frequencies)),
+bp.vals <- barplot(rev(frequencies / trees.n),
                    plot = FALSE)
 
-par(mar = c(5, 8, 4, 1) + .1)
+par(mar = c(5, 8, 4, 5) + .1)
 
-barplot(height = frequencies / sum(frequencies),
+barplot(height = frequencies / trees.n,
         xlab = "", main = "", yaxt = "n",
         beside = FALSE, xlim = c(0, 1), horiz = TRUE,
         col = palette[length(frequencies):1]
@@ -71,8 +66,11 @@ barplot(height = frequencies / sum(frequencies),
 mtext(names(frequencies), side = 2, at = bp.vals[,1], las = 1, line = 1)
 mtext("Importance", side = 1, cex = 1.5, line = 3)
 
-text(frequencies / sum(frequencies), bp.vals[,1], pos = 4,
-     labels = paste0(round(frequencies / sum(frequencies) * 100, 0), "%"))
+par(xpd = TRUE)
+text(frequencies / trees.n, bp.vals[,1], pos = 4,
+     labels = paste0(round(frequencies / trees.n * 100, 0), "%"))
+
+par(xpd = FALSE)
 }
 
 # Network plot
