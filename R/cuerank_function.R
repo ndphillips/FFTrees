@@ -30,13 +30,13 @@ cuerank <- function(formula = NULL,
 
 ) {
 
-  formula = diagnosis ~.
-  data = heartdisease
-  goal = "bacc"
-  numthresh.method = "o"
-  rounding = NULL
-  verbose = FALSE
-  cue.rules = NULL
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # goal = "bacc"
+  # numthresh.method = "o"
+  # rounding = NULL
+  # verbose = FALSE
+  # cue.rules = NULL
 
 
 # GLOBAL VARIABLES (could be updated later)

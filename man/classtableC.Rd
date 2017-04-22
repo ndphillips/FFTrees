@@ -6,6 +6,11 @@
 \usage{
 classtableC(pred, crit)
 }
+\arguments{
+\item{pred}{A binary vector of predictions}
+
+\item{crit}{A binary vector of criterion (true) values}
+}
 \description{
-this does something
+Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 }

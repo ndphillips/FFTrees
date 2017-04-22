@@ -3,8 +3,9 @@
 
 #' classtableC
 #'
-#' this does something
-#'
+#' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
+#' @param pred A binary vector of predictions
+#' @param crit A binary vector of criterion (true) values
 #' @export
 classtableC <- function(pred, crit) {
     .Call('FFTrees_classtableC', PACKAGE = 'FFTrees', pred, crit)

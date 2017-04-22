@@ -3,8 +3,9 @@ using namespace Rcpp;
 
 //' classtableC
 //'
-//' this does something
-//'
+//' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
+//' @param pred A binary vector of predictions
+//' @param crit A binary vector of criterion (true) values
 //' @export
 // [[Rcpp::export]]
 List classtableC(LogicalVector pred,
