@@ -11,7 +11,3 @@ classtableC <- function(pred, crit) {
     .Call('FFTrees_classtableC', PACKAGE = 'FFTrees', pred, crit)
 }
 
-timesTwo <- function(x) {
-    .Call('FFTrees_timesTwo', PACKAGE = 'FFTrees', x)
-}
-

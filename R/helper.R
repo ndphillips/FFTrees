@@ -13,13 +13,12 @@ apply.break <- function(direction,
   if(cue.class %in% c("numeric", "integer")) {threshold.val <- as.numeric(threshold.val)}
 
 
-  if(direction == "!=") {output <- (cue.v %in% threshold.val) == F}
+  if(direction == "!=") {output <- (cue.v %in% threshold.val) == FALSE}
   if(direction == "=") {output <- cue.v %in% threshold.val}
   if(direction == "<") {output <- cue.v < threshold.val}
   if(direction == "<=") {output <- cue.v <= threshold.val}
   if(direction == ">") {output <- cue.v > threshold.val}
   if(direction == ">=") {output <- cue.v >= threshold.val}
-
 
   return(output)
 

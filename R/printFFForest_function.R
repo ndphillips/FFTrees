@@ -14,7 +14,7 @@ print.FFForest <- function(
 
 ntree <- x$params$ntree
 train.p <- x$params$train.p
-importance <- sort(x$frequencies, decreasing = TRUE) / sum(x$frequencies)
+importance <- sort(x$frequencies, decreasing = TRUE) / nrow(x$tree.sim)
 importance.df <- data.frame(importance)
 names(importance.df) <- c("cue", "importance")
 importance.df[,2] <- round(importance.df[,2], 2)
