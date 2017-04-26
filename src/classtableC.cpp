@@ -13,10 +13,10 @@ List classtableC(LogicalVector pred,
 
   int n = pred.size();
   int correct = 0;
-  int hi = 0;
-  int fa = 0;
-  int cr = 0;
-  int mi = 0;
+  double hi = 0;
+  double fa = 0;
+  double cr = 0;
+  double mi = 0;
 
   for (int i = 0; i < n; ++i) {
 
@@ -53,14 +53,14 @@ List classtableC(LogicalVector pred,
 
 
   double bacc = (sens[0] + spec[0]) / 2;
-  NumericVector dprime = qnorm(sens) + qnorm(spec);
+  NumericVector dprime = NumericVector::create(qnorm(sens)[0] + qnorm(spec)[0]);
 
   // if sens is NA, set bacc to spec / 2
 
   if((sens[0] != sens[0]) && (spec[0] == spec[0])) {
 
     bacc = (spec[0]) / 2 ;
-    NumericVector dprime = NumericVector::create(NA_INTEGER);
+    dprime = NumericVector::create(NA_INTEGER);
 
   }
 
@@ -83,7 +83,7 @@ List classtableC(LogicalVector pred,
 
   }
 
-  double acc = (double(hi) + double(cr)) / double(n) ;
+  double acc = (hi + cr) / n ;
 
   NumericVector far = NumericVector::create(1 - spec[0]) ;
 

@@ -6,6 +6,7 @@
 Rcpp::List classtableC(Rcpp::LogicalVector pred,
                        Rcpp::LogicalVector crit);
 
+
 // cpp version of %in%
 inline Rcpp::LogicalVector inset(std::vector<std::string> x,
                                  std::vector<std::string> target) {
