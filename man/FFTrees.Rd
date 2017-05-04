@@ -5,10 +5,10 @@
 \title{Creates a Fast and Frugal Trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  algorithm = "m", goal = "bacc", sens.weight = 0.5, max.levels = 4,
+  algorithm = "m", goal = "wacc", sens.w = 0.5, max.levels = 4,
   tree.definitions = NULL, verbose = FALSE, do.cart = TRUE,
   do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
-  object = NULL, rank.method = NULL)
+  object = NULL, rank.method = NULL, force = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -21,9 +21,9 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{algorithm}{character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.}
 
-\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime}
+\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy, "d" = d-prime}
 
-\item{sens.weight}{numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})}
+\item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}}
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
 
@@ -38,6 +38,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 
 \item{rank.method}{depricated arguments.}
+
+\item{force}{logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.}
 }
 \value{
 An \code{FFTrees} object with the following elements

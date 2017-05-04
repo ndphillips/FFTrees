@@ -2,7 +2,8 @@
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime
+#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param verbose logical. A logical value indicating whether or not to print ongoing diagnostics
@@ -23,6 +24,7 @@
 cuerank <- function(formula = NULL,
                     data = NULL,
                     goal = "bacc",
+                    sens.w = .5,
                     numthresh.method = "o",
                     rounding = NULL,
                     verbose = FALSE,
@@ -39,6 +41,7 @@ max.numcat <- 20        # Maximum number of numeric thresholds to consider
 if(substr(goal, 1, 1) == "a") {goal <- "acc"}
 if(substr(goal, 1, 1) == "b") {goal <- "bacc"}
 if(substr(goal, 1, 1) == "d") {goal <- "dprime"}
+if(substr(goal, 1, 1) == "w") {goal <- "wacc"}
 
 # Extract variables in formula
 data.mf <- model.frame(formula = formula,
@@ -199,7 +202,8 @@ for(cue.i in 1:n.cues) {
           if(direction.i == "!=") {pred.vec <- cue.v != cue.level.i}
 
           classtable.temp <- classtable(prediction.v = pred.vec,
-                                        criterion.v = criterion.v)
+                                        criterion.v = criterion.v,
+                                        sens.w = sens.w)
 
 
           cue.stats.o[cue.stats.o$threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
@@ -239,7 +243,8 @@ for(cue.i in 1:n.cues) {
 
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v)
+                                      criterion.v = criterion.v,
+                                      sens.w = sens.w)
 
 
         cue.stats[row.index.i, accuracy.names] <- classtable.temp
@@ -305,7 +310,8 @@ for(cue.i in 1:n.cues) {
         if(direction.i == ">=") {pred.vec <- cue.v >= level.i}
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v)
+                                      criterion.v = criterion.v,
+                                      sens.w = sens.w)
 
         direction.accuracy.df[which(direction.i == direction.vec), names(classtable.temp)] <- classtable.temp
 

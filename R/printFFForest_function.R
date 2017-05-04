@@ -14,7 +14,7 @@ print.FFForest <- function(
 
 ntree <- x$params$ntree
 train.p <- x$params$train.p
-importance <- sort(x$frequencies, decreasing = TRUE) / sum(x$frequencies)
+importance <- sort(x$frequencies, decreasing = TRUE) / ntree
 importance.df <- data.frame(importance)
 names(importance.df) <- c("cue", "importance")
 importance.df[,2] <- round(importance.df[,2], 2)
@@ -25,6 +25,7 @@ summary.text.2 <- paste0("Mean performance across all ", ntree, " trees:")
 summary.df <- data.frame("train" = c(
                                       round(mean(x$tree.sim$acc.train), 2),
                                       round(mean(x$tree.sim$bacc.train), 2),
+                                      round(mean(x$tree.sim$wacc.train), 2),
                                       round(mean(x$tree.sim$sens.train), 2),
                                       round(mean(x$tree.sim$spec.train), 2),
                                       round(mean(x$tree.sim$mcu.train), 2),
@@ -33,6 +34,7 @@ summary.df <- data.frame("train" = c(
                          "test" = c(
                            round(mean(x$tree.sim$acc.test), 2),
                            round(mean(x$tree.sim$bacc.test), 2),
+                           round(mean(x$tree.sim$wacc.test), 2),
                            round(mean(x$tree.sim$sens.test), 2),
                            round(mean(x$tree.sim$spec.test), 2),
                            round(mean(x$tree.sim$mcu.test), 2),
@@ -40,7 +42,7 @@ summary.df <- data.frame("train" = c(
                          )
                          )
 
-row.names(summary.df) <- c("acc", "bacc", "sens", "spec", "mcu", "pci")
+row.names(summary.df) <- c("acc", "bacc", "wacc", "sens", "spec", "mcu", "pci")
 importance.text <- paste("Cue Importance:")
 
 

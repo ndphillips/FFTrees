@@ -4,7 +4,7 @@
 \alias{cuerank}
 \title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
 \usage{
-cuerank(formula = NULL, data = NULL, goal = "bacc",
+cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
   numthresh.method = "o", rounding = NULL, verbose = FALSE,
   cue.rules = NULL)
 }
@@ -13,7 +13,9 @@ cuerank(formula = NULL, data = NULL, goal = "bacc",
 
 \item{data}{dataframe. A dataframe containing variables in formula}
 
-\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime}
+\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime}
+
+\item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
 
 \item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,}
 

@@ -4,7 +4,7 @@
 \alias{apply.tree}
 \title{Applies a fast and frugal tree to a dataset.}
 \usage{
-apply.tree(data, formula, tree.definitions)
+apply.tree(data, formula, tree.definitions, sens.w = 0.5)
 }
 \arguments{
 \item{data}{dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
@@ -12,6 +12,8 @@ apply.tree(data, formula, tree.definitions)
 \item{formula}{A formula}
 
 \item{tree.definitions}{dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.}
+
+\item{sens.w}{numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.}
 }
 \value{
 A list of length 4 containing
