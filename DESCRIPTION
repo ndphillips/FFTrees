@@ -23,8 +23,7 @@ Imports:
     igraph,
     snow,
     snowfall,
-    e1071,
-    glmnet
+    e1071
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 6.0.1
