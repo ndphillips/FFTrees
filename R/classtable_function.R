@@ -1,6 +1,7 @@
 #' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 #' @param prediction.v A binary vector of predictions
 #' @param criterion.v A binary vector of criterion (true) values
+#' @param sens.w numeric. Weight given to sensitivity, must range from 0 to 1.
 #' @importFrom stats qnorm
 #' @export
 #' @examples
@@ -14,7 +15,8 @@
 #'
 
 classtable <- function(prediction.v,
-                       criterion.v) {
+                       criterion.v,
+                       sens.w = .5) {
 
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
@@ -79,6 +81,9 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   # bacc (sens - FAR)
   bacc <- (sens + spec) / 2
 
+  # wacc (waited accuracy)
+  wacc <- sens * sens.w + spec * (1 - sens.w)
+
   # d-prime
   dprime <- qnorm(sens.c) - qnorm(far.c)
 
@@ -95,6 +100,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     far <- NA
     acc <- NA
     bacc <- NA
+    waccc <- NA
     dprime <- NA
 
   }
@@ -110,6 +116,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     far = far,
     acc = acc,
     bacc = bacc,
+    wacc = wacc,
     dprime = dprime)
 
   return(result)

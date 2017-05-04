@@ -3,6 +3,7 @@
 #' @param formula A formula
 #' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param tree.definitions dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.
+#' @param sens.w numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.
 #' @return A list of length 4 containing
 #' @export
 #' @examples
@@ -18,7 +19,8 @@
 
 apply.tree <- function(data,
                        formula,
-                       tree.definitions
+                       tree.definitions,
+                       sens.w = .5
 ) {
 
   #
@@ -93,8 +95,8 @@ apply.tree <- function(data,
       # Get level stats
 
       level.i.stats <- classtable(prediction.v = decision[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i]), tree.i],
-                                  criterion.v = criterion.v[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i])]
-      )
+                                  criterion.v = criterion.v[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i])],
+                                  sens.w = sens.w)
 
       level.stats.df.i[level.i, names(level.i.stats)] <- level.i.stats
 

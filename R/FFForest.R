@@ -10,7 +10,7 @@
 #' @param train.p numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.
 #' @param algorithm string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
-#' @param sens.weight numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
+#' @param sens.w numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.lr,do.cart,do.rf,do.svm logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?
@@ -35,8 +35,8 @@ FFForest <- function(formula = NULL,
                      ntree = 10,
                      train.p = .5,
                      algorithm = "m",
-                     goal = "bacc",
-                     sens.weight = .5,
+                     goal = "wacc",
+                     sens.w = .5,
                      verbose = TRUE,
                      cpus = 1,
                      do.lr = TRUE,
@@ -113,7 +113,7 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               max.levels = max.levels,
                               algorithm = algorithm,
                               goal = goal,
-                              sens.weight = sens.weight,
+                              sens.w = sens.w,
                               do.cart = do.cart,
                               do.lr = do.lr,
                               do.rf = do.rf,
@@ -186,7 +186,7 @@ if(cpus > 1) {
   snowfall::sfExport("do.svm")
   snowfall::sfExport("max.levels")
   snowfall::sfExport("algorithm")
-  snowfall::sfExport("sens.weight")
+  snowfall::sfExport("sens.w")
 
   result.ls <- snowfall::sfClusterApplySR(1:nrow(simulations), fun = getsim.fun, perUpdate = 1)
   suppressMessages(snowfall::sfStop())
@@ -225,7 +225,7 @@ for(stat.i in c("cues", "thresholds", "directions", "classes", "exits")) {
 
 # Train stats
 
-for(stat.i in c("n", "hi", "mi", "fa", "sens", "spec", "acc", "bacc", "dprime", "pci", "mcu")) {
+for(stat.i in c("n", "hi", "mi", "fa", "sens", "spec", "acc", "bacc", "wacc", "dprime", "pci", "mcu")) {
 
 
   simulations[[paste0(stat.i, ".train")]] <- sapply(1:length(result.ls),
@@ -382,7 +382,7 @@ output <-list("formula" = formula,
                               "max.levels" = max.levels,
                               "algorithm" = algorithm,
                               "goal" = goal,
-                              "sens.weight" = sens.weight))
+                              "sens.w" = sens.w))
 
 class(output) <- "FFForest"
 

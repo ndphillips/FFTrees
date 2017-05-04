@@ -8,14 +8,15 @@
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param algorithm character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
-#' @param sens.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
+#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
 #' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
 #' @param rank.method depricated arguments.
+#' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return An \code{FFTrees} object with the following elements
 #'
@@ -58,8 +59,8 @@ FFTrees <- function(formula = NULL,
                     data.test = NULL,
                     train.p = 1,
                     algorithm = "m",
-                    goal = "bacc",
-                    sens.weight = .5,
+                    goal = "wacc",
+                    sens.w = .5,
                     max.levels = 4,
                     tree.definitions = NULL,
                     verbose = FALSE,
@@ -69,17 +70,17 @@ FFTrees <- function(formula = NULL,
                     do.svm = TRUE,
                     store.data = FALSE,
                     object = NULL,
-                    rank.method = NULL
+                    rank.method = NULL,
+                    force = FALSE
 ) {
 
-
-  # formula = poisonous ~.
-  # data = mushrooms.train
-  # data.test = mushrooms.test
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # data.test = NULL
   # train.p = 1
   # algorithm = "m"
   # goal = "bacc"
-  # sens.weight = .5
+  # sens.w = .5
   # max.levels = 4
   # tree.definitions = NULL
   # verbose = FALSE
@@ -90,6 +91,7 @@ FFTrees <- function(formula = NULL,
   # store.data = FALSE
   # object = NULL
   # rank.method = NULL
+
 
 if(is.null(rank.method) == FALSE) {
 
@@ -129,6 +131,17 @@ numthresh.method <- "o"
 rounding <- 2
 exit.method <- "fixed"
 
+if(force == FALSE) {
+
+if(goal %in% c("acc") & sens.w != .5) {
+
+  message(paste0("Note: Because sens.w != .5, I will set goal = 'wacc'. To prevent this, include force = TRUE"))
+
+  goal <- "wacc"
+
+}
+
+}
 
 # Is there training data?
 if(is.null(data)) {stop("Please specify a dataframe in data")}
@@ -423,9 +436,10 @@ if(is.null(object)) {
 
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
-                                goal = goal,
+                                goal = "bacc",         # For now, goal must be bacc when ranking cues
                                 rounding = rounding,
-                                verbose = verbose
+                                verbose = verbose,
+                                sens.w = sens.w
 )
 
 }
@@ -442,11 +456,11 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
-                                goal = goal,
+                                goal = "bacc",        # For now, goal must be 'bacc' when ranking cues
                                 rounding = rounding,
                                 verbose = verbose,
-                                cue.rules = cue.accuracies.train
-)
+                                cue.rules = cue.accuracies.train,
+                                sens.w = sens.w)
 }
 
   if(sd(crit.test) == 0) {
@@ -474,12 +488,12 @@ if(is.null(object) & is.null(tree.definitions)) {
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
                             algorithm = algorithm,
-                            goal = goal,
+                            goal = "bacc",                  # for now, goal must be 'bacc' when growing trees
                             repeat.cues = repeat.cues,
                             stopping.rule = stopping.rule,
                             stopping.par = stopping.par,
                             max.levels = max.levels,
-                            sens.weight = sens.weight)
+                            sens.w = sens.w)
 
 tree.definitions <- tree.growth$tree.definitions
 
@@ -497,7 +511,9 @@ if(is.null(data.train) == FALSE) {
 
 train.results <- apply.tree(data = data.train,
                             formula = formula,
-                            tree.definitions = tree.definitions)
+                            tree.definitions = tree.definitions,
+                            sens.w = sens.w
+                            )
 
 decision.train <- train.results$decision
 levelout.train <- train.results$levelout
@@ -522,7 +538,8 @@ if(is.null(data.test) == FALSE) {
 
 test.results <- apply.tree(data = data.test,
                            formula = formula,
-                           tree.definitions = tree.definitions)
+                           tree.definitions = tree.definitions,
+                           sens.w = sens.w)
 
 decision.test <- test.results$decision
 levelout.test <- test.results$levelout
@@ -724,7 +741,7 @@ output.fft <- list("formula" = formula,
                   "decision" = decision,
                   "levelout" = levelout,
                   "auc" = auc,
-                  "params" = list("algorithm" = algorithm, "goal" = goal, "sens.weight" = sens.weight, "max.levels" = max.levels),
+                  "params" = list("algorithm" = algorithm, "goal" = goal, "sens.w" = sens.w, "max.levels" = max.levels),
                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
