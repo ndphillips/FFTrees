@@ -23,6 +23,12 @@ plot(titanic.fft,
 
 ### Package updates
 
+1.2.3
+
+- Added `sens.w` argument to allow differential weighting of sensitivities and specificities when selecting and applying trees.
+
+- Fixed but in calculating importance weightings from `FFForest()` outputs.
+
 1.2.0
 
 - Changed wording of statistics throughout package. `hr` (hit rate) and `far` (false alarm rate) are now `sens` for sensitivity, and `spec` for specificity (1 - false alarm rate)
