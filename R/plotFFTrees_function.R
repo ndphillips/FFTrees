@@ -1458,21 +1458,21 @@ rect(final.roc.x.loc[1],
      col = gray(1))
 
   # Gridlines
-# Horizontal
- segments(x0 = rep(final.roc.x.loc[1], 9),
-          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-          x1 = rep(final.roc.x.loc[2], 9),
-          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-          lty = 1, col = gray(.8), lwd = c(.5), lend = 3
-          )
-
- # Vertical
- segments(y0 = rep(final.roc.y.loc[1], 9),
-          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-          y1 = rep(final.roc.y.loc[2], 9),
-          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-          lty = 1, col = gray(.8), lwd = c(.5), lend = 3
- )
+# # Horizontal
+#  segments(x0 = rep(final.roc.x.loc[1], 9),
+#           y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+#           x1 = rep(final.roc.x.loc[2], 9),
+#           y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+#           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
+#           )
+#
+#  # Vertical
+#  segments(y0 = rep(final.roc.y.loc[1], 9),
+#           x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+#           y1 = rep(final.roc.y.loc[2], 9),
+#           x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+#           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
+#  )
 
  # Plot border
 
