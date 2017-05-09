@@ -393,8 +393,8 @@ signal.ball.bg <- ball.bg[2]
 arrow.lty <- 1
 arrow.lwd <- 1
 arrow.length <- 2.5
-arrow.head.length <- .1
-arrow.col <- gray(.5)
+arrow.head.length <- .08
+arrow.col <- gray(0)
 
 
 # Final stats
