@@ -717,7 +717,7 @@ par(mar = c(0, 0, 0, 0))
 
 if(stats == FALSE) {
 
-  par(mar = c(5, 4, 4, 1) +  .1)
+  par(mar = c(2, 2, 2, 2) +  .1)
 
 
   }
@@ -751,7 +751,8 @@ text(x = 0, y = 0,
 
 if(stats == FALSE) {
 
-if(main == "Data") {main <- ""}
+if(main %in% c("Data (Testing)", "Data (Training)")) {main <- ""}
+
   mtext(text = main, side = 3, cex = 2)
 
 

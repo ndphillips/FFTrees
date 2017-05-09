@@ -465,7 +465,7 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
   if(sd(crit.test) > 0) {
 
-if(progress) {message("Calculating cue test accuracies...")}
+# if(progress) {message("Calculating cue test accuracies...")}
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
