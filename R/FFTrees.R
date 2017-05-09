@@ -13,9 +13,9 @@
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
-#' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
+#' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
-#' @param rank.method depricated arguments.
+#' @param rank.method,verbose depricated arguments.
 #' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return An \code{FFTrees} object with the following elements
@@ -63,7 +63,7 @@ FFTrees <- function(formula = NULL,
                     sens.w = .5,
                     max.levels = 4,
                     tree.definitions = NULL,
-                    verbose = TRUE,
+                    progress = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
@@ -71,7 +71,8 @@ FFTrees <- function(formula = NULL,
                     store.data = FALSE,
                     object = NULL,
                     rank.method = NULL,
-                    force = FALSE
+                    force = FALSE,
+                    verbose = NULL
 ) {
 
   # formula = diagnosis ~.
@@ -83,7 +84,7 @@ FFTrees <- function(formula = NULL,
   # sens.w = .5
   # max.levels = 4
   # tree.definitions = NULL
-  # verbose = FALSE
+  # progress = FALSE
   # do.cart = TRUE
   # do.lr = TRUE
   # do.rf = TRUE
@@ -91,6 +92,14 @@ FFTrees <- function(formula = NULL,
   # store.data = FALSE
   # object = NULL
   # rank.method = NULL
+
+  if(is.null(verbose) == FALSE) {
+
+    warning("The argument verbose is depricated. Use progress instead.")
+
+    progress <- verbose
+
+  }
 
 
 if(is.null(rank.method) == FALSE) {
@@ -434,13 +443,13 @@ stat.names <- names(classtable(1, 1))
 
 if(is.null(object)) {
 
-if(verbose) {message(paste("Calculating thresholds for each cue to maximize", goal, "..."))}
+if(progress) {message(paste("Calculating cue thresholds ..."))}
 
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
                                 goal = "bacc",         # For now, goal must be bacc when ranking cues
                                 rounding = rounding,
-                                verbose = verbose,
+                                progress = progress,
                                 sens.w = sens.w
 )
 
@@ -456,13 +465,13 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
   if(sd(crit.test) > 0) {
 
-if(verbose) {message("Calculating cue test accuracies...")}
+if(progress) {message("Calculating cue test accuracies...")}
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
                                 goal = "bacc",        # For now, goal must be 'bacc' when ranking cues
                                 rounding = rounding,
-                                verbose = verbose,
+                                progress = progress,
                                 cue.rules = cue.accuracies.train,
                                 sens.w = sens.w)
 }
@@ -489,7 +498,7 @@ cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.t
 {
 if(is.null(object) & is.null(tree.definitions)) {
 
-  if(verbose) {message("Growing and applying FFTs ...")}
+  if(progress) {message("Growing and applying FFTs ...")}
 
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
@@ -499,7 +508,8 @@ tree.growth <- grow.FFTrees(formula = formula,
                             stopping.rule = stopping.rule,
                             stopping.par = stopping.par,
                             max.levels = max.levels,
-                            sens.w = sens.w)
+                            sens.w = sens.w,
+                            cue.accuracies = cue.accuracies.train)
 
 tree.definitions <- tree.growth$tree.definitions
 
@@ -590,7 +600,7 @@ rownames(tree.auc) = c("train", "test")
 {
 if(do.lr) {
 
-if(verbose) {message("Calculating predictions from other algorithms ...")}
+if(progress) {message("Calculating predictions from other algorithms ...")}
 
 
 lr.acc <- comp.pred(formula = formula,

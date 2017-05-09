@@ -6,9 +6,9 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   algorithm = "m", goal = "wacc", sens.w = 0.5, max.levels = 4,
-  tree.definitions = NULL, verbose = TRUE, do.cart = TRUE, do.lr = TRUE,
-  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
-  rank.method = NULL, force = FALSE)
+  tree.definitions = NULL, progress = TRUE, do.cart = TRUE,
+  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
+  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -29,7 +29,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
 
-\item{verbose}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
+\item{progress}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
 
 \item{do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.}
 
@@ -37,7 +37,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 
-\item{rank.method}{depricated arguments.}
+\item{rank.method, verbose}{depricated arguments.}
 
 \item{force}{logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.}
 }

@@ -6,7 +6,8 @@
 \usage{
 grow.FFTrees(formula, data, max.levels = 4, algorithm = "m",
   goal = "bacc", sens.w = 0.5, stopping.rule = "exemplars",
-  stopping.par = 0.1, verbose = FALSE, rank.method = NULL, ...)
+  stopping.par = 0.1, progress = FALSE, rank.method = NULL,
+  cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -25,9 +26,11 @@ grow.FFTrees(formula, data, max.levels = 4, algorithm = "m",
 
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
 
-\item{verbose}{logical. Should tree growing progress be displayed?}
+\item{progress}{logical. Should tree growing progress be displayed?}
 
 \item{rank.method}{depricated arguments}
+
+\item{cue.accuracies}{depricated arguments}
 
 \item{...}{Currently ignored}
 }

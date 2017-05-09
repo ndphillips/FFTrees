@@ -6,9 +6,10 @@
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
-#' @param verbose logical. A logical value indicating whether or not to print ongoing diagnostics
+#' @param progress logical. A logical value indicating whether or not to print ongoing diagnostics
 #' @param cue.rules dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
 #' @importFrom stats median var
+#' @importFrom progress progress_bar
 #' @return A dataframe containing best thresholds and marginal classification statistics for each cue
 #' @export
 #' @examples
@@ -27,7 +28,7 @@ cuerank <- function(formula = NULL,
                     sens.w = .5,
                     numthresh.method = "o",
                     rounding = NULL,
-                    verbose = FALSE,
+                    progress = FALSE,
                     cue.rules = NULL
 
 ) {
@@ -52,8 +53,11 @@ criterion.v <- data.mf[,1]
 cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
 n.cues <- ncol(cue.df)
 
+
 # Convert unordered factors to character, and ordered factors to integer
 for(i in 1:n.cues) {
+
+
 
   if(setequal(class(cue.df[,i]),c("ordered", "factor"))) {
 
@@ -85,8 +89,20 @@ if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == FAL
 }
 }
 
+
+if(progress) {pb <- progress::progress_bar$new(total = n.cues, clear = FALSE, show_after = .5)}
+
+
 # Loop over cues
 for(cue.i in 1:n.cues) {
+
+  if(progress) {
+
+    pb$tick()
+    Sys.sleep(1 / n.cues)
+
+  }
+
 
   # Get main information about current cue
   cue <- names(cue.df)[cue.i]

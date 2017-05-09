@@ -7,8 +7,9 @@
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
-#' @param verbose logical. Should tree growing progress be displayed?
+#' @param progress logical. Should tree growing progress be displayed?
 #' @param rank.method depricated arguments
+#' @param cue.accuracies depricated arguments
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula var
 #' @return A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
@@ -44,8 +45,9 @@ grow.FFTrees <- function(formula,
                          sens.w = .5,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
-                         verbose = FALSE,
+                         progress = FALSE,
                          rank.method = NULL,
+                         cue.accuracies = NULL,
                          ...
 ) {
 
@@ -83,20 +85,24 @@ n.cues <- ncol(cue.df)
 # INITIAL TRAINING CUE ACCURACIES
 # ----------
 
+if(is.null(cue.accuracies)) {
+
 cue.accuracies <- cuerank(formula = formula,
                           data = data.mf,
                           goal = goal,
                           numthresh.method = numthresh.method,
                           rounding = rounding,
-                          verbose = verbose,
+                          progress = progress,
                           sens.w = sens.w)
+
+}
 
 # ----------
 # GROW TREES
 # ----------
 {
 
-if(verbose) {print("Growing trees..")}
+if(progress) {print("Growing trees..")}
 
 # SETUP TREES
 # create tree.dm which contains exit values for max.levels

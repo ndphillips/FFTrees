@@ -5,7 +5,7 @@
 \title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
 \usage{
 cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
-  numthresh.method = "o", rounding = NULL, verbose = FALSE,
+  numthresh.method = "o", rounding = NULL, progress = FALSE,
   cue.rules = NULL)
 }
 \arguments{
@@ -21,7 +21,7 @@ cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
 
 \item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 
-\item{verbose}{logical. A logical value indicating whether or not to print ongoing diagnostics}
+\item{progress}{logical. A logical value indicating whether or not to print ongoing diagnostics}
 
 \item{cue.rules}{dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"}
 }
