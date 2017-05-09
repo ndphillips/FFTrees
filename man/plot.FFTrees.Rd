@@ -7,7 +7,8 @@
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
   tree = "best.train", main = "Data", decision.names = c("Noise",
   "Signal"), cue.cex = NULL, threshold.cex = NULL, comp = TRUE,
-  stats = TRUE, n.per.icon = NULL, which.tree = NULL, ...)
+  stats = TRUE, n.per.icon = NULL, which.tree = NULL,
+  level.type = "line", ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -33,6 +34,8 @@
 \item{n.per.icon}{Number of exemplars per icon}
 
 \item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
+
+\item{level.type}{string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}}
 
 \item{...}{Currently ignored.}
 }

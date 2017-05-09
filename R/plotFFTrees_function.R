@@ -1371,7 +1371,7 @@ if(level.type == "line") {
            rect.bottom.y,
            rect.center.x,
            value.height,
-           lty = 1, col = gray(.5))
+           lty = 3)
 
   points(rect.center.x,
          value.height,
