@@ -6,9 +6,9 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   algorithm = "m", goal = "wacc", sens.w = 0.5, max.levels = 4,
-  tree.definitions = NULL, verbose = FALSE, do.cart = TRUE,
-  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
-  object = NULL, rank.method = NULL, force = FALSE)
+  tree.definitions = NULL, verbose = TRUE, do.cart = TRUE, do.lr = TRUE,
+  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
+  rank.method = NULL, force = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
