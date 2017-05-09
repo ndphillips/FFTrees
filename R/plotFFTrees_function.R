@@ -1166,15 +1166,15 @@ level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
 lloc <- data.frame(
-  element = c("classtable", "pci", "sens", "spec", "acc", "bacc", "auc", "roc"),
-  long.name = c("Classification Table", "pci", "sens", "spec", "acc", "bacc", "AUC", "ROC"),
+  element = c("classtable", "pci", "sens", "spec", "acc", "wacc", "auc", "roc"),
+  long.name = c("Classification Table", "pci", "sens", "spec", "acc", "wacc", "AUC", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 6), .85),
   center.y = rep(level.center.y, 8),
   width =    c(.2, rep(level.width, 6), .2),
   height =   c(.65, rep(level.max.height, 6), .65),
-  value = c(NA, final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, fft.auc, NA),
+  value = c(NA, final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$wacc, fft.auc, NA),
   value.name = c(NA, pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
-                 pretty.dec(final.stats$bacc), pretty.dec(fft.auc), NA
+                 pretty.dec(final.stats$wacc), pretty.dec(fft.auc), NA
   )
 )
 
@@ -1473,7 +1473,7 @@ segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == 
 
 
 
-add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
+add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
 add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7, level.type = level.type)
 }
 
