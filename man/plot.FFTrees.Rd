@@ -5,8 +5,8 @@
 \title{Draws a FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = "Data", decision.names = c("Noise",
-  "Signal"), cue.cex = NULL, threshold.cex = NULL, comp = TRUE,
+  tree = "best.train", main = NULL, decision.names = c("Noise", "Signal"),
+  cue.cex = NULL, threshold.cex = NULL, decision.cex = 1, comp = TRUE,
   stats = TRUE, n.per.icon = NULL, which.tree = NULL,
   level.type = "line", ...)
 }
@@ -23,9 +23,11 @@
 
 \item{decision.names}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
 
-\item{cue.cex}{numeric. A numeric vector specifying the size of the cue labels.}
+\item{cue.cex}{numeric. The size of the cue labels.}
 
-\item{threshold.cex}{numeric. A numeric vector specifying the size of the decision thresholds.}
+\item{threshold.cex}{numeric. The size of the threshold labels.}
+
+\item{decision.cex}{numeric. The size of the decision labels.}
 
 \item{comp}{logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)}
 
