@@ -13,6 +13,7 @@
 #' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
 #' @param n.per.icon Number of exemplars per icon
 #' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
+#' @param level.type string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}
 #' @param ... Currently ignored.
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -50,6 +51,7 @@ plot.FFTrees <- function(
   stats = TRUE,
   n.per.icon = NULL,
   which.tree = NULL,
+  level.type = "line",
   ...
 ) {
 
@@ -1154,7 +1156,7 @@ par(xpd = F)
 }
 
 
-pretty.dec <- function(x) {return(paste(round(x, 2) * 100, "%", sep = ""))}
+pretty.dec <- function(x) {return(paste(round(x, 2) * 100, sep = ""))}
 
 level.max.height <- .65
 level.width <- .05
@@ -1296,7 +1298,8 @@ add.level.fun <- function(name,
                           max.val = 1,
                           min.val = 0,
                           ok.val = .5,
-                          bottom.text = "") {
+                          bottom.text = "",
+                          level.type = "line") {
 
 rect.center.x <- lloc$center.x[lloc$element == name]
 rect.center.y <- lloc$center.y[lloc$element == name]
@@ -1347,6 +1350,8 @@ value.col <- gray(1, .25)
 
 #plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
+if(level.type == "bar") {
+
 rect(rect.left.x,
      rect.bottom.y,
      rect.right.x,
@@ -1356,6 +1361,26 @@ rect(rect.left.x,
     # col = spec.level.fun(lloc$value[lloc$element == name]),
      border = "black"
 )
+
+}
+
+
+if(level.type == "line") {
+
+  segments(rect.center.x,
+           rect.bottom.y,
+           rect.center.x,
+           value.height,
+           lty = 1, col = gray(.5))
+
+  points(rect.center.x,
+         value.height,
+         cex = 5.5,
+         pch = 21,
+         bg = "white",
+         col = "black")
+
+}
 
 # Add level border
 
@@ -1368,11 +1393,24 @@ rect(rect.left.x,
 
 # Add value text
 
+if(level.type == "line") {
+
 text.outline(x = rect.center.x,
              y = value.height,
              labels = lloc$value.name[lloc$element == name],
-             pos = 3, cex = 1.5, r = .008
+             cex = 1.5, r = 0
 )
+}
+
+if(level.type == "bar") {
+
+  text.outline(x = rect.center.x,
+               y = value.height,
+               labels = lloc$value.name[lloc$element == name],
+               cex = 1.5, r = .008, pos = 3
+  )
+}
+
 
 
 # Add subtext
@@ -1397,27 +1435,27 @@ paste(final.stats$cr, "/", 1, collapse = "")
 
 # Add 100% reference line
 
-segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element == "sens"] * .8,
-         y0 = level.top,
-         x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
-         y1 = level.top,
-         lty = 3, lwd = .75)
+# segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element == "sens"] * .8,
+#          y0 = level.top,
+#          x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
+#          y1 = level.top,
+#          lty = 3, lwd = .75)
 
-add.level.fun("pci", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+add.level.fun("pci", ok.val = .75, level.type = level.type) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
 text(lloc$center.x[lloc$element == "pci"],
      lloc$center.y[lloc$element == "pci"],
      labels = paste0("mcu\n", round(mcu, 2)))
 
 
-add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
-add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+add.level.fun("spec", ok.val = .75, level.type = level.type) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+add.level.fun("sens", ok.val = .75, level.type = level.type) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
 # Min acc
 
 min.acc <- max(crit.br, 1 - crit.br)
 
-add.level.fun("acc", min.val = 0, ok.val = .5) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("acc", min.val = 0, ok.val = .5, level.type = level.type) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
 # Add baseline to pc level
 
@@ -1427,16 +1465,16 @@ segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == 
          y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
          lty = 1)
 
-text(x = lloc$center.x[lloc$element == "acc"],
-     y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-     labels = "BL", pos = 1)
+# text(x = lloc$center.x[lloc$element == "acc"],
+#      y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+#      labels = "BL", pos = 1)
 
     #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
 
 
 
-add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5)
-add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
+add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
+add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7, level.type = level.type)
 }
 
 # MiniROC
