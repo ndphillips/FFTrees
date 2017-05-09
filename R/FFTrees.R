@@ -63,7 +63,7 @@ FFTrees <- function(formula = NULL,
                     sens.w = .5,
                     max.levels = 4,
                     tree.definitions = NULL,
-                    verbose = FALSE,
+                    verbose = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
@@ -434,6 +434,8 @@ stat.names <- names(classtable(1, 1))
 
 if(is.null(object)) {
 
+if(verbose) {message(paste("Calculating thresholds for each cue to maximize", goal, "..."))}
+
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
                                 goal = "bacc",         # For now, goal must be bacc when ranking cues
@@ -453,6 +455,8 @@ cue.accuracies.train <- object$cue.accuracies$train
 if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test))) {
 
   if(sd(crit.test) > 0) {
+
+if(verbose) {message("Calculating cue test accuracies...")}
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
@@ -484,6 +488,8 @@ cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.t
 # GET TREE DEFINITIONS
 {
 if(is.null(object) & is.null(tree.definitions)) {
+
+  if(verbose) {message("Growing and applying FFTs ...")}
 
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
@@ -583,6 +589,9 @@ rownames(tree.auc) = c("train", "test")
 # LR
 {
 if(do.lr) {
+
+if(verbose) {message("Calculating predictions from other algorithms ...")}
+
 
 lr.acc <- comp.pred(formula = formula,
                      data.train = data.train,
