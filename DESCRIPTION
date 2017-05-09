@@ -23,7 +23,8 @@ Imports:
     igraph,
     snow,
     snowfall,
-    e1071
+    e1071,
+    progress
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 6.0.1
