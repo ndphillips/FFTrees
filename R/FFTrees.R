@@ -471,7 +471,7 @@ cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
                                 goal = "bacc",        # For now, goal must be 'bacc' when ranking cues
                                 rounding = rounding,
-                                progress = progress,
+                                progress = FALSE,
                                 cue.rules = cue.accuracies.train,
                                 sens.w = sens.w)
 }

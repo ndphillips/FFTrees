@@ -717,7 +717,7 @@ par(mar = c(0, 0, 0, 0))
 
 if(stats == FALSE) {
 
-  par(mar = c(2, 2, 2, 2) +  .1)
+  par(mar = c(3, 3, 3, 3) +  .1)
 
 
   }
@@ -1412,55 +1412,61 @@ rect(rect.left.x,
      border = "black"
 )
 
-}
-
-
-if(level.type == "line") {
-
-  segments(rect.center.x,
-           rect.bottom.y,
-           rect.center.x,
-           value.height,
-           lty = 3)
-
-  points(rect.center.x,
-         value.height,
-         cex = 5.5,
-         pch = 21,
-         bg = "white",
-         col = "black", lwd = .5)
-
-}
-
-# Add level border
-
-# rect(rect.left.x,
-#      rect.bottom.y,
-#      rect.right.x,
-#      rect.top.y,
-#      border = gray(.5, .5))
-
-
-# Add value text
-
-if(level.type == "line") {
-
-text.outline(x = rect.center.x,
-             y = value.height,
-             labels = lloc$value.name[lloc$element == name],
-             cex = 1.5, r = 0
-)
-}
-
-if(level.type == "bar") {
 
   text.outline(x = rect.center.x,
                y = value.height,
                labels = lloc$value.name[lloc$element == name],
                cex = 1.5, r = .008, pos = 3
   )
+
+
+
+  # Add level border
+
+  # rect(rect.left.x,
+  #      rect.bottom.y,
+  #      rect.right.x,
+  #      rect.top.y,
+  #      border = gray(.5, .5))
+
+
 }
 
+
+if(level.type == "line") {
+
+
+  # Stem
+  segments(rect.center.x,
+           rect.bottom.y,
+           rect.center.x,
+           value.height,
+           lty = 3)
+
+  # Horizontal platform
+  platform.width <- .02
+
+  segments(rect.center.x - platform.width,
+           value.height,
+           rect.center.x + platform.width,
+           value.height)
+
+
+  # Text label
+  text.outline(x = rect.center.x,
+               y = value.height,
+               labels = lloc$value.name[lloc$element == name],
+               cex = 1.5, r = 0, pos = 3
+  )
+
+  # points(rect.center.x,
+  #        value.height,
+  #        cex = 5.5,
+  #        pch = 21,
+  #        bg = "white",
+  #        col = "black", lwd = .5)
+
+}
 
 
 # Add subtext
