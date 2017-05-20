@@ -16,26 +16,30 @@ The `FFTrees()` function is at the heart of the `FFTrees` package. The function 
 
 ## heartdisease example
 
-Let's start with an example, we'll create FFTrees fitted to the `heartdisease` dataset. This dataset contains data from 202 patients suspected of having heart disease. Here's how the dataset looks:
+Let's start with an example, we'll create FFTrees fitted to the `heartdisease` dataset. This dataset contains data from `r nrow(heartdisease)` patients suspected of having heart disease. Here's how the dataset looks:
 
 ```{r}
+# Look at the first few rows of the heartdisease data
 head(heartdisease)
 ```
 
 The critical dependent variable is `diagnosis` which indicates whether a patient has heart disease or not. The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors.
 
-Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the test dataset:
+Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the testing dataset:
 
 ```{r}
+# Create random training and testing data
+
 set.seed(100) # For replication
 heart.rand <- heartdisease[sample(nrow(heartdisease)),]
 heart.train <- heart.rand[1:150,]
 heart.test <- heart.rand[151:303,]
 ```
 
-We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent variables with `formula = diagnosis ~ .`:
+We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent variables with `formula = diagnosis ~ .` (If we wanted to only consider specific variables, like sex and age, for the tree we could do this by specifying `formula = diagnosis ~ age + sex`)
 
-```{r}
+```{r, message = FALSE}
+# Create an FFTrees object called heart.fft predicting diagnosis
 heart.fft <- FFTrees(formula = diagnosis ~.,
                     data = heart.train,
                     data.test = heart.test)
@@ -46,8 +50,21 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 `FFTrees()` returns an object with the FFTrees class. There are many elements in an FFTrees object, here are their names:
 
 ```{r}
+# Print the names of the elements of an FFTrees object
 names(heart.fft)
 ```
+
+- `formula`: The formula used to create the FFTrees object.
+- `data.desc`: Basic information about the datasets.
+- `cue.accuracies`: Thresholds and marginal accuracies for each cue.
+- `tree.definitions`: Definitions of all trees in the object.
+- `tree.stats`: Classification statistics for all trees (tree definitions are also included here).
+- `level.stats`: Cumulative classification statistics for each level of each tree.
+- `decision`: Classification decisions for each case (row) for each tree (column).
+- `levelout`: The level at which each case (row) is classified for each tree (column).
+- `auc`: Area under the curve statistics
+- `params`: Parameters used in tree construction
+- `comp`: Models and statistics for alternative classification algorithms.
 
 
 ## Printing an FFTrees object
@@ -55,13 +72,25 @@ names(heart.fft)
 You can view basic information about the FFTrees object by printing its name. This will give you a quick summary of the object, including how many trees it has, which cues the tree(s) use, and how well they performed.
 
 ```{r}
+# Print the object
 heart.fft
 ```
 
+Here is a description of each statistic:
+
+| statistic| long name | definition|
+|:-----|:----|:----------------------------------|
+|     `n`|N |    Number of cases|
+|     `mcu`|    "Mean Cues Used"| On average, how many cues were needed to classify cases?|
+|     `pci`|    "Percent Cues Ignored"| The percent of data that was *ignored* when classifying cases. This is identical to the `mcu` / `cues.n`, where `cues.n` is the total number of cues in the data.|
+|     `acc`| Accuracy | The percentage of cases that were correctly classified.|
+|     `wacc`|    Weighted Accuracy  |Weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, .5) |
+|     `sens`|   Sensitivity| The percentage of true positive cases correctly classified.|
+|     `spec`|   Specificity| The percentage of true negative cases correctly classified. |
 
 ### Cue accuracy statistics: cue.accuracies
 
-You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. The list contains dataframes with marginal cue accuracies. That is, for each cue, the threshold that maximizes the v-statistic (HR - FAR) in the training dataset is chosen. If the object has test data, you can see the marginal cue accuracies in the test dataset (using the thresholds calculated from the training data):
+You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. The list contains dataframes with marginal cue accuracies. That is, for each cue, the threshold that maximizes weighted accuracy (`wacc`) in the training dataset is chosen. If the object has test data, you can see the marginal cue accuracies in the test dataset (using the thresholds calculated from the training data):
 
 ```{r}
 heart.fft$cue.accuracies
@@ -134,14 +163,14 @@ See the vignette on plotting trees [here](FFTrees_plot.html) for more details on
 
 ## Additional arguments
 
-The `FFTrees()` function has several additional arguments than change how trees are built.
+The `FFTrees()` function has many optional arguments than change how trees are built.
 
 - `max.levels`: What is the maximum number of levels the trees should have? the larger `max.levels` is, the longer the trees will be, and the more trees will be created (due to the fact that all possible exit structures are used).
 
 - `train.p`: What percent of the data should be used for training (if `data.test` is not specified)? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Setting `train.p = 1` will train the trees to the entire dataset (and leave no data for testing).
 
-- `goal`: What accuracy statistic should the trees try to maximize? The default is balanced accuracy `bacc` which is the average of sensitivity and specificity. Alternatively, `acc` will maximize overall accuracy (eg., absolute percentage of correct decisions).
-
-- `algorithm`: As trees are being built, should cues be selected based on their marginal accuracy (`algorithm = "m"`) applied to the entire dataset, or on their conditional accuracy (`algorithm = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses. Additionally, the `algorithm = "c"` method allows the same cue to be used multiple times in the tree. When a cue has a strong non-monotonic relationship with the criterion, this can greatly improve performance.
-
 - `sens.w`: How much weight should be given to maximizing sensitivity (i.e.; avoiding misses) versus maximizing specificity (i.e, avoiding false-alarms)? The default is `sens.w = .5` which treats both measures equally. However, if your decision problem strongly favors maximizing hits over avoiding false alarms, you may wish to set `sens.w` to a higher value such as 0.75. Changing this value does not (currently) affect tree construction. Instead, it is used to select the tree with the highest weighted accuracy `wacc` score, where `wacc = sensitivity * sens.w + specificity * (1 - sens.w)`
+
+- `goal`: What accuracy statistic should the trees try to maximize? The default is weighted accuracy `wacc` which balances sensitivity and specificity according to a sensitivity weight given by `sens.w`. Alternatively, `acc` will maximize overall accuracy (eg., absolute percentage of correct decisions).
+
+- `algorithm`: As trees are being built, should cues be selected based on their marginal accuracy (`algorithm = "m"`) applied to the entire dataset, or on their conditional accuracy (`algorithm = "c"`) applied to all cases that have not yet been classified? Each method has potential pros and cons. The marginal method is much faster to implement and may be prone to less over-fitting. However, the conditional method could capture important conditional dependencies between cues that the marginal method misses. Additionally, the `algorithm = "c"` method allows the same cue to be used multiple times in the tree. When a cue has a strong non-monotonic relationship with the criterion, this can improve performance.
