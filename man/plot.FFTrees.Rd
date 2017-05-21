@@ -8,7 +8,7 @@
   tree = "best.train", main = NULL, decision.names = c("Noise", "Signal"),
   cue.cex = NULL, threshold.cex = NULL, decision.cex = 1, comp = TRUE,
   stats = TRUE, n.per.icon = NULL, which.tree = NULL,
-  level.type = "line", ...)
+  level.type = "bar", ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}

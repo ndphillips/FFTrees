@@ -6,7 +6,7 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   algorithm = "m", goal = "wacc", sens.w = 0.5, max.levels = 4,
-  tree.definitions = NULL, progress = TRUE, do.cart = TRUE,
+  tree.definitions = NULL, progress = TRUE, comp = TRUE, do.cart = TRUE,
   do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
   object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
 }
@@ -31,7 +31,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 
 \item{progress}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
 
-\item{do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.}
+\item{comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.}
 
 \item{store.data}{logical. Should training / test data be stored in the object? Default is FALSE.}
 

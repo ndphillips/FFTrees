@@ -8,24 +8,36 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, echo = FALSE}
+options(digits = 3)
+```
+
+
 ```{r, echo = F, message = F, results = 'hide'}
 library(FFTrees)
 ```
 
-The `FFTrees()` function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several fast and frugal trees which attempt to classify cases into one of two classes based on cues (aka., features).
+The `FFTrees()` function is at the heart of the `FFTrees` package. The function takes a training dataset as an argument, and generates several fast-and-frugal trees which attempt to classify cases into one of two classes (True or False) based on cues (aka., features).
 
-## heartdisease example
+## Example: heartdisease
 
-Let's start with an example, we'll create FFTrees fitted to the `heartdisease` dataset. This dataset contains data from `r nrow(heartdisease)` patients suspected of having heart disease. Here's how the dataset looks:
+```{r fig.align = "center", out.width="250px", echo = FALSE}
+knitr::include_graphics("../inst/CoronaryArtery.png")
+```
+
+We'll create FFTrees fitted to the `heartdisease` dataset. This dataset contains data from `r nrow(heartdisease)` patients suspected of having heart disease. Here's how the dataset looks:
 
 ```{r}
 # Look at the first few rows of the heartdisease data
 head(heartdisease)
 ```
 
-The critical dependent variable is `diagnosis` which indicates whether a patient has heart disease or not. The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors.
+The critical dependent variable is `diagnosis` which indicates whether a patient has heart disease (`diagnosis = 1`) or not (`diagnosis = 0`). The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors (aka., cues).
 
-Now we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its performance in the testing dataset:
+### Training and Testing data
+
+Before creating the trees, we'll split the original dataset into a *training* dataset, and a *testing* dataset. We will create the trees with the training set, then test its prediction performance in the testing dataset:
 
 ```{r}
 # Create random training and testing data
@@ -36,7 +48,13 @@ heart.train <- heart.rand[1:150,]
 heart.test <- heart.rand[151:303,]
 ```
 
-We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent variables with `formula = diagnosis ~ .` (If we wanted to only consider specific variables, like sex and age, for the tree we could do this by specifying `formula = diagnosis ~ age + sex`)
+*Note: You can also automate the training / test split using the `train.p` argument in `FFTrees()`. This will randomly split `train.p`\% of the original data into a training set.*
+
+## Create trees with `FFTrees()`
+
+To create a set of fast-and-frugal trees, use `FFTrees()`. We'll create a new FFTrees object called `heart.fft` using the `FFTrees()` function. We'll specify `diagnosis` as the (binary) dependent variable, and include all independent variables with `formula = diagnosis ~ .`
+
+*Note: If we wanted to only consider specific variables, like sex and age, for the trees we could do this by specifying `formula = diagnosis ~ age + sex`*
 
 ```{r, message = FALSE}
 # Create an FFTrees object called heart.fft predicting diagnosis
@@ -66,58 +84,80 @@ names(heart.fft)
 - `params`: Parameters used in tree construction
 - `comp`: Models and statistics for alternative classification algorithms.
 
-
-## Printing an FFTrees object
-
-You can view basic information about the FFTrees object by printing its name. This will give you a quick summary of the object, including how many trees it has, which cues the tree(s) use, and how well they performed.
+You can view basic information about the FFTrees object by printing its name. The tree with the best training `wacc` value is then indicated along with its accuracy statistics:
 
 ```{r}
-# Print the object
+# Print the object, with details about the tree with the best training wacc values
 heart.fft
 ```
+
+Here, we see that the tree with the highest training `wacc` value was tree number \#4.
 
 Here is a description of each statistic:
 
 | statistic| long name | definition|
-|:-----|:----|:----------------------------------|
+|:-----|:---------|:----------------------------------|
 |     `n`|N |    Number of cases|
-|     `mcu`|    "Mean Cues Used"| On average, how many cues were needed to classify cases?|
-|     `pci`|    "Percent Cues Ignored"| The percent of data that was *ignored* when classifying cases. This is identical to the `mcu` / `cues.n`, where `cues.n` is the total number of cues in the data.|
+|     `mcu`|    Mean cues used| On average, how many cues were needed to classify cases? In other words, what percent of the available information was used on average.|
+|     `pci`|    Percent cues ignored| The percent of data that was *ignored* when classifying cases with a given tree. This is identical to the `mcu / cues.n`, where `cues.n` is the total number of cues in the data.|
 |     `acc`| Accuracy | The percentage of cases that were correctly classified.|
-|     `wacc`|    Weighted Accuracy  |Weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, .5) |
+|     `wacc`|    Weighted Accuracy  |Weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, `sens.w = .5`) |
 |     `sens`|   Sensitivity| The percentage of true positive cases correctly classified.|
-|     `spec`|   Specificity| The percentage of true negative cases correctly classified. |
+|     `spec`|   Specificity| The percentage of true negative cases correctly classified.|
 
 ### Cue accuracy statistics: cue.accuracies
 
-You can obtain marginal cue accuracy statistics from the `cue.accuracies` list. The list contains dataframes with marginal cue accuracies. That is, for each cue, the threshold that maximizes weighted accuracy (`wacc`) in the training dataset is chosen. If the object has test data, you can see the marginal cue accuracies in the test dataset (using the thresholds calculated from the training data):
+Each tree has a decision threshold for each cue (regardless of whether or not it is actually used in the tree) that maximizes the `wacc` value of that cue when it is applied to the entire training dataset. You can obtain cue accuracy statistics using the calculated decision thresholds from the `cue.accuracies` list. If the object has test data, you can see the marginal cue accuracies in the test dataset (using the thresholds calculated from the training data):
 
 ```{r}
+# Show decision thresholds and marginal classification accuracies for each cue
 heart.fft$cue.accuracies
 ```
 
-You can also view the cue accuracies in an ROC-type plot with `plot()` combined with the `what = "cues"` argument:
+You can also view the cue accuracies in an ROC plot with `plot()` combined with the `what = "cues"` argument. This will show the sensitivities and specificities for each cue, with the top 5 cues highlighted.
 
-```{r fig.width = 8, fig.height = 8}
+```{r fig.width = 8, fig.height = 8, dpi = 400, out.width = "500px", fig.align='center'}
+# Visualize individual cue accuracies
 plot(heart.fft, 
      main = "Heartdisease Cue Accuracy",
      what = "cues")
 ```
 
 
-### Tree definitions and accuracy statistics
+### Tree definitions
 
-The `tree.definitions` dataframe contains definitions (cues, classes, exits, thresholds, and directions) of all trees in the object:
+The `tree.definitions` dataframe contains definitions (cues, classes, exits, thresholds, and directions) of all trees in the object. The combination of these 5 pieces of information (as well as their order), define how a tree makes decisions.
 
 ```{r}
+# Print the definitions of all trees
 heart.fft$tree.definitions
 ```
 
-The `tree.stats` list contains classification statistics for all trees applied to both training `tree.stats$train` and test `tree.stats$test` data. Here are the training statistics 
+To understand how to read these definitions, let's start by understanding tree #4:
 
 ```{r}
+# Print the definitions of tree 4
+heart.fft$tree.definitions[4,]
+```
+
+Separate levels in tree definitions are separated by colons `;`. For example, tree 4 has 3 cues in the order `thal`, `cp`, `ca`. The classes of the cues are `c` (character), `c` and `n` (numeric). The decision exits for the cues are 1 (positive), 0 (negative), and 0.5 (both positive and negative). This means that the first cue only makes positive decisions, the second cue only makes negative decisions, and the third cue makes *both* positive and negative decisions.
+
+The decision thresholds are `rd` and `fd` for the first cue, `a` for the second cue, and `0` for the third cue while the cue directions are `=` for the first cue, `=` for the second cue, and `>` for the third cue. Note that cue directions indicate how the tree *would* make positive decisions *if* it had a positive exit for that cue. If the tree has a positive exit for the given cue, then cases that satisfy this threshold and direction are classified as positive. However, if the tree has only a negative exit for a given cue, then cases that do *not* satisfy the given thresholds are classified as negative.
+
+From this, we can understand tree \#4 verbally as follows: 
+
+*If thal is equal to either rd or fd, predict positive. Otherwise, if cp is not equal to a, predict negative. Otherwise, if ca is greater than 0, predict positive, otherwise, predict negative.*
+
+### Accuracy statistics
+
+The `tree.stats` list contains classification statistics for all trees applied to both training `tree.stats$train` and test `tree.stats$test` data. Here are the training statistics for all trees
+
+```{r}
+# Print training statistics for all trees
 heart.fft$tree.stats$train
 ```
+
+
 
 ### decision
 
@@ -126,6 +166,7 @@ The `decision` list contains the raw classification decisions for each tree for 
 Here are is how each tree classified the first five cases in the training data:
 
 ```{r}
+# Look at the tree decisions for the first 5 training cases
 heart.fft$decision$train[1:5,]
 ```
 
@@ -136,22 +177,32 @@ The `levelout` list contains the levels at which each case was classified for ea
 Here are the levels at which the first 5 test cases were classified:
 
 ```{r}
+# Look at the levels at which decisions are made for the first 5 test cases
 heart.fft$levelout$test[1:5,]
 ```
 
 ### Predicting new data with predict()
 
-Once you've created an FFTrees object, you can use it to predict new data using `predict()`. To specify which tree to In this example, I'll use the `heart.fft` object to make predictions for cases 1 through 50 in the heartdisease dataset:
+Once you've created an FFTrees object, you can use it to predict new data using `predict()`. To specify which tree to In this example, I'll use the `heart.fft` object to make predictions for cases 1 through 50 in the heartdisease dataset. By default, the tree with the best training `wacc` values (in this case tree \#4) is used.
 
 ```{r}
+# Predict categories for new data from the best training tree
 predict(heart.fft,
         data = heartdisease[1:50,])
 ```
 
+If you want to specify a tree other than the tree with the highest training `wacc` values, just specify it with the `tree` argument.
+
+```{r}
+# Predict categories for new data from tree #1
+predict(heart.fft,
+        data = heartdisease[1:50,],
+        tree = 1)
+```
 
 ## Visualising trees
 
-Once you've created an FFTrees object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree (tree 2) applied to the test data:
+Once you've created an FFTrees object using `FFTrees()` you can visualize the tree (and ROC curves) using `plot()`. The following code will visualize the best training tree applied to the test data:
 
 ```{r, fig.width = 7, fig.height = 7}
 plot(heart.fft,
@@ -164,6 +215,8 @@ See the vignette on plotting trees [here](FFTrees_plot.html) for more details on
 ## Additional arguments
 
 The `FFTrees()` function has many optional arguments than change how trees are built.
+
+- `do.lr`, `do.cart`, `do.svm`, `do.rf`, `comp`: Should competitive algorithms (`lr` = least squares logistic regression, `cart` = regular (non-frugal) decision trees, `svm` = support vector machines, `rf` = random forests be) calculated? If the algorithm is running slowly, or if you don't care about the performance of other algorithms, set these to `FALSE`, either individually, or by setting `comp = FALSE` which turns them all off.
 
 - `max.levels`: What is the maximum number of levels the trees should have? the larger `max.levels` is, the longer the trees will be, and the more trees will be created (due to the fact that all possible exit structures are used).
 
