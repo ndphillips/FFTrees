@@ -33,7 +33,7 @@
 
 \item{stats}{logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.}
 
-\item{n.per.icon}{Number of exemplars per icon}
+\item{n.per.icon}{Number of cases per icon}
 
 \item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
 
