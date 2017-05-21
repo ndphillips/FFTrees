@@ -437,7 +437,7 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
   stat.names <- names(classtable(1, 1))
 
   trees <- as.data.frame(matrix(NA, nrow = n.trees, ncol = 7))
-  names(trees) <- c("tree", "cues", "nodes", "classes", "exits", "thresholds", "directions")
+  names(trees) <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
 
   level.stats.df$class <- substr(level.stats.df$class, 1, 1)
 
@@ -502,7 +502,7 @@ if(nrow(trees) > 0) {
 
 # setup output
 
-tree.definitions <- trees[,c("tree", "cues", "nodes", "classes", "exits", "thresholds", "directions")]
+tree.definitions <- trees[,c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")]
 tree.stats <- trees[,c("tree", names(classtable(1, 1)))]
 
 output <- list(tree.definitions = tree.definitions,
