@@ -13,7 +13,7 @@
 #' @param sens.w numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
-#' @param do.lr,do.cart,do.rf,do.svm logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?
+#' @param comp,do.lr,do.cart,do.rf,do.svm logical. See arguments in \code{FFTrees()}
 #' @param rank.method,hr.weight depricated arguments
 #' @importFrom stats  formula
 #' @return An object of class \code{FFForest} with the following elements...
@@ -39,6 +39,7 @@ FFForest <- function(formula = NULL,
                      sens.w = .5,
                      verbose = TRUE,
                      cpus = 1,
+                     comp = FALSE,
                      do.lr = TRUE,
                      do.cart = TRUE,
                      do.rf = TRUE,
@@ -113,7 +114,9 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               max.levels = max.levels,
                               algorithm = algorithm,
                               goal = goal,
+                              progress = FALSE,
                               sens.w = sens.w,
+                              comp = comp,
                               do.cart = do.cart,
                               do.lr = do.lr,
                               do.rf = do.rf,
@@ -124,7 +127,7 @@ decisions.i <- predict(result.i, data)
 tree.stats.i <- result.i$tree.stats
 comp.stats.i <- c()
 
-if(do.lr) {
+if(do.lr & comp) {
 lr.stats.i <- result.i$comp$lr$stats
 names(lr.stats.i) <- paste0("lr.", names(lr.stats.i))
 comp.stats.i <- c(comp.stats.i, lr.stats.i)
@@ -132,19 +135,19 @@ comp.stats.i <- c(comp.stats.i, lr.stats.i)
 
 
 
-if(do.cart) {
+if(do.cart & comp) {
   cart.stats.i <- result.i$comp$cart$stats
   names(cart.stats.i) <- paste0("cart.", names(cart.stats.i))
   comp.stats.i <- c(comp.stats.i, cart.stats.i)
   }
 
-if(do.rf) {
+if(do.rf & comp) {
   rf.stats.i <- result.i$comp$rf$stats
   names(rf.stats.i) <- paste0("rf.", names(rf.stats.i))
   comp.stats.i <- c(comp.stats.i, rf.stats.i)
 }
 
-if(do.svm) {
+if(do.svm & comp) {
   svm.stats.i <- result.i$comp$svm$stats
   names(svm.stats.i) <- paste0("svm.", names(svm.stats.i))
   comp.stats.i <- c(comp.stats.i, svm.stats.i)
@@ -367,7 +370,7 @@ if(do.svm) {
 # Summarise output
 
 output <-list("formula" = formula,
-              "tree.sim" = simulations,
+              "fft.sim" = simulations,
               "decisions" = decisions,
               "frequencies" = frequencies,
               "connections" = connections,
