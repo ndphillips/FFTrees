@@ -1591,12 +1591,12 @@ add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.
 
 # baseline
 
-segments(x0 = mean(lloc$center.x[2]),
-         y0 = lloc$center.y[1] - lloc$height[1] / 2,
-         x1 = mean(lloc$center.x[7]),
-         y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
-         lwd = .5,
-         col = gray(0))
+# segments(x0 = mean(lloc$center.x[2]),
+#          y0 = lloc$center.y[1] - lloc$height[1] / 2,
+#          x1 = mean(lloc$center.x[7]),
+#          y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
+#          lwd = .5,
+#          col = gray(0))
 
 }
 
