@@ -11,7 +11,7 @@
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
+#' @param comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
 #' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
@@ -64,6 +64,7 @@ FFTrees <- function(formula = NULL,
                     max.levels = 4,
                     tree.definitions = NULL,
                     progress = TRUE,
+                    comp = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
@@ -152,6 +153,7 @@ if(goal %in% c("acc") & sens.w != .5) {
 
 }
 
+
 # Is there training data?
 if(is.null(data)) {stop("Please specify a dataframe in data")}
 
@@ -170,6 +172,17 @@ if(is.null(object) == FALSE) {
   formula <- object$formula
 
 }
+
+
+if(comp == FALSE) {
+
+  do.lr <- FALSE
+  do.cart <- FALSE
+  do.svm <- FALSE
+  do.rf <- FALSE
+
+}
+
 
 # DEFINE TESTING AND TRAINING DATA
 {
