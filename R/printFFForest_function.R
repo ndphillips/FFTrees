@@ -20,25 +20,25 @@ names(importance.df) <- c("cue", "importance")
 importance.df[,2] <- round(importance.df[,2], 2)
 
 summary.text.1 <- paste("Forest of ", ntree, " FFTs from ", train.p * 100, "% random training splits.", sep = "")
-summary.text.2 <- paste0("Mean performance across all ", ntree, " trees:")
+summary.text.2 <- paste0("Median performance across all ", ntree, " trees:")
 
 summary.df <- data.frame("train" = c(
-                                      round(mean(x$tree.sim$acc.train), 2),
-                                      round(mean(x$tree.sim$bacc.train), 2),
-                                      round(mean(x$tree.sim$wacc.train), 2),
-                                      round(mean(x$tree.sim$sens.train), 2),
-                                      round(mean(x$tree.sim$spec.train), 2),
-                                      round(mean(x$tree.sim$mcu.train), 2),
-                                      round(mean(x$tree.sim$pci.train), 2)
+                                      round(median(x$fft.sim$acc.train), 2),
+                                      round(median(x$fft.sim$bacc.train), 2),
+                                      round(median(x$fft.sim$wacc.train), 2),
+                                      round(median(x$fft.sim$sens.train), 2),
+                                      round(median(x$fft.sim$spec.train), 2),
+                                      round(median(x$fft.sim$mcu.train), 2),
+                                      round(median(x$fft.sim$pci.train), 2)
                                      ),
                          "test" = c(
-                           round(mean(x$tree.sim$acc.test), 2),
-                           round(mean(x$tree.sim$bacc.test), 2),
-                           round(mean(x$tree.sim$wacc.test), 2),
-                           round(mean(x$tree.sim$sens.test), 2),
-                           round(mean(x$tree.sim$spec.test), 2),
-                           round(mean(x$tree.sim$mcu.test), 2),
-                           round(mean(x$tree.sim$pci.test), 2)
+                           round(median(x$fft.sim$acc.test), 2),
+                           round(median(x$fft.sim$bacc.test), 2),
+                           round(median(x$fft.sim$wacc.test), 2),
+                           round(median(x$fft.sim$sens.test), 2),
+                           round(median(x$fft.sim$spec.test), 2),
+                           round(median(x$fft.sim$mcu.test), 2),
+                           round(median(x$fft.sim$pci.test), 2)
                          )
                          )
 
