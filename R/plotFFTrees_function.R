@@ -4,7 +4,7 @@
 #' @param x A FFTrees object created from \code{"FFTrees()"}
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
-#' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
+#' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
 #' @param main character. The main plot label.
 #' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param cue.cex numeric. The size of the cue labels.
@@ -168,7 +168,11 @@ if(is.null(main)) {
 
 if(tree == "best.train") {
 
+  if(("tree.max" %in% names(x)) == FALSE) {
+
  tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train[[goal]])]
+
+  } else {tree <- x$tree.max}
 
 }
 if(tree == "best.test") {

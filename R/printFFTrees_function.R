@@ -17,7 +17,11 @@ criterion.name <- paste(x$formula)[2]
 n.trees <- nrow(x$tree.stats$train)
 n.cues.total <- x$data.desc$train$features
 
+if(("tree.max" %in% x) == FALSE) {
+
 tree <- min(x$tree.stats$train$tree[x$tree.stats$train[[goal]] == max(x$tree.stats$train[[goal]])])[1]
+
+} else {tree <- x$tree.max}
 
 train.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues[tree], ";"))), collapse = ",")
 train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
