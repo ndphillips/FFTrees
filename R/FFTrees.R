@@ -6,6 +6,7 @@
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
+#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param algorithm character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
@@ -62,6 +63,7 @@ FFTrees <- function(formula = NULL,
                     goal = "wacc",
                     sens.w = .5,
                     max.levels = 4,
+                    decision.labels = c("False", "True"),
                     tree.definitions = NULL,
                     progress = TRUE,
                     comp = TRUE,
@@ -541,8 +543,7 @@ if(is.null(data.train) == FALSE) {
 train.results <- apply.tree(data = data.train,
                             formula = formula,
                             tree.definitions = tree.definitions,
-                            sens.w = sens.w
-                            )
+                            sens.w = sens.w)
 
 decision.train <- train.results$decision
 levelout.train <- train.results$levelout
@@ -608,6 +609,10 @@ tree.auc <- data.frame("FFTrees" = c(tree.auc.train, tree.auc.test))
 rownames(tree.auc) = c("train", "test")
 
 }
+
+# GET BEST TREE
+tree.max <- which(treestats$train[[goal]] == max(treestats$train[[goal]]))
+if(length(tree.max) > 1) {tree.max <- tree.max[1]}
 
 if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with comp = FALSE) ...")}}
 
@@ -768,19 +773,21 @@ if(is.null(data.test) == FALSE) {
 
 output.fft <- list("formula" = formula,
                    "data.desc" = data.desc,
-                  "cue.accuracies" = cue.accuracies,
-                  "tree.definitions" = tree.definitions,
-                  "tree.stats" = treestats,
-                  "level.stats" = levelstats,
-                  "decision" = decision,
-                  "levelout" = levelout,
-                  "auc" = auc,
-                  "params" = list("algorithm" = algorithm, "goal" = goal, "sens.w" = sens.w, "max.levels" = max.levels),
-                  "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
+                   "cue.accuracies" = cue.accuracies,
+                   "tree.definitions" = tree.definitions,
+                   "tree.stats" = treestats,
+                   "level.stats" = levelstats,
+                   "decision" = decision,
+                   "levelout" = levelout,
+                   "auc" = auc,
+                   "tree.max" = tree.max,
+                   "decision.labels" = decision.labels,
+                   "params" = list("algorithm" = algorithm, "goal" = goal, "sens.w" = sens.w, "max.levels" = max.levels),
+                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
                                 "svm" = list("model" = svm.model, "stats" = svm.stats)),
-                  "data" = data.ls
+                   "data" = data.ls
 )
 
 class(output.fft) <- "FFTrees"
