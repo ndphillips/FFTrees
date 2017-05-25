@@ -6,9 +6,10 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
   algorithm = "m", goal = "wacc", sens.w = 0.5, max.levels = 4,
-  tree.definitions = NULL, progress = TRUE, comp = TRUE, do.cart = TRUE,
-  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
-  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
+  decision.labels = c("False", "True"), tree.definitions = NULL,
+  progress = TRUE, comp = TRUE, do.cart = TRUE, do.lr = TRUE,
+  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
+  rank.method = NULL, force = FALSE, verbose = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -26,6 +27,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}}
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
+
+\item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}}
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
 

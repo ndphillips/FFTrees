@@ -5,10 +5,10 @@
 \title{Draws a FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = NULL, decision.names = c("Noise", "Signal"),
+  tree = "best.train", main = NULL, decision.labels = NULL,
   cue.cex = NULL, threshold.cex = NULL, decision.cex = 1, comp = TRUE,
   stats = TRUE, n.per.icon = NULL, which.tree = NULL,
-  level.type = "bar", ...)
+  level.type = "bar", decision.names = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -21,7 +21,7 @@
 
 \item{main}{character. The main plot label.}
 
-\item{decision.names}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
+\item{decision.labels}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
 
 \item{cue.cex}{numeric. The size of the cue labels.}
 
@@ -35,9 +35,11 @@
 
 \item{n.per.icon}{Number of cases per icon}
 
-\item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
+\item{which.tree}{deprecated argument, only for backwards compatibility, use \code{"tree"} instead.}
 
 \item{level.type}{string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}}
+
+\item{decision.names}{depricated arguments.}
 
 \item{...}{Currently ignored.}
 }
@@ -53,7 +55,7 @@ data = heartdisease)
 # Visualise the tree
 plot(heart.fft,
      main = "Heart Disease Diagnosis",
-     decision.names = c("Absent", "Present"))
+     decision.labels = c("Absent", "Present"))
 
 
 # See the vignette for more details

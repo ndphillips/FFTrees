@@ -136,8 +136,14 @@ accuracy.text <- paste("FFT #", tree, " {", train.cues, "} maximizes training ",
 
 }
 
+# verbalisation
+inwords.FFTrees <- FFTrees::inwords(x = x)
+
+
 print(summary.text)
 print(accuracy.text)
 print(summary.df)
+print(paste0("Here is FFT #", tree, " in words:"))
+print(inwords.FFTrees[[1]])
 
 }
