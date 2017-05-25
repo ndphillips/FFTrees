@@ -110,8 +110,8 @@ Here is a description of each statistic:
 Each tree has a decision threshold for each cue (regardless of whether or not it is actually used in the tree) that maximizes the `wacc` value of that cue when it is applied to the entire training dataset. You can obtain cue accuracy statistics using the calculated decision thresholds from the `cue.accuracies` list. If the object has test data, you can see the marginal cue accuracies in the test dataset (using the thresholds calculated from the training data):
 
 ```{r}
-# Show decision thresholds and marginal classification accuracies for each cue
-heart.fft$cue.accuracies
+# Show decision thresholds and marginal classification training accuracies for each cue
+heart.fft$cue.accuracies$train
 ```
 
 You can also view the cue accuracies in an ROC plot with `plot()` combined with the `what = "cues"` argument. This will show the sensitivities and specificities for each cue, with the top 5 cues highlighted.

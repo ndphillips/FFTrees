@@ -609,11 +609,13 @@ rownames(tree.auc) = c("train", "test")
 
 }
 
+if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with comp = FALSE) ...")}}
+
 # LR
 {
 if(do.lr) {
 
-if(progress) {message("Calculating predictions from other algorithms ...")}
+
 
 
 lr.acc <- comp.pred(formula = formula,

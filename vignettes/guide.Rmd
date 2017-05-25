@@ -1,6 +1,6 @@
 ---
-title: "FFTrees: Fast and frugal decision trees"
-author: "Nathaniel D. Phillips"
+title: "FFTrees: Fast-and-frugal decision trees"
+author: "Nathaniel D. Phillips, Nathaniel.D.Phillips.is@gmail.com, http://ndphillips.github.io"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -18,30 +18,27 @@ library(knitr)
 
 ## Fast and Frugal Trees (FFTrees)
 
-```{r fig.align = "center", out.width="250px", echo = FALSE}
-knitr::include_graphics("../inst/FFTrees_Logo.jpg")
-```
-
-
-
 ```{r, fig.width = 6, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE}
-# Create an FFT from the heartdisease dataset
+# Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heartdisease)
 
-# Plot the best training tree
+# Visualize the best training tree
 plot(heart.fft,
      main = "Heart Disease",
      decision.names = c("Absent", "Present"))
 ```
 
-A fast-and-frugal tree (FFT) is a set of hierarchical rules for making decisions based on very little information (usually 4 or fewer). For example, the tree above uses data from to decide whether a patient truly has heart disease or not based on up to 3 pieces of information.
+
+A fast-and-frugal tree (FFT) is a set of hierarchical rules for making decisions based on very little information (usually 4 or fewer). For example, the tree above uses data from to decide whether a patient has heart disease or not based on up to 3 pieces of information.
 
 FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently preferable to more complex decision strategies (such as Logistic Regression) because they rarely over-fit data [@gigerenzer2009homo] and are easy to interpret and implement in real-world decision tasks [@marewski2012heuristic]. They have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
 
-The purpose of the `FFTrees` package is to produce, compare, and display FFTs. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. For additional details and examples, check out the vignettes below:
+The purpose of the `FFTrees` package is to produce, compare, and display FFTs. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. 
 
 ## Vignettes
+
+For additional details and examples, check out the vignettes below:
 
 - [Creating FFTrees with FFTrees()](FFTrees_function.html)
 - [Visualizing FFTrees with plot()](FFTrees_plot.html)
@@ -52,16 +49,29 @@ The purpose of the `FFTrees` package is to produce, compare, and display FFTs. T
 
 The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with FFTrees.
 
-- `heartdisease` -- patients suspected of having heart disease [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
-- `breastcancer` -- patients suspected of having breast cancer [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
-- `titanic` -- records of which passengers on the Titanic survived
-- `forestfires` -- forest fire statistics [source](http://archive.ics.uci.edu/ml/datasets/Forest+Fires)
-- `wine` -- ratings of wine quality [source](http://archive.ics.uci.edu/ml/datasets/Wine)
+- `heartdisease` -- Patients suspected of having heart disease [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
+- `breastcancer` -- Patients suspected of having breast cancer [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
+- `titanic` -- Passengers on the Titanic
+- `forestfires` -- Forest fire statistics [source](http://archive.ics.uci.edu/ml/datasets/Forest+Fires)
+- `wine` -- Ratings of wine quality [source](http://archive.ics.uci.edu/ml/datasets/Wine)
 - `income` -- Census data from > 30,000 US residents [source](http://archive.ics.uci.edu/ml/datasets/Adult)
 - `bank` -- Bank marketing dataset [source](http://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
+- `voting` -- 1984 US congressional voting records [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
 
-## Contact
+
+## Citation
+
+If you use `FFTrees` in your work, please cite the package as follows:
+
+Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). *FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees.* Manuscript submitted for publication.
+
+## Feature requests and bug reports
 
 This package is constantly being updated. The latest developer version is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). For comments, tips, additional references, and bug reports, please add an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues) or email me at Nathaniel.D.Phillips.is@gmail.com
+
+```{r fig.align = "center", out.width="50%", echo = FALSE}
+knitr::include_graphics("../inst/FFTrees_Logo.jpg")
+```
+
 
 ## Bibliography
