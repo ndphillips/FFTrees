@@ -6,15 +6,16 @@
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
 #' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
 #' @param main character. The main plot label.
-#' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
+#' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param cue.cex numeric. The size of the cue labels.
 #' @param threshold.cex numeric. The size of the threshold labels.
 #' @param decision.cex numeric. The size of the decision labels.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
 #' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
 #' @param n.per.icon Number of cases per icon
-#' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
+#' @param which.tree deprecated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param level.type string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}
+#' @param decision.names depricated arguments.
 #' @param ... Currently ignored.
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -30,7 +31,7 @@
 #' # Visualise the tree
 #' plot(heart.fft,
 #'      main = "Heart Disease Diagnosis",
-#'      decision.names = c("Absent", "Present"))
+#'      decision.labels = c("Absent", "Present"))
 #'
 #'
 #' # See the vignette for more details
@@ -45,7 +46,7 @@ plot.FFTrees <- function(
   what = 'tree',
   tree = "best.train",
   main = NULL,
-  decision.names = c("Noise", "Signal"),
+  decision.labels = NULL,
   cue.cex = NULL,
   threshold.cex = NULL,
   decision.cex = 1,
@@ -54,6 +55,7 @@ plot.FFTrees <- function(
   n.per.icon = NULL,
   which.tree = NULL,
   level.type = "bar",
+  decision.names = NULL,
   ...
 ) {
 
@@ -63,7 +65,7 @@ plot.FFTrees <- function(
   # what = 'tree'
   # tree = "best.train"
   # main = "Data"
-  # decision.names = c("Noise", "Signal")
+  # decision.labels = NULL
   # cue.cex = NULL
   # threshold.cex = NULL
   # comp = TRUE
@@ -77,6 +79,13 @@ plot.FFTrees <- function(
 if(what %in% c("cues", "tree") == FALSE) {
 
   stop("what must be either 'cues' or tree'")
+}
+
+if(is.null(decision.names) == FALSE) {
+
+  message("decision.names is depricated, use decision.lables instead")
+
+  decision.labels <- decision.names
 }
 
 # If what == cues, then send inputs to showcues()
@@ -93,6 +102,16 @@ if(what == 'tree') {
 # Extract important parameters from x
 n.trees <- nrow(x$tree.stats$train)
 goal <- x$params$goal
+
+if(is.null(decision.labels)) {
+
+  if(("decision.labels" %in% names(x))) {
+
+  decision.labels <- x$decision.labels
+
+  } else {decision.labels <- c(0, 1)}
+
+}
 
 # Check for problems and depreciated arguments
 {
@@ -662,8 +681,8 @@ text(x = .5, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", 
 n.trueneg <- with(final.stats, cr + fa)
 n.truepos <- with(final.stats, hi + mi)
 
-text(.5, .65, paste("True ", decision.names[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
-text(.5, .65, paste("True ", decision.names[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
+text(.5, .65, paste("True ", decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
+text(.5, .65, paste("True ", decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
 
 
 #points(.9, .8, pch = 1, cex = 1.2)
@@ -697,7 +716,7 @@ p.rect.ylim <- c(.1, .6)
 # p.signal level
 
 text(x = .8, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[2], ")", sep = ""),
+     labels = paste("p(", decision.labels[2], ")", sep = ""),
      pos = 3, cex = 1.2)
 
 
@@ -730,7 +749,7 @@ text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
 #p.noise level
 
 text(x = .2, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[1], ")", sep = ""),
+     labels = paste("p(", decision.labels[1], ")", sep = ""),
      pos = 3, cex = 1.2)
 
 
@@ -846,14 +865,14 @@ if(stats == TRUE) {
   # Noise Panel
 
   text(- plot.width * .6, -plot.height * .05,
-       paste("Decide ", decision.names[1], sep = ""),
+       paste("Decide ", decision.labels[1], sep = ""),
        cex = 1.2, font = 3
   )
 
 
   # Signal panel
   text(plot.width * .6, -plot.height * .05,
-       paste("Decide ", decision.names[2], sep = ""),
+       paste("Decide ", decision.labels[2], sep = ""),
        cex = 1.2, font = 3
   )
 
@@ -953,7 +972,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   text(x = subplot.center[1] - 2 - arrow.length * .7,
        y = subplot.center[2] - 2.2,
-       labels = decision.names[1],
+       labels = decision.labels[1],
        pos = 1, font = 3, cex = decision.cex)
 
   }
@@ -1014,7 +1033,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   text(x = subplot.center[1] - 2,
        y = subplot.center[2] - 2,
-       labels =  substr(decision.names[1], 1, 1)
+       labels =  substr(decision.labels[1], 1, 1)
   )
 
 }
@@ -1083,7 +1102,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   text(x = subplot.center[1] + 2 + arrow.length * .7,
        y = subplot.center[2] - 2.2,
-       labels = decision.names[2],
+       labels = decision.labels[2],
        pos = 1, font = 3, cex = decision.cex)
 
   }
@@ -1146,7 +1165,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   text(x = subplot.center[1] + 2,
        y = subplot.center[2] - 2,
-       labels = substr(decision.names[2], 1, 1)
+       labels = substr(decision.labels[2], 1, 1)
   )
 
 
@@ -1301,21 +1320,21 @@ lloc <- data.frame(
 
   text(x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-       decision.names[2])
+       decision.labels[2])
 
   text(x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-       decision.names[1])
+       decision.labels[1])
 
 # Row titles
 
   text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[2], adj = 1)
+       decision.labels[2], adj = 1)
 
   text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[1], adj = 1)
+       decision.labels[1], adj = 1)
 
 
   text(x = final.classtable.x.loc[1] - .065,
