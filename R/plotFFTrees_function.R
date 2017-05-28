@@ -685,8 +685,8 @@ text(x = .5, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", 
 n.trueneg <- with(final.stats, cr + fa)
 n.truepos <- with(final.stats, hi + mi)
 
-text(.5, .65, paste("True ", decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
-text(.5, .65, paste("True ", decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
+text(.5, .65, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
+text(.5, .65, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
 
 
 #points(.9, .8, pch = 1, cex = 1.2)
@@ -862,8 +862,8 @@ if(stats == TRUE) {
 
   text(c(- plot.width * .7, - plot.width * .5),
        c(-plot.height * .125, -plot.height * .125),
-       labels = c("Correct Rejection", "Miss"),
-       pos = c(1, 1), offset = 1)
+       labels = c("Correct\nRejection", "Miss"),
+       pos = c(2, 4), offset = 1)
 
 
   # Noise Panel
@@ -891,8 +891,8 @@ if(stats == TRUE) {
 
   text(c(plot.width * .5, plot.width * .7),
        c(-plot.height * .125, -plot.height * .125),
-       labels = c("False Alarm", "Hit"),
-       pos = c(1, 1), offset = 1)
+       labels = c("False\nAlarm", "Hit"),
+       pos = c(2, 4), offset = 1)
 
   }
 
@@ -1562,9 +1562,9 @@ text(x = rect.center.x,
 
 paste(final.stats$cr, "/", 1, collapse = "")
 
-# Add 100% reference line
-#
-# segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element == "sens"] * .8,
+#Add 100% reference line
+
+# segments(x0 = lloc$center.x[lloc$element == "mcu"] - lloc$width[lloc$element == "mcu"] * .8,
 #          y0 = level.top,
 #          x1 = lloc$center.x[lloc$element == "wacc"] + lloc$width[lloc$element == "wacc"] * .8,
 #          y1 = level.top,
@@ -1594,17 +1594,17 @@ min.acc <- max(crit.br, 1 - crit.br)
 
 add.level.fun("acc", min.val = 0, ok.val = .5, level.type = level.type) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
-# Add baseline to pc level
+# Add baseline to acc level
 
-# segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
-#          y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-#          x1 = lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2,
-#          y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-#          lty = 1)
+ segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
+          y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+          x1 = lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2,
+          y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+          lty = 3)
 
-# text(x = lloc$center.x[lloc$element == "acc"],
-#      y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-#      labels = "BL", pos = 1)
+ text(x = lloc$center.x[lloc$element == "acc"],
+      y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+      labels = "BL", pos = 1)
 
     #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
 

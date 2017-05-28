@@ -467,7 +467,7 @@ stat.names <- names(classtable(1, 1))
 
 if(is.null(object)) {
 
-if(progress) {message(paste("Calculating cue thresholds ..."))}
+if(progress) {message(paste("Calculating initial cue thresholds ..."))}
 
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
