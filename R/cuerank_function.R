@@ -1,4 +1,4 @@
-#' Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.
+#' Calculates thresholds that maximize a statistic (goal) for cues.
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
@@ -33,7 +33,15 @@ cuerank <- function(formula = NULL,
 
 ) {
 
-
+#
+#   formula <- diagnosis ~.
+#   data = heartdisease
+#   goal <- "bacc"
+#   numthresh.method = "m"
+#   sens.w = .5
+#   rounding = NULL
+#   progress = FALSE
+#   cue.rules = NULL
 
 # GLOBAL VARIABLES (could be updated later)
 max.numcat <- 20        # Maximum number of numeric thresholds to consider
@@ -140,12 +148,17 @@ for(cue.i in 1:n.cues) {
     # "median" method
     if(numthresh.method == "m" & is.null(cue.rules)) {
 
+      if(length(unique(unlist(cue.v))) == 2) {cue.levels <- unique(unlist(cue.v))} else {
+
       cue.levels <- median(unlist(cue.v))
+
+      }
 
     }
 
     # Round cue levels
-    if(!is.null(rounding)) {cue.levels <- round(cue.levels, digits = rounding)}
+    if(!is.null(rounding)) {cue.levels <- round(cue.levels,
+                                                digits = rounding)}
 
     # Remove potential duplicates
     cue.levels <- cue.levels[duplicated(cue.levels) == FALSE]
