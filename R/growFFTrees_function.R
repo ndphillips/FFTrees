@@ -51,6 +51,20 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 
+  # formula <- diagnosis ~.
+  # data = heartdisease
+  # max.levels = 4
+  # algorithm = "m"
+  # goal = "bacc"
+  # sens.w = .5
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # progress = FALSE
+  # rank.method = NULL
+  # cue.accuracies = NULL
+  #
+
+
   # Some global variables which could be changed later.
   repeat.cues <- TRUE
   numthresh.method <- "o"

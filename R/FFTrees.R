@@ -10,6 +10,7 @@
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param algorithm character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
+#' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
@@ -61,6 +62,7 @@ FFTrees <- function(formula = NULL,
                     train.p = 1,
                     algorithm = "m",
                     goal = "wacc",
+                    numthresh.method = "o",
                     sens.w = .5,
                     max.levels = 4,
                     decision.labels = c("False", "True"),
@@ -83,7 +85,7 @@ FFTrees <- function(formula = NULL,
   # data.test = NULL
   # train.p = 1
   # algorithm = "m"
-  # goal = "bacc"
+  # goal = "dprime"
   # sens.w = .5
   # max.levels = 4
   # tree.definitions = NULL
@@ -95,6 +97,7 @@ FFTrees <- function(formula = NULL,
   # store.data = FALSE
   # object = NULL
   # rank.method = NULL
+  # decision.labels <- c("a", "b")
 
   if(is.null(verbose) == FALSE) {
 
@@ -133,13 +136,17 @@ if(is.null(tree.definitions) == FALSE) {
 
 }
 
+if((goal %in% c("bacc", "wacc", "dprime")) == FALSE) {
+
+  stop("goal must be in the set 'bacc', 'wacc', 'dprime'")
+}
+
 # Set some global parameters
 
 repeat.cues <- TRUE
 stopping.rule <- "exemplars"
 stopping.par <- .1
 correction <- .25
-numthresh.method <- "o"
 rounding <- 2
 exit.method <- "fixed"
 
@@ -154,6 +161,8 @@ if(goal %in% c("acc") & sens.w != .5) {
 }
 
 }
+
+
 
 
 # Is there training data?
@@ -465,7 +474,8 @@ cue.accuracies.train <- cuerank(formula = formula,
                                 goal = "bacc",         # For now, goal must be bacc when ranking cues
                                 rounding = rounding,
                                 progress = progress,
-                                sens.w = sens.w
+                                sens.w = sens.w,
+                                numthresh.method = numthresh.method
 )
 
 }
@@ -488,7 +498,8 @@ cue.accuracies.test <- cuerank(formula = formula,
                                 rounding = rounding,
                                 progress = FALSE,
                                 cue.rules = cue.accuracies.train,
-                                sens.w = sens.w)
+                                sens.w = sens.w,
+                                numthresh.method = numthresh.method)
 }
 
   if(sd(crit.test) == 0) {
@@ -771,6 +782,15 @@ if(is.null(data.test) == FALSE) {
 }
 
 
+inwords.i <- inwords(tree = tree.max,
+                     classes.v = unlist(strsplit(tree.definitions$classes[tree.max], ";")),
+                     cues.v = unlist(strsplit(tree.definitions$cues[tree.max], ";")),
+                     directions.v = unlist(strsplit(tree.definitions$directions[tree.max], ";")),
+                     thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";")),
+                     exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";")),
+                     decision.labels = decision.labels
+                     )$v1
+
 output.fft <- list("formula" = formula,
                    "data.desc" = data.desc,
                    "cue.accuracies" = cue.accuracies,
@@ -779,8 +799,9 @@ output.fft <- list("formula" = formula,
                    "level.stats" = levelstats,
                    "decision" = decision,
                    "levelout" = levelout,
-                   "auc" = auc,
                    "tree.max" = tree.max,
+                   "inwords" = inwords.i,
+                   "auc" = auc,
                    "decision.labels" = decision.labels,
                    "params" = list("algorithm" = algorithm, "goal" = goal, "sens.w" = sens.w, "max.levels" = max.levels),
                    "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
