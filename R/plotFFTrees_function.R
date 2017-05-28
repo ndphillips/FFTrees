@@ -1412,6 +1412,8 @@ lloc <- data.frame(
 # Levels
 {
 
+if(level.type %in% c("line", "bar")) {
+
 # Color function (taken from colorRamp2 function in circlize package)
 col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .1)
 
@@ -1620,6 +1622,9 @@ add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.
 #          y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
 #          lwd = .5,
 #          col = gray(0))
+
+}
+
 
 }
 
