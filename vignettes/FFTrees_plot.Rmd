@@ -56,12 +56,12 @@ Wow. None of the cues did very well on their own. Good performing cues should be
 
 ## Plotting a tree
 
-To plot the tree from an FFTrees object, use `plot()`. You can add some stylistic arguments like `description` and `decision.names`. Let's plot one of the trees:
+To plot the tree from an FFTrees object, use `plot()`. You can add some stylistic arguments like `description` and `decision.labels`. Let's plot one of the trees:
 
 ```{r, fig.width = 6, fig.height = 6.5, fig.align = 'center'}
 plot(titanic.fft, 
      main = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     decision.labels = c("Died", "Survived"))
 ```
 
 This plot contains a lot of information, here are the main elements:
@@ -81,7 +81,7 @@ You can specify additional arguments to the `plot()` command that will change wh
 ```{r, fig.align = 'center', fig.height = 6.6, fig.width = 6, out.width = "70%"}
 # Show the best training titanic fast-and-frugal tree without statistics
 plot(titanic.fft,
-     decision.names = c("Died", "Survived"),
+     decision.labels = c("Died", "Survived"),
      stats = FALSE)
 ```
 
@@ -105,7 +105,7 @@ Here is the best training tree applied to the training data:
 plot(titanic.pred.fft,
      tree = "best.train", 
      main = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     decision.labels = c("Died", "Survived"))
 ```
 
 The best training tree (tree #3) had a high specificity of 92%, but a low hit rate of just 48%. However, as we can see in the ROC table, LR didn't perform much better, and CART did even worse than tree #3.
@@ -117,7 +117,7 @@ plot(titanic.pred.fft,
      tree = "best.train",
      data = "test", 
      main = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     decision.labels = c("Died", "Survived"))
 ```
 
 Performance has actually increased in this test data (e.g.; the hit-rate is up to 54%). However, both logistic regression and CART did similarly. 
@@ -129,7 +129,7 @@ plot(titanic.pred.fft,
      tree = 4,
      data = "test", 
      main = "Titanic", 
-     decision.names = c("Died", "Survived"))
+     decision.labels = c("Died", "Survived"))
 ```
 
 Tree #4 was able to increase the testing hit-rate up to 65%, but at a cost of a lower specificity of 70%.

@@ -207,7 +207,7 @@ Once you've created an FFTrees object using `FFTrees()` you can visualize the tr
 ```{r, fig.width = 7, fig.height = 7}
 plot(heart.fft,
      main = "Heart Disease",
-     decision.names = c("Healthy", "Disease"))
+     decision.labels = c("Healthy", "Disease"))
 ```
 
 See the vignette on plotting trees [here](FFTrees_plot.html) for more details on visualizing trees.

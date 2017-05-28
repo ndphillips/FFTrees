@@ -4,12 +4,24 @@
 \alias{inwords}
 \title{Describes an FFT in words}
 \usage{
-inwords(x, tree = NULL, decision.labels = NULL, digits = 2)
+inwords(x = NULL, tree = NULL, classes.v = NULL, cues.v = NULL,
+  directions.v = NULL, thresholds.v = NULL, exits.v = NULL,
+  decision.labels = NULL, digits = 2)
 }
 \arguments{
 \item{x}{FFTrees. An FFTrees object created with FFTrees()}
 
 \item{tree}{integer. An integer specifying which tree in the object to verbalise. The default is \code{x$tree.max}}
+
+\item{classes.v}{integer.}
+
+\item{cues.v}{integer.}
+
+\item{directions.v}{string.}
+
+\item{thresholds.v}{string.}
+
+\item{exits.v}{numeric.}
 
 \item{decision.labels}{string. A string vector (of length 2) indicating labels for negative (0 or FALSE) and positive (1 or TRUE) cases in the crterion}
 

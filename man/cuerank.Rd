@@ -2,7 +2,7 @@
 % Please edit documentation in R/cuerank_function.R
 \name{cuerank}
 \alias{cuerank}
-\title{Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.}
+\title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
 cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
   numthresh.method = "o", rounding = NULL, progress = FALSE,
@@ -29,7 +29,7 @@ cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
 A dataframe containing best thresholds and marginal classification statistics for each cue
 }
 \description{
-Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.
+Calculates thresholds that maximize a statistic (goal) for cues.
 }
 \examples{
 

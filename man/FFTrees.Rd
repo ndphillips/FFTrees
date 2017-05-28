@@ -5,11 +5,11 @@
 \title{Creates a Fast and Frugal Trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  algorithm = "m", goal = "wacc", sens.w = 0.5, max.levels = 4,
-  decision.labels = c("False", "True"), tree.definitions = NULL,
-  progress = TRUE, comp = TRUE, do.cart = TRUE, do.lr = TRUE,
-  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
-  rank.method = NULL, force = FALSE, verbose = NULL)
+  algorithm = "m", goal = "wacc", numthresh.method = "o", sens.w = 0.5,
+  max.levels = 4, decision.labels = c("False", "True"),
+  tree.definitions = NULL, progress = TRUE, comp = TRUE, do.cart = TRUE,
+  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
+  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -23,6 +23,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{algorithm}{character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.}
 
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy}
+
+\item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}}
 

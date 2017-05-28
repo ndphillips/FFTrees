@@ -1,6 +1,6 @@
-#' Prints summary information from an FFTrees x
+#' Prints summary information from an FFTrees object
 #'
-#' @description Printing function for an FFTrees x
+#' @description Printing function for an FFTrees object
 #' @param x FFTrees. A FFTrees x created from FFTrees()
 #' @param ... additional arguments passed to print.
 #' @export
@@ -147,7 +147,7 @@ inwords.FFTrees <- FFTrees::inwords(x = x)
 print(summary.text)
 print(accuracy.text)
 print(summary.df)
-print(paste0("Here is FFT #", tree, " in words:"))
+print(paste0("FFT #", tree, ":"))
 print(inwords.FFTrees[[1]])
 
 }
