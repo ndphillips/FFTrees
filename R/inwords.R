@@ -2,6 +2,11 @@
 #'
 #' @param x FFTrees. An FFTrees object created with FFTrees()
 #' @param tree integer. An integer specifying which tree in the object to verbalise. The default is \code{x$tree.max}
+#' @param classes.v integer.
+#' @param cues.v integer.
+#' @param directions.v string.
+#' @param thresholds.v string.
+#' @param exits.v numeric.
 #' @param decision.labels string. A string vector (of length 2) indicating labels for negative (0 or FALSE) and positive (1 or TRUE) cases in the crterion
 #' @param digits integer. How many digits to round numeric values
 #'
@@ -16,11 +21,17 @@
 #'
 #' inwords(heart.fft)
 #'
-inwords <- function(x,
+inwords <- function(x = NULL,
                    tree = NULL,
+                   classes.v = NULL,
+                   cues.v = NULL,
+                   directions.v = NULL,
+                   thresholds.v = NULL,
+                   exits.v = NULL,
                    decision.labels = NULL,
                    digits = 2) {
 
+  if(is.null(x) == FALSE) {
 
   if(is.null(decision.labels)) {decision.labels <- x$decision.labels}
 
@@ -37,6 +48,14 @@ inwords <- function(x,
   directions.v <- unlist(strsplit(tree.def$directions, ";"))
   thresholds.v <- unlist(strsplit(tree.def$thresholds, ";"))
   exits.v <- unlist(strsplit(tree.def$exits, ";"))
+
+  }
+
+  if(is.null(x)) {
+
+    if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
+
+  }
 
   nodes.n <- length(cues.v)
 
