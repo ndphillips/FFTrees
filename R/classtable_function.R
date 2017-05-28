@@ -78,6 +78,15 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   # Percent correct
   acc <- (hi + cr) / (hi + cr + mi + fa)
 
+  # ppv (positive predictive value)
+  ppv <- hi / (hi + fa)
+
+  # npv (negative predictive value)
+  npv <- cr / (mi + cr)
+
+  # bpv (balanced predictive value)
+  bpv <- (ppv + npv) / 2
+
   # bacc (sens - FAR)
   bacc <- (sens + spec) / 2
 
@@ -97,6 +106,9 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     cr <- NA
     sens <- NA
     spec <- NA
+    ppv <- NA
+    npv <- NA
+    bpv <- NA
     far <- NA
     acc <- NA
     bacc <- NA
@@ -113,10 +125,13 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     cr = cr,
     sens = sens,
     spec = 1 - far,
+    ppv = ppv,
+    npv = npv,
     far = far,
     acc = acc,
     bacc = bacc,
     wacc = wacc,
+    bpv = bpv,
     dprime = dprime)
 
   return(result)
