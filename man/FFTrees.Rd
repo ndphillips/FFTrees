@@ -69,7 +69,7 @@ An \code{FFTrees} object with the following elements
 This is the workhorse function for the \code{FFTrees} package. It creates a set of fast and frugal decision trees trained on a training dataset and tested on an optional test dataset.
 }
 \details{
-\code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict Tue
+\code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict T
 \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
 }
 \examples{
