@@ -4,21 +4,21 @@
 \alias{wordstoFFT}
 \title{Converts text describing an FFT into an FFT definition.}
 \usage{
-wordstoFFT(input, cue.names, decision.labels = c("false", "true"))
+wordstoFFT(input, cue.names, decision.labels = NULL)
 }
 \arguments{
 \item{input}{string. A string describing an FFT in words (see examples)}
 
-\item{decision.labels}{string. A vector of decision labels}
+\item{cue.names}{string. A vector of cue names}
 
-\item{cues}{string. A vector of cue names}
+\item{decision.labels}{string. A vector of decision labels}
 }
 \description{
 Converts text describing an FFT into an FFT definition.
 }
 \examples{
 
-my.tree.def <- wordstoFFT(input = "If age > 55, predict TRUE. If cp equals [a, b, np], predict False. If slope equals [flat, down], predict FALSE. Otherwise, predict False",
+my.tree.def <- wordstoFFT(input = "If age > 55, predict True. If cp = [a,b,np], predict False, otherwise, predict True",
                           cue.names = names(heartdisease))
 
 

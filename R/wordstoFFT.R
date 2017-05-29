@@ -2,14 +2,16 @@
 #' Converts text describing an FFT into an FFT definition.
 #'
 #' @param input string. A string describing an FFT in words (see examples)
-#' @param cues string. A vector of cue names
+#' @param cue.names string. A vector of cue names
 #' @param decision.labels string. A vector of decision labels
 #'
 #' @export
 #'
+#' @importFrom stringr str_extract str_detect
 #' @examples
 #'
-#' my.tree.def <- wordstoFFT(input = "If age > 55, predict TRUE. If cp equals [a, b, np], predict False. If slope equals [flat, down], predict FALSE. Otherwise, predict False",
+#' my.tree.def <- wordstoFFT(input = "If age > 55, predict True.
+#'                                    If cp = [a,b,np], predict False, otherwise, predict True",
 #'                           cue.names = names(heartdisease))
 #'
 #'
@@ -131,7 +133,7 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
 
   if(num.log & !bracket.log) {
 
-    threshold.i <- str_extract(x, "[-+]?\\d+\\.*\\d*")
+    threshold.i <- stringr::str_extract(x, "[-+]?\\d+\\.*\\d*")
 
   }
 
@@ -139,7 +141,7 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
 
   if(!num.log & bracket.log) {
 
-    threshold.i <- str_replace_all(unlist(strsplit(x, "\\[|\\]"))[2], pattern = " ", "")
+    threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\[|\\]"))[2], pattern = " ", "")
 
   }
 
