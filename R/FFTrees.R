@@ -12,6 +12,7 @@
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
+#' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
@@ -38,6 +39,7 @@
 #' @export
 #' @details
 #'
+#' \code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict T
 #' \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
 #'
 #' @examples
@@ -63,6 +65,7 @@ FFTrees <- function(formula = NULL,
                     algorithm = "m",
                     goal = "wacc",
                     numthresh.method = "o",
+                    my.tree = NULL,
                     sens.w = .5,
                     max.levels = 4,
                     decision.labels = c("False", "True"),
@@ -87,9 +90,11 @@ FFTrees <- function(formula = NULL,
   # algorithm = "m"
   # goal = "dprime"
   # sens.w = .5
+  # numthresh.method = "o"
   # max.levels = 4
   # tree.definitions = NULL
   # progress = FALSE
+  # comp = TRUE
   # do.cart = TRUE
   # do.lr = TRUE
   # do.rf = TRUE
@@ -97,7 +102,12 @@ FFTrees <- function(formula = NULL,
   # store.data = FALSE
   # object = NULL
   # rank.method = NULL
-  # decision.labels <- c("a", "b")
+  # decision.labels <- c("False", "True")
+  # force = FALSE
+  # #
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # my.tree = "if thal = [rd], false If cp = [a], true If age < 60 true, otherwise, false"
 
   if(is.null(verbose) == FALSE) {
 
@@ -522,7 +532,7 @@ cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.t
 
 # GET TREE DEFINITIONS
 {
-if(is.null(object) & is.null(tree.definitions)) {
+if(is.null(object) & is.null(tree.definitions) & is.null(my.tree)) {
 
   if(progress) {message("Growing and applying FFTs ...")}
 
@@ -542,6 +552,13 @@ tree.definitions <- tree.growth$tree.definitions
 }
 
 if(is.null(object) == FALSE) {tree.definitions <- object$tree.definitions}
+
+if(is.null(my.tree) == FALSE) {
+
+ tree.definitions <- wordstoFFT(input = my.tree,
+                                cue.names = names(data.train),
+                                decision.labels = decision.labels)
+}
 
 }
 
