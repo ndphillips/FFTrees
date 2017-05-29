@@ -22,12 +22,13 @@ apply.tree <- function(data,
                        tree.definitions,
                        sens.w = .5
 ) {
+#
+#   data = data.train
+#   formula = formula
+#   tree.definitions = tree.definitions
+#   sens.w = sens.w
 
-  #
-  # data = data.train
-  # formula = formula
-  # tree.definitions = tree.definitions
-  #
+
   criterion.v <- model.frame(formula = formula,
                              data = data,
                              na.action = NULL)[,1]
@@ -42,7 +43,7 @@ apply.tree <- function(data,
 
   for(tree.i in 1:n.trees) {
 
-    cue.v <- unlist(strsplit(tree.definitions$cue[tree.i], ";"))
+    cue.v <- unlist(strsplit(tree.definitions$cues[tree.i], ";"))
     class.v <- unlist(strsplit(tree.definitions$classes[tree.i], ";"))
     exit.v <- unlist(strsplit(tree.definitions$exits[tree.i], ";"))
     threshold.v <- unlist(strsplit(tree.definitions$thresholds[tree.i], ";"))

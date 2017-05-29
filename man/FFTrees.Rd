@@ -5,11 +5,12 @@
 \title{Creates a Fast and Frugal Trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
-  algorithm = "m", goal = "wacc", numthresh.method = "o", sens.w = 0.5,
-  max.levels = 4, decision.labels = c("False", "True"),
-  tree.definitions = NULL, progress = TRUE, comp = TRUE, do.cart = TRUE,
-  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
-  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
+  algorithm = "m", goal = "wacc", numthresh.method = "o",
+  my.tree = NULL, sens.w = 0.5, max.levels = 4,
+  decision.labels = c("False", "True"), tree.definitions = NULL,
+  progress = TRUE, comp = TRUE, do.cart = TRUE, do.lr = TRUE,
+  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
+  rank.method = NULL, force = FALSE, verbose = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -25,6 +26,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL, train.p = 1,
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy}
 
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
+
+\item{my.tree}{string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}}
 
@@ -66,6 +69,7 @@ An \code{FFTrees} object with the following elements
 This is the workhorse function for the \code{FFTrees} package. It creates a set of fast and frugal decision trees trained on a training dataset and tested on an optional test dataset.
 }
 \details{
+\code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict Tue
 \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
 }
 \examples{

@@ -147,7 +147,7 @@ inwords.FFTrees <- FFTrees::inwords(x = x)
 print(summary.text)
 print(accuracy.text)
 print(summary.df)
-print(paste0("FFT #", tree, ":"))
-print(inwords.FFTrees[[1]])
+# print(paste0("FFT #", tree, ":"))
+# print(inwords.FFTrees[[1]])
 
 }
