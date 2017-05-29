@@ -1,0 +1,180 @@
+---
+title: "Specifying FFTs directly"
+author: "Nathaniel Phillips"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Manually specifying FFTs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+options(digits = 3)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400, out.width = "600px", fig.align='center', message = FALSE)
+```
+
+
+```{r, echo = F, message = F, results = 'hide'}
+library(FFTrees)
+```
+
+There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function, either as a sentence using the `my.tree` argument, or as a dataframe using the `tree.definitions` argument.
+
+### `my.tree`
+
+The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing an FFT. When this argument is specified in `FFTrees()`, the FFT construction algorithm is bypassed and the algorithm will try to extract the specified FFT from the argument.
+
+For example, let's look at the heart disease dataset:
+
+```{r}
+head(heartdisease)
+```
+
+Here's how we could specify an FFT using the cues sex, age, and thal as a sentence:
+
+```{r, eval = FALSE}
+my.tree = "If sex = 1, predict True.
+           If age < 45, predict False. 
+           If thal = [fd, normal], predict True. Otherwise, predict False"`
+```
+
+Here are some notes on specifying trees manually:
+
+- Each node must start with the word "If"
+- Numeric thresholds shold be specified directly (without brackets).
+- Factor thresholds must be specified within brackets. For factors with sets of values, values within a threshold should be separated by commas.
+- Standard logical comparisons `=`, `!=`, `<` (etc.) are valid.
+- Positive exits are indicated by `True`, while negative exits are specified by `False`.
+
+Now, let's pass the `my.tree` argument to `FFTrees()`
+
+```{r}
+# Specify an FFt verbally with the my.tree argument
+my.heart.fft <- FFTrees(diagnosis ~.,
+                        data = heartdisease,
+                        my.tree = "If sex = 1, predict True.
+                                   If age < 45, predict False. 
+                                   If thal = [fd, normal], predict True. 
+                                   Otherwise, predict False")
+```
+
+Let's see how well our FFT did:
+
+```{r}
+# Show summary statistics
+my.heart.fft
+
+# Plot 
+plot(my.heart.fft)
+```
+
+As you can see, this FFT is pretty terrible -- it has a high sensitivity, but a terrible specificity. 
+
+Let's see if we can come up with a better one using the cues `thal`, `cp`, and `ca`
+
+```{r}
+# Specify an FFt verbally with the my.tree argument
+my.heart.fft <- FFTrees(diagnosis ~.,
+                        data = heartdisease,
+                        my.tree = "If thal = [rd,fd], predict True.
+                                   If cp != [a], predict False. 
+                                   If ca > 1, predict True. 
+                                   Otherwise, predict False")
+
+# Show summary statistics
+my.heart.fft
+
+# Plot 
+plot(my.heart.fft)
+```
+
+This one looks much better!
+
+### `tree.definitions`
+
+```{r, echo = FALSE}
+heart.fft <- FFTrees::FFTrees(diagnosis ~., data = heartdisease)
+```
+
+The second way to define one (or more) fast-and-frugal trees is with the `tree.definitions` argument. This argument should be a dataframe with the following structure:
+
+```{r, echo = FALSE}
+heart.fft$tree.definitions
+```
+
+The dataframe should have 7 columns:
+
+1. `tree`: An indexing integer
+2. `nodes`: The number of nodes in the tree.
+
+The following 5 columns define each node in an FFT, where nodes are separated by semi-colons `;`:
+
+3. `classes`: The class of each node in the tree. `c` = character, `n` = numeric, `i` = integert.
+4. `cues`: The names of the cues
+5. `directions`: The direction of *positive* decisions for that cue. Even if a cue only has a negative exit branch, the direction should always be specified as if it was making a positive decision.
+6. `thresholds`: The decision threshold for the cue. For numeric cues, thresholds are single numbers. For factor cues, they are sets of factor values (separted by commas)
+7. `exits`: The exit direction for the cue. `0` = negative exit, `1` = positive exit, `.5` = both a negative and a positive exit (only for the final node in a tree)
+
+On can see examples of `tree.definitions` dataframes in an `FFTrees` object. For example, the definitions above can be obtained as follows:
+
+```{r}
+# Create an FFTrees object
+heart.fft <- FFTrees::FFTrees(diagnosis ~., 
+                              data = heartdisease)
+
+# Get the tree definitions
+heart.tree.definitions <- heart.fft$tree.definitions
+
+# Print the result
+heart.tree.definitions
+```
+
+One can use `tree.definitions` dataframes created from `FFTrees()` as a template, make adjustments, and then feed the dataframe back into `FFTrees()` to create new, customized trees. Below, I'll create definitions of two FFTs, then pass them to `FFTrees()`. The two FFTS can be described as follows. 
+
+- Tree \#1 "If slope != [down, up], then predict False. If ca is greater than 1, predict True. Otherwise, predict False "
+- Tree \#2 "If chol < 300, then predict True If oldpeak is greater than 2, predict True. If restecg is *not* normal, then predict False. Otherwise, predict True"
+
+```{r}
+# Define two trees
+my.tree.definitions <- data.frame(tree = c(1, 2),
+                                  nodes = c(2, 3),
+                                  classes = c("c;n", "n;n;f"),
+                                  cues = c("slope;ca", "chol;oldpeak;restecg"),
+                                  directions = c("=;>", "<;>;!="),
+                                  thresholds = c("down,up;1", "300;2;normal"),
+                                  exits = c("0;.5", "1;1;.5"), 
+                                  stringsAsFactors = FALSE)
+```
+
+Now, we can pass these trees to `FFTrees()` and view their resulting performance:
+
+```{r}
+#Pass trees to FFTrees with tree.definitions
+my.heart.fft <- FFTrees(diagnosis ~ .,
+                        data = heartdisease,
+                        tree.definitions = my.tree.definitions)
+
+# Show summary statistics
+my.heart.fft
+
+# Plot Tree 2
+plot(my.heart.fft, tree = 2)
+
+```
+
+
+Here is Tree \#1: "If slope != [down, up], then predict False. If ca is greater than 1, predict True. Otherwise, predict False"
+
+```{r}
+# Plot Tree 1
+plot(my.heart.fft, tree = 1)
+```
+
+
+Here is Tree \#2: "If chol < 300, then predict True If oldpeak is greater than 2, predict True. If restecg is *not* normal, then predict False. Otherwise, predict True"
+
+```{r}
+# Plot Tree 2
+plot(my.heart.fft, tree = 2)
+```

@@ -9,8 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = F, message = F, results = 'hide'}
+```{r, echo = F, message = FALSE, results = 'hide'}
 library(FFTrees)
+options(digits = 3)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
 ## Mushrooms
@@ -54,7 +56,7 @@ mushrooms.fft
 
 Let's look at the individual cue training accuracies with `plot()`:
 
-```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
+```{r}
 # Show mushrooms cue accuracies
 plot(mushrooms.fft, 
      main = "Mushrooms", 
@@ -65,7 +67,7 @@ It looks like the cues `oder` and `sporepc` are the best predictors. in fact, th
 
 Now let's plot the best training tree applied to the test dataset
 
-```{r, fig.width = 6, fig.height = 6.5, fig.align = 'center'}
+```{r}
 # Plot the best FFT for the mushrooms data
 plot(mushrooms.fft, 
      data = "test", 
@@ -87,13 +89,14 @@ mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
 
 Here is the best training tree:
 
-```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
+```{r}
 plot(mushrooms.ring.fft, 
      data = "test", 
      description = "Mushrooms (Ring only) FFT")
 ```
 
 As we can see, this tree did not perform nearly as well as our earlier one.
+
 
 
 ## Iris.v
@@ -115,7 +118,7 @@ iris.fft <- FFTrees(formula = virginica ~.,
 
 First, let's look at the individual cue training accuracies:
 
-```{r fig.width = 6, fig.height = 6, fig.align = 'center'}
+```{r}
 plot(iris.fft, 
      what = "cues")
 ```
@@ -126,7 +129,7 @@ It looks like the cues *pet.wid* and *pet.len* are the best predictors. Based on
 
 Now let's plot the best tree applied to the test dataset
 
-```{r, fig.width = 6, fig.height = 6.5, fig.align = 'center'}
+```{r}
 plot(iris.fft, 
      description = "Iris FFT")
 ```
@@ -135,7 +138,7 @@ Indeed, it looks like the best tree only uses the *pet.wid* and *pet.len* cues. 
 
 Now, this tree did quite well, but what if someone wants a tree with the lowest possible false alarm rate. If we look at the ROC plot in the bottom left corner of the plot above, we can see that tree #2 has a specificity close to 100%. Let's look at that tree:
 
-```{r, fig.width = 6, fig.height = 6, fig.align = 'center'}
+```{r}
 plot(iris.fft, 
      main = "Iris",
      tree = 2)     # Show tree #2
