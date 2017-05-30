@@ -41,19 +41,12 @@ my.tree = "If sex = 1, predict True.
 
 Here are some notes on specifying trees manually:
 
-<<<<<<< HEAD
 - Each node must start with the word "If" and should in the form: `If CUE DIRECTION THRESHOLD, predict EXIT`.
 - Numeric thresholds shold be specified directly (without brackets).
 - Factor thresholds must be specified within brackets. For factors with sets of values, values within a threshold should be separated by commas.
 - Standard logical comparisons `=`, `!=`, `<`, `>=` (etc.) are valid. For numeric cues, only use `>`, `>=`, `<`, `<=`. For factors, only use `=` and `!=`.
 - Positive exits are indicated by `True`, while negative exits are specified by `False`. The final node will be forced to have a bidirectional exit. The text `Otherwise, predict EXIT` I've included in the example above is actually not necessary`.
-=======
-- Each node must start with the word "If"
-- Numeric thresholds shold be specified directly (without brackets).
-- Factor thresholds must be specified within brackets. For factors with sets of values, values within a threshold should be separated by commas.
-- Standard logical comparisons `=`, `!=`, `<` (etc.) are valid.
-- Positive exits are indicated by `True`, while negative exits are specified by `False`.
->>>>>>> 900075e9c02f7358588b27289bab19cae450ed66
+
 
 Now, let's pass the `my.tree` argument to `FFTrees()`
 
@@ -70,13 +63,7 @@ my.heart.fft <- FFTrees(diagnosis ~.,
 Let's see how well our FFT did:
 
 ```{r}
-<<<<<<< HEAD
-=======
-# Show summary statistics
-my.heart.fft
-
 # Plot 
->>>>>>> 900075e9c02f7358588b27289bab19cae450ed66
 plot(my.heart.fft)
 ```
 
@@ -93,12 +80,6 @@ my.heart.fft <- FFTrees(diagnosis ~.,
                                    If ca > 1, predict True. 
                                    Otherwise, predict False")
 
-<<<<<<< HEAD
-=======
-# Show summary statistics
-my.heart.fft
-
->>>>>>> 900075e9c02f7358588b27289bab19cae450ed66
 # Plot 
 plot(my.heart.fft)
 ```

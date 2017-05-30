@@ -23,11 +23,17 @@ plot(heart.fft,
 
 ### Package updates
 
+1.3.0
+
+- Added `inwords()`, a function that converts an FFTrees object to words.
+- Added `my.tree` argument to `FFTrees()` that allows the user to specify an FFT verbally.
+- Added positive predictive value `ppv`, negative predictive value `npv` and balanced predictive value `bpv` as primary accuracy statistics throughout.
+
 1.2.3
 
 - Added `sens.w` argument to allow differential weighting of sensitivities and specificities when selecting and applying trees.
 
-- Fixed but in calculating importance weightings from `FFForest()` outputs.
+- Fixed bug in calculating importance weightings from `FFForest()` outputs.
 
 1.2.0
 
