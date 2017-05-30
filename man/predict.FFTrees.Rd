@@ -5,14 +5,16 @@
 \title{Predict new data from an FFTrees x}
 \usage{
 \method{predict}{FFTrees}(object = NULL, data = NULL, tree = "best.train",
-  ...)
+  sens.w = NULL, ...)
 }
 \arguments{
 \item{object}{An FFTrees object created from the FFTrees() function.}
 
-\item{data}{A dataframe of test data}
+\item{data}{dataframe. A dataframe of test data}
 
-\item{tree}{Which tree in the FFTrees x should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.}
+\item{tree}{Which tree in the FFTrees x should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics (according the goal specified in tree construction).}
+
+\item{sens.w}{numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. If specified, the tree with the highest weighted accuracy (wacc) given the specified value of sens.w will be selected}
 
 \item{...}{Additional arguments passed on to \code{predict()}}
 }

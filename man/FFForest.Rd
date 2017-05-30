@@ -5,8 +5,8 @@
 \title{Creates a forest of fast and frugal decision trees}
 \usage{
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
-  ntree = 10, train.p = 0.5, algorithm = "m", goal = "bacc",
-  sens.weight = 0.5, verbose = TRUE, cpus = 1, do.lr = TRUE,
+  ntree = 10, train.p = 0.5, algorithm = "m", goal = "wacc",
+  sens.w = 0.5, verbose = TRUE, cpus = 1, comp = FALSE, do.lr = TRUE,
   do.cart = TRUE, do.rf = TRUE, do.svm = TRUE, rank.method = NULL,
   hr.weight = NULL)
 }
@@ -27,13 +27,13 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime}
 
-\item{sens.weight}{numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)}
+\item{sens.w}{numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)}
 
 \item{verbose}{logical. Should progress reports be printed?}
 
 \item{cpus}{integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.}
 
-\item{do.lr, do.cart, do.rf, do.svm}{logical. Should logistic regression, cart, regularized logistic regression, random forests and/or support vector machines be calculated for comparison?}
+\item{comp, do.lr, do.cart, do.rf, do.svm}{logical. See arguments in \code{FFTrees()}}
 
 \item{rank.method, hr.weight}{depricated arguments}
 }

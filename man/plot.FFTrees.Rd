@@ -5,9 +5,10 @@
 \title{Draws a FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = "Data", decision.names = c("Noise",
-  "Signal"), cue.cex = NULL, threshold.cex = NULL, comp = TRUE,
-  stats = TRUE, n.per.icon = NULL, which.tree = NULL, ...)
+  tree = "best.train", main = NULL, decision.labels = NULL,
+  cue.cex = NULL, threshold.cex = NULL, decision.cex = 1, comp = TRUE,
+  stats = TRUE, n.per.icon = NULL, which.tree = NULL,
+  level.type = "bar", decision.names = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -16,23 +17,29 @@
 
 \item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.}
 
-\item{tree}{integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"}
+\item{tree}{integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"}
 
 \item{main}{character. The main plot label.}
 
-\item{decision.names}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
+\item{decision.labels}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
 
-\item{cue.cex}{numeric. A numeric vector specifying the size of the cue labels.}
+\item{cue.cex}{numeric. The size of the cue labels.}
 
-\item{threshold.cex}{numeric. A numeric vector specifying the size of the decision thresholds.}
+\item{threshold.cex}{numeric. The size of the threshold labels.}
+
+\item{decision.cex}{numeric. The size of the decision labels.}
 
 \item{comp}{logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)}
 
 \item{stats}{logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.}
 
-\item{n.per.icon}{Number of exemplars per icon}
+\item{n.per.icon}{Number of cases per icon}
 
-\item{which.tree}{depreciated argument, only for backwards compatibility, use \code{"tree"} instead.}
+\item{which.tree}{deprecated argument, only for backwards compatibility, use \code{"tree"} instead.}
+
+\item{level.type}{string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}}
+
+\item{decision.names}{depricated arguments.}
 
 \item{...}{Currently ignored.}
 }
@@ -48,7 +55,7 @@ data = heartdisease)
 # Visualise the tree
 plot(heart.fft,
      main = "Heart Disease Diagnosis",
-     decision.names = c("Absent", "Present"))
+     decision.labels = c("Absent", "Present"))
 
 
 # See the vignette for more details

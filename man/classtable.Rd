@@ -4,12 +4,14 @@
 \alias{classtable}
 \title{Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors}
 \usage{
-classtable(prediction.v, criterion.v)
+classtable(prediction.v, criterion.v, sens.w = 0.5)
 }
 \arguments{
 \item{prediction.v}{A binary vector of predictions}
 
 \item{criterion.v}{A binary vector of criterion (true) values}
+
+\item{sens.w}{numeric. Weight given to sensitivity, must range from 0 to 1.}
 }
 \description{
 Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
