@@ -1,8 +1,9 @@
 #' Predict new data from an FFTrees x
 #'
 #' @param object An FFTrees object created from the FFTrees() function.
-#' @param data A dataframe of test data
-#' @param tree Which tree in the FFTrees x should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics.
+#' @param data dataframe. A dataframe of test data
+#' @param tree Which tree in the FFTrees x should be used? Can be an integer or "best.train" (the default) to use the tree with the best training statistics (according the goal specified in tree construction).
+#' @param sens.w numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. If specified, the tree with the highest weighted accuracy (wacc) given the specified value of sens.w will be selected
 #' @param ... Additional arguments passed on to \code{predict()}
 #' @return A logical vector of predictions
 #' @export
@@ -30,26 +31,47 @@ predict.FFTrees <- function(
   object = NULL,
   data = NULL,
   tree = "best.train",
+  sens.w = NULL,
   ...
 ) {
 
-  # x <- result.i
-  # data = data
-  # tree <- "best.train"
-  #
+
   goal <- object$params$goal
 
-  if (tree == "best.train") {
+  if (tree == "best.train" & is.null(sens.w)) {
 
     tree <- which(object$tree.stats$train[[goal]] == max(object$tree.stats$train[[goal]]))
-    if(length(tree) > 1) {tree <- sample(tree, 1)}
 
   }
 
+
+  if (is.null(sens.w) == FALSE) {
+
+    if(sens.w < 0 | sens.w > 1) {stop("sens.w must be a number between 0 and 1")}
+
+    # Get the sensitivities and specificities
+
+    sens.v <- object$tree.stats$train$sens
+    spec.v <- object$tree.stats$train$spec
+
+    # Calculate new wacc values
+
+    wacc.v <- sens.v * sens.w + spec.v * (1 - sens.w)
+
+    # Select tree with highest wacc value
+    tree <- which(wacc.v == max(wacc.v))
+
+  }
+
+  # If there is more than one best tree, take the first
+  if(length(tree) > 1) {tree <- tree[1]}
+
+  # Calculate predictions across all trees
   predictions <- apply.tree(formula = object$formula,
                             data = data,
                             tree.definitions = object$tree.definitions)
 
+  # Get the predictions for the selected tree
   predictions <- predictions$decision[,tree]
 
   return(predictions)

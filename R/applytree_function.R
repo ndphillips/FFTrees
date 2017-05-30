@@ -3,6 +3,7 @@
 #' @param formula A formula
 #' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param tree.definitions dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.
+#' @param sens.w numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.
 #' @return A list of length 4 containing
 #' @export
 #' @examples
@@ -18,14 +19,16 @@
 
 apply.tree <- function(data,
                        formula,
-                       tree.definitions
+                       tree.definitions,
+                       sens.w = .5
 ) {
+#
+#   data = data.train
+#   formula = formula
+#   tree.definitions = tree.definitions
+#   sens.w = sens.w
 
-  #
-  # data = data.train
-  # formula = formula
-  # tree.definitions = tree.definitions
-  #
+
   criterion.v <- model.frame(formula = formula,
                              data = data,
                              na.action = NULL)[,1]
@@ -40,7 +43,7 @@ apply.tree <- function(data,
 
   for(tree.i in 1:n.trees) {
 
-    cue.v <- unlist(strsplit(tree.definitions$cue[tree.i], ";"))
+    cue.v <- unlist(strsplit(tree.definitions$cues[tree.i], ";"))
     class.v <- unlist(strsplit(tree.definitions$classes[tree.i], ";"))
     exit.v <- unlist(strsplit(tree.definitions$exits[tree.i], ";"))
     threshold.v <- unlist(strsplit(tree.definitions$thresholds[tree.i], ";"))
@@ -93,8 +96,8 @@ apply.tree <- function(data,
       # Get level stats
 
       level.i.stats <- classtable(prediction.v = decision[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i]), tree.i],
-                                  criterion.v = criterion.v[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i])]
-      )
+                                  criterion.v = criterion.v[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i])],
+                                  sens.w = sens.w)
 
       level.stats.df.i[level.i, names(level.i.stats)] <- level.i.stats
 

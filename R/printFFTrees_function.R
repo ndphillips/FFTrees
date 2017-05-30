@@ -1,6 +1,6 @@
-#' Prints summary information from an FFTrees x
+#' Prints summary information from an FFTrees object
 #'
-#' @description Printing function for an FFTrees x
+#' @description Printing function for an FFTrees object
 #' @param x FFTrees. A FFTrees x created from FFTrees()
 #' @param ... additional arguments passed to print.
 #' @export
@@ -12,10 +12,16 @@ print.FFTrees <- function(
 
 goal <- x$params$goal
 
+criterion.name <- paste(x$formula)[2]
+
 n.trees <- nrow(x$tree.stats$train)
 n.cues.total <- x$data.desc$train$features
 
+if(("tree.max" %in% x) == FALSE) {
+
 tree <- min(x$tree.stats$train$tree[x$tree.stats$train[[goal]] == max(x$tree.stats$train[[goal]])])[1]
+
+} else {tree <- x$tree.max}
 
 train.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues[tree], ";"))), collapse = ",")
 train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
@@ -29,6 +35,7 @@ train.far <- round(x$tree.stats$train$far[tree], 2)
 train.spec <- 1 - round(x$tree.stats$train$far[tree], 2)
 train.dp <- round(x$tree.stats$train$dprime[tree], 2)
 train.bacc <- round(x$tree.stats$train$bacc[tree], 2)
+train.wacc <- round(x$tree.stats$train$wacc[tree], 2)
 train.acc <- round(x$tree.stats$train$acc[tree], 2)
 train.pci <-  round(x$tree.stats$train$pci[tree], 2)
 train.mcu <- round(x$tree.stats$train$mcu[tree], 2)
@@ -42,23 +49,28 @@ test.far <- round(x$tree.stats$test$far[tree], 2)
 test.spec <- 1 - round(x$tree.stats$test$far[tree], 2)
 test.dp <- round(x$tree.stats$test$dprime[tree], 2)
 test.bacc <- round(x$tree.stats$test$bacc[tree], 2)
+test.wacc <- round(x$tree.stats$test$wacc[tree], 2)
 test.acc <- round(x$tree.stats$test$acc[tree], 2)
 test.pci <-  round(x$tree.stats$test$pci[tree], 2)
 test.mcu <- round(x$tree.stats$test$mcu[tree], 2)
 test.auc <- round(x$auc$FFTrees[1], 2)
 
 summary.df <- data.frame("train" = c(train.n,
-                                     train.pci,
                                      train.mcu,
+
+                                     train.pci,
                                      train.acc,
-                                     train.bacc,
+                                     # train.bacc,
+                                     train.wacc,
                                      train.sens,
                                      train.spec),
                          "test" = c(test.n,
-                                    test.pci,
                                     test.mcu,
+
+                                    test.pci,
                                     test.acc,
-                                    test.bacc,
+                                    # test.bacc,
+                                    test.wacc,
                                     test.sens,
                                     test.spec)
 )
@@ -76,12 +88,14 @@ if(is.null(x$tree.stats$test)) {
   test.auc <- "--"
   test.acc <- "--"
   test.bacc <- "--"
+  test.wacc <- "--"
 
   summary.df <- data.frame("train" = c(train.n,
-                                       train.pci,
                                        train.mcu,
+                                       train.pci,
                                        train.acc,
-                                       train.bacc,
+                                       # train.bacc,
+                                       train.wacc,
                                        train.sens,
                                        train.spec)
   )
@@ -89,11 +103,20 @@ if(is.null(x$tree.stats$test)) {
 
 }
 
-rownames(summary.df) <- c("n", "pci", "mcu", "acc", "bacc", "sens", "spec")
+rownames(summary.df) <- c("cases       :n",
+                          "speed       :mcu",
+                          "frugality   :pci",
+                          "accuracy    :acc",
+                          # "balanced    :bacc",
+                          "weighted    :wacc",
+                          "sensitivity :sens",
+                          "specificity :spec")
 
 
-summary.text <- paste(n.trees, " FFTs using up to ", all.cues.n,
-                      " of ", n.cues.total, " cues", sep = "")
+summary.text <- paste(n.trees, " FFTs predicting ", criterion.name, sep = "")
+
+
+params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', sens.w = ", x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
 if(is.null(test.auc)) {
 
@@ -101,16 +124,30 @@ auc.text <- paste("FFTrees AUC: (Train = ", train.auc, ")", sep = "")
 
 }
 
-if(is.null(test.auc) == F) {
+if(is.null(test.auc) == FALSE) {
 
   auc.text <- paste("FFTrees AUC: (Train = ", train.auc, ", Test = ", test.auc, ")", sep = "")
 
 }
 
-accuracy.text <- paste("FFT #", tree, " uses ", train.cues.n, " cues {", train.cues, "} with the following performance:", sep = "")
+if(goal == "wacc" & x$params$sens.w != .5) {
+
+accuracy.text <- paste("FFT #", tree, " {", train.cues, "} maximizes training wacc (sens.w = ", x$params$sens.w, "):", sep = "")
+
+} else {
+
+accuracy.text <- paste("FFT #", tree, " {", train.cues, "} maximizes training ", goal, ":", sep = "")
+
+}
+
+# verbalisation
+inwords.FFTrees <- FFTrees::inwords(x = x)
+
 
 print(summary.text)
 print(accuracy.text)
 print(summary.df)
+# print(paste0("FFT #", tree, ":"))
+# print(inwords.FFTrees[[1]])
 
 }

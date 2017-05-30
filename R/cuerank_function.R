@@ -1,13 +1,15 @@
-#' Calculate the marginal accuracy of all cues in a dataframe. For each cue, the threshold that maximizes the criterion is selected.
+#' Calculates thresholds that maximize a statistic (goal) for cues.
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = dprime
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime
+#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
-#' @param verbose logical. A logical value indicating whether or not to print ongoing diagnostics
+#' @param progress logical. Should ongoing diagnostics be printed?
 #' @param cue.rules dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
 #' @importFrom stats median var
+#' @importFrom progress progress_bar
 #' @return A dataframe containing best thresholds and marginal classification statistics for each cue
 #' @export
 #' @examples
@@ -23,14 +25,23 @@
 cuerank <- function(formula = NULL,
                     data = NULL,
                     goal = "bacc",
+                    sens.w = .5,
                     numthresh.method = "o",
                     rounding = NULL,
-                    verbose = FALSE,
+                    progress = FALSE,
                     cue.rules = NULL
 
 ) {
 
-
+#
+#   formula <- diagnosis ~.
+#   data = heartdisease
+#   goal <- "bacc"
+#   numthresh.method = "m"
+#   sens.w = .5
+#   rounding = NULL
+#   progress = FALSE
+#   cue.rules = NULL
 
 # GLOBAL VARIABLES (could be updated later)
 max.numcat <- 20        # Maximum number of numeric thresholds to consider
@@ -39,6 +50,7 @@ max.numcat <- 20        # Maximum number of numeric thresholds to consider
 if(substr(goal, 1, 1) == "a") {goal <- "acc"}
 if(substr(goal, 1, 1) == "b") {goal <- "bacc"}
 if(substr(goal, 1, 1) == "d") {goal <- "dprime"}
+if(substr(goal, 1, 1) == "w") {goal <- "wacc"}
 
 # Extract variables in formula
 data.mf <- model.frame(formula = formula,
@@ -49,8 +61,11 @@ criterion.v <- data.mf[,1]
 cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
 n.cues <- ncol(cue.df)
 
+
 # Convert unordered factors to character, and ordered factors to integer
 for(i in 1:n.cues) {
+
+
 
   if(setequal(class(cue.df[,i]),c("ordered", "factor"))) {
 
@@ -82,8 +97,20 @@ if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == FAL
 }
 }
 
+
+if(progress) {pb <- progress::progress_bar$new(total = n.cues, clear = FALSE, show_after = .5)}
+
+
 # Loop over cues
 for(cue.i in 1:n.cues) {
+
+  if(progress) {
+
+    pb$tick()
+    Sys.sleep(1 / n.cues)
+
+  }
+
 
   # Get main information about current cue
   cue <- names(cue.df)[cue.i]
@@ -121,12 +148,17 @@ for(cue.i in 1:n.cues) {
     # "median" method
     if(numthresh.method == "m" & is.null(cue.rules)) {
 
+      if(length(unique(unlist(cue.v))) == 2) {cue.levels <- unique(unlist(cue.v))} else {
+
       cue.levels <- median(unlist(cue.v))
+
+      }
 
     }
 
     # Round cue levels
-    if(!is.null(rounding)) {cue.levels <- round(cue.levels, digits = rounding)}
+    if(!is.null(rounding)) {cue.levels <- round(cue.levels,
+                                                digits = rounding)}
 
     # Remove potential duplicates
     cue.levels <- cue.levels[duplicated(cue.levels) == FALSE]
@@ -199,7 +231,8 @@ for(cue.i in 1:n.cues) {
           if(direction.i == "!=") {pred.vec <- cue.v != cue.level.i}
 
           classtable.temp <- classtable(prediction.v = pred.vec,
-                                        criterion.v = criterion.v)
+                                        criterion.v = criterion.v,
+                                        sens.w = sens.w)
 
 
           cue.stats.o[cue.stats.o$threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
@@ -239,7 +272,8 @@ for(cue.i in 1:n.cues) {
 
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v)
+                                      criterion.v = criterion.v,
+                                      sens.w = sens.w)
 
 
         cue.stats[row.index.i, accuracy.names] <- classtable.temp
@@ -305,7 +339,8 @@ for(cue.i in 1:n.cues) {
         if(direction.i == ">=") {pred.vec <- cue.v >= level.i}
 
         classtable.temp <- classtable(prediction.v = pred.vec,
-                                      criterion.v = criterion.v)
+                                      criterion.v = criterion.v,
+                                      sens.w = sens.w)
 
         direction.accuracy.df[which(direction.i == direction.vec), names(classtable.temp)] <- classtable.temp
 

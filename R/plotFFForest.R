@@ -23,7 +23,7 @@ plot.FFForest = function(x,
                          ...) {
 
 
-trees.n <- nrow(x$tree.sim)
+trees.n <- nrow(x$fft.sim)
 
 par(mfrow = c(1, 2))
 

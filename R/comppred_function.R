@@ -1,6 +1,6 @@
 #' Wrapper for classfication algorithms
 #'
-#' This function is a wrapper for many classification algorithms such as CART (rpart::rpart), regularised logistic regression (glmnet::glmnet), support vector machines (svm::svm) and random forests (randomForest::randomForest)
+#' This function is a wrapper for many classification algorithms such as CART (rpart::rpart), logistic regression (glm), support vector machines (svm::svm) and random forests (randomForest::randomForest)
 #'
 #' @param formula a formula
 #' @param data.train dataframe. A training dataset
@@ -10,7 +10,6 @@
 #' @importFrom stats model.frame formula glm model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
-#' @importFrom glmnet glmnet
 #' @importFrom randomForest randomForest
 #' @export
 #' @examples

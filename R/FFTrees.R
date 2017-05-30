@@ -6,16 +6,20 @@
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
+#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param algorithm character. How should cues be ranked during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be re-ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method can take (much) longer and may be prone to overfitting.
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
-#' @param sens.weight numeric. A number between 0 and 1 indicating how much weight to give to maximizing hits versus minimizing false alarms when determining cue thresholds and ordering cues in trees (ignored when \code{goal = "c"})
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
+#' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
+#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
+#' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regression trees, lr = logistic regression, rf = random forests, svm = support vector machines.
+#' @param comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
-#' @param verbose logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
+#' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
-#' @param rank.method depricated arguments.
+#' @param rank.method,verbose depricated arguments.
+#' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return An \code{FFTrees} object with the following elements
 #'
@@ -35,6 +39,7 @@
 #' @export
 #' @details
 #'
+#' \code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict T
 #' \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
 #'
 #' @examples
@@ -58,31 +63,38 @@ FFTrees <- function(formula = NULL,
                     data.test = NULL,
                     train.p = 1,
                     algorithm = "m",
-                    goal = "bacc",
-                    sens.weight = .5,
+                    goal = "wacc",
+                    numthresh.method = "o",
+                    my.tree = NULL,
+                    sens.w = .5,
                     max.levels = 4,
+                    decision.labels = c("False", "True"),
                     tree.definitions = NULL,
-                    verbose = FALSE,
+                    progress = TRUE,
+                    comp = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     store.data = FALSE,
                     object = NULL,
-                    rank.method = NULL
+                    rank.method = NULL,
+                    force = FALSE,
+                    verbose = NULL
 ) {
 
-
-  # formula = poisonous ~.
-  # data = mushrooms.train
-  # data.test = mushrooms.test
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # data.test = NULL
   # train.p = 1
   # algorithm = "m"
-  # goal = "bacc"
-  # sens.weight = .5
+  # goal = "dprime"
+  # sens.w = .5
+  # numthresh.method = "o"
   # max.levels = 4
   # tree.definitions = NULL
-  # verbose = FALSE
+  # progress = FALSE
+  # comp = TRUE
   # do.cart = TRUE
   # do.lr = TRUE
   # do.rf = TRUE
@@ -90,6 +102,21 @@ FFTrees <- function(formula = NULL,
   # store.data = FALSE
   # object = NULL
   # rank.method = NULL
+  # decision.labels <- c("False", "True")
+  # force = FALSE
+  # #
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # my.tree = "if thal = [rd], false If cp = [a], true If age < 60 true, otherwise, false"
+
+  if(is.null(verbose) == FALSE) {
+
+    warning("The argument verbose is depricated. Use progress instead.")
+
+    progress <- verbose
+
+  }
+
 
 if(is.null(rank.method) == FALSE) {
 
@@ -119,15 +146,33 @@ if(is.null(tree.definitions) == FALSE) {
 
 }
 
+if((goal %in% c("bacc", "wacc", "dprime")) == FALSE) {
+
+  stop("goal must be in the set 'bacc', 'wacc', 'dprime'")
+}
+
 # Set some global parameters
 
 repeat.cues <- TRUE
 stopping.rule <- "exemplars"
 stopping.par <- .1
 correction <- .25
-numthresh.method <- "o"
 rounding <- 2
 exit.method <- "fixed"
+
+if(force == FALSE) {
+
+if(goal %in% c("acc") & sens.w != .5) {
+
+  message(paste0("Note: Because sens.w != .5, I will set goal = 'wacc'. To prevent this, include force = TRUE"))
+
+  goal <- "wacc"
+
+}
+
+}
+
+
 
 
 # Is there training data?
@@ -148,6 +193,17 @@ if(is.null(object) == FALSE) {
   formula <- object$formula
 
 }
+
+
+if(comp == FALSE) {
+
+  do.lr <- FALSE
+  do.cart <- FALSE
+  do.svm <- FALSE
+  do.rf <- FALSE
+
+}
+
 
 # DEFINE TESTING AND TRAINING DATA
 {
@@ -421,11 +477,15 @@ stat.names <- names(classtable(1, 1))
 
 if(is.null(object)) {
 
+if(progress) {message(paste("Calculating initial cue thresholds ..."))}
+
 cue.accuracies.train <- cuerank(formula = formula,
                                 data = data.train,
-                                goal = goal,
+                                goal = "bacc",         # For now, goal must be bacc when ranking cues
                                 rounding = rounding,
-                                verbose = verbose
+                                progress = progress,
+                                sens.w = sens.w,
+                                numthresh.method = numthresh.method
 )
 
 }
@@ -440,13 +500,16 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
   if(sd(crit.test) > 0) {
 
+# if(progress) {message("Calculating cue test accuracies...")}
+
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
-                                goal = goal,
+                                goal = "bacc",        # For now, goal must be 'bacc' when ranking cues
                                 rounding = rounding,
-                                verbose = verbose,
-                                cue.rules = cue.accuracies.train
-)
+                                progress = FALSE,
+                                cue.rules = cue.accuracies.train,
+                                sens.w = sens.w,
+                                numthresh.method = numthresh.method)
 }
 
   if(sd(crit.test) == 0) {
@@ -469,23 +532,33 @@ cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.t
 
 # GET TREE DEFINITIONS
 {
-if(is.null(object) & is.null(tree.definitions)) {
+if(is.null(object) & is.null(tree.definitions) & is.null(my.tree)) {
+
+  if(progress) {message("Growing and applying FFTs ...")}
 
 tree.growth <- grow.FFTrees(formula = formula,
                             data = data.train,
                             algorithm = algorithm,
-                            goal = goal,
+                            goal = "bacc",                  # for now, goal must be 'bacc' when growing trees
                             repeat.cues = repeat.cues,
                             stopping.rule = stopping.rule,
                             stopping.par = stopping.par,
                             max.levels = max.levels,
-                            sens.weight = sens.weight)
+                            sens.w = sens.w,
+                            cue.accuracies = cue.accuracies.train)
 
 tree.definitions <- tree.growth$tree.definitions
 
 }
 
 if(is.null(object) == FALSE) {tree.definitions <- object$tree.definitions}
+
+if(is.null(my.tree) == FALSE) {
+
+ tree.definitions <- wordstoFFT(input = my.tree,
+                                cue.names = names(data.train),
+                                decision.labels = decision.labels)
+}
 
 }
 
@@ -497,7 +570,8 @@ if(is.null(data.train) == FALSE) {
 
 train.results <- apply.tree(data = data.train,
                             formula = formula,
-                            tree.definitions = tree.definitions)
+                            tree.definitions = tree.definitions,
+                            sens.w = sens.w)
 
 decision.train <- train.results$decision
 levelout.train <- train.results$levelout
@@ -522,7 +596,8 @@ if(is.null(data.test) == FALSE) {
 
 test.results <- apply.tree(data = data.test,
                            formula = formula,
-                           tree.definitions = tree.definitions)
+                           tree.definitions = tree.definitions,
+                           sens.w = sens.w)
 
 decision.test <- test.results$decision
 levelout.test <- test.results$levelout
@@ -563,9 +638,18 @@ rownames(tree.auc) = c("train", "test")
 
 }
 
+# GET BEST TREE
+tree.max <- which(treestats$train[[goal]] == max(treestats$train[[goal]]))
+if(length(tree.max) > 1) {tree.max <- tree.max[1]}
+
+if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with comp = FALSE) ...")}}
+
 # LR
 {
 if(do.lr) {
+
+
+
 
 lr.acc <- comp.pred(formula = formula,
                      data.train = data.train,
@@ -715,21 +799,33 @@ if(is.null(data.test) == FALSE) {
 }
 
 
+inwords.i <- inwords(tree = tree.max,
+                     classes.v = unlist(strsplit(tree.definitions$classes[tree.max], ";")),
+                     cues.v = unlist(strsplit(tree.definitions$cues[tree.max], ";")),
+                     directions.v = unlist(strsplit(tree.definitions$directions[tree.max], ";")),
+                     thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";")),
+                     exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";")),
+                     decision.labels = decision.labels
+                     )$v1
+
 output.fft <- list("formula" = formula,
                    "data.desc" = data.desc,
-                  "cue.accuracies" = cue.accuracies,
-                  "tree.definitions" = tree.definitions,
-                  "tree.stats" = treestats,
-                  "level.stats" = levelstats,
-                  "decision" = decision,
-                  "levelout" = levelout,
-                  "auc" = auc,
-                  "params" = list("algorithm" = algorithm, "goal" = goal, "sens.weight" = sens.weight, "max.levels" = max.levels),
-                  "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
+                   "cue.accuracies" = cue.accuracies,
+                   "tree.definitions" = tree.definitions,
+                   "tree.stats" = treestats,
+                   "level.stats" = levelstats,
+                   "decision" = decision,
+                   "levelout" = levelout,
+                   "tree.max" = tree.max,
+                   "inwords" = inwords.i,
+                   "auc" = auc,
+                   "decision.labels" = decision.labels,
+                   "params" = list("algorithm" = algorithm, "goal" = goal, "sens.w" = sens.w, "max.levels" = max.levels),
+                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
                                 "svm" = list("model" = svm.model, "stats" = svm.stats)),
-                  "data" = data.ls
+                   "data" = data.ls
 )
 
 class(output.fft) <- "FFTrees"

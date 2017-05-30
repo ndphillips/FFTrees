@@ -4,15 +4,18 @@
 #' @param x A FFTrees object created from \code{"FFTrees()"}
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
-#' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to v (sens - spec), use "best.train" or "best.test"
+#' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
 #' @param main character. The main plot label.
-#' @param decision.names character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
-#' @param cue.cex numeric. A numeric vector specifying the size of the cue labels.
-#' @param threshold.cex numeric. A numeric vector specifying the size of the decision thresholds.
+#' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
+#' @param cue.cex numeric. The size of the cue labels.
+#' @param threshold.cex numeric. The size of the threshold labels.
+#' @param decision.cex numeric. The size of the decision labels.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
 #' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
-#' @param n.per.icon Number of exemplars per icon
-#' @param which.tree depreciated argument, only for backwards compatibility, use \code{"tree"} instead.
+#' @param n.per.icon Number of cases per icon
+#' @param which.tree deprecated argument, only for backwards compatibility, use \code{"tree"} instead.
+#' @param level.type string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}
+#' @param decision.names depricated arguments.
 #' @param ... Currently ignored.
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -28,7 +31,7 @@
 #' # Visualise the tree
 #' plot(heart.fft,
 #'      main = "Heart Disease Diagnosis",
-#'      decision.names = c("Absent", "Present"))
+#'      decision.labels = c("Absent", "Present"))
 #'
 #'
 #' # See the vignette for more details
@@ -42,17 +45,48 @@ plot.FFTrees <- function(
   data = "train",
   what = 'tree',
   tree = "best.train",
-  main = "Data",
-  decision.names = c("Noise", "Signal"),
+  main = NULL,
+  decision.labels = NULL,
   cue.cex = NULL,
   threshold.cex = NULL,
+  decision.cex = 1,
   comp = TRUE,
   stats = TRUE,
   n.per.icon = NULL,
   which.tree = NULL,
+  level.type = "bar",
+  decision.names = NULL,
   ...
 ) {
 
+#
+  # x = mushrooms.ring.fft
+  # data = "train"
+  # what = 'tree'
+  # tree = "best.train"
+  # main = "Data"
+  # decision.labels = NULL
+  # cue.cex = NULL
+  # threshold.cex = NULL
+  # comp = TRUE
+  # stats = TRUE
+  # n.per.icon = NULL
+  # which.tree = NULL
+  # decision.cex = 1
+  # level.type = "bar"
+
+
+if(what %in% c("cues", "tree") == FALSE) {
+
+  stop("what must be either 'cues' or tree'")
+}
+
+if(is.null(decision.names) == FALSE) {
+
+  message("decision.names is depricated, use decision.lables instead")
+
+  decision.labels <- decision.names
+}
 
 # If what == cues, then send inputs to showcues()
 if(what == 'cues') {showcues(x = x, data = data, main = main)}
@@ -60,8 +94,24 @@ if(what == 'cues') {showcues(x = x, data = data, main = main)}
 # If what == tree, then plot the tree!
 if(what == 'tree') {
 
+
+# -------------------------
+# Setup
+# --------------------------
+{
+# Extract important parameters from x
 n.trees <- nrow(x$tree.stats$train)
 goal <- x$params$goal
+
+if(is.null(decision.labels)) {
+
+  if(("decision.labels" %in% names(x))) {
+
+  decision.labels <- x$decision.labels
+
+  } else {decision.labels <- c(0, 1)}
+
+}
 
 # Check for problems and depreciated arguments
 {
@@ -100,11 +150,29 @@ goal <- x$params$goal
   }
 }
 
+# Create defaults
+if(is.null(main)) {
+
+  if(class(data) == "character") {
+
+    if(data == "train") {main <- "Data (Training)"}
+    if(data == "test") {main <- "Data (Testing)"}
+
+  }
+
+  if(class(data) == "data.frame") {main <- "Test Data"}
+
+}
+
 # DEFINE PLOTTING TREE
 
 if(tree == "best.train") {
 
+  if(("tree.max" %in% names(x)) == FALSE) {
+
  tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train[[goal]])]
+
+  } else {tree <- x$tree.max}
 
 }
 if(tree == "best.test") {
@@ -113,7 +181,14 @@ if(tree == "best.test") {
 
 }
 
+if(length(tree) > 1) {tree <- tree[1]}
+
 # DEFINE CRITICAL OBJECTS
+
+lr.stats <- NULL
+cart.stats <- NULL
+rf.stats <- NULL
+svm.stats <- NULL
 
 if(data == "train") {
 
@@ -123,11 +198,25 @@ if(data == "train") {
 
   if(comp == TRUE) {
 
-  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.train, "spec" = x$comp$lr$stats$spec.train)
-  cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.train, "spec" = x$comp$cart$stats$spec.train)
-  rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.train, "spec" = x$comp$rf$stats$spec.train)
-  svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.train, "spec" = x$comp$svm$stats$spec.train)
+    if(is.null(x$comp$lr$stats) == FALSE) {
+  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.train,
+                         "spec" = x$comp$lr$stats$spec.train)
+    }
 
+    if(is.null(x$comp$cart$stats) == FALSE) {
+  cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.train, "spec" = x$comp$cart$stats$spec.train)
+
+    }
+
+    if(is.null(x$comp$rf$stats) == FALSE) {
+
+   rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.train, "spec" = x$comp$rf$stats$spec.train)
+
+    }
+
+    if(is.null(x$comp$svm$stats) == FALSE) {
+   svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.train, "spec" = x$comp$svm$stats$spec.train)
+}
 }
 
   n.exemplars <- x$data.desc$train$cases
@@ -145,11 +234,30 @@ if(data == "test") {
 
   if(comp == TRUE) {
 
-  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.test, "spec" = x$comp$lr$stats$spec.test)
-  cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.test, "spec" = x$comp$cart$stats$spec.test)
-  rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.test, "spec" = x$comp$rf$stats$spec.test)
-  svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.test, "spec" = x$comp$svm$stats$spec.test)
+    if(is.null(x$comp$lr$stats) == FALSE) {
 
+
+  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.test, "spec" = x$comp$lr$stats$spec.test)
+    }
+
+    if(is.null(x$comp$cart$stats) == FALSE) {
+
+   cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.test, "spec" = x$comp$cart$stats$spec.test)
+
+    }
+
+    if(is.null(x$comp$rf$stats) == FALSE) {
+
+   rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.test, "spec" = x$comp$rf$stats$spec.test)
+
+    }
+
+    if(is.null(x$comp$svm$stats) == FALSE) {
+
+   svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.test, "spec" = x$comp$svm$stats$spec.test)
+
+
+    }
   }
 
   n.exemplars <- x$data.desc$test$cases
@@ -180,31 +288,40 @@ for(i in 1:n.levels) {
 
 }
 
+
+}
+
 # -------------------------
 # Define plotting parameters
 # --------------------------
 {
 {
 
+
+# Panels
+panel.line.lwd <- 1
+panel.line.col <- gray(0)
+panel.line.lty <- 1
+
+
 # Some general parameters
 
-  do.roc <- F
-  ball.col = c(gray(0), gray(0))
-  ball.bg = c(gray(1), gray(1))
-  ball.pch = c(21, 24)
-  ball.cex = c(1, 1)
-  error.col <- "red"
-  correct.col <- "green"
-  max.label.length <- 100
-  def.par <- par(no.readonly = TRUE)
-
-
-level.stats$level.name.t <-  strtrim(level.stats$cue, max.label.length)
-
-
+ball.col = c(gray(0), gray(0))
+ball.bg = c(gray(1), gray(1))
+ball.pch = c(21, 24)
+ball.cex = c(1, 1)
+error.col <- "red"
+correct.col <- "green"
+max.label.length <- 100
+def.par <- par(no.readonly = TRUE)
 ball.box.width <- 10
 label.box.height <- 2
 label.box.width <- 5
+
+
+# Define truncated level names
+level.stats$level.name.t <-  strtrim(level.stats$cue, max.label.length)
+
 
 # Node Segments
 
@@ -245,12 +362,14 @@ if(is.null(threshold.cex)) {
 
 }
 
+# Classification table
+classtable.lwd <- 1
 
-
-
+# ROC
+roc.lwd <- 1
+roc.border.col <- gray(0)
 
 if(stats == TRUE) {
-
 
 plotting.parameters.df <- data.frame(
   n.levels = 1:6,
@@ -326,9 +445,8 @@ if(n.levels == 4) {ball.box.width <- 18}
 
 #ball.box.width <- 10 * (n.levels - 1)
 ball.box.height <- 2.5
-ball.box.horiz.shift <- 7
+ball.box.horiz.shift <- 10
 ball.box.vert.shift <- -1
-
 ball.box.max.shift.p <- .9
 ball.box.min.shift.p <- .4
 
@@ -360,9 +478,8 @@ signal.ball.bg <- ball.bg[2]
 arrow.lty <- 1
 arrow.lwd <- 1
 arrow.length <- 2.5
-arrow.head.length <- .1
-arrow.col <- gray(.5)
-
+arrow.head.length <- .08
+arrow.col <- gray(0)
 
 # Final stats
 
@@ -377,9 +494,9 @@ spec.circle.col <- "red"
 dprime.circle.col <- "blue"
 stat.outer.circle.col <- gray(.5)
 
+}
 
-      }
-
+# add.balls.fun() adds balls to the plot
 add.balls.fun <- function(x.lim = c(-10, 0),
                           y.lim = c(-2, 0),
                           n.vec = c(20, 10),
@@ -388,7 +505,7 @@ add.balls.fun <- function(x.lim = c(-10, 0),
                           bg.vec = ball.bg,
                           col.vec = ball.col,
                           ball.lwd = .7,
-                          freq.text = T,
+                          freq.text = TRUE,
                           freq.text.cex = 1.2,
                           upper.text = "",
                           upper.text.cex = 1,
@@ -403,7 +520,7 @@ add.balls.fun <- function(x.lim = c(-10, 0),
 
   # Add box
 
-  if(is.null(box.col) == F | is.null(box.bg) == F) {
+  if(is.null(box.col) == FALSE | is.null(box.bg) == FALSE) {
 
     rect(x.lim[1],
          y.lim[1],
@@ -559,7 +676,7 @@ par(mar = c(0, 0, 1, 0))
 plot(1, xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n",
      xlab = "", ylab = "", yaxt = "n", xaxt = "n")
 
-segments(0, .95, 1, .95, col = gray(.2, .5), lwd = .5, lty = 1)
+segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 rect(.33, .8, .67, 1.2, col = "white", border = NA)
 
 text(x = .5, y = .95, main, cex = panel.title.cex)
@@ -568,8 +685,8 @@ text(x = .5, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", 
 n.trueneg <- with(final.stats, cr + fa)
 n.truepos <- with(final.stats, hi + mi)
 
-text(.5, .65, paste("True ", decision.names[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
-text(.5, .65, paste("True ", decision.names[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
+text(.5, .65, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
+text(.5, .65, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
 
 
 #points(.9, .8, pch = 1, cex = 1.2)
@@ -603,12 +720,10 @@ p.rect.ylim <- c(.1, .6)
 # p.signal level
 
 text(x = .8, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[2], ")", sep = ""),
+     labels = paste("p(", decision.labels[2], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-#Outline
-rect(.775, p.rect.ylim[1],
-     .825, p.rect.ylim[2], col = gray(1, .5))
+
 
 #Filling
 rect(.775, p.rect.ylim[1],
@@ -618,7 +733,11 @@ rect(.775, p.rect.ylim[1],
 # Filltop
 segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
          .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-         col = gray(.5, 1))
+         lwd = 1)
+
+#Outline
+rect(.775, p.rect.ylim[1],
+     .825, p.rect.ylim[2], lwd = 1)
 
 if(signal.p < .0001) {signal.p.text <- "<1%"} else {
 
@@ -634,11 +753,12 @@ text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
 #p.noise level
 
 text(x = .2, y = p.rect.ylim[2],
-     labels = paste("p(", decision.names[1], ")", sep = ""),
+     labels = paste("p(", decision.labels[1], ")", sep = ""),
      pos = 3, cex = 1.2)
 
-rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
-     col = gray(1, .5))
+
+
+
 
 rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
      col = gray(.5, .25), border = NA)
@@ -646,7 +766,11 @@ rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
 # Filltop
 segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
          .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-         col = gray(.5, 1))
+         lwd = 1)
+
+# outline
+rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
+     lwd = 1)
 
 if(noise.p < .0001) {noise.p.text <- "<0.01%"} else {
 
@@ -677,7 +801,7 @@ par(mar = c(0, 0, 0, 0))
 
 if(stats == FALSE) {
 
-  par(mar = c(5, 4, 4, 1) +  .1)
+  par(mar = c(3, 3, 3, 3) +  .1)
 
 
   }
@@ -700,18 +824,19 @@ par(xpd = TRUE)
 
 if(stats == TRUE) {
 
-segments(-plot.width, 0, - plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
-segments(plot.width, 0, plot.width * .3, 0, col = gray(.2, .5), lwd = .5, lty = 1)
+segments(-plot.width, 0, - plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+segments(plot.width, 0, plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 
 text(x = 0, y = 0,
-     paste("Tree #", tree, " (of ", n.trees, ")", sep = ""),
+     paste("FFT #", tree, " (of ", n.trees, ")", sep = ""),
      cex = panel.title.cex)
 
 }
 
 if(stats == FALSE) {
 
-if(main == "Data") {main <- ""}
+if(main %in% c("Data (Testing)", "Data (Training)")) {main <- ""}
+
   mtext(text = main, side = 3, cex = 2)
 
 
@@ -737,21 +862,21 @@ if(stats == TRUE) {
 
   text(c(- plot.width * .7, - plot.width * .5),
        c(-plot.height * .125, -plot.height * .125),
-       labels = c("Correct Rejection", "Miss"),
-       pos = c(1, 1), offset = 1)
+       labels = c("Correct\nRejection", "Miss"),
+       pos = c(2, 4), offset = 1)
 
 
   # Noise Panel
 
   text(- plot.width * .6, -plot.height * .05,
-       paste("Decide ", decision.names[1], sep = ""),
+       paste("Decide ", decision.labels[1], sep = ""),
        cex = 1.2, font = 3
   )
 
 
   # Signal panel
   text(plot.width * .6, -plot.height * .05,
-       paste("Decide ", decision.names[2], sep = ""),
+       paste("Decide ", decision.labels[2], sep = ""),
        cex = 1.2, font = 3
   )
 
@@ -766,8 +891,8 @@ if(stats == TRUE) {
 
   text(c(plot.width * .5, plot.width * .7),
        c(-plot.height * .125, -plot.height * .125),
-       labels = c("False Alarm", "Hit"),
-       pos = c(1, 1), offset = 1)
+       labels = c("False\nAlarm", "Hit"),
+       pos = c(2, 4), offset = 1)
 
   }
 
@@ -847,10 +972,14 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   # Decision text
 
+  if(decision.cex > 0) {
+
   text(x = subplot.center[1] - 2 - arrow.length * .7,
        y = subplot.center[2] - 2.2,
-       labels = paste0("'", decision.names[1], "'"),
-       pos = 1, font = 3)
+       labels = decision.labels[1],
+       pos = 1, font = 3, cex = decision.cex)
+
+  }
 
 
   if(ball.loc == "fixed") {
@@ -880,7 +1009,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
                   #  bg.vec = c(noise.ball.bg, signal.ball.bg),
                   bg.vec = c(correct.bg, error.bg),
                   col.vec = c(correct.border, error.border),
-                  freq.text = T,
+                  freq.text = TRUE,
                   n.per.icon = n.per.icon,
                   ball.cex = ball.cex
     )
@@ -908,7 +1037,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   text(x = subplot.center[1] - 2,
        y = subplot.center[2] - 2,
-       labels =  substr(decision.names[1], 1, 1)
+       labels =  substr(decision.labels[1], 1, 1)
   )
 
 }
@@ -973,10 +1102,14 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   # Decision text
 
+  if(decision.cex > 0) {
+
   text(x = subplot.center[1] + 2 + arrow.length * .7,
        y = subplot.center[2] - 2.2,
-       labels = paste0("'", decision.names[2], "'"),
-       pos = 1, font = 3)
+       labels = decision.labels[2],
+       pos = 1, font = 3, cex = decision.cex)
+
+  }
 
 
   if(ball.loc == "fixed") {
@@ -1006,7 +1139,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
                   #      bg.vec = c(noise.ball.bg, signal.ball.bg),
                   bg.vec = c(error.bg, correct.bg),
                   col.vec = c(error.border, correct.border),
-                  freq.text = T,
+                  freq.text = TRUE,
                   n.per.icon = n.per.icon,
                   ball.cex = ball.cex
     )
@@ -1036,7 +1169,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   text(x = subplot.center[1] + 2,
        y = subplot.center[2] - 2,
-       labels = substr(decision.names[2], 1, 1)
+       labels = substr(decision.labels[2], 1, 1)
   )
 
 
@@ -1110,18 +1243,6 @@ fft.auc <- auc(tree.stats$sens, tree.stats$spec)
 fft.sens.vec <- tree.stats$sens
 fft.spec.vec <- tree.stats$spec
 
-if(comp == TRUE) {
-
-lr.sens <- lr.stats$sens
-lr.spec <- lr.stats$spec
-cart.sens <- cart.stats$sens
-cart.spec <- cart.stats$spec
-rf.sens <- rf.stats$sens
-rf.spec <- rf.stats$spec
-svm.sens <- svm.stats$sens
-svm.spec <- svm.stats$spec
-
-}
 
 # General plotting space
 {
@@ -1142,19 +1263,19 @@ plot(1, xlim = c(0, 1), ylim = c(0, 1),
      yaxt = "n", xaxt = "n")
 
 par(xpd = T)
-segments(0, 1.1, 1, 1.1, col = gray(.2, .5), lwd = .5, lty = 1)
+segments(0, 1.1, 1, 1.1, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 rect(.25, 1, .75, 1.2, col = "white", border = NA)
 
-if(data == "train") {title.text <- "Performance (Fitting)"}
-if(data == "test") {title.text <- "Performance (Prediction)"}
+if(data == "train") {title.text <- "Performance (Training)"}
+if(data == "test") {title.text <- "Performance (Testing)"}
 
 text(.5, 1.1, title.text, cex = panel.title.cex)
-par(xpd = F)
+par(xpd = FALSE)
 
 }
 
 
-pretty.dec <- function(x) {return(paste(round(x, 2) * 100, "%", sep = ""))}
+pretty.dec <- function(x) {return(paste(round(x, 2) * 100, sep = ""))}
 
 level.max.height <- .65
 level.width <- .05
@@ -1163,16 +1284,19 @@ level.center.y <- .45
 level.bottom <- level.center.y - level.max.height / 2
 level.top <- level.center.y + level.max.height / 2
 
+
 lloc <- data.frame(
-  element = c("classtable", "pci", "sens", "spec", "acc", "bacc", "auc", "roc"),
-  long.name = c("Classification Table", "pci", "sens", "spec", "acc", "bacc", "AUC", "ROC"),
+  element = c("classtable", "mcu", "pci", "sens", "spec", "acc", "wacc", "roc"),
+  long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", "wacc", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 6), .85),
   center.y = rep(level.center.y, 8),
   width =    c(.2, rep(level.width, 6), .2),
   height =   c(.65, rep(level.max.height, 6), .65),
-  value = c(NA, final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, fft.auc, NA),
-  value.name = c(NA, pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
-                 pretty.dec(final.stats$bacc), pretty.dec(fft.auc), NA
+  value = c(NA,
+            abs(final.stats$mcu - 5) / (abs(1 - 5)),
+            final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$wacc, NA),
+  value.name = c(NA, round(final.stats$mcu, 1), pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
+                 pretty.dec(final.stats$wacc), NA
   )
 )
 
@@ -1184,11 +1308,12 @@ lloc <- data.frame(
   final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
 
   rect(final.classtable.x.loc[1], final.classtable.y.loc[1],
-       final.classtable.x.loc[2], final.classtable.y.loc[2]
+       final.classtable.x.loc[2], final.classtable.y.loc[2],
+       lwd = classtable.lwd
   )
 
-  segments(mean(final.classtable.x.loc), final.classtable.y.loc[1], mean(final.classtable.x.loc), final.classtable.y.loc[2], col = gray(.5))
-  segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(.5))
+  segments(mean(final.classtable.x.loc), final.classtable.y.loc[1], mean(final.classtable.x.loc), final.classtable.y.loc[2], col = gray(0), lwd = classtable.lwd)
+  segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(0), lwd = classtable.lwd)
 
 
   # Column titles
@@ -1199,21 +1324,21 @@ lloc <- data.frame(
 
   text(x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-       decision.names[2])
+       decision.labels[2])
 
   text(x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-       decision.names[1])
+       decision.labels[1])
 
 # Row titles
 
   text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[2], adj = 1)
+       decision.labels[2], adj = 1)
 
   text(x = final.classtable.x.loc[1] - .01,
        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
-       decision.names[1], adj = 1)
+       decision.labels[1], adj = 1)
 
 
   text(x = final.classtable.x.loc[1] - .065,
@@ -1287,6 +1412,8 @@ lloc <- data.frame(
 # Levels
 {
 
+if(level.type %in% c("line", "bar")) {
+
 # Color function (taken from colorRamp2 function in circlize package)
 col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .1)
 
@@ -1296,7 +1423,8 @@ add.level.fun <- function(name,
                           max.val = 1,
                           min.val = 0,
                           ok.val = .5,
-                          bottom.text = "") {
+                          bottom.text = "",
+                          level.type = "line") {
 
 rect.center.x <- lloc$center.x[lloc$element == name]
 rect.center.y <- lloc$center.y[lloc$element == name]
@@ -1347,6 +1475,8 @@ value.col <- gray(1, .25)
 
 #plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
+if(level.type == "bar") {
+
 rect(rect.left.x,
      rect.bottom.y,
      rect.right.x,
@@ -1357,22 +1487,61 @@ rect(rect.left.x,
      border = "black"
 )
 
-# Add level border
 
-# rect(rect.left.x,
-#      rect.bottom.y,
-#      rect.right.x,
-#      rect.top.y,
-#      border = gray(.5, .5))
+  text.outline(x = rect.center.x,
+               y = value.height,
+               labels = lloc$value.name[lloc$element == name],
+               cex = 1.5, r = .008, pos = 3
+  )
 
 
-# Add value text
 
-text.outline(x = rect.center.x,
-             y = value.height,
-             labels = lloc$value.name[lloc$element == name],
-             pos = 3, cex = 1.5, r = .008
-)
+  # Add level border
+
+  # rect(rect.left.x,
+  #      rect.bottom.y,
+  #      rect.right.x,
+  #      rect.top.y,
+  #      border = gray(.5, .5))
+
+
+}
+
+
+if(level.type == "line") {
+
+
+  # Stem
+  segments(rect.center.x,
+           rect.bottom.y,
+           rect.center.x,
+           value.height,
+           lty = 3)
+
+  # Horizontal platform
+  platform.width <- .02
+
+  segments(rect.center.x - platform.width,
+           value.height,
+           rect.center.x + platform.width,
+           value.height)
+
+
+  # Text label
+  text.outline(x = rect.center.x,
+               y = value.height,
+               labels = lloc$value.name[lloc$element == name],
+               cex = 1.5, r = 0, pos = 3
+  )
+
+  # points(rect.center.x,
+  #        value.height,
+  #        cex = 5.5,
+  #        pch = 21,
+  #        bg = "white",
+  #        col = "black", lwd = .5)
+
+}
 
 
 # Add subtext
@@ -1395,48 +1564,68 @@ text(x = rect.center.x,
 
 paste(final.stats$cr, "/", 1, collapse = "")
 
-# Add 100% reference line
+#Add 100% reference line
 
-segments(x0 = lloc$center.x[lloc$element == "sens"] - lloc$width[lloc$element == "sens"] * .8,
-         y0 = level.top,
-         x1 = lloc$center.x[lloc$element == "auc"] + lloc$width[lloc$element == "auc"] * .8,
-         y1 = level.top,
-         lty = 3, lwd = .75)
-
-add.level.fun("pci", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
-
-text(lloc$center.x[lloc$element == "pci"],
-     lloc$center.y[lloc$element == "pci"],
-     labels = paste0("mcu\n", round(mcu, 2)))
+# segments(x0 = lloc$center.x[lloc$element == "mcu"] - lloc$width[lloc$element == "mcu"] * .8,
+#          y0 = level.top,
+#          x1 = lloc$center.x[lloc$element == "wacc"] + lloc$width[lloc$element == "wacc"] * .8,
+#          y1 = level.top,
+#          lty = 3, lwd = .75)
 
 
-add.level.fun("spec", ok.val = .75) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
-add.level.fun("sens", ok.val = .75) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+add.level.fun("mcu",
+              ok.val = .75,
+              max.val = 1,
+              min.val = 0,
+              level.type = level.type) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+
+add.level.fun("pci", ok.val = .75, level.type = level.type) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+# text(lloc$center.x[lloc$element == "pci"],
+#      lloc$center.y[lloc$element == "pci"],
+#      labels = paste0("mcu\n", round(mcu, 2)))
+
+
+add.level.fun("spec", ok.val = .75, level.type = level.type) #, sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+add.level.fun("sens", ok.val = .75, level.type = level.type) #, sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
 # Min acc
 
 min.acc <- max(crit.br, 1 - crit.br)
 
-add.level.fun("acc", min.val = 0, ok.val = .5) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+add.level.fun("acc", min.val = 0, ok.val = .5, level.type = level.type) #, sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
-# Add baseline to pc level
+# Add baseline to acc level
 
-segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
-         y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-         x1 = lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2,
-         y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-         lty = 1)
+ segments(x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
+          y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+          x1 = lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2,
+          y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+          lty = 3)
 
-text(x = lloc$center.x[lloc$element == "acc"],
-     y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
-     labels = "BL", pos = 1)
+ text(x = lloc$center.x[lloc$element == "acc"],
+      y =(lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) +  lloc$height[lloc$element == "acc"] * min.acc,
+      labels = "BL", pos = 1)
 
     #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
 
 
 
-add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5)
-add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
+add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
+
+# baseline
+
+# segments(x0 = mean(lloc$center.x[2]),
+#          y0 = lloc$center.y[1] - lloc$height[1] / 2,
+#          x1 = mean(lloc$center.x[7]),
+#          y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
+#          lwd = .5,
+#          col = gray(0))
+
+}
+
+
 }
 
 # MiniROC
@@ -1450,29 +1639,29 @@ add.level.fun("auc", min.val = .5, max.val = 1, ok.val = .7)
   final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2,lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
 
 # Plot bg
-
-rect(final.roc.x.loc[1],
-     final.roc.y.loc[1],
-     final.roc.x.loc[2],
-     final.roc.y.loc[2],
-     col = gray(1))
+#
+# rect(final.roc.x.loc[1],
+#      final.roc.y.loc[1],
+#      final.roc.x.loc[2],
+#      final.roc.y.loc[2],
+#      col = gray(1), lwd = .5)
 
   # Gridlines
-# Horizontal
- segments(x0 = rep(final.roc.x.loc[1], 9),
-          y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-          x1 = rep(final.roc.x.loc[2], 9),
-          y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-          lty = 1, col = gray(.8), lwd = c(.5), lend = 3
-          )
-
- # Vertical
- segments(y0 = rep(final.roc.y.loc[1], 9),
-          x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-          y1 = rep(final.roc.y.loc[2], 9),
-          x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-          lty = 1, col = gray(.8), lwd = c(.5), lend = 3
- )
+# # Horizontal
+#  segments(x0 = rep(final.roc.x.loc[1], 9),
+#           y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+#           x1 = rep(final.roc.x.loc[2], 9),
+#           y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+#           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
+#           )
+#
+#  # Vertical
+#  segments(y0 = rep(final.roc.y.loc[1], 9),
+#           x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+#           y1 = rep(final.roc.y.loc[2], 9),
+#           x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+#           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
+#  )
 
  # Plot border
 
@@ -1480,7 +1669,8 @@ rect(final.roc.x.loc[1],
       final.roc.y.loc[1],
       final.roc.x.loc[2],
       final.roc.y.loc[2],
-      border = gray(.5))
+      border = roc.border.col,
+      lwd = roc.lwd)
 
 
   # Axis labels
@@ -1510,8 +1700,25 @@ rect(final.roc.x.loc[1],
   if(comp == TRUE) {
 
   # CART
+if(is.null(x$comp$cart$stats) == FALSE) {
 
-  points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
+if(data == "train") {
+
+  cart.spec <- x$comp$cart$stats$spec.train
+  cart.sens <- x$comp$cart$stats$sens.train
+
+}
+
+if(data == "test") {
+
+  cart.spec <- x$comp$cart$stats$spec.test
+  cart.sens <- x$comp$cart$stats$sens.test
+
+}
+
+
+
+points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 1.75,
          col = transparent("red", .1),
@@ -1540,7 +1747,24 @@ labels = "  CART", adj = 0, cex = .9)
 par("xpd" = TRUE)
 
 
+}
 ## LR
+
+if(is.null(lr.stats) == FALSE) {
+
+  if(data == "train") {
+
+    lr.spec <- x$comp$lr$stats$spec.train
+    lr.sens <- x$comp$lr$stats$sens.train
+
+  }
+
+  if(data == "test") {
+
+    lr.spec <- x$comp$lr$stats$spec.test
+    lr.sens <- x$comp$lr$stats$sens.test
+
+  }
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
@@ -1570,8 +1794,25 @@ text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
 
 par("xpd" = T)
 
+}
 
 ## rf
+
+if(is.null(rf.stats) == FALSE) {
+
+  if(data == "train") {
+
+    rf.spec <- x$comp$rf$stats$spec.train
+    rf.sens <- x$comp$rf$stats$sens.train
+
+  }
+
+  if(data == "test") {
+
+    rf.spec <- x$comp$rf$stats$spec.test
+    rf.sens <- x$comp$rf$stats$sens.test
+
+  }
 
 points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
@@ -1601,9 +1842,24 @@ text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
 
 par("xpd" = T)
 
-
+}
 
 ## svm
+    if(is.null(svm.stats) == FALSE) {
+
+if(data == "train") {
+
+  svm.spec <- x$comp$svm$stats$spec.train
+  svm.sens <- x$comp$svm$stats$sens.train
+
+}
+
+if(data == "test") {
+
+  svm.spec <- x$comp$svm$stats$spec.test
+  svm.sens <- x$comp$svm$stats$sens.test
+
+}
 
 points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
@@ -1633,6 +1889,7 @@ text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
 
 par("xpd" = T)
 
+}
 
   }
 
@@ -1652,8 +1909,8 @@ par("xpd" = T)
            final.roc.y.loc[1] + c(0, fft.sens.vec.ord) * lloc$height[lloc$element == "roc"],
            final.roc.x.loc[1] + c(1 - fft.spec.vec.ord, 1) * lloc$width[lloc$element == "roc"],
            final.roc.y.loc[1] + c(fft.sens.vec.ord, 1) * lloc$height[lloc$element == "roc"],
-           lwd = 1.5,
-           col = gray(.3))
+           lwd = 1,
+           col = gray(0))
 
   points(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
@@ -1680,7 +1937,12 @@ par("xpd" = T)
 
 
   # Labels
-  if(comp == TRUE) {
+  if(comp == TRUE & any(is.null(x$comp$lr$stats) == FALSE,
+                        is.null(x$comp$cart$stats) == FALSE,
+                        is.null(x$comp$svm$stats) == FALSE,
+                        is.null(x$comp$rf$stats) == FALSE
+                        )) {
+
   par("xpd" = FALSE)
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
