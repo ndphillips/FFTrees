@@ -24,6 +24,7 @@
 #' cancer.fff <- FFForest(formula = diagnosis ~.,
 #'                      data = breastcancer,
 #'                      ntree = 10,
+#'                      train.p = .5,
 #'                      cpus = 1)
 #'}
 #'

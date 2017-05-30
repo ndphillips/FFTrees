@@ -49,6 +49,7 @@ This function is currently in development. The idea is to generate a random fore
 cancer.fff <- FFForest(formula = diagnosis ~.,
                      data = breastcancer,
                      ntree = 10,
+                     train.p = .5,
                      cpus = 1)
 }
 

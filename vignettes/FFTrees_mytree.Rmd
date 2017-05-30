@@ -19,19 +19,19 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400,
 library(FFTrees)
 ```
 
-There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function, either as a sentence using the `my.tree` argument, or as a dataframe using the `tree.definitions` argument.
+There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function, either as a sentence using the `my.tree` argument (the easier way), or as a dataframe using the `tree.definitions` argument (the harder way). Both of these methods will bypass the tree construction algorithms built into `FFTrees`.
 
 ### `my.tree`
 
-The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing an FFT. When this argument is specified in `FFTrees()`, the FFT construction algorithm is bypassed and the algorithm will try to extract the specified FFT from the argument.
+The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. When this argument is specified in `FFTrees()`, the function (specifically `wordstoFFT()` will try to extract the specified FFT from the argument.
 
-For example, let's look at the heart disease dataset:
+For example, let's look at the columns sex, age and thal in the heartdisease data:
 
 ```{r}
-head(heartdisease)
+head(heartdisease[c("sex", "age", "thal")])
 ```
 
-Here's how we could specify an FFT using the cues sex, age, and thal as a sentence:
+Here's how we could specify an FFT using these cues as a sentence:
 
 ```{r, eval = FALSE}
 my.tree = "If sex = 1, predict True.
@@ -43,15 +43,15 @@ Here are some notes on specifying trees manually:
 
 - Each node must start with the word "If" and should in the form: `If CUE DIRECTION THRESHOLD, predict EXIT`.
 - Numeric thresholds shold be specified directly (without brackets).
-- Factor thresholds must be specified within brackets. For factors with sets of values, values within a threshold should be separated by commas.
+- Factor thresholds must be specified within brackets like `sex = [male]`. For factors with sets of values, values within a threshold should be separated by commas like `eyecolor = [blue,brown]`
 - Standard logical comparisons `=`, `!=`, `<`, `>=` (etc.) are valid. For numeric cues, only use `>`, `>=`, `<`, `<=`. For factors, only use `=` and `!=`.
-- Positive exits are indicated by `True`, while negative exits are specified by `False`. The final node will be forced to have a bidirectional exit. The text `Otherwise, predict EXIT` I've included in the example above is actually not necessary`.
+- Positive exits are indicated by `True`, while negative exits are specified by `False`. The final node will be forced to have a bidirectional exit. The text `Otherwise, predict EXIT` I've included in the example above is actually not necessary.
 
 
-Now, let's pass the `my.tree` argument to `FFTrees()`
+Now, let's pass the `my.tree` argument to `FFTrees()` to force apply our FFT to the heartdisease data:
 
 ```{r}
-# Specify an FFt verbally with the my.tree argument
+# Pass a verbally defined FFT to FFTrees with the my.tree argument
 my.heart.fft <- FFTrees(diagnosis ~.,
                         data = heartdisease,
                         my.tree = "If sex = 1, predict True.
@@ -85,6 +85,28 @@ plot(my.heart.fft)
 ```
 
 This one looks much better!
+
+Here's one more example using the `income` data. We'll create an FFT predicting whether a person has an income greater than 50K using the cues age, education, and hours.per.week:
+
+```{r}
+head(income[c("age", "education", "hours.per.week", "income.gt50")])
+```
+
+```{r}
+my.income.tree <- "If age < 35, predict False.
+                   If education = [Doctorate,Masters], predict True.
+                   If hours.per.week < 40, predict False.
+                   Otherwise, predict True"
+
+income.fft <- FFTrees(income.gt50 ~., 
+                      data = income, 
+                      my.tree = my.income.tree,
+                      comp = FALSE)
+
+plot(income.fft)
+```
+
+Wow, that tree also has pretty terrible accuracy. That's what I get for trying to come up with my own intuitive tree..
 
 ### `tree.definitions`
 
