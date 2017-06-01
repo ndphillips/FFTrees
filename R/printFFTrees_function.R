@@ -17,7 +17,7 @@ criterion.name <- paste(x$formula)[2]
 n.trees <- nrow(x$tree.stats$train)
 n.cues.total <- x$data.desc$train$features
 
-if(("tree.max" %in% x) == FALSE) {
+if(("tree.max" %in% names(x)) == FALSE) {
 
 tree <- min(x$tree.stats$train$tree[x$tree.stats$train[[goal]] == max(x$tree.stats$train[[goal]])])[1]
 
@@ -113,7 +113,7 @@ rownames(summary.df) <- c("cases       :n",
                           "specificity :spec")
 
 
-summary.text <- paste(n.trees, " FFTs predicting ", criterion.name, sep = "")
+summary.text <- paste(n.trees, " FFTs created by ", x$params$algorithm, " predicting ", criterion.name, sep = "")
 
 
 params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', sens.w = ", x$params$sens.w, ", max.levels = ", x$params$max.levels)
@@ -132,11 +132,11 @@ if(is.null(test.auc) == FALSE) {
 
 if(goal == "wacc" & x$params$sens.w != .5) {
 
-accuracy.text <- paste("FFT #", tree, " {", train.cues, "} maximizes training wacc (sens.w = ", x$params$sens.w, "):", sep = "")
+accuracy.text <- paste("FFT #", tree, " {", train.cues, "}", sep = "")
 
 } else {
 
-accuracy.text <- paste("FFT #", tree, " {", train.cues, "} maximizes training ", goal, ":", sep = "")
+accuracy.text <- paste("FFT #", tree, " {", train.cues, "}", sep = "")
 
 }
 

@@ -6,11 +6,14 @@
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
+#' @param factor.directions character. A vector of possible directions for factor values. \code{c("=", "!=")} allows both equality and inequality, while \code{"="} only allows for equality.
+#' @param numeric.directions character. A vector of possible directions for numeric values. \code{c(">", "<")} allows only strict inequalities while \code{c("<=", "<", ">=", ">")} is more flexible.
+#' @param considerFALSE logical. Should FALSE logical values be considered as potential thresholds? This is only relevant for very special algorithms.
 #' @param progress logical. Should ongoing diagnostics be printed?
-#' @param cue.rules dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"
+#' @param cue.rules dataframe. An optional df specifying existing cue thresholds, directions, names, and classes
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
-#' @return A dataframe containing best thresholds and marginal classification statistics for each cue
+#' @return A dataframe containing thresholds and marginal classification statistics for each cue
 #' @export
 #' @examples
 #'
@@ -28,20 +31,24 @@ cuerank <- function(formula = NULL,
                     sens.w = .5,
                     numthresh.method = "o",
                     rounding = NULL,
+                    factor.directions = c("=", "!="),
+                    numeric.directions = c(">", "<"),
+                    considerFALSE = TRUE,
                     progress = FALSE,
                     cue.rules = NULL
 
 ) {
 
-#
-#   formula <- diagnosis ~.
-#   data = heartdisease
-#   goal <- "bacc"
-#   numthresh.method = "m"
-#   sens.w = .5
-#   rounding = NULL
-#   progress = FALSE
-#   cue.rules = NULL
+  # formula = formula
+  # data = data.test
+  # goal = "bacc"        # For now, goal must be 'bacc' when ranking cues
+  # rounding = rounding
+  # progress = FALSE
+  # cue.rules = cue.accuracies.train
+  # sens.w = sens.w
+  # numthresh.method = numthresh.method
+
+
 
 # GLOBAL VARIABLES (could be updated later)
 max.numcat <- 20        # Maximum number of numeric thresholds to consider
@@ -61,10 +68,11 @@ criterion.v <- data.mf[,1]
 cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
 n.cues <- ncol(cue.df)
 
+# Names of accuracy measures
+accuracy.names <- names(classtable(c(1, 0, 1), c(1, 1, 0)))
 
 # Convert unordered factors to character, and ordered factors to integer
 for(i in 1:n.cues) {
-
 
 
   if(setequal(class(cue.df[,i]),c("ordered", "factor"))) {
@@ -97,13 +105,15 @@ if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == FAL
 }
 }
 
-
 if(progress) {pb <- progress::progress_bar$new(total = n.cues, clear = FALSE, show_after = .5)}
 
 
-# Loop over cues
-for(cue.i in 1:n.cues) {
+if(is.null(cue.rules) == FALSE) {cuesToLoop <- nrow(cue.rules)} else {cuesToLoop <- n.cues}
 
+# Loop over cues
+for(cue.i in 1:cuesToLoop) {
+
+# Progress update
   if(progress) {
 
     pb$tick()
@@ -112,22 +122,29 @@ for(cue.i in 1:n.cues) {
   }
 
 
-  # Get main information about current cue
-  cue <- names(cue.df)[cue.i]
-  class <- class(cue.df[,cue.i])
-  cue.v <- unlist(cue.df[,cue.i])
+if(is.null(cue.rules)) {
 
-  # Step 0: Determine possible cue levels
+# Get main information about current cue
+cue <- names(cue.df)[cue.i]
+class <- class(cue.df[,cue.i])
+cue.v <- unlist(cue.df[,cue.i])
+
+} else {
+
+cue <- cue.rules$cue[cue.i]
+class <- cue.rules$class[cue.i]
+cue.v <- unlist(cue.df[cue])
+
+}
+
+
+  # Step 0: Determine possible cue levels [cue.levels]
+ {
+
+if(is.null(cue.rules)) {
 
   # Numeric and integer cues
   if(substr(class, 1, 1) %in% c("n", "i")) {
-
-    # If cue.cules exists, then get the cue.levels from the dataframe
-    if(is.null(cue.rules) == FALSE) {
-
-      cue.levels <- as.numeric(cue.rules$threshold[cue.rules$cue == cue])
-
-    }
 
     # "optimize" method
     if(numthresh.method == "o" & is.null(cue.rules)) {
@@ -168,42 +185,63 @@ for(cue.i in 1:n.cues) {
   # Non-numeric and integer cues
   if((substr(class, 1, 1) %in% c("n", "i")) == FALSE) {
 
-    if(is.null(cue.rules) == FALSE) {
-
-      cue.levels <- cue.rules$threshold[cue.rules$cue == cue]
-
-    }
 
     # Use all unique cue values
     if(is.null(cue.rules)) {
 
+      if(is.logical(unique(unlist(cue.v))) & considerFALSE == FALSE) {
+
+        cue.levels <- TRUE
+
+      } else {
+
       cue.levels <- sort(unique(unlist(cue.v)))
+
+      }
 
     }
 
   }
 
-  cue.n <- length(cue.levels)
+}
+if(is.null(cue.rules) == FALSE) {
 
-  # Names of accuracy measures
-  accuracy.names <- names(classtable(c(1, 0, 1), c(1, 1, 0)))
+  cue.levels <- cue.rules$threshold[cue.i]
+  if(grepl(",", cue.levels)) {cue.levels <- unlist(strsplit(cue.levels, ","))}
 
-  # Step 1A: Determine best direction and threshold for all cues
+}
+
+}
+
+  # Step 1A: Determine possible directions [direction.vec]
+  {
+  if(is.null(cue.rules)) {
+
+    if(substr(class, 1, 1) %in% c("n", "i")) {
+
+      direction.vec <- numeric.directions
+
+    }
+
+    if(substr(class, 1, 1) %in% c("f", "c", "l")) {
+
+      direction.vec <- factor.directions
+
+    }
+
+  }
+
+  if(is.null(cue.rules) == FALSE) {
+
+    direction.vec <- cue.rules$direction[cue.i]
+
+  }
+  }
+
+  # Step 1A: Determine best direction and threshold for cue
 
   # factor, character, and logical
   if(substr(class, 1, 1) %in% c("f", "c", "l")) {
-
-    if(is.null(cue.rules)) {
-
-    direction.vec <- c("=", "!=")
-
-    }
-
-    if(is.null(cue.rules) == FALSE) {
-
-    direction.vec <- cue.rules$direction[cue.rules$cue == cue]
-
-    }
 
     for(direction.i in direction.vec) {
 
@@ -294,20 +332,7 @@ for(cue.i in 1:n.cues) {
   # Numeric, integer
   if(substr(class, 1, 1) %in% c("n", "i")) {
 
-    if(is.null(cue.rules)) {
-
-    direction.vec <- c("<", ">")
-
-    }
-
-    if(is.null(cue.rules) == FALSE) {
-
-    direction.vec <- cue.rules$direction[cue.rules$cue == cue]
-
-    }
-
-
-    cue.stats <- as.data.frame(matrix(NA, nrow = cue.n, ncol = 4))
+    cue.stats <- as.data.frame(matrix(NA, nrow = length(cue.levels), ncol = 4))
 
     names(cue.stats) <- c("cue",
                           "class",

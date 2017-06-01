@@ -5,8 +5,9 @@
 \title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
 cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
-  numthresh.method = "o", rounding = NULL, progress = FALSE,
-  cue.rules = NULL)
+  numthresh.method = "o", rounding = NULL, factor.directions = c("=",
+  "!="), numeric.directions = c(">", "<"), considerFALSE = TRUE,
+  progress = FALSE, cue.rules = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -21,12 +22,18 @@ cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
 
 \item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 
+\item{factor.directions}{character. A vector of possible directions for factor values. \code{c("=", "!=")} allows both equality and inequality, while \code{"="} only allows for equality.}
+
+\item{numeric.directions}{character. A vector of possible directions for numeric values. \code{c(">", "<")} allows only strict inequalities while \code{c("<=", "<", ">=", ">")} is more flexible.}
+
+\item{considerFALSE}{logical. Should FALSE logical values be considered as potential thresholds? This is only relevant for very special algorithms.}
+
 \item{progress}{logical. Should ongoing diagnostics be printed?}
 
-\item{cue.rules}{dataframe. An optional df specifying how to make decisions for each cue. Must contain columns "cue", "class", "threshold" and "direction"}
+\item{cue.rules}{dataframe. An optional df specifying existing cue thresholds, directions, names, and classes}
 }
 \value{
-A dataframe containing best thresholds and marginal classification statistics for each cue
+A dataframe containing thresholds and marginal classification statistics for each cue
 }
 \description{
 Calculates thresholds that maximize a statistic (goal) for cues.

@@ -1,4 +1,4 @@
-#' Applies a fast and frugal tree to a dataset.
+#' Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics
 #'
 #' @param formula A formula
 #' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
@@ -6,14 +6,6 @@
 #' @param sens.w numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.
 #' @return A list of length 4 containing
 #' @export
-#' @examples
-#'
-#'
-#'   tree.definitions <- data.frame("tree" = 1,
-#'                                  "cues" = "sex;age",
-#'                                  "thresholds" = "male;adult",
-#'                                  "directions" = "=;="
-#'                                  )
 #'
 #'
 
@@ -23,10 +15,11 @@ apply.tree <- function(data,
                        sens.w = .5
 ) {
 #
-#   data = data.train
-#   formula = formula
-#   tree.definitions = tree.definitions
-#   sens.w = sens.w
+#
+  # data = data
+  # formula = formula
+  # tree.definitions = tree.definitions
+  # sens.w = sens.w
 
 
   criterion.v <- model.frame(formula = formula,

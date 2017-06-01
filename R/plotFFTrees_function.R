@@ -1896,7 +1896,8 @@ par("xpd" = T)
   ## FFT
 {
 
-  roc.order <- 1:n.trees
+  roc.order <- order(fft.spec.vec, decreasing = TRUE)
+ # roc.order <- 1:n.trees
 
   fft.sens.vec.ord <- fft.sens.vec[roc.order]
   fft.spec.vec.ord <- fft.spec.vec[roc.order]

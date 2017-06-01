@@ -2,12 +2,12 @@
 % Please edit documentation in R/growFFTrees_function.R
 \name{grow.FFTrees}
 \alias{grow.FFTrees}
-\title{Grows fast and frugal trees using an algorithm specified by \code{algorithm}.}
+\title{Grows fast-and-frugal trees using an algorithm specified by \code{algorithm}.}
 \usage{
-grow.FFTrees(formula, data, max.levels = 4, algorithm = "m",
-  goal = "bacc", sens.w = 0.5, stopping.rule = "exemplars",
-  stopping.par = 0.1, progress = FALSE, rank.method = NULL,
-  cue.accuracies = NULL, ...)
+grow.FFTrees(formula, data, max.levels = NULL, algorithm = "mfan",
+  goal = "bacc", sens.w = 0.5, numthresh.method = "o",
+  stopping.rule = "exemplars", stopping.par = 0.1, progress = FALSE,
+  rank.method = NULL, cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -16,11 +16,13 @@ grow.FFTrees(formula, data, max.levels = 4, algorithm = "m",
 
 \item{max.levels}{integer. The maximum number of levels in the tree(s)}
 
-\item{algorithm}{character. A string indicating how to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
+\item{algorithm}{character. A string indicating how to rank cues during tree construction. "m" (for mfan) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
+
+\item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 
 \item{stopping.rule}{character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.}
 
@@ -38,7 +40,7 @@ grow.FFTrees(formula, data, max.levels = 4, algorithm = "m",
 A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
 }
 \description{
-Grows fast and frugal trees using an algorithm specified by \code{algorithm}.
+Grows fast-and-frugal trees using an algorithm specified by \code{algorithm}.
 }
 \examples{
 
