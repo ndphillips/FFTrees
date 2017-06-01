@@ -5,7 +5,7 @@
 #' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
-#' @param algorithm character. The algorithm to create FFTs. Can be \code{'mfan'}, \code{'cfan'}, \code{'max'}, or \code{'zigzag'}.
+#' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
@@ -64,7 +64,7 @@
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
-                    algorithm = "mfan",
+                    algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .5,
                     stopping.rule = "exemplars",
@@ -93,7 +93,7 @@ FFTrees <- function(formula = NULL,
   # formula = NULL
   # data = NULL
   # data.test = NULL
-  # algorithm = "mfan"
+  # algorithm = "ifan"
   # max.levels = NULL
   # sens.w = .5
   # stopping.rule = "exemplars"

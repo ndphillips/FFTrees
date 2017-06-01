@@ -5,7 +5,7 @@
 \title{Creates a forest of fast and frugal decision trees}
 \usage{
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
-  ntree = 10, train.p = 0.5, algorithm = "m", goal = "wacc",
+  ntree = 10, train.p = 0.5, algorithm = "mfan", goal = "wacc",
   sens.w = 0.5, verbose = TRUE, cpus = 1, comp = FALSE, do.lr = TRUE,
   do.cart = TRUE, do.rf = TRUE, do.svm = TRUE, rank.method = NULL,
   hr.weight = NULL)

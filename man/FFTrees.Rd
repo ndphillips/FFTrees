@@ -5,7 +5,7 @@
 \title{Creates a fast-and-frugal trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL,
-  algorithm = "mfan", max.levels = NULL, sens.w = 0.5,
+  algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
   stopping.rule = "exemplars", stopping.par = 0.1, goal = "wacc",
   numthresh.method = "o", decision.labels = c("False", "True"),
   train.p = 1, rounding = 2, progress = TRUE, my.tree = NULL,
@@ -20,7 +20,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{data.test}{dataframe. An optional testing dataset with the same structure as data.}
 
-\item{algorithm}{character. The algorithm to create FFTs. Can be \code{'mfan'}, \code{'cfan'}, \code{'max'}, or \code{'zigzag'}.}
+\item{algorithm}{character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.}
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
 

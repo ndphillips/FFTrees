@@ -3,7 +3,7 @@
 #' @param formula formula. A formula
 #' @param data dataframe. A dataset
 #' @param max.levels integer. The maximum number of levels in the tree(s)
-#' @param algorithm character. A string indicating how to rank cues during tree construction. "mfan"  means that cues will only be ranked once with the entire training dataset. "cfan" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
+#' @param algorithm character. A string indicating how to rank cues during tree construction. "ifan"  (independent fan) means that cues will only be ranked once with the entire training dataset "dfan" (dependent fan) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
@@ -19,7 +19,7 @@
 fan.algorithm <- function(formula,
                           data,
                           max.levels = 5,
-                          algorithm = "mfan",
+                          algorithm = "ifan",
                           goal = "bacc",
                           sens.w = .5,
                           numthresh.method = "o",
@@ -164,8 +164,8 @@ cue.accuracies <- cuerank(formula = formula,
 
       # Step 1) Determine cue for current level
 
-      # mfan algorithm
-      if(algorithm == "mfan") {
+      # ifan algorithm
+      if(algorithm == "ifan") {
 
         # Get accuracies of un-used cues
         cue.accuracies.current <- cue.accuracies.original[(cue.accuracies.original$cue %in% level.stats$cue) == FALSE,]
@@ -173,7 +173,7 @@ cue.accuracies <- cuerank(formula = formula,
       }
 
       # Conditional algorithm
-      if(algorithm == "cfan") {
+      if(algorithm == "dfan") {
 
         data.mf.r <- data.mf[remaining.exemplars, ]
 
@@ -322,7 +322,7 @@ cue.accuracies <- cuerank(formula = formula,
         if(stopping.rule == "levels" & current.level == stopping.par) {break}
 
 
-        if(algorithm == "cfan" & sd(criterion.v[remaining.exemplars]) == 0) {break}
+        if(algorithm == "dfan" & sd(criterion.v[remaining.exemplars]) == 0) {break}
 
         # Set up next level stats
         level.stats[current.level + 1,] <- NA

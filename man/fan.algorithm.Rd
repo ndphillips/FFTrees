@@ -4,7 +4,7 @@
 \alias{fan.algorithm}
 \title{Grows fast-and-frugal trees using the fan algorithm}
 \usage{
-fan.algorithm(formula, data, max.levels = 5, algorithm = "mfan",
+fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
   goal = "bacc", sens.w = 0.5, numthresh.method = "o",
   stopping.rule = "exemplars", stopping.par = 0.1, progress = TRUE)
 }
@@ -15,7 +15,7 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "mfan",
 
 \item{max.levels}{integer. The maximum number of levels in the tree(s)}
 
-\item{algorithm}{character. A string indicating how to rank cues during tree construction. "mfan"  means that cues will only be ranked once with the entire training dataset. "cfan" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
+\item{algorithm}{character. A string indicating how to rank cues during tree construction. "ifan"  (independent fan) means that cues will only be ranked once with the entire training dataset "dfan" (dependent fan) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy}
 

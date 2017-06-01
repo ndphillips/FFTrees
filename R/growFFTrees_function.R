@@ -3,7 +3,7 @@
 #' @param formula formula. A formula
 #' @param data dataframe. A dataset
 #' @param max.levels integer. The maximum number of levels in the tree(s)
-#' @param algorithm character. A string indicating how to rank cues during tree construction. "m" (for mfan) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
+#' @param algorithm character. A string indicating how to rank cues during tree construction. "m" (for ifan) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
@@ -42,7 +42,7 @@
 grow.FFTrees <- function(formula,
                          data,
                          max.levels = NULL,
-                         algorithm = "mfan",
+                         algorithm = "ifan",
                          goal = "bacc",
                          sens.w = .5,
                          numthresh.method = "o",
@@ -104,7 +104,7 @@ if(algorithm %in% c("max", "zigzag")) {
 
 }
 
-if(algorithm %in% c("mfan", "cfan")) {
+if(algorithm %in% c("ifan", "dfan")) {
 
   if(is.null(max.levels)) {max.levels <- 4}
 

@@ -35,7 +35,7 @@ FFForest <- function(formula = NULL,
                      max.levels = 5,
                      ntree = 10,
                      train.p = .5,
-                     algorithm = "m",
+                     algorithm = "mfan",
                      goal = "wacc",
                      sens.w = .5,
                      verbose = TRUE,
@@ -52,14 +52,16 @@ FFForest <- function(formula = NULL,
 #
   # formula = diagnosis ~.
   # data = heartdisease
+  # data.test <- NULL
   # max.levels = 5
   # ntree = 10
   # train.p = .5
-  # algorithm = "m"
+  # algorithm = "mfan"
   # goal = "bacc"
-  # sens.weight = .5
+  # sens.w = .5
+  # comp <- FALSE
   # verbose = TRUE
-  # cpus = 4
+  # cpus = 1
   # do.lr = TRUE
   # do.cart = TRUE
   # do.rf = TRUE

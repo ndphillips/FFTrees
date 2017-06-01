@@ -21,15 +21,15 @@ FFTrees currently contains 4 different tree construction algorithms:
 
 | Algorithm| Full Name| Reference
 |:------|:----|:---|
-|     mfan|    Marginal Fan| @phillips2017FFTrees  |
-|     cfan|    Conditional Fan|@phillips2017FFTrees|  
+|     ifan|    Marginal Fan| @phillips2017FFTrees  |
+|     dfan|    Conditional Fan|@phillips2017FFTrees|  
 |     zigzag| Zig-Zag  | @martignon2008categorization|
 |     max| Max  |   @martignon2008categorization |
 
 
-##"mfan"
+##"ifan"
 
-The default algorithm used to create trees `"mfan"` can be summarised in four steps. 
+The default algorithm used to create trees `"ifan"` can be summarised in five steps. 
 
 |     Step| Function|Description |
 |:-----|:----|:----------------------------------------------------|
@@ -39,8 +39,9 @@ The default algorithm used to create trees `"mfan"` can be summarised in four st
      |
 |  3|    `grow.FFTrees()`|Create all possible trees by varying the exit direction (left or right) at each level to a maximum of X levels (default of `max.levels = 4`).     |
 |  4|    `grow.FFTrees()`|Reduce the size of trees by removing (pruning) lower levels containing less than X\% (default of `stopping.par = .10`) of the cases in the original data.|
+|  5|    `grow.FFTrees()`|Select the FFT with the maximum weighed accuracy value as the final tree (`tree.max`)|
 
-Table: 4 Steps in growing FFTs using the mfan algorithm.
+Table: 5 Steps in growing FFTs using the ifan algorithm.
 
 ## Example: Heart Disease
 
@@ -136,9 +137,12 @@ plot(heart.fft,
 ```
 
 
+## `"dfan"`
 
-## `"cfan"`
+The `"dfan"` algorithm is identical to the `"ifan"` algorithm with one (important) exception: In `algorithm = "dfan"`, the thresholds and rankings of cues are recalculated for each level in the FFT conditioned on the exemplars that were *not* classified at higher leves in the tree. For example, in the `heartdisease` data, using `algorithm = "dfan"` would first classify some cases using the `thal` cue at the first level, and would then calculate new accuracies for the remaining cues on the remaining cases that were not yet classified. This algorithm is appropriate for datasets where cue validities systematically differ for different (and predictable) subsets of data. However, because it calculates cue thresholds for increasingly smaller samples of data as the tree grows, it is also, potentially, more prone to overfitting compared to `algorithm = "ifan"`
 
-The `"cfan"` algorithm is identical to the `"mfan"` algorithm with one (important) exception: In `algorithm = "cfan"`, the thresholds and rankings of cues are recalculated for each level in the FFT conditioned on the exemplars that were *not* classified at higher leves in the tree. For example, in the `heartdisease` data, using `algorithm = "cfan"` would first classify some cases using the `thal` cue at the first level, and would then calculate new accuracies for the remaining cues on the remaining cases that were not yet classified. This algorithm is appropriate for datasets where cue validities systematically differ for different (and predictable) subsets of data. However, because it calculates cue thresholds for increasingly smaller samples of data as the tree grows, it is also, potentially, more prone to overfitting compared to `algorithm = "mfan"`
+## `"max"`, `"zigzag"`
+
+The max and zigzag algorithms are described in @martignon2008categorization.
 
 ### References

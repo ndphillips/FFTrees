@@ -2,7 +2,7 @@
 % Please edit documentation in R/applytree_function.R
 \name{apply.tree}
 \alias{apply.tree}
-\title{Applies a fast and frugal tree to a dataset.}
+\title{Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics}
 \usage{
 apply.tree(data, formula, tree.definitions, sens.w = 0.5)
 }
@@ -19,16 +19,5 @@ apply.tree(data, formula, tree.definitions, sens.w = 0.5)
 A list of length 4 containing
 }
 \description{
-Applies a fast and frugal tree to a dataset.
-}
-\examples{
-
-
-  tree.definitions <- data.frame("tree" = 1,
-                                 "cues" = "sex;age",
-                                 "thresholds" = "male;adult",
-                                 "directions" = "=;="
-                                 )
-
-
+Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics
 }
