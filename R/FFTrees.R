@@ -93,7 +93,7 @@ FFTrees <- function(formula = NULL,
   # formula = NULL
   # data = NULL
   # data.test = NULL
-  # algorithm = "ifan"
+  # algorithm = "max"
   # max.levels = NULL
   # sens.w = .5
   # stopping.rule = "exemplars"
@@ -118,10 +118,9 @@ FFTrees <- function(formula = NULL,
   # verbose = NULL
   #
   #
-  # formula <- crit ~.
-  # data = creditapproval
-  # train.p <- .25
-  # algorithm <- "zigzag"
+  # formula = criterion ~.
+  # data = credit
+  # algorithm = "max"
 
 # Input validation
 {

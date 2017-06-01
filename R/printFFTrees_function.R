@@ -113,7 +113,8 @@ rownames(summary.df) <- c("cases       :n",
                           "specificity :spec")
 
 
-summary.text <- paste(n.trees, " FFTs created by ", x$params$algorithm, " predicting ", criterion.name, sep = "")
+if(n.trees == 1) {summary.text <- paste(x$params$algorithm, " FFT predicting ", criterion.name, sep = "")}
+if(n.trees > 1) {summary.text <- paste(n.trees, " ", x$params$algorithm, " FFTs predicting ", criterion.name, sep = "")}
 
 
 params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', sens.w = ", x$params$sens.w, ", max.levels = ", x$params$max.levels)

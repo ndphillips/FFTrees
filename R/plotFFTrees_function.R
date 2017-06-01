@@ -354,7 +354,7 @@ if(is.null(cue.cex)) {
 
 if(is.null(threshold.cex)) {
 
-  threshold.cex <- c(1.5, 1.5, 1.25, 1, .75, .5)
+  threshold.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
 
 } else {
 
@@ -373,8 +373,8 @@ if(stats == TRUE) {
 
 plotting.parameters.df <- data.frame(
   n.levels = 1:6,
-  plot.height = c(10, 12, 15, 19, 23, 25),
-  plot.width = c(14, 16, 20, 24, 28, 32),
+  plot.height = c(10, 12, 15, 19, 23, 27),
+  plot.width = c(14, 16, 20, 24, 28, 34),
   label.box.text.cex = cue.cex,
   break.label.cex = threshold.cex
 )
@@ -902,7 +902,7 @@ subplot.center <- c(0, -4)
 
 # Loop over levels
 
-for(level.i in 1:n.levels) {
+for(level.i in 1:min(c(n.levels, 6))) {
 
 current.cue <- paste(level.stats$cue[level.i])
 
@@ -1062,11 +1062,21 @@ if(level.stats$exit[level.i] %in% c(1) | paste(level.stats$exit[level.i]) %in% c
        border = "black"
   )
 
-  text(x = subplot.center[1] - 2,
-       y = subplot.center[2] - 2,
-       labels = level.stats$level.name.t[level.i + 1],
-       cex = label.box.text.cex
-  )
+  if(level.i < 6) {text(x = subplot.center[1] - 2,
+                        y = subplot.center[2] - 2,
+                        labels = level.stats$level.name.t[level.i + 1],
+                        cex = label.box.text.cex
+  )} else {
+
+    text(x = subplot.center[1] - 2,
+         y = subplot.center[2] - 2,
+         labels = paste0("+ ", n.levels - 6, " More"),
+         cex = label.box.text.cex,
+         font = 3
+    )
+  }
+
+
 
 }
 
@@ -1189,19 +1199,39 @@ if(level.stats$exit[level.i] %in% 0 | paste(level.stats$exit[level.i]) %in% c("0
   )
 
 
-  rect(subplot.center[1] + 2 - label.box.width / 2,
-       subplot.center[2] - 2 - label.box.height / 2,
-       subplot.center[1] + 2 + label.box.width / 2,
-       subplot.center[2] - 2 + label.box.height / 2,
-       col = "white",
-       border = "black"
-  )
+  if(level.i < 6) {
 
-  text(x = subplot.center[1] + 2,
-       y = subplot.center[2] - 2,
-       labels = level.stats$level.name.t[level.i + 1],
-       cex = label.box.text.cex
-  )
+    rect(subplot.center[1] + 2 - label.box.width / 2,
+         subplot.center[2] - 2 - label.box.height / 2,
+         subplot.center[1] + 2 + label.box.width / 2,
+         subplot.center[2] - 2 + label.box.height / 2,
+         col = "white",
+         border = "black")
+
+    text(x = subplot.center[1] + 2,
+         y = subplot.center[2] - 2,
+         labels = level.stats$level.name.t[level.i + 1],
+         cex = label.box.text.cex)
+
+
+  } else {
+
+    rect(subplot.center[1] + 2 - label.box.width / 2,
+         subplot.center[2] - 2 - label.box.height / 2,
+         subplot.center[1] + 2 + label.box.width / 2,
+         subplot.center[2] - 2 + label.box.height / 2,
+         col = "white",
+         border = "black", lty  = 2)
+
+
+    text(x = subplot.center[1] + 2,
+         y = subplot.center[2] - 2,
+         labels = paste0("+ ", n.levels - 6, " More"),
+         cex = label.box.text.cex,
+         font = 3
+    )
+  }
+
 
 
 }
