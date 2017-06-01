@@ -125,11 +125,11 @@ The `tree.definitions` dataframe contains definitions (cues, classes, exits, thr
 heart.fft$tree.definitions
 ```
 
-To understand how to read these definitions, let's start by understanding tree #4:
+To understand how to read these definitions, let's start by understanding tree `r heart.fft$tree.max`, the tree with the highest training weighted accuracy (also called `tree.max`:
 
 ```{r}
-# Print the definitions of tree 4
-heart.fft$tree.definitions[4,]
+# Print the definitions of tree.max
+heart.fft$tree.definitions[heart.fft$tree.max,]
 ```
 
 Separate levels in tree definitions are separated by colons `;`. For example, tree 4 has 3 cues in the order `thal`, `cp`, `ca`. The classes of the cues are `c` (character), `c` and `n` (numeric). The decision exits for the cues are 1 (positive), 0 (negative), and 0.5 (both positive and negative). This means that the first cue only makes positive decisions, the second cue only makes negative decisions, and the third cue makes *both* positive and negative decisions.

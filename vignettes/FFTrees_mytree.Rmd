@@ -36,7 +36,7 @@ Here's how we could specify an FFT using these cues as a sentence:
 ```{r, eval = FALSE}
 my.tree = "If sex = 1, predict True.
            If age < 45, predict False. 
-           If thal = [fd, normal], predict True. Otherwise, predict False"`
+           If thal = [fd, normal], predict True. Otherwise, predict False"
 ```
 
 Here are some notes on specifying trees manually:
@@ -111,7 +111,8 @@ Wow, that tree also has pretty terrible accuracy. That's what I get for trying t
 ### `tree.definitions`
 
 ```{r, echo = FALSE}
-heart.fft <- FFTrees::FFTrees(diagnosis ~., data = heartdisease)
+heart.fft <- FFTrees(diagnosis ~., 
+                     data = heartdisease)
 ```
 
 The second way to define one (or more) fast-and-frugal trees is with the `tree.definitions` argument. This argument should be a dataframe with the following structure:
@@ -137,7 +138,7 @@ On can see examples of `tree.definitions` dataframes in an `FFTrees` object. For
 
 ```{r}
 # Create an FFTrees object
-heart.fft <- FFTrees::FFTrees(diagnosis ~., 
+heart.fft <- FFTrees(diagnosis ~., 
                               data = heartdisease)
 
 # Get the tree definitions
@@ -189,7 +190,7 @@ plot(my.heart.fft, tree = 1)
 ```
 
 
-Here is Tree \#2: "If chol < 300, then predict True If oldpeak is greater than 2, predict True. If restecg is *not* normal, then predict False. Otherwise, predict True"
+Here is Tree \#2: "If chol < 300, then predict True. If oldpeak is greater than 2, predict True. If restecg is *not* normal, then predict False. Otherwise, predict True"
 
 ```{r}
 # Plot Tree 2
