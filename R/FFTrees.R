@@ -117,9 +117,10 @@ FFTrees <- function(formula = NULL,
   # force = FALSE
   # verbose = NULL
   #
-  #
+  # #
   # formula = criterion ~.
-  # data = credit
+  # data = voting
+  # train.p = .5
   # algorithm = "max"
 
 # Input validation

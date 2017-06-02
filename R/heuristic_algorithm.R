@@ -16,7 +16,7 @@ heuristic.algorithm <- function(formula,
   # formula = formula
   # data = data.mf
   # max.levels = max.levels
-  # algorithm = "zigzag"
+  # algorithm = algorithm
 
 # Convert factors to character
 
@@ -60,10 +60,8 @@ for(col.i in 2:ncol(data.mf)) {
 
       )
 
-    data.mm <- data.frame(data.mm, factor.df)
+    data.mm <- data.frame(data.mm, factor.df, check.names = FALSE)
   }
-
-
 
 }
 

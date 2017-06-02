@@ -54,16 +54,15 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 #
-#   formula = formula
-#   data = data.train
-#   algorithm = algorithm
-#   goal = goal                  # for now, goal must be 'bacc' when growing trees
-#   repeat.cues = repeat.cues
-#   stopping.rule = stopping.rule
-#   stopping.par = stopping.par
-#   max.levels = max.levels
-#   sens.w = sens.w
-#   progress = progress
+  # formula = formula
+  # data = data.train
+  # algorithm = algorithm
+  # goal = goal
+  # stopping.rule = stopping.rule
+  # stopping.par = stopping.par
+  # max.levels = max.levels
+  # sens.w = sens.w
+  # progress = progress
 
 
 # Check for depricated arguments
