@@ -16,7 +16,7 @@ apply.tree <- function(data,
 ) {
 #
 #
-  # data = data
+  # data = data.test
   # formula = formula
   # tree.definitions = tree.definitions
   # sens.w = sens.w
@@ -87,6 +87,7 @@ apply.tree <- function(data,
       levelout[classify.now, tree.i] <- level.i
 
       # Get level stats
+
 
       level.i.stats <- classtable(prediction.v = decision[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i]), tree.i],
                                   criterion.v = criterion.v[levelout[,tree.i] <= level.i & is.finite(levelout[,tree.i])],

@@ -18,6 +18,9 @@ classtable <- function(prediction.v,
                        criterion.v,
                        sens.w = .5) {
 
+  #
+  # prediction.v <- NA
+  # criterin.v <- NA
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
 
@@ -112,7 +115,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     far <- NA
     acc <- NA
     bacc <- NA
-    waccc <- NA
+    wacc <- NA
     dprime <- NA
 
   }
