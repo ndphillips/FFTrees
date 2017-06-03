@@ -1,6 +1,6 @@
 #' Creates a fast-and-frugal trees (FFTrees) object.
 #'
-#' This is the workhorse function for the \code{FFTrees} package. It creates a set of fast-and-frugal decision trees trained on a training dataset and tested on an optional test dataset.
+#' This is the workhorse function for the \code{FFTrees} package. It creates (one or more) fast-and-frugal decision trees trained on a training dataset and tested on an optional test dataset.
 #'
 #' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
 #' @param data dataframe. A training dataset.
@@ -27,24 +27,23 @@
 #' @return An \code{FFTrees} object with the following elements
 #'
 #' \describe{
-#'   \item{data, data.test}{The original training and test data.}
-#'   \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes balanced accuracy for the training data. These are calculated using the \code{cuerank()} function.}
+#'   \item{formula}{The formula specified when creating the FFTs}
+#'   \item{data.desc}{Descriptive statistics of the data}
+#'   \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm}
 #'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
 #'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
 #'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
-#'   \item{auc}{Area under the curve statistics}
 #'   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
 #'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
-#'   \item{params}{A list of control parameters (e.g.; \code{algorithm}, \code{goal})}
+#'   \item{tree.max}{The index of the 'final' tree specified by the algorithm. For algorithms that only return a single tree, this value is always 1.}
+#'   \item{inwords}{A verbal definition of \code{tree.max}.}
+#'   \item{auc}{Area under the curve statistics}
+#'   \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal})}
 #'   \item{comp}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
+#'   \item{data}{The original training and test data (only included when \code{store.data = TRUE})}
 #'   }
 #'
 #' @export
-#' @details
-#'
-#' \code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict T
-#' \code{tree.definitions} should be a dataframe defining trees with each row. At least 4 columns should be present: \code{cues}, the names of the cues, \code{thresholds}, thresholds determining cue splits, \code{directions}, directions pointing towards positive classifications, \code{classes}, classes of the cues, and \code{exits}, the exit directions where 0 means a negative exit, 1 means a positive exit, and .5 means a bi-directional exit. Different levels within a tree should be separated by semicolons.
-#'
 #' @examples
 #'
 #'  # Create ffts for heart disease
@@ -90,40 +89,40 @@ FFTrees <- function(formula = NULL,
 ) {
 
 
-  # formula = NULL
-  # data = NULL
-  # data.test = NULL
-  # algorithm = "max"
-  # max.levels = NULL
-  # sens.w = .5
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = "wacc"
-  # numthresh.method = "o"
-  # decision.labels = c("False", "True")
-  # train.p = 1
-  # rounding = 2
-  # progress = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  #
-  # #
-  # formula = criterion ~.
-  # data = voting
-  # train.p = .5
-  # algorithm = "max"
-
-# Input validation
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   algorithm = "max"
+#   max.levels = NULL
+#   sens.w = .5
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = "wacc"
+#   numthresh.method = "o"
+#   decision.labels = c("False", "True")
+#   train.p = 1
+#   rounding = 2
+#   progress = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+# #   #
+# #   # #
+#   formula = diagnosis ~.
+#   data = heartdisease
+#   algorithm = "max"
+#   train.p = .5
+#
+# # Input validation
 {
 if(is.null(verbose) == FALSE) {
 
@@ -164,6 +163,38 @@ if(is.null(tree.definitions) == FALSE) {
 if((goal %in% c("bacc", "wacc", "dprime")) == FALSE) {
 
   stop("goal must be in the set 'bacc', 'wacc', 'dprime'")
+
+}
+
+# Check algorithm input
+valid.algorithms <- c("ifan", "dfan", "max", "zigzag")
+
+
+if(algorithm %in% valid.algorithms == FALSE) {
+
+  if(algorithm %in% c("c", "m") == FALSE) {
+
+    stop(paste0("The algorithm ", algorithm, " is invalid, please use one of the following: [", paste(valid.algorithms, collapse = ", "), "]"))
+
+  }
+
+  if(algorithm == "m") {
+
+    message("Algorithm 'm' is depricated, using 'ifan' instead")
+    algorithm <- "ifan"
+
+  }
+
+  if(algorithm == "c") {
+
+    message("Algorithm 'c' is depricated, using 'dfan' instead")
+    algorithm <- "dfan"
+
+    }
+
+
+
+
 }
 
 
