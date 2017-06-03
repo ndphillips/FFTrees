@@ -193,13 +193,12 @@ for(i in 2:nrow(cue.acc)) {
 
 cue.acc <- cue.acc.f
 
-
 cue.acc.o <- cue.acc
 cue.acc.o <- cue.acc.o[,names(cue.acc.o) %in% c("cue", "class", "threshold", "direction", names(classtable(c(1, 1, 0), c(1, 0, 1))))]
 
 # Now get final tree definition
 fft.cue.acc <- cue.acc[1:min(nrow(cue.acc),max.levels),]
-fft.cue.acc$exits[nrow(fft.cue.acc)] <- .5
+fft.cue.acc$exits[min(max.levels, nrow(fft.cue.acc))] <- .5
 
 
 tree.definitions <- data.frame(tree = 1,
@@ -296,6 +295,7 @@ if(algorithm == "zigzag") {
   cue.acc <- cue.acc[order(cue.acc$node),]
 
   fft.cue.acc <- cue.acc[1:min(nrow(cue.acc),max.levels),]
+  fft.cue.acc$exits[fft.cue.acc$node == max.levels] <- .5
 
 
   tree.definitions <- data.frame(tree = 1,
