@@ -60,20 +60,24 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 An \code{FFTrees} object with the following elements
 
 \describe{
-  \item{data, data.test}{The original training and test data.}
-  \item{cue.accuracies}{Marginal accuracies of each cue given a threshold that maximizes balanced accuracy for the training data. These are calculated using the \code{cuerank()} function.}
+  \item{formula}{The formula specified when creating the FFTs}
+  \item{data.desc}{Descriptive statistics of the data}
+  \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm}
   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
-  \item{auc}{Area under the curve statistics}
   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
-  \item{params}{A list of control parameters (e.g.; \code{algorithm}, \code{goal})}
+  \item{tree.max}{The index of the 'final' tree specified by the algorithm. For algorithms that only return a single tree, this value is always 1.}
+  \item{inwords}{A verbal definition of \code{tree.max}.}
+  \item{auc}{Area under the curve statistics}
+  \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal})}
   \item{comp}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
+  \item{data}{The original training and test data (only included when \code{store.data = TRUE})}
   }
 }
 \description{
-This is the workhorse function for the \code{FFTrees} package. It creates a set of fast-and-frugal decision trees trained on a training dataset and tested on an optional test dataset.
+This is the workhorse function for the \code{FFTrees} package. It creates (one or more) fast-and-frugal decision trees trained on a training dataset and tested on an optional test dataset.
 }
 \details{
 \code{my.tree} Is a string defining a tree as a sentence in a form like 'If age > 40, predict T

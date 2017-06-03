@@ -113,7 +113,9 @@ rownames(summary.df) <- c("cases       :n",
                           "specificity :spec")
 
 
-if(n.trees == 1) {summary.text <- paste(x$params$algorithm, " FFT predicting ", criterion.name, sep = "")}
+n.cues <- x$tree.definitions$nodes[tree]
+
+if(n.trees == 1) {summary.text <- paste(x$params$algorithm, " FFT predicting ", criterion.name, " with up to ", n.cues, " nodes", sep = "")}
 if(n.trees > 1) {summary.text <- paste(n.trees, " ", x$params$algorithm, " FFTs predicting ", criterion.name, sep = "")}
 
 

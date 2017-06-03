@@ -27,11 +27,11 @@ plot(heart.fft,
 
 - Added `inwords()`, a function that converts an FFTrees object to words.
 
-- Added `my.tree` argument to `FFTrees()` that allows the user to specify an FFT verbally.
+- Added `my.tree` argument to `FFTrees()` that allows the user to specify an FFT verbally. E.g., `my.tree = 'If age > 30, predict True. If sex = [m], predict False. Otherwise, predict True'`.
 
 - Added positive predictive value `ppv`, negative predictive value `npv` and balanced predictive value `bpv` as primary accuracy statistics throughout.
 
-- Added support for two FFT construction algorithms from Martignon et al. (2008): "zigzag" and "max". The algorithms are contained in the file `heuristic_algorithm.R`
+- Added support for two FFT construction algorithms from Martignon et al. (2008): `"zigzag"` and `"max"`. The algorithms are contained in the file `heuristic_algorithm.R` and can be implemented in `FFTrees()` as arguments to `algorithm`.
 
 1.2.3
 
