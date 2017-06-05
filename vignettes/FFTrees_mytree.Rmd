@@ -36,14 +36,14 @@ Here's how we could specify an FFT using these cues as a sentence:
 ```{r, eval = FALSE}
 my.tree = "If sex = 1, predict True.
            If age < 45, predict False. 
-           If thal = [fd, normal], predict True. Otherwise, predict False"
+           If thal = {fd, normal}, predict True. Otherwise, predict False"
 ```
 
 Here are some notes on specifying trees manually:
 
 - Each node must start with the word "If" and should in the form: `If CUE DIRECTION THRESHOLD, predict EXIT`.
 - Numeric thresholds shold be specified directly (without brackets).
-- Factor thresholds must be specified within brackets like `sex = [male]`. For factors with sets of values, values within a threshold should be separated by commas like `eyecolor = [blue,brown]`
+- Factor thresholds must be specified within braces like `sex = {male}`. For factors with sets of values, values within a threshold should be separated by commas like `eyecolor = {blue,brown}`
 - Standard logical comparisons `=`, `!=`, `<`, `>=` (etc.) are valid. For numeric cues, only use `>`, `>=`, `<`, `<=`. For factors, only use `=` and `!=`.
 - Positive exits are indicated by `True`, while negative exits are specified by `False`. The final node will be forced to have a bidirectional exit. The text `Otherwise, predict EXIT` I've included in the example above is actually not necessary.
 
@@ -56,7 +56,7 @@ my.heart.fft <- FFTrees(diagnosis ~.,
                         data = heartdisease,
                         my.tree = "If sex = 1, predict True.
                                    If age < 45, predict False. 
-                                   If thal = [fd, normal], predict True. 
+                                   If thal = {fd, normal}, predict True. 
                                    Otherwise, predict False")
 ```
 
@@ -75,8 +75,8 @@ Let's see if we can come up with a better one using the cues `thal`, `cp`, and `
 # Specify an FFt verbally with the my.tree argument
 my.heart.fft <- FFTrees(diagnosis ~.,
                         data = heartdisease,
-                        my.tree = "If thal = [rd,fd], predict True.
-                                   If cp != [a], predict False. 
+                        my.tree = "If thal = {rd,fd}, predict True.
+                                   If cp != {a}, predict False. 
                                    If ca > 1, predict True. 
                                    Otherwise, predict False")
 
@@ -94,7 +94,7 @@ head(income[c("age", "education", "hours.per.week", "income.gt50")])
 
 ```{r}
 my.income.tree <- "If age < 35, predict False.
-                   If education = [Doctorate,Masters], predict True.
+                   If education = {Doctorate,Masters}, predict True.
                    If hours.per.week < 40, predict False.
                    Otherwise, predict True"
 
@@ -150,7 +150,7 @@ heart.tree.definitions
 
 One can use `tree.definitions` dataframes created from `FFTrees()` as a template, make adjustments, and then feed the dataframe back into `FFTrees()` to create new, customized trees. Below, I'll create definitions of two FFTs, then pass them to `FFTrees()`. The two FFTS can be described as follows. 
 
-- Tree \#1 "If slope != [down, up], then predict False. If ca is greater than 1, predict True. Otherwise, predict False "
+- Tree \#1 "If slope != {down, up}, then predict False. If ca is greater than 1, predict True. Otherwise, predict False "
 - Tree \#2 "If chol < 300, then predict True If oldpeak is greater than 2, predict True. If restecg is *not* normal, then predict False. Otherwise, predict True"
 
 ```{r}
@@ -182,7 +182,7 @@ plot(my.heart.fft, tree = 2)
 ```
 
 
-Here is Tree \#1: "If slope != [down, up], then predict False. If ca is greater than 1, predict True. Otherwise, predict False"
+Here is Tree \#1: "If slope != {down, up}, then predict False. If ca is greater than 1, predict True. Otherwise, predict False"
 
 ```{r}
 # Plot Tree 1

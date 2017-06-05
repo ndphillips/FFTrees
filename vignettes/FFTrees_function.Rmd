@@ -238,13 +238,13 @@ The sensitivity for this FFT is a bit higher at 0.98, however, it came at a cost
 
 - For complete details on specifying an FFT with `my.tree`, look at the vignette [Specifying FFTs directly](FFTrees_mytree.html).
 
-You can also define a specific FFT to apply to a dataset using the `my.tree` argument. To do so, specify the FFT as a sentence, making sure to spell the cue names correctly as the appear in the data. Specify sets of factor cues using brackets. In the example below, I'll manually define an FFT using the sentence `"If chol > 300, predict True. If thal = [fd,rd], predict False. Otherwise, predict True"`
+You can also define a specific FFT to apply to a dataset using the `my.tree` argument. To do so, specify the FFT as a sentence, making sure to spell the cue names correctly as the appear in the data. Specify sets of factor cues using brackets. In the example below, I'll manually define an FFT using the sentence `"If chol > 300, predict True. If thal = {fd,rd}, predict False. Otherwise, predict True"`
 
 ```{r}
 # Define a tree manually using the my.tree argument
 myheart.fft <- FFTrees(diagnosis ~., 
                        data = heartdisease, 
-                       my.tree = "If chol > 300, predict True. If thal = [fd,rd], predict False. Otherwise, predict True")
+                       my.tree = "If chol > 300, predict True. If thal = {fd,rd}, predict False. Otherwise, predict True")
 
 # Here is the result
 plot(myheart.fft, 

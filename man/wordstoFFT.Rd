@@ -19,7 +19,7 @@ Converts text describing an FFT into an FFT definition.
 \examples{
 
 my.tree.def <- wordstoFFT(input = "If age > 55, predict True.
-                                   If cp = [a,b,np], predict False, otherwise, predict True",
+                                   If cp = {a,b,np}, predict False, otherwise, predict True",
                           cue.names = names(heartdisease))
 
 
