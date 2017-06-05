@@ -8,7 +8,7 @@
 #' @param max.levels integer. Maximum number of levels considered for the trees.
 #' @param ntree integer. Number of trees to create.
 #' @param train.p numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.
-#' @param algorithm string. How to rank cues during tree construction. "m" (for marginal) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars. This also means that the same cue can be used multiple times in the trees. Note that the "c" method will take (much) longer and may be prone to overfitting.
+#' @param algorithm string. The algorith uses to create FFTs. See arguments in \code{FFTrees()}
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
 #' @param sens.w numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
@@ -35,7 +35,7 @@ FFForest <- function(formula = NULL,
                      max.levels = 5,
                      ntree = 10,
                      train.p = .5,
-                     algorithm = "mfan",
+                     algorithm = "ifan",
                      goal = "wacc",
                      sens.w = .5,
                      verbose = TRUE,
