@@ -11,7 +11,7 @@
 #' @examples
 #'
 #' my.tree.def <- wordstoFFT(input = "If age > 55, predict True.
-#'                                    If cp = [a,b,np], predict False, otherwise, predict True",
+#'                                    If cp = {a,b,np}, predict False, otherwise, predict True",
 #'                           cue.names = names(heartdisease))
 #'
 #'
@@ -20,13 +20,13 @@ wordstoFFT <- function(input,
                        decision.labels = NULL) {
 
   #
-  # input = "if thal != [rd], false If cp = [a], true If age < 60 true, otherwise, false"
+  # input = "if thal != {rd}, false If cp = {a}, true If age < 60 true, otherwise, false"
   # cue.names = names(heartdisease)
   # decision.labels <- NULL
 
 if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
 
-  # input = "if thal = [rd], healthy. If cp = [a], disease, otherwise, healthy"
+  # input = "if thal = {rd}, healthy. If cp = {a}, disease, otherwise, healthy"
   # cue.names = names(heartdisease)
   # decision.labels = c("healthy", "disease")
 
@@ -61,7 +61,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
   cue.exists <- any(sapply(cue.names, FUN = function(cue.i) {any(stringr::str_detect(node.sentence, cue.i))}))
 
-  if(!cue.exists) {stop(paste("I could not find any valid cue names in the sentence: [", node.sentence, "]. Please rewrite", sep = ""))}
+  if(!cue.exists) {stop(paste("I could not find any valid cue names in the sentence: '", node.sentence, "'. Please rewrite", sep = ""))}
 
   if(cue.exists) {
 
@@ -80,7 +80,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 {
 classes.v <- rep(NA, nodes.n)
 
-contains.brack <- stringr::str_detect(def[1:nodes.n], "\\[")
+contains.brack <- stringr::str_detect(def[1:nodes.n], "\\[") | stringr::str_detect(def[1:nodes.n], "\\{")
 classes.v[contains.brack] <- "c"
 classes.v[contains.brack == FALSE] <- "n"
 }
@@ -126,10 +126,10 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
   # Is there a number?
   num.log <- grepl("[0-9]", x = x)
 
-  # Is there a bracket?
-  bracket.log <- grepl("\\[", x = x)
+  # Is there a brace?
+  bracket.log <- grepl("\\{", x = x)
 
-  # If there is a number and no bracket, get the number
+  # If there is a number and no brace, get the number
 
   if(num.log & !bracket.log) {
 
@@ -137,11 +137,11 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
 
   }
 
-  # If no number and bracket, get what's inside the brackets (and remove any spaces)
+  # If no number and bracket, get what's inside the braces (and remove any spaces)
 
   if(!num.log & bracket.log) {
 
-    threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\[|\\]"))[2], pattern = " ", "")
+    threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\{|\\}"))[2], pattern = " ", "")
 
   }
 

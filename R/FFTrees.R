@@ -560,7 +560,6 @@ if(is.null(data.test) & train.p < 1) {
 # CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
 {
 
-
 if(is.null(object) == FALSE) {
 
 cue.accuracies.train <- object$cue.accuracies$train
