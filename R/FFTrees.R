@@ -609,7 +609,7 @@ levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 
-treestats.train <- treestats.train[c("tree", "pci", "mcu", names(classtable(c(1, 0, 1), c(1, 0, 0))))]
+treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu", )]
 
 
 tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
@@ -638,7 +638,7 @@ levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
 
-treestats.test <- treestats.test[c("tree", "pci", "mcu", names(classtable(c(1, 0, 1), c(1, 0, 0))))]
+treestats.test <- treestats.test[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
 
 
 if(any(is.na(test.results$treestats$sens)) == TRUE) {
