@@ -64,7 +64,6 @@ grow.FFTrees <- function(formula,
   # sens.w = sens.w
   # progress = progress
 
-
 # Check for depricated arguments
 if(is.null(rank.method) == FALSE) {
 
@@ -111,7 +110,7 @@ if(algorithm %in% c("ifan", "dfan")) {
                              data = data.mf,
                              max.levels = max.levels,
                              algorithm = algorithm,
-                             goal = goal,
+                             goal = "bacc",
                              sens.w = sens.w,
                              numthresh.method = numthresh.method,
                              stopping.rule = stopping.rule,
