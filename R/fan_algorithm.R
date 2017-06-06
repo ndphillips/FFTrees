@@ -442,6 +442,7 @@ tree.definitions$rank <- tree.order
 tree.definitions <- tree.definitions[order(tree.definitions$rank),]
 tree.definitions$tree <- 1:nrow(tree.definitions)
 tree.definitions <- tree.definitions[,names(tree.definitions) != "rank"]
+rownames(tree.definitions) <- 1:nrow(tree.definitions)
 
 return(list(tree.definitions = tree.definitions,
             cue.accuracies = cue.accuracies))
