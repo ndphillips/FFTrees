@@ -1,6 +1,6 @@
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("  a      ")
+  packageStartupMessage("   a      ")
   packageStartupMessage("  / \\     ")
   packageStartupMessage(" 0   b  ")
   packageStartupMessage("   / \\   ")
