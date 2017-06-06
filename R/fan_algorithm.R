@@ -9,6 +9,7 @@
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. \code{"levels"} means the tree grows until a certain level, \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain. \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == \code{"levels"}, this is the number of levels. For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
+#' @param rounding integer. How much should threshold parameters be rounded? Default is
 #' @param progress logical. Should tree growing progress be displayed?
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula var
@@ -25,25 +26,25 @@ fan.algorithm <- function(formula,
                           numthresh.method = "o",
                           stopping.rule = "exemplars",
                           stopping.par = .1,
+                          rounding = NULL,
                           progress = TRUE) {
+#
+#   formula = formula
+#   data = data.mf
+#   max.levels = max.levels
+#   algorithm = algorithm
+#   goal = "bacc"
+#   sens.w = .8
+#   numthresh.method = numthresh.method
+#   stopping.rule = stopping.rule
+#   stopping.par = stopping.par
+#   progress = progress
+# # Some global variables which could be changed later.
 
 
-  # formula = formula
-  # data = data.mf
-  # max.levels = max.levels
-  # algorithm = algorithm
-  # goal = goal
-  # sens.w = sens.w
-  # numthresh.method = numthresh.method
-  # stopping.rule = stopping.rule
-  # stopping.par = stopping.par
-  # progress = TRUE
-
-# Some global variables which could be changed later.
 repeat.cues <- TRUE
 exit.method <- "fixed"
 correction <- .25
-rounding <- 2
 
 
 # Start with criterion
@@ -69,7 +70,6 @@ cue.accuracies <- cuerank(formula = formula,
 # GROW TREES
 # ----------
 {
-
 
   # SETUP TREES
   # create tree.dm which contains exit values for max.levels
@@ -428,6 +428,20 @@ cue.accuracies <- cuerank(formula = formula,
 
 }
 
+
+# Order tree definitions by wacc:
+
+my.applytree <- apply.tree(data = data,
+                           formula = formula,
+                           tree.definitions = tree.definitions,
+                           sens.w = sens.w)
+
+tree.order <- rank(-1 * my.applytree$treestats$wacc, ties.method = "first")
+
+tree.definitions$rank <- tree.order
+tree.definitions <- tree.definitions[order(tree.definitions$rank),]
+tree.definitions$tree <- 1:nrow(tree.definitions)
+tree.definitions <- tree.definitions[,names(tree.definitions) != "rank"]
 
 return(list(tree.definitions = tree.definitions,
             cue.accuracies = cue.accuracies))
