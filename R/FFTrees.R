@@ -72,7 +72,7 @@ FFTrees <- function(formula = NULL,
                     numthresh.method = "o",
                     decision.labels = c("False", "True"),
                     train.p = 1,
-                    rounding = 2,
+                    rounding = NULL,
                     progress = TRUE,
                     my.tree = NULL,
                     tree.definitions = NULL,
@@ -88,11 +88,11 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL
 ) {
 
-
-#   formula = NULL
-#   data = NULL
+#
+#   formula = diagnosis ~.
+#   data = heartdisease
 #   data.test = NULL
-#   algorithm = "max"
+#   algorithm = "ifan"
 #   max.levels = NULL
 #   sens.w = .5
 #   stopping.rule = "exemplars"
@@ -116,11 +116,8 @@ FFTrees <- function(formula = NULL,
 #   force = FALSE
 #   verbose = NULL
 # #   #
-# #   # #
-#   formula = diagnosis ~.
-#   data = heartdisease
-#   algorithm = "max"
-#   train.p = .5
+#   # #
+
 #
 # # Input validation
 {
@@ -517,7 +514,7 @@ if(is.null(data.test) & train.p < 1) {
 
   if(is.null(object) & is.null(tree.definitions) & is.null(my.tree) & is.null(tree.definitions)) {
 
-    if(progress) {message("Growing FFTs ...")}
+    if(progress) {message(paste0("Growing FFTs with ", algorithm))}
 
     tree.growth <- grow.FFTrees(formula = formula,
                                 data = data.train,
@@ -612,6 +609,9 @@ levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 
+treestats.train <- treestats.train[c("tree", "pci", "mcu", names(classtable(c(1, 0, 1), c(1, 0, 0))))]
+
+
 tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
                                spec.v = train.results$treestats$spec)
 }
@@ -637,6 +637,9 @@ decision.test <- test.results$decision
 levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
+
+treestats.test <- treestats.test[c("tree", "pci", "mcu", names(classtable(c(1, 0, 1), c(1, 0, 0))))]
+
 
 if(any(is.na(test.results$treestats$sens)) == TRUE) {
 
@@ -815,6 +818,7 @@ if(store.data) {data.ls <- list("train" = data.train, "test" = data.test)} else 
 
 }
 
+
 # Data descriptions
 
 data.desc <- list("train" = data.frame("cases" = nrow(cue.train),
@@ -847,6 +851,8 @@ inwords.i <- inwords(tree = tree.max,
                      exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";")),
                      decision.labels = decision.labels
                      )$v1
+
+
 }
 
 # Final output
