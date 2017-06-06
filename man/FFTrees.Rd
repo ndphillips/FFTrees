@@ -8,7 +8,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
   stopping.rule = "exemplars", stopping.par = 0.1, goal = "wacc",
   numthresh.method = "o", decision.labels = c("False", "True"),
-  train.p = 1, rounding = 2, progress = TRUE, my.tree = NULL,
+  train.p = 1, rounding = NULL, progress = TRUE, my.tree = NULL,
   tree.definitions = NULL, comp = TRUE, do.cart = TRUE, do.lr = TRUE,
   do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
   rank.method = NULL, force = FALSE, verbose = NULL)

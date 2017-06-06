@@ -6,7 +6,8 @@
 \usage{
 fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
   goal = "bacc", sens.w = 0.5, numthresh.method = "o",
-  stopping.rule = "exemplars", stopping.par = 0.1, progress = TRUE)
+  stopping.rule = "exemplars", stopping.par = 0.1, rounding = NULL,
+  progress = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -26,6 +27,8 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
 \item{stopping.rule}{character. A string indicating the method to stop growing trees. \code{"levels"} means the tree grows until a certain level, \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain. \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.}
 
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule. For stopping.rule == \code{"levels"}, this is the number of levels. For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.}
+
+\item{rounding}{integer. How much should threshold parameters be rounded? Default is}
 
 \item{progress}{logical. Should tree growing progress be displayed?}
 

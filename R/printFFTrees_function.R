@@ -23,11 +23,11 @@ tree <- min(x$tree.stats$train$tree[x$tree.stats$train[[goal]] == max(x$tree.sta
 
 } else {tree <- x$tree.max}
 
-train.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues[tree], ";"))), collapse = ",")
+train.cues <- paste(unique(unlist(strsplit(x$tree.definitions$cues[tree], ";"))), collapse = ",")
 train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
-all.cues <- paste(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))), collapse = ",")
-all.cues.n <- length(unique(unlist(strsplit(x$tree.stats$train$cues, ";"))))
+all.cues <- paste(unique(unlist(strsplit(x$tree.definitions$cues, ";"))), collapse = ",")
+all.cues.n <- length(unique(unlist(strsplit(x$tree.definitions$cues, ";"))))
 
 train.n <- x$data.desc$train$cases
 train.sens <- round(x$tree.stats$train$sens[tree], 2)
@@ -150,7 +150,5 @@ inwords.FFTrees <- FFTrees::inwords(x = x)
 print(summary.text)
 print(accuracy.text)
 print(summary.df)
-# print(paste0("FFT #", tree, ":"))
-# print(inwords.FFTrees[[1]])
 
 }
