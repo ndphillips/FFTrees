@@ -33,7 +33,7 @@ The default algorithm used to create trees `"ifan"` can be summarised in five st
 
 |     Step| Function|Description |
 |:-----|:----|:----------------------------------------------------|
-|  1|    `cuerank`|For each cue, claculate a *classification threshold* that maximizes the balanced accuracy (average of sensitivity and specificity) of classifications of *all data* based on that cue (that is, ignoring all other cues). If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels.
+|  1|    `cuerank`|For each cue, calculate a *classification threshold* that maximizes the balanced accuracy (average of sensitivity and specificity) of classifications of *all data* based on that cue (that is, ignoring all other cues). If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels.
      |
 | 2|    `grow.FFTrees()`|Rank cues in order of their highest balanced accuracy value calculated using the classification threshold determined in step 1
      |
