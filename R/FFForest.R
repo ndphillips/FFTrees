@@ -50,25 +50,25 @@ FFForest <- function(formula = NULL,
 ) {
 #
 #
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # data.test <- NULL
-  # max.levels = 5
-  # ntree = 10
-  # train.p = .5
-  # algorithm = "mfan"
-  # goal = "bacc"
-  # sens.w = .5
-  # comp <- FALSE
-  # verbose = TRUE
-  # cpus = 1
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # rank.method = NULL
-  # hr.weight = NULL
-#
+#   formula = diagnosis ~.
+#   data = heartdisease
+#   data.test <- NULL
+#   max.levels = 5
+#   ntree = 10
+#   train.p = .5
+#   algorithm = "ifan"
+#   goal = "bacc"
+#   sens.w = .5
+#   comp <- FALSE
+#   verbose = TRUE
+#   cpus = 1
+#   do.lr = TRUE
+#   do.cart = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   rank.method = NULL
+#   hr.weight = NULL
+# #
 
 
 # Check for depricated arguments
@@ -128,6 +128,7 @@ result.i <- FFTrees::FFTrees(formula = formula,
 decisions.i <- predict(result.i, data)
 
 tree.stats.i <- result.i$tree.stats
+tree.definitions.i <- result.i$tree.definitions
 comp.stats.i <- c()
 
 if(do.lr & comp) {
@@ -135,7 +136,6 @@ lr.stats.i <- result.i$comp$lr$stats
 names(lr.stats.i) <- paste0("lr.", names(lr.stats.i))
 comp.stats.i <- c(comp.stats.i, lr.stats.i)
 }
-
 
 
 if(do.cart & comp) {
@@ -160,7 +160,8 @@ comp.stats.i <- unlist(comp.stats.i)
 
 return(list("trees" = tree.stats.i,
             "decisions" = decisions.i,
-            "competitors" = comp.stats.i
+            "competitors" = comp.stats.i,
+            "tree.definitions" = tree.definitions.i
             ))
 
 }
@@ -224,7 +225,7 @@ for(stat.i in c("cues", "thresholds", "directions", "classes", "exits")) {
   simulations[[stat.i]] <- sapply(1:length(result.ls),
                                   FUN = function(x) {
 
-                                    result.ls[[x]]$trees$train[[stat.i]][best.tree.v[x]]})
+                                    result.ls[[x]]$tree.definitions[[stat.i]][best.tree.v[x]]})
 
 }
 

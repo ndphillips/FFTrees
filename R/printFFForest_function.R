@@ -19,8 +19,8 @@ importance.df <- data.frame(importance)
 names(importance.df) <- c("cue", "importance")
 importance.df[,2] <- round(importance.df[,2], 2)
 
-summary.text.1 <- paste("Forest of ", ntree, " FFTs from ", train.p * 100, "% random training splits.", sep = "")
-summary.text.2 <- paste0("Median performance across all ", ntree, " trees:")
+summary.text.1 <- paste("Forest of ", ntree, " ", x$params$algorithm, " FFTs from ", train.p * 100, "% random training splits.", sep = "")
+summary.text.2 <- paste0("Median performance across all ", ntree, " FFTs:")
 
 summary.df <- data.frame("train" = c(
                                       round(median(x$fft.sim$acc.train), 2),
