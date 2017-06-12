@@ -8,9 +8,12 @@
 #' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
+#' @param cost.errors numeric. A vector of length 2 specifying the costs of a miss and false alarm respectively. E.g.; \code{costs.errors = c(100, 10)} means that a
+#' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy
+#' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
@@ -66,9 +69,12 @@ FFTrees <- function(formula = NULL,
                     algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .5,
+                    cost.errors = NULL,
+                    cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
                     goal = "wacc",
+                    goal.chase = "bacc",
                     numthresh.method = "o",
                     decision.labels = c("False", "True"),
                     train.p = 1,
@@ -121,6 +127,19 @@ FFTrees <- function(formula = NULL,
 #
 # # Input validation
 {
+
+if(is.null(cost.errors) & is.null(cost.cues) == FALSE) {
+
+  stop("You specified cue costs but not error costs. You must also specify error costs.")
+
+}
+
+if(is.null(cost.errors) == FALSE & is.null(cost.cues)) {
+
+  message("You specified error costs but not cue costs, all cues will assumed to have a cost of 0.")
+
+}
+
 if(is.null(verbose) == FALSE) {
 
     warning("The argument verbose is depricated. Use progress instead.")
@@ -520,6 +539,7 @@ if(is.null(data.test) & train.p < 1) {
                                 data = data.train,
                                 algorithm = algorithm,
                                 goal = goal,
+                                goal.chase = goal.chase,
                                 stopping.rule = stopping.rule,
                                 stopping.par = stopping.par,
                                 max.levels = max.levels,

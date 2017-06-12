@@ -6,9 +6,9 @@
 \usage{
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
   ntree = 10, train.p = 0.5, algorithm = "ifan", goal = "wacc",
-  sens.w = 0.5, verbose = TRUE, cpus = 1, comp = FALSE, do.lr = TRUE,
-  do.cart = TRUE, do.rf = TRUE, do.svm = TRUE, rank.method = NULL,
-  hr.weight = NULL)
+  goal.chase = "wacc", sens.w = 0.5, verbose = TRUE, cpus = 1,
+  comp = FALSE, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE,
+  do.svm = TRUE, rank.method = NULL, hr.weight = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -25,7 +25,9 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{algorithm}{string. The algorith uses to create FFTs. See arguments in \code{FFTrees()}}
 
-\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime}
+\item{goal}{character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime}
+
+\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)}
 

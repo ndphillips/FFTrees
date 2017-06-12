@@ -5,9 +5,9 @@
 \title{Grows fast-and-frugal trees using the fan algorithm}
 \usage{
 fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
-  goal = "bacc", sens.w = 0.5, numthresh.method = "o",
-  stopping.rule = "exemplars", stopping.par = 0.1, rounding = NULL,
-  progress = TRUE)
+  goal = "wacc", goal.chase = "bacc", sens.w = 0.5,
+  numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
+  rounding = NULL, progress = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -18,7 +18,9 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
 
 \item{algorithm}{character. A string indicating how to rank cues during tree construction. "ifan"  (independent fan) means that cues will only be ranked once with the entire training dataset "dfan" (dependent fan) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
-\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy}
+\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
+
+\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
 

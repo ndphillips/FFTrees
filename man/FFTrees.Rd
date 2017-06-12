@@ -6,7 +6,8 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL,
   algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
-  stopping.rule = "exemplars", stopping.par = 0.1, goal = "wacc",
+  cost.errors = NULL, cost.cues = NULL, stopping.rule = "exemplars",
+  stopping.par = 0.1, goal = "wacc", goal.chase = "bacc",
   numthresh.method = "o", decision.labels = c("False", "True"),
   train.p = 1, rounding = NULL, progress = TRUE, my.tree = NULL,
   tree.definitions = NULL, comp = TRUE, do.cart = TRUE, do.lr = TRUE,
@@ -26,11 +27,17 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}}
 
+\item{cost.errors}{numeric. A vector of length 2 specifying the costs of a miss and false alarm respectively. E.g.; \code{costs.errors = c(100, 10)} means that a}
+
+\item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
+
 \item{stopping.rule}{character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.}
 
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
 
-\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "wacc" = weighted accuracy}
+\item{goal}{character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
+
+\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 

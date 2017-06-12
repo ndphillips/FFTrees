@@ -5,6 +5,7 @@
 #' @param max.levels integer. The maximum number of levels in the tree(s)
 #' @param algorithm character. A string indicating how to rank cues during tree construction. "m" (for ifan) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
@@ -43,7 +44,8 @@ grow.FFTrees <- function(formula,
                          data,
                          max.levels = NULL,
                          algorithm = "ifan",
-                         goal = "bacc",
+                         goal = "wacc",
+                         goal.chase = "bacc",
                          sens.w = .5,
                          numthresh.method = "o",
                          stopping.rule = "exemplars",
@@ -91,7 +93,6 @@ n.cues <- ncol(cue.df)
 
 if(algorithm %in% c("max", "zigzag")) {
 
-
   heuristicResult <- heuristic.algorithm(formula = formula,
                                           data = data.mf,
                                           max.levels = max.levels,
@@ -110,7 +111,8 @@ if(algorithm %in% c("ifan", "dfan")) {
                              data = data.mf,
                              max.levels = max.levels,
                              algorithm = algorithm,
-                             goal = "bacc",
+                             goal = goal,
+                             goal.chase = goal.chase,
                              sens.w = sens.w,
                              numthresh.method = numthresh.method,
                              stopping.rule = stopping.rule,

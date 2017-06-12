@@ -5,9 +5,9 @@
 \title{Grows fast-and-frugal trees using an algorithm specified by \code{algorithm}.}
 \usage{
 grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
-  goal = "bacc", sens.w = 0.5, numthresh.method = "o",
-  stopping.rule = "exemplars", stopping.par = 0.1, progress = FALSE,
-  rank.method = NULL, cue.accuracies = NULL, ...)
+  goal = "wacc", goal.chase = "bacc", sens.w = 0.5,
+  numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
+  progress = FALSE, rank.method = NULL, cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -19,6 +19,8 @@ grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
 \item{algorithm}{character. A string indicating how to rank cues during tree construction. "m" (for ifan) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.}
 
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy}
+
+\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
 

@@ -9,7 +9,8 @@
 #' @param ntree integer. Number of trees to create.
 #' @param train.p numeric. What percentage of the data should be used to fit each tree? Smaller values will result in more diverse trees.
 #' @param algorithm string. The algorith uses to create FFTs. See arguments in \code{FFTrees()}
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
+#' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
 #' @param verbose logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
@@ -37,6 +38,7 @@ FFForest <- function(formula = NULL,
                      train.p = .5,
                      algorithm = "ifan",
                      goal = "wacc",
+                     goal.chase = "wacc",
                      sens.w = .5,
                      verbose = TRUE,
                      cpus = 1,
@@ -117,6 +119,7 @@ result.i <- FFTrees::FFTrees(formula = formula,
                               max.levels = max.levels,
                               algorithm = algorithm,
                               goal = goal,
+                              goal.chase = goal.chase,
                               progress = FALSE,
                               sens.w = sens.w,
                               comp = comp,

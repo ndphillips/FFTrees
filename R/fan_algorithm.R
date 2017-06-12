@@ -4,7 +4,8 @@
 #' @param data dataframe. A dataset
 #' @param max.levels integer. The maximum number of levels in the tree(s)
 #' @param algorithm character. A string indicating how to rank cues during tree construction. "ifan"  (independent fan) means that cues will only be ranked once with the entire training dataset "dfan" (dependent fan) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy
+#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. \code{"levels"} means the tree grows until a certain level, \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain. \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
@@ -21,7 +22,8 @@ fan.algorithm <- function(formula,
                           data,
                           max.levels = 5,
                           algorithm = "ifan",
-                          goal = "bacc",
+                          goal = "wacc",
+                          goal.chase = "bacc",
                           sens.w = .5,
                           numthresh.method = "o",
                           stopping.rule = "exemplars",
@@ -60,7 +62,7 @@ cue.df <- data.mf[,2:ncol(data.mf)]
 
 cue.accuracies <- cuerank(formula = formula,
                           data = data,
-                          goal = goal,
+                          goal = goal.chase,
                           numthresh.method = numthresh.method,
                           rounding = rounding,
                           progress = progress,
@@ -192,7 +194,7 @@ cue.accuracies <- cuerank(formula = formula,
         # Calculate cue accuracies with remaining exemplars
         cue.accuracies.current <-  cuerank(formula = formula,
                                            data = data.mf.r,
-                                           goal = goal,
+                                           goal = goal.chase,
                                            numthresh.method = numthresh.method,
                                            rounding = rounding,
                                            sens.w = sens.w)
@@ -201,7 +203,7 @@ cue.accuracies <- cuerank(formula = formula,
 
       # Get next cue based on maximizing goal
 
-      best.cue.index <- which(cue.accuracies.current[[goal]] == max(cue.accuracies.current[[goal]]))
+      best.cue.index <- which(cue.accuracies.current[[goal.chase]] == max(cue.accuracies.current[[goal.chase]]))
 
       # If there is a tie, take the first
       if(length(best.cue.index) > 1) {best.cue.index <- best.cue.index[1]}
@@ -246,17 +248,17 @@ cue.accuracies <- cuerank(formula = formula,
       asif.stats[current.level, c("sens", "spec", "bacc", "wacc")] <-  asif.classtable[1, c("sens", "spec", "bacc", "wacc")]
 
       # If ASIF classification is perfect, then stop!
-      if(asif.stats[[goal]][current.level] == 1) {grow.tree <- FALSE}
+      if(asif.stats[[goal.chase]][current.level] == 1) {grow.tree <- FALSE}
 
       if(current.level == 1) {
 
-        asif.stats$goal.change[1] <- asif.classtable[[goal]]
+        asif.stats$goal.change[1] <- asif.classtable[[goal.chase]]
 
       }
 
       if(current.level > 1) {
 
-        goal.change <- asif.stats[[goal]][current.level] - asif.stats[[goal]][current.level - 1]
+        goal.change <- asif.stats[[goal.chase]][current.level] - asif.stats[[goal.chase]][current.level - 1]
         asif.stats$goal.change[current.level] <- goal.change
 
       }
@@ -436,7 +438,7 @@ my.applytree <- apply.tree(data = data,
                            tree.definitions = tree.definitions,
                            sens.w = sens.w)
 
-tree.order <- rank(-1 * my.applytree$treestats$wacc, ties.method = "first")
+tree.order <- rank(-1 * my.applytree$treestats[[goal]], ties.method = "first")
 
 tree.definitions$rank <- tree.order
 tree.definitions <- tree.definitions[order(tree.definitions$rank),]
