@@ -6,6 +6,7 @@
 \usage{
 fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
   goal = "wacc", goal.chase = "bacc", sens.w = 0.5,
+  cost.outcomes = cost.outcomes, cost.cues = cost.cues,
   numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
   rounding = NULL, progress = TRUE)
 }

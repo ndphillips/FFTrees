@@ -60,10 +60,13 @@ grow.FFTrees <- function(formula,
   # data = data.train
   # algorithm = algorithm
   # goal = goal
+  # goal.chase = goal.chase
   # stopping.rule = stopping.rule
   # stopping.par = stopping.par
   # max.levels = max.levels
   # sens.w = sens.w
+  # cost.outcomes = cost.outcomes
+  # cost.cues = cost.cues
   # progress = progress
 
 # Check for depricated arguments
@@ -114,6 +117,8 @@ if(algorithm %in% c("ifan", "dfan")) {
                              goal = goal,
                              goal.chase = goal.chase,
                              sens.w = sens.w,
+                             cost.outcomes = cost.outcomes,
+                             cost.cues = cost.cues,
                              numthresh.method = numthresh.method,
                              stopping.rule = stopping.rule,
                              stopping.par = stopping.par,
@@ -134,7 +139,9 @@ n.trees <- nrow(tree.definitions)
 my.apply.tree <- apply.tree(data = data,
                             formula = formula,
                             tree.definitions = tree.definitions,
-                            sens.w = sens.w)
+                            sens.w = sens.w,
+                            cost.outcomes = cost.outcomes,
+                            cost.cues = cost.cues)
 
 
 stat.names <- names(classtable(c(1, 1, 0), c(1, 0, 0)))
@@ -143,7 +150,8 @@ output <- list(tree.definitions = tree.definitions,
                tree.stats = my.apply.tree$treestats[,c("tree", stat.names)],
                cue.accuracies = cue.accuracies,
                levelout = my.apply.tree$levelout,
-               decision = my.apply.tree$decision)
+               decision = my.apply.tree$decision,
+               cost = my.apply.tree$treecost)
 
 return(output)
 

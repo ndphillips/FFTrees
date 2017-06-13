@@ -4,7 +4,8 @@
 \alias{apply.tree}
 \title{Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics}
 \usage{
-apply.tree(data, formula, tree.definitions, sens.w = 0.5)
+apply.tree(data, formula, tree.definitions, sens.w = 0.5,
+  cost.outcomes = NULL, cost.cues = NULL)
 }
 \arguments{
 \item{data}{dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
@@ -14,6 +15,10 @@ apply.tree(data, formula, tree.definitions, sens.w = 0.5)
 \item{tree.definitions}{dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.}
 
 \item{sens.w}{numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.}
+
+\item{cost.outcomes}{numeric. A vector of length 2 specifying the costs of a miss and false alarm respectively. E.g.; \code{costs.errors = c(100, 10)} means that a}
+
+\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 }
 \value{
 A list of length 4 containing

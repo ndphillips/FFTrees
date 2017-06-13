@@ -25,22 +25,27 @@ fan.algorithm <- function(formula,
                           goal = "wacc",
                           goal.chase = "bacc",
                           sens.w = .5,
+                          cost.outcomes = cost.outcomes,
+                          cost.cues = cost.cues,
                           numthresh.method = "o",
                           stopping.rule = "exemplars",
                           stopping.par = .1,
                           rounding = NULL,
                           progress = TRUE) {
-#
-#   formula = formula
-#   data = data.mf
-#   max.levels = max.levels
-#   algorithm = algorithm
-#   goal = "bacc"
-#   sens.w = .8
-#   numthresh.method = numthresh.method
-#   stopping.rule = stopping.rule
-#   stopping.par = stopping.par
-#   progress = progress
+
+  # formula = formula
+  # data = data.mf
+  # max.levels = max.levels
+  # algorithm = algorithm
+  # goal = goal
+  # goal.chase = goal.chase
+  # sens.w = sens.w
+  # numthresh.method = numthresh.method
+  # stopping.rule = stopping.rule
+  # stopping.par = stopping.par
+  # progress = progress
+  #
+
 # # Some global variables which could be changed later.
 
 
@@ -436,7 +441,9 @@ cue.accuracies <- cuerank(formula = formula,
 my.applytree <- apply.tree(data = data,
                            formula = formula,
                            tree.definitions = tree.definitions,
-                           sens.w = sens.w)
+                           sens.w = sens.w,
+                           cost.outcomes = cost.outcomes,
+                           cost.cues = cost.cues)
 
 tree.order <- rank(-1 * my.applytree$treestats[[goal]], ties.method = "first")
 

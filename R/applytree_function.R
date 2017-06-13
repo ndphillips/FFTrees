@@ -4,8 +4,8 @@
 #' @param data dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.
 #' @param tree.definitions dataframe. Definitions of one or more trees. The dataframe must contain the columns: cues, classes, thresholds, directions, exits.
 #' @param sens.w numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.
-#' @param cost.errors numeric. A vector of length 2 specifying the costs of a miss and false alarm respectively. E.g.; \code{costs.errors = c(100, 10)} means that a
-#' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
+#' @param cost.outcomes numeric. A vector of length 2 specifying the costs of a miss and false alarm respectively. E.g.; \code{costs.errors = c(100, 10)} means that a
+#' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @return A list of length 4 containing
 #' @export
 #'
@@ -15,18 +15,18 @@ apply.tree <- function(data,
                        formula,
                        tree.definitions,
                        sens.w = .5,
-                       cost.errors = NULL,
+                       cost.outcomes = NULL,
                        cost.cues = NULL
 ) {
 # #
-#  heart.fft <- FFTrees(diagnosis ~., data = heartdisease)
-#   data <- heartdisease
-#   formula = diagnosis ~.
-#   tree.definitions <- heart.fft$tree.definitions
-#   sens.w = .5
-#   cost.errors = NULL
-#   cost.cues = data.frame(cue = c("thal", "cp"),
-#                          cost = c(100, 50, 25), stringsAsFactors = FALSE)
+  # data = data.train
+  # formula = formula
+  # tree.definitions = tree.definitions
+  # sens.w = sens.w
+  # cost.cues = cost.cues
+  # cost.outcomes = cost.outcomes
+
+  if(is.null(cost.outcomes)) {cost.outcomes <- c(0, 0, 0, 0)}
 
   criterion.v <- model.frame(formula = formula,
                              data = data,
@@ -38,11 +38,7 @@ apply.tree <- function(data,
   levelout <- matrix(NA, nrow = n.exemplars, ncol = n.trees)
   decision <- matrix(NA, nrow = n.exemplars, ncol = n.trees)
 
-  if(is.null(cost.cues) == FALSE) {
-
   cost <- matrix(0, nrow = n.exemplars, ncol = n.trees)
-
-  } else {cost <- NULL}
 
   level.stats.ls <- vector("list", length = n.trees)
 
@@ -53,12 +49,6 @@ apply.tree <- function(data,
     exit.v <- unlist(strsplit(tree.definitions$exits[tree.i], ";"))
     threshold.v <- unlist(strsplit(tree.definitions$thresholds[tree.i], ";"))
     direction.v <-  unlist(strsplit(tree.definitions$directions[tree.i], ";"))
-
-    if(is.null(cost.cues) == FALSE) {
-
-      cost.v <- rep(0, nrow(data))
-
-    }
 
     n.levels <- length(cue.v)
 
@@ -87,7 +77,7 @@ apply.tree <- function(data,
           cost.i <- cost.cues$cost[cost.cues$cue == cue.i]
 
           }
-        }
+        } else {cost.i <- 0}
 
       unclassified.cases <- which(is.na(decision[,tree.i]))
       classified.cases <- which(is.na(decision[,tree.i]) == FALSE)
@@ -156,11 +146,40 @@ apply.tree <- function(data,
 
   treestats$mcu <- colMeans(levelout)
 
+  # Add decision error costs to costs
+
+  cost.err.df <- sapply(1:n.trees, FUN = function(tree.i) {
+
+    # which cases are hits
+    hi.log <- criterion.v == 1 & decision[,tree.i] == 1
+
+    # which cases are false alarms
+    fa.log <- criterion.v == 0 & decision[,tree.i] == 1
+
+    # which cases are misses
+    mi.log <- criterion.v == 1 & decision[,tree.i] == 0
+
+    # which cases are correct rejections
+    cr.log <- criterion.v == 0 & decision[,tree.i] == 0
+
+  cost.v <- hi.log * cost.outcomes[1] + fa.log * cost.outcomes[2] + mi.log * cost.outcomes[3] + cr.log * cost.outcomes[4]
+
+    return(cost.v)
+
+
+  })
+
+  final.cost.df <- cost.err.df + cost
+
+  # Add mean cost per case (mcc)
+
+  treestats$cost <- colMeans(final.cost.df)
+
   return(list("decision" = decision,
               "levelout" = levelout,
               "levelstats" = levelstats,
               "treestats" = treestats,
-              "treecost" = cost
+              "treecost" = final.cost.df
   ))
 
 }

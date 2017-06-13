@@ -8,7 +8,7 @@
 #' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
-#' @param cost.errors numeric. A vector of length 2 specifying the costs of a miss and false alarm respectively. E.g.; \code{costs.errors = c(100, 10)} means that a
+#' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
@@ -69,7 +69,7 @@ FFTrees <- function(formula = NULL,
                     algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .5,
-                    cost.errors = NULL,
+                    cost.outcomes = NULL,
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
@@ -94,47 +94,69 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL
 ) {
 
-#
-#   formula = diagnosis ~.
-#   data = heartdisease
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   train.p = 1
-#   rounding = 2
-#   progress = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-# #   #
-#   # #
+# #
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = NULL
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = "wacc"
+  # goal.chase = "bacc"
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # train.p = 1
+  # rounding = 2
+  # progress = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  # #
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # cost.outcomes = c(0, 100, 30, 0)
+  # cost.cues = data.frame("cue" = c("thal", "cp"),
+  #                        "cost" = c(100, 300))
+  # algorithm = "ifan"
+  # max.levels = 4
+
+
 
 #
 # # Input validation
 {
 
-if(is.null(cost.errors) & is.null(cost.cues) == FALSE) {
+if(is.null(cost.outcomes) == FALSE) {
 
-  stop("You specified cue costs but not error costs. You must also specify error costs.")
+
+  if(length(cost.outcomes) != 4) {
+
+    stop("cost.outcomes must have length 4 corresponding to hits, false-alarms, misses, and correct rejections")
+  }
+}
+
+if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
+
+  message("Beware: You specified cue costs but not error costs, all errors will be assumed to have a cost of 0.")
+
+  cost.outcomes <- c(0, 0, 0, 0)
 
 }
 
-if(is.null(cost.errors) == FALSE & is.null(cost.cues)) {
+if(is.null(cost.outcomes) == FALSE & is.null(cost.cues)) {
 
   message("You specified error costs but not cue costs, all cues will assumed to have a cost of 0.")
 
@@ -544,6 +566,8 @@ if(is.null(data.test) & train.p < 1) {
                                 stopping.par = stopping.par,
                                 max.levels = max.levels,
                                 sens.w = sens.w,
+                                cost.outcomes = cost.outcomes,
+                                cost.cues = cost.cues,
                                 progress = progress)
 
     tree.definitions <- tree.growth$tree.definitions
@@ -591,7 +615,7 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
-                                goal = "bacc",        # For now, goal must be 'bacc' when ranking cues
+                                goal = goal.chase,        # For now, goal must be 'bacc' when ranking cues
                                 rounding = rounding,
                                 progress = FALSE,
                                 cue.rules = cue.accuracies.train,
@@ -622,14 +646,17 @@ if(is.null(data.train) == FALSE) {
 train.results <- apply.tree(data = data.train,
                             formula = formula,
                             tree.definitions = tree.definitions,
-                            sens.w = sens.w)
+                            sens.w = sens.w,
+                            cost.cues = cost.cues,
+                            cost.outcomes = cost.outcomes)
 
 decision.train <- train.results$decision
 levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
+treecost.train <- train.results$treecost
 
-treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
+treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu", "cost")]
 
 
 tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
@@ -643,6 +670,7 @@ if(is.null(data.train) == TRUE) {
   levelstats.train <- NULL
   treestats.train <- NULL
   tree.auc.train <- NA
+  treecost.train <- NULL
 
 }
 
@@ -651,14 +679,17 @@ if(is.null(data.test) == FALSE) {
 test.results <- apply.tree(data = data.test,
                            formula = formula,
                            tree.definitions = tree.definitions,
-                           sens.w = sens.w)
+                           sens.w = sens.w,
+                           cost.cues = cost.cues,
+                           cost.outcomes = cost.outcomes)
 
 decision.test <- test.results$decision
 levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
+treecost.test <- test.results$treecost
 
-treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
+treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu", "cost")]
 
 
 if(any(is.na(test.results$treestats$sens)) == TRUE) {
@@ -682,6 +713,7 @@ if(is.null(data.test) == TRUE) {
   levelstats.test <- NULL
   treestats.test <- NULL
   tree.auc.test <- NA
+  treecost.test <- NULL
 
 }
 
@@ -689,6 +721,7 @@ decision <- list("train" = decision.train, "test" = decision.test)
 levelout <- list("train" = levelout.train, "test" = levelout.test)
 levelstats <- list("train" = levelstats.train, "test" = levelstats.test)
 treestats <- list("train" = treestats.train, "test" = treestats.test)
+treecost <- list("train" = treecost.train, "test" = treecost.test)
 
 tree.auc <- data.frame("FFTrees" = c(tree.auc.train, tree.auc.test))
 rownames(tree.auc) = c("train", "test")
@@ -882,6 +915,7 @@ x.FFTrees <- list("formula" = formula,
                    "cue.accuracies" = cue.accuracies,
                    "tree.definitions" = tree.definitions,
                    "tree.stats" = treestats,
+                   "cost" = treecost,
                    "level.stats" = levelstats,
                    "decision" = decision,
                    "levelout" = levelout,
