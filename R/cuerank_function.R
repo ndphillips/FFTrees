@@ -4,6 +4,8 @@
 #' @param data dataframe. A dataframe containing variables in formula
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
+#' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param factor.directions character. A vector of possible directions for factor values. \code{c("=", "!=")} allows both equality and inequality, while \code{"="} only allows for equality.
@@ -29,6 +31,8 @@ cuerank <- function(formula = NULL,
                     data = NULL,
                     goal = "bacc",
                     sens.w = .5,
+                    cost.outcomes = c(0, 1, 1, 0),
+                    cost.cues = NULL,
                     numthresh.method = "o",
                     rounding = NULL,
                     factor.directions = c("=", "!="),
@@ -38,16 +42,18 @@ cuerank <- function(formula = NULL,
                     cue.rules = NULL
 
 ) {
-
-  # formula = formula
-  # data = data.test
-  # goal = "bacc"        # For now, goal must be 'bacc' when ranking cues
-  # rounding = rounding
-  # progress = FALSE
-  # cue.rules = cue.accuracies.train
-  # sens.w = sens.w
-  # numthresh.method = numthresh.method
-
+#
+#   formula = formula
+#   data = data
+#   goal = goal.chase
+#   numthresh.method = numthresh.method
+#   rounding = rounding
+#   progress = progress
+#   sens.w = sens.w
+#   cost.outcomes = cost.outcomes
+#   cost.cues = cost.cues
+#   considerFALSE = TRUE
+#   cue.rules = NULL
 
 
 # GLOBAL VARIABLES (could be updated later)
@@ -65,8 +71,11 @@ data.mf <- model.frame(formula = formula,
 
 # Define criterion (vector) and cues (dataframe)
 criterion.v <- data.mf[,1]
+cases.n <- length(criterion.v)
 cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
 n.cues <- ncol(cue.df)
+cue.names <- names(cue.df)
+N <- length(criterion.v)
 
 # Names of accuracy measures
 accuracy.names <- names(classtable(c(1, 0, 1), c(1, 1, 0)))
@@ -107,8 +116,36 @@ if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == FAL
 
 if(progress) {pb <- progress::progress_bar$new(total = n.cues, clear = FALSE, show_after = .5)}
 
-
 if(is.null(cue.rules) == FALSE) {cuesToLoop <- nrow(cue.rules)} else {cuesToLoop <- n.cues}
+
+# Make sure cost.cues is full
+{
+  if(is.null(cost.cues)) {
+
+    cost.cues <- data.frame("cue" = cue.names,
+                            "cost" = rep(0, n.cues),
+                            stringsAsFactors = FALSE)
+
+  } else {
+
+    names(cost.cues) <- c("cue", "cost")
+
+    # Which cues are missing in cost.cues?
+
+    missing.cues <- setdiff(cue.names, cost.cues[,1])
+
+    if(length(missing.cues) > 0) {
+
+      cost.cues.missing <- data.frame("cue" = missing.cues,
+                                      "cost" = rep(0, length(missing.cues)))
+
+      cost.cues <- rbind(cost.cues, cost.cues.missing)
+
+
+    }
+
+  }
+}
 
 # Loop over cues
 for(cue.i in 1:cuesToLoop) {
@@ -137,7 +174,7 @@ cue.v <- unlist(cue.df[cue])
 
 }
 
-
+cue.cost.i <- cost.cues$cost[cost.cues$cue == cue]
   # Step 0: Determine possible cue levels [cue.levels]
  {
 
@@ -270,7 +307,9 @@ if(is.null(cue.rules) == FALSE) {
 
           classtable.temp <- classtable(prediction.v = pred.vec,
                                         criterion.v = criterion.v,
-                                        sens.w = sens.w)
+                                        sens.w = sens.w,
+                                        cost.v = rep(cue.cost.i, N),
+                                        cost.outcomes = cost.outcomes)
 
 
           cue.stats.o[cue.stats.o$threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
@@ -278,7 +317,15 @@ if(is.null(cue.rules) == FALSE) {
         }
 
         # Rank cues
+        if(goal != "cost") {
         cue.stats.o <- cue.stats.o[order(cue.stats.o[goal], decreasing = TRUE),]
+
+        }
+
+        if(goal == "cost") {
+          cue.stats.o <- cue.stats.o[order(cue.stats.o["cost"], decreasing = FALSE),]
+
+        }
         cue.stats.o$rank <- 1:nrow(cue.stats.o)
 
       }
@@ -311,7 +358,9 @@ if(is.null(cue.rules) == FALSE) {
 
         classtable.temp <- classtable(prediction.v = pred.vec,
                                       criterion.v = criterion.v,
-                                      sens.w = sens.w)
+                                      sens.w = sens.w,
+                                      cost.v = rep(cue.cost.i, N),
+                                      cost.outcomes = cost.outcomes)
 
 
         cue.stats[row.index.i, accuracy.names] <- classtable.temp
@@ -365,15 +414,29 @@ if(is.null(cue.rules) == FALSE) {
 
         classtable.temp <- classtable(prediction.v = pred.vec,
                                       criterion.v = criterion.v,
-                                      sens.w = sens.w)
+                                      cost.v = rep(cue.cost.i, cases.n),
+                                      sens.w = sens.w,
+                                      cost.outcomes = cost.outcomes)
 
         direction.accuracy.df[which(direction.i == direction.vec), names(classtable.temp)] <- classtable.temp
 
       }
 
       # Determine best direction for level.i
-      best.acc <- max(direction.accuracy.df[goal], na.rm = TRUE)
-      best.acc.index <- which(direction.accuracy.df[goal] == best.acc)
+
+      if(goal == "cost") {
+
+          best.acc <- min(direction.accuracy.df["cost"], na.rm = TRUE)
+          best.acc.index <- which(direction.accuracy.df["cost"] == best.acc)
+
+
+      } else {
+
+        best.acc <- max(direction.accuracy.df[goal], na.rm = TRUE)
+        best.acc.index <- which(direction.accuracy.df[goal] == best.acc)
+
+        }
+
 
       if(length(best.acc.index) > 1) {best.acc.index <- sample(best.acc.index, size = 1)}
 
@@ -402,7 +465,16 @@ if(is.null(cue.rules) == FALSE) {
   }
 
   # Get thresholds that maximizes goal
+  if(goal != "cost") {
   best.result.index <- which(cue.stats[goal] == max(cue.stats[goal]))[1]
+
+  }
+
+  if(goal == "cost") {
+
+    best.result.index <- which(cue.stats["cost"] == min(cue.stats["cost"]))[1]
+
+  }
 
   best.result <- cue.stats[best.result.index,]
   if(cue.i == 1) {cuerank.df <- best.result}
@@ -411,6 +483,9 @@ if(is.null(cue.rules) == FALSE) {
 }
 
 rownames(cuerank.df) <- 1:nrow(cuerank.df)
+
+# Add cue costs
+cuerank.df$cost.cue <- cost.cues$cost[match(cuerank.df$cue, cost.cues$cue)]
 
 return(cuerank.df)
 

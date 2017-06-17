@@ -7,6 +7,8 @@
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
+#' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
@@ -47,6 +49,8 @@ grow.FFTrees <- function(formula,
                          goal = "wacc",
                          goal.chase = "bacc",
                          sens.w = .5,
+                         cost.outcomes = c(0, 1, 1, 0),
+                         cost.cues = NULL,
                          numthresh.method = "o",
                          stopping.rule = "exemplars",
                          stopping.par = .1,
@@ -55,7 +59,8 @@ grow.FFTrees <- function(formula,
                          cue.accuracies = NULL,
                          ...
 ) {
-#
+
+  #
   # formula = formula
   # data = data.train
   # algorithm = algorithm
@@ -69,7 +74,7 @@ grow.FFTrees <- function(formula,
   # cost.cues = cost.cues
   # progress = progress
 
-# Check for depricated arguments
+# Depricated arguments
 if(is.null(rank.method) == FALSE) {
 
   warning("The argument rank.method is depricated. Use algorithm instead.")
@@ -78,8 +83,8 @@ if(is.null(rank.method) == FALSE) {
 
 }
 
-# Set up dataframes
-
+# Step 0: Prepare data
+{
 # data.mf contains only criterion and predictors
 data.mf <- model.frame(formula = formula,
                        data = data)
@@ -90,10 +95,10 @@ cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
 criterion.v <- data.mf[,1]
 crit.name <- names(data.mf)[1]
 n.cues <- ncol(cue.df)
+}
 
-# Determine tree.definitions and cue.accuracies
-
-
+# Step 1: Determine tree.definitions and cue.accuracies
+{
 if(algorithm %in% c("max", "zigzag")) {
 
   heuristicResult <- heuristic.algorithm(formula = formula,
@@ -128,13 +133,10 @@ if(algorithm %in% c("ifan", "dfan")) {
   cue.accuracies <- fanResult$cue.accuracies
 
 }
+}
 
-
-
-
-# Apply tree.definitions to data and calculate statistics
-
-n.trees <- nrow(tree.definitions)
+# Step 2: Apply tree.definitions to data and calculate statistics
+{
 
 my.apply.tree <- apply.tree(data = data,
                             formula = formula,
@@ -142,12 +144,12 @@ my.apply.tree <- apply.tree(data = data,
                             sens.w = sens.w,
                             cost.outcomes = cost.outcomes,
                             cost.cues = cost.cues)
+}
 
-
-stat.names <- names(classtable(c(1, 1, 0), c(1, 0, 0)))
+# Setup final output
 
 output <- list(tree.definitions = tree.definitions,
-               tree.stats = my.apply.tree$treestats[,c("tree", stat.names)],
+               tree.stats = my.apply.tree$treestats[,c("tree",  c(names(classtable(c(1, 1, 0), c(1, 0, 0))), "mcu", "pci", "cost"))],
                cue.accuracies = cue.accuracies,
                levelout = my.apply.tree$levelout,
                decision = my.apply.tree$decision,

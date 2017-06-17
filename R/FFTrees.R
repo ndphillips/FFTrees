@@ -94,74 +94,96 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL
 ) {
 
-# #
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # data.test = NULL
-  # algorithm = "ifan"
-  # max.levels = NULL
-  # sens.w = .5
-  # cost.outcomes = NULL
-  # cost.cues = NULL
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = "wacc"
-  # goal.chase = "bacc"
-  # numthresh.method = "o"
-  # decision.labels = c("False", "True")
-  # train.p = 1
-  # rounding = 2
-  # progress = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  # #
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # cost.outcomes = c(0, 100, 30, 0)
-  # cost.cues = data.frame("cue" = c("thal", "cp"),
-  #                        "cost" = c(100, 300))
-  # algorithm = "ifan"
-  # max.levels = 4
-
-
 
 #
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = NULL
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = "wacc"
+#   goal.chase = "bacc"
+#   numthresh.method = "o"
+#   decision.labels = c("False", "True")
+#   train.p = 1
+#   rounding = NULL
+#   progress = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+#
+#   formula <- diagnosis ~.
+#   data = heart.train
+#   goal = "cost"
+#   goal.chase = "cost"
+#   cost.outcomes = c(0, 1, 1, 0)
+#   cost.cues = data.frame("cue" = "thal", cost = .00)
+
 # # Input validation
 {
 
-if(is.null(cost.outcomes) == FALSE) {
+# Cost
 
+if(is.null(cost.outcomes) == FALSE & goal != "cost") {
+
+  message("Because you specified outcome costs, goal will be set to 'cost'")
+
+  goal <- "cost"
+
+}
+if(is.null(cost.outcomes)) {cost.outcomes <- c(0, 1, 1, 0)}
+
+
+
+if(is.null(cost.outcomes) == FALSE) {
 
   if(length(cost.outcomes) != 4) {
 
     stop("cost.outcomes must have length 4 corresponding to hits, false-alarms, misses, and correct rejections")
   }
+
+}
+
+if(is.null(cost.cues) == FALSE) {
+
+  # Make sure all named cues in cost.cues are in data
+
+  cue.not.in.data <- sapply(cost.cues[,1], FUN = function(x) {x %in% names(data) == FALSE})
+
+  if(any(cue.not.in.data)) {
+
+    missing.cues <- paste(cost.cues[cue.not.in.data, 1], collapse = ",")
+
+    warning(paste0("The cue(s) {",missing.cues, "} specified in cost.cues are not present in the data."))
+
+  }
+
+
+
 }
 
 if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
-
-  message("Beware: You specified cue costs but not error costs, all errors will be assumed to have a cost of 0.")
 
   cost.outcomes <- c(0, 0, 0, 0)
 
 }
 
-if(is.null(cost.outcomes) == FALSE & is.null(cost.cues)) {
-
-  message("You specified error costs but not cue costs, all cues will assumed to have a cost of 0.")
-
-}
-
+# Depricated arguments
+{
 if(is.null(verbose) == FALSE) {
 
     warning("The argument verbose is depricated. Use progress instead.")
@@ -177,7 +199,11 @@ if(is.null(rank.method) == FALSE) {
   algorithm <- rank.method
 
 }
+}
 
+# Validate and clean arguments
+
+# tree.definitions
 if(is.null(tree.definitions) == FALSE) {
 
   for(i in 1:ncol(tree.definitions)) {
@@ -198,15 +224,15 @@ if(is.null(tree.definitions) == FALSE) {
 
 }
 
-if((goal %in% c("bacc", "wacc", "dprime")) == FALSE) {
+# goal
+if((goal %in% c("bacc", "wacc", "dprime", "cost", "acc")) == FALSE) {
 
-  stop("goal must be in the set 'bacc', 'wacc', 'dprime'")
+  stop("goal must be in the set 'bacc', 'wacc', 'dprime', 'cost', 'acc'")
 
 }
 
-# Check algorithm input
+# algorithm
 valid.algorithms <- c("ifan", "dfan", "max", "zigzag")
-
 
 if(algorithm %in% valid.algorithms == FALSE) {
 
@@ -229,13 +255,7 @@ if(algorithm %in% valid.algorithms == FALSE) {
     algorithm <- "dfan"
 
     }
-
-
-
-
 }
-
-
 
 if(force == FALSE) {
 
@@ -250,7 +270,8 @@ if(goal %in% c("acc") & sens.w != .5) {
 }
 
 
-# Is there training data?
+# Missing manditory arguments
+{
 if(is.null(data)) {stop("Please specify a dataframe in data")}
 
 # Is there a valid formula?
@@ -261,6 +282,7 @@ crit.name <- paste(formula)[2]
 if(crit.name %in% names(data) == FALSE) {
 
   stop(paste0("The criterion variable ", crit.name, " is not in the data."))}
+}
 
 # If there is an existing FFTrees object, then get the formula
 if(is.null(object) == FALSE) {
@@ -278,6 +300,9 @@ if(comp == FALSE) {
   do.rf <- FALSE
 
 }
+
+
+
 }
 
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
@@ -290,7 +315,8 @@ if(is.null(object) == FALSE) {
                             data = data.train.o)
 
   cue.train <- data.train[,2:ncol(data.train)]
-
+  cue.names <- names(cue.train)
+  n.cues <- length(cue.names)
   if(ncol(data.train) == 2) {
 
     cue.train <- data.frame(cue.train)
@@ -338,6 +364,9 @@ if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
                             data = data.train.o)
 
   cue.train <- data.train[,2:ncol(data.train)]
+  cue.names <- names(cue.train)
+  n.cues <- length(cue.names)
+
   crit.train <- data.train[,1]
 
   if(ncol(data.train) == 2) {
@@ -399,6 +428,8 @@ if(is.null(data.test) & train.p < 1) {
 
   cue.train <- data.train[,2:ncol(data.train)]
   crit.train <- data.train[,1]
+  cue.names <- names(cue.train)
+  n.cues <- length(cue.names)
 
   # create 'training testing' sets of size train.p * nrow(data.train)
 
@@ -522,23 +553,52 @@ if(is.null(data.test) & train.p < 1) {
   }
 
 
-  ## VALIDITY CHECKS
-  {
-    # Non-binary DV
-    if(setequal(crit.train, c(0, 1)) == FALSE) {
+## VALIDITY CHECKS
+{
+  # Non-binary DV
+  if(setequal(crit.train, c(0, 1)) == FALSE) {
 
-      stop(paste0("The criterion ", crit.name, " is either not binary or logical, or does not have variance"))
+    stop(paste0("The criterion ", crit.name, " is either not binary or logical, or does not have variance"))
 
-    }
+  }
 
-    # Missing values
-    if(any(is.finite(crit.train) == FALSE)) {
+  # Missing values
+  if(any(is.finite(crit.train) == FALSE)) {
 
-      stop(paste0("The criterion ", crit.name, " has missing values"))
+    stop(paste0("The criterion ", crit.name, " has missing values"))
+
+  }
+
+}
+
+# Make sure cost.cues contains all cues
+{
+  if(is.null(cost.cues)) {
+
+    cost.cues <- data.frame("cue" = cue.names,
+                            "cost" = rep(0, n.cues),
+                            stringsAsFactors = FALSE)
+
+  } else {
+
+    names(cost.cues) <- c("cue", "cost")
+
+    # Which cues are missing in cost.cues?
+
+    missing.cues <- setdiff(cue.names, cost.cues[,1])
+
+    if(length(missing.cues) > 0) {
+
+      cost.cues.missing <- data.frame("cue" = missing.cues,
+                                      "cost" = rep(0, length(missing.cues)))
+
+      cost.cues <- rbind(cost.cues, cost.cues.missing)
+
 
     }
 
   }
+}
 }
 }
 
@@ -656,7 +716,7 @@ levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
 treecost.train <- train.results$treecost
 
-treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu", "cost")]
+treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
 
 
 tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
@@ -689,7 +749,7 @@ levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
 treecost.test <- test.results$treecost
 
-treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu", "cost")]
+treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
 
 
 if(any(is.na(test.results$treestats$sens)) == TRUE) {
@@ -857,7 +917,16 @@ rownames(tree.auc) = c("train", "test")
 
 # GET BEST TREE
 # Note: Only matters when the algorithm produces multiple trees
+if(goal != "cost") {
+
 tree.max <- which(treestats$train[[goal]] == max(treestats$train[[goal]]))
+
+} else {
+
+tree.max <- which(treestats$train[[goal]] == min(treestats$train[[goal]]))
+
+}
+
 if(length(tree.max) > 1) {tree.max <- tree.max[1]}
 
 # Get AUC matrix

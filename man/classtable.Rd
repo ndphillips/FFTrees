@@ -4,7 +4,8 @@
 \alias{classtable}
 \title{Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors}
 \usage{
-classtable(prediction.v, criterion.v, sens.w = 0.5)
+classtable(prediction.v, criterion.v, sens.w = 0.5, cost.v = NULL,
+  cost.outcomes = c(0, 1, 1, 0))
 }
 \arguments{
 \item{prediction.v}{A binary vector of predictions}
@@ -12,6 +13,10 @@ classtable(prediction.v, criterion.v, sens.w = 0.5)
 \item{criterion.v}{A binary vector of criterion (true) values}
 
 \item{sens.w}{numeric. Weight given to sensitivity, must range from 0 to 1.}
+
+\item{cost.v}{numeric. An optional vector of additional costs to be added to each case.}
+
+\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 }
 \description{
 Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors

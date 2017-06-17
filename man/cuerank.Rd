@@ -5,8 +5,9 @@
 \title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
 cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
-  numthresh.method = "o", rounding = NULL, factor.directions = c("=",
-  "!="), numeric.directions = c(">", "<"), considerFALSE = TRUE,
+  cost.outcomes = c(0, 1, 1, 0), cost.cues = NULL, numthresh.method = "o",
+  rounding = NULL, factor.directions = c("=", "!="),
+  numeric.directions = c(">", "<"), considerFALSE = TRUE,
   progress = FALSE, cue.rules = NULL)
 }
 \arguments{
@@ -17,6 +18,10 @@ cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
+
+\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+
+\item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
 
 \item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,}
 

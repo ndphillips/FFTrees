@@ -1000,7 +1000,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   }
 
-  if(max(c(cr.i, mi.i)) > 0 & stats == TRUE) {
+  if(max(c(cr.i, mi.i), na.rm = TRUE) > 0 & stats == TRUE) {
 
     add.balls.fun(x.lim = ball.x.lim,
                   y.lim = ball.y.lim,
@@ -1140,7 +1140,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   }
 
-  if(max(c(fa.i, hi.i)) > 0 & stats == TRUE) {
+  if(max(c(fa.i, hi.i), na.rm = TRUE) > 0 & stats == TRUE) {
 
     add.balls.fun(x.lim = ball.x.lim,
                   y.lim = ball.y.lim,

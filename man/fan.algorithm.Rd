@@ -5,10 +5,10 @@
 \title{Grows fast-and-frugal trees using the fan algorithm}
 \usage{
 fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
-  goal = "wacc", goal.chase = "bacc", sens.w = 0.5,
-  cost.outcomes = cost.outcomes, cost.cues = cost.cues,
-  numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
-  rounding = NULL, progress = TRUE)
+  goal = "wacc", goal.chase = "bacc", sens.w = 0.5, cost.outcomes = c(0,
+  1, 1, 0), cost.cues = NULL, numthresh.method = "o",
+  stopping.rule = "exemplars", stopping.par = 0.1, rounding = NULL,
+  progress = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -24,6 +24,10 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
 \item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
+
+\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+
+\item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
 
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 

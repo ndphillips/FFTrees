@@ -1,6 +1,8 @@
 #' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 #' @param prediction.v A binary vector of predictions
 #' @param criterion.v A binary vector of criterion (true) values
+#' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param cost.v numeric. An optional vector of additional costs to be added to each case.
 #' @param sens.w numeric. Weight given to sensitivity, must range from 0 to 1.
 #' @importFrom stats qnorm
 #' @export
@@ -16,11 +18,19 @@
 
 classtable <- function(prediction.v,
                        criterion.v,
-                       sens.w = .5) {
+                       sens.w = .5,
+                       cost.v = NULL,
+                       cost.outcomes = c(0, 1, 1, 0)) {
 
-  #
-  # prediction.v <- NA
-  # criterin.v <- NA
+#
+#   prediction.v = pred.vec
+#   criterion.v = criterion.v
+#   cost.v = rep(cue.cost.i, cases.n)
+#   sens.w = sens.w
+#   cost.outcomes = cost.outcomes
+
+
+if(is.null(cost.v)) {cost.v <- rep(0, length(prediction.v))}
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
 
@@ -99,6 +109,9 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   # d-prime
   dprime <- qnorm(sens.c) - qnorm(far.c)
 
+  # cost (outcome costs)
+  cost <- (as.numeric(c(hi, fa, mi, cr) %*% cost.outcomes) + sum(cost.v)) / N
+
   }
 
   if(N == 0) {
@@ -117,6 +130,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     bacc <- NA
     wacc <- NA
     dprime <- NA
+    costo <- NA
 
   }
 
@@ -135,7 +149,8 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     bacc = bacc,
     wacc = wacc,
     bpv = bpv,
-    dprime = dprime)
+    dprime = dprime,
+    cost = cost)
 
   return(result)
 
