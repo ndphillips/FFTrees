@@ -21,12 +21,13 @@ library(knitr)
 ```{r, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
-                     data = heartdisease)
+                     data = heart.train,
+                     data.test = heart.test,
+                     decision.labels = c("Low-Risk", "High-Risk"))
 
 # Visualize the best training tree
 plot(heart.fft,
-     main = "Heart Disease",
-     decision.labels = c("Absent", "Present"))
+     main = "Heart Disease")
 ```
 
 

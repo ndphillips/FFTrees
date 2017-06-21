@@ -28,19 +28,22 @@ The following example follows the tutorial presented in @phillips2017FFTrees *FF
 You can install FFTrees from CRAN using `install.packages()` (you only need to do this once)
 
 ```{r, eval = FALSE}
-install.packages("FFTrees")   # Install the package
+# Install the package from CRAN
+install.packages("FFTrees")
 ```
 
 To use the package, you first need to load it into your current R session. You can load the package using `library()`
 
 ```{r, eval = TRUE, message = TRUE}
-library(FFTrees)   # Load the package
+# Load the package
+library(FFTrees)
 ```
 
 The package contains several guides. To open the main guide, run `FFTrees.guide()`
 
 ```{r, eval = FALSE}
-FFTrees.guide()    # Open the main package guide
+# Open the main package guide
+FFTrees.guide() 
 ```
 
 ## Step 2: Create FFTs from training data (and test on testing data)
