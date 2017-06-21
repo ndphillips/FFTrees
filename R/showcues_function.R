@@ -15,6 +15,14 @@ showcues <- function(x = NULL,
                      main = NULL,
                      top = 5) {
 
+  #
+  # x <- heart.fft
+  # data = "train"
+  # cue.accuracies <- NULL
+  # main = NULL
+  # top = 5
+  #
+
   palette <- "basel"
 
   if(palette %in% yarrr::piratepal("names")) {
@@ -52,7 +60,6 @@ if(is.null(x) & is.null(cue.accuracies) == FALSE) {
   cue.df <- cue.accuracies
 
 }
-
 
 if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 

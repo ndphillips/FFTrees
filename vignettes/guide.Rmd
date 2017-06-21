@@ -18,7 +18,7 @@ library(knitr)
 
 ## Fast and Frugal Trees (FFTrees)
 
-```{r, fig.width = 6, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE}
+```{r, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heartdisease)
@@ -40,6 +40,7 @@ The purpose of the `FFTrees` package is to produce, compare, and display FFTs. T
 
 For additional details and examples, check out the vignettes below:
 
+- [Heart Disease Tutorial](FFTrees_heart.html)
 - [Creating FFTrees with FFTrees()](FFTrees_function.html)
     - [Specifying trees directly](FFTrees_mytree.html)
 - [Visualizing FFTrees with plot()](FFTrees_plot.html)

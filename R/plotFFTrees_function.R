@@ -60,20 +60,21 @@ plot.FFTrees <- function(
 ) {
 
 #
-  # x = mushrooms.ring.fft
+  #   x = heart.fft
   # data = "train"
-  # what = 'tree'
+  # what = 'cues'
   # tree = "best.train"
-  # main = "Data"
+  # main = NULL
   # decision.labels = NULL
   # cue.cex = NULL
   # threshold.cex = NULL
+  # decision.cex = 1
   # comp = TRUE
   # stats = TRUE
   # n.per.icon = NULL
   # which.tree = NULL
-  # decision.cex = 1
   # level.type = "bar"
+  # decision.names = NULL
 
 
 if(what %in% c("cues", "tree") == FALSE) {
