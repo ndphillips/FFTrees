@@ -43,7 +43,7 @@ inwords <- function(x = NULL,
 
   if(is.null(x) == FALSE) {
 
-  if(is.null(decision.labels)) {decision.labels <- x$decision.labels}
+  if(is.null(decision.labels)) {decision.labels <- x$params$decision.labels}
 
   if(is.null(tree)) {
 
