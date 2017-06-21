@@ -30,11 +30,12 @@
 #' @return An \code{FFTrees} object with the following elements
 #'
 #' \describe{
-#'   \item{formula}{The formula specified when creating the FFTs}
+#'   \item{formula}{The formula specified when creating the FFTs.}
 #'   \item{data.desc}{Descriptive statistics of the data}
 #'   \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm}
 #'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
 #'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
+#'   \item{cost}{A list of cost information for each case in each tree.}
 #'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
 #'   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
 #'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
@@ -96,56 +97,50 @@ FFTrees <- function(formula = NULL,
 
 
 #
-#   formula = NULL
-#   data = NULL
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = NULL
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   goal.chase = "bacc"
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   train.p = 1
-#   rounding = NULL
-#   progress = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#
-#   formula <- diagnosis ~.
-#   data = heart.train
-#   goal = "cost"
-#   goal.chase = "cost"
-#   cost.outcomes = c(0, 1, 1, 0)
-#   cost.cues = data.frame("cue" = "thal", cost = .00)
+  # formula = NULL
+  # data = NULL
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = NULL
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = "wacc"
+  # goal.chase = "bacc"
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # train.p = 1
+  # rounding = NULL
+  # progress = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  #
+  # formula <- diagnosis ~.
+  # data = heart.train
+  # goal = "bacc"
+  # goal.chase = "bacc"
+  # cost.outcomes = c(0, 1, 1, 0)
+  #
+  #
+  # formula = diagnosis ~.
+  # data = heart.train
+  # cost.outcomes = c(0, 0, 0, 0)
+  # cost.cues = heart.cost
 
 # # Input validation
 {
-
-# Cost
-
-if(is.null(cost.outcomes) == FALSE & goal != "cost") {
-
-  message("Because you specified outcome costs, goal will be set to 'cost'")
-
-  goal <- "cost"
-
-}
-if(is.null(cost.outcomes)) {cost.outcomes <- c(0, 1, 1, 0)}
 
 
 
@@ -179,6 +174,15 @@ if(is.null(cost.cues) == FALSE) {
 if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
 
   cost.outcomes <- c(0, 0, 0, 0)
+
+} else {
+
+  if(is.null(cost.outcomes) & is.null(cost.cues)) {
+
+    cost.outcomes <- c(0, 1, 1, 0)
+
+
+  }
 
 }
 
@@ -266,6 +270,14 @@ if(goal %in% c("acc") & sens.w != .5) {
   goal <- "wacc"
 
 }
+
+
+}
+
+
+if(algorithm %in% c("ifan", "dfan") & is.null(max.levels)) {
+
+  max.levels <- 4
 
 }
 
@@ -991,8 +1003,14 @@ x.FFTrees <- list("formula" = formula,
                    "tree.max" = tree.max,
                    "inwords" = inwords.i,
                    "auc" = auc,
-                   "decision.labels" = decision.labels,
-                   "params" = list("algorithm" = algorithm, "goal" = goal, "sens.w" = sens.w, "max.levels" = max.levels),
+                   "params" = list("algorithm" = algorithm,
+                                   "goal" = goal,
+                                   "goal.chase" = goal.chase,
+                                   "sens.w" = sens.w,
+                                   "max.levels" = max.levels,
+                                   "cost.outcomes" = cost.outcomes,
+                                   "cost.cues" = cost.cues,
+                                   "decision.labels" = decision.labels),
                    "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),

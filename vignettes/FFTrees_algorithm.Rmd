@@ -14,6 +14,7 @@ vignette: >
 ```{r setup, include=FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(FFTrees)
+options(digits = 3)
 ```
 
 
@@ -33,10 +34,8 @@ The default algorithm used to create trees `"ifan"` can be summarised in five st
 
 |     Step| Function|Description |
 |:-----|:----|:----------------------------------------------------|
-|  1|    `cuerank`|For each cue, calculate a *classification threshold* that maximizes the balanced accuracy (average of sensitivity and specificity) of classifications of *all data* based on that cue (that is, ignoring all other cues). If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels.
-     |
-| 2|    `grow.FFTrees()`|Rank cues in order of their highest balanced accuracy value calculated using the classification threshold determined in step 1
-     |
+|  1|    `cuerank`|For each cue, calculate a *classification threshold* that maximizes the balanced accuracy (average of sensitivity and specificity) of classifications of *all data* based on that cue (that is, ignoring all other cues). If the cue is numeric, the threshold is a number. If the cue is a factor, the threshold is one or more factor levels.|
+| 2|    `grow.FFTrees()`|Rank cues in order of their highest balanced accuracy value calculated using the classification threshold determined in step 1|
 |  3|    `grow.FFTrees()`|Create all possible trees by varying the exit direction (left or right) at each level to a maximum of X levels (default of `max.levels = 4`).     |
 |  4|    `grow.FFTrees()`|Reduce the size of trees by removing (pruning) lower levels containing less than X\% (default of `stopping.par = .10`) of the cases in the original data.|
 |  5|    `grow.FFTrees()`|Select the FFT with the maximum weighed accuracy value as the final tree (`tree.max`)|
@@ -141,8 +140,80 @@ plot(heart.fft,
 
 The `"dfan"` algorithm is identical to the `"ifan"` algorithm with one (important) exception: In `algorithm = "dfan"`, the thresholds and rankings of cues are recalculated for each level in the FFT conditioned on the exemplars that were *not* classified at higher leves in the tree. For example, in the `heartdisease` data, using `algorithm = "dfan"` would first classify some cases using the `thal` cue at the first level, and would then calculate new accuracies for the remaining cues on the remaining cases that were not yet classified. This algorithm is appropriate for datasets where cue validities systematically differ for different (and predictable) subsets of data. However, because it calculates cue thresholds for increasingly smaller samples of data as the tree grows, it is also, potentially, more prone to overfitting compared to `algorithm = "ifan"`
 
-## `"max"`, `"zigzag"`
+
+## Additional arguments
+
+One can adjust the `"ifan"` and `"dfan"` algorithms in multiple ways. The most important arguments are `goal` and `goal.chase` which affect how thresholds are determined for each cue, and how cues are selected and ordered.
+
+| Argument| Functionality| Default | Other possible arguments
+|:------|:-------------------------|:-------|:---------|
+|     `goal.chase`| Specifies which statistic is optimized when *calculating* cue thresholds and ranking cues. |`goal.chase = "bacc"`| `"wacc"`, `"acc"`, `"dprime"`, `"cost"` |
+|     `goal`| Specifies which statistic is optimized when *selecting* an FFT in the fan.|`goal = "wacc"`| `"acc"`, `"dprime"`, `"cost"` |
+
+
+## Specifying costs
+
+If `goal = "cost"` and/or `goal.chase = "cost"`, the fan algorithms will try to minimize costs. One can specify two types of costs, `cost.cues`, the cost of using a cue to classify a case,, and `cost.outcomess` the cost of different outcomes.
+
+`cost.cues` should be a data frame with two columns, one column giving the names of cues with costs, and one column giving the actual costs. For example, in the `heartdisease` dataset, cues have the following costs:
+
+```{r}
+heart.cue.cost <- data.frame("cue" = c("age", "sex", "cp", "trestbps", "chol",  "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal"),
+                         "cost" = c(1, 1, 1, 1, 7.27, 5.2, 15.5, 102.9, 87.3, 87.3, 87.3, 100.9, 102.9))
+```
+
+`cost.outcome` should be a vector of length 4 indicating the cost of hits, false alarms, misses, and correct rejections reespectively. For example, if a false alarm has a cost of \$500 and a miss has a cost of $1000, one could specify:
+
+```{r}
+# Specify the following costs for heart disease diagnosis:
+# cost(Hit) = 0, cost(False Alarm) = 100, cost(Miss) = 200, cost(correct rejection) = 0
+
+heart.cost.outcomes <- c(0, 500, 1000, 0)
+```
+
+
+Here is an FFT that is built with the goal of maximizing balanced accuracy and *ignoring* these costs:
+
+```{r}
+heart.costA.fft <- FFTrees(formula = diagnosis ~.,
+                          data = heartdisease,
+                          cost.outcomes = heart.cost.outcomes,
+                          cost.cues = heart.cue.cost,
+                          goal = "bacc",
+                          goal.chase = "bacc")
+```
+
+Let's look at the performance of the best performing tree. The best tree has `bacc` = 0.812 and `cost` = 252
+
+```{r}
+summary(heart.costA.fft)$train[1,]
+```
+
+Now, we can build an FFT that tries to respect these costs:
+
+```{r}
+heart.costB.fft <- FFTrees(formula = diagnosis ~.,
+                          data = heartdisease,
+                          cost.outcomes = heart.cost.outcomes,
+                          cost.cues = heart.cue.cost,
+                          goal = "cost",
+                          goal.chase = "cost")
+```
+
+
+Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.732`, but a much loser cost of `cost = 154`
+
+```{r}
+summary(heart.costB.fft)$train[1,]
+```
+
+
+
+## `"max"` `"zigzag"`
 
 The max and zigzag algorithms are described in @martignon2008categorization.
+
+
+
 
 ### References

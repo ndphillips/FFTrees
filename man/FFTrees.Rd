@@ -67,11 +67,12 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 An \code{FFTrees} object with the following elements
 
 \describe{
-  \item{formula}{The formula specified when creating the FFTs}
+  \item{formula}{The formula specified when creating the FFTs.}
   \item{data.desc}{Descriptive statistics of the data}
   \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm}
   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
+  \item{cost}{A list of cost information for each case in each tree.}
   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}

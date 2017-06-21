@@ -213,6 +213,7 @@ for(tree.i in 1:trees.n) {
                            "acc" = NA,
                            "bacc" = NA,
                            "wacc" = NA,
+                           "dprime" = NA,
                            "cost" = NA,
                            "goal.change" = NA)
 
@@ -326,7 +327,7 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
                               cost.v = as.if.cuecost.v,
                               cost.outcomes = cost.outcomes)
 
-  asif.stats[current.level, c("sens", "spec", "acc", "bacc", "wacc", "cost")] <-  asif.classtable[1, c("sens", "spec", "acc", "bacc", "wacc", "cost")]
+  asif.stats[current.level, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "cost")] <-  asif.classtable[1, c("sens", "spec", "acc", "bacc", "wacc", "dprime","cost")]
 
 
   # If ASIF classification is perfect, then stop!

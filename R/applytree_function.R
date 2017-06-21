@@ -18,13 +18,15 @@ apply.tree <- function(data,
                        cost.outcomes = c(0, 1, 1, 0),
                        cost.cues = NULL
 ) {
-# #
-  # data = heart.train
-  # formula = diagnosis ~.
-  # tree.definitions = y$tree.definitions
-  # sens.w = .5
-  # cost.cues = data.frame("cue"= c("thal", "cp"), cost = c(0, 0))
-  # cost.outcomes = c(0, 1, 1, 0)
+
+
+
+  # data = data.train
+  # formula = formula
+  # tree.definitions = tree.definitions
+  # sens.w = sens.w
+  # cost.cues = cost.cues
+  # cost.outcomes = cost.outcomes
 
 # Step 0: Validation and Setup
 

@@ -105,9 +105,9 @@ goal <- x$params$goal
 
 if(is.null(decision.labels)) {
 
-  if(("decision.labels" %in% names(x))) {
+  if(("decision.labels" %in% names(x$params))) {
 
-  decision.labels <- x$decision.labels
+  decision.labels <- x$params$decision.labels
 
   } else {decision.labels <- c(0, 1)}
 
