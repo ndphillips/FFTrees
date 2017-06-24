@@ -20,6 +20,12 @@ apply.tree <- function(data,
 ) {
 
 
+  # formula = object$formula
+  # data = data
+  # tree.definitions = object$tree.definitions
+  # sens.w = .5
+  # cost.outcomes = c(0, 1, 1, 0)
+  # cost.cues = NULL
 
   # data = data.train
   # formula = formula

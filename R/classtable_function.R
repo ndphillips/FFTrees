@@ -51,7 +51,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
   prediction.v <- prediction.v[is.finite(criterion.v)]
   criterion.v <- criterion.v[is.finite(criterion.v)]
 
-  N <- length(criterion.v)
+  N <- min(length(criterion.v), length(prediction.v))
 
   if(N > 0) {
 
@@ -130,7 +130,7 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
     bacc <- NA
     wacc <- NA
     dprime <- NA
-    costo <- NA
+    cost <- NA
 
   }
 
