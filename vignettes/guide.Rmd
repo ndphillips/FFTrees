@@ -37,9 +37,32 @@ FFTs are simple, transparent decision strategies that use minimal information to
 
 The purpose of the `FFTrees` package is to produce, compare, and display FFTs. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. 
 
+To get started, we recomend looking at the [Heart Disease Tutorial](FFTrees_heart.html) and the tutorial on the FFTrees() function [creating FFTrees with FFTrees()](FFTrees_function.html).
+
+
+## Citation
+
+If you use `FFTrees` in your work, please cite us as follows:
+
+Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
+
+
+```{r, eval = FALSE}
+# BibTeX
+@article{phillips2017FFTrees,
+  title={FFTrees: A toolbox to create, visualise, and evaluate fast-and-frugal decision trees},
+  author={Phillips, Nathaniel D. and Neth, Hansjoerg and Woike, Jan and Wolfgang, Gaissmaier},
+  journal={Judgment and Decision Making},
+  year={2017}
+}
+```
+
+
+
+
 ## Vignettes
 
-For additional details and examples, check out the vignettes below:
+Here is a complete list of the vignettes
 
 - [Heart Disease Tutorial](FFTrees_heart.html)
 - [Creating FFTrees with FFTrees()](FFTrees_function.html)
@@ -61,12 +84,6 @@ The package contains several datasets taken from the [UCI Machine Learning Repos
 - `bank` -- Bank marketing dataset [source](http://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
 - `voting` -- 1984 US congressional voting records [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
 
-
-## Citation
-
-If you use `FFTrees` in your work, please cite the package as follows:
-
-Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). *FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees.* Manuscript submitted for publication.
 
 ## Feature requests and bug reports
 

@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400,
 library(FFTrees)
 ```
 
-The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* published in Judgment and Decision Making.
+The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* Soon to be published in [Judgment and Decision Making](http://www.sjdm.org).
 
 
 ## Step 1: Install and load the FFTrees package
@@ -39,7 +39,7 @@ To use the package, you first need to load it into your current R session. You c
 library(FFTrees)
 ```
 
-The package contains several guides. To open the main guide, run `FFTrees.guide()`
+The package contains several guides (like this one). To open the main guide, run `FFTrees.guide()`
 
 ```{r, eval = FALSE}
 # Open the main package guide
@@ -48,30 +48,31 @@ FFTrees.guide()
 
 ## Step 2: Create FFTs from training data (and test on testing data)
 
-In this example, we will create FFTs from a heart disease data set. The training data are in an object called `heart.train`, and the testing data are in an object called `heart.test`. For these data, we will predict `diagnosis`, a binary criterion that indicates whether each patent has or does not have heart disease (i.e., is at high-risk or low-risk):
+In this example, we will create FFTs from a heart disease data set. The training data are in an object called `heart.train`, and the testing data are in an object called `heart.test`. For these data, we will predict `diagnosis`, a binary criterion that indicates whether each patent has or does not have heart disease (i.e., is at high-risk or low-risk).
+
+To create the `FFTrees` object, we'll use the function `FFTrees()` with two main arguments: `formula`, a formula indicating the binary criterion as a function of one or more predictors to be considered for the tree (the shorthand `formula = diagnosis ~ .` means to include all predictors), and `data`, the training data.
 
 ```{r, message = FALSE}
 # Create an FFTrees object
 
-heart.fft <- FFTrees(formula = diagnosis ~.,
-                     data = heart.train,
-                     data.test = heart.test,
-                     decision.labels = c("Low-Risk", "High-Risk"))
+heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                     data = heart.train,                # Training data
+                     data.test = heart.test,            # Testing data
+                     decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
 ```
 
 The resulting trees, decisions, and accuracy statistics are now stored in the `FFTrees` object called `heart.fft`.
 
 #### Other arguments
 
-- There are several different algorithms available to build FFTs, including "ifan" [@phillips2017FFTrees], "dfan"[@phillips2017FFTrees], "max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization]. To specify a different algorithm, use the `algorithm` argument.
-- To change the maximum number of levels allowed in the tree, use `max.levels`
+- `algorithm`: There are several different algorithms available to build FFTs, including "ifan" [@phillips2017FFTrees], "dfan"[@phillips2017FFTrees], "max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization].
+- `max.levels`: Changes the maximum number of levels allowed in the tree.
 
 The following arguments apply to the "ifan" and "dfan" algorithms only:
 
-- The `goal.chase` argument changes which statistic is maximized during tree construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
-- The `goal` argument changes which statistic is maximized when *selecting* trees after construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
-
-[Defining an FFT verbally](FFTrees_mytree.html)
+- `goal.chase`: The `goal.chase` argument changes which statistic is maximized during tree construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
+- `goal`: The `goal` argument changes which statistic is maximized when *selecting* trees after construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
+- `my.tree`: You can define a tree verbally as a sentence using the `my.tree` argument. See [Defining an FFT verbally](FFTrees_mytree.html) for examples.
 
 ## Step 3: Inspect and summarize FFTs
 
@@ -95,7 +96,7 @@ To summaries performance statistics for all trees in the object, use the `summar
 summary(heart.fft)
 ```
 
-Here is a brief description of each statistic
+All statistics can be derived from a 2 x 2 confusion table like the one below. 
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}
 knitr::include_graphics("../inst/confusiontable.png")
@@ -118,9 +119,15 @@ knitr::include_graphics("../inst/confusiontable.png")
 |     wacc|   Weighted accuracy  | $sens \times w + spec \times w$|
 |     bpv|   Balanced predictive value  |  $ppv \times .5 + npv \times .5$|
 |     dprime|   D-prime  | $zsens - zfar$|
+
+The following statistics require a bit more information than the confusion table:
+
+| Output| Description| Formula
+|:------|:-----------------------------------------|:----------------------|
 |     cost|   Algorithm cost  | $hi \times cost_{hi} + mi \times cost_{mi} + fa \times cost_{fa} + cr \times cost_{cr}$|
-|     pci|   Percentage of cues ignored: Percentage of cues ignored when classifying cases | |
 |     mcu|   Mean cues used: Average number of cue values used in making classifications, averaged across all cases| |
+|     pci|   Percentage of cues ignored: Percentage of cues ignored when classifying cases | $N(CuesInData) - mcu$|
+
 
 
 ## Step 4: Visualise the final FFT
@@ -132,19 +139,25 @@ To visualize a tree, use `plot()`:
 ```{r}
 # Plot the best FFT when applied to the test data
 
-plot(heart.fft,
-     data = "test",
-     main = "Heart Disease")
+plot(heart.fft,              # An FFTrees object
+     data = "test",          # Which data to plot? "train" or "test"
+     main = "Heart Disease") # Plot heading
 ```
 
 #### Other arguments
 
-- To plot a tree other than the best fitting tree (FFT \#1), just specify another tree as an integer (e.g.; `plot(heart.fft, tree = 2)`).
-- To show statistics for training data, include the argument `data = "train"`.
-- To show only the tree, without any performance statistics, include the argument `stats = FALSE`
-- To remove the performance statistics of competitive algorithms (e.g.; regression, random forests) in the ROC curve, include the argument `comp = FALSE`
+- `tree`: Which tree in the object should beplotted? To plot a tree other than the best fitting tree (FFT \#1), just specify another tree as an integer (e.g.; `plot(heart.fft, tree = 2)`).
+- `data`: For which dataset should statistics be shown? Either `data = "train"` (the default), or `data = "test"`
+- `stats`: Should accuracy statistics be shown with the tree? To show only the tree, without any performance statistics, include the argument `stats = FALSE`
 
-To show individual cue accuracies in ROC space, include the argument `what = "cues"`:
+```{r}
+# Plot only the tree without accuracy statistics
+plot(heart.fft, 
+     stats = FALSE)
+```
+
+
+- `what`: To show individual cue accuracies in ROC space, include the argument `what = "cues"`:
 
 ```{r}
 # Show marginal cue accuracies in ROC space
@@ -154,9 +167,7 @@ plot(heart.fft,
      main = "Heart Disease")
 ```
 
-Here, we can see that the top 3 cues in terms of weighted accuracy are `thal`, `cp`, and `ca`
-
-
+- `comp`: Should statistics from competitive algorithms be shown in the ROC curve? To remove the performance statistics of competitive algorithms (e.g.; regression, random forests), include the argument `comp = FALSE`
 
 
 ## Additional Steps
