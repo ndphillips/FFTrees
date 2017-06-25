@@ -25,8 +25,9 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
                      data.test = heart.test,
                      decision.labels = c("Low-Risk", "High-Risk"))
 
-# Visualize the best training tree
+# Visualize the best training tree applied to the test data
 plot(heart.fft,
+     data = "test",
      main = "Heart Disease")
 ```
 
@@ -40,15 +41,38 @@ The purpose of the `FFTrees` package is to produce, compare, and display FFTs. T
 To get started, we recomend looking at the [Heart Disease Tutorial](FFTrees_heart.html) and the tutorial on the FFTrees() function [creating FFTrees with FFTrees()](FFTrees_function.html).
 
 
-## Citation
+## Vignettes
 
-If you use `FFTrees` in your work, please cite us as follows:
+Here is a complete list of the vignettes
+
+| | Vignette Link| Description |
+|--:|:------------------------------|:-------------------------------------------------|
+|     1|    [Heart Disease Tutorial](FFTrees_heart.html)| A complete example of using FFTrees to model heart disease diagnosis     |
+|      |    [Accuracy statistics](AccuracyStatistics.html)| Definitions of accuracy statistics     |
+|     2|    [Creating FFTrees with FFTrees()](FFTrees_function.html) |Description of `FFTrees()` arguments     |
+|      |    [Specifying trees directly with my.tree](FFTrees_mytree.html)|How to create FFTs manually     |
+|     3|    [Visualizing FFTrees with plot()](FFTrees_plot.html)|Plotting `FFTrees()` objects     |
+|     4|    [How FFTrees grows trees](FFTrees_algorithm.html)|Description of the algorithm(s) used to grow FFTs     |
+|     5|    [Examples of FFTrees](FFTrees_examples.html)|Lots of examples of FFTs     |
+
+
+
+## Please read our article and cite FFTrees!
+
+We have a forthcoming article introducing the package in the Journal of [Judgment and Decision Making](http://www.sjdm.org)
 
 Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
 
+If you use `FFTrees` in your work, please cite us so those of us without permanent positions can keep our jobs and continue developing the package:
+
+```{r}
+# Cite the package
+citation("FFTrees")
+```
+
 
 ```{r, eval = FALSE}
-# BibTeX
+# Cite the article
 @article{phillips2017FFTrees,
   title={FFTrees: A toolbox to create, visualise, and evaluate fast-and-frugal decision trees},
   author={Phillips, Nathaniel D. and Neth, Hansjoerg and Woike, Jan and Wolfgang, Gaissmaier},
@@ -57,19 +81,6 @@ Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). FFTrees: An R pack
 }
 ```
 
-
-
-
-## Vignettes
-
-Here is a complete list of the vignettes
-
-- [Heart Disease Tutorial](FFTrees_heart.html)
-- [Creating FFTrees with FFTrees()](FFTrees_function.html)
-    - [Specifying trees directly](FFTrees_mytree.html)
-- [Visualizing FFTrees with plot()](FFTrees_plot.html)
-- [How FFTrees grows trees](FFTrees_algorithm.html)
-- [Examples of FFTrees](FFTrees_examples.html)
 
 ## Datasets
 

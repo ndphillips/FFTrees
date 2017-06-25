@@ -6,5 +6,5 @@
   packageStartupMessage("    / \\   ")
   packageStartupMessage("   0   1  ")
   packageStartupMessage("FFTrees v1.3.0. Email: Nathaniel.D.Phillips.is@gmail.com")
-  packageStartupMessage("FFTrees.guide() opens the package guide.")
+  packageStartupMessage("FFTrees.guide() opens the package guide. Citation info at citation('FFTrees')")
 }

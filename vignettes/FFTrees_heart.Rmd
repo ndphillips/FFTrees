@@ -96,37 +96,11 @@ To summaries performance statistics for all trees in the object, use the `summar
 summary(heart.fft)
 ```
 
-All statistics can be derived from a 2 x 2 confusion table like the one below. 
+All statistics can be derived from a 2 x 2 confusion table like the one below. For definitions of all accuracy statistics, look at [Accuracy statistic definitions](AccuracyStatistics.html)
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}
 knitr::include_graphics("../inst/confusiontable.png")
 ```
-
-| Output| Description| Formula
-|:------|:------------------------------|:----------------------|
-|     n|    Total number of cases| |
-|     hi|    Number of hits|$N(Decision = 1 \land Truth = 1)$) |
-|     mi|   Number of misses| $N(Decision = 0 \land Truth = 1)$) |
-|     fa|    Number of false-alarms| $N(Decision = 1 \land Truth = 0)$) |
-|     cr|   Number of correct rejections| $N(Decision = 0 \land Truth = 0)$) |
-|     sens|  Sensitivity  | $p(Decision = 1 \vert Truth = 1) = hi / (hi + mi)$|
-|     spec|   Specificity  | $p(Decision = 0 \vert Truth = 0) = cr / (cr + fa)$|
-|     ppv|   Positive predictive value  | $p(Truth = 1 \vert Decision = 1) = hi / (hi + fa)$|
-|     npv|   Negative predictive value  | $p(Truth = 0 \vert Decision = 0) = cr / (cr + mi)$|
-|     far|   False alarm rate  | $1 - spec$|
-|     acc|   Accuracy |  $(hi + cr) / (hi + mi + fa + cr)$|
-|     bacc|   Balanced accuracy  | $sens \times .5 + spec \times .5$|
-|     wacc|   Weighted accuracy  | $sens \times w + spec \times w$|
-|     bpv|   Balanced predictive value  |  $ppv \times .5 + npv \times .5$|
-|     dprime|   D-prime  | $zsens - zfar$|
-
-The following statistics require a bit more information than the confusion table:
-
-| Output| Description| Formula
-|:------|:-----------------------------------------|:----------------------|
-|     cost|   Algorithm cost  | $hi \times cost_{hi} + mi \times cost_{mi} + fa \times cost_{fa} + cr \times cost_{cr}$|
-|     mcu|   Mean cues used: Average number of cue values used in making classifications, averaged across all cases| |
-|     pci|   Percentage of cues ignored: Percentage of cues ignored when classifying cases | $N(CuesInData) - mcu$|
 
 
 
