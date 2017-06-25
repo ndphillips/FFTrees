@@ -38,22 +38,23 @@ FFTs are simple, transparent decision strategies that use minimal information to
 
 The purpose of the `FFTrees` package is to produce, compare, and display FFTs. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. 
 
-To get started, we recomend looking at the [Heart Disease Tutorial](FFTrees_heart.html) and the tutorial on the FFTrees() function [creating FFTrees with FFTrees()](FFTrees_function.html).
+## How to use the package
 
+To get started with `FFTrees`, we recomend looking at the [Heart Disease Tutorial](FFTrees_heart.html). This tutorial will take you through all of the basics steps of creating, visualising, and evaluating fast-and-frugal trees.
 
-## Vignettes
+### Vignettes
 
 Here is a complete list of the vignettes
 
 | | Vignette Link| Description |
 |--:|:------------------------------|:-------------------------------------------------|
 |     1|    [Heart Disease Tutorial](FFTrees_heart.html)| A complete example of using FFTrees to model heart disease diagnosis     |
-|      |    [Accuracy statistics](AccuracyStatistics.html)| Definitions of accuracy statistics     |
-|     2|    [Creating FFTrees with FFTrees()](FFTrees_function.html) |Description of `FFTrees()` arguments     |
-|      |    [Specifying trees directly with my.tree](FFTrees_mytree.html)|How to create FFTs manually     |
-|     3|    [Visualizing FFTrees with plot()](FFTrees_plot.html)|Plotting `FFTrees()` objects     |
-|     4|    [How FFTrees grows trees](FFTrees_algorithm.html)|Description of the algorithm(s) used to grow FFTs     |
-|     5|    [Examples of FFTrees](FFTrees_examples.html)|Lots of examples of FFTs     |
+|      |    [Accuracy statistics](AccuracyStatistics.html)| Definitions of accuracy statistics used throughout the package|
+|     2|    [Creating FFTrees with FFTrees()](FFTrees_function.html) |Description of  the main function `FFTrees()`|
+|     |    [FFT construction](FFTrees_algorithm.html)|Description of the algorithm(s) used to grow FFTs     |
+|      |    [Specifying trees directly with my.tree](FFTrees_mytree.html)|How to create FFTs directly without using one of the built-in algorithms|
+|     3|    [Visualizing FFTrees with plot()](FFTrees_plot.html)|Plotting `FFTrees()` objects|
+|     4|    [Examples of FFTrees](FFTrees_examples.html)|Lots of examples of FFTs from different datasets contained in the package|
 
 
 
@@ -61,7 +62,6 @@ Here is a complete list of the vignettes
 
 We have a forthcoming article introducing the package in the Journal of [Judgment and Decision Making](http://www.sjdm.org)
 
-Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
 
 If you use `FFTrees` in your work, please cite us so those of us without permanent positions can keep our jobs and continue developing the package:
 
@@ -70,6 +70,7 @@ If you use `FFTrees` in your work, please cite us so those of us without permane
 citation("FFTrees")
 ```
 
+To cite our article, use the following BibTeX entry:
 
 ```{r, eval = FALSE}
 # Cite the article
@@ -81,10 +82,12 @@ citation("FFTrees")
 }
 ```
 
+Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
+
 
 ## Datasets
 
-The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with FFTrees.
+The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with `FFTrees`
 
 - `heartdisease` -- Patients suspected of having heart disease [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
 - `breastcancer` -- Patients suspected of having breast cancer [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
