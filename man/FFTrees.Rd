@@ -9,10 +9,10 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   cost.outcomes = NULL, cost.cues = NULL, stopping.rule = "exemplars",
   stopping.par = 0.1, goal = "wacc", goal.chase = "bacc",
   numthresh.method = "o", decision.labels = c("False", "True"),
-  train.p = 1, rounding = NULL, progress = TRUE, my.tree = NULL,
-  tree.definitions = NULL, comp = TRUE, do.cart = TRUE, do.lr = TRUE,
-  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
-  rank.method = NULL, force = FALSE, verbose = NULL)
+  main = NULL, train.p = 1, rounding = NULL, progress = TRUE,
+  my.tree = NULL, tree.definitions = NULL, comp = TRUE, do.cart = TRUE,
+  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
+  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -42,6 +42,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 
 \item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}}
+
+\item{main}{string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}}
 
 \item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.}
 

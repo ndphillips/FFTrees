@@ -16,6 +16,7 @@
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}
+#' @param main string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
@@ -78,6 +79,7 @@ FFTrees <- function(formula = NULL,
                     goal.chase = "bacc",
                     numthresh.method = "o",
                     decision.labels = c("False", "True"),
+                    main = NULL,
                     train.p = 1,
                     rounding = NULL,
                     progress = TRUE,
@@ -1010,7 +1012,8 @@ x.FFTrees <- list("formula" = formula,
                                    "max.levels" = max.levels,
                                    "cost.outcomes" = cost.outcomes,
                                    "cost.cues" = cost.cues,
-                                   "decision.labels" = decision.labels),
+                                   "decision.labels" = decision.labels,
+                                   "main" = main),
                    "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),

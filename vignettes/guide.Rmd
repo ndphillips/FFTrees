@@ -23,12 +23,11 @@ library(knitr)
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test,
+                     main = "Heart Disease",
                      decision.labels = c("Low-Risk", "High-Risk"))
 
 # Visualize the best training tree applied to the test data
-plot(heart.fft,
-     data = "test",
-     main = "Heart Disease")
+plot(heart.fft, data = "test")
 ```
 
 
@@ -60,7 +59,7 @@ Here is a complete list of the vignettes
 
 ## Please read our article and cite FFTrees!
 
-We have a forthcoming article introducing the package in the Journal of [Judgment and Decision Making](http://www.sjdm.org) called *FFTrees: A toolbox to create, visualise, and evaluate fast-and-frugal decision trees. We encourage you to read the full article to learn more about the history of FFTs and how they work.
+We have a forthcoming article introducing the package in the Journal of [Judgment and Decision Making](http://www.sjdm.org) called *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. We encourage you to read the full article to learn more about the history of FFTs and how they work.
 
 If you use `FFTrees`, please cite us (so those of us with temporary academic positions can keep our jobs). You can either cite the package, or the article:
 
@@ -74,7 +73,7 @@ To cite our article, use the following BibTeX entry:
 ```{r, eval = FALSE}
 # Cite the article
 @article{phillips2017FFTrees,
-  title={FFTrees: A toolbox to create, visualise, and evaluate fast-and-frugal decision trees},
+  title={FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
   author={Phillips, Nathaniel D. and Neth, Hansjoerg and Woike, Jan and Wolfgang, Gaissmaier},
   journal={Judgment and Decision Making},
   year={2017}

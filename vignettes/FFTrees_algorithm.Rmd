@@ -124,10 +124,9 @@ Here, we see that we have 7 different trees, each using some combination of the 
 Now let's use the wrapper function `FFTrees()` to create the trees all at once. We will then plot tree #4 which, according to our results above, should contain the cues `thal, cp, ca`"
 
 ```{r, fig.width = 5, fig.height = 5, message = FALSE, fig.align = "center"}
-library(FFTrees)
-
 # Create trees
-heart.fft <- FFTrees(formula = diagnosis ~., data = heartdisease)
+heart.fft <- FFTrees(formula = diagnosis ~., 
+                     data = heartdisease)
 
 # Plot tree # 4
 plot(heart.fft, 

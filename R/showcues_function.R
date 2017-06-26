@@ -71,7 +71,14 @@ cue.df$col <- rep(palette, length.out = nrow(cue.df))
 
 # GENERAL PLOTTING SPACE
 
-if(is.null(main)) {main <- "Individual Cue Accuracies"}
+if(is.null(main)) {
+
+  if(is.null(x$params$main)) {
+  main <- "Individual Cue Accuracies"
+  } else {main <- x$params$main}
+
+
+  }
 
 plot(1, xlim = c(0, 1), ylim  = c(0, 1), type = "n",
      xlab = "1 - Specificity", ylab = "Sensitivity", main = main,

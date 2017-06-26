@@ -114,6 +114,31 @@ if(is.null(decision.labels)) {
 
 }
 
+if(is.null(main)) {
+
+  if(("main" %in% names(x$params))) {
+
+    main <- x$params$main
+
+  } else {
+
+    if(class(data) == "character") {
+
+      if(data == "train") {main <- "Data (Training)"}
+      if(data == "test") {main <- "Data (Testing)"}
+
+    }
+
+    if(class(data) == "data.frame") {main <- "Test Data"}
+
+
+  }
+
+}
+
+
+
+
 # Check for problems and depreciated arguments
 {
   if(is.null(which.tree) == FALSE) {
@@ -151,19 +176,6 @@ if(is.null(decision.labels)) {
   }
 }
 
-# Create defaults
-if(is.null(main)) {
-
-  if(class(data) == "character") {
-
-    if(data == "train") {main <- "Data (Training)"}
-    if(data == "test") {main <- "Data (Testing)"}
-
-  }
-
-  if(class(data) == "data.frame") {main <- "Test Data"}
-
-}
 
 # DEFINE PLOTTING TREE
 
@@ -836,7 +848,7 @@ text(x = 0, y = 0,
 
 if(stats == FALSE) {
 
-if(main %in% c("Data (Testing)", "Data (Training)")) {main <- ""}
+if(is.null(main) & is.null(x$params$main)) {main <- ""}
 
   mtext(text = main, side = 3, cex = 2)
 
