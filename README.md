@@ -25,6 +25,8 @@ plot(heart.fft,
 
 1.3.0
 
+- Many additional vignettes (e.g.; Accuracy Statistics and Heart Disease Tutorial) and updates to existing vignettes.
+
 - Added `cost.outcomes` and `cost.cues` to allow the user to specify specify the cost of outcomes and cues. Also added a new `cost` statistic throughout outputs.
 
 - Added `inwords()`, a function that converts an FFTrees object to words.
