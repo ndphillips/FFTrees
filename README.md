@@ -17,7 +17,7 @@ plot(heart.fft,
      decision.labels = c("Healthy", "Disease"))
 ```
 
-![](inst/HeartDiseaseFFT_v1_3_0.png)
+![](inst/HeartFFT.jpg)
 
 
 
