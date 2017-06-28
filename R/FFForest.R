@@ -16,7 +16,9 @@
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param comp,do.lr,do.cart,do.rf,do.svm logical. See arguments in \code{FFTrees()}
 #' @param rank.method,hr.weight depricated arguments
-#' @importFrom stats  formula
+#' @importFrom stats formula
+#' @importFrom parallel mclapply
+
 #' @return An object of class \code{FFForest} with the following elements...
 #' @export
 #' @examples
@@ -51,26 +53,6 @@ FFForest <- function(formula = NULL,
                      hr.weight = NULL
 ) {
 #
-#
-#   formula = diagnosis ~.
-#   data = heartdisease
-#   data.test <- NULL
-#   max.levels = 5
-#   ntree = 10
-#   train.p = .5
-#   algorithm = "ifan"
-#   goal = "bacc"
-#   sens.w = .5
-#   comp <- FALSE
-#   verbose = TRUE
-#   cpus = 1
-#   do.lr = TRUE
-#   do.cart = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   rank.method = NULL
-#   hr.weight = NULL
-# #
 
 
 # Check for depricated arguments
@@ -110,6 +92,8 @@ simulations <- data.frame(
 
 # getsim.fun does one training split and returns tree statistics
 getsim.fun <- function(i) {
+
+cat(i)
 
 result.i <- FFTrees::FFTrees(formula = formula,
                               data = data,
@@ -169,39 +153,14 @@ return(list("trees" = tree.stats.i,
 
 }
 
-if(cpus == 1) {
 
-  result.ls <- lapply(1:nrow(simulations), FUN = function(x) {
+result.ls <- parallel::mclapply(1:nrow(simulations), FUN = function(x) {
 
-    if(verbose) {print(paste0(x, " of ", nrow(simulations)))}
-    return(getsim.fun(x))
+  if(verbose) {cat(paste0(x, " of ", nrow(simulations)))}
 
-    })
+  return(getsim.fun(x))}, mc.cores = cpus)
 
-}
 
-if(cpus > 1) {
-
-  suppressMessages(snowfall::sfInit(parallel = TRUE, cpus = cpus))
-  snowfall::sfExport("simulations")
-  snowfall::sfLibrary(FFTrees)
-  snowfall::sfExport("formula")
-  snowfall::sfExport("goal")
-  snowfall::sfExport("data")
-  snowfall::sfExport("max.levels")
-  snowfall::sfExport("train.p")
-  snowfall::sfExport("do.lr")
-  snowfall::sfExport("do.rf")
-  snowfall::sfExport("do.cart")
-  snowfall::sfExport("do.svm")
-  snowfall::sfExport("max.levels")
-  snowfall::sfExport("algorithm")
-  snowfall::sfExport("sens.w")
-
-  result.ls <- snowfall::sfClusterApplySR(1:nrow(simulations), fun = getsim.fun, perUpdate = 1)
-  suppressMessages(snowfall::sfStop())
-
-  }
 
 # Append final results to simulations
 

@@ -11,7 +11,7 @@ vignette: >
 
 ```{r, echo = FALSE}
 options(digits = 3)
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
 
@@ -24,7 +24,7 @@ The `FFTrees()` function is at the heart of the `FFTrees` package. The function 
 ## Example: heartdisease
 
 ```{r fig.align = "center", out.width="250px", echo = FALSE}
-knitr::include_graphics("../inst/CoronaryArtery.png")
+knitr::include_graphics("../inst/CoronaryArtery.jpg")
 ```
 
 We'll create FFTrees fitted to the `heartdisease` dataset. This dataset contains data from `r nrow(heartdisease)` patients suspected of having heart disease. Here's how the dataset looks:

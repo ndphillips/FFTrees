@@ -11,7 +11,7 @@ vignette: >
 
 ```{r, echo = FALSE}
 options(digits = 3)
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
 
@@ -31,10 +31,10 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 plot(heart.fft)
 ```
 
-You'll notice a 2 x 2 table in the bottom-left hand side of the plot. This is a *2 x 2 Confusion Table* [Wikipedia Entry](https://en.wikipedia.org/wiki/Confusion_matrix). All accuracy measures can be derived from this table. Here is a generic version of a confusion table:
+You'll notice a 2 x 2 table in the bottom-left hand side of the plot. This is a *2 x 2 Confusion Table* [Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix). All accuracy measures can be derived from this table. Here is a generic version of a confusion table:
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}
-knitr::include_graphics("../inst/confusiontable.png")
+knitr::include_graphics("../inst/confusiontable.jpg")
 ```
 
 The table cross-tabulates the decisions of the algorithm (rows) with actual criterion values (columns) and contains counts of observations for all four resulting cells. Counts in cells a and d refer to correct decisions due to the match between predicted and criterion values, whereas counts in cells b and c refer to errors due to the mismatch between predicted and criterion values. Both correct decisions and errors come in two types: Cell *hi* represents hits, positive criterion values correctly predicted to be positive, and cell *cr* represents correct rejections, negative criterion values correctly predicted to be negative. As for errors, cell *fa* represents false alarms, negative criterion values erroneously predicted to be positive, and cell *mi* represents misses, positive criterion values erroneously predicted

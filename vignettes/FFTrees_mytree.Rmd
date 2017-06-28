@@ -11,7 +11,7 @@ vignette: >
 
 ```{r, echo = FALSE}
 options(digits = 3)
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
 
@@ -86,27 +86,25 @@ plot(my.heart.fft)
 
 This one looks much better!
 
-Here's one more example using the `income` data. We'll create an FFT predicting whether a person has an income greater than 50K using the cues age, education, and hours.per.week:
+Here's one more example using the `titanic` data. We'll create an FFT predicting whether a person survived the Titanic using the cues class, age, and sex:
 
 ```{r}
-head(income[c("age", "education", "hours.per.week", "income.gt50")])
+head(titanic[c("class", "age", "sex", "survived")])
 ```
 
 ```{r}
-my.income.tree <- "If age < 35, predict False.
-                   If education = {Doctorate,Masters}, predict True.
-                   If hours.per.week < 40, predict False.
-                   Otherwise, predict True"
+my.titanic.tree <- "If age = {child}, predict True.
+                   If sex = {female}, predict True.
+                   If class = {first}, predict True.
+                   Otherwise, predict False"
 
-income.fft <- FFTrees(income.gt50 ~., 
-                      data = income, 
-                      my.tree = my.income.tree,
+titanic.fft <- FFTrees(survived ~., 
+                      data = titanic, 
+                      my.tree = my.titanic.tree,
                       comp = FALSE)
 
-plot(income.fft)
+plot(titanic.fft)
 ```
-
-Wow, that tree also has pretty terrible accuracy. That's what I get for trying to come up with my own intuitive tree..
 
 ### `tree.definitions`
 

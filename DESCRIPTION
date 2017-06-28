@@ -1,13 +1,13 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
-Version: 1.3.0
-Date: 2017-6-25
+Version: 1.3.1
+Date: 2017-6-28
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut", "cre"),
                      email = "Nathaniel.D.Phillips.is@gmail.com"),
-              person("Hansjoerg", "Neth", role = "ctb"),
-              person("Jan", "Woike", role = "ctb"),
-              person("Wolfgang", "Gaissmaer", role = "ctb"))
+              person("Hansjoerg", "Neth", role = "aut"),
+              person("Jan", "Woike", role = "aut"),
+              person("Wolfgang", "Gaissmaer", role = "aut"))
 Maintainer: Nathaniel Phillips <Nathaniel.D.Phillips.is@gmail.com>
 Description: Create, visualize, and test fast-and-frugal decision trees (FFTs). FFTs are very simple decision trees for
     classifying cases (i.e.; breast cancer patients) into one of two classes (e.g.;
@@ -21,11 +21,10 @@ Imports:
     MASS,
     circlize,
     mlbench,
+    parallel,
     graphics,
     randomForest,
     igraph,
-    snow,
-    snowfall,
     e1071,
     glmnet,stringr,progress
 License: CC0

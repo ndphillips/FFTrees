@@ -18,7 +18,7 @@ library(knitr)
 
 ## Fast and Frugal Trees (FFTs)
 
-```{r fig1, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease risk."}
+```{r fig1, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease risk. Read the Heart Disease Tutorial vignette to learn more about how to create this FFT."}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
@@ -57,18 +57,28 @@ Here is a complete list of the vignettes
 
 
 
-## Please read our article and cite FFTrees!
+## Article in Judgment and Decision Making
 
-We have a forthcoming article introducing the package in the Journal of [Judgment and Decision Making](http://www.sjdm.org) called *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. We encourage you to read the full article to learn more about the history of FFTs and how they work.
+- Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (in press). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
 
-If you use `FFTrees`, please cite us (so those of us with temporary academic positions can keep our jobs). You can either cite the package, or the article:
+We have an article in press introducing the package in the journal [Judgment and Decision Making](http://www.sjdm.org/journal/). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
+
+
+
+
+
+## Citation information
+
+We had a lot of fun creating FFTrees and hope you like it too! If you use FFTrees in your work, please spread the word and cite us so we can continue developing the package. You can cite the package as follows
 
 ```{r}
 # Cite the package
 citation("FFTrees")
 ```
 
-To cite our article, use the following BibTeX entry:
+You can cite our article as follows:
+
+Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (in press). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*.
 
 ```{r, eval = FALSE}
 # Cite the article
@@ -80,7 +90,6 @@ To cite our article, use the following BibTeX entry:
 }
 ```
 
-Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (2017). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
 
 
 ## Datasets
@@ -93,13 +102,12 @@ The package contains several datasets taken from the [UCI Machine Learning Repos
 - `forestfires` -- Forest fire statistics [source](http://archive.ics.uci.edu/ml/datasets/Forest+Fires)
 - `wine` -- Ratings of wine quality [source](http://archive.ics.uci.edu/ml/datasets/Wine)
 - `income` -- Census data from > 30,000 US residents [source](http://archive.ics.uci.edu/ml/datasets/Adult)
-- `bank` -- Bank marketing dataset [source](http://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
 - `voting` -- 1984 US congressional voting records [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
 
 
-## Feature requests and bug reports
+## GitHub
 
-This package is constantly being updated. The latest developer version is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). For comments, tips, additional references, and bug reports, please add an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues) or email me at Nathaniel.D.Phillips.is@gmail.com
+The latest developer version of FFTrees is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). For comments, tips, and bug reports, please post an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues) or email me at Nathaniel.D.Phillips.is@gmail.com.
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE}
 knitr::include_graphics("../inst/FFTrees_Logo.jpg")

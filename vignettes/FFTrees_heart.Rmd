@@ -12,7 +12,7 @@ vignette: >
 
 ```{r, echo = FALSE}
 options(digits = 3)
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 400, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
 
@@ -100,7 +100,7 @@ summary(heart.fft)
 All statistics can be derived from a 2 x 2 confusion table like the one below. For definitions of all accuracy statistics, look at the [accuracy statistic definitions](AccuracyStatistics.html) vignette.
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}
-knitr::include_graphics("../inst/confusiontable.png")
+knitr::include_graphics("../inst/confusiontable.jpg")
 ```
 
 
