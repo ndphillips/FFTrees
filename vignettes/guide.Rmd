@@ -16,7 +16,7 @@ library(FFTrees)
 library(knitr)
 ```
 
-## Fast and Frugal Trees (FFTs)
+## Fast-and-Frugal Trees (FFTs)
 
 ```{r fig1, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease risk. Read the Heart Disease Tutorial vignette to learn more about how to create this FFT."}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
@@ -59,7 +59,7 @@ Here is a complete list of the vignettes
 
 ## Article in Judgment and Decision Making
 
-- Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (in press). FFTrees: An R package to create, visualize, and implement fast-and-frugal decision trees. *Judgment and Decision Making*.
+- Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (in press). FFTrees: An R package to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*.
 
 We have an article in press introducing the package in the journal [Judgment and Decision Making](http://www.sjdm.org/journal/). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
