@@ -50,6 +50,6 @@ print(summary.text.1)
 print(summary.text.2)
 print(summary.df)
 print(importance.text)
-print(importance.df)
+print(importance.df[1:min(5, nrow(importance.df)),])
 
 }

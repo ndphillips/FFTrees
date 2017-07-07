@@ -136,10 +136,8 @@ FFTrees <- function(formula = NULL,
   # cost.outcomes = c(0, 1, 1, 0)
   #
   #
-  # formula = diagnosis ~.
-  # data = heart.train
-  # cost.outcomes = c(0, 0, 0, 0)
-  # cost.cues = heart.cost
+  # formula = type ~.
+  # data = Zoo_b
 
 # # Input validation
 {
