@@ -31,15 +31,14 @@ inwords <- function(x = NULL,
                    decision.labels = NULL,
                    digits = 2) {
 
-# x = NULL
-#   tree = tree.max
-#   classes.v = unlist(strsplit(tree.definitions$classes[tree.max], ";"))
-#   cues.v = unlist(strsplit(tree.definitions$cues[tree.max], ";"))
-#   directions.v = unlist(strsplit(tree.definitions$directions[tree.max], ";"))
-#   thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";"))
-#   exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";"))
-#   decision.labels = decision.labels
-#   digits = 2
+
+  # tree = tree.max
+  # classes.v = unlist(strsplit(tree.definitions$classes[tree.max], ";"))
+  # cues.v = unlist(strsplit(tree.definitions$cues[tree.max], ";"))
+  # directions.v = unlist(strsplit(tree.definitions$directions[tree.max], ";"))
+  # thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";"))
+  # exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";"))
+  # decision.labels = decision.labels
 
   if(is.null(x) == FALSE) {
 
@@ -114,10 +113,19 @@ if(exits.i %in% c(0, 1)) {
 
       }
 
-      if(classes.v[i] %in% c("n", "i")) {
+      if(classes.v[i] %in% c("n", "i", "l")) {
 
         threshold.i <- thresholds.v[i]
+
+        if(classes.v[i] == "l") {
+
+          threshold.i <- paste(thresholds.v[i])
+
+        } else {
+
         threshold.i <- round(as.numeric(thresholds.v[i]), 2)
+
+        }
 
         sentence.i <- paste0("If ", cues.v[i], " ", direction.i, " ", threshold.i,
                              ", predict ", decision.labels[1], "")
