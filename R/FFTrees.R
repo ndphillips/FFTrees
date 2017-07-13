@@ -98,51 +98,66 @@ FFTrees <- function(formula = NULL,
 ) {
 
 
+# #
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = NULL
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = "wacc"
+#   goal.chase = "bacc"
+#   numthresh.method = "o"
+#   decision.labels = c("False", "True")
+#   train.p = 1
+#   rounding = NULL
+#   progress = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
 #
-  # formula = NULL
-  # data = NULL
-  # data.test = NULL
-  # algorithm = "ifan"
-  # max.levels = NULL
-  # sens.w = .5
-  # cost.outcomes = NULL
-  # cost.cues = NULL
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = "wacc"
-  # goal.chase = "bacc"
-  # numthresh.method = "o"
-  # decision.labels = c("False", "True")
-  # train.p = 1
-  # rounding = NULL
-  # progress = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  #
-  # formula <- diagnosis ~.
-  # data = heart.train
-  # goal = "bacc"
-  # goal.chase = "bacc"
-  # cost.outcomes = c(0, 1, 1, 0)
-  #
-  #
-  # formula = type ~.
-  # data = Zoo_b
+#
+#   object <- NULL
+#   formula <- diagnosis ~.
+#   data <- heartdisease
+
 
 # # Input validation
+
+# If no FFTrees object is specified
+if(is.null(object)) {
+
+# Depricated arguments
 {
+if(is.null(verbose) == FALSE) {
 
+  warning("The argument verbose is depricated. Use progress instead.")
 
+  progress <- verbose
+
+}
+
+if(is.null(rank.method) == FALSE) {
+
+  warning("The argument rank.method is depricated. Use algorithm instead.")
+
+  algorithm <- rank.method
+
+}
+}
 
 if(is.null(cost.outcomes) == FALSE) {
 
@@ -174,6 +189,7 @@ if(is.null(cost.cues) == FALSE) {
 if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
 
   cost.outcomes <- c(0, 0, 0, 0)
+  message("Warning: You specified cue costs but no outcome costs. Results could be misleading.")
 
 } else {
 
@@ -186,26 +202,15 @@ if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
 
 }
 
-# Depricated arguments
-{
-if(is.null(verbose) == FALSE) {
-
-    warning("The argument verbose is depricated. Use progress instead.")
-
-    progress <- verbose
-
-  }
-
-if(is.null(rank.method) == FALSE) {
-
-  warning("The argument rank.method is depricated. Use algorithm instead.")
-
-  algorithm <- rank.method
-
-}
-}
 
 # Validate and clean arguments
+
+if(is.null(object) == FALSE) {
+
+    formula <- object$formula
+    tree.definitions <- object$tree.definitions
+
+}
 
 # tree.definitions
 if(is.null(tree.definitions) == FALSE) {
@@ -284,24 +289,20 @@ if(algorithm %in% c("ifan", "dfan") & is.null(max.levels)) {
 
 # Missing manditory arguments
 {
-if(is.null(data)) {stop("Please specify a dataframe in data")}
+if(is.null(data) & is.null(object)) {stop("Please specify training data")}
 
 # Is there a valid formula?
-if(is.null(formula) | class(formula) != "formula") {stop("Please specify a valid formula")}
+if((is.null(formula) | class(formula) != "formula") & is.null(object)) {stop("Please specify a valid formula")}
 
 # Does the named criterion exist?
 crit.name <- paste(formula)[2]
-if(crit.name %in% names(data) == FALSE) {
+if((crit.name %in% names(data) == FALSE) & is.null(object)) {
 
   stop(paste0("The criterion variable ", crit.name, " is not in the data."))}
-}
-
-# If there is an existing FFTrees object, then get the formula
-if(is.null(object) == FALSE) {
-
-  formula <- object$formula
 
 }
+
+
 
 
 if(comp == FALSE) {
@@ -314,47 +315,20 @@ if(comp == FALSE) {
 }
 
 
-
-}
-
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
 {
 
 if(is.null(object) == FALSE) {
 
-  data.train.o <- object$data$train
-  data.train <- model.frame(formula = formula,
-                            data = data.train.o)
+  data.train.o <- NULL
+  data.train <- NULL
 
-  cue.train <- data.train[,2:ncol(data.train)]
-  cue.names <- names(cue.train)
+  cue.train <- NULL
+  cue.names <- object$cue.accuracies$train$cue
   n.cues <- length(cue.names)
-  if(ncol(data.train) == 2) {
 
-    cue.train <- data.frame(cue.train)
-
-  }
-
-  crit.train <- data.train[,1]
-
-  crit.name <- names(data.train)[1]
-
-  if(is.null(data.test) == FALSE) {
-
-    data.test.o <- data.test
-
-    if(setequal(names(data.train), names(data.test)) == FALSE) {
-
-      stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
-
-    }
-
-    data.test <- model.frame(formula = formula,
-                             data = data.test.o,
-                             na.action = NULL)
-
-    cue.test <- data.test[,2:ncol(data.test)]
-    crit.test <- data.test[,1]
+  crit.train <- NULL
+  crit.name <- NULL
 
   }
 
@@ -421,7 +395,6 @@ if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
 
 ## TRAINING / TESTING RANDOM SPLIT
 if(is.null(data.test) & train.p < 1) {
-
 
   # UPDATE
 
@@ -512,7 +485,6 @@ if(is.null(data.test) & train.p < 1) {
 
 }
 
-
 # More validity checks
 {
 
@@ -535,10 +507,13 @@ if(is.null(data.test) & train.p < 1) {
 
     }
 
+    if(is.null(object)) {
+
     data.test <- fac.to.string(data.test)
     data.train <- fac.to.string(data.train)
     cue.train <- fac.to.string(cue.train)
     cue.test <- fac.to.string(cue.test)
+}
 
   }
 
@@ -554,7 +529,6 @@ if(is.null(data.test) & train.p < 1) {
   # MAKE SURE TRAINING AND TEST DATAFRAMES ARE SIMILAR
 
   if(is.null(data.test) == FALSE) {
-
 
     if(setequal(names(data.train), names(data.test)) == FALSE) {
 
@@ -612,7 +586,6 @@ if(is.null(data.test) & train.p < 1) {
   }
 }
 }
-}
 
 # GET TREE DEFINITIONS  with grow.FFTrees()
 #  [tree.definitions, cue.accuracies.train]
@@ -623,7 +596,7 @@ if(is.null(data.test) & train.p < 1) {
     tree.definitions <- object$tree.definitions
     cue.accuracies.train <- object$cue.accuracies$train
 
-    }
+  }
 
   if(is.null(object) & is.null(tree.definitions) & is.null(my.tree) & is.null(tree.definitions)) {
 
@@ -670,14 +643,57 @@ if(is.null(data.test) & train.p < 1) {
 
 }
 
-# CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
-{
+}
 
 if(is.null(object) == FALSE) {
 
-cue.accuracies.train <- object$cue.accuracies$train
+  if(class(object) != "FFTrees") {stop("The object you specified is not of class FFTrees")}
+
+  formula <- object$formula
+  tree.definitions <- object$tree.definitions
+  algorithm <- object$params$algorithm
+  goal <- object$params$goal
+  goal.chase <- object$params$goal.chase
+  sens.w <- object$params$sens.w
+  max.levels <- object$params$max.levels
+  cost.outcomes <- object$params$cost.outcomes
+  cost.cues <- object$params$cost.cues
+  decision.labels <- object$params$decision.labels
+  main <- object$params$main
+  data.desc.train <- object$data.desc$train
+  cue.accuracies.train <- object$cue.accuracies$train
+  treestats.train <- object$tree.stats$train
+  levelstats.train <- object$level.stats$train
+  decision.train <- object$decision$train
+  levelout.train <- object$levelout$train
+  tree.auc.train <- object$auc[1,"FFTrees"]
+  treecost.train <- object$cost$train
+  tree.max <- object$tree.max
+  comp <- object$comp
+  data.train <- NULL
+
+
+  if((is.null(data) == FALSE) & is.null(data.test)) {
+
+    warning("You specified an FFTrees object but not data.test. I will use data as data.test")
+
+    data.test <- data
+    data <- NULL
+
+  }
+
+  data.test.o <- data.test
+  data.test <- model.frame(formula = formula,
+                           data = data.test,
+                           na.action = NULL)
+
+  cue.test <- data.test[,2:ncol(data.test)]
+  crit.test <- data.test[,1]
 
 }
+
+# CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
+{
 
 if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test)) & is.null(cue.accuracies.train) == FALSE) {
 
@@ -702,8 +718,6 @@ cue.accuracies.test <- cuerank(formula = formula,
   }
 
 } else {cue.accuracies.test <- NULL}
-
-
 
 cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.test)
 
@@ -730,12 +744,13 @@ treecost.train <- train.results$treecost
 
 treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
 
-
 tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
                                spec.v = train.results$treestats$spec)
 }
 
 if(is.null(data.train) == TRUE) {
+
+  if(is.null(object)) {
 
   decision.train <- NULL
   levelout.train <- NULL
@@ -744,6 +759,7 @@ if(is.null(data.train) == TRUE) {
   tree.auc.train <- NA
   treecost.train <- NULL
 
+  }
 }
 
 if(is.null(data.test) == FALSE) {
@@ -762,7 +778,6 @@ treestats.test <- test.results$treestats
 treecost.test <- test.results$treecost
 
 treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
-
 
 if(any(is.na(test.results$treestats$sens)) == TRUE) {
 
@@ -808,17 +823,28 @@ rownames(tree.auc) = c("train", "test")
   {
     if(do.lr) {
 
+      if(is.null(object) == FALSE & is.null(object$comp$lr) == FALSE) {
 
+        model <- object$comp$lr$model
 
+      } else {model <- NULL}
 
       lr.acc <- comp.pred(formula = formula,
                           data.train = data.train,
                           data.test = data.test,
-                          algorithm = "lr")
+                          algorithm = "lr",
+                          model = model)
 
       lr.stats <- lr.acc$accuracy
       lr.auc <- lr.acc$auc
       lr.model <- lr.acc$model
+
+
+      if(is.null(object) == FALSE) {
+
+        lr.stats[,grepl(".train", names(lr.stats))] <- object$comp$lr$stats[,grepl(".train", names(object$comp$lr$stats))]
+
+      }
 
     }
 
@@ -841,15 +867,27 @@ rownames(tree.auc) = c("train", "test")
 
     if(do.cart) {
 
+      if(is.null(object) == FALSE & is.null(object$comp$cart) == FALSE) {
+
+        model <- object$comp$cart$model
+
+      } else {model <- NULL}
+
       cart.acc <- comp.pred(formula = formula,
                             data.train = data.train,
                             data.test = data.test,
-                            algorithm = "cart"
-      )
+                            algorithm = "cart",
+                            model = model)
 
       cart.stats <- cart.acc$accuracy
       cart.auc <- cart.acc$auc
       cart.model <- cart.acc$model
+
+      if(is.null(object) == FALSE) {
+
+      cart.stats[,grepl(".train", names(cart.stats))] <- object$comp$cart$stats[,grepl(".train", names(object$comp$cart$stats))]
+
+      }
 
     }
 
@@ -871,14 +909,27 @@ rownames(tree.auc) = c("train", "test")
 
     if(do.rf) {
 
+      if(is.null(object) == FALSE & is.null(object$comp$rf) == FALSE) {
+
+        model <- object$comp$rf$model
+
+      } else {model <- NULL}
+
       rf.acc <- comp.pred(formula = formula,
                           data.train = data.train,
                           data.test = data.test,
-                          algorithm = "rf")
+                          algorithm = "rf",
+                          model = model)
 
       rf.stats <- rf.acc$accuracy
       rf.auc <- rf.acc$auc
       rf.model <- rf.acc$model
+
+      if(is.null(object) == FALSE) {
+
+        rf.stats[,grepl(".train", names(rf.stats))] <- object$comp$rf$stats[,grepl(".train", names(object$comp$rf$stats))]
+
+      }
 
     }
 
@@ -900,14 +951,27 @@ rownames(tree.auc) = c("train", "test")
 
     if(do.svm) {
 
+      if(is.null(object) == FALSE & is.null(object$comp$svm) == FALSE) {
+
+        model <- object$comp$svm$model
+
+      } else {model <- NULL}
+
       svm.acc <- comp.pred(formula = formula,
                            data.train = data.train,
                            data.test = data.test,
-                           algorithm = "svm")
+                           algorithm = "svm",
+                           model = model)
 
       svm.stats <- svm.acc$accuracy
       svm.auc <- svm.acc$auc
       svm.model <- svm.acc$model
+
+      if(is.null(object) == FALSE) {
+
+        svm.stats[,grepl(".train", names(svm.stats))] <- object$comp$svm$stats[,grepl(".train", names(object$comp$svm$stats))]
+
+      }
     }
 
     if(do.svm == FALSE) {
@@ -929,6 +993,7 @@ rownames(tree.auc) = c("train", "test")
 
 # GET BEST TREE
 # Note: Only matters when the algorithm produces multiple trees
+if(is.null(object)) {
 if(goal != "cost") {
 
 tree.max <- which(treestats$train[[goal]] == max(treestats$train[[goal]]))
@@ -940,6 +1005,7 @@ tree.max <- which(treestats$train[[goal]] == min(treestats$train[[goal]]))
 }
 
 if(length(tree.max) > 1) {tree.max <- tree.max[1]}
+}
 
 # Get AUC matrix
 auc <- cbind(tree.auc, lr.auc, cart.auc, rf.auc, svm.auc)
@@ -955,6 +1021,8 @@ if(store.data) {data.ls <- list("train" = data.train, "test" = data.test)} else 
 
 # Data descriptions
 
+if(is.null(object)) {
+
 data.desc <- list("train" = data.frame("cases" = nrow(cue.train),
                                        "features" = ncol(cue.train),
                                        "n.pos" = sum(crit.train),
@@ -964,7 +1032,19 @@ data.desc <- list("train" = data.frame("cases" = nrow(cue.train),
                                       "features" = NA,
                                       "n.pos" = NA,
                                       "n.neg" = NA,
+                                      "criterion.br" = NA)) } else {
+
+data.desc <- list("train" = data.frame("cases" = object$data.desc$train$cases,
+                                       "features" = object$data.desc$train$features,
+                                       "n.pos" = object$data.desc$train$n.pos,
+                                       "n.neg" = object$data.desc$train$n.neg,
+                                       "criterion.br" = object$data.desc$train$criterion.br),
+                  "test" = data.frame("cases" = NA,
+                                      "features" = NA,
+                                      "n.pos" = NA,
+                                      "n.neg" = NA,
                                       "criterion.br" = NA))
+                                      }
 
 if(is.null(data.test) == FALSE) {
 

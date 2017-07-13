@@ -118,7 +118,12 @@ if(is.null(main)) {
 
   if(("main" %in% names(x$params))) {
 
+    if(is.null(x$params$main)) {main <- "Data"} else {
+
     main <- x$params$main
+
+    }
+
 
   } else {
 

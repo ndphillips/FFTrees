@@ -5,7 +5,7 @@
 \title{Wrapper for classfication algorithms}
 \usage{
 comp.pred(formula, data.train, data.test = NULL, algorithm = NULL,
-  new.factors = "exclude")
+  model = NULL, new.factors = "exclude")
 }
 \arguments{
 \item{formula}{a formula}
@@ -15,6 +15,8 @@ comp.pred(formula, data.train, data.test = NULL, algorithm = NULL,
 \item{data.test}{dataframe. A testing dataset}
 
 \item{algorithm}{string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests}
+
+\item{model}{model. An optional existing model applied to test data}
 
 \item{new.factors}{string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.}
 }

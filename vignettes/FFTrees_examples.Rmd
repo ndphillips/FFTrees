@@ -126,7 +126,7 @@ It looks like the cues *pet.wid* and *pet.len* are the best predictors. Based on
 
 ### iris FFT
 
-Now let's plot the best tree applied to the test dataset
+Now let's plot the best tree
 
 ```{r}
 plot(iris.fft)

@@ -23,6 +23,10 @@ plot(heart.fft,
 
 ### Package updates
 
+1.3.3
+
+- Bug fixes
+
 1.3.0
 
 - Many additional vignettes (e.g.; Accuracy Statistics and Heart Disease Tutorial) and updates to existing vignettes.
