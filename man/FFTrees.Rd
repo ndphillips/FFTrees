@@ -10,9 +10,10 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   stopping.par = 0.1, goal = "wacc", goal.chase = "bacc",
   numthresh.method = "o", decision.labels = c("False", "True"),
   main = NULL, train.p = 1, rounding = NULL, progress = TRUE,
-  my.tree = NULL, tree.definitions = NULL, comp = TRUE, do.cart = TRUE,
-  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
-  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL)
+  my.tree = NULL, tree.definitions = NULL, do.comp = TRUE,
+  do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, do.svm = TRUE,
+  store.data = FALSE, object = NULL, rank.method = NULL, force = FALSE,
+  verbose = NULL, comp = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -55,13 +56,13 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
 
-\item{comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.}
+\item{do.comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.}
 
 \item{store.data}{logical. Should training / test data be stored in the object? Default is FALSE.}
 
 \item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 
-\item{rank.method, verbose}{depricated arguments.}
+\item{rank.method, verbose, comp}{depricated arguments.}
 
 \item{force}{logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.}
 }

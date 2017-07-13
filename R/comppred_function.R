@@ -44,12 +44,13 @@ comp.pred <- function(formula,
                      new.factors = "exclude") {
 
 
-
-  # formula = formula
-  # data.train = data.train
-  # data.test = data.test
-  # algorithm = "svm"
-  # model = model
+#
+#   formula = formula
+#   data.train = data.train
+#   data.test = data.test
+#   algorithm = "lr"
+#   model = model
+#   new.factors = "exclude"
 
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")}

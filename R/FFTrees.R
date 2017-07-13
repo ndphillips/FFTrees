@@ -22,10 +22,10 @@
 #' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
+#' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
-#' @param rank.method,verbose depricated arguments.
+#' @param rank.method,verbose,comp depricated arguments.
 #' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return An \code{FFTrees} object with the following elements
@@ -85,7 +85,7 @@ FFTrees <- function(formula = NULL,
                     progress = TRUE,
                     my.tree = NULL,
                     tree.definitions = NULL,
-                    comp = TRUE,
+                    do.comp = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
@@ -94,70 +94,83 @@ FFTrees <- function(formula = NULL,
                     object = NULL,
                     rank.method = NULL,
                     force = FALSE,
-                    verbose = NULL
+                    verbose = NULL,
+                    comp = NULL
 ) {
 
 
 # #
-#   formula = NULL
-#   data = NULL
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = NULL
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   goal.chase = "bacc"
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   train.p = 1
-#   rounding = NULL
-#   progress = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#
-#
-#   object <- NULL
-#   formula <- diagnosis ~.
-#   data <- heartdisease
+  # formula = NULL
+  # data = NULL
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = NULL
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = "wacc"
+  # goal.chase = "bacc"
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # train.p = 1
+  # rounding = NULL
+  # progress = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  #
+  #
+  # object = heart.fft
+  # data.test = heartdisease[1:50,]
+  # comp = NULL
+  # do.comp = TRUE
 
+
+# Depricated arguments
+{
+  if(is.null(verbose) == FALSE) {
+
+    warning("The argument verbose is depricated. Use progress instead.")
+
+    progress <- verbose
+
+  }
+
+  if(is.null(rank.method) == FALSE) {
+
+    warning("The argument rank.method is depricated. Use algorithm instead.")
+
+    algorithm <- rank.method
+
+  }
+
+  if(is.null(comp) == FALSE) {
+
+    warning("The argument comp is depricated. Use do.comp instead.")
+
+    do.comp <- comp
+
+  }
+
+}
 
 # # Input validation
 
 # If no FFTrees object is specified
 if(is.null(object)) {
 
-# Depricated arguments
-{
-if(is.null(verbose) == FALSE) {
 
-  warning("The argument verbose is depricated. Use progress instead.")
-
-  progress <- verbose
-
-}
-
-if(is.null(rank.method) == FALSE) {
-
-  warning("The argument rank.method is depricated. Use algorithm instead.")
-
-  algorithm <- rank.method
-
-}
-}
 
 if(is.null(cost.outcomes) == FALSE) {
 
@@ -304,15 +317,6 @@ if((crit.name %in% names(data) == FALSE) & is.null(object)) {
 
 
 
-
-if(comp == FALSE) {
-
-  do.lr <- FALSE
-  do.cart <- FALSE
-  do.svm <- FALSE
-  do.rf <- FALSE
-
-}
 
 
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
@@ -817,13 +821,23 @@ rownames(tree.auc) = c("train", "test")
 
 # FIT COMPETITIVE ALGORITHMS
 {
+
+if(do.comp == FALSE) {
+
+do.lr <- FALSE
+do.cart <- FALSE
+do.svm <- FALSE
+do.rf <- FALSE
+
+}
   if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with comp = FALSE) ...")}}
 
   # LR
   {
-    if(do.lr) {
+    if(do.lr & ((is.null(object) == FALSE &  is.null(object$comp$lr$model) == FALSE) |
+                is.null(data.train) == FALSE)) {
 
-      if(is.null(object) == FALSE & is.null(object$comp$lr) == FALSE) {
+      if(is.null(object) == FALSE & is.null(object$comp$lr$model) == FALSE) {
 
         model <- object$comp$lr$model
 
@@ -846,9 +860,7 @@ rownames(tree.auc) = c("train", "test")
 
       }
 
-    }
-
-    if(do.lr == FALSE) {
+    } else {
 
       lr.acc <- NULL
       lr.stats <- NULL
@@ -865,7 +877,8 @@ rownames(tree.auc) = c("train", "test")
   # CART
   {
 
-    if(do.cart) {
+    if(do.cart & ((is.null(object) == FALSE &  is.null(object$comp$cart$model) == FALSE) |
+                is.null(data.train) == FALSE)) {
 
       if(is.null(object) == FALSE & is.null(object$comp$cart) == FALSE) {
 
@@ -889,9 +902,7 @@ rownames(tree.auc) = c("train", "test")
 
       }
 
-    }
-
-    if(do.cart == FALSE) {
+    } else {
 
       cart.acc <- NULL
       cart.stats <- NULL
@@ -907,7 +918,8 @@ rownames(tree.auc) = c("train", "test")
   # rf
   {
 
-    if(do.rf) {
+    if(do.rf & ((is.null(object) == FALSE &  is.null(object$comp$rf$model) == FALSE) |
+                is.null(data.train) == FALSE)){
 
       if(is.null(object) == FALSE & is.null(object$comp$rf) == FALSE) {
 
@@ -931,9 +943,7 @@ rownames(tree.auc) = c("train", "test")
 
       }
 
-    }
-
-    if(do.rf == FALSE) {
+    } else {
 
       rf.acc <- NULL
       rf.stats <- NULL
@@ -949,7 +959,8 @@ rownames(tree.auc) = c("train", "test")
   # svm
   {
 
-    if(do.svm) {
+    if(do.lr & ((is.null(object) == FALSE &  is.null(object$comp$svm$model) == FALSE) |
+                is.null(data.train) == FALSE)){
 
       if(is.null(object) == FALSE & is.null(object$comp$svm) == FALSE) {
 
@@ -972,9 +983,7 @@ rownames(tree.auc) = c("train", "test")
         svm.stats[,grepl(".train", names(svm.stats))] <- object$comp$svm$stats[,grepl(".train", names(object$comp$svm$stats))]
 
       }
-    }
-
-    if(do.svm == FALSE) {
+    } else {
 
       svm.acc <- NULL
       svm.stats <- NULL
