@@ -26,6 +26,8 @@ plot(heart.fft,
 1.3.3
 
 - Bug fixes
+    - Issues when passing an existing FFTrees object to a new call to FFTrees().
+
 
 1.3.0
 
