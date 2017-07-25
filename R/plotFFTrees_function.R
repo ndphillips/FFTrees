@@ -1,9 +1,9 @@
-#' Draws a FFTrees object.
+#' Plots an FFTrees object.
 #'
-#' @description The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the FFTrees() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
+#' @description Plots an FFTrees object created by the FFTrees() function.
 #' @param x A FFTrees object created from \code{"FFTrees()"}
 #' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
-#' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.
+#' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)
 #' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
 #' @param main character. The main plot label.
 #' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
@@ -12,6 +12,8 @@
 #' @param decision.cex numeric. The size of the decision labels.
 #' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
 #' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
+#' @param show.header,show.tree,show.confusion,show.levels,show.roc,show.icons,show.iconguide logical. Logical arguments indicating which specific elements of the plot to show.
+#' @param label.tree,label.performance string. Optional arguments to define lables for the tree and performance section(s).
 #' @param n.per.icon Number of cases per icon
 #' @param which.tree deprecated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param level.type string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}
@@ -52,6 +54,15 @@ plot.FFTrees <- function(
   decision.cex = 1,
   comp = TRUE,
   stats = TRUE,
+  show.header = NULL,
+  show.tree = NULL,
+  show.confusion = NULL,
+  show.levels = NULL,
+  show.roc = NULL,
+  show.icons = NULL,
+  show.iconguide = NULL,
+  label.tree = NULL,
+  label.performance = NULL,
   n.per.icon = NULL,
   which.tree = NULL,
   level.type = "bar",
@@ -60,7 +71,8 @@ plot.FFTrees <- function(
 ) {
 
 #
-  #   x = heart.fft
+  # x = FFTrees(diagnosis ~., data = heartdisease)
+  #
   # data = "train"
   # what = 'cues'
   # tree = "best.train"
@@ -71,15 +83,30 @@ plot.FFTrees <- function(
   # decision.cex = 1
   # comp = TRUE
   # stats = TRUE
+  #
+  # show.header = TRUE
+  # show.tree = NULL
+  # show.confusion = TRUE
+  # show.levels = FALSE
+  # show.roc = FALSE
+  # show.icons = FALSE
+  # show.iconguide = FALSE
+  #
+  # label.tree = "my label"
+  # label.performance = "my performance"
+  #
   # n.per.icon = NULL
   # which.tree = NULL
   # level.type = "bar"
   # decision.names = NULL
 
 
-if(what %in% c("cues", "tree") == FALSE) {
+# Check for invalid or missing arguments
 
-  stop("what must be either 'cues' or tree'")
+if(what %in% c("cues", "tree", "roc") == FALSE) {
+
+  stop("what must be either 'cues', 'tree', or 'roc'")
+
 }
 
 if(is.null(decision.names) == FALSE) {
@@ -92,230 +119,332 @@ if(is.null(decision.names) == FALSE) {
 # If what == cues, then send inputs to showcues()
 if(what == 'cues') {showcues(x = x, data = data, main = main)}
 
-# If what == tree, then plot the tree!
-if(what == 'tree') {
+if(what != 'cues') {
 
-
-# -------------------------
-# Setup
-# --------------------------
+# Determine layout
 {
-# Extract important parameters from x
-n.trees <- nrow(x$tree.stats$train)
-goal <- x$params$goal
 
-if(is.null(decision.labels)) {
+  if(what == "tree") {
 
-  if(("decision.labels" %in% names(x$params))) {
+    if(stats == TRUE) {
 
-  decision.labels <- x$params$decision.labels
-
-  } else {decision.labels <- c(0, 1)}
-
-}
-
-if(is.null(main)) {
-
-  if(("main" %in% names(x$params))) {
-
-    if(is.null(x$params$main)) {main <- "Data"} else {
-
-    main <- x$params$main
+      if(is.null(show.header)) {show.header <- TRUE}
+      if(is.null(show.tree)) {show.tree <- TRUE}
+      if(is.null(show.confusion)) {show.confusion <- TRUE}
+      if(is.null(show.levels)) {show.levels <- TRUE}
+      if(is.null(show.roc)) {show.roc <- TRUE}
+      if(is.null(show.icons)) {show.icons <- TRUE}
+      if(is.null(show.iconguide)) {show.iconguide <- TRUE}
 
     }
 
+    if(stats == FALSE) {
 
-  } else {
+      if(is.null(show.header)) {show.header <- FALSE}
+      if(is.null(show.tree)) {show.tree <- TRUE}
+      if(is.null(show.confusion)) {show.confusion <- FALSE}
+      if(is.null(show.levels)) {show.levels <- FALSE}
+      if(is.null(show.roc)) {show.roc <- FALSE}
+      if(is.null(show.icons)) {show.icons <- FALSE}
+      if(is.null(show.iconguide)) {show.iconguide <- FALSE}
+
+    }
+
+  }
+
+  if(what == "roc") {
+
+    show.header <- FALSE
+    show.tree <- FALSE
+    show.confusion <- FALSE
+    show.levels <- FALSE
+    show.roc <- TRUE
+    show.icons <- FALSE
+
+  }
+
+
+  # Top, middle, bottom
+  if(show.header & show.tree & (show.confusion | show.levels | show.roc)) {
+
+    show.top <- TRUE
+    show.middle <- TRUE
+    show.bottom <- TRUE
+
+    layout(matrix(1:3, nrow = 3, ncol = 1),
+           widths = c(6),
+           heights = c(1.2, 3, 1.8))
+
+  }
+
+  # Top and middle
+  if(show.header & show.tree & (show.confusion == FALSE & show.levels == FALSE & show.roc == FALSE)) {
+
+    show.top <- TRUE
+    show.middle <- TRUE
+    show.bottom <- FALSE
+
+    layout(matrix(1:2, nrow = 2, ncol = 1),
+           widths = c(6),
+           heights = c(1.2, 3))
+
+  }
+
+  # Middle and bottom
+  if(show.header == FALSE & show.tree & (show.confusion | show.levels | show.roc)) {
+
+    show.top <- FALSE
+    show.middle <- TRUE
+    show.bottom <- TRUE
+
+    layout(matrix(1:2, nrow = 2, ncol = 1),
+           widths = c(6),
+           heights = c(3, 1.8))
+
+  }
+
+  # Middle
+  if(show.header == FALSE & show.tree & (show.confusion == FALSE & show.levels == FALSE & show.roc == FALSE)) {
+
+    show.top <- FALSE
+    show.middle <- TRUE
+    show.bottom <- FALSE
+
+    layout(matrix(1:1, nrow = 1, ncol = 1),
+           widths = c(6),
+           heights = c(3))
+
+  }
+
+
+}
+
+# -------------------------
+# Setup data
+# --------------------------
+{
+  # Extract important parameters from x
+  n.trees <- nrow(x$tree.stats$train)
+  goal <- x$params$goal
+
+  if(is.null(decision.labels)) {
+
+    if(("decision.labels" %in% names(x$params))) {
+
+      decision.labels <- x$params$decision.labels
+
+    } else {decision.labels <- c(0, 1)}
+
+  }
+
+  if(is.null(main)) {
+
+    if(("main" %in% names(x$params))) {
+
+      if(is.null(x$params$main)) {
+
+        if(show.header) {
+        main <- "Data"
+        } else {main <- ""}
+
+
+        } else {
+
+        main <- x$params$main
+
+      }
+
+
+    } else {
+
+      if(class(data) == "character") {
+
+        if(data == "train") {main <- "Data (Training)"}
+        if(data == "test") {main <- "Data (Testing)"}
+
+      }
+
+      if(class(data) == "data.frame") {main <- "Test Data"}
+
+
+    }
+
+  }
+
+
+
+
+  # Check for problems and depreciated arguments
+  {
+    if(is.null(which.tree) == FALSE) {
+
+      message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
+
+      tree <- which.tree
+
+    }
+
+    if(class(x) != "FFTrees") {
+
+      stop("You did not include a valid FFTrees class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid FFTrees object with FFTrees() or specify the tree directly.")
+
+    }
+
+    if(tree == "best.test" & is.null(x$tree.stats$test)) {
+
+      print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
+
+      tree <- "best.train"
+
+    }
+
+    if(is.numeric(tree) & (tree %in% 1:n.trees) == F) {
+
+      stop(paste("You asked for a tree that does not exist. This object has", n.trees, "trees"))
+
+    }
 
     if(class(data) == "character") {
 
-      if(data == "train") {main <- "Data (Training)"}
-      if(data == "test") {main <- "Data (Testing)"}
-
-    }
-
-    if(class(data) == "data.frame") {main <- "Test Data"}
-
-
-  }
-
-}
-
-
-
-
-# Check for problems and depreciated arguments
-{
-  if(is.null(which.tree) == FALSE) {
-
-    message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
-
-    tree <- which.tree
-
-  }
-
-  if(class(x) != "FFTrees") {
-
-    stop("You did not include a valid FFTrees class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid FFTrees object with FFTrees() or specify the tree directly.")
-
-  }
-
-  if(tree == "best.test" & is.null(x$tree.stats$test)) {
-
-    print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
-
-    tree <- "best.train"
-
-  }
-
-  if(is.numeric(tree) & (tree %in% 1:n.trees) == F) {
-
-    stop(paste("You asked for a tree that does not exist. This object has", n.trees, "trees"))
-
-  }
-
-  if(class(data) == "character") {
-
-    if(data == "test" & is.null(x$tree.stats$test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
-
-  }
-}
-
-
-# DEFINE PLOTTING TREE
-
-if(tree == "best.train") {
-
-  if(("tree.max" %in% names(x)) == FALSE) {
-
- tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train[[goal]])]
-
-  } else {tree <- x$tree.max}
-
-}
-if(tree == "best.test") {
-
- tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test[[goal]])]
-
-}
-
-if(length(tree) > 1) {tree <- tree[1]}
-
-# DEFINE CRITICAL OBJECTS
-
-lr.stats <- NULL
-cart.stats <- NULL
-rf.stats <- NULL
-svm.stats <- NULL
-
-if(data == "train") {
-
-  decision.v <- x$decision$train[,tree]
-  tree.stats <- x$tree.stats$train
-  level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
-
-  if(comp == TRUE) {
-
-    if(is.null(x$comp$lr$stats) == FALSE) {
-  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.train,
-                         "spec" = x$comp$lr$stats$spec.train)
-    }
-
-    if(is.null(x$comp$cart$stats) == FALSE) {
-  cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.train, "spec" = x$comp$cart$stats$spec.train)
-
-    }
-
-    if(is.null(x$comp$rf$stats) == FALSE) {
-
-   rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.train, "spec" = x$comp$rf$stats$spec.train)
-
-    }
-
-    if(is.null(x$comp$svm$stats) == FALSE) {
-   svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.train, "spec" = x$comp$svm$stats$spec.train)
-}
-}
-
-  n.exemplars <- x$data.desc$train$cases
-  n.pos <- x$data.desc$train$n.pos
-  n.neg <- x$data.desc$train$n.neg
-  mcu <- x$tree.stats$train$mcu[tree]
-  crit.br <- x$data.desc$train$criterion.br
-
-}
-if(data == "test") {
-
-  decision.v <- x$decision$test[,tree]
-  tree.stats <- x$tree.stats$test
-  level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
-
-  if(comp == TRUE) {
-
-    if(is.null(x$comp$lr$stats) == FALSE) {
-
-
-  lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.test, "spec" = x$comp$lr$stats$spec.test)
-    }
-
-    if(is.null(x$comp$cart$stats) == FALSE) {
-
-   cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.test, "spec" = x$comp$cart$stats$spec.test)
-
-    }
-
-    if(is.null(x$comp$rf$stats) == FALSE) {
-
-   rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.test, "spec" = x$comp$rf$stats$spec.test)
-
-    }
-
-    if(is.null(x$comp$svm$stats) == FALSE) {
-
-   svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.test, "spec" = x$comp$svm$stats$spec.test)
-
+      if(data == "test" & is.null(x$tree.stats$test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
 
     }
   }
 
-  n.exemplars <- x$data.desc$test$cases
-  n.pos <- x$data.desc$test$n.pos
-  n.neg <- x$data.desc$test$n.neg
-  mcu <- x$tree.stats$test$mcu[tree]
-  crit.br <- x$data.desc$test$criterion.br
 
-}
+  # DEFINE PLOTTING TREE
 
-final.stats <- tree.stats[tree,]
+  if(tree == "best.train") {
 
-# ADD LEVEL STATISTICS
-n.levels <- nrow(level.stats)
-# Add marginal classification statistics to level.stats
-level.stats[c("hi.m", "mi.m", "fa.m", "cr.m")] <- NA
-for(i in 1:n.levels) {
+    if(("tree.max" %in% names(x)) == FALSE) {
 
-  if(i == 1) {
+      tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train[[goal]])]
 
-    level.stats[1, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[1, c("hi", "mi", "fa", "cr")]
+    } else {tree <- x$tree.max}
+
+  }
+  if(tree == "best.test") {
+
+    tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test[[goal]])]
+
   }
 
-  if(i > 1) {
+  if(length(tree) > 1) {tree <- tree[1]}
 
-    level.stats[i, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[i, c("hi", "mi", "fa", "cr")] - level.stats[i - 1, c("hi", "mi", "fa", "cr")]
+  # DEFINE CRITICAL OBJECTS
+
+  lr.stats <- NULL
+  cart.stats <- NULL
+  rf.stats <- NULL
+  svm.stats <- NULL
+
+  if(data == "train") {
+
+    decision.v <- x$decision$train[,tree]
+    tree.stats <- x$tree.stats$train
+    level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
+
+    if(comp == TRUE) {
+
+      if(is.null(x$comp$lr$stats) == FALSE) {
+        lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.train,
+                               "spec" = x$comp$lr$stats$spec.train)
+      }
+
+      if(is.null(x$comp$cart$stats) == FALSE) {
+        cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.train, "spec" = x$comp$cart$stats$spec.train)
+
+      }
+
+      if(is.null(x$comp$rf$stats) == FALSE) {
+
+        rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.train, "spec" = x$comp$rf$stats$spec.train)
+
+      }
+
+      if(is.null(x$comp$svm$stats) == FALSE) {
+        svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.train, "spec" = x$comp$svm$stats$spec.train)
+      }
+    }
+
+    n.exemplars <- x$data.desc$train$cases
+    n.pos <- x$data.desc$train$n.pos
+    n.neg <- x$data.desc$train$n.neg
+    mcu <- x$tree.stats$train$mcu[tree]
+    crit.br <- x$data.desc$train$criterion.br
+
+  }
+  if(data == "test") {
+
+    decision.v <- x$decision$test[,tree]
+    tree.stats <- x$tree.stats$test
+    level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
+
+    if(comp == TRUE) {
+
+      if(is.null(x$comp$lr$stats) == FALSE) {
+
+
+        lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.test, "spec" = x$comp$lr$stats$spec.test)
+      }
+
+      if(is.null(x$comp$cart$stats) == FALSE) {
+
+        cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.test, "spec" = x$comp$cart$stats$spec.test)
+
+      }
+
+      if(is.null(x$comp$rf$stats) == FALSE) {
+
+        rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.test, "spec" = x$comp$rf$stats$spec.test)
+
+      }
+
+      if(is.null(x$comp$svm$stats) == FALSE) {
+
+        svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.test, "spec" = x$comp$svm$stats$spec.test)
+
+
+      }
+    }
+
+    n.exemplars <- x$data.desc$test$cases
+    n.pos <- x$data.desc$test$n.pos
+    n.neg <- x$data.desc$test$n.neg
+    mcu <- x$tree.stats$test$mcu[tree]
+    crit.br <- x$data.desc$test$criterion.br
+
   }
 
-}
+  final.stats <- tree.stats[tree,]
+
+  # ADD LEVEL STATISTICS
+  n.levels <- nrow(level.stats)
+  # Add marginal classification statistics to level.stats
+  level.stats[c("hi.m", "mi.m", "fa.m", "cr.m")] <- NA
+  for(i in 1:n.levels) {
+
+    if(i == 1) {
+
+      level.stats[1, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[1, c("hi", "mi", "fa", "cr")]
+    }
+
+    if(i > 1) {
+
+      level.stats[i, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[i, c("hi", "mi", "fa", "cr")] - level.stats[i - 1, c("hi", "mi", "fa", "cr")]
+    }
+
+  }
 
 
 }
+
 
 # -------------------------
 # Define plotting parameters
 # --------------------------
 {
 {
-
-
 # Panels
 panel.line.lwd <- 1
 panel.line.col <- gray(0)
@@ -340,9 +469,7 @@ label.box.width <- 5
 # Define truncated level names
 level.stats$level.name.t <-  strtrim(level.stats$cue, max.label.length)
 
-
 # Node Segments
-
 segment.lty <- 1
 segment.lwd <- 1
 
@@ -356,6 +483,16 @@ decision.node.cex <- 4
 exit.node.cex <- 4
 panel.title.cex <- 2
 
+
+# Classification table
+classtable.lwd <- 1
+
+# ROC
+roc.lwd <- 1
+roc.border.col <- gray(0)
+
+# Label sizes
+{
 # Set cue label size
 
 if(is.null(cue.cex)) {
@@ -379,15 +516,9 @@ if(is.null(threshold.cex)) {
   if(length(threshold.cex) < 6) {threshold.cex <- rep(threshold.cex, length.out = 6)}
 
 }
+}
 
-# Classification table
-classtable.lwd <- 1
-
-# ROC
-roc.lwd <- 1
-roc.border.col <- gray(0)
-
-if(stats == TRUE) {
+if(show.top & show.middle & show.bottom) {
 
 plotting.parameters.df <- data.frame(
   n.levels = 1:6,
@@ -397,14 +528,22 @@ plotting.parameters.df <- data.frame(
   break.label.cex = threshold.cex
 )
 
-}
-
-if(stats == FALSE) {
+} else if (show.top == FALSE & show.middle & show.bottom == FALSE) {
 
   plotting.parameters.df <- data.frame(
     n.levels = 1:6,
     plot.height = c(10, 12, 15, 19, 23, 25),
-    plot.width = c(14, 16, 20, 24, 28, 32) * .5,
+    plot.width = c(14, 16, 20, 24, 28, 32) * 1,
+    label.box.text.cex = cue.cex,
+    break.label.cex = threshold.cex
+  )
+
+} else {
+
+  plotting.parameters.df <- data.frame(
+    n.levels = 1:6,
+    plot.height = c(10, 12, 15, 19, 23, 25),
+    plot.width = c(14, 16, 20, 24, 28, 32) * 1,
     label.box.text.cex = cue.cex,
     break.label.cex = threshold.cex
   )
@@ -419,7 +558,6 @@ plot.height <- plotting.parameters.df$plot.height[n.levels]
 plot.width <- plotting.parameters.df$plot.width[n.levels]
 
 }
-
 
 if(n.levels >= 6) {
 
@@ -460,8 +598,6 @@ ball.loc <- "variable"
 if(n.levels == 3) {ball.box.width <- 14}
 if(n.levels == 4) {ball.box.width <- 18}
 
-
-#ball.box.width <- 10 * (n.levels - 1)
 ball.box.height <- 2.5
 ball.box.horiz.shift <- 10
 ball.box.vert.shift <- -1
@@ -673,21 +809,10 @@ label.cex.fun <- function(i, label.box.text.cex = 2) {
 
 }
 
-if(stats == TRUE) {
-
-layout(matrix(1:3, nrow = 3, ncol = 1),
-       widths = c(6),
-       heights = c(1.2, 3, 1.8))
-
-}
-
-
 # -------------------------
 # 1: Initial Frequencies
 # --------------------------
-
-if(stats == TRUE) {
-{
+if(show.top) {
 
 par(mar = c(0, 0, 1, 0))
 
@@ -807,22 +932,18 @@ text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
 
 
 }
-}
 
 # -------------------------
 # 2. TREE
 # --------------------------
-{
-if(stats == TRUE) {
-par(mar = c(0, 0, 0, 0))
-}
+if(show.middle) {
 
-if(stats == FALSE) {
+if(show.top == FALSE & show.bottom == FALSE) {
 
   par(mar = c(3, 3, 3, 3) +  .1)
 
-
-  }
+} else {par(mar = c(0, 0, 0, 0))
+}
 
 # Setup plotting space
 
@@ -839,34 +960,33 @@ plot(1,
 
 par(xpd = TRUE)
 
-
-if(stats == TRUE) {
+if(show.top | show.bottom) {
 
 segments(-plot.width, 0, - plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 segments(plot.width, 0, plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 
+if(is.null(label.tree)) {label.tree <- paste("FFT #", tree, " (of ", n.trees, ")", sep = "")}
+
 text(x = 0, y = 0,
-     paste("FFT #", tree, " (of ", n.trees, ")", sep = ""),
+     label.tree,
      cex = panel.title.cex)
 
 }
 
-if(stats == FALSE) {
+if(show.top == FALSE & show.bottom == FALSE) {
 
 if(is.null(main) & is.null(x$params$main)) {main <- ""}
 
   mtext(text = main, side = 3, cex = 2)
-
 
 }
 
 par(xpd = FALSE)
 
 
-
 # Create Noise and Signal panels
 
-if(stats == TRUE) {
+if(show.iconguide) {
 
   # Noise Balls
 
@@ -1018,7 +1138,7 @@ if(level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %i
 
   }
 
-  if(max(c(cr.i, mi.i), na.rm = TRUE) > 0 & stats == TRUE) {
+  if(max(c(cr.i, mi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
 
     add.balls.fun(x.lim = ball.x.lim,
                   y.lim = ball.y.lim,
@@ -1158,7 +1278,7 @@ if(level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %i
 
   }
 
-  if(max(c(fa.i, hi.i), na.rm = TRUE) > 0 & stats == TRUE) {
+  if(max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
 
     add.balls.fun(x.lim = ball.x.lim,
                   y.lim = ball.y.lim,
@@ -1282,7 +1402,7 @@ if(level.stats$exit[level.i] == 1) {
 # 3. CUMULATIVE PERFORMANCE
 # -----------------------
 
-if(stats == TRUE) {
+if(show.bottom == TRUE) {
 {
 
 # OBTAIN FINAL STATISTICS
@@ -1314,13 +1434,16 @@ par(xpd = T)
 segments(0, 1.1, 1, 1.1, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 rect(.25, 1, .75, 1.2, col = "white", border = NA)
 
-if(data == "train") {title.text <- "Performance (Training)"}
-if(data == "test") {title.text <- "Performance (Testing)"}
+if(is.null(label.performance)) {
 
-text(.5, 1.1, title.text, cex = panel.title.cex)
-par(xpd = FALSE)
+if(data == "train") {label.performance <- "Performance (Training)"}
+if(data == "test") {label.performance <- "Performance (Testing)"}
 
 }
+
+text(.5, 1.1, label.performance, cex = panel.title.cex)
+par(xpd = FALSE)
+
 
 
 pretty.dec <- function(x) {return(paste(round(x, 2) * 100, sep = ""))}
@@ -1347,10 +1470,11 @@ lloc <- data.frame(
                  pretty.dec(final.stats$wacc), NA
   )
 )
+}
 
 
 # Classification table
-{
+if(show.confusion) {
 
   final.classtable.x.loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
   final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
@@ -1458,7 +1582,7 @@ lloc <- data.frame(
 }
 
 # Levels
-{
+if(show.levels) {
 
 if(level.type %in% c("line", "bar")) {
 
@@ -1677,7 +1801,7 @@ add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.
 }
 
 # MiniROC
-{
+if(show.roc) {
 
   text(lloc$center.x[lloc$element == "roc"], header.y.loc, "ROC", pos = 1, cex = header.cex)
 #    text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
@@ -2021,6 +2145,7 @@ par("xpd" = T)
 # Reset plotting space
 par(mfrow = c(1, 1))
 par(mar = c(5, 4, 4, 1) + .1)
-}
 
 }
+}
+

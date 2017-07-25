@@ -25,6 +25,10 @@ plot(heart.fft,
 
 1.3.3
 
+- Added `show.X` arguments to `plot.FFTrees()` that allow you to selectively turn on or turn off elements when plotting an `FFTrees` object.
+
+- Added `label.tree`, `label.performance` arguments to `plot.FFTrees()` that allow you to specify plot (sub) labels. 
+
 - Bug fixes
     - Issues when passing an existing FFTrees object to a new call to FFTrees().
 

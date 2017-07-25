@@ -2,12 +2,15 @@
 % Please edit documentation in R/plotFFTrees_function.R
 \name{plot.FFTrees}
 \alias{plot.FFTrees}
-\title{Draws a FFTrees object.}
+\title{Plots an FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
   tree = "best.train", main = NULL, decision.labels = NULL,
   cue.cex = NULL, threshold.cex = NULL, decision.cex = 1, comp = TRUE,
-  stats = TRUE, n.per.icon = NULL, which.tree = NULL,
+  stats = TRUE, show.header = NULL, show.tree = NULL,
+  show.confusion = NULL, show.levels = NULL, show.roc = NULL,
+  show.icons = NULL, show.iconguide = NULL, label.tree = NULL,
+  label.performance = NULL, n.per.icon = NULL, which.tree = NULL,
   level.type = "bar", decision.names = NULL, ...)
 }
 \arguments{
@@ -15,7 +18,7 @@
 
 \item{data}{Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.}
 
-\item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space.}
+\item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)}
 
 \item{tree}{integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"}
 
@@ -33,6 +36,10 @@
 
 \item{stats}{logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.}
 
+\item{show.header, show.tree, show.confusion, show.levels, show.roc, show.icons, show.iconguide}{logical. Logical arguments indicating which specific elements of the plot to show.}
+
+\item{label.tree, label.performance}{string. Optional arguments to define lables for the tree and performance section(s).}
+
 \item{n.per.icon}{Number of cases per icon}
 
 \item{which.tree}{deprecated argument, only for backwards compatibility, use \code{"tree"} instead.}
@@ -44,7 +51,7 @@
 \item{...}{Currently ignored.}
 }
 \description{
-The primary purpose of this function is to visualize a Fast and Frugal Tree (FFT) for data that has already been classified using the FFTrees() function. However, if the data have not yet been classified, the function can also implement a tree specified by the user. Inputs with the (M) header are manditory. If the tree has already been implimented, then only inputs with the (A) header should be entered. If the tree has not been implimented, then only inputs with the (B) header should be entered.
+Plots an FFTrees object created by the FFTrees() function.
 }
 \examples{
 

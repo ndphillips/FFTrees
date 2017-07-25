@@ -39,7 +39,9 @@ First, let's create an FFTrees object called `titanic.fft` from the `titanic` da
 # Create fast-and-frugal trees from the titanic data
 
 titanic.fft <- FFTrees(formula = survived ~.,
-                       data = titanic)       
+                       data = titanic,
+                       main = "Titanic", 
+                       decision.labels = c("Died", "Survived"))       
 ```
 
 ## Visualising cue accuracies
@@ -48,7 +50,6 @@ You can visualize individual cue accuracies (specifically their sensitivities an
 
 ```{r fig.width = 6, fig.height = 6.5, fig.align = 'center', out.width = "80%"}
 plot(titanic.fft,
-     main = "Titanic cue accuracy",
      what = 'cues')
 ```
 
@@ -56,12 +57,10 @@ Wow. None of the cues did very well on their own. Good performing cues should be
 
 ## Plotting a tree
 
-To plot the tree from an FFTrees object, use `plot()`. You can add some stylistic arguments like `description` and `decision.labels`. Let's plot one of the trees:
+To plot the tree from an FFTrees object, use `plot()`. Let's plot one of the trees:
 
 ```{r, fig.width = 6, fig.height = 6.5, fig.align = 'center'}
-plot(titanic.fft, 
-     main = "Titanic", 
-     decision.labels = c("Died", "Survived"))
+plot(titanic.fft)
 ```
 
 This plot contains a lot of information, here are the main elements:
@@ -78,11 +77,23 @@ You can specify additional arguments to the `plot()` command that will change wh
 
 - `stats`: If you want to visualise a tree without any statistics, include the argument `stats = FALSE`:
 
-```{r, fig.align = 'center', fig.height = 6.6, fig.width = 6, out.width = "70%"}
+```{r, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "70%"}
 # Show the best training titanic fast-and-frugal tree without statistics
 plot(titanic.fft,
-     decision.labels = c("Died", "Survived"),
      stats = FALSE)
+```
+
+
+- `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, `show.iconguide`: These arguments allow you to selectively turn on or turn off specific elements in the overall plot. Here are some examples:
+
+
+
+```{r, fig.align = 'center', fig.height = 9, fig.width = 11, out.width = "70%"}
+plot(titanic.fft,
+     show.icons = FALSE,     # Turn off icons
+     show.iconguide = FALSE, # Turn off icon guide
+     show.header = FALSE     # Turn off header
+     )
 ```
 
 
@@ -96,6 +107,8 @@ For example, let's repeat the previous analysis, but now we'll create separate t
 set.seed(100) # For replicability of the training/test split
 titanic.pred.fft <- FFTrees(formula = survived ~.,
                             data = titanic,
+                            main = "Titanic", 
+                            decision.labels = c("Died", "Survived"),
                             train.p = .5)
 ```
 
@@ -103,9 +116,7 @@ Here is the best training tree applied to the training data:
 
 ```{r, fig.width = 6, fig.height = 6.5, fig.align='center'}
 plot(titanic.pred.fft,
-     tree = "best.train", 
-     main = "Titanic", 
-     decision.labels = c("Died", "Survived"))
+     tree = "best.train")
 ```
 
 The best training tree (tree #3) had a high specificity of 92%, but a low hit rate of just 48%. However, as we can see in the ROC table, LR didn't perform much better, and CART did even worse than tree #3.
@@ -115,9 +126,7 @@ Now let's apply the same tree to the test dataset:
 ```{r, fig.width = 6, fig.height = 6.5, fig.align='center'}
 plot(titanic.pred.fft,
      tree = "best.train",
-     data = "test", 
-     main = "Titanic", 
-     decision.labels = c("Died", "Survived"))
+     data = "test")
 ```
 
 Performance has actually increased in this test data (e.g.; the hit-rate is up to 54%). However, both logistic regression and CART did similarly. 
@@ -127,9 +136,7 @@ Let's visualise tree #4, the most liberal tree with the highest hit-rate:
 ```{r, fig.width = 6, fig.height = 6.5, fig.align='center'}
 plot(titanic.pred.fft,
      tree = 4,
-     data = "test", 
-     main = "Titanic", 
-     decision.labels = c("Died", "Survived"))
+     data = "test")
 ```
 
 Tree #4 was able to increase the testing hit-rate up to 65%, but at a cost of a lower specificity of 70%.
