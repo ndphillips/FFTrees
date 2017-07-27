@@ -20,12 +20,16 @@ wordstoFFT <- function(input,
                        decision.labels = NULL) {
 
 
+  # input = "If duration >= 9.5, True. If turnsamp > 0.694, False. If tibialCMAP > 6.4, False. If mediaSNAP <= 7.8, True. Otherwise, False"
+  # cue.names <- names(emg_myop)
+  # 
+  
 if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
 if(grepl(decision.labels[1], x = input) == FALSE) {
 
   if(grepl("true", x = tolower(input))) {
 
-    decision.labels <- c("True", "False")
+    decision.labels <- c("False", "True")
 
   } else {stop("Something is wrong with decision.labels as they are not in the input.")}
 
@@ -97,7 +101,6 @@ classes.v[contains.brack == FALSE] <- "n"
 
 # exits.v
 {
-
 exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
 
@@ -126,7 +129,6 @@ exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
 
 }))
-
 }
 
 # thresholds.v
@@ -164,7 +166,6 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
 # directions.v
 {
   # Look for directions in sentences
-
 
   directions.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
