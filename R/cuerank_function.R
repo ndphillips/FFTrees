@@ -42,18 +42,16 @@ cuerank <- function(formula = NULL,
                     cue.rules = NULL
 
 ) {
-  #
-  #   formula = formula
-  #   data = data
-  #   goal = goal.chase
-  #   numthresh.method = numthresh.method
-  #   rounding = rounding
-  #   progress = progress
-  #   sens.w = sens.w
-  #   cost.outcomes = cost.outcomes
-  #   cost.cues = cost.cues
-  #   considerFALSE = TRUE
-  #   cue.rules = NULL
+
+  
+  # formula = formula
+  # data = data.mf.r
+  # goal = goal.chase
+  # numthresh.method = numthresh.method
+  # rounding = rounding
+  # sens.w = sens.w
+  # cost.outcomes = cost.outcomes
+  # cost.cues = cost.cues
 
 
   # GLOBAL VARIABLES (could be updated later)
@@ -435,8 +433,17 @@ cuerank <- function(formula = NULL,
 
           } else {
 
+            if(any(is.finite(unlist(direction.accuracy.df[goal])))) {
+            
             best.acc <- max(direction.accuracy.df[goal], na.rm = TRUE)
             best.acc.index <- which(direction.accuracy.df[goal] == best.acc)
+            
+            
+            } else {
+              
+              best.acc <- 0
+              best.acc.index <- 1
+              }
 
           }
 
@@ -479,6 +486,8 @@ cuerank <- function(formula = NULL,
         best.result.index <- which(cue.stats["cost"] == min(cue.stats["cost"]))[1]
 
       }
+      
+      if(is.na(best.result.index)) {best.result.index <- 1}
 
       best.result <- cue.stats[best.result.index,]
 

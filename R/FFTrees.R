@@ -129,14 +129,22 @@ FFTrees <- function(formula = NULL,
   # rank.method = NULL
   # force = FALSE
   # verbose = NULL
-  #
-  #
+  # 
+  # 
   # object = heart.fft
-  # data.test = heartdisease[1:50,]
+  # data.test = NULL
   # comp = NULL
   # do.comp = TRUE
-
-
+  # 
+  # 
+  # 
+  # formula = diagnosis_norm ~ .
+  # data = emg_norm
+  # main = "normal"
+  # algorithm = "dfan"
+  # decision.labels = c("Not normal", "Normal")
+  # 
+  # 
 # Depricated arguments
 {
   if(is.null(verbose) == FALSE) {
@@ -314,9 +322,6 @@ if((crit.name %in% names(data) == FALSE) & is.null(object)) {
   stop(paste0("The criterion variable ", crit.name, " is not in the data."))}
 
 }
-
-
-
 
 
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]

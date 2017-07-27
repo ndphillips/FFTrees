@@ -36,21 +36,19 @@ fan.algorithm <- function(formula,
                           progress = TRUE) {
 
 #
-  # formula = diagnosis ~.
-  # data = heart.train
-  # data.test = heart.test
-  # max.levels = 4
-  # algorithm = "ifan"
-  # goal = "cost"
-  # goal.chase = "cost"
-  # sens.w = .5
-  # cost.outcomes = c(0, 1, 3, 0)
-  # cost.cues = NULL
-  # numthresh.method = "o"
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # rounding = NULL
-  # progress = TRUE
+#   formula = formula
+#   data = data.train
+#   algorithm = algorithm
+#   goal = goal
+#   goal.chase = goal.chase
+#   stopping.rule = stopping.rule
+#   stopping.par = stopping.par
+#   max.levels = max.levels
+#   sens.w = sens.w
+#   cost.outcomes = cost.outcomes
+#   cost.cues = cost.cues
+#   progress = progress
+#
 
 # # Some global variables which could be changed later.
 
@@ -271,8 +269,8 @@ if(algorithm == "dfan") {
 }
 
 # Get next cue based on maximizing  (or minimizing) goal
-if(grepl("cost", goal.chase)) {best.cue.index <- which(cue.accuracies.current[[goal.chase]] == min(cue.accuracies.current[[goal.chase]]))}
-if(grepl("cost", goal.chase) == FALSE) {best.cue.index <- which(cue.accuracies.current[[goal.chase]] == max(cue.accuracies.current[[goal.chase]]))}
+if(grepl("cost", goal.chase)) {best.cue.index <- which(cue.accuracies.current[[goal.chase]] == min(cue.accuracies.current[[goal.chase]], na.rm = TRUE))}
+if(grepl("cost", goal.chase) == FALSE) {best.cue.index <- which(cue.accuracies.current[[goal.chase]] == max(cue.accuracies.current[[goal.chase]], na.rm = TRUE))}
 
 # If there is a tie, take the first
 if(length(best.cue.index) > 1) {best.cue.index <- best.cue.index[1]}
