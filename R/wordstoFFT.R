@@ -59,7 +59,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
   # Can I find the name of a cue in this sentence?
 
-  cue.exists <- any(sapply(cue.names, FUN = function(cue.i) {any(stringr::str_detect(node.sentence, cue.i))}))
+  cue.exists <- any(sapply(cue.names, FUN = function(cue.i) {any(stringr::str_detect(node.sentence, paste0(" ", cue.i, " ")))}))
 
   if(!cue.exists) {stop(paste("I could not find any valid cue names in the sentence: '", node.sentence, "'. Please rewrite", sep = ""))}
 
