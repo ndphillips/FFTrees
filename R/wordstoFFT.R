@@ -21,8 +21,8 @@ wordstoFFT <- function(input,
 
   #
   # input = "if thal != {rd}, false If cp = {a}, true If age < 60 true, otherwise, false"
-  # cue.names = names(heartdisease)
-  # decision.labels <- NULL
+  # cue.names = c("THAL", "cp", "aGe", "blah")
+  # # decision.labels <- NULL
 
 if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
 
@@ -43,7 +43,7 @@ exits.df <- data.frame(exit.char = decision.labels,
 
 # Split
 
-cue.names <- tolower(cue.names)
+cue.names.l <- tolower(cue.names)
 input <- tolower(input)
 decision.labels <- tolower(decision.labels)
 
@@ -58,14 +58,14 @@ nodes.n <- length(def)
 cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
   # Can I find the name of a cue in this sentence?
-
-  cue.exists <- any(sapply(cue.names, FUN = function(cue.i) {any(stringr::str_detect(node.sentence, paste0(" ", cue.i, " ")))}))
+  cue.exists <- any(sapply(cue.names.l, FUN = function(cue.i) {any(stringr::str_detect(node.sentence, paste0(" ", cue.i, " ")))}))
 
   if(!cue.exists) {stop(paste("I could not find any valid cue names in the sentence: '", node.sentence, "'. Please rewrite", sep = ""))}
 
   if(cue.exists) {
 
-  output <- which(sapply(cue.names, FUN = function(cue.i) {stringr::str_detect(node.sentence, cue.i)}))
+  output <- which(sapply(cue.names.l, FUN = function(cue.i) {stringr::str_detect(node.sentence, cue.i)}))
+
 
   }
 
@@ -74,6 +74,10 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
   return(output)
 
   })))
+
+# Convert cue names back to original (non lower) values
+cues.v <- cue.names[sapply(cues.v, FUN = function(x) {which(cue.names.l == x)})]
+
 }
 
 # classes.v
