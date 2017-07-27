@@ -37,6 +37,16 @@ apply.tree <- function(data,
   # cost.cues = cost.cues
   # cost.outcomes = cost.outcomes
 
+  # 
+  # 
+  # data = emg_myop
+  # formula = myop.dfan.bacc$formula
+  # tree.definitions = myop.dfan.bacc$tree.definitions
+  # sens.w = .5
+  # cost.outcomes = c(0, 1, 1, 0)
+  # cost.cues = NULL
+  # allNA.pred = FALSE
+  # 
 # Step 0: Validation and Setup
 
 criterion.v <- model.frame(formula = formula,
@@ -138,8 +148,7 @@ if(exit.i %in% c(0, 1)) {classify.now[is.na(classify.now)] <- FALSE}
 #If it is the final node, then classify NA cases according to most common class
 if(exit.i %in% .5) {
 
-  current.decisions[is.na(classify.now)] <- allNA.pred
-  classify.now[is.na(classify.now)] <- TRUE
+  current.decisions[is.na(current.decisions)] <- allNA.pred
 
   }
 

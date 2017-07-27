@@ -10,10 +10,10 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   stopping.par = 0.1, goal = "wacc", goal.chase = "bacc",
   numthresh.method = "o", decision.labels = c("False", "True"),
   main = NULL, train.p = 1, rounding = NULL, progress = TRUE,
-  my.tree = NULL, tree.definitions = NULL, do.comp = TRUE,
-  do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, do.svm = TRUE,
-  store.data = FALSE, object = NULL, rank.method = NULL, force = FALSE,
-  verbose = NULL, comp = NULL)
+  repeat.cues = TRUE, my.tree = NULL, tree.definitions = NULL,
+  do.comp = TRUE, do.cart = TRUE, do.lr = TRUE, do.rf = TRUE,
+  do.svm = TRUE, store.data = FALSE, object = NULL, rank.method = NULL,
+  force = FALSE, verbose = NULL, comp = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -51,6 +51,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 \item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 
 \item{progress}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
+
+\item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 
 \item{my.tree}{string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}}
 

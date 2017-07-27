@@ -8,7 +8,7 @@ grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
   goal = "wacc", goal.chase = "bacc", sens.w = 0.5, cost.outcomes = c(0,
   1, 1, 0), cost.cues = NULL, numthresh.method = "o",
   stopping.rule = "exemplars", stopping.par = 0.1, progress = FALSE,
-  rank.method = NULL, cue.accuracies = NULL, ...)
+  repeat.cues = TRUE, rank.method = NULL, cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -36,6 +36,8 @@ grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.}
 
 \item{progress}{logical. Should tree growing progress be displayed?}
+
+\item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 
 \item{rank.method}{depricated arguments}
 
