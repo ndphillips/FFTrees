@@ -20,16 +20,21 @@ wordstoFFT <- function(input,
                        decision.labels = NULL) {
 
 
-#   input = "If duration >= 9.2, FALSE. If turnsamp > 0.694, TRUE. If tibialCMAP > 6.4, TRUE. If mediaSNAP <= 7.8, False. Otherwise, TRUE"
-#   cue.names = names(emg_myop)
-# decision.labels <- NULL
-  
-  
 if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
+if(grepl(decision.labels[1], x = input) == FALSE) {
 
-  # input = "if thal = {rd}, healthy. If cp = {a}, disease, otherwise, healthy"
-  # cue.names = names(heartdisease)
-  # decision.labels = c("healthy", "disease")
+  if(grepl("true", x = tolower(input))) {
+
+    decision.labels <- c("True", "False")
+
+  } else {stop("Something is wrong with decision.labels as they are not in the input.")}
+
+}
+
+#
+#   input = "if thal = {rd}, healthy. If cp = {a}, disease, otherwise, healthy"
+#   cue.names = names(heartdisease)
+#   decision.labels = c("healthy", "disease")
 
 
 directions.df <- data.frame(directions = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
