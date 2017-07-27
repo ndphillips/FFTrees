@@ -14,6 +14,7 @@
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == \code{"levels"}, this is the number of levels. For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
 #' @param rounding integer. How much should threshold parameters be rounded? Default is
 #' @param progress logical. Should tree growing progress be displayed?
+#' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula var
 #'
@@ -33,7 +34,8 @@ fan.algorithm <- function(formula,
                           stopping.rule = "exemplars",
                           stopping.par = .1,
                           rounding = NULL,
-                          progress = TRUE) {
+                          progress = TRUE,
+                          repeat.cues = TRUE) {
 
 #
 #   formula = formula
@@ -52,7 +54,6 @@ fan.algorithm <- function(formula,
 
 # # Some global variables which could be changed later.
 
-repeat.cues <- TRUE
 exit.method <- "fixed"
 correction <- .25
 

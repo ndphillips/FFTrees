@@ -13,6 +13,7 @@
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param progress logical. Should tree growing progress be displayed?
+#' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param rank.method depricated arguments
 #' @param cue.accuracies depricated arguments
 #' @param ... Currently ignored
@@ -55,6 +56,7 @@ grow.FFTrees <- function(formula,
                          stopping.rule = "exemplars",
                          stopping.par = .1,
                          progress = FALSE,
+                         repeat.cues = TRUE,
                          rank.method = NULL,
                          cue.accuracies = NULL,
                          ...
@@ -73,7 +75,7 @@ grow.FFTrees <- function(formula,
   # cost.outcomes = cost.outcomes
   # cost.cues = cost.cues
   # progress = progress
-  # 
+  #
   # formula = formula
   # data = data.train
   # algorithm = algorithm
@@ -141,7 +143,8 @@ if(algorithm %in% c("ifan", "dfan")) {
                              numthresh.method = numthresh.method,
                              stopping.rule = stopping.rule,
                              stopping.par = stopping.par,
-                             progress = progress)
+                             progress = progress,
+                             repeat.cues = repeat.cues)
 
   tree.definitions <- fanResult$tree.definitions
   cue.accuracies <- fanResult$cue.accuracies

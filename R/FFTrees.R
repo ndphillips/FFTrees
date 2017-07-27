@@ -20,6 +20,7 @@
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
+#' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
@@ -83,6 +84,7 @@ FFTrees <- function(formula = NULL,
                     train.p = 1,
                     rounding = NULL,
                     progress = TRUE,
+                    repeat.cues = TRUE,
                     my.tree = NULL,
                     tree.definitions = NULL,
                     do.comp = TRUE,
@@ -129,22 +131,22 @@ FFTrees <- function(formula = NULL,
   # rank.method = NULL
   # force = FALSE
   # verbose = NULL
-  # 
-  # 
+  #
+  #
   # object = heart.fft
   # data.test = NULL
   # comp = NULL
   # do.comp = TRUE
-  # 
-  # 
-  # 
+  #
+  #
+  #
   # formula = diagnosis_norm ~ .
   # data = emg_norm
   # main = "normal"
   # algorithm = "dfan"
   # decision.labels = c("Not normal", "Normal")
-  # 
-  # 
+  #
+  #
 # Depricated arguments
 {
   if(is.null(verbose) == FALSE) {
@@ -623,7 +625,8 @@ if(is.null(data.test) & train.p < 1) {
                                 sens.w = sens.w,
                                 cost.outcomes = cost.outcomes,
                                 cost.cues = cost.cues,
-                                progress = progress)
+                                progress = progress,
+                                repeat.cues = repeat.cues)
 
     tree.definitions <- tree.growth$tree.definitions
     cue.accuracies.train <- tree.growth$cue.accuracies
@@ -1106,7 +1109,8 @@ x.FFTrees <- list("formula" = formula,
                                    "cost.outcomes" = cost.outcomes,
                                    "cost.cues" = cost.cues,
                                    "decision.labels" = decision.labels,
-                                   "main" = main),
+                                   "main" = main,
+                                   "repeat.cues" = repeat.cues),
                    "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
