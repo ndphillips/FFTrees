@@ -5,13 +5,13 @@
 \title{Plots an FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = NULL, decision.labels = NULL,
-  cue.cex = NULL, threshold.cex = NULL, decision.cex = 1, comp = TRUE,
-  stats = TRUE, show.header = NULL, show.tree = NULL,
-  show.confusion = NULL, show.levels = NULL, show.roc = NULL,
-  show.icons = NULL, show.iconguide = NULL, label.tree = NULL,
-  label.performance = NULL, n.per.icon = NULL, which.tree = NULL,
-  level.type = "bar", decision.names = NULL, ...)
+  tree = "best.train", main = NULL, cue.labels = NULL,
+  decision.labels = NULL, cue.cex = NULL, threshold.cex = NULL,
+  decision.cex = 1, comp = TRUE, stats = TRUE, show.header = NULL,
+  show.tree = NULL, show.confusion = NULL, show.levels = NULL,
+  show.roc = NULL, show.icons = NULL, show.iconguide = NULL,
+  label.tree = NULL, label.performance = NULL, n.per.icon = NULL,
+  which.tree = NULL, level.type = "bar", decision.names = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
@@ -23,6 +23,8 @@
 \item{tree}{integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"}
 
 \item{main}{character. The main plot label.}
+
+\item{cue.labels}{character. An optional string of labels for the cues / nodes.}
 
 \item{decision.labels}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
 
