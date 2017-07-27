@@ -412,7 +412,6 @@ if(is.null(data.test) & train.p < 1) {
 
   data.train.o <- data
 
-
   data.train <- model.frame(formula = formula,
                             data = data.train.o,
                             na.action = NULL)

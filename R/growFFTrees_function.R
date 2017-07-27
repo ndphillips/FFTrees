@@ -87,7 +87,8 @@ if(is.null(rank.method) == FALSE) {
 {
 # data.mf contains only criterion and predictors
 data.mf <- model.frame(formula = formula,
-                       data = data)
+                       data = data,
+                       na.action = NULL)
 
 # cue.df contains cues
 cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
