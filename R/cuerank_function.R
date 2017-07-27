@@ -67,7 +67,7 @@ if(substr(goal, 1, 1) == "w") {goal <- "wacc"}
 
 # Extract variables in formula
 data.mf <- model.frame(formula = formula,
-                       data = data)
+                       data = data, na.action = NULL)
 
 # Define criterion (vector) and cues (dataframe)
 criterion.v <- data.mf[,1]
