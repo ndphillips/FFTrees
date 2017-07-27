@@ -351,7 +351,8 @@ if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
 
   data.train.o <- data
   data.train <- model.frame(formula = formula,
-                            data = data.train.o)
+                            data = data.train.o,
+                            na.action = NULL)
 
   cue.train <- data.train[,2:ncol(data.train)]
   cue.names <- names(cue.train)
@@ -413,7 +414,8 @@ if(is.null(data.test) & train.p < 1) {
 
 
   data.train <- model.frame(formula = formula,
-                            data = data.train.o)
+                            data = data.train.o,
+                            na.action = NULL)
 
   cue.train <- data.train[,2:ncol(data.train)]
   crit.train <- data.train[,1]
