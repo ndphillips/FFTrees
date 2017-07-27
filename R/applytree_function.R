@@ -6,6 +6,8 @@
 #' @param sens.w numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.
 #' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
+#' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
+
 #' @return A list of length 4 containing
 #' @export
 #'
@@ -16,7 +18,8 @@ apply.tree <- function(data,
                        tree.definitions,
                        sens.w = .5,
                        cost.outcomes = c(0, 1, 1, 0),
-                       cost.cues = NULL
+                       cost.cues = NULL,
+                       allNA.pred = FALSE
 ) {
 
 
@@ -42,6 +45,7 @@ criterion.v <- model.frame(formula = formula,
 
 n.exemplars <- nrow(data)
 n.trees <- nrow(tree.definitions)
+
 
 # decision: The decision for each case
 decision          <- matrix(NA, nrow = n.exemplars, ncol = n.trees)
@@ -124,6 +128,21 @@ if(direction.i == ">=") {current.decisions <- cue.values >= threshold.i}
 if(exit.i == 0) {classify.now <- current.decisions == FALSE & is.na(decision[,tree.i])}
 if(exit.i == 1) {classify.now <- current.decisions == TRUE & is.na(decision[,tree.i])}
 if(exit.i == .5) {classify.now <- is.na(decision[,tree.i])}
+
+# Convert NAs
+
+# If it is not the final node, then don't classify NA cases
+if(exit.i %in% c(0, 1)) {classify.now[is.na(classify.now)] <- FALSE}
+
+
+#If it is the final node, then classify NA cases according to most common class
+if(exit.i %in% .5) {
+
+  current.decisions[is.na(classify.now)] <- allNA.pred
+  classify.now[is.na(classify.now)] <- TRUE
+
+  }
+
 
 decision[classify.now, tree.i] <- current.decisions[classify.now]
 levelout[classify.now, tree.i] <- level.i
