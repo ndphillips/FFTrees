@@ -57,38 +57,32 @@ Here is a complete list of the vignettes
 
 
 
-## Article in Judgment and Decision Making
+## Article and citation information
 
-- Phillips, N. D., Neth, H., Gaissmeier, W. & Woike, J. (in press). FFTrees: An R package to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*.
+We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making. We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
-We have an article in press introducing the package in the journal [Judgment and Decision Making](http://www.sjdm.org/journal/). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
+[Link to the Article in Judgment and Decision Making](http://journal.sjdm.org/17/17217/jdm17217.pdf)
 
+If you use FFTrees in your work, please spread the word and cite us so we can continue developing the package
 
+*APA Citation*
 
+Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*, 12(4), 344-368.
 
-
-## Citation information
-
-We had a lot of fun creating FFTrees and hope you like it too! If you use FFTrees in your work, please spread the word and cite us so we can continue developing the package. You can cite the package as follows
-
-```{r}
-# Cite the package
-citation("FFTrees")
-```
-
-You can cite our article as follows:
-
-Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (in press). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*.
+*BibTeX Citation*
 
 ```{r, eval = FALSE}
-# Cite the article
 @article{phillips2017FFTrees,
-  title={FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
-  author={Phillips, Nathaniel D. and Neth, Hansjoerg and Woike, Jan and Wolfgang, Gaissmaier},
-  journal={Judgment and Decision Making},
-  year={2017}
+ title = {{FFTrees}: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
+ author = {Phillips, Nathaniel D and Neth, Hansjoerg and Woike, Jan K and Gaissmaier, Wolfgang},
+ year = 2017, 
+ journal = {Judgment and Decision Making},
+ volume = 12,
+ number = 4,
+ pages = {344--368}
 }
 ```
+
 
 
 
