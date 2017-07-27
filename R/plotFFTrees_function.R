@@ -6,6 +6,7 @@
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)
 #' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
 #' @param main character. The main plot label.
+#' @param cue.labels character. An optional string of labels for the cues / nodes.
 #' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param cue.cex numeric. The size of the cue labels.
 #' @param threshold.cex numeric. The size of the threshold labels.
@@ -48,6 +49,7 @@ plot.FFTrees <- function(
   what = 'tree',
   tree = "best.train",
   main = NULL,
+  cue.labels = NULL,
   decision.labels = NULL,
   cue.cex = NULL,
   threshold.cex = NULL,
@@ -74,7 +76,7 @@ plot.FFTrees <- function(
   # x = FFTrees(diagnosis ~., data = heartdisease)
   #
   # data = "train"
-  # what = 'cues'
+  # what = 'tree'
   # tree = "best.train"
   # main = NULL
   # decision.labels = NULL
@@ -466,8 +468,18 @@ label.box.height <- 2
 label.box.width <- 5
 
 
-# Define truncated level names
-level.stats$level.name.t <-  strtrim(level.stats$cue, max.label.length)
+# Define cue labels
+{
+if(is.null(cue.labels)) {
+
+  cue.labels <- level.stats$cue
+
+}
+
+# Trim labels
+cue.labels <- strtrim(cue.labels, max.label.length)
+}
+
 
 # Node Segments
 segment.lty <- 1
@@ -1042,7 +1054,7 @@ subplot.center <- c(0, -4)
 
 for(level.i in 1:min(c(n.levels, 6))) {
 
-current.cue <- paste(level.stats$cue[level.i])
+current.cue <- cue.labels[level.i]
 
 # Get stats for current level
 {
@@ -1202,7 +1214,7 @@ if(level.stats$exit[level.i] %in% c(1) | paste(level.stats$exit[level.i]) %in% c
 
   if(level.i < 6) {text(x = subplot.center[1] - 2,
                         y = subplot.center[2] - 2,
-                        labels = level.stats$level.name.t[level.i + 1],
+                        labels = cue.labels[level.i + 1],
                         cex = label.box.text.cex
   )} else {
 
@@ -1348,7 +1360,7 @@ if(level.stats$exit[level.i] %in% 0 | paste(level.stats$exit[level.i]) %in% c("0
 
     text(x = subplot.center[1] + 2,
          y = subplot.center[2] - 2,
-         labels = level.stats$level.name.t[level.i + 1],
+         labels = cue.labels[level.i + 1],
          cex = label.box.text.cex)
 
 
