@@ -60,7 +60,7 @@ correction <- .25
 
 
 # Start with criterion
-data.mf <- model.frame(formula, data)
+data.mf <- model.frame(formula, data, na.action = NULL)
 criterion.name <- names(data.mf)[1]
 criterion.v <- data.mf[,1]
 cues.n <- ncol(data.mf) - 1
