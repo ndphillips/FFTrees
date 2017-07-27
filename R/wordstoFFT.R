@@ -19,11 +19,12 @@ wordstoFFT <- function(input,
                        cue.names,
                        decision.labels = NULL) {
 
-  #
-  # input = "if thal != {rd}, false If cp = {a}, true If age < 60 true, otherwise, false"
-  # cue.names = c("THAL", "cp", "aGe", "blah")
-  # # decision.labels <- NULL
 
+#   input = "If duration >= 9.2, FALSE. If turnsamp > 0.694, TRUE. If tibialCMAP > 6.4, TRUE. If mediaSNAP <= 7.8, False. Otherwise, TRUE"
+#   cue.names = names(emg_myop)
+# decision.labels <- NULL
+  
+  
 if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
 
   # input = "if thal = {rd}, healthy. If cp = {a}, disease, otherwise, healthy"
@@ -64,7 +65,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
   if(cue.exists) {
 
-  output <- which(sapply(cue.names.l, FUN = function(cue.i) {stringr::str_detect(node.sentence, cue.i)}))
+  output <- which(sapply(cue.names.l, FUN = function(cue.i) {stringr::str_detect(node.sentence, paste0(" ", cue.i, " "))}))
 
 
   }
