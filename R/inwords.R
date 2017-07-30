@@ -140,7 +140,7 @@ if(exits.i %in% c("0", "1")) {
 
 }
 
-    if(exits.i == "0.5") {
+    if(exits.i %in% c(".5", "0.5")) {
 
       # Negate the direction
       direction.neg.i <- switch(directions.v[i],
