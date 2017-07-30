@@ -19,12 +19,13 @@ wordstoFFT <- function(input,
                        cue.names,
                        decision.labels = NULL) {
 
-# 
-  # input = "If duration >= 9.5, True. If turnsamp > 0.694, False. If tibialCMAP > 6.4, False. If mediaSNAP <= 7.8, True. Otherwise, False"
-  # cue.names <- names(emg_myop)
-  # decision.labels = c("Not M", "Myopathic")
-  # # 
-  
+#
+
+   # input = "If thal = {rd,fd}, predict True. If cp != {a}, predict False. If ca <= 0, predict False, otherwise, predict True"
+   # cue.names <- names(heartdisease)
+   # decision.labels = c("Not M", "Myopathic")
+
+
 if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
 if(grepl(decision.labels[1], x = input) == FALSE) {
 

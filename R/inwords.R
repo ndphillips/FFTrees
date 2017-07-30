@@ -31,14 +31,16 @@ inwords <- function(x = NULL,
                    decision.labels = NULL,
                    digits = 2) {
 
-
-  # tree = tree.max
-  # classes.v = unlist(strsplit(tree.definitions$classes[tree.max], ";"))
-  # cues.v = unlist(strsplit(tree.definitions$cues[tree.max], ";"))
-  # directions.v = unlist(strsplit(tree.definitions$directions[tree.max], ";"))
-  # thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";"))
-  # exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";"))
-  # decision.labels = decision.labels
+#
+# x <- y
+# tree = NULL
+# classes.v = NULL
+# cues.v = NULL
+# directions.v = NULL
+# thresholds.v = NULL
+# exits.v = NULL
+# decision.labels = NULL
+# digits = 2
 
   if(is.null(x) == FALSE) {
 
@@ -72,11 +74,11 @@ inwords <- function(x = NULL,
 
   for(i in 1:nodes.n) {
 
-    exits.i <- exits.v[i]
+    exits.i <- paste(exits.v[i])
 
-if(exits.i %in% c(0, 1)) {
+if(exits.i %in% c("0", "1")) {
 
-    if(exits.i == 1) {
+    if(exits.i == "1") {
 
       if(classes.v[i] == "c") {
 
@@ -97,7 +99,7 @@ if(exits.i %in% c(0, 1)) {
 
     }
 
-    if(exits.i == 0) {
+    if(exits.i == "0") {
 
       # Negate the direction
       direction.i <- switch(directions.v[i],
@@ -138,7 +140,7 @@ if(exits.i %in% c(0, 1)) {
 
 }
 
-    if(exits.i == .5) {
+    if(paste(exits.i) == ".5") {
 
       # Negate the direction
       direction.neg.i <- switch(directions.v[i],
@@ -154,8 +156,12 @@ if(exits.i %in% c(0, 1)) {
         sentence.i.1 <- paste0("If ", cues.v[i], " ", direction.neg.i, " {", thresholds.v[i], "}, predict ",
                              decision.labels[1])
 
-        sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " {", thresholds.v[i], "}, predict ",
-                              decision.labels[2])
+
+        sentence.i.2 <- paste0(", otherwise, predict ",
+                               decision.labels[2])
+
+        # sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " {", thresholds.v[i], "}, predict ",
+        #                       decision.labels[2])
 
       }
 
@@ -173,8 +179,13 @@ if(exits.i %in% c(0, 1)) {
         sentence.i.1 <- paste0("If ", cues.v[i], " ", direction.neg.i, " ", thresholds.v[i], ", predict ",
                                decision.labels[1])
 
-        sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " ", thresholds.v[i], ", predict ",
+
+        sentence.i.2 <- paste0(", otherwise, predict ",
                                decision.labels[2])
+
+
+        # sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " ", thresholds.v[i], ", predict ",
+        #                        decision.labels[2])
 
       }
 
