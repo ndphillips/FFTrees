@@ -55,7 +55,6 @@ Here is a complete list of the vignettes
 |     4|    [Examples of FFTs](FFTrees_examples.html)|Lots of examples of FFTs from different datasets contained in the package|
 
 
-
 ## Article and citation information
 
 We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making. We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
