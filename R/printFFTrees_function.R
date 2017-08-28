@@ -136,25 +136,32 @@ if(is.null(test.auc) == FALSE) {
 }
 
 
-accuracy.text <- paste("FFT #", tree, " uses ", train.cues.n, " cues: {", train.cues, "}", sep = "")
+accuracy.text <- paste("FFT #", tree, " predicts ", criterion.name," using ", train.cues.n, " cues: {", train.cues, "}", sep = "")
+
+
+# Confusion table
 
 
 
-# verbalisation
-inwords.FFTrees <- FFTrees::inwords(x = x)
+
 
 if(is.null(x$params$main) == FALSE) {
 
 cat(x$params$main)
 cat("\n")
 }
-cat(summary.text)
-cat("\n")
+
+
+
 cat(accuracy.text)
 cat("\n")
+
+cat("\n")
+sapply(1:length(FFTrees::inwords(x = x)$v1), FUN = function(i) {cat(paste0("[", i, "] ", FFTrees::inwords(x)$v1[i], ".\n"))})
 cat("\n")
 print(summary.df)
 cat("\n")
+
 cat(params.text)
 
 

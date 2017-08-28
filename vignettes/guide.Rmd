@@ -11,9 +11,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = F, message = F, results = 'hide'}
+```{r, echo = F, message = FALSE, results = 'hide'}
 library(FFTrees)
-library(knitr)
 ```
 
 ## Fast-and-Frugal Trees (FFTs)
@@ -61,9 +60,9 @@ Here is a complete list of the vignettes
 
 We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making. We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
-[Link to the Article in Judgment and Decision Making](http://journal.sjdm.org/17/17217/jdm17217.pdf)
+[FFTrees Article PDF link](http://journal.sjdm.org/17/17217/jdm17217.pdf)
 
-If you use FFTrees in your work, please spread the word and cite us so we can continue developing the package
+If you use FFTrees in your work, please cite us and spreaad the word so we can continue developing the package
 
 *APA Citation*
 
@@ -82,8 +81,6 @@ Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017).
  pages = {344--368}
 }
 ```
-
-
 
 
 ## Datasets
