@@ -32,7 +32,7 @@ inwords <- function(x = NULL,
                    digits = 2) {
 
 #
-# x <- y
+
 # tree = NULL
 # classes.v = NULL
 # cues.v = NULL
@@ -106,7 +106,9 @@ if(exits.i %in% c("0", "1")) {
                             "=" = "!=",
                             "!=" = "=",
                             ">" = "<=",
-                            "<" = ">=")
+                            "<" = ">=",
+                            ">=" = "<",
+                            "<=" = ">")
 
       if(classes.v[i] == "c") {
 
@@ -147,7 +149,9 @@ if(exits.i %in% c("0", "1")) {
                             "=" = "!=",
                             "!=" = "=",
                             ">" = "<=",
-                            "<" = ">=")
+                            "<" = ">=",
+                            ">=" = "<",
+                            "<=" = ">")
 
       direction.pos.i <- directions.v[i]
 

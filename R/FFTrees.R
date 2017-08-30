@@ -839,7 +839,7 @@ do.svm <- FALSE
 do.rf <- FALSE
 
 }
-  if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with comp = FALSE) ...")}}
+  if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with do.comp = FALSE) ...")}}
 
   # LR
   {
