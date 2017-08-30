@@ -23,6 +23,10 @@ plot(heart.fft,
 
 ### Package updates
 
+1.3.4
+
+- Updated `print.FFTrees()` to display FFT #1 'in words' (from the `inwords(x)` function)
+
 1.3.3
 
 - Added `show.X` arguments to `plot.FFTrees()` that allow you to selectively turn on or turn off elements when plotting an `FFTrees` object.
