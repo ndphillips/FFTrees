@@ -38,7 +38,6 @@ fan.algorithm <- function(formula,
                           repeat.cues = TRUE) {
 
 
-
 # # Some global variables which could be changed later.
 
 exit.method <- "fixed"

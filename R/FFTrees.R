@@ -277,7 +277,6 @@ if((crit.name %in% names(data) == FALSE) & is.null(object)) {
 
 }
 
-
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
 {
 
@@ -506,7 +505,11 @@ if(is.null(data.test) & train.p < 1) {
 ## VALIDITY CHECKS
 {
   # Non-binary DV
-  if(setequal(crit.train, c(0, 1)) == FALSE) {
+
+  if(setequal(crit.train, c(0, 1)) == FALSE |
+     {"factor" %in% c(class(crit.train))} |
+     {"character" %in% c(class(crit.train))}
+     ) {
 
     stop(paste0("The criterion ", crit.name, " is either not binary or logical, or does not have variance"))
 
