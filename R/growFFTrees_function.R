@@ -62,33 +62,6 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 
-  #
-  # formula = formula
-  # data = data.train
-  # algorithm = algorithm
-  # goal = goal
-  # goal.chase = goal.chase
-  # stopping.rule = stopping.rule
-  # stopping.par = stopping.par
-  # max.levels = max.levels
-  # sens.w = sens.w
-  # cost.outcomes = cost.outcomes
-  # cost.cues = cost.cues
-  # progress = progress
-  #
-  # formula = formula
-  # data = data.train
-  # algorithm = algorithm
-  # goal = goal
-  # goal.chase = goal.chase
-  # stopping.rule = stopping.rule
-  # stopping.par = stopping.par
-  # max.levels = max.levels
-  # sens.w = sens.w
-  # cost.outcomes = cost.outcomes
-  # cost.cues = cost.cues
-  # progress = progress
-
 # Depricated arguments
 if(is.null(rank.method) == FALSE) {
 

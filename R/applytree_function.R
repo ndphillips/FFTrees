@@ -22,31 +22,6 @@ apply.tree <- function(data,
                        allNA.pred = FALSE
 ) {
 
-
-  # formula = object$formula
-  # data = data
-  # tree.definitions = object$tree.definitions
-  # sens.w = .5
-  # cost.outcomes = c(0, 1, 1, 0)
-  # cost.cues = NULL
-
-  # data = data.train
-  # formula = formula
-  # tree.definitions = tree.definitions
-  # sens.w = sens.w
-  # cost.cues = cost.cues
-  # cost.outcomes = cost.outcomes
-
-  # 
-  # 
-  # data = emg_myop
-  # formula = myop.dfan.bacc$formula
-  # tree.definitions = myop.dfan.bacc$tree.definitions
-  # sens.w = .5
-  # cost.outcomes = c(0, 1, 1, 0)
-  # cost.cues = NULL
-  # allNA.pred = FALSE
-  # 
 # Step 0: Validation and Setup
 
 criterion.v <- model.frame(formula = formula,

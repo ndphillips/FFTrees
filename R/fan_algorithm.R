@@ -37,20 +37,7 @@ fan.algorithm <- function(formula,
                           progress = TRUE,
                           repeat.cues = TRUE) {
 
-#
-#   formula = formula
-#   data = data.train
-#   algorithm = algorithm
-#   goal = goal
-#   goal.chase = goal.chase
-#   stopping.rule = stopping.rule
-#   stopping.par = stopping.par
-#   max.levels = max.levels
-#   sens.w = sens.w
-#   cost.outcomes = cost.outcomes
-#   cost.cues = cost.cues
-#   progress = progress
-#
+
 
 # # Some global variables which could be changed later.
 

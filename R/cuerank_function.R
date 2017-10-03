@@ -43,17 +43,6 @@ cuerank <- function(formula = NULL,
 
 ) {
 
-  
-  # formula = formula
-  # data = data.mf.r
-  # goal = goal.chase
-  # numthresh.method = numthresh.method
-  # rounding = rounding
-  # sens.w = sens.w
-  # cost.outcomes = cost.outcomes
-  # cost.cues = cost.cues
-
-
   # GLOBAL VARIABLES (could be updated later)
   max.numcat <- 20        # Maximum number of numeric thresholds to consider
 
@@ -172,7 +161,9 @@ cuerank <- function(formula = NULL,
 
     }
 
+
     cue.cost.i <- cost.cues$cost[cost.cues$cue == cue]
+
 
     if(all(is.na(cue.v)) == FALSE) {
 
@@ -239,6 +230,15 @@ cuerank <- function(formula = NULL,
 
             }
 
+
+        # If there are > 50% unique cue.levels, send a warning
+
+            if(length(cue.levels) > .5 * nrow(data)) {
+
+
+              warning(paste0("The cue ", cue.names[cue.i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
+
+
           }
 
         }
@@ -248,6 +248,18 @@ cuerank <- function(formula = NULL,
           if(grepl(",", cue.levels)) {cue.levels <- unlist(strsplit(cue.levels, ","))}
 
         }
+
+
+
+        # Check for clue levels containing protected characters (;)
+
+        if(any(sapply(cue.levels, FUN = function(x) {grepl(";", x = x)}))) {
+
+          stop(paste0("The cue ", cue.names[cue.i], " contains the character ; which is not allowed. Please replace this value in the data and try again."))
+
+          }
+
+
 
       }
 
@@ -434,13 +446,13 @@ cuerank <- function(formula = NULL,
           } else {
 
             if(any(is.finite(unlist(direction.accuracy.df[goal])))) {
-            
+
             best.acc <- max(direction.accuracy.df[goal], na.rm = TRUE)
             best.acc.index <- which(direction.accuracy.df[goal] == best.acc)
-            
-            
+
+
             } else {
-              
+
               best.acc <- 0
               best.acc.index <- 1
               }
@@ -486,7 +498,7 @@ cuerank <- function(formula = NULL,
         best.result.index <- which(cue.stats["cost"] == min(cue.stats["cost"]))[1]
 
       }
-      
+
       if(is.na(best.result.index)) {best.result.index <- 1}
 
       best.result <- cue.stats[best.result.index,]

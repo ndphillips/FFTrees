@@ -100,53 +100,6 @@ FFTrees <- function(formula = NULL,
                     comp = NULL
 ) {
 
-
-# #
-  # formula = NULL
-  # data = NULL
-  # data.test = NULL
-  # algorithm = "ifan"
-  # max.levels = NULL
-  # sens.w = .5
-  # cost.outcomes = NULL
-  # cost.cues = NULL
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = "wacc"
-  # goal.chase = "bacc"
-  # numthresh.method = "o"
-  # decision.labels = c("False", "True")
-  # train.p = 1
-  # rounding = NULL
-  # progress = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  #
-  #
-  # object = heart.fft
-  # data.test = NULL
-  # comp = NULL
-  # do.comp = TRUE
-  #
-  #
-  #
-  # formula = diagnosis_norm ~ .
-  # data = emg_norm
-  # main = "normal"
-  # algorithm = "dfan"
-  # decision.labels = c("Not normal", "Normal")
-  #
-  #
 # Depricated arguments
 {
   if(is.null(verbose) == FALSE) {
@@ -179,7 +132,6 @@ FFTrees <- function(formula = NULL,
 
 # If no FFTrees object is specified
 if(is.null(object)) {
-
 
 
 if(is.null(cost.outcomes) == FALSE) {
