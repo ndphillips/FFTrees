@@ -64,8 +64,6 @@
 #'
 #'
 
-
-
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
@@ -132,7 +130,6 @@ FFTrees <- function(formula = NULL,
 
 # If no FFTrees object is specified
 if(is.null(object)) {
-
 
 if(is.null(cost.outcomes) == FALSE) {
 
@@ -489,6 +486,7 @@ if(is.null(data.test) & train.p < 1) {
 
     }
   }
+
   # MAKE SURE TRAINING AND TEST DATAFRAMES ARE SIMILAR
 
   if(is.null(data.test) == FALSE) {
@@ -500,7 +498,6 @@ if(is.null(data.test) & train.p < 1) {
     }
 
   }
-
 
 ## VALIDITY CHECKS
 {
@@ -783,6 +780,16 @@ rownames(tree.auc) = c("train", "test")
 
 }
 
+
+## GET HISTORY
+#
+# history <-  updateHistory(newdata = data.train,
+#                           object = object,
+#                           formula = formula,
+#                           tree.definitions = tree.definitions)$history
+
+
+
 # FIT COMPETITIVE ALGORITHMS
 {
 
@@ -1050,6 +1057,7 @@ x.FFTrees <- list("formula" = formula,
                    "tree.definitions" = tree.definitions,
                    "tree.stats" = treestats,
                    "cost" = treecost,
+                   "history" = history,
                    "level.stats" = levelstats,
                    "decision" = decision,
                    "levelout" = levelout,
