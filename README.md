@@ -31,6 +31,8 @@ plot(heart.fft,
 
 1.3.4
 
+- Added class probability predictions with `predict.FFTrees(type = "prob")`
+
 - Updated `print.FFTrees()` to display FFT #1 'in words' (from the `inwords(x)` function)
 
 1.3.3
