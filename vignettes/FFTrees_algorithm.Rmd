@@ -200,19 +200,15 @@ heart.costB.fft <- FFTrees(formula = diagnosis ~.,
 ```
 
 
-Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.732`, but a much loser cost of `cost = 154`
+Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.732`, but a much lower cost of `cost = 154`
 
 ```{r}
 summary(heart.costB.fft)$train[1,]
 ```
 
-
-
 ## `"max"` `"zigzag"`
 
 The max and zigzag algorithms are described in @martignon2008categorization.
-
-
 
 
 ### References
