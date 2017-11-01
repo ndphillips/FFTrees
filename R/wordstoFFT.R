@@ -18,12 +18,6 @@
 wordstoFFT <- function(input,
                        cue.names,
                        decision.labels = NULL) {
-#
-
-   # input = "If thal = {rd,fd}, predict True. If cp != {a}, predict False. If ca <= 0, predict False, otherwise, predict True"
-   # cue.names <- names(heartdisease)
-   # decision.labels = c("Not M", "Myopathic")
-
 
 # Clean up input
 

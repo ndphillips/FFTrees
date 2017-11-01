@@ -21,7 +21,7 @@
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
-#' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}
+#' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
 #' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
@@ -309,7 +309,7 @@ if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
                             data = data.train.o,
                             na.action = NULL)
 
-  cue.train <- data.train[,2:ncol(data.train)]
+  cue.train <- data.train[,2:ncol(data.train), drop = FALSE]
   cue.names <- names(cue.train)
   n.cues <- length(cue.names)
 
@@ -562,7 +562,10 @@ if(is.null(data.test) & train.p < 1) {
 
   }
 
-  if(is.null(object) & is.null(tree.definitions) & is.null(my.tree) & is.null(tree.definitions)) {
+  if(is.null(object) &
+     is.null(tree.definitions) &
+     is.null(my.tree) &
+     is.null(tree.definitions)) {
 
     if(progress) {message(paste0("Growing FFTs with ", algorithm))}
 
@@ -1057,7 +1060,7 @@ x.FFTrees <- list("formula" = formula,
                    "tree.definitions" = tree.definitions,
                    "tree.stats" = treestats,
                    "cost" = treecost,
-                   "history" = history,
+                   # "history" = history,
                    "level.stats" = levelstats,
                    "decision" = decision,
                    "levelout" = levelout,
