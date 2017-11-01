@@ -29,6 +29,10 @@ plot(heart.fft,
 
 ### Package updates
 
+1.3.5
+
+- Bug fixes.
+
 1.3.4
 
 - Added class probability predictions with `predict.FFTrees(type = "prob")`
