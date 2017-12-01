@@ -162,6 +162,7 @@ if(what != 'cues') {
     show.levels <- FALSE
     show.roc <- TRUE
     show.icons <- FALSE
+    show.top <- FALSE
 
   }
 
@@ -217,6 +218,22 @@ if(what != 'cues') {
            heights = c(3))
 
   }
+
+  # Bottom
+  if(show.header == FALSE & show.tree == FALSE) {
+
+    show.top <- FALSE
+    show.middle <- FALSE
+    show.bottom <- TRUE
+
+    nplots <- show.confusion + show.levels + show.roc
+
+    layout(matrix(1:nplots, nrow = 1, ncol = nplots),
+           widths = c(3 * nplots),
+           heights = c(3))
+
+  }
+
 
 
 }

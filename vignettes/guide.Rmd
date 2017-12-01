@@ -61,7 +61,7 @@ We had a lot of fun creating FFTrees and hope you like it too! We have an articl
 
 [FFTrees Article PDF link](http://journal.sjdm.org/17/17217/jdm17217.pdf)
 
-If you use FFTrees in your work, please cite us and spreaad the word so we can continue developing the package
+If you use FFTrees in your work, please cite us and spread the word so we can continue developing the package
 
 *APA Citation*
 

@@ -122,6 +122,50 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL,
                     comp = NULL
 ) {
+#
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = NULL
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = "wacc"
+#   goal.chase = "bacc"
+#   numthresh.method = "o"
+#   decision.labels = c("False", "True")
+#   main = NULL
+#   train.p = 1
+#   rounding = NULL
+#   progress = TRUE
+#   repeat.cues = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   do.comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+#   comp = NULL
+#
+#
+#   formula = diagnosis ~ .               # The variable we are predicting
+#   data = heart.train                    # Training data
+#   data.test = heart.test                # Testing data
+#   main = "ER Decisions"               # Main label
+#   decision.labels = c("Stable", "Attack")
+#   my.tree = "If chol > 300, predict Attack.
+#                                 If age < 50, predict Stable.
+#                                 If slope = {up, flat} predict Attack. Otherwise, predict Stable." # Label for decisions
+#
 
 # Depricated arguments
 {
