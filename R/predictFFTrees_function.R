@@ -36,7 +36,7 @@ predict.FFTrees <- function(
   tree = 1,
   type = "class",
   sens.w = NULL,
-  method = "laplace"
+  method = "laplace",
   ...
 ) {
 
