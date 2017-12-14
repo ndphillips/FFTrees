@@ -7,7 +7,7 @@
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
   ntree = 10, train.p = 0.5, algorithm = "ifan", goal = "wacc",
   goal.chase = "wacc", sens.w = 0.5, verbose = TRUE, cpus = 1,
-  comp = FALSE, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE,
+  do.comp = FALSE, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE,
   do.svm = TRUE, rank.method = NULL, hr.weight = NULL)
 }
 \arguments{
@@ -35,7 +35,7 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{cpus}{integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.}
 
-\item{comp, do.lr, do.cart, do.rf, do.svm}{logical. See arguments in \code{FFTrees()}}
+\item{do.comp, do.lr, do.cart, do.rf, do.svm}{logical. See arguments in \code{FFTrees()}}
 
 \item{rank.method, hr.weight}{depricated arguments}
 }

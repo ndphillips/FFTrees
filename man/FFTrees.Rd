@@ -54,7 +54,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 
-\item{my.tree}{string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = [m], predict FALSE. Otherwise, predict TRUE"}}
+\item{my.tree}{string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE"}}
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
 
@@ -91,18 +91,4 @@ An \code{FFTrees} object with the following elements
 }
 \description{
 This is the workhorse function for the \code{FFTrees} package. It creates (one or more) fast-and-frugal decision trees trained on a training dataset and tested on an optional test dataset.
-}
-\examples{
-
- # Create ffts for heart disease
- heart.fft <- FFTrees(formula = diagnosis ~.,
-                      data = heartdisease)
-
- # Print the result for summary info
- heart.fft
-
- # Plot the best tree
- plot(heart.fft)
-
-
 }

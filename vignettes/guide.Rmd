@@ -71,7 +71,7 @@ Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017).
 
 ```{r, eval = FALSE}
 @article{phillips2017FFTrees,
- title = {{FFTrees}: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
+ title = {FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
  author = {Phillips, Nathaniel D and Neth, Hansjoerg and Woike, Jan K and Gaissmaier, Wolfgang},
  year = 2017, 
  journal = {Judgment and Decision Making},
