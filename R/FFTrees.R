@@ -337,10 +337,9 @@ if((crit.name %in% names(data) == FALSE) & is.null(object)) {
 
 if(class(data[[crit.name]]) != "factor") {data[[crit.name]] <- factor(data[[crit.name]])}
 
-
 if(length(levels(data[[crit.name]])) != 2) {stop("The criterion must have exactly two levels")}
 
-
+criterion.levels <- levels(data[[crit.name]])
 
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
 {
@@ -1109,7 +1108,7 @@ x.FFTrees <- list("formula" = formula,
                    "tree.definitions" = tree.definitions,
                    "tree.stats" = treestats,
                    "cost" = treecost,
-                   # "history" = history,
+                   "criterion.levels" = criterion.levels,
                    "level.stats" = levelstats,
                    "decision" = decision,
                    "levelout" = levelout,

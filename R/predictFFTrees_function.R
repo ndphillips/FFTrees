@@ -36,7 +36,7 @@ predict.FFTrees <- function(
   tree = 1,
   type = "class",
   sens.w = NULL,
-  method = "laplace",
+  method = "laplace"
   ...
 ) {
 
@@ -58,12 +58,11 @@ predict.FFTrees <- function(
 
   new.apply.tree <-  apply.tree(formula = object$formula,
                                 data = data,
-                                tree.definitions = object$tree.definitions)
+                                tree.definitions = object$tree.definitions,
+                                criterion.levels = object$criterion.levels)
 
   # Calculate predictions from tree
   predictions <- new.apply.tree$decision[,tree]
-
-  criterion.levels <- levels(predictions)
 
    if(type == "class") {output <- predictions}
 

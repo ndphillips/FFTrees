@@ -19,7 +19,8 @@ apply.tree <- function(data,
                        sens.w = .5,
                        cost.outcomes = c(0, 1, 1, 0),
                        cost.cues = NULL,
-                       allNA.pred = NULL
+                       allNA.pred = NULL,
+                       criterion.levels = NULL
 ) {
 
 #
@@ -37,8 +38,11 @@ criterion.v <- factor(model.frame(formula = formula,
                            data = data,
                            na.action = NULL)[,1])
 
+if(is.null(criterion.levels)) {
+
 criterion.levels <- levels(criterion.v)
 
+}
 
 # Which is the most common class?
 if(is.null(allNA.pred)) {
