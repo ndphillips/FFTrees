@@ -63,6 +63,8 @@ predict.FFTrees <- function(
   # Calculate predictions from tree
   predictions <- new.apply.tree$decision[,tree]
 
+  criterion.levels <- levels(predictions)
+
    if(type == "class") {output <- predictions}
 
 if(type == "prob") {
@@ -93,10 +95,11 @@ ppv.lp.m <- (hi.m + 1) / (hi.m + fa.m + 2)
 for(level.i in 1:levels.n) {
 
   decide.now.0.log <- new.apply.tree$levelout[,tree] == level.i &
-                      new.apply.tree$decision[,tree] == 0
+                      new.apply.tree$decision[,tree] == criterion.levels[1]
 
   decide.now.1.log <- new.apply.tree$levelout[,tree] == level.i &
-                      new.apply.tree$decision[,tree] == 1
+                      new.apply.tree$decision[,tree] == criterion.levels[2]
+
 
   if(method == "laplace") {
 
