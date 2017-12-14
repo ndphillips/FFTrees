@@ -86,7 +86,7 @@ cuerank <- function(formula = NULL,
   }
 
   # Validation: Make sure there is variance in the criterion!
-  if(var(criterion.v) == 0) {
+  if(length(unique(criterion.v)) == 1) {
 
     stop("There is no variance in the criterion!")
 

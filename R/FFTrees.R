@@ -572,12 +572,9 @@ if(is.null(data.test) & train.p < 1) {
 {
   # Non-binary DV
 
-  if(setequal(crit.train, c(0, 1)) == FALSE |
-     {"factor" %in% c(class(crit.train))} |
-     {"character" %in% c(class(crit.train))}
-     ) {
+  if(length(unique(crit.train)) != 2) {
 
-    stop(paste0("The criterion ", crit.name, " is either not binary or logical, or does not have variance"))
+    stop(paste0("The criterion ", crit.name, " must have exactly 2 unique values."))
 
   }
 
