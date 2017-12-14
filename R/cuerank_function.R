@@ -15,6 +15,7 @@
 #' @param cue.rules dataframe. An optional df specifying existing cue thresholds, directions, names, and classes
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
+#' @importFrom plyr mapvalues
 #' @return A dataframe containing thresholds and marginal classification statistics for each cue
 #' @export
 #' @examples
@@ -43,6 +44,8 @@ cuerank <- function(formula = NULL,
 
 ) {
 
+  crit.name <- paste(formula)[2]
+  if(class(data[[crit.name]]) != "factor") {data[[crit.name]] <- factor(data[[crit.name]])}
 
   # GLOBAL VARIABLES (could be updated later)
   max.numcat <- 20        # Maximum number of numeric thresholds to consider
@@ -55,7 +58,8 @@ cuerank <- function(formula = NULL,
 
   # Extract variables in formula
   data.mf <- model.frame(formula = formula,
-                         data = data, na.action = NULL)
+                         data = data,
+                         na.action = NULL)
 
   # Define criterion (vector) and cues (dataframe)
   criterion.v <- data.mf[,1]
@@ -70,7 +74,6 @@ cuerank <- function(formula = NULL,
 
   # Convert unordered factors to character, and ordered factors to integer
   for(i in 1:n.cues) {
-
 
     if(setequal(class(cue.df[,i]),c("ordered", "factor"))) {
 
@@ -319,6 +322,13 @@ cuerank <- function(formula = NULL,
               if(direction.i == "=") {pred.vec <- cue.v == cue.level.i}
               if(direction.i == "!=") {pred.vec <- cue.v != cue.level.i}
 
+
+              # Convert pred.vec to factor
+
+              pred.vec <- factor(pred.vec, levels = c("FALSE", "TRUE"))
+              pred.vec <- plyr::mapvalues(pred.vec, from = c("FALSE", "TRUE"), to = levels(criterion.v), warn_missing = FALSE)
+
+
               classtable.temp <- classtable(prediction.v = pred.vec,
                                             criterion.v = criterion.v,
                                             sens.w = sens.w,
@@ -368,6 +378,11 @@ cuerank <- function(formula = NULL,
 
               if(direction.i == "=") {pred.vec <- joint.cue.vec == TRUE}
               if(direction.i == "!=") {pred.vec <- joint.cue.vec == FALSE}
+
+              # Convert pred.vec to factor
+
+              pred.vec <- factor(pred.vec, levels = c("FALSE", "TRUE"))
+              pred.vec <- plyr::mapvalues(pred.vec, from = c("FALSE", "TRUE"), to = levels(criterion.v), warn_missing = FALSE)
 
 
               classtable.temp <- classtable(prediction.v = pred.vec,
@@ -425,6 +440,13 @@ cuerank <- function(formula = NULL,
             if(direction.i == "<=") {pred.vec <- cue.v <= level.i}
             if(direction.i == ">") {pred.vec <- cue.v > level.i}
             if(direction.i == ">=") {pred.vec <- cue.v >= level.i}
+
+
+            # Convert pred.vec to factor
+
+            pred.vec <- factor(pred.vec, levels = c("FALSE", "TRUE"))
+            pred.vec <- plyr::mapvalues(pred.vec, from = c("FALSE", "TRUE"), to = levels(criterion.v), warn_missing = FALSE)
+
 
             classtable.temp <- classtable(prediction.v = pred.vec,
                                           criterion.v = criterion.v,

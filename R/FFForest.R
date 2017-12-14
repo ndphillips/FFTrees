@@ -53,31 +53,37 @@ FFForest <- function(formula = NULL,
                      hr.weight = NULL
 ) {
 
+#
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   max.levels = 5
+#   ntree = 10
+#   train.p = .5
+#   algorithm = "ifan"
+#   goal = "wacc"
+#   goal.chase = "wacc"
+#   sens.w = .5
+#   verbose = TRUE
+#   cpus = 1
+#   do.comp = FALSE
+#   do.lr = TRUE
+#   do.cart = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   rank.method = NULL
+#   hr.weight = NULL
+#
+#   formula <- diagnosis ~.
+#   data = heartdisease
 
-  # formula = NULL
-  # data = NULL
-  # data.test = NULL
-  # max.levels = 5
-  # ntree = 10
-  # train.p = .5
-  # algorithm = "ifan"
-  # goal = "wacc"
-  # goal.chase = "wacc"
-  # sens.w = .5
-  # verbose = TRUE
-  # cpus = 1
-  # comp = FALSE
-  # do.lr = TRUE
-  # do.cart = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # rank.method = NULL
-  # hr.weight = NULL
-  #
-  # formula <- diagnosis ~.
-  # data = heartdisease
 
+  crit.name <- paste(formula)[2]
+  if(class(data[[crit.name]]) != "factor") {data[[crit.name]] <- factor(data[[crit.name]])}
+  if(length(levels(data[[crit.name]])) != 2) {stop("The criterion must have exactly two levels")}
 
+  criterion.v <- data[[crit.name]]
+  criterion.levels <- levels(criterion.v)
 
 # Check for depricated arguments
 
@@ -188,7 +194,6 @@ result.ls <- parallel::mclapply(1:nrow(simulations), FUN = function(x) {
 
 # Append final results to simulations
 
-
 fft.models <- lapply(1:length(result.ls), FUN = function(x) {
 
   result.ls[[x]]$fft.model
@@ -205,11 +210,18 @@ best.tree.v <- sapply(1:length(result.ls), FUN = function(i) {
 
 })
 
-decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(i) {
+decisions <- as.data.frame(do.call(cbind, lapply(1:length(result.ls), FUN = function(i) {
 
-  return(result.ls[[i]]$decisions)
 
-})), nrow = nrow(data), ncol = ntree)
+  paste(result.ls[[i]]$decisions)
+
+
+})))
+
+
+for(i in 1:ncol(decisions)) {decisions[,i] <- factor(decisions[,i], levels = criterion.levels)}
+
+
 
 
 
@@ -272,9 +284,9 @@ for(i in 1:nrow(connections)) {
 }
 
 # Get training performance
-FFForest.Train.Decisions <- rowMeans(decisions) >= .5
+FFForest.Train.Decisions <- rowMeans(decisions == criterion.levels[2]) >= .5
 
-train.stats <- classtable(FFForest.Train.Decisions, criterion.v)
+train.stats <- classtable(FFForest.Train.Decisions, criterion.v == criterion.levels[2])
 
 # Get testing performance
 if(is.null(data.test) == FALSE) {
@@ -284,8 +296,6 @@ FFForest.Test.Decisions <- sapply(1:nrow(simulations), FUN = function(x) {
   pred <- apply.tree(data = data.test,
                      formula = formula,
                      tree.definitions = simulations[x,])$decision
-
-
 })
 
 FFForest.Test.Decisions <- rowMeans(FFForest.Test.Decisions) >= .5
@@ -294,6 +304,7 @@ test.stats <- classtable(prediction.v = FFForest.Test.Decisions,
                          criterion.v = data.mf.test[,1])
 
 }
+
 if(is.null(data.test)) {test.stats <- NULL}
 
 forest.stats <- list(train = train.stats, test = test.stats)
@@ -301,18 +312,18 @@ forest.stats <- list(train = train.stats, test = test.stats)
 
 # Get single surrogate tree with highest agreement with FFForest
 {
-FFForest.Decisions <- rowMeans(decisions) >= .5
+FFForest.Decisions <- rowMeans(decisions == criterion.levels[2]) >= .5
 
 # Get agreement
 criterion <- data.mf[,1]
-FFForest.Decisions.neg <- FFForest.Decisions[criterion == 0]
-FFForest.Decisions.pos <- FFForest.Decisions[criterion == 1]
+FFForest.Decisions.neg <- FFForest.Decisions[criterion == criterion.levels[1]]
+FFForest.Decisions.pos <- FFForest.Decisions[criterion == criterion.levels[2]]
 
-agreement <- matrix(as.numeric(decisions) == rep(FFForest.Decisions, times = ncol(decisions)),
+agreement <- matrix(as.numeric(decisions == criterion.levels[2]) == rep(FFForest.Decisions, times = ncol(decisions)),
                     nrow = nrow(decisions), ncol = ncol(decisions))
 
-agree.pos <- colMeans(agreement[criterion == 1,])
-agree.neg <- colMeans(agreement[criterion == 0,])
+agree.pos <- colMeans(agreement[criterion == criterion.levels[2],])
+agree.neg <- colMeans(agreement[criterion == criterion.levels[1],])
 
 agree.combined <- (agree.pos + agree.neg) / 2
 

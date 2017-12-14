@@ -122,50 +122,45 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL,
                     comp = NULL
 ) {
-#
-#   formula = NULL
-#   data = NULL
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = NULL
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   goal.chase = "bacc"
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   main = NULL
-#   train.p = 1
-#   rounding = NULL
-#   progress = TRUE
-#   repeat.cues = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   do.comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#   comp = NULL
-#
-#
-#   formula = diagnosis ~ .               # The variable we are predicting
-#   data = heart.train                    # Training data
-#   data.test = heart.test                # Testing data
-#   main = "ER Decisions"               # Main label
-#   decision.labels = c("Stable", "Attack")
-#   my.tree = "If chol > 300, predict Attack.
-#                                 If age < 50, predict Stable.
-#                                 If slope = {up, flat} predict Attack. Otherwise, predict Stable." # Label for decisions
-#
+# # # #
+  # formula = NULL
+  # data = NULL
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = NULL
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = "wacc"
+  # goal.chase = "bacc"
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # main = NUL
+  # train.p = 1
+  # rounding = NULL
+  # progress = TRUE
+  # repeat.cues = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # do.comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  # comp = NULL
+  #
+  #
+  # formula = diagnosis ~ .               # The variable we are predicting
+  # data = heartdisease
+
+
 
 # Depricated arguments
 {
@@ -195,7 +190,6 @@ FFTrees <- function(formula = NULL,
 
 }
 
-# # Input validation
 
 # If no FFTrees object is specified
 if(is.null(object)) {
@@ -222,9 +216,6 @@ if(is.null(cost.cues) == FALSE) {
     warning(paste0("The cue(s) {",missing.cues, "} specified in cost.cues are not present in the data."))
 
   }
-
-
-
 }
 
 if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
@@ -237,7 +228,6 @@ if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
   if(is.null(cost.outcomes) & is.null(cost.cues)) {
 
     cost.outcomes <- c(0, 1, 1, 0)
-
 
   }
 
@@ -343,6 +333,15 @@ if((crit.name %in% names(data) == FALSE) & is.null(object)) {
 
 }
 
+# Factor criterion with 2 levels
+
+if(class(data[[crit.name]]) != "factor") {data[[crit.name]] <- factor(data[[crit.name]])}
+
+
+if(length(levels(data[[crit.name]])) != 2) {stop("The criterion must have exactly two levels")}
+
+
+
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
 {
 
@@ -405,8 +404,15 @@ if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
                             data = data.test,
                             na.action = NULL)
 
+   # convert criterion to factor
+
+   if(class(data.test[[crit.name]]) != "factor") {data.test[[crit.name]] <- factor(data.test[[crit.name]], levels = levels(data[[crit.name]]))}
+
+
    cue.test <- data.test[,2:ncol(data.test)]
    crit.test <- data.test[,1]
+
+
 
  }
 
@@ -494,9 +500,12 @@ if(is.null(data.test) & train.p < 1) {
 
     if(force.factor == FALSE) {model.can.predict <- TRUE}
 
-    # Do the training and test data valid?
-    if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 &
-       mean(crit.test.i > 0) & mean(crit.test.i < 1) & all(model.can.predict)) {continue <- FALSE}
+    # # Do the training and test data valid?
+    # if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 &
+    #    mean(crit.test.i > 0) & mean(crit.test.i < 1) & all(model.can.predict)) {continue <- FALSE}
+
+    # # Do the training and test data valid?
+    if(all(model.can.predict)) {continue <- FALSE}
 
     if(run.i == 100) {stop("I could not create valid training and test data sets. This is likely due to sparse data. You'll have to create them manually.")}
 
@@ -517,60 +526,34 @@ if(is.null(data.test) & train.p < 1) {
 # More validity checks
 {
 
-  # Convert factors to strings
-  {
-    fac.to.string <- function(x) {
+# Check for missing or bad inputs
+{
+  if(is.null(data.train) |
+     "data.frame" %in% class(data.train) == FALSE) {
 
-      if(is.null(x) == FALSE) {
+    stop("Please specify a valid dataframe object in data")
 
-        for(i in 1:ncol(x)) {
-
-          x.i <- x[,i]
-
-          if("factor" %in% class(x.i)) {x[,i] <- paste(x.i)}
-
-        }
-      }
-
-      return(x)
-
-    }
-
-    if(is.null(object)) {
-
-    data.test <- fac.to.string(data.test)
-    data.train <- fac.to.string(data.train)
-    cue.train <- fac.to.string(cue.train)
-    cue.test <- fac.to.string(cue.test)
+  }
 }
-
-  }
-
-  # Check for missing or bad inputs
-  {
-    if(is.null(data.train) |
-       "data.frame" %in% class(data.train) == FALSE) {
-
-      stop("Please specify a valid dataframe object in data")
-
-    }
-  }
 
   # MAKE SURE TRAINING AND TEST DATAFRAMES ARE SIMILAR
 
-  if(is.null(data.test) == FALSE) {
+if(is.null(data.test) == FALSE) {
 
-    if(setequal(names(data.train), names(data.test)) == FALSE) {
+  if(setequal(names(data.train), names(data.test)) == FALSE) {
 
-      stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
-
-    }
+    stop("Your training (data) and test (data.test) dataframes do not appear to have the same column names. Please fix and try again.")
 
   }
 
+}
+
 ## VALIDITY CHECKS
 {
-  # Non-binary DV
+
+
+
+    # Non-binary DV
 
   if(length(unique(crit.train)) != 2) {
 
@@ -729,9 +712,9 @@ if(is.null(object) == FALSE) {
 # CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
 {
 
-if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test)) & is.null(cue.accuracies.train) == FALSE) {
+if(is.null(data.test) == FALSE & is.null(cue.accuracies.train) == FALSE) {
 
-  if(sd(crit.test) > 0) {
+  if(all(duplicated(crit.test)[-1L]) == FALSE) {
 
 # if(progress) {message("Calculating cue test accuracies...")}
 
@@ -745,7 +728,7 @@ cue.accuracies.test <- cuerank(formula = formula,
                                 numthresh.method = numthresh.method)
 }
 
-  if(sd(crit.test) == 0) {
+  if(all(duplicated(crit.test)[-1L]) == TRUE) {
 
     cue.accuracies.test <- NULL
 
@@ -1074,9 +1057,9 @@ if(is.null(object)) {
 
 data.desc <- list("train" = data.frame("cases" = nrow(cue.train),
                                        "features" = ncol(cue.train),
-                                       "n.pos" = sum(crit.train),
-                                       "n.neg" = sum(crit.train == 0),
-                                       "criterion.br" = mean(crit.train)),
+                                       "n.pos" = sum(crit.train == levels(crit.train)[2]),
+                                       "n.neg" = sum(crit.train == levels(crit.train)[1]),
+                                       "criterion.br" = mean(crit.train == levels(crit.train)[2])),
                   "test" = data.frame("cases" = NA,
                                       "features" = NA,
                                       "n.pos" = NA,
@@ -1099,9 +1082,9 @@ if(is.null(data.test) == FALSE) {
 
   data.desc[[2]] <- data.frame("cases" = nrow(cue.test),
                                "features" = ncol(cue.test),
-                               "n.pos" = sum(crit.test),
-                               "n.neg" = sum(crit.test == 0),
-                               "criterion.br" = mean(crit.test))
+                               "n.pos" = sum(crit.test == levels(crit.train)[2]),
+                               "n.neg" = sum(crit.test == levels(crit.train)[1]),
+                               "criterion.br" = mean(crit.test == levels(crit.train)[2]))
 
 }
 

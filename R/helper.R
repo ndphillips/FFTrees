@@ -4,14 +4,21 @@
 apply.break <- function(direction,
                         threshold.val,
                         cue.v,
-                        cue.class
+                        cue.class,
+                        criterion.levels = NULL
 ) {
+
+#
+#   direction = new.direction
+#   threshold.val = new.threshold
+#   cue.v = data.mf[[new.cue]]
+#   cue.class = new.cue.stats$class
+#   criterion.levels = levels(criterion.v)
 
 
   if(is.character(threshold.val)) {threshold.val <- unlist(strsplit(threshold.val, ","))}
 
   if(cue.class %in% c("numeric", "integer")) {threshold.val <- as.numeric(threshold.val)}
-
 
   if(direction == "!=") {output <- (cue.v %in% threshold.val) == FALSE}
   if(direction == "=") {output <- cue.v %in% threshold.val}
@@ -20,6 +27,7 @@ apply.break <- function(direction,
   if(direction == ">") {output <- cue.v > threshold.val}
   if(direction == ">=") {output <- cue.v >= threshold.val}
 
+  output <- plyr::mapvalues(factor(output), from = c(FALSE, TRUE), to = criterion.levels)
 
   return(output)
 

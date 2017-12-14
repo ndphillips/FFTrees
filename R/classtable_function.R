@@ -22,27 +22,36 @@ classtable <- function(prediction.v,
                        cost.v = NULL,
                        cost.outcomes = c(0, 1, 1, 0)) {
 
-#
-#   prediction.v = pred.vec
-#   criterion.v = criterion.v
-#   cost.v = rep(cue.cost.i, cases.n)
-#   sens.w = sens.w
-#   cost.outcomes = cost.outcomes
+  # prediction.v = pred.vec
+  # criterion.v = criterion.v
+  # cost.v = rep(cue.cost.i, cases.n)
+  # sens.w = sens.w
+  # cost.outcomes = cost.outcomes
 
 
 if(is.null(cost.v)) {cost.v <- rep(0, length(prediction.v))}
 
-if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
 
-  prediction.v <- as.logical(paste(prediction.v))
+  if(class(criterion.v) != "factor") {
 
-}
+    if(all(criterion.v %in% c(FALSE, TRUE))) {
 
-if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
+      criterion.v <- factor(criterion.v, levels = c(FALSE, TRUE))
+      prediction.v <- factor(prediction.v, levels = c(FALSE, TRUE))
 
-  criterion.v <- as.logical(paste(criterion.v))
+    }
+
+    if(all(criterion.v %in% c(0, 1))) {
+
+      criterion.v <- factor(criterion.v, levels = c(0, 1))
+      prediction.v <- factor(prediction.v, levels = c(0, 1))
+
+    }
 
   }
+
+
+  criterion.levels <- levels(criterion.v)
 
   correction <- .25
 
@@ -55,10 +64,10 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
 
   if(N > 0) {
 
-  hi <- sum(prediction.v == 1 & criterion.v == 1, na.rm = TRUE)
-  mi <- sum(prediction.v == 0 & criterion.v == 1, na.rm = TRUE)
-  fa <- sum(prediction.v == 1 & criterion.v == 0, na.rm = TRUE)
-  cr <- sum(prediction.v == 0 & criterion.v == 0, na.rm = TRUE)
+  hi <- sum(prediction.v == criterion.levels[2] & criterion.v == criterion.levels[2], na.rm = TRUE)
+  mi <- sum(prediction.v == criterion.levels[1] & criterion.v == criterion.levels[2], na.rm = TRUE)
+  fa <- sum(prediction.v == criterion.levels[2] & criterion.v == criterion.levels[1], na.rm = TRUE)
+  cr <- sum(prediction.v == criterion.levels[1] & criterion.v == criterion.levels[1], na.rm = TRUE)
 
 
   if(hi == 0 | mi == 0 | cr == 0 | fa == 0) {

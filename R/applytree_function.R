@@ -7,7 +7,7 @@
 #' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
-
+#' @importFrom plyr mapvalues
 #' @return A list of length 4 containing
 #' @export
 #'
@@ -19,21 +19,43 @@ apply.tree <- function(data,
                        sens.w = .5,
                        cost.outcomes = c(0, 1, 1, 0),
                        cost.cues = NULL,
-                       allNA.pred = FALSE
+                       allNA.pred = NULL
 ) {
+
+#
+#   data = data
+#   formula = formula
+#   tree.definitions = tree.definitions
+#   sens.w = sens.w
+#   cost.outcomes = cost.outcomes
+#   cost.cues = cost.cues
+#   allNA.pred = NULL
 
 # Step 0: Validation and Setup
 
-criterion.v <- model.frame(formula = formula,
+criterion.v <- factor(model.frame(formula = formula,
                            data = data,
-                           na.action = NULL)[,1]
+                           na.action = NULL)[,1])
+
+criterion.levels <- levels(criterion.v)
+
+
+# Which is the most common class?
+if(is.null(allNA.pred)) {
+
+allNA.pred <- names(table(criterion.v)[which(table(criterion.v) == max(table(criterion.v)))])
+
+}
 
 n.exemplars <- nrow(data)
 n.trees <- nrow(tree.definitions)
 
 
 # decision: The decision for each case
-decision          <- matrix(NA, nrow = n.exemplars, ncol = n.trees)
+decision          <- as.data.frame(matrix(NA, nrow = n.exemplars, ncol = n.trees))
+
+for(i in 1:ncol(decision)) {decision[,i] <- factor(decision[,i], levels = criterion.levels)}
+
 
 # levelout: The level at which each case is classified
 levelout          <- matrix(NA, nrow = n.exemplars, ncol = n.trees)
@@ -110,8 +132,10 @@ if(direction.i == "<=") {current.decisions <- cue.values <= threshold.i}
 if(direction.i == ">") {current.decisions <- cue.values > threshold.i}
 if(direction.i == ">=") {current.decisions <- cue.values >= threshold.i}
 
-if(exit.i == 0) {classify.now <- current.decisions == FALSE & is.na(decision[,tree.i])}
-if(exit.i == 1) {classify.now <- current.decisions == TRUE & is.na(decision[,tree.i])}
+current.decisions <- plyr::mapvalues(factor(current.decisions), from = c(FALSE, TRUE), to = criterion.levels)
+
+if(exit.i == 0) {classify.now <- current.decisions == criterion.levels[1] & is.na(decision[,tree.i])}
+if(exit.i == 1) {classify.now <- current.decisions == criterion.levels[2] & is.na(decision[,tree.i])}
 if(exit.i == .5) {classify.now <- is.na(decision[,tree.i])}
 
 # Convert NAs
@@ -146,7 +170,7 @@ level.stats.df.i[level.i, names(level.i.stats)] <- level.i.stats
 
 }
 
-# Add costt
+# Add cost
 
   level.stats.ls[[tree.i]] <- level.stats.df.i
 
@@ -180,16 +204,16 @@ treestats$mcu <- colMeans(levelout)
 costoutcomes.t <- sapply(1:n.trees, FUN = function(tree.i) {
 
   # which cases are hits
-  hi.log <- criterion.v == 1 & decision[,tree.i] == 1
+  hi.log <- criterion.v == criterion.levels[2] & decision[,tree.i] == criterion.levels[2]
 
   # which cases are false alarms
-  fa.log <- criterion.v == 0 & decision[,tree.i] == 1
+  fa.log <- criterion.v == criterion.levels[1] & decision[,tree.i] == criterion.levels[2]
 
   # which cases are misses
-  mi.log <- criterion.v == 1 & decision[,tree.i] == 0
+  mi.log <- criterion.v == criterion.levels[2] & decision[,tree.i] == criterion.levels[1]
 
   # which cases are correct rejections
-  cr.log <- criterion.v == 0 & decision[,tree.i] == 0
+  cr.log <- criterion.v == criterion.levels[1] & decision[,tree.i] == criterion.levels[1]
 
 cost.v <- hi.log * cost.outcomes[1] + fa.log * cost.outcomes[2] + mi.log * cost.outcomes[3] + cr.log * cost.outcomes[4]
 

@@ -13,7 +13,7 @@
 #' @param stopping.rule character. A string indicating the method to stop growing trees. \code{"levels"} means the tree grows until a certain level, \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain. \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == \code{"levels"}, this is the number of levels. For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
 #' @param rounding integer. How much should threshold parameters be rounded? Default is
-#' @param progress logical. Should tree growing progress be displayed?
+#' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula var
@@ -48,6 +48,7 @@ correction <- .25
 data.mf <- model.frame(formula, data, na.action = NULL)
 criterion.name <- names(data.mf)[1]
 criterion.v <- data.mf[,1]
+criterion.levels <- levels(criterion.v)
 cues.n <- ncol(data.mf) - 1
 cases.n <- nrow(data.mf)
 cue.df <- data.mf[,2:ncol(data.mf)]
@@ -241,7 +242,7 @@ if(algorithm == "dfan") {
   }
 
   # If there is no variance in the criterion, then stop growth!
-  if(var(data.mf.r[,1]) == 0) {grow.tree <- FALSE ; break}
+  if(length(unique(data.mf.r[,1])) == 0) {grow.tree <- FALSE ; break}
 
   # Calculate cue accuracies with remaining exemplars
   cue.accuracies.current <-  cuerank(formula = formula,
@@ -287,7 +288,8 @@ level.stats$exit[current.level] <- current.exit
 cue.decisions <- apply.break(direction = new.direction,
                              threshold.val = new.threshold,
                              cue.v = data.mf[[new.cue]],
-                             cue.class = new.cue.stats$class)
+                             cue.class = new.cue.stats$class,
+                             criterion.levels = levels(criterion.v))
 
 # Statistics for current decisions
 cue.classtable <- classtable(prediction.v = cue.decisions,
@@ -298,7 +300,7 @@ cue.classtable <- classtable(prediction.v = cue.decisions,
 
 # How would classifications look if all remaining exemplars
 #   were classified at the current level?
-as.if.decision.v <- decision.v
+as.if.decision.v <- factor(decision.v, levels = criterion.levels)
 as.if.levelout.v <- levelout.v
 as.if.cuecost.v <- cuecost.v
 
@@ -341,28 +343,28 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
 
     if(current.exit == 1 | current.exit == .5) {
 
-      decide.1.index <- remaining.exemplars & cue.decisions == TRUE
+      decide.1.index <- remaining.exemplars & cue.decisions == criterion.levels[2]
 
-      decision.v[decide.1.index] <- 1
+      decision.v[decide.1.index] <-  criterion.levels[2]
       levelout.v[decide.1.index] <- current.level
 
     }
 
     if(current.exit == 0 | current.exit == .5) {
 
-      decide.0.index <- is.na(decision.v) & cue.decisions == FALSE
+      decide.0.index <- is.na(decision.v) & cue.decisions == criterion.levels[1]
 
-      decision.v[decide.0.index] <- 0
+      decision.v[decide.0.index] <- criterion.levels[1]
       levelout.v[decide.0.index] <- current.level
     }
 
 
     # Update cost vectors
 
-    hi.v <- decision.v == 1 & criterion.v == 1
-    mi.v <- decision.v == 0 & criterion.v == 1
-    fa.v <- decision.v == 1 & criterion.v == 0
-    cr.v <- decision.v == 0 & criterion.v == 0
+    hi.v <- decision.v == criterion.levels[2] & criterion.v == criterion.levels[2]
+    mi.v <- decision.v == criterion.levels[1] & criterion.v == criterion.levels[2]
+    fa.v <- decision.v == criterion.levels[2] & criterion.v == criterion.levels[1]
+    cr.v <- decision.v == criterion.levels[1] & criterion.v == criterion.levels[1]
 
     outcomecost.v[hi.v == TRUE] <- cost.outcomes[1]
     outcomecost.v[mi.v == TRUE] <- cost.outcomes[2]
@@ -381,10 +383,10 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
     # Get cumulative stats of examplars currently classified
 
     cum.classtable <- classtable(prediction.v = decision.v[remaining.exemplars == FALSE],
-                                criterion.v = criterion.v[remaining.exemplars == FALSE],
-                                sens.w = sens.w,
-                                cost.v = cuecost.v[remaining.exemplars == FALSE],
-                                cost.outcomes = cost.outcomes)
+                                 criterion.v = criterion.v[remaining.exemplars == FALSE],
+                                 sens.w = sens.w,
+                                 cost.v = cuecost.v[remaining.exemplars == FALSE],
+                                 cost.outcomes = cost.outcomes)
 
 
     # Update level stats
@@ -412,7 +414,7 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
     if(stopping.rule == "levels" & current.level == stopping.par) {break}
 
 
-    if(algorithm == "dfan" & sd(criterion.v[remaining.exemplars]) == 0) {break}
+    if(algorithm == "dfan" & length(unique(criterion.v[remaining.exemplars])) == 0) {break}
 
     # Set up next level stats
     level.stats[current.level + 1,] <- NA
@@ -448,13 +450,14 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
     current.decisions <- apply.break(direction = new.direction,
                                      threshold.val = new.threshold,
                                      cue.v = data.mf[[last.cue]],
-                                     cue.class = new.class)
+                                     cue.class = new.class,
+                                     criterion.levels = criterion.levels)
 
-    decide.0.index <- decision.index == TRUE & current.decisions == 0
-    decide.1.index <- decision.index == TRUE & current.decisions == 1
+    decide.0.index <- decision.index == TRUE & current.decisions == criterion.levels[1]
+    decide.1.index <- decision.index == TRUE & current.decisions == criterion.levels[2]
 
-    decision.v[decide.0.index] <- 0
-    decision.v[decide.1.index] <- 1
+    decision.v[decide.0.index] <- criterion.levels[1]
+    decision.v[decide.1.index] <- criterion.levels[2]
 
     levelout.v[decide.0.index] <- current.level
     levelout.v[decide.1.index] <- current.level

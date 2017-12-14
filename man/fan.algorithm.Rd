@@ -37,7 +37,7 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
 
 \item{rounding}{integer. How much should threshold parameters be rounded? Default is}
 
-\item{progress}{logical. Should tree growing progress be displayed?}
+\item{progress}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
 
 \item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 

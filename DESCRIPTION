@@ -1,8 +1,8 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
-Version: 1.3.5
-Date: 2017-11-01
+Version: 1.3.6
+Date: 2017-12-14
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut", "cre"),
                      email = "Nathaniel.D.Phillips.is@gmail.com"),
               person("Hansjoerg", "Neth", role = "aut"),
@@ -24,7 +24,8 @@ Imports:
     igraph,
     e1071,
     stringr,
-    progress
+    progress,
+    plyr
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 6.0.1

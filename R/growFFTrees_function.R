@@ -62,6 +62,23 @@ grow.FFTrees <- function(formula,
                          ...
 ) {
 
+#
+#   formula = diagnosis ~.
+#   data = heartdisease
+#   max.levels = NULL
+#   algorithm = "ifan"
+#   goal = "wacc"
+#   goal.chase = "bacc"
+#   sens.w = .5
+#   cost.outcomes = c(0, 1, 1, 0)
+#   cost.cues = NULL
+#   numthresh.method = "o"
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   progress = FALSE
+#   repeat.cues = TRUE
+#   rank.method = NULL
+#   cue.accuracies = NULL
 
 # Depricated arguments
 if(is.null(rank.method) == FALSE) {
@@ -78,6 +95,10 @@ if(is.null(rank.method) == FALSE) {
 data.mf <- model.frame(formula = formula,
                        data = data,
                        na.action = NULL)
+
+# Make sure criterion is a factor
+
+if(class(data.mf[,1]) != "factor") {data.mf[,1] <- factor(data.mf[,1])}
 
 # cue.df contains cues
 cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
