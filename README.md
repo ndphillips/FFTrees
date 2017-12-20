@@ -29,6 +29,10 @@ plot(heart.fft,
 
 ### Package updates
 
+1.3.6
+
+- Bug fixes.
+
 1.3.5
 
 - Bug fixes.
