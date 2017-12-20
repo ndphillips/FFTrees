@@ -155,17 +155,14 @@ FFTrees <- function(formula = NULL,
 #   force = FALSE
 #   verbose = NULL
 #   comp = NULL
+# #
+# #
 #
 #
-#   formula = diagnosis ~ .               # The variable we are predicting
-#   data = heart.train                    # Training data
-#   data.test = heart.test                # Testing data
-#   main = "ER Decisions"               # Main label
-#   decision.labels = c("Stable", "Attack")
-#   my.tree = "If chol > 300, predict Attack.
-#                                 If age < 50, predict Stable.
-#                                 If slope = {up, flat} predict Attack. Otherwise, predict Stable." # Label for decisions
-#
+#   formula = decis_bin ~ .
+#   data = lung.train
+#   my.tree =    "If target_action <= 0, predict True.
+#   If drivermut2CAT >= 1, predict True. Otherwise, predict False."
 
 # Depricated arguments
 {

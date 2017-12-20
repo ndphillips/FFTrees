@@ -19,6 +19,11 @@ wordstoFFT <- function(input,
                        cue.names,
                        decision.labels = NULL) {
 
+
+  # input = my.tree
+  # cue.names = names(data.train)
+  # decision.labels = decision.labels
+
 # Clean up input
 
   # Remove \n (can happen if input has line breaks)
@@ -134,7 +139,13 @@ exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
 # thresholds.v
 {
-thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
+thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
+
+  # Get definition
+  x <- def[i]
+
+  # Remove the name of the cue
+  x <- gsub(pattern = tolower(cues.v[i]), replacement = "", x = x)
 
   # Is there a number?
   num.log <- grepl("[0-9]", x = x)
@@ -144,7 +155,7 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
 
   # If there is a number and no brace, get the number
 
-  if(!bracket.log) {
+  if(!bracket.log & num.log) {
 
     threshold.i <- stringr::str_extract(x, "[-+]?\\d+\\.*\\d*")
 
@@ -213,10 +224,8 @@ thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
 
 }
 
-
 # Set final exit to .5
 exits.v[nodes.n] <- ".5"
-
 
 output <- data.frame(tree = 1,
                      nodes = nodes.n,
@@ -225,8 +234,6 @@ output <- data.frame(tree = 1,
                      "directions" = paste(directions.v, collapse = ";"),
                      "thresholds" = paste(thresholds.v, collapse = ";"),
                      "exits" = paste(exits.v, collapse = ";"), stringsAsFactors = FALSE)
-
-
 
 return(output)
 
