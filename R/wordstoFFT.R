@@ -134,34 +134,40 @@ exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
 # thresholds.v
 {
-thresholds.v <- sapply(def[1:nodes.n], FUN = function(x) {
+  thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 
-  # Is there a number?
-  num.log <- grepl("[0-9]", x = x)
+    # Get definition
+    x <- def[i]
 
-  # Is there a brace?
-  bracket.log <- grepl("\\{", x = x)
+    # Remove the name of the cue (to avoid confusion)
+    x <- gsub(pattern = tolower(cues.v[i]), replacement = "", x = x)
 
-  # If there is a number and no brace, get the number
+    # Is there a number?
+    num.log <- grepl("[0-9]", x = x)
 
-  if(!bracket.log) {
+    # Is there a brace?
+    bracket.log <- grepl("\\{", x = x)
 
-    threshold.i <- stringr::str_extract(x, "[-+]?\\d+\\.*\\d*")
+    # If there is a number and no brace, get the number
 
-  }
+    if(!bracket.log & num.log) {
 
-  # If there is a brace get what's inside the braces (and remove any spaces)
+      threshold.i <- stringr::str_extract(x, "[-+]?\\d+\\.*\\d*")
 
-  if(bracket.log) {
+    }
 
-    threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\{|\\}"))[2], pattern = " ", "")
+    # If there is a brace get what's inside the braces (and remove any spaces)
 
-  }
+    if(bracket.log) {
 
-  return(threshold.i)
+      threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\{|\\}"))[2], pattern = " ", "")
+
+    }
+
+    return(threshold.i)
 
 
-})
+  })
 }
 
 # directions.v
