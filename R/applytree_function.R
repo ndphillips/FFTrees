@@ -7,6 +7,7 @@
 #' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
+#' @param criterion.levels character. Levels of the criterion.
 #' @importFrom plyr mapvalues
 #' @return A list of length 4 containing
 #' @export

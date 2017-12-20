@@ -22,6 +22,8 @@ apply.tree(data, formula, tree.definitions, sens.w = 0.5,
 \item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
 
 \item{allNA.pred}{logical. What should be predicted if all cue values in tree are NA? Default is FALSE}
+
+\item{criterion.levels}{character. Levels of the criterion.}
 }
 \value{
 A list of length 4 containing

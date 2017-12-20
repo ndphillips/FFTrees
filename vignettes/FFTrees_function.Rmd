@@ -31,10 +31,10 @@ We'll create FFTrees for heartdisease diagnosis data. The full dataset is stored
 
 ```{r}
 # Training data
-head(heartdisease)
+head(heart.train)
 
 # Test data
-head(heartdisease)
+head(heart.test)
 ```
 
 The critical dependent variable is `diagnosis` which indicates whether a patient has heart disease (`diagnosis = 1`) or not (`diagnosis = 0`). The other variables in the dataset (e.g.; sex, age, and several biological measurements) will be used as predictors (aka., cues).

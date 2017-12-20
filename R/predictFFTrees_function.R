@@ -40,6 +40,10 @@ predict.FFTrees <- function(
   ...
 ) {
 
+  # object = heart.fft
+  # data = heartdisease[1:10,]
+  # type = "prob"
+  #
   if(is.null(data)) {
 
     if(is.null(newdata) == FALSE) {
@@ -55,6 +59,7 @@ predict.FFTrees <- function(
   if(is.null(sens.w) == FALSE) {stop("sens.w is depricated and will be ignored.")}
 
   goal <- object$params$goal
+  criterion.levels <- object$criterion.levels
 
   new.apply.tree <-  apply.tree(formula = object$formula,
                                 data = data,

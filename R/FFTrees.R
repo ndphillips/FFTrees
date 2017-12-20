@@ -123,43 +123,43 @@ FFTrees <- function(formula = NULL,
                     comp = NULL
 ) {
 # # # #
-  # formula = NULL
-  # data = NULL
-  # data.test = NULL
-  # algorithm = "ifan"
-  # max.levels = NULL
-  # sens.w = .5
-  # cost.outcomes = NULL
-  # cost.cues = NULL
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = "wacc"
-  # goal.chase = "bacc"
-  # numthresh.method = "o"
-  # decision.labels = c("False", "True")
-  # main = NUL
-  # train.p = 1
-  # rounding = NULL
-  # progress = TRUE
-  # repeat.cues = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # do.comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  # comp = NULL
-  #
-  #
-  # formula = diagnosis ~ .               # The variable we are predicting
-  # data = heartdisease
-
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = NULL
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = "wacc"
+#   goal.chase = "bacc"
+#   numthresh.method = "o"
+#   decision.labels = c("False", "True")
+#   main = NULL
+#   train.p = 1
+#   rounding = NULL
+#   progress = TRUE
+#   repeat.cues = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   do.comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+#   comp = NULL
+#
+#
+#   formula = diagnosis ~ .               # The variable we are predicting
+#   data = heartdisease
+# train.p <- .5
 
 
 # Depricated arguments
@@ -333,12 +333,13 @@ if((crit.name %in% names(data) == FALSE) & is.null(object)) {
 
 }
 
-# Factor criterion with 2 levels
+# Ensure criterion is a factor criterion with 2 levels
 
 if(class(data[[crit.name]]) != "factor") {data[[crit.name]] <- factor(data[[crit.name]])}
 
-if(length(levels(data[[crit.name]])) != 2) {stop("The criterion must have exactly two levels")}
+if(length(levels(data[[crit.name]])) != 2) {stop("The criterion must have exactly two levels. More than two levels are currently not supported")}
 
+# Get levels of the criterion
 criterion.levels <- levels(data[[crit.name]])
 
 # DEFINE TESTING AND TRAINING DATA [data.train, data.test]
@@ -430,95 +431,31 @@ if(is.null(object) == TRUE & (train.p == 1 | is.null(data.test) == FALSE)) {
 ## TRAINING / TESTING RANDOM SPLIT
 if(is.null(data.test) & train.p < 1) {
 
-  # UPDATE
+  split.results <- createPartition(data = data,
+                                   formula = formula,
+                                   train.p = train.p)
 
-  # randomly sort the original data
-  # loop over the rows. Assign the first row to the training data and the second row to the test data
-  # Look at the next row, would it fill an empty factor slot for the training data? if yes, then assign to training. If no, then assign to test.
-  # repeat until all slots are filled for both training and test.
-  # assign the remaining cases proportionally to training and test
+  data.train <- split.results$part1
+
+  data.train.mf <- model.frame(formula = formula,
+                               data = data.train,
+                               na.action = NULL)
+
+  crit.train <- data.train.mf[,1]
+  cue.train <- data.train.mf[,2:ncol(data.train.mf)]
 
 
-  data.train.o <- data
+  data.test <- split.results$part2
 
-  data.train <- model.frame(formula = formula,
-                            data = data.train.o,
-                            na.action = NULL)
+  data.test.mf <- model.frame(formula = formula,
+                               data = data.test,
+                               na.action = NULL)
 
-  cue.train <- data.train[,2:ncol(data.train)]
-  crit.train <- data.train[,1]
-  cue.names <- names(cue.train)
+  crit.test <- data.test.mf[,1]
+  cue.test <- data.test.mf[,2:ncol(data.test.mf)]
+
+  cue.names <- names(data.train.mf)[2:ncol(data.train.mf)]
   n.cues <- length(cue.names)
-
-  # create 'training testing' sets of size train.p * nrow(data.train)
-
-  continue <- TRUE
-  run.i <- 0
-
-  # Create train and test set
-
-  # Test set must not have new factor values
-  # training set must have at least one positive and one negative case
-
-  while(continue) {
-
-    run.i <- run.i + 1
-
-    n.train <- floor(train.p * nrow(data.train))
-    train.exemplars.i <- sample(1:nrow(data.train), size = n.train)
-    test.exemplars.i <- setdiff(1:nrow(data.train), train.exemplars.i)
-    crit.train.i <- data.train[train.exemplars.i, 1]
-    crit.test.i <- data.train[test.exemplars.i, 1]
-
-    data.train.i <- data.train[train.exemplars.i,]
-    data.test.i <- data.train[test.exemplars.i,]
-
-     ## FORCE TEST AND TRAINING SET TO HAVE SAME FACTOR VALUES
-    force.factor <- FALSE
-
-    if(force.factor == TRUE) {
-    orig.vals.ls <- lapply(1:ncol(data.train.i), FUN = function(x) {unique(data.train.i[,x])})
-
-    can.predict.mtx <- matrix(1, nrow = nrow(data.test.i), ncol = ncol(data.test.i))
-
-    for(i in 1:ncol(can.predict.mtx)) {
-
-      test.vals.i <- data.test.i[,i]
-
-      if(is.numeric(test.vals.i)) {
-        can.predict.mtx[,i] <- 1} else {
-
-          can.predict.mtx[,i] <- paste(test.vals.i) %in% paste(orig.vals.ls[[i]])
-
-
-        }
-    }
-
-    model.can.predict <- rowMeans(can.predict.mtx) == 1
-    }
-
-    if(force.factor == FALSE) {model.can.predict <- TRUE}
-
-    # # Do the training and test data valid?
-    # if(mean(crit.train.i) > 0 & mean(crit.train.i) < 1 &
-    #    mean(crit.test.i > 0) & mean(crit.test.i < 1) & all(model.can.predict)) {continue <- FALSE}
-
-    # # Do the training and test data valid?
-    if(all(model.can.predict)) {continue <- FALSE}
-
-    if(run.i == 100) {stop("I could not create valid training and test data sets. This is likely due to sparse data. You'll have to create them manually.")}
-
-  }
-
-  data.train.full <- data.train
-
-  data.train <- data.train.full[train.exemplars.i,]
-  cue.train <- data.train[,2:ncol(data.train)]
-  crit.train <- data.train[,1]
-
-  data.test <- data.train.full[test.exemplars.i,]
-  cue.test <- data.test[,2:ncol(data.test)]
-  crit.test <- data.test[,1]
 
 }
 
