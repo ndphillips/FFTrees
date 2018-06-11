@@ -40,7 +40,6 @@ train.wacc <- round(x$tree.stats$train$wacc[tree], 2)
 train.acc <- round(x$tree.stats$train$acc[tree], 2)
 train.pci <-  round(x$tree.stats$train$pci[tree], 2)
 train.mcu <- round(x$tree.stats$train$mcu[tree], 2)
-train.auc <- round(x$auc$FFTrees[1], 2)
 
 if(is.null(x$tree.stats$test) == FALSE) {
 
@@ -55,7 +54,6 @@ test.wacc <- round(x$tree.stats$test$wacc[tree], 2)
 test.acc <- round(x$tree.stats$test$acc[tree], 2)
 test.pci <-  round(x$tree.stats$test$pci[tree], 2)
 test.mcu <- round(x$tree.stats$test$mcu[tree], 2)
-test.auc <- round(x$auc$FFTrees[1], 2)
 
 summary.df <- data.frame("train" = c(train.n,
                                      train.mcu,
@@ -87,7 +85,6 @@ if(is.null(x$tree.stats$test)) {
   test.sens <- "--"
   test.far <- "--"
   test.spec <- "--"
-  test.auc <- "--"
   test.acc <- "--"
   test.bacc <- "--"
   test.wacc <- "--"
@@ -122,17 +119,7 @@ if(n.trees > 1) {summary.text <- paste(n.trees, " FFTs predicting ", criterion.n
 
 params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', sens.w = ", x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
-if(is.null(test.auc)) {
 
-auc.text <- paste("FFTrees AUC: (Train = ", train.auc, ")", sep = "")
-
-}
-
-if(is.null(test.auc) == FALSE) {
-
-  auc.text <- paste("FFTrees AUC: (Train = ", train.auc, ", Test = ", test.auc, ")", sep = "")
-
-}
 
 
 accuracy.text <- paste("FFT #", tree, " predicts ", criterion.name," using ", train.cues.n, " cues: {", train.cues, "}", sep = "")

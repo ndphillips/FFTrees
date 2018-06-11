@@ -494,35 +494,7 @@ if(is.null(train.cases) == FALSE) {
   acc <- cbind(acc.train, acc.test)
   acc <- acc[order(acc$spec.train),]
 
-  # CALCULATE AUC
-
-  if(is.null(data.train) == FALSE & do.test == TRUE) {
-
-    auc.train <- FFTrees::auc(sens.v = acc$sens.train,
-                              spec.v = acc$spec.train)
-
-  } else {
-
-    auc.train <- NA
-
-  }
-
-  if(is.null(data.test) == FALSE & do.test == TRUE) {
-
-    auc.test <- FFTrees::auc(sens.v = acc$sens.test, spec.v = acc$spec.test)
-
-  } else {
-
-    auc.test <- NA
-
-  }
-
-  model.auc <- matrix(c(auc.train, auc.test), nrow = 2, ncol = 1)
-  colnames(model.auc) <- algorithm
-  rownames(model.auc) <- c("train", "test")
-
   output <- list("accuracy" = acc,
-                 "auc" = model.auc,
                  "model" = train.mod,
                  "algorithm" = algorithm)
 

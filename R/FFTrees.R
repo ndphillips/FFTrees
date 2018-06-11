@@ -43,7 +43,6 @@
 #'   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
 #'   \item{tree.max}{The index of the 'final' tree specified by the algorithm. For algorithms that only return a single tree, this value is always 1.}
 #'   \item{inwords}{A verbal definition of \code{tree.max}.}
-#'   \item{auc}{Area under the curve statistics}
 #'   \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal})}
 #'   \item{comp}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
 #'   \item{data}{The original training and test data (only included when \code{store.data = TRUE})}
@@ -65,7 +64,7 @@
 #'  # Plot the tree applied to training data
 #'  plot(heart.fft, stats = FALSE)
 #'  plot(heart.fft)
-#'  plot(heart.fft, data = "test)  # Now for testing data
+#'  plot(heart.fft, data = "test")  # Now for testing data
 #'  plot(heart.fft, data = "test", tree = 2) # Look at tree number 2
 #'
 #'
@@ -700,7 +699,6 @@ if(is.null(object) == FALSE) {
   levelstats.train <- object$level.stats$train
   decision.train <- object$decision$train
   levelout.train <- object$levelout$train
-  tree.auc.train <- object$auc[1,"FFTrees"]
   treecost.train <- object$cost$train
   tree.max <- object$tree.max
   comp <- object$comp
@@ -778,8 +776,6 @@ treecost.train <- train.results$treecost
 
 treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
 
-tree.auc.train <- FFTrees::auc(sens.v = train.results$treestats$sens,
-                               spec.v = train.results$treestats$spec)
 }
 
 if(is.null(data.train) == TRUE) {
@@ -790,7 +786,6 @@ if(is.null(data.train) == TRUE) {
   levelout.train <- NULL
   levelstats.train <- NULL
   treestats.train <- NULL
-  tree.auc.train <- NA
   treecost.train <- NULL
 
   }
@@ -813,18 +808,7 @@ treecost.test <- test.results$treecost
 
 treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
 
-if(any(is.na(test.results$treestats$sens)) == TRUE) {
 
-  tree.auc.test <- NA
-
-}
-
-if(all(is.finite(test.results$treestats$sens))) {
-
-tree.auc.test <- FFTrees::auc(sens.v = test.results$treestats$sens,
-                              spec.v = test.results$treestats$spec)
-
-}
 }
 
 if(is.null(data.test) == TRUE) {
@@ -833,7 +817,6 @@ if(is.null(data.test) == TRUE) {
   levelout.test <- NULL
   levelstats.test <- NULL
   treestats.test <- NULL
-  tree.auc.test <- NA
   treecost.test <- NULL
 
 }
@@ -843,9 +826,6 @@ levelout <- list("train" = levelout.train, "test" = levelout.test)
 levelstats <- list("train" = levelstats.train, "test" = levelstats.test)
 treestats <- list("train" = treestats.train, "test" = treestats.test)
 treecost <- list("train" = treecost.train, "test" = treecost.test)
-
-tree.auc <- data.frame("FFTrees" = c(tree.auc.train, tree.auc.test))
-rownames(tree.auc) = c("train", "test")
 
 }
 
@@ -890,7 +870,6 @@ do.rf <- FALSE
                           model = model)
 
       lr.stats <- lr.acc$accuracy
-      lr.auc <- lr.acc$auc
       lr.model <- lr.acc$model
 
 
@@ -905,10 +884,6 @@ do.rf <- FALSE
       lr.acc <- NULL
       lr.stats <- NULL
       lr.model <- NULL
-
-      lr.auc <- matrix(NA, nrow = 2, ncol =1)
-      rownames(lr.auc) <- c("train", "test")
-      colnames(lr.auc) <- "lr"
 
     }
 
@@ -933,7 +908,6 @@ do.rf <- FALSE
                             model = model)
 
       cart.stats <- cart.acc$accuracy
-      cart.auc <- cart.acc$auc
       cart.model <- cart.acc$model
 
       if(is.null(object) == FALSE) {
@@ -947,10 +921,6 @@ do.rf <- FALSE
       cart.acc <- NULL
       cart.stats <- NULL
       cart.model <- NULL
-
-      cart.auc <- matrix(NA, nrow = 2, ncol =1)
-      rownames(cart.auc) <- c("train", "test")
-      colnames(cart.auc) <- "cart"
 
     }
   }
@@ -974,7 +944,6 @@ do.rf <- FALSE
                           model = model)
 
       rf.stats <- rf.acc$accuracy
-      rf.auc <- rf.acc$auc
       rf.model <- rf.acc$model
 
       if(is.null(object) == FALSE) {
@@ -989,9 +958,6 @@ do.rf <- FALSE
       rf.stats <- NULL
       rf.model <- NULL
 
-      rf.auc <- matrix(NA, nrow = 2, ncol =1)
-      rownames(rf.auc) <- c("train", "test")
-      colnames(rf.auc) <- "rf"
 
     }
   }
@@ -1015,7 +981,6 @@ do.rf <- FALSE
                            model = model)
 
       svm.stats <- svm.acc$accuracy
-      svm.auc <- svm.acc$auc
       svm.model <- svm.acc$model
 
       if(is.null(object) == FALSE) {
@@ -1028,10 +993,6 @@ do.rf <- FALSE
       svm.acc <- NULL
       svm.stats <- NULL
       svm.model <- NULL
-
-      svm.auc <- matrix(NA, nrow = 2, ncol =1)
-      rownames(svm.auc) <- c("train", "test")
-      colnames(svm.auc) <- "svm"
 
     }
   }
@@ -1056,8 +1017,6 @@ tree.max <- which(treestats$train[[goal]] == min(treestats$train[[goal]]))
 if(length(tree.max) > 1) {tree.max <- tree.max[1]}
 }
 
-# Get AUC matrix
-auc <- cbind(tree.auc, lr.auc, cart.auc, rf.auc, svm.auc)
 
 # Store data?
 
@@ -1132,7 +1091,6 @@ x.FFTrees <- list("formula" = formula,
                    "levelout" = levelout,
                    "tree.max" = tree.max,
                    "inwords" = inwords.i,
-                   "auc" = auc,
                    "params" = list("algorithm" = algorithm,
                                    "goal" = goal,
                                    "goal.chase" = goal.chase,

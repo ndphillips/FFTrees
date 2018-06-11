@@ -1436,7 +1436,6 @@ if(show.bottom == TRUE) {
 
 # OBTAIN FINAL STATISTICS
 
-fft.auc <- auc(tree.stats$sens, tree.stats$spec)
 fft.sens.vec <- tree.stats$sens
 fft.spec.vec <- tree.stats$spec
 
