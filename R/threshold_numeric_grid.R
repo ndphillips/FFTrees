@@ -1,0 +1,87 @@
+#' Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue
+#'
+#' @param thresholds numeric. A vector of thresholds to consider
+#' @param cue.v numeric. Feature values
+#' @param criterion.v logical. Criterion values
+#' @param sens.w numeric.
+#' @param cost.outcomes numeric.
+#' @param goal.chase character.
+#'
+#'
+#' @examples
+#'
+#'
+#' threshold_numeric_grid(thresholds = c(10, 30, 50, 70, 90),
+#'                        cue.v =  c(13, 16, 24, 35, 56, 76, 87, 95),
+#'                        criterion.v = c( 0,  0,  1,  0,  1,  1,  1,  0),
+#'                        sens.w = .5,
+#'                        cost.outcomes = c(0, 1, 1, 0))
+#'
+#'
+threshold_numeric_grid <- function(thresholds,
+                                   cue.v,
+                                   criterion.v,
+                                   sens.w = .5,
+                                   cost.outcomes = c(0, 1, 1, 0),
+                                   goal.chase = "acc") {
+
+  # thresholds = cue.levels
+  # cue.v = cue.v
+  # criterion.v = criterion.v
+  # sens.w = sens.w
+  # cost.outcomes = cost.outcomes
+  # goal.chase = goal.chase
+  #
+
+  thresholds_n <- length(thresholds)
+  data_n <- length(cue.v)
+
+  results_gt <- matrix(NA, nrow = thresholds_n, ncol = 4)
+
+  # Loop over all thresholds
+  # C++
+
+  for(i in 1:thresholds_n) {
+
+    threshold_i <- thresholds[i]
+
+    # Create vector of decisions
+    decisions_i <- cue.v > threshold_i
+
+    # Calculate decisions
+    hi_i <- sum(decisions_i == TRUE & criterion.v == TRUE)
+    fa_i <- sum(decisions_i == TRUE & criterion.v == FALSE)
+    mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
+    cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
+
+    # Return values to results
+    results_gt[i, ] <- c(hi_i, fa_i, mi_i,  cr_i)
+
+  }
+
+  # Get results if using <= threshold
+  results_lt <- results_gt[,c(3, 4, 1, 2)]
+
+  # Combine
+  results <- rbind(results_gt, results_lt)
+
+  # Convert to named dataframe
+  results <- as.data.frame(results)
+  names(results) <- c("hi", "fa", "mi", "cr")
+
+  # Add thresholds and directions
+  results$threshold <- rep(thresholds, 2)
+  results$direction <- rep(c(">", "<"), each = thresholds_n)
+
+  # Add accuracy statistics
+  results <- cbind(results, Add_Stats(results,
+                                      sens.w = sens.w,
+                                      cost.outcomes = cost.outcomes))
+
+
+  # Order by goal and change column order
+  results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+
+  return(results)
+
+}
