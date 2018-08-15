@@ -5,11 +5,9 @@
 #' @param criterion.v logical. Criterion values
 #' @param sens.w numeric.
 #' @param cost.outcomes numeric.
-#' @param goal.chase character.
-#'
+#' @param goal character.
 #'
 #' @examples
-#'
 #'
 #' threshold_numeric_grid(thresholds = c(10, 30, 50, 70, 90),
 #'                        cue.v =  c(13, 16, 24, 35, 56, 76, 87, 95),
@@ -17,20 +15,19 @@
 #'                        sens.w = .5,
 #'                        cost.outcomes = c(0, 1, 1, 0))
 #'
-#'
 threshold_numeric_grid <- function(thresholds,
                                    cue.v,
                                    criterion.v,
                                    sens.w = .5,
                                    cost.outcomes = c(0, 1, 1, 0),
-                                   goal.chase = "acc") {
+                                   goal = "acc") {
 
   # thresholds = cue.levels
   # cue.v = cue.v
   # criterion.v = criterion.v
   # sens.w = sens.w
   # cost.outcomes = cost.outcomes
-  # goal.chase = goal.chase
+  # goal = goal
   #
 
   thresholds_n <- length(thresholds)
@@ -80,7 +77,7 @@ threshold_numeric_grid <- function(thresholds,
 
 
   # Order by goal and change column order
-  results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+  results <- results[order(-results[goal]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
 
   return(results)
 
