@@ -145,19 +145,16 @@ cuerank <- function(formula = NULL,
 
     }
 
-
       # Get main information about current cue
       cue_i_name <- names(cue.df)[cue_i]
       cue_i_class <- class(cue.df[,cue_i])
       cue_i_v <- unlist(cue.df[,cue_i])
       cue_i_cost <- cost.cues$cost[cost.cues$cue == cue_i_name]
 
-
     if(all(is.na(cue_i_v)) == FALSE) {
 
       # Step 0: Determine possible cue levels [cue_i_levels]
       {
-
           # Numeric and integer cues
           if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
@@ -204,15 +201,12 @@ cuerank <- function(formula = NULL,
 
             cue_i_levels <- sort(unique(unlist(cue_i_v)))
 
-
         # If there are > 50% unique cue.levels, send a warning
 
             if(length(cue_i_levels) > .5 * nrow(data)) {
 
               warning(paste0("The cue ", cue_names[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
-
           }
-
 
         # Check for cue levels containing protected characters (;)
 
@@ -222,12 +216,10 @@ cuerank <- function(formula = NULL,
 
           }
 
-
-
       }
 
-      # Step 1A: Determine best direction and threshold for cue
-
+      # Step 1: Determine best direction and threshold for cue [cue_i_best]
+      {
       # Numeric, integer
       if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
@@ -239,166 +231,63 @@ cuerank <- function(formula = NULL,
                                               goal = goal)
       }
 
-
       # factor, character, and logical
       if(substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
-        cue_i_stats <- factor()
-
-
-        for(direction.i in direction.vec) {
-
-          # cue.stats.o
-          # Get accuracy of all individual cue levels
-          {
-
-            cue.stats.o <- as.data.frame(matrix(NA, nrow = length(cue.levels),
-                                                ncol = 4))
-
-            names(cue.stats.o) <- c("cue", "class", "threshold", "direction")
-
-            cue.stats.o$cue <- cue
-            cue.stats.o$class <- class
-            cue.stats.o$threshold <- cue.levels
-            cue.stats.o$direction <- direction.i
-
-            cue.stats.o[accuracy.names] <- NA
-
-            # Get stats for each cue.level
-
-            for(cue.level.i in cue.levels) {
-
-              if(direction.i == "=") {pred.vec <- cue.v == cue.level.i}
-              if(direction.i == "!=") {pred.vec <- cue.v != cue.level.i}
-
-              classtable.temp <- classtable(prediction.v = pred.vec,
-                                            criterion.v = criterion.v,
-                                            sens.w = sens.w,
-                                            cost.v = rep(cue.cost.i, cases_n),
-                                            cost.outcomes = cost.outcomes)
-
-
-              cue.stats.o[cue.stats.o$threshold == cue.level.i, names(classtable.temp)] <- classtable.temp
-
-            }
-
-            # Rank cues
-            if(goal != "cost") {
-              cue.stats.o <- cue.stats.o[order(cue.stats.o[goal], decreasing = TRUE),]
-
-            }
-
-            if(goal == "cost") {
-              cue.stats.o <- cue.stats.o[order(cue.stats.o["cost"], decreasing = FALSE),]
-
-            }
-            cue.stats.o$rank <- 1:nrow(cue.stats.o)
-
-          }
-
-          # cue.stats
-          # Accuracy of threshold based criterion
-          {
-
-            cue.stats <- as.data.frame(matrix(NA, nrow = length(cue.levels),
-                                              ncol = 4))
-
-            names(cue.stats) <- c("cue", "class", "threshold", "direction")
-            cue.stats$cue <- cue
-            cue.stats$class <- class
-            cue.stats$direction <- direction.i
-
-            cue.stats[accuracy.names] <- NA
-
-            for (row.index.i in 1:nrow(cue.stats.o)) {
-
-              levels.i <- cue.stats.o$threshold[1:row.index.i]
-
-              cue.stats$threshold[row.index.i] <- paste(levels.i, collapse = ",")
-
-              joint.cue.vec <- cue.v %in% levels.i
-
-              if(direction.i == "=") {pred.vec <- joint.cue.vec == TRUE}
-              if(direction.i == "!=") {pred.vec <- joint.cue.vec == FALSE}
-
-
-              classtable.temp <- classtable(prediction.v = pred.vec,
-                                            criterion.v = criterion.v,
-                                            sens.w = sens.w,
-                                            cost.v = rep(cue.cost.i, cases_n),
-                                            cost.outcomes = cost.outcomes)
-
-
-              cue.stats[row.index.i, accuracy.names] <- classtable.temp
-
-
-            }
-
-            if(direction.i == direction.vec[1]) {cue.stats.all <- cue.stats}
-            if(direction.i != direction.vec[1]) {cue.stats.all <- rbind(cue.stats.all, cue.stats)}
-
-          }
-        }
-
-        cue.stats <- cue.stats.all
-
-      }
-
-
-      # Other classes
-      if((substr(class, 1, 1) %in% c("f", "c", "l", "n", "i")) == FALSE) {
-
-        direction.i <- NA
-        v.i <-  NA
-        spec.i <-  NA
-        sens.i <- NA
-        far.i <-  NA
-        dprime.i <-  NA
-        hi.i <- NA
-        mi.i <- NA
-        fa.i <- NA
-        cr.i <- NA
-
+        cue_i_stats <- threshold_factor_grid(thresholds = cue_i_levels,
+                                              cue.v = cue_i_v,
+                                              criterion.v = criterion_v,
+                                              sens.w = sens.w,
+                                              cost.outcomes = cost.outcomes,
+                                              goal = goal)
       }
 
       # Get thresholds that maximizes goal
-      if(goal != "cost") {
 
-        best.result.index <- which(cue.stats[goal] == max(cue.stats[goal]))[1]
+      best.result.index <- which(cue_i_stats[goal] == max(cue_i_stats[goal], na.rm = TRUE))
 
-      }
+      # If there are two best indices, take the first
+      #   Not sure if this is the best way to do it...
 
-      if(goal == "cost") {
+      if(length(best.result.index) > 1) {
 
-        best.result.index <- which(cue.stats["cost"] == min(cue.stats["cost"]))[1]
+        best.result.index <- best.result.index[1]
 
       }
 
       if(is.na(best.result.index)) {best.result.index <- 1}
 
-      best.result <- cue.stats[best.result.index,]
+      cue_i_best <- cue_i_stats[best.result.index,]
+}
 
     } else {
 
-      # If all cue values are NA, then return empy results
+      # If all cue values are NA, then return empty results
 
-      best.result <- data.frame("cue" = cue, class = class, threshold = NA, direction = NA)
-      best.result <- cbind(best.result, classtable(c(0, 0, 0), c(1, 1, 1)))
-      best.result[names(classtable(c(0, 1, 0), c(1, 0, 0)))] <-0
+      cue_i_best <- threshold_factor_grid(thresholds = NULL,
+                                           cue.v = NULL,
+                                           criterion.v = NULL,
+                                           sens.w = sens.w,
+                                           cost.outcomes = cost.outcomes,
+                                           goal = goal)
 
     }
 
+      cue_i_best$cue <- cue_i_name
 
-
-    if(cue.i == 1) {cuerank.df <- best.result}
-    if(cue.i > 1) {cuerank.df <- rbind(cuerank.df, best.result)}
+    if(cue_i == 1) {cuerank_df <- cue_i_best}
+    if(cue_i > 1) {cuerank_df <- rbind(cuerank_df, cue_i_best)}
 
   }
 
-  rownames(cuerank.df) <- 1:nrow(cuerank.df)
+  rownames(cuerank_df) <- 1:nrow(cuerank_df)
 
   # Add cue costs
-  cuerank.df$cost.cue <- cost.cues$cost[match(cuerank.df$cue, cost.cues$cue)]
+  cuerank_df$cost.cue <- cost.cues$cost[match(cuerank_df$cue, cost.cues$cue)]
+
+  # Re-order
+
+  cuerank_df <- cue_rank_df[,c]
 
   return(cuerank.df)
 

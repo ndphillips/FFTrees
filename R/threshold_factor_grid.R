@@ -28,6 +28,8 @@ threshold_factor_grid <- function(thresholds,
 
 
 
+  if(!is.null(thresholds)) {
+
   thresholds_n <- length(thresholds)
   data_n <- length(cue.v)
 
@@ -54,7 +56,6 @@ threshold_factor_grid <- function(thresholds,
     results[i, ] <- c(hi_i, fa_i, mi_i,  cr_i)
 
   }
-
 
   # Convert to named dataframe
   results <- as.data.frame(results)
@@ -119,6 +120,23 @@ threshold_factor_grid <- function(thresholds,
 
   # Order by goal and change column order
   results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+
+  } else {
+
+    results <- data.frame("threshold" = NA,
+                          "direction" = NA,
+                          "hi" = NA,
+                          "fa" = NA,
+                          "mi" = NA,
+                          "cr" = NA,
+                          "sens" = NA,
+                          "spec" = NA,
+                          "bacc" = NA,
+                          "acc" = NA,
+                          "wacc" = NA,
+                          "cost" = NA)
+
+  }
 
   return(results)
 
