@@ -63,7 +63,7 @@ correction <- .25
 data.mf <- model.frame(formula, data, na.action = NULL)
 
 criterion_name <- names(data.mf)[1]
-criterion_v <- data.mf[,1]
+criterion.v <- data.mf[,1]
 cue_n <- ncol(data.mf) - 1
 cases_n <- nrow(data.mf)
 cue_df <- data.mf[,2:ncol(data.mf)]
@@ -71,7 +71,7 @@ cue_names <- names(cue_df)
 
 # Data checks
 
-if(class(criterion_v) != "logical") {criterion_v <- as.logical(criterion_v)}
+if(class(criterion.v) != "logical") {criterion.v <- as.logical(criterion.v)}
 
 # Fill in empty cost.cues
 {
@@ -164,6 +164,9 @@ tree_stats_ls <- lapply(1:length(tree_table_names), FUN = function(x) {
   output
 
 })
+
+names(tree_stats_ls) <- tree_table_names
+
 }
 
   # Loop over trees
@@ -274,7 +277,6 @@ cue_best_i <- which(cue_best_df_current[[goal.chase]] == max(cue_best_df_current
 # If there is a tie, take the first
 if(length(cue_best_i) > 1) {cue_best_i <- cue_best_i[1]}
 
-
 cue_name_new <- cue_best_df_current$cue[cue_best_i]
 cue_stats_new <- cue_best_df_current$cue[cue_best_i]
 cue_cost_new <- cue_best_df_current$cost.cue[cue_best_i]
@@ -297,7 +299,7 @@ level_stats$direction[level_current] <- cue_direction_new
 level_stats$exit[level_current] <- exit_current
 }
 
-# Step 2) Determine how classificaitons would look if
+# Step 2) Determine how classifications would look if
 #  all remaining exemplars were classified
 {
 
@@ -320,7 +322,8 @@ asif.cuecost_v[cases_remaining] <- cue_cost_new
 
 # Calculate asif_cm
 
-asif_results <- classtable(prediction.v = asif.decision_v, criterion.v = criterion_v)
+asif_results <- classtable(prediction.v = asif.decision_v,
+                           criterion.v = criterion.v)
 
 
 # Add key stats to asif.stats
@@ -377,14 +380,12 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
       levelout_v[decide.0.index] <- level_current
     }
 
-
-
     # Update cost vectors
 
-    hi_v <- decision_v == TRUE & criterion_v == TRUE
-    mi_v <- decision_v == FALSE & criterion_v == TRUE
-    fa_v <- decision_v == TRUE & criterion_v == FALSE
-    cr_v <- decision_v == FALSE & criterion_v == FALSE
+    hi_v <- decision_v == TRUE & criterion.v == TRUE
+    mi_v <- decision_v == FALSE & criterion.v == TRUE
+    fa_v <- decision_v == TRUE & criterion.v == FALSE
+    cr_v <- decision_v == FALSE & criterion.v == FALSE
 
     outcomecost_v[hi.v == TRUE] <- cost.outcomes$hi
     outcomecost_v[mi.v == TRUE] <- cost.outcomes$mi
@@ -393,17 +394,16 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
   }
 
-  cases_remaining <- is.na(decision_v)
-
   # Step 4) Update Results
   {
+    cases_remaining <- is.na(decision_v)
 
     # NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS
 
     # Get cumulative stats of examplars currently classified
 
-    cum.classtable <- classtable(prediction.v = decision_v[cases_remaining == FALSE],
-                                 criterion.v = criterion_v[cases_remaining == FALSE],
+    results_cum <- classtable(prediction.v = decision_v[cases_remaining == FALSE],
+                                 criterion.v = criterion.v[cases_remaining == FALSE],
                                  sens.w = sens.w,
                                  cost.v = cuecost_v[cases_remaining == FALSE],
                                  cost.outcomes = cost.outcomes)
@@ -411,30 +411,34 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
     # Update level stats
 
-    level_stats[level_current, c("level", "cue", "class", "threshold", "direction", "exit")] <- c(
-      level_current, new.cue.stats[c("cue", "class", "threshold", "direction")], exit_current)
+    level_stats$level[level_current] <- level_current
+    level_stats$cue[level_current] <- cue_name_new
+    level_stats$class[level_current] <- cue_class_new
+    level_stats$threshold[level_current] <- cue_threshold_new
+    level_stats$direction[level_current] <- cue_direction_new
+    level_stats$exit[level_current] <- exit_current
 
-    level_stats[level_current, names(cum.classtable)] <- cum.classtable
+
+    level_stats[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
 
   }
 
   # Step 5) Continue growing tree?
   {
 
-    n.remaining <- sum(cases_remaining)
+    cases_remaining_n <- sum(cases_remaining)
 
-    if(n.remaining > 0 & level_current != cue_n & exit.method == "fixed") {
+    if(cases_remaining_n > 0 & level_current != cue_n & exit.method == "fixed") {
 
       if(level_current < level_n) {grow.tree <- TRUE}
       if(level_current == level_n) {grow.tree <- FALSE ; break}
 
     }
-    if(n.remaining == 0 | level_current == cue_n) {break}
-    if(stopping.rule == "exemplars" & n.remaining < stopping.par * nrow(cue_df)) {break}
+    if(cases_remaining_n == 0 | level_current == cue_n) {break}
+    if(stopping.rule == "exemplars" & cases_remaining_n < stopping.par * nrow(cue_df)) {break}
     if(stopping.rule == "levels" & level_current == stopping.par) {break}
 
-
-    if(algorithm == "dfan" & sd(criterion_v[cases_remaining]) == 0) {break}
+    if(algorithm == "dfan" & sd(criterion.v[cases_remaining]) == 0) {break}
 
     # Set up next level stats
     level_stats[level_current + 1,] <- NA
@@ -443,7 +447,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
 }  # STOP while(grow.tree) Loop
 
-# Step 5) No more growth. Make sure last level is bidirectional
+# Step 6) No more growth. Make sure last level is bidirectional
 {
 
   last.level <- max(level_stats$level)
@@ -461,36 +465,38 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
     decision_v[levelout_v == last.level] <- NA
 
-    new.cue.stats <- cue_best_df_current[cue_best_df_current$cue == last.cue,]
+    last_cue_stats <- cue_best_df_current[cue_best_df_current$cue == last.cue,]
 
     decision.index <- is.na(decision_v)
 
     # Step 2) Determine accuracy of negative and positive classification
 
-    current.decisions <- apply.break(direction = new.direction,
-                                     threshold.val = new.threshold,
+    current.decisions <- apply.break(direction = last_cue_stats$direction,
+                                     threshold.val = last_cue_stats$threshold,
                                      cue.v = data.mf[[last.cue]],
-                                     cue.class = new.class)
+                                     cue.class = last_cue_stats$class)
 
-    decide.0.index <- decision.index == TRUE & current.decisions == 0
-    decide.1.index <- decision.index == TRUE & current.decisions == 1
+    decide.0.index <- decision.index == TRUE & current.decisions == FALSE
+    decide.1.index <- decision.index == TRUE & current.decisions == TRUE
 
-    decision_v[decide.0.index] <- 0
-    decision_v[decide.1.index] <- 1
+    decision_v[decide.0.index] <- FALSE
+    decision_v[decide.1.index] <- TRUE
 
     levelout_v[decide.0.index] <- level_current
     levelout_v[decide.1.index] <- level_current
 
     # up
 
-    last.classtable <- classtable(prediction.v = decision_v,
-                                  criterion_v = criterion_v,
+    last.classtable <- classtable(prediction.v = as.logical(decision_v),
+                                  criterion.v = as.logical(criterion.v),
                                   sens.w = sens.w,
                                   cost.v = cuecost_v,
                                   cost.outcomes = cost.outcomes)
 
     level_stats$exit[last.level] <- .5
-    level_stats[last.level, names(last.classtable)] <- last.classtable
+
+
+    level_stats[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
 
   }
 
@@ -502,8 +508,8 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
 # Set up final output
 
-decision[,tree_i] <- decision_v
-levelout[,tree_i] <- levelout_v
+tree_stats_ls$decision[,tree_i] <- decision_v
+tree_stats_ls$levelout[,tree_i] <- levelout_v
 
 level_stats$tree <- tree_i
 
@@ -513,6 +519,10 @@ if(tree_i > 1) {level_stats.df <- rbind(level_stats.df, level_stats)}
   }
 
 }
+
+
+
+# STOPPED HERE
 
 # -------------------------
 # SUMMARISE TREE DEFINITIONS AND STATISTICS

@@ -23,6 +23,7 @@ classtable <- function(prediction.v,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
 
+
 if(is.null(cost.v)) {cost.v <- rep(0, length(prediction.v))}
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
@@ -47,6 +48,8 @@ if((class(prediction.v) != "logical") | class(criterion.v) != "logical") {stop("
   N <- min(length(criterion.v), length(prediction.v))
 
   if(N > 0) {
+
+    if(var(prediction.v) > 0 & var(criterion.v) > 0) {
 
     cm <- caret::confusionMatrix(table(prediction.v, criterion.v),
                                       positive = "TRUE")
@@ -78,9 +81,37 @@ if((class(prediction.v) != "logical") | class(criterion.v) != "logical") {stop("
 
     # cost per case
     cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
-  }
 
-  if(N == 0) {
+    } else {
+
+      hi <- sum(prediction.v == TRUE & criterion.v == TRUE)
+      mi <- sum(prediction.v == FALSE & criterion.v == TRUE)
+      fa <- sum(prediction.v == TRUE & criterion.v == FALSE)
+      cr <- sum(prediction.v == FALSE & criterion.v == FALSE)
+
+      # Corrected values
+      hi_c <- hi + correction
+      mi_c <- mi + correction
+      fa_c <- fa + correction
+      cr_c <- cr + correction
+
+      # Statistics
+      sens <- hi / (hi + mi)
+      spec <- cr / (cr + fa)
+      acc <-  (hi + cr) / c(hi + cr + mi + fa)
+      acc_p <- NA
+      ppv <- hi / (hi + fa)
+      npv <- cr / (cr + mi)
+      bacc <- sens * .5 + spec * .5
+      wacc <- sens * sens.w + spec * (1 - sens.w)
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+
+      # cost per case
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+
+    }
+
+    } else {
 
     hi <- NA
     mi <- NA
