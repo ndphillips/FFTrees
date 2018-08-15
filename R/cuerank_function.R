@@ -6,7 +6,8 @@
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
-#' @param numthresh_method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
+#' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
+#' @param numthresh.n integer. The maximum number of numeric thresholds to be considered.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param progress logical. Should ongoing diagnostics be printed?
 #' @importFrom stats median var
@@ -29,12 +30,24 @@ cuerank <- function(formula = NULL,
                     sens.w = .5,
                     cost.outcomes = c(0, 1, 1, 0),
                     cost.cues = NULL,
-                    numthresh_method = "o",
-                    numthresh_max = 20,
+                    numthresh.method = "o",
+                    numthresh.n = 20,
                     rounding = NULL,
                     progress = FALSE
 
 ) {
+
+  # formula = formula
+  # data = data
+  # goal = goal.chase
+  # numthresh.method = numthresh.method
+  # numthresh.n = numthresh.n
+  # rounding = rounding
+  # progress = progress
+  # sens.w = sens.w
+  # cost.outcomes = cost.outcomes
+  # cost.cues = cost.cues
+
 
   # Extract variables in formula
   data.mf <- model.frame(formula = formula,
@@ -110,7 +123,6 @@ cuerank <- function(formula = NULL,
 
   if(progress) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
 
-
   # Loop over cues
   for(cue_i in 1:cue_n) {
 
@@ -136,7 +148,7 @@ cuerank <- function(formula = NULL,
           if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
             # "optimize" method
-            if(numthresh_method == "o") {
+            if(numthresh.method == "o") {
 
               # Get all possible (sorted) cue values
               cue_i_levels <- sort(unique(unlist(cue_i_v)))
@@ -152,7 +164,7 @@ cuerank <- function(formula = NULL,
             }
 
             # "median" method
-            if(numthresh_method == "m") {
+            if(numthresh.method == "m") {
 
               if(length(unique(unlist(cue_i_v))) == 2) {cue_i_levels <- unique(unlist(cue_i_v))} else {
 

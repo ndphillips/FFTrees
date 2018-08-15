@@ -19,7 +19,6 @@
 #' @importFrom stats anova predict glm as.formula var
 #'
 #' @return A definition of an FFT
-#' @export
 #'
 fan.algorithm <- function(formula,
                           data,
@@ -31,6 +30,7 @@ fan.algorithm <- function(formula,
                           cost.outcomes = c(0, 1, 1, 0),
                           cost.cues = NULL,
                           numthresh.method = "o",
+                          numthresh.n = 20,
                           stopping.rule = "exemplars",
                           stopping.par = .1,
                           rounding = NULL,
@@ -38,34 +38,50 @@ fan.algorithm <- function(formula,
                           repeat.cues = TRUE) {
 
 
-# # Some global variables which could be changed later.
+  formula = diagnosis ~.
+  data = heartdisease
+  max.levels = 5
+  algorithm = "ifan"
+  goal = "wacc"
+  goal.chase = "bacc"
+  sens.w = .5
+  cost.outcomes = c(0, 1, 1, 0)
+  cost.cues = NULL
+  numthresh.method = "o"
+  stopping.rule = "exemplars"
+  stopping.par = .1
+  rounding = NULL
+  progress = TRUE
+  repeat.cues = TRUE
+
+# Some global variables which could be changed later.
 
 exit.method <- "fixed"
 correction <- .25
 
-
-# Start with criterion
+# Define key objects
 data.mf <- model.frame(formula, data, na.action = NULL)
-criterion.name <- names(data.mf)[1]
-criterion.v <- data.mf[,1]
-cues.n <- ncol(data.mf) - 1
-cases.n <- nrow(data.mf)
-cue.df <- data.mf[,2:ncol(data.mf)]
-cue.names <- names(cue.df)
 
-# Fill in emptry cost.cues
+criterion_name <- names(data.mf)[1]
+criterion_v <- data.mf[,1]
+cue_n <- ncol(data.mf) - 1
+cases_n <- nrow(data.mf)
+cue_df <- data.mf[,2:ncol(data.mf)]
+cue_names <- names(cue_df)
+
+# Fill in empty cost.cues
 {
 if(is.null(cost.cues)) {
 
-  cost.cues <- data.frame("cue" = cue.names,
-                          "cost" = rep(0, cues.n),
+  cost.cues <- data.frame("cue" = cue_names,
+                          "cost" = rep(0, cue_n),
                           stringsAsFactors = FALSE)
 
 } else {
 
   # Which cues are missing in cost.cues?
 
-  missing.cues <- setdiff(cue.names, cost.cues[,1])
+  missing.cues <- setdiff(cue_names, cost.cues[,1])
 
   if(length(missing.cues) > 0) {
 
@@ -88,13 +104,12 @@ cue.accuracies <- cuerank(formula = formula,
                           data = data,
                           goal = goal.chase,
                           numthresh.method = numthresh.method,
+                          numthresh.n = numthresh.n,
                           rounding = rounding,
                           progress = progress,
                           sens.w = sens.w,
                           cost.outcomes = cost.outcomes,
-                          cost.cues = cost.cues,
-                          considerFALSE = TRUE,
-                          cue.rules = NULL)
+                          cost.cues = cost.cues)
 
 # ----------
 # GROW TREES
@@ -102,7 +117,7 @@ cue.accuracies <- cuerank(formula = formula,
 {
 
 # SETUP TREES
-# create tree.dm which contains exit values for max.levels
+# create tree_dm which contains exit values for max.levels
 
 if(max.levels > 1) {
 
@@ -113,7 +128,7 @@ if(max.levels > 1) {
   names(expand.ls) <- c(paste("exit.", 1:(max.levels - 1), sep = ""),
                         paste("exit.", max.levels, sep = ""))
 
-  tree.dm <- expand.grid(
+  tree_dm <- expand.grid(
     expand.ls,
     stringsAsFactors = FALSE)
 
@@ -121,60 +136,50 @@ if(max.levels > 1) {
 
 if(max.levels == 1) {
 
-  tree.dm <- data.frame("exit.1" = .5)
+  tree_dm <- data.frame("exit.1" = .5)
 
 }
 
-tree.dm$tree.num <- 1:nrow(tree.dm)
-trees.n <- nrow(tree.dm)
+tree_dm$tree.num <- 1:nrow(tree_dm)
+tree_n <- nrow(tree_dm)
 
 # Set up decision.df and levelout.df
 #  These contain each tree's decisions and the level at which
 #   classifications are made
 
-decision <- as.data.frame(matrix(NA,
-                                 nrow = cases.n,
-                                 ncol = trees.n))
 
-levelout <- as.data.frame(matrix(NA,
-                                 nrow = cases.n,
-                                 ncol = trees.n))
+tree_table_names <- c("decision", "levelout", "cost_cue", "cost_outcome", "cost_total")
 
-cuecost <- as.data.frame(matrix(NA,
-                             nrow = cases.n,
-                             ncol = trees.n))
+tree_stats <- lapply(1:length(tree_table_names), FUN = function(x) {
 
-outcomecost <- as.data.frame(matrix(NA,
-                                nrow = cases.n,
-                                ncol = trees.n))
+  output <- as.data.frame(matrix(NA,
+                       nrow = cases_n,
+                       ncol = tree_n))
 
-totalcost  <- as.data.frame(matrix(NA,
-                                   nrow = cases.n,
-                                   ncol = trees.n))
+  names(output) <- paste("tree", 1:tree_n, sep = ".")
 
-names(decision) <- paste("tree", 1:trees.n, sep = ".")
-names(levelout) <- paste("tree", 1:trees.n, sep = ".")
-names(cuecost) <- paste("tree", 1:trees.n, sep = ".")
-names(totalcost) <- paste("tree", 1:trees.n, sep = ".")
+  output
+
+})
 
 
   # Loop over trees
-for(tree.i in 1:trees.n) {
+for(tree_i in 1:tree_n) {
 
-  ## Determine exits for tree.i
+  ## Determine exits for tree_i
 
-  level.exits.v.i <- unlist(tree.dm[tree.i, grepl("exit.", names(tree.dm))])
+  level.exits.v.i <- unlist(tree_dm[tree_i, grepl("exit.", names(tree_dm))])
   levels.n <- length(level.exits.v.i)
 
   ## Set up placeholders
   cue.accuracies.original <- cue.accuracies
 
   # Decisions, levelout, and cost vectors
-  decision.v <- rep(NA, cases.n)
-  levelout.v <- rep(NA, cases.n)
-  cuecost.v <- rep(0, cases.n)
-  outcomecost.v <- rep(NA, cases.n)
-  totalcost.v <- rep(0, cases.n)
+  decision.v <- rep(NA, cases_n)
+  levelout.v <- rep(NA, cases_n)
+  cuecost.v <- rep(0, cases_n)
+  outcomecost.v <- rep(NA, cases_n)
+  totalcost.v <- rep(0, cases_n)
 
   ## level.stats shows cumulative classification decisions statistics at each level
   level.stats = data.frame("level" = NA,
@@ -234,9 +239,9 @@ if(algorithm == "dfan") {
   # If cues can NOT be repeated, then remove old cues as well
   if(repeat.cues == FALSE) {
 
-    remaining.cues.index <- (names(cue.df) %in% level.stats$cue) == FALSE
-    remaining.cues <- names(cue.df)[remaining.cues.index]
-    data.mf.r <- data.mf.r[, c(criterion.name, remaining.cues)]
+    remaining.cues.index <- (names(cue_df) %in% level.stats$cue) == FALSE
+    remaining.cues <- names(cue_df)[remaining.cues.index]
+    data.mf.r <- data.mf.r[, c(criterion_name, remaining.cues)]
 
   }
 
@@ -291,7 +296,7 @@ cue.decisions <- apply.break(direction = new.direction,
 
 # Statistics for current decisions
 cue.classtable <- classtable(prediction.v = cue.decisions,
-                             criterion.v = criterion.v,
+                             criterion_v = criterion_v,
                              sens.w = sens.w,
                              cost.v = cuecost.v,
                              cost.outcomes = cost.outcomes)
@@ -307,7 +312,7 @@ as.if.levelout.v[remaining.exemplars] <- current.level
 as.if.cuecost.v[remaining.exemplars] <- new.cost.cue
 
 asif.classtable <- classtable(prediction.v = as.if.decision.v,
-                              criterion.v = criterion.v,
+                              criterion_v = criterion_v,
                               sens.w = sens.w,
                               cost.v = as.if.cuecost.v,
                               cost.outcomes = cost.outcomes)
@@ -359,10 +364,10 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
 
     # Update cost vectors
 
-    hi.v <- decision.v == 1 & criterion.v == 1
-    mi.v <- decision.v == 0 & criterion.v == 1
-    fa.v <- decision.v == 1 & criterion.v == 0
-    cr.v <- decision.v == 0 & criterion.v == 0
+    hi.v <- decision.v == 1 & criterion_v == 1
+    mi.v <- decision.v == 0 & criterion_v == 1
+    fa.v <- decision.v == 1 & criterion_v == 0
+    cr.v <- decision.v == 0 & criterion_v == 0
 
     outcomecost.v[hi.v == TRUE] <- cost.outcomes[1]
     outcomecost.v[mi.v == TRUE] <- cost.outcomes[2]
@@ -381,7 +386,7 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
     # Get cumulative stats of examplars currently classified
 
     cum.classtable <- classtable(prediction.v = decision.v[remaining.exemplars == FALSE],
-                                criterion.v = criterion.v[remaining.exemplars == FALSE],
+                                criterion_v = criterion_v[remaining.exemplars == FALSE],
                                 sens.w = sens.w,
                                 cost.v = cuecost.v[remaining.exemplars == FALSE],
                                 cost.outcomes = cost.outcomes)
@@ -401,18 +406,18 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
 
     n.remaining <- sum(remaining.exemplars)
 
-    if(n.remaining > 0 & current.level != cues.n & exit.method == "fixed") {
+    if(n.remaining > 0 & current.level != cue_n & exit.method == "fixed") {
 
       if(current.level < levels.n) {grow.tree <- TRUE}
       if(current.level == levels.n) {grow.tree <- FALSE ; break}
 
     }
-    if(n.remaining == 0 | current.level == cues.n) {break}
-    if(stopping.rule == "exemplars" & n.remaining < stopping.par * nrow(cue.df)) {break}
+    if(n.remaining == 0 | current.level == cue_n) {break}
+    if(stopping.rule == "exemplars" & n.remaining < stopping.par * nrow(cue_df)) {break}
     if(stopping.rule == "levels" & current.level == stopping.par) {break}
 
 
-    if(algorithm == "dfan" & sd(criterion.v[remaining.exemplars]) == 0) {break}
+    if(algorithm == "dfan" & sd(criterion_v[remaining.exemplars]) == 0) {break}
 
     # Set up next level stats
     level.stats[current.level + 1,] <- NA
@@ -462,7 +467,7 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
     # up
 
     last.classtable <- classtable(prediction.v = decision.v,
-                                  criterion.v = criterion.v,
+                                  criterion_v = criterion_v,
                                   sens.w = sens.w,
                                   cost.v = cuecost.v,
                                   cost.outcomes = cost.outcomes)
@@ -480,13 +485,13 @@ asif.classtable <- classtable(prediction.v = as.if.decision.v,
 
 # Set up final output
 
-decision[,tree.i] <- decision.v
-levelout[,tree.i] <- levelout.v
+decision[,tree_i] <- decision.v
+levelout[,tree_i] <- levelout.v
 
-level.stats$tree <- tree.i
+level.stats$tree <- tree_i
 
-if(tree.i == 1) {level.stats.df <- level.stats}
-if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
+if(tree_i == 1) {level.stats.df <- level.stats}
+if(tree_i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
 
   }
 
@@ -501,12 +506,12 @@ if(tree.i > 1) {level.stats.df <- rbind(level.stats.df, level.stats)}
 
   stat.names <- names(classtable(1, 1))
 
-  tree.definitions <- as.data.frame(matrix(NA, nrow = trees.n, ncol = 7))
+  tree.definitions <- as.data.frame(matrix(NA, nrow = tree_n, ncol = 7))
   names(tree.definitions) <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
 
   level.stats.df$class <- substr(level.stats.df$class, 1, 1)
 
-  for(i in 1:trees.n) {
+  for(i in 1:tree_n) {
 
     tree.definitions$tree[i] <- i
     tree.definitions$cues[i] <- paste(level.stats.df$cue[level.stats.df$tree == i], collapse = ";")

@@ -116,7 +116,7 @@ threshold_factor_grid <- function(thresholds,
 
   # Add accuracy statistics
 
-  results <- cbind(results, Add_Stats(results))
+  results <- cbind(results, Add_Stats(results, sens.w = sens.w, cost.outcomes = cost.outcomes))
 
   # Order by goal and change column order
   results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
