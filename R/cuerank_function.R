@@ -32,24 +32,9 @@ cuerank <- function(formula = NULL,
                     numthresh_method = "o",
                     numthresh_max = 20,
                     rounding = NULL,
-                    progress = FALSE,
-                    cue.rules = NULL,
-
+                    progress = FALSE
 
 ) {
-
-
-  formula = diagnosis ~.
-  data = heart.train
-  goal = "bacc"
-  sens.w = .5
-  cost.outcomes = c(0, 1, 1, 0)
-  cost.cues = NULL
-  numthresh_method = "o"
-  numthresh_max = 20
-  rounding = NULL
-  progress = FALSE
-  cue.rules = NULL
 
   # Extract variables in formula
   data.mf <- model.frame(formula = formula,
@@ -91,15 +76,7 @@ cuerank <- function(formula = NULL,
 
   }
 
-  # Validation: If cue.rules are specified, make sure they are valid
-  if(is.null(cue.rules) == FALSE) {
 
-    if(all(c("cue", "class", "threshold", "direction") %in% names(cue.rules)) == FALSE) {
-
-      stop("You specified a cue.rules object but the object does not contain critical columns. Look at the descriptions for cue.rules and try again")
-
-    }
-  }
 }
 
   # Make sure cost.cues is full
@@ -286,9 +263,8 @@ cuerank <- function(formula = NULL,
   cuerank_df$cost.cue <- cost.cues$cost[match(cuerank_df$cue, cost.cues$cue)]
 
   # Re-order
+  cuerank_df <- cuerank_df[,c("cue", setdiff(names(cuerank_df), "cue"))]
 
-  cuerank_df <- cue_rank_df[,c]
-
-  return(cuerank.df)
+  return(cuerank_df)
 
 }
