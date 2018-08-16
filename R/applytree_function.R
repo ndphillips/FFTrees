@@ -9,7 +9,6 @@
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
 
 #' @return A list of length 4 containing
-#' @export
 #'
 #'
 
@@ -23,16 +22,34 @@ apply.tree <- function(data,
 ) {
 
 # Step 0: Validation and Setup
-
-criterion_v <- model.frame(formula = formula,
-                           data = data,
-                           na.action = NULL)[,1]
-
+{
+# Data Details
+{
 case_n <- nrow(data)
+
+criterion_name <- paste(formula)[2]
+
+if(criterion_name %in% names(data)) {
+
+  criterion_v <- model.frame(formula = formula,
+                             data = data,
+                             na.action = NULL)[,1]
+
+} else {criterion_v <- rep(NA, case_n)}
+}
+
+# Tree details
+{
 tree_n <- nrow(tree.definitions)
 
+  }
 
-output_names <- c("decision", "levelout", "costcue", "costout")
+# Setup outputs
+
+#  [output_ls]
+#    A list containing dataframes with one row per case, and one column per tree
+
+output_names <- c("decision", "levelout", "costout", "costcue", "cost")
 
 output_ls <- lapply(1:length(output_names), FUN = function(x) {
 
@@ -45,29 +62,62 @@ output_ls <- lapply(1:length(output_names), FUN = function(x) {
   output
 
 })
-
 names(output_ls) <- output_names
 
 
+# [level_stats_ls]
+#   A list with one element per tree, each containing cumulative level statistics
 
-# level_stats_ls: Cumulative level statistics
 level_stats_ls <- vector("list", length = tree_n)
 
-# Loop over trees
+}
+
+# LOOP
+#  Loop over trees
+
 for(tree_i in 1:tree_n) {
 
-decision_v <- rep(NA, case_n)
-levelout_v <- rep(NA, case_n)
-costcue_v <- rep(NA, case_n)
-
-# Extract node definitions
+# Extract defintions for current tree
 cue_v <- unlist(strsplit(tree.definitions$cues[tree_i], ";"))
 class_v <- unlist(strsplit(tree.definitions$classes[tree_i], ";"))
 exit_v <- unlist(strsplit(tree.definitions$exits[tree_i], ";"))
 threshold_v <- unlist(strsplit(tree.definitions$thresholds[tree_i], ";"))
 direction_v <-  unlist(strsplit(tree.definitions$directions[tree_i], ";"))
+level_n <- tree.definitions$nodes[tree_i]
 
-level_n <- length(cue_v)
+
+#  [cue_cost_cum_level]
+# Calculate cumulative cue cost for each level based on cue costs
+
+if(is.null(cost.cues) == FALSE) {
+
+  costc.level <- sapply(cue_v, FUN = function(cue_i) {
+
+    if(cue_i %in% cost.cues[,1]) {cost.cue_i <- cost.cues[cost.cues[,1] == cue_i, 2]} else {
+
+      cost.cue_i <- 0}})
+
+
+  costc.level.cum <- cumsum(costc.level)
+
+} else {costc.level.cum <- rep(0, level_n)}
+
+cue_cost_cum_level <- data.frame(level = 1:level_n,
+                                 cue_cost_cum = costc.level.cum)
+
+
+
+
+
+
+# Define vectors of critical outputs for each case
+
+decision_v <- rep(NA, case_n)
+levelout_v <- rep(NA, case_n)
+costcue_v <-  rep(NA, case_n)
+costout_v <-  rep(NA, case_n)
+cost_v <-  rep(NA, case_n)
+
 
 # level_stats_i contains cumulative level statistics
 level_stats_i <- data.frame(tree = tree_i,
@@ -83,22 +133,8 @@ critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv",
 
 # Add stat names to level_stats_i
 level_stats_i[critical_stats_v] <- NA
+level_stats_i$costcue <- NA
 
-
-# Calculate cumulative cue cost for each level
-
-if(is.null(cost.cues) == FALSE) {
-
-  costc.level <- sapply(cue_v, FUN = function(cue_i) {
-
-    if(cue_i %in% cost.cues[,1]) {cost.cue_i <- cost.cues[cost.cues[,1] == cue_i, 2]} else {
-
-      cost.cue_i <- 0}})
-
-
-  costc.level.cum <- cumsum(costc.level)
-
-} else {costc.level.cum <- rep(0, level_n)}
 
 # Loop over levels
 for(level_i in 1:level_n) {
@@ -145,14 +181,22 @@ if(exit_i %in% .5) {
 
   }
 
+
+# Define critical values for current decisions
+
 decision_v[classify.now] <- current.decisions[classify.now]
 levelout_v[classify.now] <- level_i
 costcue_v[classify.now] <- costc.level.cum[level_i]
 
+costout_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == TRUE] <- cost.outcomes$hi
+costout_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == FALSE] <- cost.outcomes$fa
+costout_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == TRUE] <- cost.outcomes$mi
+costout_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == FALSE] <- cost.outcomes$cr
+
+cost_v[classify.now] <- costcue_v[classify.now] + costout_v[classify.now]
 
 
-
-# Get level stats
+# Get cumulative level stats
 
 my_level_stats_i <- classtable(prediction.v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
                                criterion.v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
@@ -164,28 +208,39 @@ my_level_stats_i <- classtable(prediction.v = decision_v[levelout_v <= level_i &
 # level_stats_i$costc <- sum(costcue[,tree_i], na.rm = TRUE)
 level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[,critical_stats_v]
 
+# Add cue cost and cost
+
+level_stats_i$costcue[level_i] <- mean(costcue_v[!is.na(costcue_v)])
+level_stats_i$cost[level_i] <-level_stats_i$costcue[level_i]  + level_stats_i$costout[level_i]
 
 }
 
-# Add costt
+# Add final tree results to level_stats_ls and output_ls
 
   level_stats_ls[[tree_i]] <- level_stats_i
 
   output_ls$decision[,tree_i] <- decision_v
   output_ls$levelout[,tree_i] <- levelout_v
   output_ls$costcue[,tree_i] <- costcue_v
+  output_ls$costout[,tree_i] <- costout_v
+  output_ls$cost[,tree_i] <- cost_v
 
 
 }
 
+# Aggregate results
+{
+
 # Combine all levelstats into one dataframe
 level_stats <- do.call("rbind", args = level_stats_ls)
 
+# [tree_stats]
+#  One row per tree definitions and statistics
 # CUMULATIVE TREE STATS
 
 helper <- paste(level_stats$tree, level_stats$level, sep = ".")
 maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-tree_stats <- cbind(tree.definitions, level_stats[helper %in% maxlevs, critical_stats_v])
+tree_stats <- cbind(tree.definitions, level_stats[helper %in% maxlevs, c(critical_stats_v, "costcue", "cost")])
 rownames(tree_stats) <- 1:nrow(tree_stats)
 
 
@@ -198,71 +253,20 @@ max.lookups <- nrow(data) * ncol(data)
 tree_stats$pci <- 1 - n.lookups / max.lookups
 
 # Add mean cues per case (mcu)
-
 tree_stats$mcu <- colMeans(output_ls$levelout)
 
-# Calculate outcome costs
-costoutcomes.t <- sapply(1:tree_n, FUN = function(tree_i) {
 
-  # which cases are hits
-  hi.log <- criterion_v == 1 & output_ls$decision[,tree_i] == 1
+}
 
-  # which cases are false alarms
-  fa.log <- criterion_v == 0 & output_ls$decision[,tree_i] == 1
-
-  # which cases are misses
-  mi.log <- criterion_v == 1 & output_ls$decision[,tree_i] == 0
-
-  # which cases are correct rejections
-  cr.log <- criterion_v == 0 & output_ls$decision[,tree_i] == 0
-
-cost_v <- hi.log * cost.outcomes$hi + fa.log * cost.outcomes$fa + mi.log * cost.outcomes$mi + cr.log * cost.outcomes$cr
-
-  return(cost_v)
-
-})
-
-# Calculate cue costs
-costcues.t <- sapply(1:tree_n, FUN = function(tree_i) {
-
-  # Determine cues in tree:
-  cues_in.tree <- unlist(strsplit(tree.definitions$cues[tree_i], ";"))
-
-  # Determine cost of each cue in tree
-  cue.cost_in.tree <- sapply(cues_in.tree, FUN = function(x) {
-
-    if(x %in% cost.cues$cue) {
-    return(cost.cues$cost[cost.cues$cue == x])} else {return(0)}
-
-  })
-
-  # Get cumulative cost for each level
-  cost.per.level <- cumsum(cue.cost_in.tree)
-
-  # Get node for each case for current tree
-  cost.level_v <- cost.per.level[output_ls$levelout[,tree_i]]
-
-
-  return(cost.level_v)
-
-})
-
-# Calculate total costs (outcomes + cues)
-costtotal.t <- costoutcomes.t + costcues.t
-
-cost.ls <- list("out" = costoutcomes.t,
-                "cue" = costcues.t,
-                "tot" = costtotal.t)
-
-# Add mean cost per case (mcc)
-# treestats$costt <- colMeans(costtotal.t)
-# treestats$costc <- colMeans(costcues.t)
-
-output <- list("decision" = output_ls$decision,
-               "levelout" = output_ls$levelout,
-               "levelstats" = level_stats,
+# Define output
+output <- list("tree.definitions" = tree.definitions,
                "treestats" = tree_stats,
-               "treecost" = cost.ls)
+               "levelstats" = level_stats,
+               "decision" = output_ls$decision,
+               "levelout" = output_ls$levelout,
+               "costout" = output_ls$costout,
+               "costcue" = output_ls$costcue,
+               "cost" = output_ls$cost)
 
 return(output)
 
