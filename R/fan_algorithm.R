@@ -38,8 +38,8 @@ fan.algorithm <- function(formula,
                           repeat.cues = TRUE) {
 
 
-  formula = diagnosis ~.
-  data = heartdisease
+  formula = poisonous ~.
+  data = mushrooms
   max.levels = 5
   algorithm = "ifan"
   goal = "wacc"
@@ -65,7 +65,7 @@ data.mf <- model.frame(formula, data, na.action = NULL)
 criterion_name <- names(data.mf)[1]
 criterion.v <- data.mf[,1]
 cue_n <- ncol(data.mf) - 1
-cases_n <- nrow(data.mf)
+case_n <- nrow(data.mf)
 cue_df <- data.mf[,2:ncol(data.mf)]
 cue_names <- names(cue_df)
 
@@ -121,7 +121,7 @@ cue_best_df <- cuerank(formula = formula,
 {
 
 # SETUP TREES
-# [tree_dm, tree_stats_ls]
+# [tree_dm, tree_stats_ls, level_stats_ls]
 {
 if(max.levels > 1) {
 
@@ -151,13 +151,11 @@ tree_n <- nrow(tree_dm)
 #  A list containing dataframes representing
 #   one-row-per-case, one-column-per-tree statistics
 
-tree_table_names <- c("decision", "levelout", "cost_cue", "cost_outcome", "cost_total")
+tree_table_names <- c("decision", "levelout")
 
 tree_stats_ls <- lapply(1:length(tree_table_names), FUN = function(x) {
 
-  output <- as.data.frame(matrix(NA,
-                       nrow = cases_n,
-                       ncol = tree_n))
+  output <- as.data.frame(matrix(NA, nrow = case_n, ncol = tree_n))
 
   names(output) <- paste("tree", 1:tree_n, sep = ".")
 
@@ -166,6 +164,8 @@ tree_stats_ls <- lapply(1:length(tree_table_names), FUN = function(x) {
 })
 
 names(tree_stats_ls) <- tree_table_names
+
+level_stats_ls <- vector("list", length = tree_n)
 
 }
 
@@ -181,18 +181,18 @@ for(tree_i in 1:tree_n) {
   cue_best_df.original <- cue_best_df
 
   # Decisions, levelout, and cost vectors
-  decision_v <- rep(NA, cases_n)
-  levelout_v <- rep(NA, cases_n)
-  cuecost_v <- rep(0, cases_n)
-  outcomecost_v <- rep(NA, cases_n)
-  totalcost_v <- rep(0, cases_n)
-  hi_v <- rep(NA, cases_n)
-  fa_v <- rep(NA, cases_n)
-  mi_v <- rep(NA, cases_n)
-  cr_v <- rep(NA, cases_n)
+  decision_v <- rep(NA, case_n)
+  levelout_v <- rep(NA, case_n)
+  cuecost_v <- rep(0, case_n)
+  outcomecost_v <- rep(NA, case_n)
+  totalcost_v <- rep(0, case_n)
+  hi_v <- rep(NA, case_n)
+  fa_v <- rep(NA, case_n)
+  mi_v <- rep(NA, case_n)
+  cr_v <- rep(NA, case_n)
 
-  ## level_stats shows cumulative classification decisions statistics at each level
-  level_stats <- data.frame("level" = NA,
+  ## level_stats_i shows cumulative classification decisions statistics at each level
+  level_stats_i <- data.frame("level" = NA,
                            "cue" = NA,
                            "cost.cue" = NA,
                            "cost.cue.cum" = NA,
@@ -202,7 +202,7 @@ for(tree_i in 1:tree_n) {
                            "exit" = NA)
 
   level_stat_names <- setdiff(names(threshold_factor_grid()), c("threshold", "direction"))
-  level_stats[level_stat_names] <- NA
+  level_stats_i[level_stat_names] <- NA
 
   ## asif.stats shows cumulative classification statistics as if all exemplars were
   #   classified at the current level (i.e; if the tree stopped here)
@@ -237,7 +237,7 @@ cases_remaining <- is.na(decision_v)
 if(algorithm == "ifan") {
 
   # Get accuracies of un-used cues
-  cue_best_df_current <- cue_best_df.original[(cue_best_df.original$cue %in% level_stats$cue) == FALSE,]
+  cue_best_df_current <- cue_best_df.original[(cue_best_df.original$cue %in% level_stats_i$cue) == FALSE,]
 
 }
 
@@ -249,7 +249,7 @@ if(algorithm == "dfan") {
   # If cues can NOT be repeated, then remove old cues as well
   if(repeat.cues == FALSE) {
 
-    remaining.cues.index <- (names(cue_df) %in% level_stats$cue) == FALSE
+    remaining.cues.index <- (names(cue_df) %in% level_stats_i$cue) == FALSE
     remaining.cues <- names(cue_df)[remaining.cues.index]
     data.mf.r <- data.mf.r[, c(criterion_name, remaining.cues)]
 
@@ -289,14 +289,14 @@ cuecost_v[is.na(decision_v)] <- cuecost_v[is.na(decision_v)] + cue_cost_new
 
 # ADD CUE INFO TO LEVEL.STATS
 
-level_stats$level[level_current] <- level_current
-level_stats$cue[level_current] <- cue_name_new
-level_stats$cost.cue[level_current] <- cue_cost_new
-level_stats$cost.cue.cum[level_current] <- sum(level_stats$cost.cue[1:level_current])
-level_stats$class[level_current] <- cue_class_new
-level_stats$threshold[level_current] <- cue_threshold_new
-level_stats$direction[level_current] <- cue_direction_new
-level_stats$exit[level_current] <- exit_current
+level_stats_i$level[level_current] <- level_current
+level_stats_i$cue[level_current] <- cue_name_new
+level_stats_i$cost.cue[level_current] <- cue_cost_new
+level_stats_i$cost.cue.cum[level_current] <- sum(level_stats_i$cost.cue[1:level_current])
+level_stats_i$class[level_current] <- cue_class_new
+level_stats_i$threshold[level_current] <- cue_threshold_new
+level_stats_i$direction[level_current] <- cue_direction_new
+level_stats_i$exit[level_current] <- exit_current
 }
 
 # Step 2) Determine how classifications would look if
@@ -411,15 +411,15 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
     # Update level stats
 
-    level_stats$level[level_current] <- level_current
-    level_stats$cue[level_current] <- cue_name_new
-    level_stats$class[level_current] <- cue_class_new
-    level_stats$threshold[level_current] <- cue_threshold_new
-    level_stats$direction[level_current] <- cue_direction_new
-    level_stats$exit[level_current] <- exit_current
+    level_stats_i$level[level_current] <- level_current
+    level_stats_i$cue[level_current] <- cue_name_new
+    level_stats_i$class[level_current] <- cue_class_new
+    level_stats_i$threshold[level_current] <- cue_threshold_new
+    level_stats_i$direction[level_current] <- cue_direction_new
+    level_stats_i$exit[level_current] <- exit_current
 
 
-    level_stats[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+    level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
 
   }
 
@@ -441,7 +441,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
     if(algorithm == "dfan" & sd(criterion.v[cases_remaining]) == 0) {break}
 
     # Set up next level stats
-    level_stats[level_current + 1,] <- NA
+    level_stats_i[level_current + 1,] <- NA
 
   }
 
@@ -450,8 +450,8 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 # Step 6) No more growth. Make sure last level is bidirectional
 {
 
-  last.level <- max(level_stats$level)
-  last.cue <- level_stats$cue[last.level]
+  last.level <- max(level_stats_i$level)
+  last.cue <- level_stats_i$cue[last.level]
   if(last.cue %in% cost.cues[,1]) {cost.cue <- cost.cues[cost.cues[,1] == last.cue,2]} else {
 
     cost.cue <- 0
@@ -459,7 +459,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
   }
 
 
-  last.exitdirection <- level_stats$exit[level_stats$level == last.level]
+  last.exitdirection <- level_stats_i$exit[level_stats_i$level == last.level]
 
   if(last.exitdirection != .5) {
 
@@ -493,10 +493,10 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
                                   cost.v = cuecost_v,
                                   cost.outcomes = cost.outcomes)
 
-    level_stats$exit[last.level] <- .5
+    level_stats_i$exit[last.level] <- .5
 
 
-    level_stats[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+    level_stats_i[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
 
   }
 
@@ -511,10 +511,9 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 tree_stats_ls$decision[,tree_i] <- decision_v
 tree_stats_ls$levelout[,tree_i] <- levelout_v
 
-level_stats$tree <- tree_i
+level_stats_i$tree <- tree_i
 
-if(tree_i == 1) {level_stats.df <- level_stats}
-if(tree_i > 1) {level_stats.df <- rbind(level_stats.df, level_stats)}
+level_stats_ls[[tree_i]] <- level_stats_i
 
   }
 
@@ -522,7 +521,7 @@ if(tree_i > 1) {level_stats.df <- rbind(level_stats.df, level_stats)}
 
 
 
-# STOPPED HERE
+# STOPPED HERE!!!!!!!!!!
 
 # -------------------------
 # SUMMARISE TREE DEFINITIONS AND STATISTICS
@@ -531,22 +530,20 @@ if(tree_i > 1) {level_stats.df <- rbind(level_stats.df, level_stats)}
 {
   # Summarise tree definitions
 
-  stat.names <- names(classtable(1, 1))
-
   tree.definitions <- as.data.frame(matrix(NA, nrow = tree_n, ncol = 7))
   names(tree.definitions) <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
 
-  level_stats.df$class <- substr(level_stats.df$class, 1, 1)
+  for(tree_i in 1:tree_n) {
 
-  for(i in 1:tree_n) {
+    level_stats_i <- level_stats_ls[[tree_i]]
 
-    tree.definitions$tree[i] <- i
-    tree.definitions$cues[i] <- paste(level_stats.df$cue[level_stats.df$tree == i], collapse = ";")
-    tree.definitions$nodes[i] <- length(level_stats.df$cue[level_stats.df$tree == i])
-    tree.definitions$classes[i] <- paste(level_stats.df$class[level_stats.df$tree == i], collapse = ";")
-    tree.definitions$exits[i] <- paste(level_stats.df$exit[level_stats.df$tree == i], collapse = ";")
-    tree.definitions$thresholds[i] <- paste(level_stats.df$threshold[level_stats.df$tree == i], collapse = ";")
-    tree.definitions$directions[i] <- paste(level_stats.df$direction[level_stats.df$tree == i], collapse = ";")
+    tree.definitions$tree[tree_i] <- tree_i
+    tree.definitions$cues[tree_i] <- paste(level_stats_i$cue, collapse = ";")
+    tree.definitions$nodes[tree_i] <- length(level_stats_i$cue)
+    tree.definitions$classes[tree_i] <- paste(substr(level_stats_i$class, 1, 1), collapse = ";")
+    tree.definitions$exits[tree_i] <- paste(level_stats_i$exit, collapse = ";")
+    tree.definitions$thresholds[tree_i] <- paste(level_stats_i$threshold, collapse = ";")
+    tree.definitions$directions[tree_i] <- paste(level_stats_i$direction, collapse = ";")
 
   }
 
@@ -557,7 +554,6 @@ if(tree_i > 1) {level_stats.df <- rbind(level_stats.df, level_stats)}
   tree.definitions <- tree.definitions[,c(which(names(tree.definitions) == "tree"), which(names(tree.definitions) != "tree"))]
 
 }
-
 
 # Order tree definitions by wacc:
 

@@ -16,7 +16,7 @@
 #'
 #'
 
-classtable <- function(prediction.v,
+classtable <- function(prediction.v = NULL,
                        criterion.v,
                        sens.w = .5,
                        cost.v = NULL,
@@ -38,10 +38,9 @@ if(any(c("FALSE", "TRUE") %in% paste(criterion.v))) {
 
 }
 
-if((class(prediction.v) != "logical") | class(criterion.v) != "logical") {stop("prediction.v and criterion.v must be logical")}
+if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.null(prediction.v)) {stop("prediction.v and criterion.v must be logical")}
 
   # Remove NA criterion values
-
   prediction.v <- prediction.v[is.finite(criterion.v)]
   criterion.v <- criterion.v[is.finite(criterion.v)]
 
