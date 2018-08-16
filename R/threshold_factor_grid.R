@@ -24,6 +24,7 @@ threshold_factor_grid <- function(thresholds = NULL,
                                    criterion.v = NULL,
                                    sens.w = .5,
                                    cost.outcomes = c(0, 1, 1, 0),
+                                   cost.each = 0,
                                    goal.chase = "acc") {
 
 
@@ -31,9 +32,9 @@ threshold_factor_grid <- function(thresholds = NULL,
   if(!is.null(thresholds)) {
 
   thresholds_n <- length(thresholds)
-  data_n <- length(cue.v)
+  case_n <- length(cue.v)
 
-  results <- matrix(NA, nrow = thresholds_n, ncol = 4)
+  results <- matrix(NA, nrow = thresholds_n, ncol = 5)
 
   # Loop 1 over all thresholds
   # C++
@@ -51,15 +52,17 @@ threshold_factor_grid <- function(thresholds = NULL,
     mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
     cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
 
+    n_i <- hi_i + fa_i + mi_i + cr_i
+
     # Return values to results
 
-    results[i, ] <- c(hi_i, fa_i, mi_i,  cr_i)
+    results[i, ] <- c(n_i, hi_i, fa_i, mi_i,  cr_i)
 
   }
 
   # Convert to named dataframe
   results <- as.data.frame(results)
-  names(results) <- c("hi", "fa", "mi", "cr")
+  names(results) <- c("n", "hi", "fa", "mi", "cr")
 
   # Add thresholds and directions
   results$threshold <- thresholds
@@ -73,8 +76,8 @@ threshold_factor_grid <- function(thresholds = NULL,
   # Loop 2 over cumulative thresholds
   # C++
 
-  results_cum <- as.data.frame(matrix(NA, nrow = thresholds_n, ncol = 5))
-  names(results_cum) <- c("threshold", "hi", "fa", "mi", "cr")
+  results_cum <- as.data.frame(matrix(NA, nrow = thresholds_n, ncol = 6))
+  names(results_cum) <- c("threshold", "n", "hi", "fa", "mi", "cr")
 
   for(i in 1:thresholds_n) {
 
@@ -89,9 +92,11 @@ threshold_factor_grid <- function(thresholds = NULL,
     mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
     cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
 
+    n_i <- hi_i + fa_i + mi_i + cr_i
+
     # Return values to results
 
-    results_cum[i, 2:5] <- c(hi_i, fa_i, mi_i,  cr_i)
+    results_cum[i, 2:6] <- c(n_i, hi_i, fa_i, mi_i,  cr_i)
     results_cum[i, 1] <- paste(threshold_i, collapse = ",")
   }
 
@@ -116,10 +121,17 @@ threshold_factor_grid <- function(thresholds = NULL,
 
   # Add accuracy statistics
 
-  results <- cbind(results, Add_Stats(results, sens.w = sens.w, cost.outcomes = cost.outcomes))
+  new_stats <-  Add_Stats(data = results,
+                          sens.w = sens.w,
+                          cost.outcomes = cost.outcomes,
+                          cost.each = cost.each)
+
+  # Add accuracy statistics
+  results <- cbind(results, new_stats)
+
 
   # Order by goal and change column order
-  results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+  results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
 
   } else {
 
@@ -134,6 +146,7 @@ threshold_factor_grid <- function(thresholds = NULL,
                           "bacc" = NA,
                           "acc" = NA,
                           "wacc" = NA,
+                          "costout" = NA,
                           "cost" = NA)
 
   }

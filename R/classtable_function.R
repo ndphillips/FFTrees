@@ -110,7 +110,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
 
       # cost per case
       costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      costtot <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
     }
 
@@ -131,7 +131,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     wacc <- NA
     dprime <- NA
     costout <- NA
-    costtot <- NA
+    cost <- NA
 
   }
 
@@ -151,7 +151,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     wacc = wacc,
     dprime = dprime,
     costout = costout,
-    costtot = costtot)
+    cost = cost)
 
   return(result)
 

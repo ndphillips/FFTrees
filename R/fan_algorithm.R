@@ -105,15 +105,15 @@ if(is.null(cost.cues)) {
 # ----------
 
 cue_best_df <- cuerank(formula = formula,
-                          data = data,
-                          goal = goal.chase,
-                          numthresh.method = numthresh.method,
-                          numthresh.n = numthresh.n,
-                          rounding = rounding,
-                          progress = progress,
-                          sens.w = sens.w,
-                          cost.outcomes = cost.outcomes,
-                          cost.cues = cost.cues)
+                       data = data,
+                       goal = goal.chase,
+                       numthresh.method = numthresh.method,
+                       numthresh.n = numthresh.n,
+                       rounding = rounding,
+                       progress = progress,
+                       sens.w = sens.w,
+                       cost.outcomes = cost.outcomes,
+                       cost.cues = cost.cues)
 
 # ----------
 # GROW TREES
@@ -196,6 +196,7 @@ for(tree_i in 1:tree_n) {
                            "cue" = NA,
                            "cost.cue" = NA,
                            "cost.cue.cum" = NA,
+                           "costout"= NA,
                            "class" = NA,
                            "threshold" = NA,
                            "direction" = NA,
@@ -419,7 +420,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
     level_stats_i$exit[level_current] <- exit_current
 
 
-    level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+    level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")]
 
   }
 
@@ -496,7 +497,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
     level_stats_i$exit[last.level] <- .5
 
 
-    level_stats_i[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+    level_stats_i[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")]
 
   }
 
@@ -525,7 +526,7 @@ level_stats_ls[[tree_i]] <- level_stats_i
 
 # -------------------------
 # SUMMARISE TREE DEFINITIONS AND STATISTICS
-#   trees
+#   tree.definitions
 # -------------------------
 {
   # Summarise tree definitions

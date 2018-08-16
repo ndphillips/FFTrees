@@ -19,6 +19,7 @@ threshold_numeric_grid <- function(thresholds,
                                    cue.v,
                                    criterion.v,
                                    sens.w = .5,
+                                   cost.each = 0,
                                    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                    goal = "acc") {
 
@@ -31,7 +32,7 @@ threshold_numeric_grid <- function(thresholds,
   #
 
   thresholds_n <- length(thresholds)
-  data_n <- length(cue.v)
+  case_n <- length(cue.v)
 
   results_gt <- matrix(NA, nrow = thresholds_n, ncol = 4)
 
@@ -51,33 +52,37 @@ threshold_numeric_grid <- function(thresholds,
     mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
     cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
 
+    n_i <- hi_i + fa_i + mi_i + cr_i
+
     # Return values to results
-    results_gt[i, ] <- c(hi_i, fa_i, mi_i,  cr_i)
+    results_gt[i, ] <- c(n_i, hi_i, fa_i, mi_i,  cr_i)
 
   }
 
   # Get results if using <= threshold
-  results_lt <- results_gt[,c(3, 4, 1, 2)]
+  results_lt <- results_gt[,c(1, 4, 5, 2, 3)]
 
   # Combine
   results <- rbind(results_gt, results_lt)
 
   # Convert to named dataframe
   results <- as.data.frame(results)
-  names(results) <- c("hi", "fa", "mi", "cr")
+  names(results) <- c("n", "hi", "fa", "mi", "cr")
 
   # Add thresholds and directions
   results$threshold <- rep(thresholds, 2)
   results$direction <- rep(c(">", "<"), each = thresholds_n)
 
-  # Add accuracy statistics
-  results <- cbind(results, Add_Stats(results,
-                                      sens.w = sens.w,
-                                      cost.outcomes = cost.outcomes))
+  new_stats <-  Add_Stats(results,
+                          sens.w = sens.w,
+                          cost.outcomes = cost.outcomes,
+                          cost.each = cost.each)
 
+  # Add accuracy statistics
+  results <- cbind(results, new_stats)
 
   # Order by goal and change column order
-  results <- results[order(-results[goal]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost")]
+  results <- results[order(-results[goal]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
 
   return(results)
 

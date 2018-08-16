@@ -36,18 +36,19 @@ cuerank <- function(formula = NULL,
                     progress = FALSE
 
 ) {
-#
-#   formula = formula
-#   data = data
-#   goal = goal.chase
-#   numthresh.method = numthresh.method
-#   numthresh.n = numthresh.n
-#   rounding = rounding
-#   progress = progress
-#   sens.w = sens.w
-#   cost.outcomes = cost.outcomes
-#   cost.cues = cost.cues
 
+
+  formula = diagnosis ~.
+  data = heart.train
+  goal = goal.chase
+  numthresh.method = numthresh.method
+  numthresh.n = 20
+  rounding = rounding
+  progress = progress
+  sens.w = sens.w
+  cost.outcomes = cost.outcomes
+  cost.cues = cost.cues
+  numthresh.n = 20
 
   # Extract variables in formula
   data.mf <- model.frame(formula = formula,
@@ -216,6 +217,7 @@ cuerank <- function(formula = NULL,
                                               cue.v = cue_i_v,
                                               criterion.v = criterion_v,
                                               sens.w = sens.w,
+                                              cost.v = rep(cue_i_cost, length(criterion_v)),
                                               cost.outcomes = cost.outcomes,
                                               goal = goal)
       }
@@ -224,11 +226,12 @@ cuerank <- function(formula = NULL,
       if(substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
         cue_i_stats <- threshold_factor_grid(thresholds = cue_i_levels,
-                                              cue.v = cue_i_v,
-                                              criterion.v = criterion_v,
-                                              sens.w = sens.w,
-                                              cost.outcomes = cost.outcomes,
-                                              goal = goal)
+                                             cue.v = cue_i_v,
+                                             criterion.v = criterion_v,
+                                             sens.w = sens.w,
+                                             cost.v = cue_i_cost,
+                                             cost.outcomes = cost.outcomes,
+                                             goal = goal)
       }
 
       # Get thresholds that maximizes goal
