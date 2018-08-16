@@ -24,6 +24,8 @@ classtable <- function(prediction.v = NULL,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
 
 
+
+
 if(is.null(cost.v)) {cost.v <- rep(0, length(prediction.v))}
 
 if(any(c("FALSE", "TRUE") %in% paste(prediction.v))) {
@@ -79,7 +81,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
     # cost per case
-    cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+    costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
     } else {
 
@@ -106,7 +108,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
       # cost per case
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
     }
 
@@ -126,7 +128,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     bacc <- NA
     wacc <- NA
     dprime <- NA
-    cost <- NA
+    costout <- NA
 
   }
 
@@ -145,7 +147,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     bacc = bacc,
     wacc = wacc,
     dprime = dprime,
-    cost = cost)
+    costout = costout)
 
   return(result)
 

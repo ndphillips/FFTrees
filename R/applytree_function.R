@@ -50,11 +50,15 @@ names(output_ls) <- output_names
 
 
 
-# level.stats.ls: Cumulative level statistics
-level.stats.ls <- vector("list", length = tree_n)
+# level_stats_ls: Cumulative level statistics
+level_stats_ls <- vector("list", length = tree_n)
 
 # Loop over trees
 for(tree_i in 1:tree_n) {
+
+decision_v <- rep(NA, case_n)
+levelout_v <- rep(NA, case_n)
+costcue_v <- rep(NA, case_n)
 
 # Extract node definitions
 cue_v <- unlist(strsplit(tree.definitions$cues[tree_i], ";"))
@@ -75,8 +79,10 @@ level_stats_i <- data.frame(tree = tree_i,
                             exit = exit_v,
                             stringsAsFactors = FALSE)
 
+critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "acc", "bacc", "wacc", "costout")
+
 # Add stat names to level_stats_i
-level_stats_i[c("hi", "fa", "mi", "cr", "sens", "spec", "acc", "bacc", "wacc")] <- NA
+level_stats_i[critical_stats_v] <- NA
 
 
 # Calculate cumulative cue cost for each level
@@ -106,8 +112,8 @@ threshold_i <- threshold_v[level_i]
 
 
 # Determine which cases are classified / unclassified
-unclassified.cases <- which(is.na(decision[,tree_i]))
-classified.cases <- which(is.na(decision[,tree_i]) == FALSE)
+unclassified.cases <- which(is.na(decision_v))
+classified.cases <- which(is.na(decision_v) == FALSE)
 
 cue_values <- data[[cue_i]]
 
@@ -122,9 +128,9 @@ if(direction_i == "<=") {current.decisions <- cue_values <= threshold_i}
 if(direction_i == ">") {current.decisions <- cue_values > threshold_i}
 if(direction_i == ">=") {current.decisions <- cue_values >= threshold_i}
 
-if(exit_i == 0) {classify.now <- current.decisions == FALSE & is.na(decision[,tree_i])}
-if(exit_i == 1) {classify.now <- current.decisions == TRUE & is.na(decision[,tree_i])}
-if(exit_i == .5) {classify.now <- is.na(decision[,tree_i])}
+if(exit_i == 0) {classify.now <- current.decisions == FALSE & is.na(decision_v)}
+if(exit_i == 1) {classify.now <- current.decisions == TRUE & is.na(decision_v)}
+if(exit_i == .5) {classify.now <- is.na(decision_v)}
 
 # Convert NAs
 
@@ -139,71 +145,78 @@ if(exit_i %in% .5) {
 
   }
 
+decision_v[classify.now] <- current.decisions[classify.now]
+levelout_v[classify.now] <- level_i
+costcue_v[classify.now] <- costc.level.cum[level_i]
 
-output_ls$decision[classify.now, tree_i] <- current.decisions[classify.now]
-output_ls$levelout[classify.now, tree_i] <- level_i
-output_ls$costcue[classify.now, tree_i] <- costc.level.cum[level_i]
+
+
 
 # Get level stats
 
-level_i.stats <- classtable(prediction_v = output_ls$decision[levelout[,tree_i] <= level_i & is.finite(output_ls$levelout[,tree_i]), tree_i],
-                            criterion_v = criterion_v[output_ls$levelout[,tree_i] <= level_i & is.finite(output_ls$levelout[,tree_i])],
-                            sens.w = sens.w,
-                            cost_v = output_ls$costcue[output_ls$levelout[,tree_i] <= level_i & is.finite(output_ls$levelout[,tree_i]), tree_i],
-                            cost.outcomes = cost.outcomes)
+my_level_stats_i <- classtable(prediction.v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
+                               criterion.v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
+                               sens.w = sens.w,
+                               cost.v = costcue_v[levelout_v <= level_i & is.finite(levelout_v)],
+                               cost.outcomes = cost.outcomes)
 
 
-# level_i.stats$costc <- sum(costcue[,tree_i], na.rm = TRUE)
-level_stats_i[level_i, names(level_i.stats)] <- level_i.stats
+# level_stats_i$costc <- sum(costcue[,tree_i], na.rm = TRUE)
+level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[,critical_stats_v]
+
 
 }
 
 # Add costt
 
-  level.stats.ls[[tree_i]] <- level_stats_i
+  level_stats_ls[[tree_i]] <- level_stats_i
+
+  output_ls$decision[,tree_i] <- decision_v
+  output_ls$levelout[,tree_i] <- levelout_v
+  output_ls$costcue[,tree_i] <- costcue_v
+
 
 }
 
 # Combine all levelstats into one dataframe
-levelstats <- do.call("rbind", args = level.stats.ls)
+level_stats <- do.call("rbind", args = level_stats_ls)
 
 # CUMULATIVE TREE STATS
 
-treestats <- tree.definitions
-helper <- paste(levelstats$tree, levelstats$level, sep = ".")
-maxlevs <- paste(rownames(tapply(levelstats$level, levelstats$tree, FUN = which.max)), tapply(levelstats$level, levelstats$tree, FUN = which.max), sep = ".")
-treestats <- cbind(tree.definitions, levelstats[helper %in% maxlevs, names(level_i.stats)])
-rownames(treestats) <- 1:nrow(treestats)
+helper <- paste(level_stats$tree, level_stats$level, sep = ".")
+maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
+tree_stats <- cbind(tree.definitions, level_stats[helper %in% maxlevs, critical_stats_v])
+rownames(tree_stats) <- 1:nrow(tree_stats)
 
 
 # Add pci to treestats
 #   pci is the number of cues looked up for each case divided by the maximum possible
 
-n.lookups <- colSums(levelout)
+n.lookups <- colSums(output_ls$levelout)
 max.lookups <- nrow(data) * ncol(data)
 
-treestats$pci <- 1 - n.lookups / max.lookups
+tree_stats$pci <- 1 - n.lookups / max.lookups
 
 # Add mean cues per case (mcu)
 
-treestats$mcu <- colMeans(levelout)
+tree_stats$mcu <- colMeans(output_ls$levelout)
 
 # Calculate outcome costs
 costoutcomes.t <- sapply(1:tree_n, FUN = function(tree_i) {
 
   # which cases are hits
-  hi.log <- criterion_v == 1 & decision[,tree_i] == 1
+  hi.log <- criterion_v == 1 & output_ls$decision[,tree_i] == 1
 
   # which cases are false alarms
-  fa.log <- criterion_v == 0 & decision[,tree_i] == 1
+  fa.log <- criterion_v == 0 & output_ls$decision[,tree_i] == 1
 
   # which cases are misses
-  mi.log <- criterion_v == 1 & decision[,tree_i] == 0
+  mi.log <- criterion_v == 1 & output_ls$decision[,tree_i] == 0
 
   # which cases are correct rejections
-  cr.log <- criterion_v == 0 & decision[,tree_i] == 0
+  cr.log <- criterion_v == 0 & output_ls$decision[,tree_i] == 0
 
-cost_v <- hi.log * cost.outcomes[1] + fa.log * cost.outcomes[2] + mi.log * cost.outcomes[3] + cr.log * cost.outcomes[4]
+cost_v <- hi.log * cost.outcomes$hi + fa.log * cost.outcomes$fa + mi.log * cost.outcomes$mi + cr.log * cost.outcomes$cr
 
   return(cost_v)
 
@@ -227,7 +240,7 @@ costcues.t <- sapply(1:tree_n, FUN = function(tree_i) {
   cost.per.level <- cumsum(cue.cost_in.tree)
 
   # Get node for each case for current tree
-  cost.level_v <- cost.per.level[levelout[,tree_i]]
+  cost.level_v <- cost.per.level[output_ls$levelout[,tree_i]]
 
 
   return(cost.level_v)
@@ -237,18 +250,20 @@ costcues.t <- sapply(1:tree_n, FUN = function(tree_i) {
 # Calculate total costs (outcomes + cues)
 costtotal.t <- costoutcomes.t + costcues.t
 
-cost.ls <- list("outcomes" = costoutcomes.t,
-                "cues" = costcues.t,
-                "total" = costtotal.t)
+cost.ls <- list("out" = costoutcomes.t,
+                "cue" = costcues.t,
+                "tot" = costtotal.t)
 
 # Add mean cost per case (mcc)
 # treestats$costt <- colMeans(costtotal.t)
 # treestats$costc <- colMeans(costcues.t)
 
-return(list("decision" = decision,
-            "levelout" = levelout,
-            "levelstats" = levelstats,
-            "treestats" = treestats,
-            "treecost" = cost.ls))
+output <- list("decision" = output_ls$decision,
+               "levelout" = output_ls$levelout,
+               "levelstats" = level_stats,
+               "treestats" = tree_stats,
+               "treecost" = cost.ls)
+
+return(output)
 
 }
