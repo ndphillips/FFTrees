@@ -29,11 +29,17 @@ plot(heart.fft,
      decision.labels = c("Healthy", "Disease"))
 ```
 
-![](inst/HeartFFT.jpg)
+![](inst/HeartFFT.jpeg)
 
 
 
 ### Package updates
+1.4.0
+
+- Big under the hood changes to make code more efficient (and prepare for c++). Code should be ~50% faster.
+- Many inputs such as `cost.cues` and `cost.outcomes` are now specified as named lists to avoid confusion.
+- New cost outputs that separate costs from cues, outcomes, and total costs.
+- Changes to input defaults for `goal` and `goal.chase`
 
 1.3.6
 
