@@ -8,8 +8,8 @@
 #' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
-#' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
-#' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
+#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param cost.cues list A list containing containing costs for each cue. Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number. Cues not present in \code{cost.cues} are assume to have 0 cost.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
@@ -94,12 +94,12 @@ FFTrees <- function(formula = NULL,
                     algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .5,
-                    cost.outcomes = NULL,
+                    cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0),
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
                     goal = "wacc",
-                    goal.chase = "bacc",
+                    goal.chase = NULL,
                     numthresh.method = "o",
                     decision.labels = c("False", "True"),
                     main = NULL,
@@ -121,47 +121,44 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL,
                     comp = NULL
 ) {
-#
-#   formula = NULL
-#   data = NULL
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = NULL
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   goal.chase = "bacc"
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   main = NULL
-#   train.p = 1
-#   rounding = NULL
-#   progress = TRUE
-#   repeat.cues = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   do.comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#   comp = NULL
-# #
-# #
-#
-#
-#   formula = decis_bin ~ .
-#   data = lung.train
-#   my.tree =    "If target_action <= 0, predict True.
-#   If drivermut2CAT >= 1, predict True. Otherwise, predict False."
+
+
+  # formula = NULL
+  # data = NULL
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0)
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = "wacc"
+  # goal.chase = NULL
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # main = NULL
+  # train.p = 1
+  # rounding = NULL
+  # progress = TRUE
+  # repeat.cues = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # do.comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  # comp = NULL
+  # formula = diagnosis ~.
+  # data = heart.train
+  # cost.cues = heart.cost
+  # goal = "cost"
 
 # Depricated arguments
 {
@@ -193,61 +190,76 @@ FFTrees <- function(formula = NULL,
 
 # # Input validation
 
+# Make sure criterion is logical
+
+criterion_name <- paste(formula)[2]
+
+if(class(data[[criterion_name]]) != "logical") {
+
+  if(sum(is.na(as.logical(data[[criterion_name]]))) == sum(is.na(data[[criterion_name]]))) {
+
+    data[[criterion_name]] <- as.logical(data[[criterion_name]])
+
+    message(criterion_name, " is now logical.")
+
+  } else {
+
+  stop("The criterion ", criterion_name, " does not appear to be logical (or easily converted to logical). Please fix.")
+
+  }
+}
+
+
+
 # If no FFTrees object is specified
 if(is.null(object)) {
 
 if(is.null(cost.outcomes) == FALSE) {
 
-  if(length(cost.outcomes) != 4) {
+  if(length(cost.outcomes) != 4 || !identical(setdiff(names(cost.outcomes), c("hi", "mi", "fa", "cr")), character(0))) {
 
-    stop("cost.outcomes must have length 4 corresponding to hits, false-alarms, misses, and correct rejections")
-  }
+    stop("cost.outcomes must be a list of length 4 with the names 'hi', 'mi', 'fa', and 'cr'")
+
+    }
 
 }
 
+
+# cost.cues
+{
+
 if(is.null(cost.cues) == FALSE) {
 
-  # Make sure all named cues in cost.cues are in data
-
-  cue.not.in.data <- sapply(cost.cues[,1], FUN = function(x) {x %in% names(data) == FALSE})
-
-  if(any(cue.not.in.data)) {
-
-    missing.cues <- paste(cost.cues[cue.not.in.data, 1], collapse = ",")
-
-    warning(paste0("The cue(s) {",missing.cues, "} specified in cost.cues are not present in the data."))
-
-  }
-
-
+cost.cues <- cost.cues.append(formula, data, cost.cues = cost.cues)
 
 }
 
 if(is.null(cost.outcomes) & is.null(cost.cues) == FALSE) {
 
-  cost.outcomes <- c(0, 0, 0, 0)
+  cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)
+  cost.cues <- cost.cues.append(formula, data)
+
   message("Warning: You specified cue costs but no outcome costs. Results could be misleading.")
 
 } else {
 
   if(is.null(cost.outcomes) & is.null(cost.cues)) {
 
-    cost.outcomes <- c(0, 1, 1, 0)
+    cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)
+    cost.cues <- cost.cues.append(formula, data)
 
 
   }
 
 }
 
+  if(is.null(cost.cues)) {
 
-# Validate and clean arguments
+cost.cues <- cost.cues.append(formula, data)
 
-if(is.null(object) == FALSE) {
-
-    formula <- object$formula
-    tree.definitions <- object$tree.definitions
-
+  }
 }
+
 
 # tree.definitions
 if(is.null(tree.definitions) == FALSE) {
@@ -276,6 +288,20 @@ if((goal %in% c("bacc", "wacc", "dprime", "cost", "acc")) == FALSE) {
   stop("goal must be in the set 'bacc', 'wacc', 'dprime', 'cost', 'acc'")
 
 }
+
+
+
+
+if(goal == "cost" & is.null(goal.chase)) {
+
+  goal.chase <- "cost"
+
+} else if (is.null(goal.chase)) {
+
+  goal.chase <- "wacc"
+
+}
+
 
 # algorithm
 valid.algorithms <- c("ifan", "dfan", "max", "zigzag")
@@ -313,7 +339,6 @@ if(goal %in% c("acc") & sens.w != .5) {
 
 }
 
-
 }
 
 
@@ -322,7 +347,6 @@ if(algorithm %in% c("ifan", "dfan") & is.null(max.levels)) {
   max.levels <- 4
 
 }
-
 
 # Missing manditory arguments
 {
@@ -586,34 +610,6 @@ if(is.null(data.test) & train.p < 1) {
 
 }
 
-# Make sure cost.cues contains all cues
-{
-  if(is.null(cost.cues)) {
-
-    cost.cues <- data.frame("cue" = cue.names,
-                            "cost" = rep(0, n.cues),
-                            stringsAsFactors = FALSE)
-
-  } else {
-
-    names(cost.cues) <- c("cue", "cost")
-
-    # Which cues are missing in cost.cues?
-
-    missing.cues <- setdiff(cue.names, cost.cues[,1])
-
-    if(length(missing.cues) > 0) {
-
-      cost.cues.missing <- data.frame("cue" = missing.cues,
-                                      "cost" = rep(0, length(missing.cues)))
-
-      cost.cues <- rbind(cost.cues, cost.cues.missing)
-
-
-    }
-
-  }
-}
 }
 
 # GET TREE DEFINITIONS  with grow.FFTrees()
@@ -629,8 +625,7 @@ if(is.null(data.test) & train.p < 1) {
 
   if(is.null(object) &
      is.null(tree.definitions) &
-     is.null(my.tree) &
-     is.null(tree.definitions)) {
+     is.null(my.tree)) {
 
     if(progress) {message(paste0("Growing FFTs with ", algorithm))}
 
@@ -772,9 +767,9 @@ decision.train <- train.results$decision
 levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
-treecost.train <- train.results$treecost
-
-treestats.train <- treestats.train[c("tree", names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
+costout.train <- train.results$costout
+costcue.train <- train.results$costcue
+cost.train <- train.results$cost
 
 }
 
@@ -786,7 +781,10 @@ if(is.null(data.train) == TRUE) {
   levelout.train <- NULL
   levelstats.train <- NULL
   treestats.train <- NULL
-  treecost.train <- NULL
+  costout.train <- NULL
+  costcue.train <- NULL
+  cost.train <- NULL
+
 
   }
 }
@@ -804,9 +802,9 @@ decision.test <- test.results$decision
 levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
-treecost.test <- test.results$treecost
-
-treestats.test <- treestats.test[c("tree",names(classtable(c(1, 0, 1), c(1, 0, 0))), "pci", "mcu")]
+costout.test <- train.results$costout
+costcue.test <- train.results$costcue
+cost.test <- train.results$cost
 
 
 }
@@ -818,25 +816,20 @@ if(is.null(data.test) == TRUE) {
   levelstats.test <- NULL
   treestats.test <- NULL
   treecost.test <- NULL
-
+  costout.test <- NULL
+  costcue.test <- NULL
+  cost.test <- NULL
 }
 
 decision <- list("train" = decision.train, "test" = decision.test)
 levelout <- list("train" = levelout.train, "test" = levelout.test)
 levelstats <- list("train" = levelstats.train, "test" = levelstats.test)
 treestats <- list("train" = treestats.train, "test" = treestats.test)
-treecost <- list("train" = treecost.train, "test" = treecost.test)
+costout <- list("train" = costout.train, "test" = costout.test)
+costcue <- list("train" = costcue.train, "test" = costcue.test)
+cost <- list("train" = cost.train, "test" = cost.test)
 
 }
-
-
-## GET HISTORY
-#
-# history <-  updateHistory(newdata = data.train,
-#                           object = object,
-#                           formula = formula,
-#                           tree.definitions = tree.definitions)$history
-
 
 
 # FIT COMPETITIVE ALGORITHMS
@@ -1084,7 +1077,7 @@ x.FFTrees <- list("formula" = formula,
                    "cue.accuracies" = cue.accuracies,
                    "tree.definitions" = tree.definitions,
                    "tree.stats" = treestats,
-                   "cost" = treecost,
+                   "cost" = list("cost" = cost, "outcomes" = costout, "cues" = costcue),
                    # "history" = history,
                    "level.stats" = levelstats,
                    "decision" = decision,

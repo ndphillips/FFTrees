@@ -5,7 +5,8 @@
 \title{Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics}
 \usage{
 apply.tree(data, formula, tree.definitions, sens.w = 0.5,
-  cost.outcomes = c(0, 1, 1, 0), cost.cues = NULL, allNA.pred = FALSE)
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
+  allNA.pred = FALSE)
 }
 \arguments{
 \item{data}{dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}
@@ -16,7 +17,7 @@ apply.tree(data, formula, tree.definitions, sens.w = 0.5,
 
 \item{sens.w}{numeric.  A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only used for calculating wacc values.}
 
-\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+\item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 
 \item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
 

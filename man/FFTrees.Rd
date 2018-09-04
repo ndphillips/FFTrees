@@ -6,10 +6,10 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL,
   algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
-  cost.outcomes = NULL, cost.cues = NULL, stopping.rule = "exemplars",
-  stopping.par = 0.1, goal = "wacc", goal.chase = "bacc",
-  numthresh.method = "o", decision.labels = c("False", "True"),
-  main = NULL, train.p = 1, rounding = NULL, progress = TRUE,
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
+  stopping.rule = "exemplars", stopping.par = 0.1, goal = "wacc",
+  goal.chase = NULL, numthresh.method = "o", decision.labels = c("False",
+  "True"), main = NULL, train.p = 1, rounding = NULL, progress = TRUE,
   repeat.cues = TRUE, my.tree = NULL, tree.definitions = NULL,
   do.comp = TRUE, do.cart = TRUE, do.lr = TRUE, do.rf = TRUE,
   do.svm = TRUE, store.data = FALSE, object = NULL, rank.method = NULL,
@@ -28,9 +28,9 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}}
 
-\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+\item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 
-\item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
+\item{cost.cues}{list A list containing containing costs for each cue. Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number. Cues not present in \code{cost.cues} are assume to have 0 cost.}
 
 \item{stopping.rule}{character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.}
 

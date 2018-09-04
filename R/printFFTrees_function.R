@@ -34,9 +34,9 @@ train.nodes <- train.cues.n
 train.sens <- round(x$tree.stats$train$sens[tree], 2)
 train.far <- round(x$tree.stats$train$far[tree], 2)
 train.spec <- 1 - round(x$tree.stats$train$far[tree], 2)
-train.dp <- round(x$tree.stats$train$dprime[tree], 2)
 train.bacc <- round(x$tree.stats$train$bacc[tree], 2)
 train.wacc <- round(x$tree.stats$train$wacc[tree], 2)
+train.cost <- round(x$tree.stats$train$cost[tree], 2)
 train.acc <- round(x$tree.stats$train$acc[tree], 2)
 train.pci <-  round(x$tree.stats$train$pci[tree], 2)
 train.mcu <- round(x$tree.stats$train$mcu[tree], 2)
@@ -48,29 +48,29 @@ test.nodes <- train.cues.n
 test.sens <- round(x$tree.stats$test$sens[tree], 2)
 test.far <- round(x$tree.stats$test$far[tree], 2)
 test.spec <- 1 - round(x$tree.stats$test$far[tree], 2)
-test.dp <- round(x$tree.stats$test$dprime[tree], 2)
 test.bacc <- round(x$tree.stats$test$bacc[tree], 2)
 test.wacc <- round(x$tree.stats$test$wacc[tree], 2)
+test.cost <- round(x$tree.stats$test$cost[tree], 2)
 test.acc <- round(x$tree.stats$test$acc[tree], 2)
 test.pci <-  round(x$tree.stats$test$pci[tree], 2)
 test.mcu <- round(x$tree.stats$test$mcu[tree], 2)
 
 summary.df <- data.frame("train" = c(train.n,
                                      train.mcu,
-
                                      train.pci,
+                                     train.cost,
                                      train.acc,
                                      # train.bacc,
-                                     train.wacc,
+                                     train.bacc,
                                      train.sens,
                                      train.spec),
                          "test" = c(test.n,
                                     test.mcu,
-
                                     test.pci,
+                                    test.cost,
                                     test.acc,
                                     # test.bacc,
-                                    test.wacc,
+                                    test.bacc,
                                     test.sens,
                                     test.spec)
 )
@@ -86,15 +86,17 @@ if(is.null(x$tree.stats$test)) {
   test.far <- "--"
   test.spec <- "--"
   test.acc <- "--"
+  test.cost <- "--"
   test.bacc <- "--"
   test.wacc <- "--"
 
   summary.df <- data.frame("train" = c(train.n,
                                        train.mcu,
                                        train.pci,
+                                       train.cost,
                                        train.acc,
                                        # train.bacc,
-                                       train.wacc,
+                                       train.bacc,
                                        train.sens,
                                        train.spec)
   )
@@ -105,9 +107,10 @@ if(is.null(x$tree.stats$test)) {
 rownames(summary.df) <- c("cases       :n",
                           "speed       :mcu",
                           "frugality   :pci",
+                          "cost        :cost",
                           "accuracy    :acc",
                           # "balanced    :bacc",
-                          "weighted    :wacc",
+                          "balanced    :bacc",
                           "sensitivity :sens",
                           "specificity :spec")
 

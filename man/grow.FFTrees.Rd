@@ -5,10 +5,11 @@
 \title{Grows fast-and-frugal trees using an algorithm specified by \code{algorithm}.}
 \usage{
 grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
-  goal = "wacc", goal.chase = "bacc", sens.w = 0.5, cost.outcomes = c(0,
-  1, 1, 0), cost.cues = NULL, numthresh.method = "o",
-  stopping.rule = "exemplars", stopping.par = 0.1, progress = FALSE,
-  repeat.cues = TRUE, rank.method = NULL, cue.accuracies = NULL, ...)
+  goal = "wacc", goal.chase = "bacc", sens.w = 0.5,
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
+  numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
+  progress = FALSE, repeat.cues = TRUE, rank.method = NULL,
+  cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}

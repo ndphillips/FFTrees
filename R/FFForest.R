@@ -53,30 +53,28 @@ FFForest <- function(formula = NULL,
                      hr.weight = NULL
 ) {
 
-
-  # formula = NULL
-  # data = NULL
   # data.test = NULL
   # max.levels = 5
   # ntree = 10
   # train.p = .5
   # algorithm = "ifan"
-  # goal = "wacc"
+  # goal = "wacc"3
   # goal.chase = "wacc"
   # sens.w = .5
   # verbose = TRUE
   # cpus = 1
-  # comp = FALSE
+  # do.comp = FALSE
   # do.lr = TRUE
-  # do.cart = TRUE
+  # do.cart = TRUEbreast
   # do.rf = TRUE
   # do.svm = TRUE
   # rank.method = NULL
   # hr.weight = NULL
   #
-  # formula <- diagnosis ~.
+  # formula = diagnosis ~.
   # data = heartdisease
-
+  # ntree = 10
+  # train.p = .5
 
 
 # Check for depricated arguments
@@ -117,7 +115,7 @@ simulations <- data.frame(
 # getsim.fun does one training split and returns tree statistics
 getsim.fun <- function(i) {
 
-result.i <- FFTrees::FFTrees(formula = formula,
+result.i <- FFTrees(formula = formula,
                               data = data,
                               data.test = NULL,
                               object = NULL,
@@ -215,7 +213,7 @@ decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(i) {
 
 # Tree definitions
 
-for(stat.i in c("cues", "thresholds", "directions", "classes", "exits")) {
+for(stat.i in c("nodes", "cues", "thresholds", "directions", "classes", "exits")) {
 
   simulations[[stat.i]] <- sapply(1:length(result.ls),
                                   FUN = function(x) {
@@ -274,7 +272,7 @@ for(i in 1:nrow(connections)) {
 # Get training performance
 FFForest.Train.Decisions <- rowMeans(decisions) >= .5
 
-train.stats <- classtable(FFForest.Train.Decisions, criterion.v)
+train.stats <- classtable(as.logical(FFForest.Train.Decisions), as.logical(criterion.v))
 
 # Get testing performance
 if(is.null(data.test) == FALSE) {
@@ -320,7 +318,7 @@ surrogate.tree <- which(agree.combined == max(agree.combined))
 
 if(length(surrogate.tree) > 1) {surrogate.tree <- sample(surrogate.tree, size = 1)}
 
-surrogate.tree.definition <- simulations[surrogate.tree, c("cues", "thresholds", "directions", "classes", "exits")]
+surrogate.tree.definition <- simulations[surrogate.tree, c("nodes", "cues", "thresholds", "directions", "classes", "exits")]
 surrogate.tree.definition$tree <- 1
 
 # Create new FFTrees object from surrogate tree
