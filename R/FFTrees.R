@@ -99,7 +99,7 @@ FFTrees <- function(formula = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
                     goal = "wacc",
-                    goal.chase = "bacc",
+                    goal.chase = NULL,
                     numthresh.method = "o",
                     decision.labels = c("False", "True"),
                     main = NULL,
@@ -121,56 +121,44 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL,
                     comp = NULL
 ) {
-# #
-
-  #
-  #
-#
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0)
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   goal.chase = "bacc"
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   main = NULL
-#   train.p = 1
-#   rounding = NULL
-#   progress = TRUE
-#   repeat.cues = TRUE
-#   my.tree = NULL
-#   do.comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#   comp = NULL
-#
-#
-#   formula = formula
-#   data = data
-#   data.test = data.test
-#   tree.definitions = surrogate.tree.definition
-#   algorithm = algorithm
-#   goal = goal
-#   goal.chase = goal.chase
 
 
-  #
-  #
-  #
+  # formula = NULL
+  # data = NULL
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0)
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = "wacc"
+  # goal.chase = NULL
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # main = NULL
+  # train.p = 1
+  # rounding = NULL
+  # progress = TRUE
+  # repeat.cues = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # do.comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  # comp = NULL
   # formula = diagnosis ~.
-  # data = heartdisease
-
+  # data = heart.train
+  # cost.cues = heart.cost
+  # goal = "cost"
 
 # Depricated arguments
 {
@@ -238,9 +226,10 @@ if(is.null(cost.outcomes) == FALSE) {
 
 # cost.cues
 {
+
 if(is.null(cost.cues) == FALSE) {
 
-cost.cues <- cost.cues.append(formula, data)
+cost.cues <- cost.cues.append(formula, data, cost.cues = cost.cues)
 
 }
 
@@ -298,6 +287,20 @@ if((goal %in% c("bacc", "wacc", "dprime", "cost", "acc")) == FALSE) {
   stop("goal must be in the set 'bacc', 'wacc', 'dprime', 'cost', 'acc'")
 
 }
+
+
+
+
+if(goal == "cost" & is.null(goal.chase)) {
+
+  goal.chase <- "cost"
+
+} else if (is.null(goal.chase)) {
+
+  goal.chase <- "wacc"
+
+}
+
 
 # algorithm
 valid.algorithms <- c("ifan", "dfan", "max", "zigzag")
@@ -763,7 +766,9 @@ decision.train <- train.results$decision
 levelout.train <- train.results$levelout
 levelstats.train <- train.results$levelstats
 treestats.train <- train.results$treestats
-treecost.train <- train.results$treecost
+costout.train <- train.results$costout
+costcue.train <- train.results$costcue
+cost.train <- train.results$cost
 
 }
 
@@ -775,7 +780,10 @@ if(is.null(data.train) == TRUE) {
   levelout.train <- NULL
   levelstats.train <- NULL
   treestats.train <- NULL
-  treecost.train <- NULL
+  costout.train <- NULL
+  costcue.train <- NULL
+  cost.train <- NULL
+
 
   }
 }
@@ -793,7 +801,9 @@ decision.test <- test.results$decision
 levelout.test <- test.results$levelout
 levelstats.test <- test.results$levelstats
 treestats.test <- test.results$treestats
-treecost.test <- test.results$treecost
+costout.test <- train.results$costout
+costcue.test <- train.results$costcue
+cost.test <- train.results$cost
 
 
 }
@@ -805,14 +815,18 @@ if(is.null(data.test) == TRUE) {
   levelstats.test <- NULL
   treestats.test <- NULL
   treecost.test <- NULL
-
+  costout.test <- NULL
+  costcue.test <- NULL
+  cost.test <- NULL
 }
 
 decision <- list("train" = decision.train, "test" = decision.test)
 levelout <- list("train" = levelout.train, "test" = levelout.test)
 levelstats <- list("train" = levelstats.train, "test" = levelstats.test)
 treestats <- list("train" = treestats.train, "test" = treestats.test)
-treecost <- list("train" = treecost.train, "test" = treecost.test)
+costout <- list("train" = costout.train, "test" = costout.test)
+costcue <- list("train" = costcue.train, "test" = costcue.test)
+cost <- list("train" = cost.train, "test" = cost.test)
 
 }
 
@@ -1062,7 +1076,7 @@ x.FFTrees <- list("formula" = formula,
                    "cue.accuracies" = cue.accuracies,
                    "tree.definitions" = tree.definitions,
                    "tree.stats" = treestats,
-                   "cost" = treecost,
+                   "cost" = list("cost" = cost, "outcomes" = costout, "cues" = costcue),
                    # "history" = history,
                    "level.stats" = levelstats,
                    "decision" = decision,

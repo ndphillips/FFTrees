@@ -20,14 +20,14 @@ apply.tree <- function(data,
                        cost.cues = NULL,
                        allNA.pred = FALSE
 ) {
-#
-  # data = heart.test
-  # formula = diagnosis ~.
+
+  # data = data.train
+  # formula = formula
   # tree.definitions = tree.definitions
-  # sens.w = .5
-  # cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
-  # cost.cues = heart.cost
-  # allNA.pred = FALSE
+  # sens.w = sens.w
+  # cost.cues = cost.cues
+  # cost.outcomes = cost.outcomes
+  #  allNA.pred = FALSE
 
 # Step 0: Validation and Setup
 {
