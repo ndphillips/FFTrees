@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100,
 library(FFTrees)
 ```
 
-The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* Soon to be published in [Judgment and Decision Making](http://www.sjdm.org).
+The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* available online at [http://journal.sjdm.org/17/17217/jdm17217.pdf](http://journal.sjdm.org/17/17217/jdm17217.pdf)
 
 
 ## Step 1: Install and load the FFTrees package
@@ -111,7 +111,7 @@ knitr::include_graphics("../inst/confusiontable.jpg")
 
 To visualize a tree, use `plot()`:
 
-```{r}
+```{r, fig.width = 6.5, fig.height = 6}
 # Plot the best FFT when applied to the test data
 
 plot(heart.fft,              # An FFTrees object
@@ -124,7 +124,7 @@ plot(heart.fft,              # An FFTrees object
 - `data`: For which dataset should statistics be shown? Either `data = "train"` (the default), or `data = "test"`
 - `stats`: Should accuracy statistics be shown with the tree? To show only the tree, without any performance statistics, include the argument `stats = FALSE`
 
-```{r}
+```{r, fig.width = 10, fig.height = 6}
 # Plot only the tree without accuracy statistics
 plot(heart.fft, 
      stats = FALSE)
@@ -204,7 +204,7 @@ my.heart.fft <- FFTrees(formula = diagnosis ~.,
 
 Here is the result (It's actually not too bad, although the first node is pretty worthless)
 
-```{r}
+```{r, fig.width = 6.5, fig.height = 6}
 plot(my.heart.fft)
 ```
 
@@ -215,11 +215,10 @@ The `FFForest()` function conducts a bootstrapped simulation on the training dat
 
 ```{r, eval = FALSE}
 # Create an FFForest object (can take a few minutes)
-heart.fff <- FFForest(diagnosis ~., 
+heart.fff <- FFForest(formula = diagnosis ~., 
                       data = heartdisease, 
-                      ntree = 100, 
-                      train.p = .5, 
-                      cpus = 4)
+                      ntree = 10, 
+                      train.p = .5)
 ```
 
 Plotting the result shows cue importance and co-occurrence relationships:

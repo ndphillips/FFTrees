@@ -3,29 +3,20 @@
 #' @param thresholds numeric. A vector of factor thresholds to consider
 #' @param cue.v numeric. Feature values
 #' @param criterion.v logical. Criterion values
+#' @param directions character. Character vector of threshold directions to consider.
 #' @param sens.w numeric.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
-#' @param cost.cue numeric.
-#' @param goal.chase character.
-#'
-#'
-#' @examples
-#'
-#'
-#' threshold_numeric_grid(thresholds = c(10, 30, 50, 70, 90),
-#'                        cue.v =  c(13, 16, 24, 35, 56, 76, 87, 95),
-#'                        criterion.v = c( 0,  0,  1,  0,  1,  1,  1,  0),
-#'                        sens.w = .5,
-#'                        cost.outcomes = c(0, 1, 1, 0))
-#'
+#' @param cost.each numeric.
+#' @param goal character.
 #'
 threshold_factor_grid <- function(thresholds = NULL,
                                    cue.v = NULL,
                                    criterion.v = NULL,
+                                   directions = "=",
                                    sens.w = .5,
-                                   cost.outcomes = c(0, 1, 1, 0),
+                                   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                    cost.each = 0,
-                                   goal.chase = "acc") {
+                                   goal = "acc") {
 
 
 
@@ -71,7 +62,7 @@ threshold_factor_grid <- function(thresholds = NULL,
   results <- cbind(results, Add_Stats(results,
                                       sens.w = sens.w,
                                       cost.outcomes = cost.outcomes))
-  results <- results[order(-results[goal.chase]),]
+  results <- results[order(-results[goal]),]
 
   # Loop 2 over cumulative thresholds
   # C++
@@ -131,12 +122,17 @@ threshold_factor_grid <- function(thresholds = NULL,
 
 
   # Order by goal and change column order
-  results <- results[order(-results[goal.chase]), c("threshold", "direction", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
+  results <- results[order(-results[goal]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
+
+
+  # Remove invalid directions
+  results[results$direction %in% directions, ]
 
   } else {
 
     results <- data.frame("threshold" = NA,
                           "direction" = NA,
+                          "n" = NA,
                           "hi" = NA,
                           "fa" = NA,
                           "mi" = NA,
@@ -150,6 +146,8 @@ threshold_factor_grid <- function(thresholds = NULL,
                           "cost" = NA)
 
   }
+
+
 
   return(results)
 

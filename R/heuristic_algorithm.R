@@ -84,10 +84,7 @@ for(i in 1:ncol(data.mm)) {
 cue.acc <- cuerank(formula,
                    data = data.mm,
                    goal = "bacc",
-                   considerFALSE = FALSE,
-                   numthresh.method = "m",
-                   factor.directions = c("="),
-                   numeric.directions = c(">=", "<", ">=", ">"))
+                   numthresh.method = "m")
 
 
 # Convert missing ppv and npv to 0

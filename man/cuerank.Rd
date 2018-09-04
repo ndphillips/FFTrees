@@ -5,10 +5,9 @@
 \title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
 cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
-  cost.outcomes = c(0, 1, 1, 0), cost.cues = NULL, numthresh.method = "o",
-  rounding = NULL, factor.directions = c("=", "!="),
-  numeric.directions = c(">", "<"), considerFALSE = TRUE,
-  progress = FALSE, cue.rules = NULL)
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
+  numthresh.method = "o", numthresh.n = 20, rounding = NULL,
+  cue.rules = NULL, progress = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -19,23 +18,19 @@ cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
 
-\item{cost.outcomes}{numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+\item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 
 \item{cost.cues}{dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.}
 
 \item{numthresh.method}{character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,}
 
+\item{numthresh.n}{integer. The maximum number of numeric thresholds to be considered.}
+
 \item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).}
 
-\item{factor.directions}{character. A vector of possible directions for factor values. \code{c("=", "!=")} allows both equality and inequality, while \code{"="} only allows for equality.}
-
-\item{numeric.directions}{character. A vector of possible directions for numeric values. \code{c(">", "<")} allows only strict inequalities while \code{c("<=", "<", ">=", ">")} is more flexible.}
-
-\item{considerFALSE}{logical. Should FALSE logical values be considered as potential thresholds? This is only relevant for very special algorithms.}
+\item{cue.rules}{dataframe. Optional existing dataframe of previously defined cue rules.}
 
 \item{progress}{logical. Should ongoing diagnostics be printed?}
-
-\item{cue.rules}{dataframe. An optional df specifying existing cue thresholds, directions, names, and classes}
 }
 \value{
 A dataframe containing thresholds and marginal classification statistics for each cue

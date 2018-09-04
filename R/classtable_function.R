@@ -1,20 +1,12 @@
 #' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
 #' @param prediction.v logical. A logical vector of predictions
 #' @param criterion.v logical A logical vector of criterion (true) values
-#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
-#' @param cost.v list. An optional list of additional costs to be added to each case.
 #' @param sens.w numeric. Weight given to sensitivity, must range from 0 to 1.
+#' @param cost.v list. An optional list of additional costs to be added to each case.
+#' @param correction numeric. Correction added to all counts for calculating dprime
+#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @importFrom stats qnorm
 #' @importFrom caret confusionMatrix
-#' @examples
-#'
-#'
-#'  # classification statistics for 5 cases
-#' classtable(prediction.v = c(0, 0, 0, 1, 1),
-#'            criterion.v = c(0, 0, 1, 0, 1))
-#'
-#'
-#'
 
 classtable <- function(prediction.v = NULL,
                        criterion.v,
@@ -23,7 +15,20 @@ classtable <- function(prediction.v = NULL,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
 
+#
+#   prediction.v = decision_v[cases_remaining == FALSE],
+#   criterion.v = criterion.v[cases_remaining == FALSE],
+#   sens.w = sens.w,
+#   cost.v = cuecost_v[cases_remaining == FALSE],
+#   cost.outcomes = cost.outcomes
+#
 
+  #
+  # prediction.v = decision_v[cases_remaining == FALSE]
+  # criterion.v = criterion.v[cases_remaining == FALSE]
+  # sens.w = sens.w
+  # cost.v = cuecost_v[cases_remaining == FALSE]
+  # cost.outcomes = cost.outcomes
 
 
 if(is.null(cost.v)) {cost.v <- rep(0, length(prediction.v))}
@@ -72,6 +77,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     # Statistics
     sens <- cm_byClass$Sensitivity
     spec <- cm_byClass$Specificity
+    far <- 1 - spec
     acc <-  cm_overall$Accuracy
     acc_p <- cm_overall$AccuracyPValue
     ppv <- cm_byClass$Pos.Pred.Value
@@ -82,7 +88,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
 
     # cost per case
     costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-    costtot <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+    cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
     } else {
 
@@ -100,6 +106,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
       # Statistics
       sens <- hi / (hi + mi)
       spec <- cr / (cr + fa)
+      far <- 1 - spec
       acc <-  (hi + cr) / c(hi + cr + mi + fa)
       acc_p <- NA
       ppv <- hi / (hi + fa)
@@ -122,6 +129,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     cr <- NA
     sens <- NA
     spec <- NA
+    far <- NA
     ppv <- NA
     npv <- NA
     far <- NA
@@ -143,6 +151,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     cr = cr,
     sens = sens,
     spec = spec,
+    far = far,
     ppv = ppv,
     npv = npv,
     acc = acc,

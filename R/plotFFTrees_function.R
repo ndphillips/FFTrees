@@ -1485,17 +1485,17 @@ level.top <- level.center.y + level.max.height / 2
 
 
 lloc <- data.frame(
-  element = c("classtable", "mcu", "pci", "sens", "spec", "acc", "wacc", "roc"),
-  long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", "wacc", "ROC"),
+  element = c("classtable", "mcu", "pci", "sens", "spec", "acc", "bacc", "roc"),
+  long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", "bacc", "ROC"),
   center.x = c(.18, seq(.35, .65, length.out = 6), .85),
   center.y = rep(level.center.y, 8),
   width =    c(.2, rep(level.width, 6), .2),
   height =   c(.65, rep(level.max.height, 6), .65),
   value = c(NA,
             abs(final.stats$mcu - 5) / (abs(1 - 5)),
-            final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$wacc, NA),
+            final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, NA),
   value.name = c(NA, round(final.stats$mcu, 1), pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec),  pretty.dec(final.stats$acc),
-                 pretty.dec(final.stats$wacc), NA
+                 pretty.dec(final.stats$bacc), NA
   )
 )
 }
@@ -1768,7 +1768,7 @@ paste(final.stats$cr, "/", 1, collapse = "")
 
 # segments(x0 = lloc$center.x[lloc$element == "mcu"] - lloc$width[lloc$element == "mcu"] * .8,
 #          y0 = level.top,
-#          x1 = lloc$center.x[lloc$element == "wacc"] + lloc$width[lloc$element == "wacc"] * .8,
+#          x1 = lloc$center.x[lloc$element == "bacc"] + lloc$width[lloc$element == "bacc"] * .8,
 #          y1 = level.top,
 #          lty = 3, lwd = .75)
 
@@ -1812,7 +1812,7 @@ add.level.fun("acc", min.val = 0, ok.val = .5, level.type = level.type) #, sub =
 
 
 
-add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
+add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
 
 # baseline
 

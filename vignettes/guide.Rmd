@@ -17,7 +17,7 @@ library(FFTrees)
 
 ## Fast-and-Frugal Trees (FFTs)
 
-```{r fig1, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease risk. Read the Heart Disease Tutorial vignette to learn more about how to create this FFT."}
+```{r fig1, fig.width = 6.5, fig.height = 6, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease risk. Read the Heart Disease Tutorial vignette to learn more about how to create this FFT."}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,

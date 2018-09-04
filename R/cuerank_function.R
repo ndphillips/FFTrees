@@ -9,6 +9,7 @@
 #' @param numthresh.method character. A string indicating how to calculate cue splitting thresholds. "m" = median split, "o" = split that maximizes the goal,
 #' @param numthresh.n integer. The maximum number of numeric thresholds to be considered.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
+#' @param cue.rules dataframe. Optional existing dataframe of previously defined cue rules.
 #' @param progress logical. Should ongoing diagnostics be printed?
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
@@ -33,23 +34,26 @@ cuerank <- function(formula = NULL,
                     numthresh.method = "o",
                     numthresh.n = 20,
                     rounding = NULL,
+                    cue.rules = NULL,
                     progress = FALSE
 
 ) {
 
+  #
+  #
+  # formula = diagnosis ~.
+  # data = heartdisease
+  # goal = "bacc"
+  # sens.w = .5
+  # cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+  # cost.cues = NULL
+  # numthresh.method = "o"
+  # numthresh.n = 20
+  # rounding = NULL
+  # cue.rules = NULL
+  # progress = FALSE
 
-  formula = diagnosis ~.
-  data = heart.train
-  goal = goal.chase
-  numthresh.method = numthresh.method
-  numthresh.n = 20
-  rounding = rounding
-  progress = progress
-  sens.w = sens.w
-  cost.outcomes = cost.outcomes
-  cost.cues = cost.cues
-  numthresh.n = 20
-
+  #
   # Extract variables in formula
   data.mf <- model.frame(formula = formula,
                          data = data,
@@ -59,8 +63,10 @@ cuerank <- function(formula = NULL,
   cue.df <- data.mf[,2:ncol(data.mf), drop = FALSE]
   criterion_v <- data.mf[,1]
 
+  if(is.null(cost.cues)) {cost.cues <- cost.cues.append(formula, data)}
+
   # Get data information
-  cases_n <- length(criterion.v)
+  cases_n <- length(criterion_v)
   cue_n <- ncol(cue.df)
   cue_names <- names(cue.df)
 
@@ -84,7 +90,7 @@ cuerank <- function(formula = NULL,
   }
 
   # Validation: Make sure there is variance in the criterion!
-  if(var(criterion.v) == 0) {
+  if(var(criterion_v) == 0) {
 
     stop("There is no variance in the criterion!")
 
@@ -93,34 +99,6 @@ cuerank <- function(formula = NULL,
 
 }
 
-  # Make sure cost.cues is full
-  {
-    if(is.null(cost.cues)) {
-
-      cost.cues <- data.frame("cue" = cue_names,
-                              "cost" = rep(0, cue_n),
-                              stringsAsFactors = FALSE)
-
-    } else {
-
-      names(cost.cues) <- c("cue", "cost")
-
-      # Which cues are missing in cost.cues?
-
-      missing.cues <- setdiff(cue_names, cost.cues[,1])
-
-      if(length(missing.cues) > 0) {
-
-        cost.cues.missing <- data.frame("cue" = missing.cues,
-                                        "cost" = rep(0, length(missing.cues)))
-
-        cost.cues <- rbind(cost.cues, cost.cues.missing)
-
-
-      }
-
-    }
-  }
 
   if(progress) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
 
@@ -135,16 +113,31 @@ cuerank <- function(formula = NULL,
 
     }
 
+    if(is.null(cue.rules)) {
+
       # Get main information about current cue
       cue_i_name <- names(cue.df)[cue_i]
       cue_i_class <- class(cue.df[,cue_i])
       cue_i_v <- unlist(cue.df[,cue_i])
-      cue_i_cost <- cost.cues$cost[cost.cues$cue == cue_i_name]
+      cue_i_cost <- cost.cues[[cue_i_name]]
+
+    } else {
+
+      # Get main information about current cue
+      cue_i_name <- cue.rules$cue[cue_i]
+      cue_i_class <- cue.rules$class[cue_i]
+      cue_i_v <- unlist(cue.df[cue_i_name])
+      cue_i_cost <- cost.cues[[cue_i_name]]
+
+    }
 
     if(all(is.na(cue_i_v)) == FALSE) {
 
       # Step 0: Determine possible cue levels [cue_i_levels]
       {
+
+        if(is.null(cue.rules)) {
+
           # Numeric and integer cues
           if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
@@ -154,10 +147,10 @@ cuerank <- function(formula = NULL,
               # Get all possible (sorted) cue values
               cue_i_levels <- sort(unique(unlist(cue_i_v)))
 
-              # If too long, reduce to numthresh_max
-              if(length(cue_i_levels) > numthresh_max) {
+              # If too long, reduce to numthresh.n
+              if(length(cue_i_levels) > numthresh.n) {
 
-                indicies <- round(seq(1, length(cue_i_levels), length.out = numthresh_max), 0)
+                indicies <- round(seq(1, length(cue_i_levels), length.out = numthresh.n), 0)
                 cue_i_levels <- cue_i_levels[indicies]
 
               }
@@ -198,6 +191,14 @@ cuerank <- function(formula = NULL,
               warning(paste0("The cue ", cue_names[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
           }
 
+        } else {
+
+          cue_i_levels <- cue.rules$threshold[cue_i]
+          if(grepl(",", cue_i_levels)) {cue_i_levels <- unlist(strsplit(cue_i_levels, ","))}
+
+        }
+
+
         # Check for cue levels containing protected characters (;)
 
         if(any(sapply(cue_i_levels, FUN = function(x) {grepl(";", x = x)}))) {
@@ -208,6 +209,25 @@ cuerank <- function(formula = NULL,
 
       }
 
+      if(is.null(cue.rules) == FALSE) {
+
+        directions <- cue.rules$direction[cue_i]
+
+      } else {
+
+        if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
+
+          directions <- c(">", "<=")
+        }
+
+        if(substr(cue_i_class, 1, 1) %in% c("c", "f", "l")) {
+
+          directions <- c("=", "!=")
+        }
+
+      }
+
+
       # Step 1: Determine best direction and threshold for cue [cue_i_best]
       {
       # Numeric, integer
@@ -217,7 +237,8 @@ cuerank <- function(formula = NULL,
                                               cue.v = cue_i_v,
                                               criterion.v = criterion_v,
                                               sens.w = sens.w,
-                                              cost.v = rep(cue_i_cost, length(criterion_v)),
+                                              directions = directions,
+                                              cost.each = cue_i_cost,
                                               cost.outcomes = cost.outcomes,
                                               goal = goal)
       }
@@ -228,8 +249,9 @@ cuerank <- function(formula = NULL,
         cue_i_stats <- threshold_factor_grid(thresholds = cue_i_levels,
                                              cue.v = cue_i_v,
                                              criterion.v = criterion_v,
+                                             directions = directions,
                                              sens.w = sens.w,
-                                             cost.v = cue_i_cost,
+                                             cost.each = cue_i_cost,
                                              cost.outcomes = cost.outcomes,
                                              goal = goal)
       }
@@ -275,8 +297,9 @@ cuerank <- function(formula = NULL,
 
   rownames(cuerank_df) <- 1:nrow(cuerank_df)
 
-  # Add cue costs
-  cuerank_df$cost.cue <- cost.cues$cost[match(cuerank_df$cue, cost.cues$cue)]
+
+    # Add cue costs
+  cuerank_df$costcue <- unlist(cost.cues[match(cuerank_df$cue, names(cost.cues))])
 
   # Re-order
   cuerank_df <- cuerank_df[,c("cue", "class", setdiff(names(cuerank_df), c("cue", "class")))]

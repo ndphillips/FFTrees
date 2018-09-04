@@ -10,6 +10,7 @@
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
+#' @param numthresh.n numeric. Number of threshold values to consider.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. \code{"levels"} means the tree grows until a certain level, \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain. \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == \code{"levels"}, this is the number of levels. For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
 #' @param rounding integer. How much should threshold parameters be rounded? Default is
@@ -36,23 +37,23 @@ fan.algorithm <- function(formula,
                           rounding = NULL,
                           progress = TRUE,
                           repeat.cues = TRUE) {
+#
+  # formula = formula
+  # data = data.mf
+  # max.levels = max.levels
+  # algorithm = algorithm
+  # goal = goal
+  # goal.chase = goal.chase
+  # sens.w = sens.w
+  # cost.outcomes = cost.outcomes
+  # cost.cues = cost.cues
+  # numthresh.method = numthresh.method
+  # stopping.rule = stopping.rule
+  # stopping.par = stopping.par
+  # progress = progress
+  # repeat.cues = repeat.cues
 
 
-  formula = poisonous ~.
-  data = mushrooms
-  max.levels = 5
-  algorithm = "ifan"
-  goal = "wacc"
-  goal.chase = "bacc"
-  sens.w = .5
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
-  cost.cues = NULL
-  numthresh.method = "o"
-  stopping.rule = "exemplars"
-  stopping.par = .1
-  rounding = NULL
-  progress = TRUE
-  repeat.cues = TRUE
 
 # Some global variables which could be changed later.
 
@@ -62,6 +63,9 @@ correction <- .25
 # Define key objects
 data.mf <- model.frame(formula, data, na.action = NULL)
 
+if(class(data.mf[,1]) != "logical") {data.mf[,1] <- as.logical(data.mf[,1])}
+
+
 criterion_name <- names(data.mf)[1]
 criterion.v <- data.mf[,1]
 cue_n <- ncol(data.mf) - 1
@@ -69,36 +73,8 @@ case_n <- nrow(data.mf)
 cue_df <- data.mf[,2:ncol(data.mf)]
 cue_names <- names(cue_df)
 
-# Data checks
+if(is.null(cost.cues)) {cost.cues <- cost.cues.append(formula, data)}
 
-if(class(criterion.v) != "logical") {criterion.v <- as.logical(criterion.v)}
-
-# Fill in empty cost.cues
-{
-if(is.null(cost.cues)) {
-
-  cost.cues <- data.frame("cue" = cue_names,
-                          "cost" = rep(0, cue_n),
-                          stringsAsFactors = FALSE)
-
-} else {
-
-  # Which cues are missing in cost.cues?
-
-  missing.cues <- setdiff(cue_names, cost.cues[,1])
-
-  if(length(missing.cues) > 0) {
-
-    cost.cues.missing <- data.frame("cue" = missing.cues,
-                                    "cost" = rep(0, length(missing.cues)))
-
-    cost.cues <- rbind(cost.cues, cost.cues.missing)
-
-
-  }
-
-}
-}
 
 # ----------
 # INITIAL TRAINING CUE ACCURACIES
@@ -194,8 +170,8 @@ for(tree_i in 1:tree_n) {
   ## level_stats_i shows cumulative classification decisions statistics at each level
   level_stats_i <- data.frame("level" = NA,
                            "cue" = NA,
-                           "cost.cue" = NA,
-                           "cost.cue.cum" = NA,
+                           "costcue" = NA,
+                           "costcue.cum" = NA,
                            "costout"= NA,
                            "class" = NA,
                            "threshold" = NA,
@@ -280,7 +256,7 @@ if(length(cue_best_i) > 1) {cue_best_i <- cue_best_i[1]}
 
 cue_name_new <- cue_best_df_current$cue[cue_best_i]
 cue_stats_new <- cue_best_df_current$cue[cue_best_i]
-cue_cost_new <- cue_best_df_current$cost.cue[cue_best_i]
+cue_cost_new <- cost.cues[[cue_name_new]]
 cue_class_new <- cue_best_df_current$class[cue_best_i]
 cue_threshold_new <- cue_best_df_current$threshold[cue_best_i]
 cue_direction_new <- cue_best_df_current$direction[cue_best_i]
@@ -292,8 +268,8 @@ cuecost_v[is.na(decision_v)] <- cuecost_v[is.na(decision_v)] + cue_cost_new
 
 level_stats_i$level[level_current] <- level_current
 level_stats_i$cue[level_current] <- cue_name_new
-level_stats_i$cost.cue[level_current] <- cue_cost_new
-level_stats_i$cost.cue.cum[level_current] <- sum(level_stats_i$cost.cue[1:level_current])
+level_stats_i$costcue[level_current] <- cue_cost_new
+level_stats_i$costcue.cum[level_current] <- sum(level_stats_i$costcue[1:level_current])
 level_stats_i$class[level_current] <- cue_class_new
 level_stats_i$threshold[level_current] <- cue_threshold_new
 level_stats_i$direction[level_current] <- cue_direction_new
@@ -362,7 +338,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 }
 
 # Step 3) Classify exemplars in current level
-  {
+{
 
     if(exit_current == 1 | exit_current == .5) {
 
@@ -388,63 +364,63 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
     fa_v <- decision_v == TRUE & criterion.v == FALSE
     cr_v <- decision_v == FALSE & criterion.v == FALSE
 
-    outcomecost_v[hi.v == TRUE] <- cost.outcomes$hi
-    outcomecost_v[mi.v == TRUE] <- cost.outcomes$mi
-    outcomecost_v[fa.v == TRUE] <- cost.outcomes$fa
-    outcomecost_v[cr.v == TRUE] <- cost.outcomes$cr
+    outcomecost_v[hi_v == TRUE] <- cost.outcomes$hi
+    outcomecost_v[mi_v == TRUE] <- cost.outcomes$mi
+    outcomecost_v[fa_v == TRUE] <- cost.outcomes$fa
+    outcomecost_v[cr_v == TRUE] <- cost.outcomes$cr
 
   }
 
-  # Step 4) Update Results
-  {
-    cases_remaining <- is.na(decision_v)
+# Step 4) Update Results
+{
+  cases_remaining <- is.na(decision_v)
 
-    # NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS
+  # NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS
 
-    # Get cumulative stats of examplars currently classified
+  # Get cumulative stats of examplars currently classified
 
-    results_cum <- classtable(prediction.v = decision_v[cases_remaining == FALSE],
-                                 criterion.v = criterion.v[cases_remaining == FALSE],
-                                 sens.w = sens.w,
-                                 cost.v = cuecost_v[cases_remaining == FALSE],
-                                 cost.outcomes = cost.outcomes)
-
-
-    # Update level stats
-
-    level_stats_i$level[level_current] <- level_current
-    level_stats_i$cue[level_current] <- cue_name_new
-    level_stats_i$class[level_current] <- cue_class_new
-    level_stats_i$threshold[level_current] <- cue_threshold_new
-    level_stats_i$direction[level_current] <- cue_direction_new
-    level_stats_i$exit[level_current] <- exit_current
+  results_cum <- classtable(prediction.v = decision_v[cases_remaining == FALSE],
+                            criterion.v = criterion.v[cases_remaining == FALSE],
+                            sens.w = sens.w,
+                            cost.v = cuecost_v[cases_remaining == FALSE],
+                            cost.outcomes = cost.outcomes)
 
 
-    level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")]
+  # Update level stats
+  level_stats_i[level_current,] <- NA
+  level_stats_i$level[level_current] <- level_current
+  level_stats_i$cue[level_current] <- cue_name_new
+  level_stats_i$class[level_current] <- cue_class_new
+  level_stats_i$threshold[level_current] <- cue_threshold_new
+  level_stats_i$direction[level_current] <- cue_direction_new
+  level_stats_i$exit[level_current] <- exit_current
 
-  }
 
-  # Step 5) Continue growing tree?
-  {
+  level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
 
-    cases_remaining_n <- sum(cases_remaining)
+}
 
-    if(cases_remaining_n > 0 & level_current != cue_n & exit.method == "fixed") {
+# Step 5) Continue growing tree?
+{
 
-      if(level_current < level_n) {grow.tree <- TRUE}
-      if(level_current == level_n) {grow.tree <- FALSE ; break}
+  cases_remaining_n <- sum(cases_remaining)
 
-    }
-    if(cases_remaining_n == 0 | level_current == cue_n) {break}
-    if(stopping.rule == "exemplars" & cases_remaining_n < stopping.par * nrow(cue_df)) {break}
-    if(stopping.rule == "levels" & level_current == stopping.par) {break}
+  if(cases_remaining_n > 0 & level_current != cue_n & exit.method == "fixed") {
 
-    if(algorithm == "dfan" & sd(criterion.v[cases_remaining]) == 0) {break}
-
-    # Set up next level stats
-    level_stats_i[level_current + 1,] <- NA
+    if(level_current < level_n) {grow.tree <- TRUE}
+    if(level_current == level_n) {grow.tree <- FALSE ; break}
 
   }
+  if(cases_remaining_n == 0 | level_current == cue_n) {break}
+  if(stopping.rule == "exemplars" & cases_remaining_n < stopping.par * nrow(cue_df)) {break}
+  if(stopping.rule == "levels" & level_current == stopping.par) {break}
+
+  if(algorithm == "dfan" & sd(criterion.v[cases_remaining]) == 0) {break}
+
+  # Set up next level stats
+  level_stats_i[level_current + 1,] <- NA
+
+}
 
 }  # STOP while(grow.tree) Loop
 
@@ -453,11 +429,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
   last.level <- max(level_stats_i$level)
   last.cue <- level_stats_i$cue[last.level]
-  if(last.cue %in% cost.cues[,1]) {cost.cue <- cost.cues[cost.cues[,1] == last.cue,2]} else {
-
-    cost.cue <- 0
-
-  }
+  cost.cue <- cost.cues[[last.cue]]
 
 
   last.exitdirection <- level_stats_i$exit[level_stats_i$level == last.level]
@@ -520,10 +492,6 @@ level_stats_ls[[tree_i]] <- level_stats_i
 
 }
 
-
-
-# STOPPED HERE!!!!!!!!!!
-
 # -------------------------
 # SUMMARISE TREE DEFINITIONS AND STATISTICS
 #   tree.definitions
@@ -582,6 +550,7 @@ tree.definitions <- tree.definitions[,names(tree.definitions) != "rank"]
 rownames(tree.definitions) <- 1:nrow(tree.definitions)
 
 return(list(tree.definitions = tree.definitions,
+            cue.accuracies = cue_best_df,
             cue_best_df = cue_best_df))
 
 }

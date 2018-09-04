@@ -7,7 +7,7 @@
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
-
+#'
 #' @return A list of length 4 containing
 #'
 #'
@@ -20,9 +20,19 @@ apply.tree <- function(data,
                        cost.cues = NULL,
                        allNA.pred = FALSE
 ) {
+#
+  # data = heart.test
+  # formula = diagnosis ~.
+  # tree.definitions = tree.definitions
+  # sens.w = .5
+  # cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+  # cost.cues = heart.cost
+  # allNA.pred = FALSE
 
 # Step 0: Validation and Setup
 {
+
+
 # Data Details
 {
 case_n <- nrow(data)
@@ -34,6 +44,9 @@ if(criterion_name %in% names(data)) {
   criterion_v <- model.frame(formula = formula,
                              data = data,
                              na.action = NULL)[,1]
+
+  if(class(criterion_v) != "logical") {criterion_v <- as.logical(criterion_v)}
+
 
 } else {criterion_v <- rep(NA, case_n)}
 }
@@ -85,30 +98,24 @@ threshold_v <- unlist(strsplit(tree.definitions$thresholds[tree_i], ";"))
 direction_v <-  unlist(strsplit(tree.definitions$directions[tree_i], ";"))
 level_n <- tree.definitions$nodes[tree_i]
 
-
 #  [cue_cost_cum_level]
 # Calculate cumulative cue cost for each level based on cue costs
 
-if(is.null(cost.cues) == FALSE) {
+cost.cues <- cost.cues.append(formula = formula,
+                              data = data,
+                              cost.cues)
 
-  costc.level <- sapply(cue_v, FUN = function(cue_i) {
 
-    if(cue_i %in% cost.cues[,1]) {cost.cue_i <- cost.cues[cost.cues[,1] == cue_i, 2]} else {
+costc.level <- sapply(cue_v, FUN = function(cue_i) {
+
+    if(cue_i %in% names(cost.cues)) {cost.cue_i <- cost.cues[[cue_i]]} else {
 
       cost.cue_i <- 0}})
 
-
-  costc.level.cum <- cumsum(costc.level)
-
-} else {costc.level.cum <- rep(0, level_n)}
+costc.level.cum <- cumsum(costc.level)
 
 cue_cost_cum_level <- data.frame(level = 1:level_n,
                                  cue_cost_cum = costc.level.cum)
-
-
-
-
-
 
 # Define vectors of critical outputs for each case
 
@@ -117,7 +124,6 @@ levelout_v <- rep(NA, case_n)
 costcue_v <-  rep(NA, case_n)
 costout_v <-  rep(NA, case_n)
 cost_v <-  rep(NA, case_n)
-
 
 # level_stats_i contains cumulative level statistics
 level_stats_i <- data.frame(tree = tree_i,
@@ -129,7 +135,7 @@ level_stats_i <- data.frame(tree = tree_i,
                             exit = exit_v,
                             stringsAsFactors = FALSE)
 
-critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "acc", "bacc", "wacc", "costout")
+critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "costout")
 
 # Add stat names to level_stats_i
 level_stats_i[critical_stats_v] <- NA

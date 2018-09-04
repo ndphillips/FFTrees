@@ -3,38 +3,33 @@
 #' @param thresholds numeric. A vector of thresholds to consider
 #' @param cue.v numeric. Feature values
 #' @param criterion.v logical. Criterion values
+#' @param directions character. Possible directions to consider
 #' @param sens.w numeric.
+#' @param cost.each numeric. Cost to add to each value (e.g.; cost of  the cue)
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param goal character.
-#'
-#' @examples
-#'
-#' threshold_numeric_grid(thresholds = c(10, 30, 50, 70, 90),
-#'                        cue.v =  c(13, 16, 24, 35, 56, 76, 87, 95),
-#'                        criterion.v = c( 0,  0,  1,  0,  1,  1,  1,  0),
-#'                        sens.w = .5,
-#'                        cost.outcomes = c(0, 1, 1, 0))
 #'
 threshold_numeric_grid <- function(thresholds,
                                    cue.v,
                                    criterion.v,
+                                   directions = c(">", "<="),
                                    sens.w = .5,
                                    cost.each = 0,
                                    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                    goal = "acc") {
 
-  # thresholds = cue.levels
-  # cue.v = cue.v
-  # criterion.v = criterion.v
+  # thresholds = cue_i_levels
+  # cue.v = cue_i_v
+  # criterion.v = criterion_v
   # sens.w = sens.w
+  # directions = directions
+  # cost.each = cue_i_cost
   # cost.outcomes = cost.outcomes
   # goal = goal
-  #
 
   thresholds_n <- length(thresholds)
-  case_n <- length(cue.v)
 
-  results_gt <- matrix(NA, nrow = thresholds_n, ncol = 4)
+  results_gt <- matrix(NA, nrow = thresholds_n, ncol = 5)
 
   # Loop over all thresholds
   # C++
@@ -59,19 +54,42 @@ threshold_numeric_grid <- function(thresholds,
 
   }
 
-  # Get results if using <= threshold
-  results_lt <- results_gt[,c(1, 4, 5, 2, 3)]
 
-  # Combine
-  results <- rbind(results_gt, results_lt)
 
   # Convert to named dataframe
-  results <- as.data.frame(results)
-  names(results) <- c("n", "hi", "fa", "mi", "cr")
+  results_gt <- as.data.frame(results_gt)
+  names(results_gt) <- c("n", "hi", "fa", "mi", "cr")
+  results_gt$direction <- ">"
+  results_gt$threshold <- thresholds
 
-  # Add thresholds and directions
-  results$threshold <- rep(thresholds, 2)
-  results$direction <- rep(c(">", "<"), each = thresholds_n)
+  # Get results if using <= threshold
+  results_lt <- results_gt[,c(1, 4, 5, 2, 3)]
+  names(results_lt) <- c("n", "hi", "fa", "mi", "cr")
+  results_lt <- results_lt[,c("n", "hi", "fa", "mi", "cr")]
+
+
+
+  results_lt$direction <- "<="
+  results_lt$threshold <- thresholds
+
+  if(setequal("<=", directions)) {
+
+    results <- results_lt
+
+  }
+
+  if(setequal(">", directions)) {
+
+    results <- results_gt
+
+  }
+
+  if(setequal(c(">", "<="), directions)) {
+
+    results <- rbind(results_gt, results_lt)
+
+  }
+
 
   new_stats <-  Add_Stats(results,
                           sens.w = sens.w,
@@ -83,6 +101,10 @@ threshold_numeric_grid <- function(thresholds,
 
   # Order by goal and change column order
   results <- results[order(-results[goal]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
+
+
+  # Remove invalid directions
+  results[results$direction %in% directions, ]
 
   return(results)
 
