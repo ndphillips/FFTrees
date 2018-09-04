@@ -216,10 +216,11 @@ if(is.null(object)) {
 
 if(is.null(cost.outcomes) == FALSE) {
 
-  if(length(cost.outcomes) != 4) {
+  if(length(cost.outcomes) != 4 || !identical(setdiff(names(cost.outcomes), c("hi", "mi", "fa", "cr")), character(0))) {
 
-    stop("cost.outcomes must have length 4 corresponding to hits, false-alarms, misses, and correct rejections")
-  }
+    stop("cost.outcomes must be a list of length 4 with the names 'hi', 'mi', 'fa', and 'cr'")
+
+    }
 
 }
 
