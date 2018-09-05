@@ -6,7 +6,7 @@
 #' @param type string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, or \code{"prob"} which returns a matrix of class probabilities.
 #' @param method string. Method of calculating class probabilities. Either 'laplace', which applies the Laplace correction, or 'raw' which applies no correction.
 #' @param ... Additional arguments passed on to \code{predict()}
-#' @param sens.w, data depricated
+#' @param sens.w,data depricated
 #' @return A logical vector of predictions
 #' @export
 #' @examples
