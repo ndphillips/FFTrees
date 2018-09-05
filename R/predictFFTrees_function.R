@@ -1,13 +1,13 @@
-#' Predict new data from an FFTrees x
+#' Predict classifications from newdata using an FFTrees object
 #'
 #' @param object An FFTrees object created from the FFTrees() function.
 #' @param newdata dataframe. A dataframe of test data
-#' @param tree integer. Which tree in the object should be used?
+#' @param tree integer. Which tree in the object should be used? By default, tree = 1 is used
 #' @param type string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, or \code{"prob"} which returns a matrix of class probabilities.
 #' @param method string. Method of calculating class probabilities. Either 'laplace', which applies the Laplace correction, or 'raw' which applies no correction.
 #' @param ... Additional arguments passed on to \code{predict()}
 #' @param sens.w,data depricated
-#' @return A logical vector of predictions
+#' @return Either a logical vector of predictions, or a matrix of class probabilities.
 #' @export
 #' @examples
 #'
@@ -24,9 +24,14 @@
 #'   breast.fft <- FFTrees(formula = diagnosis ~.,
 #'                               data = breast.train)
 #'
-#'  # Predict results for test data
+#'  # Predict classes of test data
 #'   breast.fft.pred <- predict(breast.fft,
 #'                              data = breast.test)
+#'
+#'  # Predict class probabilities
+#'   breast.fft.pred <- predict(breast.fft,
+#'                              data = breast.test,
+#'                              type = "prob)
 #'
 
 predict.FFTrees <- function(
