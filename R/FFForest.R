@@ -12,7 +12,7 @@
 #' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
-#' @param verbose logical. Should progress reports be printed?
+#' @param quiet logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.comp,do.lr,do.cart,do.rf,do.svm logical. See arguments in \code{FFTrees()}
 #' @param rank.method,hr.weight depricated arguments
@@ -25,10 +25,10 @@
 #'
 #'\dontrun{
 #' cancer.fff <- FFForest(formula = diagnosis ~.,
-#'                      data = breastcancer,
-#'                      ntree = 10,
-#'                      train.p = .5,
-#'                      cpus = 1)
+#'                        data = breastcancer,
+#'                        ntree = 10,
+#'                        train.p = .5,
+#'                        cpus = 1)
 #'}
 #'
 #'
@@ -42,7 +42,7 @@ FFForest <- function(formula = NULL,
                      goal = "wacc",
                      goal.chase = "wacc",
                      sens.w = .5,
-                     verbose = TRUE,
+                     quiet = TRUE,
                      cpus = 1,
                      do.comp = FALSE,
                      do.lr = TRUE,
@@ -124,7 +124,7 @@ result.i <- FFTrees(formula = formula,
                               algorithm = algorithm,
                               goal = goal,
                               goal.chase = goal.chase,
-                              progress = FALSE,
+                              quiet = FALSE,
                               sens.w = sens.w,
                               do.comp = do.comp,
                               do.cart = do.cart,

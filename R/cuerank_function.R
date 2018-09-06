@@ -10,7 +10,7 @@
 #' @param numthresh.n integer. The maximum number of numeric thresholds to be considered.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param cue.rules dataframe. Optional existing dataframe of previously defined cue rules.
-#' @param progress logical. Should ongoing diagnostics be printed?
+#' @param quiet logical. Should ongoing diagnostics be printed?
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
 #' @return A dataframe containing thresholds and marginal classification statistics for each cue
@@ -27,7 +27,6 @@
 
 cuerank <- function(formula = NULL,
                     data = NULL,
-                    goal = "bacc",
                     goal.threshold = "bacc",
                     sens.w = .5,
                     cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
@@ -36,7 +35,7 @@ cuerank <- function(formula = NULL,
                     numthresh.n = 20,
                     rounding = NULL,
                     cue.rules = NULL,
-                    progress = FALSE
+                    quiet = FALSE
 
 ) {
 
@@ -101,13 +100,13 @@ cuerank <- function(formula = NULL,
 }
 
 
-  if(progress) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
+  if(!quiet) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
 
   # Loop over cues
   for(cue_i in 1:cue_n) {
 
     # Progress update
-    if(progress) {
+    if(!quiet) {
 
       pb$tick()
       Sys.sleep(1 / cue_n)

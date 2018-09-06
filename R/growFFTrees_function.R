@@ -13,7 +13,7 @@
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
-#' @param progress logical. Should tree growing progress be displayed?
+#' @param quiet logical. Should progress messages be shown?
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param rank.method depricated arguments
 #' @param cue.accuracies depricated arguments
@@ -57,7 +57,7 @@ grow.FFTrees <- function(formula,
                          numthresh.method = "o",
                          stopping.rule = "exemplars",
                          stopping.par = .1,
-                         progress = FALSE,
+                         quiet = FALSE,
                          repeat.cues = TRUE,
                          rank.method = NULL,
                          cue.accuracies = NULL,
@@ -138,7 +138,7 @@ if(algorithm %in% c("ifan", "dfan")) {
                              numthresh.method = numthresh.method,
                              stopping.rule = stopping.rule,
                              stopping.par = stopping.par,
-                             progress = progress,
+                             quiet = quiet,
                              repeat.cues = repeat.cues)
 
   tree.definitions <- fanResult$tree.definitions

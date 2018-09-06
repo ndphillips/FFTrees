@@ -9,7 +9,7 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
   sens.w = 0.5, cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
   cost.cues = NULL, numthresh.method = "o", numthresh.n = 20,
   stopping.rule = "exemplars", stopping.par = 0.1, rounding = NULL,
-  progress = TRUE, repeat.cues = TRUE)
+  quiet = TRUE, repeat.cues = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -42,7 +42,7 @@ fan.algorithm(formula, data, max.levels = 5, algorithm = "ifan",
 
 \item{rounding}{integer. How much should threshold parameters be rounded? Default is}
 
-\item{progress}{logical. Should tree growing progress be displayed?}
+\item{quiet}{logical. Should tree growing progress be displayed?}
 
 \item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 

@@ -246,9 +246,9 @@ level_stats <- do.call("rbind", args = level_stats_ls)
 
 helper <- paste(level_stats$tree, level_stats$level, sep = ".")
 maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-tree_stats <- cbind(tree.definitions, level_stats[helper %in% maxlevs, c(critical_stats_v, "costcue", "cost")])
+tree_stats <- cbind(tree.definitions[,c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "costcue", "cost")])
+names(tree_stats)[1] <- "tree"
 rownames(tree_stats) <- 1:nrow(tree_stats)
-
 
 # Add pci to treestats
 #   pci is the number of cues looked up for each case divided by the maximum possible

@@ -65,18 +65,18 @@ cat("\n")
 
 
 x_summary <- summary(x, tree)
-rownames(x_summary) <- paste0(c("cases       ,",
-                               "hits        ,",
-                               "misses      ,",
-                               "false al    ,",
-                               "corr rej    ,",
-                               "speed       ,",
-                               "frugality   ,",
-                               "cost        ,",
-                               "accuracy    ,",
-                               "balanced    ,",
-                               "sensitivity ,",
-                               "specificity ,"), rownames(x_summary))
+rownames(x_summary) <- paste0(c("cases       .",
+                               "hits        .",
+                               "misses      .",
+                               "false al    .",
+                               "corr rej    .",
+                               "speed       .",
+                               "frugality   .",
+                               "cost        .",
+                               "accuracy    .",
+                               "balanced    .",
+                               "sensitivity .",
+                               "specificity ."), rownames(x_summary))
 
 if(all(is.na(x_summary$test))) {
   x_summary$test <- rep("--", nrow(x_summary))

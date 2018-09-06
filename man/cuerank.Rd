@@ -4,10 +4,10 @@
 \alias{cuerank}
 \title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
-cuerank(formula = NULL, data = NULL, goal = "bacc",
-  goal.threshold = "bacc", sens.w = 0.5, cost.outcomes = list(hi = 0, fa =
-  1, mi = 1, cr = 0), cost.cues = NULL, numthresh.method = "o",
-  numthresh.n = 20, rounding = NULL, cue.rules = NULL, progress = FALSE)
+cuerank(formula = NULL, data = NULL, goal.threshold = "bacc",
+  sens.w = 0.5, cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+  cost.cues = NULL, numthresh.method = "o", numthresh.n = 20,
+  rounding = NULL, cue.rules = NULL, quiet = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -30,7 +30,7 @@ cuerank(formula = NULL, data = NULL, goal = "bacc",
 
 \item{cue.rules}{dataframe. Optional existing dataframe of previously defined cue rules.}
 
-\item{progress}{logical. Should ongoing diagnostics be printed?}
+\item{quiet}{logical. Should ongoing diagnostics be printed?}
 }
 \value{
 A dataframe containing thresholds and marginal classification statistics for each cue

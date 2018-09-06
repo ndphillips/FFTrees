@@ -20,7 +20,7 @@
 #' @param main string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
-#' @param progress logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
+#' @param quiet logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
@@ -107,7 +107,6 @@ FFTrees <- function(formula = NULL,
                     main = NULL,
                     train.p = 1,
                     rounding = NULL,
-                    progress = TRUE,
                     repeat.cues = TRUE,
                     my.tree = NULL,
                     tree.definitions = NULL,
@@ -121,46 +120,57 @@ FFTrees <- function(formula = NULL,
                     rank.method = NULL,
                     force = FALSE,
                     verbose = NULL,
-                    comp = NULL
+                    comp = NULL,
+                    quiet = TRUE
 ) {
-
-
-  # formula = diagnosis ~.
-  # data = heart.train
-  # data.test = heart.test
-  # algorithm = "ifan"
-  # max.levels = NULL
-  # sens.w = .5
-  # cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0)
-  # cost.cues = NULL
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = "wacc"
-  # goal.chase = NULL
-  # numthresh.method = "o"
-  # decision.labels = c("False", "True")
-  # main = NULL
-  # train.p = 1
-  # rounding = NULL
-  # progress = TRUE
-  # repeat.cues = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # do.comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  # comp = NULL
-  # formula = diagnosis ~.
-  # data = heart.train
-  # cost.cues = heart.cost
-  # goal = "cost"
+#
+#
+#   formula = diagnosis ~.
+#   data = heart.train
+#   data.test = heart.test
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0)
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = "wacc"
+#   goal.chase = NULL
+#   numthresh.method = "o"
+#   decision.labels = c("False", "True")
+#   main = NULL
+#   train.p = 1
+#   rounding = NULL
+#   progress = TRUE
+#   repeat.cues = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   do.comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+#   comp = NULL
+#   formula = diagnosis ~.
+#   data = heart.train
+#   cost.cues = heart.cost
+#   goal = "cost"
+#
+#   diagnosis ~.
+#   cost.cues = list(thal = 102.9, ca = 100.9)
+#   cost.outcomes = list(mi = 75, fa = 25)
+#   data = heart.train
+#   data.test = heart.test
+#   main = "My Custom FFT"
+#   my.tree = "If chol > 300, predict True.
+#   If cp != {a}, predict False.
+#   If age < 40, predict False."
 
 # Depricated arguments
 {
@@ -657,7 +667,7 @@ if(is.null(data.test) & train.p < 1) {
      is.null(tree.definitions) &
      is.null(my.tree)) {
 
-    if(progress) {message(paste0("Growing FFTs with ", algorithm))}
+    if(!quiet) {message(paste0("Growing FFTs with ", algorithm))}
 
     tree.growth <- grow.FFTrees(formula = formula,
                                 data = data.train,
@@ -671,7 +681,7 @@ if(is.null(data.test) & train.p < 1) {
                                 sens.w = sens.w,
                                 cost.outcomes = cost.outcomes,
                                 cost.cues = cost.cues,
-                                progress = progress,
+                                quiet = quiet,
                                 repeat.cues = repeat.cues)
 
     tree.definitions <- tree.growth$tree.definitions
@@ -754,6 +764,7 @@ if(is.null(object) == FALSE) {
 # CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
 {
 
+
 if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test)) & is.null(cue.accuracies.train) == FALSE) {
 
   if(sd(crit.test) > 0) {
@@ -762,24 +773,19 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
-                                goal = goal.chase,        # For now, goal must be 'bacc' when ranking cues
                                 goal.threshold = goal.threshold,
                                 rounding = rounding,
-                                progress = FALSE,
+                                quiet = TRUE,
                                 cue.rules = cue.accuracies.train,
                                 sens.w = sens.w,
                                 numthresh.method = numthresh.method)
 }
 
-  if(sd(crit.test) == 0) {
-
-    cue.accuracies.test <- NULL
-
-  }
-
 } else {cue.accuracies.test <- NULL}
 
 cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.test)
+
+
 
 }
 
@@ -876,7 +882,7 @@ do.svm <- FALSE
 do.rf <- FALSE
 
 }
-  if(do.lr | do.cart | do.rf | do.svm) {if(progress) {message("Fitting non-FFTrees algorithms for comparison (you can turn this off with do.comp = FALSE) ...")}}
+  if(do.lr | do.cart | do.rf | do.svm) {if(!quiet) {message("Fitting other algorithms for comparison (disable with do.comp = FALSE) ...")}}
 
   # LR
   {

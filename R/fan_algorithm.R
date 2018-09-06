@@ -15,7 +15,7 @@
 #' @param stopping.rule character. A string indicating the method to stop growing trees. \code{"levels"} means the tree grows until a certain level, \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain. \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == \code{"levels"}, this is the number of levels. For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
 #' @param rounding integer. How much should threshold parameters be rounded? Default is
-#' @param progress logical. Should tree growing progress be displayed?
+#' @param quiet logical. Should tree growing progress be displayed?
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula var
@@ -37,7 +37,7 @@ fan.algorithm <- function(formula,
                           stopping.rule = "exemplars",
                           stopping.par = .1,
                           rounding = NULL,
-                          progress = TRUE,
+                          quiet = TRUE,
                           repeat.cues = TRUE) {
 #
   # formula = formula
@@ -84,12 +84,11 @@ if(is.null(cost.cues)) {cost.cues <- cost.cues.append(formula, data)}
 
 cue_best_df <- cuerank(formula = formula,
                        data = data,
-                       goal = goal.chase,
                        goal.threshold = goal.threshold,
                        numthresh.method = numthresh.method,
                        numthresh.n = numthresh.n,
                        rounding = rounding,
-                       progress = progress,
+                       quiet = quiet,
                        sens.w = sens.w,
                        cost.outcomes = cost.outcomes,
                        cost.cues = cost.cues)
@@ -246,6 +245,7 @@ if(algorithm == "dfan") {
                                   numthresh.n = numthresh.n,
                                   rounding = rounding,
                                   sens.w = sens.w,
+                                  quiet = quiet,
                                   cost.outcomes = cost.outcomes,
                                   cost.cues = cost.cues)
 

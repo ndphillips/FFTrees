@@ -6,7 +6,7 @@
 \usage{
 FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
   ntree = 10, train.p = 0.5, algorithm = "ifan", goal = "wacc",
-  goal.chase = "wacc", sens.w = 0.5, verbose = TRUE, cpus = 1,
+  goal.chase = "wacc", sens.w = 0.5, quiet = TRUE, cpus = 1,
   do.comp = FALSE, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE,
   do.svm = TRUE, rank.method = NULL, hr.weight = NULL)
 }
@@ -31,7 +31,7 @@ FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
 
 \item{sens.w}{numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)}
 
-\item{verbose}{logical. Should progress reports be printed?}
+\item{quiet}{logical. Should progress reports be printed?}
 
 \item{cpus}{integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.}
 
@@ -49,10 +49,10 @@ This function is currently in development. The idea is to generate a random fore
 
 \dontrun{
 cancer.fff <- FFForest(formula = diagnosis ~.,
-                     data = breastcancer,
-                     ntree = 10,
-                     train.p = .5,
-                     cpus = 1)
+                       data = breastcancer,
+                       ntree = 10,
+                       train.p = .5,
+                       cpus = 1)
 }
 
 

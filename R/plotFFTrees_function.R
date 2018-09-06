@@ -1464,14 +1464,13 @@ rect(.25, 1, .75, 1.2, col = "white", border = NA)
 
 if(is.null(label.performance)) {
 
-if(data == "train") {label.performance <- "Performance (Training)"}
-if(data == "test") {label.performance <- "Performance (Testing)"}
+if(data == "train") {label.performance <- "Accuracy (Training)"}
+if(data == "test") {label.performance <- "Accuracy (Testing)"}
 
 }
 
 text(.5, 1.1, label.performance, cex = panel.title.cex)
 par(xpd = FALSE)
-
 
 
 pretty.dec <- function(x) {return(paste(round(x, 2) * 100, sep = ""))}
