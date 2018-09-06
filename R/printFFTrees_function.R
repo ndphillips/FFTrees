@@ -78,6 +78,11 @@ rownames(x_summary) <- paste0(c("cases       ,",
                                "sensitivity ,",
                                "specificity ,"), rownames(x_summary))
 
+if(all(is.na(x_summary$test))) {
+  x_summary$test <- rep("--", nrow(x_summary))
+}
+
+
 print(x_summary)
 
 
