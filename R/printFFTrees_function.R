@@ -62,7 +62,25 @@ cat("\n")
 cat("\n")
 sapply(1:length(inwords(x = x, tree = tree)), FUN = function(i) {cat(paste0("[", i, "] ", inwords(x, tree, version = 1)[i], ".\n"))})
 cat("\n")
-print(summary(x, tree))
+
+
+x_summary <- summary(x, tree)
+rownames(x_summary) <- paste0(c("cases       ,",
+                               "hits        ,",
+                               "misses      ,",
+                               "false al    ,",
+                               "corr rej    ,",
+                               "speed       ,",
+                               "frugality   ,",
+                               "cost        ,",
+                               "accuracy    ,",
+                               "balanced    ,",
+                               "sensitivity ,",
+                               "specificity ,"), rownames(x_summary))
+
+print(x_summary)
+
+
 cat("\n")
 
 cat(params.text)

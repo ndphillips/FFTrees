@@ -82,20 +82,20 @@ summary.FFTrees <- function(object,
 
   if(is.null(object$tree.stats$test)) {
 
-    test.n <- 0
-    test.hi <- 0
-    test.mi <- 0
-    test.fa <- 0
-    test.cr <- 0
-    test.pci <- "--"
-    test.mcu <- "--"
-    test.sens <- "--"
-    test.far <- "--"
-    test.spec <- "--"
-    test.acc <- "--"
-    test.cost <- "--"
-    test.bacc <- "--"
-    test.wacc <- "--"
+    test.n <- NA
+    test.hi <- NA
+    test.mi <- NA
+    test.fa <- NA
+    test.cr <- NA
+    test.pci <- NA
+    test.mcu <- NA
+    test.sens <- NA
+    test.far <- NA
+    test.spec <- NA
+    test.acc <- NA
+    test.cost <- NA
+    test.bacc <- NA
+    test.wacc <- NA
 
     summary.df <- data.frame("train" = c(train.n,
                                          train.hi,
@@ -108,24 +108,35 @@ summary.FFTrees <- function(object,
                                          train.acc,
                                          train.bacc,
                                          train.sens,
-                                         train.spec)
-    )
+                                         train.spec),
+                                         "test" = c(test.n,
+                                                    test.hi,
+                                                    test.mi,
+                                                    test.fa,
+                                                    test.cr,
+                                                    test.mcu,
+                                                    test.pci,
+                                                    test.cost,
+                                                    test.acc,
+                                                    test.bacc,
+                                                    test.sens,
+                                                    test.spec))
 
 
   }
 
-  rownames(summary.df) <- c("cases       ,n",
-                            "hits        ,hi",
-                            "misses      ,mi",
-                            "false al    ,fa",
-                            "corr rej    ,cr",
-                            "speed       ,mcu",
-                            "frugality   ,pci",
-                            "cost        ,cost",
-                            "accuracy    ,acc",
-                            "balanced    ,bacc",
-                            "sensitivity ,sens",
-                            "specificity ,spec")
+  rownames(summary.df) <- c("n",
+                            "hi",
+                            "mi",
+                            "fa",
+                            "cr",
+                            "mcu",
+                            "pci",
+                            "cost",
+                            "acc",
+                            "bacc",
+                            "sens",
+                            "spec")
 
 
 
