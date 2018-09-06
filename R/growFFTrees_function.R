@@ -6,6 +6,7 @@
 #' @param algorithm character. A string indicating how to rank cues during tree construction. "m" (for ifan) means that cues will only be ranked once with the entire training dataset. "c" (conditional) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param cost.outcomes numeric. A vector of length 4 specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = c(0, 10, 20, 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
@@ -49,6 +50,7 @@ grow.FFTrees <- function(formula,
                          algorithm = "ifan",
                          goal = "wacc",
                          goal.chase = "bacc",
+                         goal.threshold = "bacc",
                          sens.w = .5,
                          cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                          cost.cues = NULL,
@@ -129,6 +131,7 @@ if(algorithm %in% c("ifan", "dfan")) {
                              algorithm = algorithm,
                              goal = goal,
                              goal.chase = goal.chase,
+                             goal.threshold = goal.threshold,
                              sens.w = sens.w,
                              cost.outcomes = cost.outcomes,
                              cost.cues = cost.cues,

@@ -6,6 +6,7 @@
 #' @param algorithm character. A string indicating how to rank cues during tree construction. "ifan"  (independent fan) means that cues will only be ranked once with the entire training dataset "dfan" (dependent fan) means that cues will be ranked after each level in the tree with the remaining unclassified training exemplars.
 #' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
@@ -27,6 +28,7 @@ fan.algorithm <- function(formula,
                           algorithm = "ifan",
                           goal = "wacc",
                           goal.chase = "bacc",
+                          goal.threshold = "bacc",
                           sens.w = .5,
                           cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                           cost.cues = NULL,
@@ -83,6 +85,7 @@ if(is.null(cost.cues)) {cost.cues <- cost.cues.append(formula, data)}
 cue_best_df <- cuerank(formula = formula,
                        data = data,
                        goal = goal.chase,
+                       goal.threshold = goal.threshold,
                        numthresh.method = numthresh.method,
                        numthresh.n = numthresh.n,
                        rounding = rounding,
@@ -238,7 +241,7 @@ if(algorithm == "dfan") {
   # Calculate cue accuracies with remaining exemplars
   cue_best_df_current <-  cuerank(formula = formula,
                                   data = data.mf.r,
-                                  goal = goal.chase,
+                                  goal.threshold = goal.threshold,
                                   numthresh.method = numthresh.method,
                                   numthresh.n = numthresh.n,
                                   rounding = rounding,

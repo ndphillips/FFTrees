@@ -7,7 +7,7 @@
 #' @param sens.w numeric.
 #' @param cost.each numeric. Cost to add to each value (e.g.; cost of  the cue)
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
-#' @param goal character.
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #'
 threshold_numeric_grid <- function(thresholds,
                                    cue.v,
@@ -16,7 +16,7 @@ threshold_numeric_grid <- function(thresholds,
                                    sens.w = .5,
                                    cost.each = 0,
                                    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                                   goal = "acc") {
+                                   goal.threshold = "bacc") {
 
   # thresholds = cue_i_levels
   # cue.v = cue_i_v
@@ -99,9 +99,8 @@ threshold_numeric_grid <- function(thresholds,
   # Add accuracy statistics
   results <- cbind(results, new_stats)
 
-  # Order by goal and change column order
-  results <- results[order(-results[goal]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
-
+  # Order by goal.threshold and change column order
+  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
 
   # Remove invalid directions
   results[results$direction %in% directions, ]

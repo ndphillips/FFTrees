@@ -5,11 +5,11 @@
 \title{Grows fast-and-frugal trees using an algorithm specified by \code{algorithm}.}
 \usage{
 grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
-  goal = "wacc", goal.chase = "bacc", sens.w = 0.5,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
-  numthresh.method = "o", stopping.rule = "exemplars", stopping.par = 0.1,
-  progress = FALSE, repeat.cues = TRUE, rank.method = NULL,
-  cue.accuracies = NULL, ...)
+  goal = "wacc", goal.chase = "bacc", goal.threshold = "bacc",
+  sens.w = 0.5, cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+  cost.cues = NULL, numthresh.method = "o", stopping.rule = "exemplars",
+  stopping.par = 0.1, progress = FALSE, repeat.cues = TRUE,
+  rank.method = NULL, cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
@@ -23,6 +23,8 @@ grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
 \item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy}
 
 \item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
+
+\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
 

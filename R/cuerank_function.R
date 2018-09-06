@@ -2,7 +2,7 @@
 #'
 #' @param formula formula. A formula specifying a binary criterion as a function of multiple variables
 #' @param data dataframe. A dataframe containing variables in formula
-#' @param goal character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
 #' @param cost.cues dataframe. A dataframe with two columns specifying the cost of each cue. The first column should be a vector of cue names, and the second column should be a numeric vector of costs. Cues in the dataset not present in \code{cost.cues} are assume to have 0 cost.
@@ -28,6 +28,7 @@
 cuerank <- function(formula = NULL,
                     data = NULL,
                     goal = "bacc",
+                    goal.threshold = "bacc",
                     sens.w = .5,
                     cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                     cost.cues = NULL,
@@ -240,7 +241,7 @@ cuerank <- function(formula = NULL,
                                               directions = directions,
                                               cost.each = cue_i_cost,
                                               cost.outcomes = cost.outcomes,
-                                              goal = goal)
+                                              goal.threshold = goal.threshold)
       }
 
       # factor, character, and logical
@@ -253,12 +254,12 @@ cuerank <- function(formula = NULL,
                                              sens.w = sens.w,
                                              cost.each = cue_i_cost,
                                              cost.outcomes = cost.outcomes,
-                                             goal = goal)
+                                             goal.threshold = goal.threshold)
       }
 
-      # Get thresholds that maximizes goal
+      # Get thresholds that maximizes goal.threshold
 
-      best.result.index <- which(cue_i_stats[goal] == max(cue_i_stats[goal], na.rm = TRUE))
+      best.result.index <- which(cue_i_stats[goal.threshold] == max(cue_i_stats[goal.threshold], na.rm = TRUE))
 
       # If there are two best indices, take the first
       #   Not sure if this is the best way to do it...
@@ -283,7 +284,7 @@ cuerank <- function(formula = NULL,
                                            criterion.v = NULL,
                                            sens.w = sens.w,
                                            cost.outcomes = cost.outcomes,
-                                           goal = goal)
+                                          goal.threshold = goal.threshold)
 
     }
 

@@ -4,17 +4,17 @@
 \alias{cuerank}
 \title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
-cuerank(formula = NULL, data = NULL, goal = "bacc", sens.w = 0.5,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
-  numthresh.method = "o", numthresh.n = 20, rounding = NULL,
-  cue.rules = NULL, progress = FALSE)
+cuerank(formula = NULL, data = NULL, goal = "bacc",
+  goal.threshold = "bacc", sens.w = 0.5, cost.outcomes = list(hi = 0, fa =
+  1, mi = 1, cr = 0), cost.cues = NULL, numthresh.method = "o",
+  numthresh.n = 20, rounding = NULL, cue.rules = NULL, progress = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
 
 \item{data}{dataframe. A dataframe containing variables in formula}
 
-\item{goal}{character. A string indicating the statistic to maximize: "acc" = overall accuracy, "bacc" = balanced accuracy, "wacc" = weighted accuracy, "d" = dprime}
+\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity.}
 

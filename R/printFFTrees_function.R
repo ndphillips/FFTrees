@@ -7,6 +7,7 @@
 
 print.FFTrees <- function(
   x = NULL,
+  tree = NULL,
   ...
 ) {
 
@@ -17,11 +18,21 @@ criterion.name <- paste(x$formula)[2]
 n.trees <- nrow(x$tree.stats$train)
 n.cues.total <- x$data.desc$train$features
 
+if(is.null(tree)) {
+
 if(("tree.max" %in% names(x)) == FALSE) {
 
 tree <- min(x$tree.stats$train$tree[x$tree.stats$train[[goal]] == max(x$tree.stats$train[[goal]])])[1]
 
 } else {tree <- x$tree.max}
+
+} else {
+
+  if(class(tree) != "numeric" || length(tree) != 1 || round(tree, 0) != tree) {
+
+    stop("tree must be an integer")
+  }
+}
 
 train.cues <- paste(unique(unlist(strsplit(x$tree.definitions$cues[tree], ";"))), collapse = ",")
 train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
@@ -125,8 +136,7 @@ params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", 
 
 
 
-accuracy.text <- paste("FFT #", tree, " predicts ", criterion.name," using ", train.cues.n, " cues: {", train.cues, "}", sep = "")
-
+accuracy.text <- paste("FFT #", tree, " predicts ", criterion.name," using ", train.cues.n, " cues: {", paste(unlist(strsplit(train.cues, ",")), collapse = ", "), "}", sep = "")
 
 # Confusion table
 

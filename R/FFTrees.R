@@ -13,7 +13,8 @@
 #' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
-#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy, "cost" = cost.
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}
 #' @param main string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}
@@ -98,8 +99,9 @@ FFTrees <- function(formula = NULL,
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
-                    goal = "wacc",
+                    goal = NULL,
                     goal.chase = NULL,
+                    goal.threshold = "bacc",
                     numthresh.method = "o",
                     decision.labels = c("False", "True"),
                     main = NULL,
@@ -214,7 +216,7 @@ if(class(data[[criterion_name]]) != "logical") {
 # If no FFTrees object is specified
 if(is.null(object)) {
 
-if(is.null(cost.outcomes) == FALSE) {
+if(!is.null(cost.outcomes)) {
 
   if(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")) == FALSE) {
 
@@ -233,6 +235,45 @@ if(is.null(cost.outcomes) == FALSE) {
 
 
 }
+
+
+  # goal, goal.chase, goal.threshold
+
+  {
+
+
+    if(is.null(goal)) {
+
+      if(!is.null(cost.outcomes) |is.null(cost.cues)) {
+
+        goal <- "cost"
+        # message("Setting goal = 'cost'")
+
+      } else {
+
+        goal <- "wacc"
+        # message("Setting goal = 'wacc'")
+
+      }
+    } else {
+      if(!(goal %in% c("bacc", "wacc", "dprime", "cost", "acc"))) {
+
+        stop("goal must be in the set 'bacc', 'wacc', 'cost', 'acc'")
+
+      }
+    }
+
+
+    if(goal == "cost" & is.null(goal.chase)) {
+
+      goal.chase <- "cost"
+
+    } else if (is.null(goal.chase)) {
+
+      goal.chase <- "wacc"
+
+    }
+  }
 
 
 # cost.cues
@@ -291,27 +332,6 @@ if(is.null(tree.definitions) == FALSE) {
   }
 
 }
-
-# goal
-if((goal %in% c("bacc", "wacc", "dprime", "cost", "acc")) == FALSE) {
-
-  stop("goal must be in the set 'bacc', 'wacc', 'dprime', 'cost', 'acc'")
-
-}
-
-
-
-
-if(goal == "cost" & is.null(goal.chase)) {
-
-  goal.chase <- "cost"
-
-} else if (is.null(goal.chase)) {
-
-  goal.chase <- "wacc"
-
-}
-
 
 # algorithm
 valid.algorithms <- c("ifan", "dfan", "max", "zigzag")
@@ -644,6 +664,7 @@ if(is.null(data.test) & train.p < 1) {
                                 algorithm = algorithm,
                                 goal = goal,
                                 goal.chase = goal.chase,
+                                goal.threshold = goal.threshold,
                                 stopping.rule = stopping.rule,
                                 stopping.par = stopping.par,
                                 max.levels = max.levels,
@@ -692,6 +713,7 @@ if(is.null(object) == FALSE) {
   algorithm <- object$params$algorithm
   goal <- object$params$goal
   goal.chase <- object$params$goal.chase
+  goal.threshold <- object$params$goal.threshold
   sens.w <- object$params$sens.w
   max.levels <- object$params$max.levels
   cost.outcomes <- object$params$cost.outcomes
@@ -741,6 +763,7 @@ if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.t
 cue.accuracies.test <- cuerank(formula = formula,
                                 data = data.test,
                                 goal = goal.chase,        # For now, goal must be 'bacc' when ranking cues
+                                goal.threshold = goal.threshold,
                                 rounding = rounding,
                                 progress = FALSE,
                                 cue.rules = cue.accuracies.train,
@@ -1097,6 +1120,7 @@ x.FFTrees <- list("formula" = formula,
                    "params" = list("algorithm" = algorithm,
                                    "goal" = goal,
                                    "goal.chase" = goal.chase,
+                                   "goal.threshold" = goal.threshold,
                                    "sens.w" = sens.w,
                                    "max.levels" = max.levels,
                                    "cost.outcomes" = cost.outcomes,

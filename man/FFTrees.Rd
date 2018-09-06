@@ -8,12 +8,12 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
   stopping.rule = "exemplars", stopping.par = 0.1, goal = "wacc",
-  goal.chase = NULL, numthresh.method = "o", decision.labels = c("False",
-  "True"), main = NULL, train.p = 1, rounding = NULL, progress = TRUE,
-  repeat.cues = TRUE, my.tree = NULL, tree.definitions = NULL,
-  do.comp = TRUE, do.cart = TRUE, do.lr = TRUE, do.rf = TRUE,
-  do.svm = TRUE, store.data = FALSE, object = NULL, rank.method = NULL,
-  force = FALSE, verbose = NULL, comp = NULL)
+  goal.chase = NULL, goal.threshold = "bacc", numthresh.method = "o",
+  decision.labels = c("False", "True"), main = NULL, train.p = 1,
+  rounding = NULL, progress = TRUE, repeat.cues = TRUE, my.tree = NULL,
+  tree.definitions = NULL, do.comp = TRUE, do.cart = TRUE, do.lr = TRUE,
+  do.rf = TRUE, do.svm = TRUE, store.data = FALSE, object = NULL,
+  rank.method = NULL, force = FALSE, verbose = NULL, comp = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -39,6 +39,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 \item{goal}{character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
+
+\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 

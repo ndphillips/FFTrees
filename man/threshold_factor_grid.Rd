@@ -6,7 +6,7 @@
 \usage{
 threshold_factor_grid(thresholds = NULL, cue.v = NULL, criterion.v = NULL,
   directions = "=", sens.w = 0.5, cost.outcomes = list(hi = 0, fa = 1, mi
-  = 1, cr = 0), cost.each = 0, goal = "acc")
+  = 1, cr = 0), cost.each = 0, goal.threshold = "bacc")
 }
 \arguments{
 \item{thresholds}{numeric. A vector of factor thresholds to consider}
@@ -23,7 +23,7 @@ threshold_factor_grid(thresholds = NULL, cue.v = NULL, criterion.v = NULL,
 
 \item{cost.each}{numeric.}
 
-\item{goal}{character.}
+\item{goal.threshold}{character.}
 }
 \description{
 Performs a grid search over factor and returns accuracy statistics for a given factor cue

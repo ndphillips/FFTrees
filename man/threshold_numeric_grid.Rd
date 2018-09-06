@@ -6,7 +6,7 @@
 \usage{
 threshold_numeric_grid(thresholds, cue.v, criterion.v, directions = c(">",
   "<="), sens.w = 0.5, cost.each = 0, cost.outcomes = list(hi = 0, fa = 1,
-  mi = 1, cr = 0), goal = "acc")
+  mi = 1, cr = 0), goal.threshold = "bacc")
 }
 \arguments{
 \item{thresholds}{numeric. A vector of thresholds to consider}
@@ -23,7 +23,7 @@ threshold_numeric_grid(thresholds, cue.v, criterion.v, directions = c(">",
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 
-\item{goal}{character.}
+\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 }
 \description{
 Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue
