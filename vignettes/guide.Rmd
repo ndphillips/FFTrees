@@ -17,13 +17,13 @@ library(FFTrees)
 
 ## Fast-and-Frugal Trees (FFTs)
 
-```{r fig1, fig.width = 6.5, fig.height = 6, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease risk. Read the Heart Disease Tutorial vignette to learn more about how to create this FFT."}
+```{r fig1, fig.width = 6.5, fig.height = 6, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease status"}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test,
                      main = "Heart Disease",
-                     decision.labels = c("Low-Risk", "High-Risk"))
+                     decision.labels = c("Healthy", "Diseased"))
 
 # Visualize the best training tree applied to the test data
 plot(heart.fft, data = "test")
@@ -57,9 +57,7 @@ Here is a complete list of the vignettes
 
 ## Article and citation information
 
-We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making. We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
-
-[FFTrees Article PDF link](http://journal.sjdm.org/17/17217/jdm17217.pdf)
+We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making [FFTrees Article PDF link](http://journal.sjdm.org/17/17217/jdm17217.pdf). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
 If you use FFTrees in your work, please cite us and spread the word so we can continue developing the package
 

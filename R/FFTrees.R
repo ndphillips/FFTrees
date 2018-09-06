@@ -216,11 +216,21 @@ if(is.null(object)) {
 
 if(is.null(cost.outcomes) == FALSE) {
 
-  if(length(cost.outcomes) != 4 || !identical(setdiff(names(cost.outcomes), c("hi", "mi", "fa", "cr")), character(0))) {
+  if(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")) == FALSE) {
 
-    stop("cost.outcomes must be a list of length 4 with the names 'hi', 'mi', 'fa', and 'cr'")
+    stop("cost.outcomes must be a list of length 4 with the names 'hi', 'mi', 'fa', and 'cr'")}
 
-    }
+  # add any missing entries as 0
+  for(lab in c("hi", "mi", "cr", "fa")) {
+
+  if(lab %in% names(cost.outcomes) == FALSE) {
+
+    cost.outcomes[[length(cost.outcomes) + 1]] <- 0
+    names(cost.outcomes)[length(cost.outcomes)] <- lab
+  }
+
+  }
+
 
 }
 
