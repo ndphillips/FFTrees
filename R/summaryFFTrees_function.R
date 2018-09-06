@@ -114,18 +114,18 @@ summary.FFTrees <- function(object,
 
   }
 
-  rownames(summary.df) <- c("cases       n",
-                            "hits        hi",
-                            "misses      mi",
-                            "false al    fa",
-                            "corr rej    cr",
-                            "speed       mcu",
-                            "frugality   pci",
-                            "cost        cost",
-                            "accuracy    acc",
-                            "balanced    bacc",
-                            "sensitivity sens",
-                            "specificity spec")
+  rownames(summary.df) <- c("cases       ,n",
+                            "hits        ,hi",
+                            "misses      ,mi",
+                            "false al    ,fa",
+                            "corr rej    ,cr",
+                            "speed       ,mcu",
+                            "frugality   ,pci",
+                            "cost        ,cost",
+                            "accuracy    ,acc",
+                            "balanced    ,bacc",
+                            "sensitivity ,sens",
+                            "specificity ,spec")
 
 
 
