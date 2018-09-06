@@ -2,6 +2,7 @@
 #'
 #' @description Printing function for an FFTrees object
 #' @param x FFTrees. A FFTrees x created from FFTrees()
+#' @param tree integer. The tree to explore.
 #' @param ... additional arguments passed to print.
 #' @export
 
@@ -59,7 +60,7 @@ cat(accuracy.text)
 cat("\n")
 
 cat("\n")
-sapply(1:length(FFTrees::inwords(x = x, tree = tree)$v1), FUN = function(i) {cat(paste0("[", i, "] ", FFTrees::inwords(x, tree)$v1[i], ".\n"))})
+sapply(1:length(inwords(x = x, tree = tree)), FUN = function(i) {cat(paste0("[", i, "] ", inwords(x, tree, version = 1)[i], ".\n"))})
 cat("\n")
 print(summary(x, tree))
 cat("\n")

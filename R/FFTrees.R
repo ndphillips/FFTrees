@@ -125,9 +125,9 @@ FFTrees <- function(formula = NULL,
 ) {
 
 
-  # formula = NULL
-  # data = NULL
-  # data.test = NULL
+  # formula = diagnosis ~.
+  # data = heart.train
+  # data.test = heart.test
   # algorithm = "ifan"
   # max.levels = NULL
   # sens.w = .5
@@ -1098,7 +1098,7 @@ inwords.i <- inwords(tree = tree.max,
                      thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";")),
                      exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";")),
                      decision.labels = decision.labels
-                     )$v1
+                     )
 
 
 }

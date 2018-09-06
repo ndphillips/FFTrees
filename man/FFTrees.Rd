@@ -7,7 +7,7 @@
 FFTrees(formula = NULL, data = NULL, data.test = NULL,
   algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
-  stopping.rule = "exemplars", stopping.par = 0.1, goal = "wacc",
+  stopping.rule = "exemplars", stopping.par = 0.1, goal = NULL,
   goal.chase = NULL, goal.threshold = "bacc", numthresh.method = "o",
   decision.labels = c("False", "True"), main = NULL, train.p = 1,
   rounding = NULL, progress = TRUE, repeat.cues = TRUE, my.tree = NULL,
@@ -38,7 +38,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{goal}{character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
-\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
+\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy, "cost" = cost.}
 
 \item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 

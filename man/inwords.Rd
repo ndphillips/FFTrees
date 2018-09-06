@@ -6,7 +6,7 @@
 \usage{
 inwords(x = NULL, tree = NULL, classes.v = NULL, cues.v = NULL,
   directions.v = NULL, thresholds.v = NULL, exits.v = NULL,
-  decision.labels = NULL, digits = 2)
+  decision.labels = NULL, digits = 2, version = 1)
 }
 \arguments{
 \item{x}{FFTrees. An FFTrees object created with FFTrees()}
@@ -26,6 +26,8 @@ inwords(x = NULL, tree = NULL, classes.v = NULL, cues.v = NULL,
 \item{decision.labels}{string. A string vector (of length 2) indicating labels for negative (0 or FALSE) and positive (1 or TRUE) cases in the crterion}
 
 \item{digits}{integer. How many digits to round numeric values}
+
+\item{version}{integer. Which version to show? 1 or 2}
 }
 \value{
 A list of string vectors

@@ -2,15 +2,17 @@
 % Please edit documentation in R/summaryFFTrees_function.R
 \name{summary.FFTrees}
 \alias{summary.FFTrees}
-\title{Returns a summary of an fft object}
+\title{Returns summary information about an FFTrees object}
 \usage{
-\method{summary}{FFTrees}(object, ...)
+\method{summary}{FFTrees}(object, tree = 1, ...)
 }
 \arguments{
 \item{object}{An FFTrees object}
 
-\item{...}{Additional arguments (currently ignored)}
+\item{tree}{integer. The tree to summarise}
+
+\item{...}{additional arguments (currently ignored)}
 }
 \description{
-Returns a summary of an fft object
+Returns summary information about an FFTrees object
 }

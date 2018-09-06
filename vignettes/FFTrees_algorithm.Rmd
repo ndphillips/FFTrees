@@ -195,25 +195,25 @@ heart.costA.fft <- FFTrees(formula = diagnosis ~.,
 Let's look at the performance of the best performing tree. The best tree has `bacc` = 0.812 and `cost` = 252
 
 ```{r}
-summary(heart.costA.fft)$train[1,]
+summary(heart.costA.fft)
 ```
 
 Now, we can build an FFT that tries to respect these costs:
 
 ```{r}
 heart.costB.fft <- FFTrees(formula = diagnosis ~.,
-                          data = heartdisease,
-                          cost.outcomes = heart.cost.outcomes,
-                          cost.cues = heart.cue.cost,
-                          goal = "cost",
-                          goal.chase = "cost")
+                           data = heartdisease,
+                           cost.outcomes = heart.cost.outcomes,
+                           cost.cues = heart.cue.cost,
+                           goal = "cost",
+                           goal.chase = "cost")
 ```
 
 
-Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.732`, but a much lower cost of `cost = 154`
+Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.73`, but a much lower cost of `cost = 154`
 
 ```{r}
-summary(heart.costB.fft)$train[1,]
+summary(heart.costB.fft)
 ```
 
 ## `"max"` `"zigzag"`

@@ -4,10 +4,12 @@
 \alias{print.FFTrees}
 \title{Prints summary information from an FFTrees object}
 \usage{
-\method{print}{FFTrees}(x = NULL, ...)
+\method{print}{FFTrees}(x = NULL, tree = NULL, ...)
 }
 \arguments{
 \item{x}{FFTrees. A FFTrees x created from FFTrees()}
+
+\item{tree}{integer. The tree to explore.}
 
 \item{...}{additional arguments passed to print.}
 }
