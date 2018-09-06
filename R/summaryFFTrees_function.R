@@ -1,11 +1,12 @@
-#' Returns a summary of an fft object
+#' Returns summary information about an FFTrees object
 #' @param object An FFTrees object
 #' @param tree integer. The tree to summarise
 #' @param ... Additional arguments (currently ignored)
 #' @export
 #'
 
-summary.FFTrees <- function(object, tree = 1) {
+summary.FFTrees <- function(object,
+                            tree = 1) {
 
 
   train.cues <- paste(unique(unlist(strsplit(object$tree.definitions$cues[tree], ";"))), collapse = ",")
@@ -131,6 +132,6 @@ summary.FFTrees <- function(object, tree = 1) {
 
 
 
-  return(object$tree.stats)
+  return(summary.df)
 
 }
