@@ -31,7 +31,7 @@
 #'  # Predict class probabilities
 #'   breast.fft.pred <- predict(breast.fft,
 #'                              data = breast.test,
-#'                              type = "prob)
+#'                              type = "prob")
 #'
 
 predict.FFTrees <- function(
