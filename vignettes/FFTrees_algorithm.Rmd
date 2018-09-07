@@ -28,7 +28,7 @@ FFTrees currently contains 4 different tree construction algorithms:
 |     max| Max  |   @martignon2008categorization |
 
 
-##"ifan"t
+## ifan
 
 The default algorithm used to create trees `"ifan"` can be summarised in five steps. 
 
@@ -210,7 +210,7 @@ heart.costB.fft <- FFTrees(formula = diagnosis ~.,
 ```
 
 
-Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.73`, but a much lower cost of `cost = 154`
+Here's it's performance: it has a slightly lower balanced accuracy of `bacc = 0.76`, but a much lower cost of `cost = 160`
 
 ```{r}
 summary(heart.costB.fft)

@@ -178,7 +178,7 @@ return(list("trees" = tree.stats.i,
 
 result.ls <- parallel::mclapply(1:nrow(simulations), FUN = function(x) {
 
-  if(verbose) {cat(paste0(x, " of ", nrow(simulations), ", "))}
+  if(!quiet) {cat(paste0(x, " of ", nrow(simulations), ", "))}
 
   return(getsim.fun(x))}, mc.cores = cpus)
 

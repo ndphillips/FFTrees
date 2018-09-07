@@ -71,7 +71,7 @@ The resulting trees, decisions, and accuracy statistics are now stored in the `F
 
 The following arguments apply to the "ifan" and "dfan" algorithms only:
 
-- `goal.chase`: The `goal.chase` argument changes which statistic is maximized during tree construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
+- `goal.chase`: The `goal.chase` argument changes which statistic is maximized during tree construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost". The default is "wacc" with a sensitivity weight of 0.50 (which is identical to "bacc")
 - `goal`: The `goal` argument changes which statistic is maximized when *selecting* trees after construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
 - `my.tree`: You can define a tree verbally as a sentence using the `my.tree` argument. See [Defining an FFT verbally](FFTrees_mytree.html) for examples.
 
@@ -85,12 +85,11 @@ heart.fft   # Print the object
 
 The output tells us several pieces of information:
 
-- The object contains 7 different FFTs. Of those trees, the tree with the highest weighted sensitivity `wacc` with a sensitivity weight of 0.5 is selected as the best tree.
+- The tree with the highest weighted sensitivity `wacc` with a sensitivity weight of 0.5 is selected as the best tree.
 - The best tree, FFT \#1 uses three cues: `thal`, `cp`, and `ca`.
 - Several summary statistics for this tree in training and test data are then summarized.
 
-
-To summaries performance statistics for all trees in the object, use the `summary()` function:
+To summarise performance statistics for a tree across training and test data, use the `summary()` function (use the `tree = X` argument to specify a diffent tree)
 
 ```{r}
 # Pring summary statistics of all trees

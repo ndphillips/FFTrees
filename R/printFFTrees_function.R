@@ -45,7 +45,7 @@ if(n.trees > 1) {summary.text <- paste(n.trees, " FFTs predicting ", criterion.n
 
 params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', sens.w = ", x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
-accuracy.text <- paste("FFT #", tree, " predicts ", criterion.name," using ", train.cues.n, " cues: {", paste(unlist(strsplit(train.cues, ",")), collapse = ", "), "}", sep = "")
+accuracy.text <- paste("FFT ", tree, " (of ", n.trees, ") predicts ", criterion.name," using ", train.cues.n, " cues: {", paste(unlist(strsplit(train.cues, ",")), collapse = ", "), "}", sep = "")
 
 # Confusion table
 
