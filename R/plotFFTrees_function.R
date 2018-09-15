@@ -6,6 +6,7 @@
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)
 #' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
 #' @param main character. The main plot label.
+#' @param hlines logical. Should horizontal panel separation lines be shown?
 #' @param cue.labels character. An optional string of labels for the cues / nodes.
 #' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
 #' @param cue.cex numeric. The size of the cue labels.
@@ -49,6 +50,7 @@ plot.FFTrees <- function(
   what = 'tree',
   tree = "best.train",
   main = NULL,
+  hlines = TRUE,
   cue.labels = NULL,
   decision.labels = NULL,
   cue.cex = NULL,
@@ -848,7 +850,10 @@ par(mar = c(0, 0, 1, 0))
 plot(1, xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n",
      xlab = "", ylab = "", yaxt = "n", xaxt = "n")
 
+if(hlines) {
 segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+}
+
 rect(.33, .8, .67, 1.2, col = "white", border = NA)
 
 text(x = .5, y = .95, main, cex = panel.title.cex)
@@ -991,8 +996,10 @@ par(xpd = TRUE)
 
 if(show.top | show.bottom) {
 
+if(hlines) {
 segments(-plot.width, 0, - plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 segments(plot.width, 0, plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+}
 
 if(is.null(label.tree)) {label.tree <- paste("FFT #", tree, " (of ", n.trees, ")", sep = "")}
 
@@ -1459,8 +1466,12 @@ plot(1, xlim = c(0, 1), ylim = c(0, 1),
      yaxt = "n", xaxt = "n")
 
 par(xpd = T)
+
+if(hlines) {
 segments(0, 1.1, 1, 1.1, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 rect(.25, 1, .75, 1.2, col = "white", border = NA)
+}
+
 
 if(is.null(label.performance)) {
 

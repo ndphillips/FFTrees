@@ -95,7 +95,7 @@ FFTrees <- function(formula = NULL,
                     algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .5,
-                    cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0),
+                    cost.outcomes = NULL,
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
@@ -125,52 +125,38 @@ FFTrees <- function(formula = NULL,
 ) {
 #
 #
-#   formula = diagnosis ~.
-#   data = heart.train
-#   data.test = heart.test
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = list("hi" = 0, "fa" = 1, "mi" = 1, "cr" = 0)
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = "wacc"
-#   goal.chase = NULL
-#   numthresh.method = "o"
-#   decision.labels = c("False", "True")
-#   main = NULL
-#   train.p = 1
-#   rounding = NULL
-#   progress = TRUE
-#   repeat.cues = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   do.comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#   comp = NULL
-#   formula = diagnosis ~.
-#   data = heart.train
-#   cost.cues = heart.cost
-#   goal = "cost"
-#
-#   diagnosis ~.
-#   cost.cues = list(thal = 102.9, ca = 100.9)
-#   cost.outcomes = list(mi = 75, fa = 25)
-#   data = heart.train
-#   data.test = heart.test
-#   main = "My Custom FFT"
-#   my.tree = "If chol > 300, predict True.
-#   If cp != {a}, predict False.
-#   If age < 40, predict False."
+  # formula = diagnosis ~.
+  # data = heart.train
+  # data.test = heart.test
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = NULL
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = NULL
+  # goal.chase = NULL
+  # numthresh.method = "o"
+  # decision.labels = c("False", "True")
+  # main = NULL
+  # train.p = 1
+  # rounding = NULL
+  # progress = TRUE
+  # repeat.cues = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # do.comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  # comp = NULL
 
 # Depricated arguments
 {
@@ -222,7 +208,6 @@ if(class(data[[criterion_name]]) != "logical") {
 }
 
 
-
 # If no FFTrees object is specified
 if(is.null(object)) {
 
@@ -251,10 +236,9 @@ if(!is.null(cost.outcomes)) {
 
   {
 
-
     if(is.null(goal)) {
 
-      if(!is.null(cost.outcomes) |is.null(cost.cues)) {
+      if(!is.null(cost.outcomes) | !is.null(cost.cues)) {
 
         goal <- "cost"
         # message("Setting goal = 'cost'")
@@ -262,10 +246,12 @@ if(!is.null(cost.outcomes)) {
       } else {
 
         goal <- "wacc"
+        cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
         # message("Setting goal = 'wacc'")
 
       }
     } else {
+
       if(!(goal %in% c("bacc", "wacc", "dprime", "cost", "acc"))) {
 
         stop("goal must be in the set 'bacc', 'wacc', 'cost', 'acc'")

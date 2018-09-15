@@ -6,9 +6,9 @@
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL,
   algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
-  stopping.rule = "exemplars", stopping.par = 0.1, goal = NULL,
-  goal.chase = NULL, goal.threshold = "bacc", numthresh.method = "o",
+  cost.outcomes = NULL, cost.cues = NULL, stopping.rule = "exemplars",
+  stopping.par = 0.1, goal = NULL, goal.chase = NULL,
+  goal.threshold = "bacc", numthresh.method = "o",
   decision.labels = c("False", "True"), main = NULL, train.p = 1,
   rounding = NULL, repeat.cues = TRUE, my.tree = NULL,
   tree.definitions = NULL, do.comp = TRUE, do.cart = TRUE, do.lr = TRUE,

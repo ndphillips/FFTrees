@@ -5,7 +5,7 @@
 \title{Plots an FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = NULL, cue.labels = NULL,
+  tree = "best.train", main = NULL, hlines = TRUE, cue.labels = NULL,
   decision.labels = NULL, cue.cex = NULL, threshold.cex = NULL,
   decision.cex = 1, comp = TRUE, stats = TRUE, show.header = NULL,
   show.tree = NULL, show.confusion = NULL, show.levels = NULL,
@@ -23,6 +23,8 @@
 \item{tree}{integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"}
 
 \item{main}{character. The main plot label.}
+
+\item{hlines}{logical. Should horizontal panel separation lines be shown?}
 
 \item{cue.labels}{character. An optional string of labels for the cues / nodes.}
 

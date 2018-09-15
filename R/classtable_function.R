@@ -14,22 +14,14 @@ classtable <- function(prediction.v = NULL,
                        cost.v = NULL,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
-
 #
-#   prediction.v = decision_v[cases_remaining == FALSE],
-#   criterion.v = criterion.v[cases_remaining == FALSE],
-#   sens.w = sens.w,
-#   cost.v = cuecost_v[cases_remaining == FALSE],
-#   cost.outcomes = cost.outcomes
 #
-
-  #
-  # prediction.v = decision_v[cases_remaining == FALSE]
-  # criterion.v = criterion.v[cases_remaining == FALSE]
-  # sens.w = sens.w
-  # cost.v = cuecost_v[cases_remaining == FALSE]
-  # cost.outcomes = cost.outcomes
-
+#   prediction.v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
+#   criterion.v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
+#   sens.w = .5
+#   cost.v = NULL
+#   correction = .25
+#   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 
 if(is.null(cost.v)) {cost.v <- rep(0, length(prediction.v))}
 
@@ -90,6 +82,11 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
     cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
+    # auc
+#
+#     auc <- as.numeric(pROC::roc(response = as.numeric(criterion.v),
+#                                 predictor = as.numeric(prediction.v))$auc)
+
     } else {
 
       hi <- sum(prediction.v == TRUE & criterion.v == TRUE)
@@ -119,6 +116,10 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
       costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
+      # auc
+      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion.v),
+      #                             predictor = as.numeric(prediction.v))$auc)
+
     }
 
     } else {
@@ -140,6 +141,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     dprime <- NA
     costout <- NA
     cost <- NA
+    # auc <- NA
 
   }
 
@@ -156,6 +158,7 @@ if(((class(prediction.v) != "logical") | class(criterion.v) != "logical") & !is.
     npv = npv,
     acc = acc,
     acc_p = acc_p,
+    # auc = auc,
     bacc = bacc,
     wacc = wacc,
     dprime = dprime,

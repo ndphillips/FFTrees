@@ -22,15 +22,15 @@ summary.FFTrees <- function(object,
   train.cr <- object$tree.stats$train$cr[tree]
   train.fa <- object$tree.stats$train$fa[tree]
   train.nodes <- train.cues.n
-  train.sens <- round(object$tree.stats$train$sens[tree], 2)
-  train.far <- round(object$tree.stats$train$far[tree], 2)
-  train.spec <- 1 - round(object$tree.stats$train$far[tree], 2)
-  train.bacc <- round(object$tree.stats$train$bacc[tree], 2)
-  train.wacc <- round(object$tree.stats$train$wacc[tree], 2)
-  train.cost <- round(object$tree.stats$train$cost[tree], 2)
-  train.acc <- round(object$tree.stats$train$acc[tree], 2)
-  train.pci <-  round(object$tree.stats$train$pci[tree], 2)
-  train.mcu <- round(object$tree.stats$train$mcu[tree], 2)
+  train.sens <- object$tree.stats$train$sens[tree]
+  train.far <- object$tree.stats$train$far[tree]
+  train.spec <- 1 - object$tree.stats$train$far[tree]
+  train.bacc <- object$tree.stats$train$bacc[tree]
+  train.wacc <- object$tree.stats$train$wacc[tree]
+  train.cost <- object$tree.stats$train$cost[tree]
+  train.acc <- object$tree.stats$train$acc[tree]
+  train.pci <-  object$tree.stats$train$pci[tree]
+  train.mcu <- object$tree.stats$train$mcu[tree]
 
   if(is.null(object$tree.stats$test) == FALSE) {
 
@@ -40,17 +40,16 @@ summary.FFTrees <- function(object,
     test.cr <- object$tree.stats$test$cr[tree]
     test.fa <- object$tree.stats$test$fa[tree]
 
-
     test.nodes <- train.cues.n
-    test.sens <- round(object$tree.stats$test$sens[tree], 2)
-    test.far <- round(object$tree.stats$test$far[tree], 2)
-    test.spec <- 1 - round(object$tree.stats$test$far[tree], 2)
-    test.bacc <- round(object$tree.stats$test$bacc[tree], 2)
-    test.wacc <- round(object$tree.stats$test$wacc[tree], 2)
-    test.cost <- round(object$tree.stats$test$cost[tree], 2)
-    test.acc <- round(object$tree.stats$test$acc[tree], 2)
-    test.pci <-  round(object$tree.stats$test$pci[tree], 2)
-    test.mcu <- round(object$tree.stats$test$mcu[tree], 2)
+    test.sens <- object$tree.stats$test$sens[tree]
+    test.far <- object$tree.stats$test$far[tree]
+    test.spec <- 1 - object$tree.stats$test$far[tree]
+    test.bacc <- object$tree.stats$test$bacc[tree]
+    test.wacc <- object$tree.stats$test$wacc[tree]
+    test.cost <- object$tree.stats$test$cost[tree]
+    test.acc <- object$tree.stats$test$acc[tree]
+    test.pci <-  object$tree.stats$test$pci[tree]
+    test.mcu <- object$tree.stats$test$mcu[tree]
 
     summary.df <- data.frame("train" = c(train.n,
                                          train.hi,

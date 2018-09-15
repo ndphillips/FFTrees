@@ -80,6 +80,13 @@ rownames(x_summary) <- paste0(c("cases       .",
 
 if(all(is.na(x_summary$test))) {
   x_summary$test <- rep("--", nrow(x_summary))
+  x_summary$train <- round(x_summary$train, 3)
+
+} else {
+
+  if(class(x_summary$train) == "numeric") {x_summary$train <- round(x_summary$train, 2)}
+  if(class(x_summary$test) == "numeric") {x_summary$test <- round(x_summary$test, 2)}
+
 }
 
 
