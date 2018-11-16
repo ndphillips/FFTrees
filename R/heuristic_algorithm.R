@@ -9,14 +9,14 @@
 #' @export
 #'
 heuristic.algorithm <- function(formula,
-                          data,
-                          max.levels = NULL,
-                          algorithm = "max") {
+                                data,
+                                max.levels = NULL,
+                                algorithm = "max") {
 
-  # formula = formula
-  # data = data.mf
-  # max.levels = max.levels
-  # algorithm = algorithm
+  # formula = diagnosis ~.
+  # data = heart.train
+  # max.levels = NULL
+  # algorithm = max
 
 # Convert factors to character
 
@@ -84,7 +84,8 @@ for(i in 1:ncol(data.mm)) {
 cue.acc <- cuerank(formula,
                    data = data.mm,
                    goal.threshold = "bacc",
-                   numthresh.method = "m")
+                   numthresh.method = "m",
+                   quiet = TRUE)
 
 
 # Convert missing ppv and npv to 0

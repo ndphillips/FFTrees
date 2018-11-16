@@ -11,17 +11,38 @@ Add_Stats <- function(data,
 
   if(is.null(cost.each)) {cost.each <- 0}
 
+  # Accuracy
     data$acc <- with(data, (hi + cr) / (hi + cr + fa + mi))
+
+  # Sensitivity
     data$sens <- with(data, hi / (hi + mi))
+
+  # Specificity
     data$spec <- with(data, cr / (cr + fa))
+
+  # Negative Predictive Value
+    data$npv <- with(data, cr / (cr + mi))
+
+  # Positive Predictive Value
+    data$ppv <- with(data, hi / (hi + fa))
+
+  # False alarm rate
     data$far <- with(data, 1 - spec)
+
+  # Balanced Accuracy
     data$bacc <- with(data, sens * .5 + spec * .5)
+
+  # Weighted Accuracy
     data$wacc <- with(data, sens * sens.w + spec * (1 - sens.w))
+
+  # Outcome Cost
     data$costout <- with(data, -1 * (hi * cost.outcomes$hi + fa * cost.outcomes$fa + mi * cost.outcomes$mi + cr * cost.outcomes$cr)) / data$n
+
+  # Total Cost
     data$cost <- data$costout - cost.each
 
     # reorder
-    data <- data[, c("sens", "spec", "far", "acc", "bacc", "wacc", "costout", "cost")]
+    data <- data[, c("sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "costout", "cost")]
 
     return(data)
 

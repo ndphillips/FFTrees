@@ -4,8 +4,9 @@
 \alias{classtable}
 \title{Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors}
 \usage{
-classtable(prediction.v = NULL, criterion.v, sens.w = 0.5, cost.v = NULL,
-  correction = 0.25, cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0))
+classtable(prediction.v = NULL, criterion.v, sens.w = 0.5,
+  cost.v = NULL, correction = 0.25, cost.outcomes = list(hi = 0, fa =
+  1, mi = 1, cr = 0))
 }
 \arguments{
 \item{prediction.v}{logical. A logical vector of predictions}

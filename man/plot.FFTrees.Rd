@@ -5,13 +5,14 @@
 \title{Plots an FFTrees object.}
 \usage{
 \method{plot}{FFTrees}(x = NULL, data = "train", what = "tree",
-  tree = "best.train", main = NULL, hlines = TRUE, cue.labels = NULL,
-  decision.labels = NULL, cue.cex = NULL, threshold.cex = NULL,
-  decision.cex = 1, comp = TRUE, stats = TRUE, show.header = NULL,
-  show.tree = NULL, show.confusion = NULL, show.levels = NULL,
-  show.roc = NULL, show.icons = NULL, show.iconguide = NULL,
-  label.tree = NULL, label.performance = NULL, n.per.icon = NULL,
-  which.tree = NULL, level.type = "bar", decision.names = NULL, ...)
+  tree = "best.train", main = NULL, hlines = TRUE,
+  cue.labels = NULL, decision.labels = NULL, cue.cex = NULL,
+  threshold.cex = NULL, decision.cex = 1, comp = TRUE,
+  stats = TRUE, show.header = NULL, show.tree = NULL,
+  show.confusion = NULL, show.levels = NULL, show.roc = NULL,
+  show.icons = NULL, show.iconguide = NULL, label.tree = NULL,
+  label.performance = NULL, n.per.icon = NULL, which.tree = NULL,
+  level.type = "bar", decision.names = NULL, ...)
 }
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}

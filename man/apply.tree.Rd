@@ -5,8 +5,8 @@
 \title{Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics}
 \usage{
 apply.tree(data, formula, tree.definitions, sens.w = 0.5,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0), cost.cues = NULL,
-  allNA.pred = FALSE)
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+  cost.cues = NULL, allNA.pred = FALSE)
 }
 \arguments{
 \item{data}{dataframe. A model training dataset. An m x n dataframe containing n cue values for each of the m exemplars.}

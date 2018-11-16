@@ -4,11 +4,12 @@
 \alias{FFForest}
 \title{Creates a forest of fast and frugal decision trees}
 \usage{
-FFForest(formula = NULL, data = NULL, data.test = NULL, max.levels = 5,
-  ntree = 10, train.p = 0.5, algorithm = "ifan", goal = "wacc",
-  goal.chase = "wacc", sens.w = 0.5, quiet = TRUE, cpus = 1,
-  do.comp = FALSE, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE,
-  do.svm = TRUE, rank.method = NULL, hr.weight = NULL)
+FFForest(formula = NULL, data = NULL, data.test = NULL,
+  max.levels = 5, ntree = 10, train.p = 0.5, algorithm = "ifan",
+  goal = "wacc", goal.chase = "wacc", sens.w = 0.5, quiet = TRUE,
+  cpus = 1, do.comp = FALSE, do.lr = TRUE, do.cart = TRUE,
+  do.rf = TRUE, do.svm = TRUE, rank.method = NULL,
+  hr.weight = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}

@@ -29,7 +29,7 @@ Imports:
     caret
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

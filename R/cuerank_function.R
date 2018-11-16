@@ -39,19 +39,11 @@ cuerank <- function(formula = NULL,
 
 ) {
 
-  #
-  #
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # goal = "bacc"
-  # sens.w = .5
-  # cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
-  # cost.cues = NULL
-  # numthresh.method = "o"
-  # numthresh.n = 20
-  # rounding = NULL
-  # cue.rules = NULL
-  # progress = FALSE
+  # formula
+  # data = data.mm
+  # goal.threshold = "bacc"
+  # numthresh.method = "m"
+  # quiet = TRUE
 
   #
   # Extract variables in formula
@@ -283,7 +275,7 @@ cuerank <- function(formula = NULL,
                                            criterion.v = NULL,
                                            sens.w = sens.w,
                                            cost.outcomes = cost.outcomes,
-                                          goal.threshold = goal.threshold)
+                                           goal.threshold = goal.threshold)
 
     }
 

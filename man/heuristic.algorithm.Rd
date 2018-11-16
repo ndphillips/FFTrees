@@ -4,7 +4,8 @@
 \alias{heuristic.algorithm}
 \title{Heuristic algorithms for building FFTs originally developed by Martignon, Katsikopoulos & Woike (2008)}
 \usage{
-heuristic.algorithm(formula, data, max.levels = NULL, algorithm = "max")
+heuristic.algorithm(formula, data, max.levels = NULL,
+  algorithm = "max")
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}

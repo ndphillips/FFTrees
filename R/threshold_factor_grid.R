@@ -122,7 +122,7 @@ threshold_factor_grid <- function(thresholds = NULL,
 
 
   # Order by goal.threshold and change column order
-  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
+  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc", "costout", "cost")]
 
 
   # Remove invalid directions

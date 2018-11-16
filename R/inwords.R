@@ -32,17 +32,17 @@ inwords <- function(x = NULL,
                    decision.labels = NULL,
                    digits = 2,
                    version = 1) {
-
 #
+#   tree = NULL
+#   classes.v = NULL
+#   cues.v = NULL
+#   directions.v = NULL
+#   thresholds.v = NULL
+#   exits.v = NULL
+#   decision.labels = NULL
+#   digits = 2
+#   version = 1
 
-# tree = NULL
-# classes.v = NULL
-# cues.v = NULL
-# directions.v = NULL
-# thresholds.v = NULL
-# exits.v = NULL
-# decision.labels = NULL
-# digits = 2
 
   if(is.null(x) == FALSE) {
 
@@ -137,7 +137,6 @@ if(exits.i %in% c("0", "1")) {
                              ", decide ", decision.labels[1], "")
       }
 
-
     }
 
   sentences.v <- c(sentences.v, sentence.i)
@@ -202,8 +201,6 @@ if(exits.i %in% c("0", "1")) {
 
 
     }
-
-
 
   }
 

@@ -17,15 +17,15 @@ threshold_numeric_grid <- function(thresholds,
                                    cost.each = 0,
                                    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                    goal.threshold = "bacc") {
-
-  # thresholds = cue_i_levels
-  # cue.v = cue_i_v
-  # criterion.v = criterion_v
-  # sens.w = sens.w
-  # directions = directions
-  # cost.each = cue_i_cost
-  # cost.outcomes = cost.outcomes
-  # goal = goal
+#
+#   thresholds = cue_i_levels
+#   cue.v = cue_i_v
+#   criterion.v = criterion_v
+#   sens.w = sens.w
+#   directions = directions
+#   cost.each = cue_i_cost
+#   cost.outcomes = cost.outcomes
+#   goal.threshold = goal.threshold
 
   thresholds_n <- length(thresholds)
 
@@ -67,8 +67,6 @@ threshold_numeric_grid <- function(thresholds,
   names(results_lt) <- c("n", "hi", "fa", "mi", "cr")
   results_lt <- results_lt[,c("n", "hi", "fa", "mi", "cr")]
 
-
-
   results_lt$direction <- "<="
   results_lt$threshold <- thresholds
 
@@ -100,7 +98,7 @@ threshold_numeric_grid <- function(thresholds,
   results <- cbind(results, new_stats)
 
   # Order by goal.threshold and change column order
-  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
+  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc", "costout", "cost")]
 
   # Remove invalid directions
   results[results$direction %in% directions, ]

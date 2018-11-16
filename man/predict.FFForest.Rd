@@ -4,8 +4,8 @@
 \alias{predict.FFForest}
 \title{Predict outcoms from a test dataset using an FFForest object}
 \usage{
-\method{predict}{FFForest}(object = NULL, data = NULL, threshold = 0.5,
-  ...)
+\method{predict}{FFForest}(object = NULL, data = NULL,
+  threshold = 0.5, ...)
 }
 \arguments{
 \item{object}{FFForest. An FFForest object created from the FFForest() function.}

@@ -7,9 +7,9 @@
 grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
   goal = "wacc", goal.chase = "bacc", goal.threshold = "bacc",
   sens.w = 0.5, cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-  cost.cues = NULL, numthresh.method = "o", stopping.rule = "exemplars",
-  stopping.par = 0.1, quiet = FALSE, repeat.cues = TRUE,
-  rank.method = NULL, cue.accuracies = NULL, ...)
+  cost.cues = NULL, numthresh.method = "o",
+  stopping.rule = "exemplars", stopping.par = 0.1, quiet = FALSE,
+  repeat.cues = TRUE, rank.method = NULL, cue.accuracies = NULL, ...)
 }
 \arguments{
 \item{formula}{formula. A formula}
