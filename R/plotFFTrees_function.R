@@ -19,7 +19,7 @@
 #' @param n.per.icon Number of cases per icon
 #' @param which.tree deprecated argument, only for backwards compatibility, use \code{"tree"} instead.
 #' @param level.type string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}
-#' @param decision.names depricated arguments.
+#' @param decision.names deprecated arguments.
 #' @param ... Currently ignored.
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -115,7 +115,7 @@ if(what %in% c("cues", "tree", "roc") == FALSE) {
 
 if(is.null(decision.names) == FALSE) {
 
-  message("decision.names is depricated, use decision.lables instead")
+  message("decision.names is deprecated, use decision.lables instead")
 
   decision.labels <- decision.names
 }

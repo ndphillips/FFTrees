@@ -16,7 +16,7 @@
 
 \item{type}{string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, or \code{"prob"} which returns a matrix of class probabilities.}
 
-\item{sens.w, data}{depricated}
+\item{sens.w, data}{deprecated}
 
 \item{method}{string. Method of calculating class probabilities. Either 'laplace', which applies the Laplace correction, or 'raw' which applies no correction.}
 

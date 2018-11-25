@@ -42,9 +42,9 @@ grow.FFTrees(formula, data, max.levels = NULL, algorithm = "ifan",
 
 \item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 
-\item{rank.method}{depricated arguments}
+\item{rank.method}{deprecated arguments}
 
-\item{cue.accuracies}{depricated arguments}
+\item{cue.accuracies}{deprecated arguments}
 
 \item{...}{Currently ignored}
 }
