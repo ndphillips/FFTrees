@@ -27,7 +27,7 @@
 #' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
 #' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
-#' @param rank.method,verbose,comp depricated arguments.
+#' @param rank.method,verbose,comp deprecated arguments.
 #' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
 #' @importFrom stats anova predict glm as.formula formula sd
 #' @return An \code{FFTrees} object with the following elements
@@ -158,11 +158,11 @@ FFTrees <- function(formula = NULL,
   # verbose = NULL
   # comp = NULL
 
-# Depricated arguments
+# Deprecated arguments
 {
   if(is.null(verbose) == FALSE) {
 
-    warning("The argument verbose is depricated. Use progress instead.")
+    warning("The argument verbose is deprecated. Use progress instead.")
 
     progress <- verbose
 
@@ -170,7 +170,7 @@ FFTrees <- function(formula = NULL,
 
   if(is.null(rank.method) == FALSE) {
 
-    warning("The argument rank.method is depricated. Use algorithm instead.")
+    warning("The argument rank.method is deprecated. Use algorithm instead.")
 
     algorithm <- rank.method
 
@@ -178,7 +178,7 @@ FFTrees <- function(formula = NULL,
 
   if(is.null(comp) == FALSE) {
 
-    warning("The argument comp is depricated. Use do.comp instead.")
+    warning("The argument comp is deprecated. Use do.comp instead.")
 
     do.comp <- comp
 
@@ -342,14 +342,14 @@ if(algorithm %in% valid.algorithms == FALSE) {
 
   if(algorithm == "m") {
 
-    message("Algorithm 'm' is depricated, using 'ifan' instead")
+    message("Algorithm 'm' is deprecated, using 'ifan' instead")
     algorithm <- "ifan"
 
   }
 
   if(algorithm == "c") {
 
-    message("Algorithm 'c' is depricated, using 'dfan' instead")
+    message("Algorithm 'c' is deprecated, using 'dfan' instead")
     algorithm <- "dfan"
 
     }

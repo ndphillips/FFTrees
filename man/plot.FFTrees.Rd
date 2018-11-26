@@ -50,7 +50,7 @@
 
 \item{level.type}{string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}}
 
-\item{decision.names}{depricated arguments.}
+\item{decision.names}{deprecated arguments.}
 
 \item{...}{Currently ignored.}
 }
