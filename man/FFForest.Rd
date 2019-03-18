@@ -38,7 +38,7 @@ FFForest(formula = NULL, data = NULL, data.test = NULL,
 
 \item{do.comp, do.lr, do.cart, do.rf, do.svm}{logical. See arguments in \code{FFTrees()}}
 
-\item{rank.method, hr.weight}{depricated arguments}
+\item{rank.method, hr.weight}{deprecated arguments}
 }
 \value{
 An object of class \code{FFForest} with the following elements...

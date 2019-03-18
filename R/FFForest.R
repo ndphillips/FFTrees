@@ -15,7 +15,7 @@
 #' @param quiet logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.comp,do.lr,do.cart,do.rf,do.svm logical. See arguments in \code{FFTrees()}
-#' @param rank.method,hr.weight depricated arguments
+#' @param rank.method,hr.weight deprecated arguments
 #' @importFrom stats formula
 #' @importFrom parallel mclapply
 
@@ -77,18 +77,18 @@ FFForest <- function(formula = NULL,
   # train.p = .5
 
 
-# Check for depricated arguments
+# Check for deprecated arguments
 
 if(is.null(rank.method) == FALSE) {
 
-  warning("The argument rank.method is depricated. Use algorithm instead.")
+  warning("The argument rank.method is deprecated. Use algorithm instead.")
 
   algorithm <- rank.method
 
 }
 if(is.null(hr.weight) == FALSE) {
 
-    warning("The argument hr.weight is depricated. Use sens.weight instead.")
+    warning("The argument hr.weight is deprecated. Use sens.weight instead.")
 
     sens.weight <- hr.weight
 

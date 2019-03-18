@@ -15,8 +15,8 @@
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
 #' @param quiet logical. Should progress messages be shown?
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
-#' @param rank.method depricated arguments
-#' @param cue.accuracies depricated arguments
+#' @param rank.method deprecated arguments
+#' @param cue.accuracies deprecated arguments
 #' @param ... Currently ignored
 #' @importFrom stats anova predict glm as.formula var
 #' @return A list of length 4. tree.definitions contains definitions of the tree(s). tree.stats contains classification statistics for the tree(s). levelout shows which level in the tree(s) each exemplar is classified. Finally, decision shows the classification decision for each tree for each exemplar
@@ -83,10 +83,10 @@ grow.FFTrees <- function(formula,
 
 
 # #
-# Depricated arguments
+# Deprecated arguments
 if(is.null(rank.method) == FALSE) {
 
-  warning("The argument rank.method is depricated. Use algorithm instead.")
+  warning("The argument rank.method is deprecated. Use algorithm instead.")
 
   algorithm <- rank.method
 

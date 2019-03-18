@@ -89,7 +89,7 @@ plot(heart.fft,
 
 - Changed wording of statistics throughout package. `hr` (hit rate) and `far` (false alarm rate) are now `sens` for sensitivity, and `spec` for specificity (1 - false alarm rate)
 
-- The `rank.method` argument is now depricated. Use `algorithm` instead.
+- The `rank.method` argument is now deprecated. Use `algorithm` instead.
 
 - Added `stats` argument to `plot.FFTrees()`. When `stats = FALSE`, only the tree will be plotted without reference to any statistical output.
 

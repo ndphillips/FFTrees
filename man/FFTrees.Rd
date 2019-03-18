@@ -65,7 +65,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 
 \item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 
-\item{rank.method, verbose, comp}{depricated arguments.}
+\item{rank.method, verbose, comp}{deprecated arguments.}
 
 \item{force}{logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.}
 
