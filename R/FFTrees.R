@@ -186,9 +186,9 @@ FFTrees <- function(formula = NULL,
 
 }
 
-# # Input validation
+# Input validation --------------------------------------------------------
 
-# Make sure criterion is logical
+# Make sure criterion is logical ==========================================
 
 criterion_name <- paste(formula)[2]
 
@@ -211,6 +211,8 @@ if(class(data[[criterion_name]]) != "logical") {
 # If no FFTrees object is specified
 if(is.null(object)) {
 
+# cost.outcomes ===========================================================
+
 if(!is.null(cost.outcomes)) {
 
   if(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")) == FALSE) {
@@ -232,9 +234,9 @@ if(!is.null(cost.outcomes)) {
 }
 
 
-  # goal, goal.chase, goal.threshold
+# goal, goal.chase, goal.threshold ==========================================
 
-  {
+{
 
     if(is.null(goal)) {
 
@@ -272,7 +274,7 @@ if(!is.null(cost.outcomes)) {
   }
 
 
-# cost.cues
+# cost.cues ============================================================
 {
 
 if(is.null(cost.cues) == FALSE) {
@@ -749,7 +751,6 @@ if(is.null(object) == FALSE) {
 
 # CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
 {
-
 
 if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test)) & is.null(cue.accuracies.train) == FALSE) {
 
