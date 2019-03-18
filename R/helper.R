@@ -37,7 +37,7 @@ cost.cues.append <- function(formula,
   data_mf <- model.frame(formula = formula,
                          data = data)
 
-  cue_df <- data_mf[,2:ncol(data_mf)]
+  cue_df <- data_mf[,2:ncol(data_mf), drop = FALSE]
   cue_name_v <- names(cue_df)
 
 
