@@ -1,8 +1,8 @@
 #' Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue
 #'
 #' @param thresholds numeric. A vector of thresholds to consider
-#' @param cue.v numeric. Feature values
-#' @param criterion.v logical. Criterion values
+#' @param cue_v numeric. Feature values
+#' @param criterion_v logical. Criterion values
 #' @param directions character. Possible directions to consider
 #' @param sens.w numeric.
 #' @param cost.each numeric. Cost to add to each value (e.g.; cost of  the cue)
@@ -10,8 +10,8 @@
 #' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #'
 threshold_numeric_grid <- function(thresholds,
-                                   cue.v,
-                                   criterion.v,
+                                   cue_v,
+                                   criterion_v,
                                    directions = c(">", "<="),
                                    sens.w = .5,
                                    cost.each = 0,
@@ -19,8 +19,8 @@ threshold_numeric_grid <- function(thresholds,
                                    goal.threshold = "bacc") {
 #
 #   thresholds = cue_i_levels
-#   cue.v = cue_i_v
-#   criterion.v = criterion_v
+#   cue_v = cue_i_v
+#   criterion_v = criterion_v
 #   sens.w = sens.w
 #   directions = directions
 #   cost.each = cue_i_cost
@@ -39,13 +39,13 @@ threshold_numeric_grid <- function(thresholds,
     threshold_i <- thresholds[i]
 
     # Create vector of decisions
-    decisions_i <- cue.v > threshold_i
+    decisions_i <- cue_v > threshold_i
 
     # Calculate decisions
-    hi_i <- sum(decisions_i == TRUE & criterion.v == TRUE)
-    fa_i <- sum(decisions_i == TRUE & criterion.v == FALSE)
-    mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
-    cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
+    hi_i <- sum(decisions_i == TRUE & criterion_v == TRUE)
+    fa_i <- sum(decisions_i == TRUE & criterion_v == FALSE)
+    mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE)
+    cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE)
 
     n_i <- hi_i + fa_i + mi_i + cr_i
 

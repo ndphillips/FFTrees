@@ -1,72 +1,49 @@
 
 #' Converts text describing an FFT into an FFT definition.
 #'
-#' @param input string. A string describing an FFT in words (see examples)
-#' @param cue.names string. A vector of cue names
-#' @param decision.labels string. A vector of decision labels
+#' @param x FFTrees.
+#' @param my.tree string. A string defining an FFT
 #'
 #' @export
 #'
 #' @importFrom stringr str_extract str_detect
 #' @examples
 #'
-#' my.tree.def <- wordstoFFT(input = "If age > 55, predict True.
-#'                                    If cp = {a,b,np}, predict False, otherwise, predict True",
-#'                           cue.names = names(heartdisease))
+#' my.tree.def <- wordstoFFT(my.tree = "If age > 55, predict True.
+#'                                      If cp = {a,b,np}, predict False, otherwise, predict True")
 #'
 #'
-wordstoFFT <- function(input,
-                       cue.names,
-                       decision.labels = NULL) {
+fftrees_wordstofftrees <- function(x,
+                                   my.tree) {
 
+# Clean up my.tree
 
-  # input = my.tree
-  # cue.names = names(data.train)
-  # decision.labels = decision.labels
+  # Remove \n (can happen if my.tree has line breaks)
+my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 
-# Clean up input
+if(grepl(x$params$decision.labels[1], x = my.tree) == FALSE) {
 
-  # Remove \n (can happen if input has line breaks)
-input <- gsub(pattern = "\n", replacement = "", x = input)
-
-
-if(is.null(decision.labels)) {decision.labels <- c("False", "True")}
-if(grepl(decision.labels[1], x = input) == FALSE) {
-
-  if(grepl("true", x = tolower(input))) {
-
-    decision.labels <- c("False", "True")
-
-  } else {stop("Something is wrong with decision.labels as they are not in the input.")}
-
-}
-
-#
-#   input = "if thal = {rd}, healthy. If cp = {a}, disease, otherwise, healthy"
-#   cue.names = names(heartdisease)
-#   decision.labels = c("healthy", "disease")
-
+stop("Something is wrong with decision.labels as they are not in the my.tree.")}
 
 directions.df <- data.frame(directions = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
                             negations =  c("!=", "<=", "<",  ">=", ">",  "=",   "!=",    "!=",     "!=",       "<=",      ">="),
                             directions.f = c("=", ">", ">=", "<", "<=", "!=", "=", "=", "=", ">", "<"),
                             stringsAsFactors = FALSE)
 
-exits.df <- data.frame(exit.char = decision.labels,
+exits.df <- data.frame(exit.char = x$params$decision.labels,
                        exit = c("0", "1"),
                        stringsAsFactors = FALSE)
 
 
 # Split
 
-cue.names.l <- tolower(cue.names)
-input <- tolower(input)
+cue.names.l <- tolower(x$metadata$cue_names)
+my.tree <- tolower(my.tree)
 decision.labels <- tolower(decision.labels)
 
-def <- unlist(strsplit(input, split = "if", fixed = TRUE))
+def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
 def <- def[2:length(def)]
 nodes.n <- length(def)
-
 
 
 # cues.v
@@ -92,7 +69,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
   })))
 
 # Convert cue names back to original (non lower) values
-cues.v <- cue.names[sapply(cues.v, FUN = function(x) {which(cue.names.l == x)})]
+cues.v <- x$metadata$cue_names[sapply(cues.v, FUN = function(x) {which(cue.names.l == x)})]
 
 }
 
@@ -109,26 +86,25 @@ classes.v[contains.brack == FALSE] <- "n"
 {
 exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
-
   # Indices of TRUE
 
-  x <- unlist(strsplit(node.sentence, " "))
-  true.indices <- grep(decision.labels[2], x = x)
-  false.indices <- grep(decision.labels[1], x = x)
+  y <- unlist(strsplit(node.sentence, " "))
+  true.indices <- grep(x$params$decision.labels[2], x = y)
+  false.indices <- grep(x$params$decision.labels[1], x = y)
 
-  if(any(grepl(decision.labels[2], x)) & any(grepl(decision.labels[1], x))) {
+  if(any(grepl(x$params$decision.labels[2], x)) & any(grepl(x$params$decision.labels[1], y))) {
 
     if(min(true.indices) < min(false.indices)) {return(1)}
     if(min(true.indices) > min(false.indices)) {return(0)}
 
   }
 
-  if(any(grepl(decision.labels[2], x)) & !any(grepl(decision.labels[1], x))) {
+  if(any(grepl(x$params$decision.labels[2], y)) & !any(grepl(x$params$decision.labels[1], y))) {
 
     return(1)
   }
 
-  if(!any(grepl("v", x)) & any(grepl(decision.labels[1], x))) {
+  if(!any(grepl("v", y)) & any(grepl(decision.labels[1], y))) {
 
     return(0)
   }
@@ -227,14 +203,17 @@ thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 # Set final exit to .5
 exits.v[nodes.n] <- ".5"
 
-output <- data.frame(tree = 1,
-                     nodes = nodes.n,
-                     "classes" = paste(classes.v, collapse = ";"),
-                     "cues" = paste(cues.v, collapse = ";"),
-                     "directions" = paste(directions.v, collapse = ";"),
-                     "thresholds" = paste(thresholds.v, collapse = ";"),
-                     "exits" = paste(exits.v, collapse = ";"), stringsAsFactors = FALSE)
 
-return(output)
+# Save result in tree.definitions
+
+x$trees$definitions <- data.frame(tree = 1,
+                                 nodes = nodes.n,
+                                 "classes" = paste(classes.v, collapse = ";"),
+                                 "cues" = paste(cues.v, collapse = ";"),
+                                 "directions" = paste(directions.v, collapse = ";"),
+                                 "thresholds" = paste(thresholds.v, collapse = ";"),
+                                 "exits" = paste(exits.v, collapse = ";"), stringsAsFactors = FALSE)
+
+return(x)
 
 }

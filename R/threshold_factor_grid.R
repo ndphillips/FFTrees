@@ -1,8 +1,8 @@
 #' Performs a grid search over factor and returns accuracy statistics for a given factor cue
 #'
 #' @param thresholds numeric. A vector of factor thresholds to consider
-#' @param cue.v numeric. Feature values
-#' @param criterion.v logical. Criterion values
+#' @param cue_v numeric. Feature values
+#' @param criterion_v logical. Criterion values
 #' @param directions character. Character vector of threshold directions to consider.
 #' @param sens.w numeric.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
@@ -10,20 +10,23 @@
 #' @param goal.threshold character.
 #'
 threshold_factor_grid <- function(thresholds = NULL,
-                                   cue.v = NULL,
-                                   criterion.v = NULL,
+                                   cue_v = NULL,
+                                   criterion_v = NULL,
                                    directions = "=",
                                    sens.w = .5,
                                    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                    cost.each = 0,
                                    goal.threshold = "bacc") {
 
+# Assertions
+expect_true(!any(is.na(criterion_v)))
+expect_true(!any(is.na(cue_v)))
 
 
   if(!is.null(thresholds)) {
 
   thresholds_n <- length(thresholds)
-  case_n <- length(cue.v)
+  case_n <- length(cue_v)
 
   results <- matrix(NA, nrow = thresholds_n, ncol = 5)
 
@@ -35,13 +38,13 @@ threshold_factor_grid <- function(thresholds = NULL,
     threshold_i <- thresholds[i]
 
     # Create vector of decisions
-    decisions_i <- cue.v == threshold_i
+    decisions_i <- cue_v == threshold_i
 
     # Calculate decisions
-    hi_i <- sum(decisions_i == TRUE & criterion.v == TRUE)
-    fa_i <- sum(decisions_i == TRUE & criterion.v == FALSE)
-    mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
-    cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
+    hi_i <- sum(decisions_i == TRUE & criterion_v == TRUE)
+    fa_i <- sum(decisions_i == TRUE & criterion_v == FALSE)
+    mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE)
+    cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE)
 
     n_i <- hi_i + fa_i + mi_i + cr_i
 
@@ -75,13 +78,13 @@ threshold_factor_grid <- function(thresholds = NULL,
     threshold_i <- results$threshold[1:i]
 
     # Create vector of decisions
-    decisions_i <- cue.v %in% threshold_i
+    decisions_i <- cue_v %in% threshold_i
 
     # Calculate decisions
-    hi_i <- sum(decisions_i == TRUE & criterion.v == TRUE)
-    fa_i <- sum(decisions_i == TRUE & criterion.v == FALSE)
-    mi_i <- sum(decisions_i == FALSE & criterion.v == TRUE)
-    cr_i <- sum(decisions_i == FALSE & criterion.v == FALSE)
+    hi_i <- sum(decisions_i == TRUE & criterion_v == TRUE)
+    fa_i <- sum(decisions_i == TRUE & criterion_v == FALSE)
+    mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE)
+    cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE)
 
     n_i <- hi_i + fa_i + mi_i + cr_i
 

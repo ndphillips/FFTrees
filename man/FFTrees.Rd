@@ -9,12 +9,12 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   cost.outcomes = NULL, cost.cues = NULL,
   stopping.rule = "exemplars", stopping.par = 0.1, goal = NULL,
   goal.chase = NULL, goal.threshold = "bacc", numthresh.method = "o",
-  decision.labels = c("False", "True"), main = NULL, train.p = 1,
-  rounding = NULL, repeat.cues = TRUE, my.tree = NULL,
-  tree.definitions = NULL, do.comp = TRUE, do.cart = TRUE,
-  do.lr = TRUE, do.rf = TRUE, do.svm = TRUE, store.data = FALSE,
-  object = NULL, rank.method = NULL, force = FALSE, verbose = NULL,
-  comp = NULL, quiet = TRUE)
+  numthresh.n = 10, decision.labels = c("False", "True"),
+  main = NULL, train.p = 1, rounding = NULL, repeat.cues = TRUE,
+  my.tree = NULL, tree.definitions = NULL, do.comp = TRUE,
+  do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, do.svm = TRUE,
+  store.data = FALSE, object = NULL, rank.method = NULL,
+  force = FALSE, verbose = NULL, comp = NULL, quiet = TRUE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -44,6 +44,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 \item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
+
+\item{numthresh.n}{integer. Number of numeric thresholds to try.}
 
 \item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}}
 

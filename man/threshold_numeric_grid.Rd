@@ -4,7 +4,7 @@
 \alias{threshold_numeric_grid}
 \title{Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue}
 \usage{
-threshold_numeric_grid(thresholds, cue.v, criterion.v,
+threshold_numeric_grid(thresholds, cue_v, criterion_v,
   directions = c(">", "<="), sens.w = 0.5, cost.each = 0,
   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
   goal.threshold = "bacc")
@@ -12,9 +12,9 @@ threshold_numeric_grid(thresholds, cue.v, criterion.v,
 \arguments{
 \item{thresholds}{numeric. A vector of thresholds to consider}
 
-\item{cue.v}{numeric. Feature values}
+\item{cue_v}{numeric. Feature values}
 
-\item{criterion.v}{logical. Criterion values}
+\item{criterion_v}{logical. Criterion values}
 
 \item{directions}{character. Possible directions to consider}
 

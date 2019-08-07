@@ -73,11 +73,10 @@ plot.FFTrees <- function(
   decision.names = NULL,
   ...
 ) {
-
 #
-  # x = FFTrees(diagnosis ~., data = heartdisease)
-  #
-  # data = "train"
+# #
+  # x = x.FFTrees
+  # data = "test"
   # what = 'tree'
   # tree = "best.train"
   # main = NULL
@@ -87,6 +86,7 @@ plot.FFTrees <- function(
   # decision.cex = 1
   # comp = TRUE
   # stats = TRUE
+  # cue.labels = NULL
   #
   # show.header = TRUE
   # show.tree = NULL
@@ -1834,7 +1834,6 @@ add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.
 #          col = gray(0))
 
 }
-
 
 }
 
