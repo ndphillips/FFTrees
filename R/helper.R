@@ -7,6 +7,9 @@ apply.break <- function(direction,
                         cue.class
 ) {
 
+  testthat::expect_true(direction %in% c("!=", "=", "<", "<=", ">", ">="))
+  testthat::expect_true(length(threshold.val) == 1)
+
   # direction = cue_direction_new
   # threshold.val = cue_threshold_new
   # cue.v = data_current[[cues_name_new]]
@@ -16,7 +19,6 @@ apply.break <- function(direction,
   if(is.character(threshold.val)) {threshold.val <- unlist(strsplit(threshold.val, ","))}
 
   if(cue.class %in% c("numeric", "integer")) {threshold.val <- as.numeric(threshold.val)}
-
 
   if(direction == "!=") {output <- (cue.v %in% threshold.val) == FALSE}
   if(direction == "=") {output <- cue.v %in% threshold.val}
@@ -162,14 +164,6 @@ comp.pred <- function(formula,
                       new.factors = "exclude") {
 
 
-  #
-  #   formula = formula
-  #   data.train = data.train
-  #   data.test = data.test
-  #   algorithm = "lr"
-  #   model = model
-  #   new.factors = "exclude"
-
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")}
 
@@ -259,6 +253,7 @@ comp.pred <- function(formula,
     } else {train.mod <- model}
 
     if(is.null(data.train) == FALSE) {
+
       pred.train <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.train))), 0))
 
     } else {pred.train <- NULL}
@@ -320,6 +315,8 @@ comp.pred <- function(formula,
   }
 
   # Get testing data
+
+  pred.test <- NULL
 
   if(is.null(data.test) == FALSE) {
 
@@ -386,21 +383,21 @@ comp.pred <- function(formula,
 
       if(is.null(data.test) == FALSE) {
 
+        pred.test <- rep(0, nrow(data.test))
+
         if(any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
 
-          pred.test <- rep(0, nrow(data.test))
           pred.test[cannot.pred.v] <- mean(train.crit) > .5
           pred.test[cannot.pred.v == FALSE] <- round(1 / (1 + exp(-predict(train.mod, data.test[cannot.pred.v == FALSE,]))), 0)
 
         } else {
 
-          pred.test <- round(1 / (1 + exp(-predict(train.mod, data.test[cannot.pred.v == FALSE,]))), 0)
+          pred.test[!cannot.pred.v] <- round(1 / (1 + exp(-predict(train.mod, data.test[cannot.pred.v == FALSE,]))), 0)
 
         }
 
 
-      } else {pred.test <- NULL}
-
+      }
 
     }
 
@@ -423,66 +420,9 @@ comp.pred <- function(formula,
         }
 
 
-      } else {pred.test <- NULL}
+      }
 
     }
-
-    # if(algorithm == "rlr") {
-    #
-    #   # Set up training data with factor matrix
-    #
-    #   col.classes <- sapply(1:ncol(data.train), FUN = function(x) {class(data.train[,x])})
-    #   fact.names <- names(data.train)[col.classes == "factor"]
-    #   crit.name <- names(data.train)[1]
-    #
-    #   fact.formula <- as.formula(paste(crit.name, "~", paste(fact.names, collapse = "+")))
-    #   xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.train)[,-1])
-    #   x.train <- suppressWarnings(as.matrix(data.frame(data.train[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
-    #
-    #   # Create new rLR model
-    #   train.mod <- try(train.mod <-  suppressWarnings(glmnet::cv.glmnet(x.train,
-    #                                                       y = as.factor(data.train[,1]),
-    #                                                       family = "binomial"
-    #   )), silent = TRUE)
-    #
-    #
-    #   if(class(train.mod) == "try-error") {
-    #
-    #     pred.train <- NULL
-    #
-    #     }
-    #
-    #   if(class(train.mod) == "cv.glmnet") {
-    #
-    #   pred.train <- round(as.vector(predict(train.mod,
-    #                                         x.train,
-    #                                         type = "response",
-    #                                         a = train.mod$lambda.min)), 0)
-    #
-    #  }
-    #
-    #   if(is.null(data.test) == FALSE & class(train.mod) == "cv.glmnet") {
-    #
-    #     # Set up test data with factor matrix
-    #
-    #     col.classes <- sapply(1:ncol(data.test), FUN = function(x) {class(data.test[,x])})
-    #     fact.names <- names(data.test)[col.classes == "factor"]
-    #     crit.name <- names(data.test)[1]
-    #
-    #     fact.formula <- as.formula(paste(crit.name, "~", paste(fact.names, collapse = "+")))
-    #     xfactors <- suppressWarnings(model.matrix(object = fact.formula, data = data.test)[,-1])
-    #     x.test <- suppressWarnings(as.matrix(data.frame(data.test[,col.classes %in% c("numeric", "integer", "logical")], xfactors))[,-1])
-    #
-    #     pred.test <- round(as.vector(predict(train.mod,
-    #                                          x.test,
-    #                                          type = "response",
-    #                                          a = train.mod$lambda.min)), 0)
-    #
-    #
-    #   } else {pred.test <- NULL}
-    #
-    #
-    # }
 
     if(algorithm == "cart") {
 
@@ -503,7 +443,7 @@ comp.pred <- function(formula,
 
 
 
-      } else {pred.test <- NULL}
+      }
 
 
     }
@@ -552,10 +492,10 @@ comp.pred <- function(formula,
 
 
 
-      } else {pred.test <- NULL}
+      }
     }
 
-  } else {pred.test <- NULL}
+  }
 
   # Convert predictions to logical if necessary
 
@@ -566,30 +506,30 @@ comp.pred <- function(formula,
 
     # Calculate training accuracy stats
 
-    acc.train <- classtable(prediction_v = as.logical(pred.train),
+    acc.train <- FFTrees:::classtable(prediction_v = as.logical(pred.train),
                             criterion_v = as.logical(crit.train))
 
   }
 
   if(is.null(pred.train)) {
 
-    acc.train <- classtable(c(TRUE, TRUE, FALSE), c(FALSE, FALSE, TRUE))
+    acc.train <- FFTrees:::classtable(c(TRUE, TRUE, FALSE), c(FALSE, FALSE, TRUE))
     acc.train[1,] <- NA
 
   }
 
-  if( is.null(pred.test) == FALSE) {
+  if(is.null(pred.test) == FALSE) {
 
     if("TRUE" %in% paste(pred.test)) {pred.test <- as.logical(paste(pred.test))}
     if("1" %in% paste(pred.test)) {pred.test <- as.logical(as.numeric(paste(pred.test)))}
 
 
-    acc.test <- classtable(prediction_v = as.logical(pred.test),
-                           criterion_v =  as.logical(crit.test))
+    acc.test <- FFTrees:::classtable(prediction_v = as.logical(pred.test),
+                                    criterion_v =  as.logical(crit.test))
   } else {
 
-    acc.test <- classtable(prediction_v = c(TRUE, FALSE, TRUE),
-                           criterion_v = c(TRUE, TRUE, FALSE))
+    acc.test <- FFTrees:::classtable(prediction_v = c(TRUE, FALSE, TRUE),
+                                     criterion_v = c(TRUE, TRUE, FALSE))
     acc.test[1,] <- NA
 
   }
@@ -597,22 +537,16 @@ comp.pred <- function(formula,
 
   if(do.test == FALSE) {
 
-    acc.train <- classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.train <- FFTrees:::classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
     acc.train[1, ] <- NA
 
-    acc.test <- classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.test <- FFTrees:::lasstable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
     acc.test[1, ] <- NA
   }
 
   # ORGANIZE
 
-  names(acc.train) <- paste(names(acc.train), ".train", sep = "")
-  names(acc.test) <- paste(names(acc.test), ".test", sep = "")
-
-  acc <- cbind(acc.train, acc.test)
-  acc <- acc[order(acc$spec.train),]
-
-  output <- list("accuracy" = acc,
+  output <- list("accuracy" = list(train = acc.train, test = acc.test),
                  "model" = train.mod,
                  "algorithm" = algorithm)
 
@@ -889,6 +823,72 @@ classtable <- function(prediction_v = NULL,
   return(result)
 
 }
+
+
+
+console_confusionmatrix <- function(hi, mi, fa, cr) {
+
+# Header Row
+cat("|", rep(" ", times = 8), "| True + | True - |\n", sep = "")
+
+# Line
+cat("|-", rep("-", times = 7), "|", rep("-", times = 8), "|", rep("-", times = 8), "|\n", sep = "")
+
+# Decide + Row
+cat("|Decide +| ", crayon::green(scales::comma(hi)),
+    rep(" ", 6 - floor(log10(hi))), "| ",
+    crayon::red(fa),
+    rep(" ", 6 - floor(log10(fa))),
+    "| ", sep = "")
+cat(scales::comma(hi + fa))
+
+cat("\n")
+
+# Decide - Row
+
+cat("|Decide -| ", crayon::red(scales::comma(mi)),
+    rep(" ", 6 - floor(log10(mi))), "| ",
+    crayon::green(cr),
+    rep(" ", 6 - floor(log10(cr))), "| ",
+    sep = "")
+
+cat(scales::comma(mi + cr))
+cat("\n")
+
+# Bottom line
+cat("|-", rep("-", times = 7), "|", rep("-", times = 8), "|", rep("-", times = 8), "|\n", sep = "")
+
+
+# Bottom total
+cat("           ")
+cat(scales::comma(hi + mi))
+cat(" ")
+cat(rep(" ", 5 - floor(log10(hi + mi))))
+cat(scales::comma(cr + fa))
+
+cat(rep(" ", 5 - floor(log10(cr + fa))))
+cat("")
+
+cat(scales::number(hi + mi + fa + cr))
+
+cat("\n\n")
+
+cat("acc  =", scales::percent((hi + cr) / (hi + mi + cr + fa), accuracy = .1), sep = " ")
+
+cat("  ppv  =", scales::percent(hi / (hi + fa), accuracy = .1), sep = " ")
+cat("  npv  =", scales::percent(cr / (cr + mi), accuracy = .1), sep = " ")
+cat("\n")
+
+cat("bacc =", scales::percent((hi / (hi + mi) + cr / (cr + fa)) / 2, accuracy = .1), sep = " ")
+
+cat("  sens =", scales::percent(hi / (hi + mi), accuracy = .1), sep = " ")
+cat("  spec =", scales::percent(cr / (cr + fa), accuracy = .1), sep = " ")
+cat("\n")
+# cat("br   =", scales::percent((hi + mi) / (hi + cr + mi + fa), accuracy = .1), sep = " ")
+# cat("\n")
+
+}
+
 
 
 

@@ -2,7 +2,7 @@
 #'
 #' @param x FFTrees.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
-#'
+#' @importFrom testthat expect_true
 #' @return A list of length 4 containing
 #'
 #'
@@ -12,7 +12,8 @@ fftrees_apply <- function(x,
                           allNA.pred = FALSE
 ) {
 
-  expect_true(mydata %in% c("train", "test"))
+
+  testthat::expect_true(mydata %in% c("train", "test"))
 
   if(mydata == "train") {
 
@@ -20,7 +21,7 @@ fftrees_apply <- function(x,
 
   } else if (mydata == "test") {
 
-    expect_true(!is.null(x$data$test))
+    testthat::expect_true(!is.null(x$data$test))
 
     data <- x$data$test
 

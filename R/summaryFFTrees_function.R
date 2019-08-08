@@ -1,55 +1,55 @@
-#' Returns summary information about an FFTrees object
-#' @param object An FFTrees object
+#' Returns summary information about an FFTrees x
+#' @param x An FFTrees x
 #' @param tree integer. The tree to summarise
 #' @param ... additional arguments (currently ignored)
 #' @export
 #'
 
-summary.FFTrees <- function(object,
+summary.FFTrees <- function(x,
                             tree = 1,
                             ...) {
 
 
-  train.cues <- paste(unique(unlist(strsplit(object$tree.definitions$cues[tree], ";"))), collapse = ",")
+  train.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
   train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
-  all.cues <- paste(unique(unlist(strsplit(object$tree.definitions$cues, ";"))), collapse = ",")
-  all.cues.n <- length(unique(unlist(strsplit(object$tree.definitions$cues, ";"))))
+  all.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues, ";"))), collapse = ",")
+  all.cues.n <- length(unique(unlist(strsplit(x$trees$definitions$cues, ";"))))
 
-  train.n <- object$data.desc$train$cases
-  train.hi <- object$tree.stats$train$hi[tree]
-  train.mi <- object$tree.stats$train$mi[tree]
-  train.cr <- object$tree.stats$train$cr[tree]
-  train.fa <- object$tree.stats$train$fa[tree]
+  train.n <- nrow(x$data$train)
+  train.hi <- x$trees$results$train$stats$hi[tree]
+  train.mi <- x$trees$results$train$stats$mi[tree]
+  train.cr <- x$trees$results$train$stats$cr[tree]
+  train.fa <- x$trees$results$train$stats$fa[tree]
   train.nodes <- train.cues.n
-  train.sens <- object$tree.stats$train$sens[tree]
-  train.far <- object$tree.stats$train$far[tree]
-  train.spec <- 1 - object$tree.stats$train$far[tree]
-  train.bacc <- object$tree.stats$train$bacc[tree]
-  train.wacc <- object$tree.stats$train$wacc[tree]
-  train.cost <- object$tree.stats$train$cost[tree]
-  train.acc <- object$tree.stats$train$acc[tree]
-  train.pci <-  object$tree.stats$train$pci[tree]
-  train.mcu <- object$tree.stats$train$mcu[tree]
+  train.sens <- x$trees$results$train$stats$sens[tree]
+  train.far <- x$trees$results$train$stats$far[tree]
+  train.spec <- 1 - x$trees$results$train$stats$far[tree]
+  train.bacc <- x$trees$results$train$stats$bacc[tree]
+  train.wacc <- x$trees$results$train$stats$wacc[tree]
+  train.cost <- x$trees$results$train$stats$cost[tree]
+  train.acc <- x$trees$results$train$stats$acc[tree]
+  train.pci <-  x$trees$results$train$stats$pci[tree]
+  train.mcu <- x$trees$results$train$stats$mcu[tree]
 
-  if(is.null(object$tree.stats$test) == FALSE) {
+  if(is.null(x$trees$results$test$stats) == FALSE) {
 
-    test.n <- object$data.desc$test$cases
-    test.hi <- object$tree.stats$test$hi[tree]
-    test.mi <- object$tree.stats$test$mi[tree]
-    test.cr <- object$tree.stats$test$cr[tree]
-    test.fa <- object$tree.stats$test$fa[tree]
+    test.n <- nrow(x$data$test)
+    test.hi <- x$trees$results$test$stats$hi[tree]
+    test.mi <- x$trees$results$test$stats$mi[tree]
+    test.cr <- x$trees$results$test$stats$cr[tree]
+    test.fa <- x$trees$results$test$stats$fa[tree]
 
     test.nodes <- train.cues.n
-    test.sens <- object$tree.stats$test$sens[tree]
-    test.far <- object$tree.stats$test$far[tree]
-    test.spec <- 1 - object$tree.stats$test$far[tree]
-    test.bacc <- object$tree.stats$test$bacc[tree]
-    test.wacc <- object$tree.stats$test$wacc[tree]
-    test.cost <- object$tree.stats$test$cost[tree]
-    test.acc <- object$tree.stats$test$acc[tree]
-    test.pci <-  object$tree.stats$test$pci[tree]
-    test.mcu <- object$tree.stats$test$mcu[tree]
+    test.sens <- x$trees$results$test$stats$sens[tree]
+    test.far <- x$trees$results$test$stats$far[tree]
+    test.spec <- 1 - x$trees$results$test$stats$far[tree]
+    test.bacc <- x$trees$results$test$stats$bacc[tree]
+    test.wacc <- x$trees$results$test$stats$wacc[tree]
+    test.cost <- x$trees$results$test$stats$cost[tree]
+    test.acc <- x$trees$results$test$stats$acc[tree]
+    test.pci <-  x$trees$results$test$stats$pci[tree]
+    test.mcu <- x$trees$results$test$stats$mcu[tree]
 
     summary.df <- data.frame("train" = c(train.n,
                                          train.hi,
@@ -79,7 +79,7 @@ summary.FFTrees <- function(object,
 
   }
 
-  if(is.null(object$tree.stats$test)) {
+  if(is.null(x$trees$results$test$stats)) {
 
     test.n <- NA
     test.hi <- NA

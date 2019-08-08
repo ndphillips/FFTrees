@@ -47,7 +47,7 @@ Table: 5 Steps in growing FFTs using the ifan algorithm.
 First, we'll calculate a classification threshold for each cue using `cuerank()`:
 
 ```{r, message = FALSE}
-heartdisease.ca <- cuerank(formula = diagnosis ~., 
+heartdisease.ca <- fftrees_cuerank(formula = diagnosis ~., 
                            data = heartdisease)
 
 # Print key results

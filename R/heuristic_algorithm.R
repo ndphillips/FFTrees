@@ -81,7 +81,7 @@ for(i in 1:ncol(data.mm)) {
   }
 
 # Calculate cue accuracies with median num threshold
-cue.acc <- cuerank(formula,
+cue.acc <- fftrees_cuerank(formula,
                    data = data.mm,
                    goal.threshold = "bacc",
                    numthresh.method = "m",

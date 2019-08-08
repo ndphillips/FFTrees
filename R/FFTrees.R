@@ -126,55 +126,49 @@ FFTrees <- function(formula = NULL,
                     quiet = TRUE
 ) {
 #
-#
-
-  formula = NULL
-  data = NULL
-  data.test = NULL
-  algorithm = "ifan"
-  max.levels = NULL
-  sens.w = .5
-  cost.outcomes = NULL
-  cost.cues = NULL
-  stopping.rule = "exemplars"
-  stopping.par = .1
-  goal = NULL
-  goal.chase = NULL
-  goal.threshold = "bacc"
-  numthresh.method = "o"
-  numthresh.n = 10
-  decision.labels = c("False", "True")
-  main = NULL
-  train.p = 1
-  rounding = NULL
-  repeat.cues = TRUE
-  my.tree = NULL
-  tree.definitions = NULL
-  do.comp = TRUE
-  do.cart = TRUE
-  do.lr = TRUE
-  do.rf = TRUE
-  do.svm = TRUE
-  store.data = FALSE
-  object = NULL
-  rank.method = NULL
-  force = FALSE
-  verbose = NULL
-  comp = NULL
-  quiet = TRUE
-
-
-  formula = diagnosis ~.
-  data = heartdisease
-  train.p = .5    # Split data into 50\50 training \ test
-  main = "Heartdisease"
-
-  decision.labels = c("False", "True")
-  # my.tree = "If age > 55, predict True.
-  #           If cp = {a,b,np}, predict False, otherwise, predict True"
+# #
+# # #
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = NULL
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = NULL
+#   goal.chase = NULL
+#   goal.threshold = "bacc"
+#   numthresh.method = "o"
+#   numthresh.n = 10
+#   decision.labels = c("False", "True")
+#   main = NULL
+#   train.p = 1
+#   rounding = NULL
+#   repeat.cues = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   do.comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+#   comp = NULL
+#   quiet = TRUE
+# #
+# #
+#   formula = diagnosis ~.
+#   data = heartdisease
 
 
-# Deprecated arguments -------------------------------------------------
+# DEPRECATED ARGUMENTS -------------------------------------------------
 {
   if(is.null(verbose) == FALSE) {
 
@@ -202,7 +196,7 @@ FFTrees <- function(formula = NULL,
 
 }
 
-# Create training and test split ---------------------------------------
+# TRAINING / TEST SPLIT ---------------------------------------
 if(train.p < 1 && is.null(data.test)) {
 
   # Save original data
@@ -222,7 +216,7 @@ if(train.p < 1 && is.null(data.test)) {
 
 }
 
-# 0) CREATE AN FFTREES OBJECT --------------------------------------------
+# CREATE AN FFTREES OBJECT --------------------------------------------
 
 x <- FFTrees:::fftrees_create(data = data,
                               formula = formula,
@@ -243,37 +237,16 @@ x <- FFTrees:::fftrees_create(data = data,
                               repeat.cues = repeat.cues,
                               numthresh.method = numthresh.method,
                               numthresh.n = numthresh.n,
-                              quiet = quiet)
+                              quiet = quiet,
+                              do.lr = do.lr,
+                              do.cart = do.cart,
+                              do.svm = do.svm,
+                              do.rf = do.rf,
+                              do.comp = do.comp)
 
 # 1) GET FFTREES DEFINITIONS ----------------------------------------
 
-# If object is specified, take the trees from that object
-
-if(is.null(object) == FALSE) {
-
-  expect_is(object, "FFTrees", info = "You specified object but it is not of class 'FFTrees'")
-
-  x$trees <- object$trees
-
-} else if(!is.null(my.tree)) {
-
-  x <- FFTrees::fftrees_wordstofftrees(x, my.tree = my.tree)
-
-} else if(is.null(object) && is.null(my.tree)) {
-
-
-if(x$params$algorithm %in% c("ifan", "dfan")) {
-
-  x <- FFTrees:::fftrees_grow_fan(x)
-
-}
-
-} else {
-
-  stop("I don't know how to define your trees...")
-
-}
-
+x <- FFTrees:::fftrees_define(x, object = object)
 
 # 2) APPLY TREES TO TRAINING DATA -------------------------------
 
@@ -283,313 +256,58 @@ x <- FFTrees:::fftrees_apply(x, mydata = "train")
 
 # Test.........
 
+if(!is.null(x$data$test)) {
+
 x <- FFTrees:::fftrees_apply(x, mydata = "test")
 
-
-# CALCULATE TEST CUE ACCURACIES [cue.accuracies.test]
-{
-
-if(is.null(data.test) == FALSE & all(is.finite(crit.test)) & is.finite(sd(crit.test)) & is.null(cue.accuracies.train) == FALSE) {
-
-  if(sd(crit.test) > 0) {
-
-# if(progress) {message("Calculating cue test accuracies...")}
-
-cue.accuracies.test <- cuerank(formula = formula,
-                                data = data.test,
-                                goal.threshold = goal.threshold,
-                                rounding = rounding,
-                                quiet = TRUE,
-                                cue.rules = cue.accuracies.train,
-                                sens.w = sens.w,
-                                numthresh.method = numthresh.method)
 }
 
-} else {cue.accuracies.test <- NULL}
+## 3) DEFINE TREES IN WORDS
 
-cue.accuracies <- list("train" = cue.accuracies.train, "test" = cue.accuracies.test)
-
-
-
-}
-
-
+x <- FFTrees:::fftrees_ffttowords(x = x,
+                                  digits = 2)
 
 # FIT COMPETITIVE ALGORITHMS
-{
 
-if(do.comp == FALSE) {
-
-do.lr <- FALSE
-do.cart <- FALSE
-do.svm <- FALSE
-do.rf <- FALSE
-
-}
-  if(do.lr | do.cart | do.rf | do.svm) {if(!quiet) {message("Fitting other algorithms for comparison (disable with do.comp = FALSE) ...")}}
-
-  # LR
-  {
-    if(do.lr & ((is.null(object) == FALSE &  is.null(object$comp$lr$model) == FALSE) |
-                is.null(data.train) == FALSE)) {
-
-      if(is.null(object) == FALSE & is.null(object$comp$lr$model) == FALSE) {
-
-        model <- object$comp$lr$model
-
-      } else {model <- NULL}
-
-      lr.acc <- FFTrees:::comp.pred(formula = formula,
-                          data.train = data.train,
-                          data.test = data.test,
-                          algorithm = "lr",
-                          model = model)
-
-      lr.stats <- lr.acc$accuracy
-      lr.model <- lr.acc$model
-
-
-      if(is.null(object) == FALSE) {
-
-        lr.stats[,grepl(".train", names(lr.stats))] <- object$comp$lr$stats[,grepl(".train", names(object$comp$lr$stats))]
-
-      }
-
-    } else {
-
-      lr.acc <- NULL
-      lr.stats <- NULL
-      lr.model <- NULL
-
-    }
-
-  }
-
-  # CART
-  {
-
-    if(do.cart & ((is.null(object) == FALSE &  is.null(object$comp$cart$model) == FALSE) |
-                is.null(data.train) == FALSE)) {
-
-      if(is.null(object) == FALSE & is.null(object$comp$cart) == FALSE) {
-
-        model <- object$comp$cart$model
-
-      } else {model <- NULL}
-
-      cart.acc <- FFTrees:::comp.pred(formula = formula,
-                            data.train = data.train,
-                            data.test = data.test,
-                            algorithm = "cart",
-                            model = model)
-
-      cart.stats <- cart.acc$accuracy
-      cart.model <- cart.acc$model
-
-      if(is.null(object) == FALSE) {
-
-      cart.stats[,grepl(".train", names(cart.stats))] <- object$comp$cart$stats[,grepl(".train", names(object$comp$cart$stats))]
-
-      }
-
-    } else {
-
-      cart.acc <- NULL
-      cart.stats <- NULL
-      cart.model <- NULL
-
-    }
-  }
-
-  # rf
-  {
-
-    if(do.rf & ((is.null(object) == FALSE &  is.null(object$comp$rf$model) == FALSE) |
-                is.null(data.train) == FALSE)){
-
-      if(is.null(object) == FALSE & is.null(object$comp$rf) == FALSE) {
-
-        model <- object$comp$rf$model
-
-      } else {model <- NULL}
-
-      rf.acc <- FFTrees:::comp.pred(formula = formula,
-                          data.train = data.train,
-                          data.test = data.test,
-                          algorithm = "rf",
-                          model = model)
-
-      rf.stats <- rf.acc$accuracy
-      rf.model <- rf.acc$model
-
-      if(is.null(object) == FALSE) {
-
-        rf.stats[,grepl(".train", names(rf.stats))] <- object$comp$rf$stats[,grepl(".train", names(object$comp$rf$stats))]
-
-      }
-
-    } else {
-
-      rf.acc <- NULL
-      rf.stats <- NULL
-      rf.model <- NULL
-
-
-    }
-  }
-
-  # svm
-  {
-
-    if(do.lr & ((is.null(object) == FALSE &  is.null(object$comp$svm$model) == FALSE) |
-                is.null(data.train) == FALSE)){
-
-      if(is.null(object) == FALSE & is.null(object$comp$svm) == FALSE) {
-
-        model <- object$comp$svm$model
-
-      } else {model <- NULL}
-
-      svm.acc <- FFTrees:::comp.pred(formula = formula,
-                           data.train = data.train,
-                           data.test = data.test,
-                           algorithm = "svm",
-                           model = model)
-
-      svm.stats <- svm.acc$accuracy
-      svm.model <- svm.acc$model
-
-      if(is.null(object) == FALSE) {
-
-        svm.stats[,grepl(".train", names(svm.stats))] <- object$comp$svm$stats[,grepl(".train", names(object$comp$svm$stats))]
-
-      }
-    } else {
-
-      svm.acc <- NULL
-      svm.stats <- NULL
-      svm.model <- NULL
-
-    }
-  }
-}
-
-# Set up additional outputs
-{
-
-# GET BEST TREE
-# Note: Only matters when the algorithm produces multiple trees
-if(is.null(object)) {
-if(goal != "cost") {
-
-tree.max <- which(treestats$train[[goal]] == max(treestats$train[[goal]]))
-
-} else {
-
-tree.max <- which(treestats$train[[goal]] == min(treestats$train[[goal]]))
-
-}
-
-if(length(tree.max) > 1) {tree.max <- tree.max[1]}
-}
-
-
-# Store data?
-
-if(store.data) {data.ls <- list("train" = data.train, "test" = data.test)} else {
-
-  data.ls <- list("train", "test")
-
-}
-
-
-# Data descriptions
-
-if(is.null(object)) {
-
-data.desc <- list("train" = data.frame("cases" = nrow(cue.train),
-                                       "features" = ncol(cue.train),
-                                       "n.pos" = sum(crit.train == levels(crit.train)[1]),
-                                       "n.neg" = sum(crit.train == levels(crit.train)[2]),
-                                       "criterion.br" = mean(crit.train == levels(crit.train)[2])),
-                  "test" = data.frame("cases" = NA,
-                                      "features" = NA,
-                                      "n.pos" = NA,
-                                      "n.neg" = NA,
-                                      "criterion.br" = NA)) } else {
-
-data.desc <- list("train" = data.frame("cases" = object$data.desc$train$cases,
-                                       "features" = object$data.desc$train$features,
-                                       "n.pos" = object$data.desc$train$n.pos,
-                                       "n.neg" = object$data.desc$train$n.neg,
-                                       "criterion.br" = object$data.desc$train$criterion.br),
-                  "test" = data.frame("cases" = NA,
-                                      "features" = NA,
-                                      "n.pos" = NA,
-                                      "n.neg" = NA,
-                                      "criterion.br" = NA))
-                                      }
-
-if(is.null(data.test) == FALSE) {
-
-  data.desc[[2]] <- data.frame("cases" = nrow(cue.test),
-                               "features" = ncol(cue.test),
-                               "n.pos" = sum(crit.test == levels(crit.test)[1]),
-                               "n.neg" = sum(crit.test == levels(crit.test)[2]),
-                               "criterion.br" = mean(crit.test == levels(crit.test)[2]))
-
-}
-
-
-inwords.i <- inwords(tree = tree.max,
-                     classes.v = unlist(strsplit(tree.definitions$classes[tree.max], ";")),
-                     cues.v = unlist(strsplit(tree.definitions$cues[tree.max], ";")),
-                     directions.v = unlist(strsplit(tree.definitions$directions[tree.max], ";")),
-                     thresholds.v = unlist(strsplit(tree.definitions$thresholds[tree.max], ";")),
-                     exits.v = unlist(strsplit(tree.definitions$exits[tree.max], ";")),
-                     decision.labels = decision.labels
-                     )
-
-
-}
-
-# Final output
-
-x.FFTrees <- list("formula" = formula,
-                  "data.desc" = data.desc,
-                  "cue.accuracies" = cue.accuracies,
-                  "tree.definitions" = tree.definitions,
-                  "tree.stats" = treestats,
-                  "cost" = list("cost" = cost,
-                                 "outcomes" = costout,
-                                 "cues" = costcue),
-                   # "history" = history,
-                   "level.stats" = levelstats,
-                   "decision" = decision,
-                   "levelout" = levelout,
-                   "tree.max" = tree.max,
-                   "inwords" = inwords.i,
-                   "params" = list("algorithm" = algorithm,
-                                   "goal" = goal,
-                                   "goal.chase" = goal.chase,
-                                   "goal.threshold" = goal.threshold,
-                                   "sens.w" = sens.w,
-                                   "max.levels" = max.levels,
-                                   "cost.outcomes" = cost.outcomes,
-                                   "cost.cues" = cost.cues,
-                                   "decision.labels" = decision.labels,
-                                   "main" = main,
-                                   "repeat.cues" = repeat.cues),
-                   "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
-                                "cart" = list("model" = cart.model, "stats" = cart.stats),
-                                "rf" = list("model" = rf.model, "stats" = rf.stats),
-                                "svm" = list("model" = svm.model, "stats" = svm.stats)),
-                   "data" = data.ls
-)
-
-class(x.FFTrees) <- "FFTrees"
-
-return(x.FFTrees)
+x <- FFTrees:::fftrees_fitcomp(x = x)
+#
+# # Final output
+#
+# x.FFTrees <- list("formula" = formula,
+#                   "data.desc" = data.desc,
+#                   "cue.accuracies" = cue.accuracies,
+#                   "tree.definitions" = tree.definitions,
+#                   "tree.stats" = treestats,
+#                   "cost" = list("cost" = cost,
+#                                  "outcomes" = costout,
+#                                  "cues" = costcue),
+#                    # "history" = history,
+#                    "level.stats" = levelstats,
+#                    "decision" = decision,
+#                    "levelout" = levelout,
+#                    "tree.max" = tree.max,
+#                    "inwords" = inwords.i,
+#                    "params" = list("algorithm" = algorithm,
+#                                    "goal" = goal,
+#                                    "goal.chase" = goal.chase,
+#                                    "goal.threshold" = goal.threshold,
+#                                    "sens.w" = sens.w,
+#                                    "max.levels" = max.levels,
+#                                    "cost.outcomes" = cost.outcomes,
+#                                    "cost.cues" = cost.cues,
+#                                    "decision.labels" = decision.labels,
+#                                    "main" = main,
+#                                    "repeat.cues" = repeat.cues),
+#                    "comp" = list("lr" = list("model" = lr.model, "stats" = lr.stats),
+#                                 "cart" = list("model" = cart.model, "stats" = cart.stats),
+#                                 "rf" = list("model" = rf.model, "stats" = rf.stats),
+#                                 "svm" = list("model" = svm.model, "stats" = svm.stats)),
+#                    "data" = data.ls
+# )
+#
+# class(x.FFTrees) <- "FFTrees"
+
+return(x)
 
 }
 

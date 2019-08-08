@@ -39,7 +39,7 @@ exits.df <- data.frame(exit.char = x$params$decision.labels,
 
 cue.names.l <- tolower(x$metadata$cue_names)
 my.tree <- tolower(my.tree)
-decision.labels <- tolower(decision.labels)
+decision.labels <- tolower(x$params$decision.labels)
 
 def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
 def <- def[2:length(def)]
@@ -203,7 +203,6 @@ thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 # Set final exit to .5
 exits.v[nodes.n] <- ".5"
 
-
 # Save result in tree.definitions
 
 x$trees$definitions <- data.frame(tree = 1,
@@ -213,6 +212,8 @@ x$trees$definitions <- data.frame(tree = 1,
                                  "directions" = paste(directions.v, collapse = ";"),
                                  "thresholds" = paste(thresholds.v, collapse = ";"),
                                  "exits" = paste(exits.v, collapse = ";"), stringsAsFactors = FALSE)
+
+x$trees$n <- 1
 
 return(x)
 

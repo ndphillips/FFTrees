@@ -9,7 +9,11 @@
 #' @param cost.each numeric.
 #' @param goal.threshold character.
 #'
-threshold_factor_grid <- function(thresholds = NULL,
+#' @import testthat
+#' @importFrom  magrittr "%>%"
+#'
+#'
+fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                    cue_v = NULL,
                                    criterion_v = NULL,
                                    directions = "=",
@@ -19,8 +23,8 @@ threshold_factor_grid <- function(thresholds = NULL,
                                    goal.threshold = "bacc") {
 
 # Assertions
-expect_true(!any(is.na(criterion_v)))
-expect_true(!any(is.na(cue_v)))
+testthat::expect_true(!any(is.na(criterion_v)))
+testthat::expect_true(!any(is.na(cue_v)))
 
 
   if(!is.null(thresholds)) {

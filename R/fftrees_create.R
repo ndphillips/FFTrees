@@ -20,6 +20,14 @@
 #' @param data.test dataframe.
 #' @param repeat.cues logical.
 #' @param quiet logical
+#' @param do.lr logical.
+#' @param do.cart logical.
+#' @param do.svm logical.
+#' @param do.rf logical.
+#' @param do.comp logical.
+#'
+#' @importFrom  magrittr "%>%"
+#' @import testthat
 #'
 #' @return An FFTrees object.
 #'
@@ -42,26 +50,30 @@ fftrees_create <- function(data = NULL,
                            my.tree = NULL,
                            data.test = NULL,
                            repeat.cues = NULL,
-                           quiet = NULL) {
-
+                           quiet = NULL,
+                           do.lr = TRUE,
+                           do.svm = TRUE,
+                           do.cart = TRUE,
+                           do.rf = TRUE,
+                           do.comp = TRUE) {
 
 # Validation tests ------------------------------------
 
 ## data ==============================================
 
-expect_true(!is.null(data),
+testthat::expect_true(!is.null(data),
             info = "data is NULL")
 
-expect_true(is.data.frame(data),
+testthat::expect_true(is.data.frame(data),
             info = "Object is not a dataframe")
 
 
 ## formula ============================================
 
-expect_true(!is.null(formula),
+testthat::expect_true(!is.null(formula),
             info = "formula is NULL")
 
-expect_is(formula, "formula")
+testthat::expect_is(formula, "formula")
 
 
 criterion_name <- paste(formula)[2]
@@ -71,10 +83,10 @@ criterion_name <- paste(formula)[2]
 
 algorithm_valid <- c("ifan", "dfan", "max", "zigzag")
 
-expect_true(!is.null(algorithm),
+testthat::expect_true(!is.null(algorithm),
             info = "algorithm is NULL")
 
-expect_true(algorithm %in% algorithm_valid)
+testthat::expect_true(algorithm %in% algorithm_valid)
 
 ## goal ================================================
 
@@ -96,10 +108,10 @@ if(is.null(goal)) {
   }
 }
 
-expect_true(!is.null(goal),
+testthat::expect_true(!is.null(goal),
             info = "goal is NULL")
 
-expect_true(goal %in% goal_valid)
+testthat::expect_true(goal %in% goal_valid)
 
 ## goal.chase ================================================
 
@@ -118,17 +130,17 @@ if(goal == "cost" & is.null(goal.chase)) {
 
 }
 
-expect_true(!is.null(goal.chase),
+testthat::expect_true(!is.null(goal.chase),
             info = "goal.chase is NULL")
 
-expect_true(goal.chase %in% goal_valid)
+testthat::expect_true(goal.chase %in% goal_valid)
 
 ## goal.threshold ================================================
 
-expect_true(!is.null(goal.threshold),
+testthat::expect_true(!is.null(goal.threshold),
             info = "goal.threshold is NULL")
 
-expect_true(goal.threshold %in% goal_valid)
+testthat::expect_true(goal.threshold %in% goal_valid)
 
 
 
@@ -137,7 +149,7 @@ expect_true(goal.threshold %in% goal_valid)
 
 numthresh.method_valid <- c("optimise", "median")
 
-expect_true(substr(numthresh.method, 1, 1) %in% substr(numthresh.method_valid, 1, 1),
+testthat::expect_true(substr(numthresh.method, 1, 1) %in% substr(numthresh.method_valid, 1, 1),
             info = paste0("numthresh.method is not valid\nTry one of the following: ",
             paste(numthresh.method_valid, collapse = ", ")))
 
@@ -147,19 +159,19 @@ expect_true(substr(numthresh.method, 1, 1) %in% substr(numthresh.method_valid, 1
 
 numthresh.n_valid <- c(3:20)
 
-expect_true(numthresh.n %in% numthresh.n_valid,
+testthat::expect_true(numthresh.n %in% numthresh.n_valid,
             info = paste0("numthresh.n is not valid\nTry one of the following: ",
                           paste(numthresh.n_valid, collapse = ", ")))
 
 
 ## sens.w ================================================
 
-expect_true(!is.null(sens.w),
+testthat::expect_true(!is.null(sens.w),
             info = "sens.w is NULL")
 
-expect_lte(sens.w, expected = 1)
+testthat::expect_lte(sens.w, expected = 1)
 
-expect_gte(sens.w, expected = 0)
+testthat::expect_gte(sens.w, expected = 0)
 
 ## max.levels =========================================
 
@@ -170,10 +182,10 @@ if(is.null(max.levels)) {
   if(quiet == FALSE) {"Setting max.levels = 4"}
 }
 
-expect_true(!is.null(max.levels),
+testthat::expect_true(!is.null(max.levels),
             info = "max.levels is NULL")
 
-expect_true(max.levels %in% 1:6,
+testthat::expect_true(max.levels %in% 1:6,
             info = "max.levels must be an integer between 1 and 6")
 
 ## cost.outcomes =========================================
@@ -190,14 +202,14 @@ if(quiet == FALSE) {
 
 }
 
-expect_true(!is.null(cost.outcomes),
+testthat::expect_true(!is.null(cost.outcomes),
             info = "cost.outcomes is NULL")
 
-expect_is(cost.outcomes,
+testthat::expect_is(cost.outcomes,
           class = "list")
 
-expect_equal(names(cost.outcomes),
-             expected = c("hi", "mi", "fa", "cr"))
+testthat::expect_equal(names(cost.outcomes),
+                       expected = c("hi", "mi", "fa", "cr"))
 
 
 
@@ -208,51 +220,51 @@ cost.cues <- FFTrees:::cost.cues.append(formula,
                                         data,
                                         cost.cues = cost.cues)
 
-expect_true(!is.null(cost.cues),
+testthat::expect_true(!is.null(cost.cues),
             info = "cost.cues is NULL")
 
-expect_is(cost.cues,
+testthat::expect_is(cost.cues,
           class = "list")
 
-expect_true(all(names(cost.cues) %in% names(data)),
+testthat::expect_true(all(names(cost.cues) %in% names(data)),
             info = "At least one of the values you specified in cost.cues is not in data")
 
 ## stopping.rule ====================================
 
 stopping.rule_valid <- c("exemplars", "levels")
 
-expect_true(stopping.rule %in% stopping.rule_valid)
+testthat::expect_true(stopping.rule %in% stopping.rule_valid)
 
 ## stopping.par ====================================
 
-expect_gt(stopping.par, expected = 0)
-expect_lt(stopping.par, expected = 1)
+testthat::expect_gt(stopping.par, expected = 0)
+testthat::expect_lt(stopping.par, expected = 1)
 
 ## decision.labels ===================================
 
-expect_true(!is.null(decision.labels),
+testthat::expect_true(!is.null(decision.labels),
             info = "decision.labels is NULL")
 
-expect_equal(length(decision.labels), 2)
+testthat::expect_equal(length(decision.labels), 2)
 
 ## repeat.cues ============================================
-expect_is(repeat.cues, "logical")
+testthat::expect_is(repeat.cues, "logical")
 
 # Data quality checks ----------------------------------------------------------
 
 ## Criterion is in data ===================================
 
-expect_true(criterion_name %in% names(data),
+testthat::expect_true(criterion_name %in% names(data),
             info = paste("The criterion", criterion_name, "is not in your data object"))
 
 ## No missing criterion values ============================
 
-expect_true(all(!is.na(data[[criterion_name]])),
+testthat::expect_true(all(!is.na(data[[criterion_name]])),
             info = "At least one of the criterion values are missing. Please remove these cases and try again.")
 
 ## Criterion has two unique values
 
-expect_equal(length(unique(data[[criterion_name]])),
+testthat::expect_equal(length(unique(data[[criterion_name]])),
              expected = 2,
              info = "Your criterion does not have exactly 2 unique values")
 
@@ -280,10 +292,10 @@ if(class(data[[criterion_name]]) %in% c("character", "factor")) {
 
 if(!is.null(data.test)) {
 
-expect_true(is.data.frame(data),
+testthat::expect_true(is.data.frame(data),
             info = "Object is not a dataframe")
 
-expect_true(criterion_name %in% names(data.test),
+testthat::expect_true(criterion_name %in% names(data.test),
             info = paste("The criterion", criterion_name, "is not in your data.test object"))
 
 }
@@ -345,6 +357,11 @@ data <- data %>%
                             cue_names = cue_names,
                             cues_n = ncol(data) - 1,                 # Cue names
                             cases_n = nrow(data)),             # Number of cases
+
+            cues = list(stats = list(train = NULL,
+                                     test = NULL),
+                        thresholds = list(train = NULL)),
+
             # Parameters
 
             params = list(algorithm = algorithm,
@@ -362,14 +379,24 @@ data <- data %>%
                           decision.labels = decision.labels,
                           main = main,
                           repeat.cues = repeat.cues,
-                          quiet = quiet),
+                          quiet = quiet,
+                          my.tree = my.tree,
+                          do.lr = do.lr,
+                          do.cart = do.cart,
+                          do.svm = do.svm,
+                          do.rf = do.rf,
+                          do.comp = do.comp),
 
             # Competitive algorithms
 
-            comp = list(lr = list(model = NULL, stats = NULL),
-                        cart = list(model = NULL, stats = NULL),
-                        rf = list(model = NULL, stats = NULL),
-                        svm = list(model = NULL, stats = NULL)))
+            comp = list(lr = list(model = NULL, results = list(train = list(stats = NULL),
+                                                               test = list(stats = NULL))),
+                        cart = list(model = NULL, results = list(train = list(stats = NULL),
+                                                                 test = list(stats = NULL))),
+                        rf = list(model = NULL, results = list(train = list(stats = NULL),
+                                                               test = list(stats = NULL))),
+                        svm = list(model = NULL, results = list(train = list(stats = NULL),
+                                                                test = list(stats = NULL)))))
 
   class(x) <- "FFTrees"
 

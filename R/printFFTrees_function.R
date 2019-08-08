@@ -12,16 +12,10 @@ print.FFTrees <- function(
   ...
 ) {
 
-goal <- x$params$goal
-sens.w <- x$params$sens.w
-criterion.name <- paste(x$formula)[2]
-
-n.trees <- nrow(x$tree.stats$train)
-n.cues.total <- x$data.desc$train$features
 
 if(is.null(tree)) {
 
-tree <- 1
+tree <- x$trees$best$train
 
 } else {
 
@@ -32,70 +26,98 @@ tree <- 1
 }
 
 
-train.cues <- paste(unique(unlist(strsplit(x$tree.definitions$cues[tree], ";"))), collapse = ",")
+train.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
 train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
-all.cues <- paste(unique(unlist(strsplit(x$tree.definitions$cues, ";"))), collapse = ",")
-all.cues.n <- length(unique(unlist(strsplit(x$tree.definitions$cues, ";"))))
+all.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues, ";"))), collapse = ",")
+all.cues.n <- length(unique(unlist(strsplit(x$trees$definitions$cues, ";"))))
 
-n.cues <- x$tree.definitions$nodes[tree]
+n.cues <- x$trees$definitions$nodes[tree]
 
-if(n.trees == 1) {summary.text <- paste(x$params$algorithm, " FFT predicting ", criterion.name, " with up to ", n.cues, " nodes", sep = "")}
-if(n.trees > 1) {summary.text <- paste(n.trees, " FFTs predicting ", criterion.name, " (", x$params$decision.labels[1], " v ", x$params$decision.labels[2], ")", sep = "")}
+if(x$trees$n == 1) {summary.text <- paste(x$params$algorithm, " FFT predicting ", x$metadata$criterion_name, " with up to ", n.cues, " nodes", sep = "")}
+if(x$trees$n > 1) {summary.text <- paste(x$trees$n, " FFTs predicting ", x$metadata$criterion_name, " (", x$params$decision.labels[1], " v ", x$params$decision.labels[2], ")", sep = "")}
 
-params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', sens.w = ", x$params$sens.w, ", max.levels = ", x$params$max.levels)
+params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', x$params$sens.w = ", x$params$x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
-accuracy.text <- paste("FFT ", tree, " (of ", n.trees, ") predicts ", criterion.name," using ", train.cues.n, " cues: {", paste(unlist(strsplit(train.cues, ",")), collapse = ", "), "}", sep = "")
 
 # Confusion table
 
-
 if(is.null(x$params$main) == FALSE) {
 
-cat(x$params$main)
-cat("\n")
+  cat(x$params$main)
+  cat("\n")
+
 }
 
-cat(accuracy.text)
-cat("\n")
+cat(crayon::green("FFTrees ")) #, rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
+cat('\n')
+cat("-", x$trees$n, "fast-and-frugal trees predicting", crayon::underline(x$metadata$criterion_name), "\n")
 
-cat("\n")
-sapply(1:length(inwords(x = x, tree = tree)), FUN = function(i) {cat(paste0("[", i, "] ", inwords(x, tree, version = 1)[i], ".\n"))})
-cat("\n")
+if(tree == x$trees$best$train) {
 
+cat(paste("- FFT ", crayon::underline("#", x$trees$best$train, sep = ""), " optimises ", crayon::underline(x$params$goal), " using ", train.cues.n, " cues: {",
+          crayon::underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
 
-x_summary <- summary(x, tree)
-rownames(x_summary) <- paste0(c("cases       .",
-                               "hits        .",
-                               "misses      .",
-                               "false al    .",
-                               "corr rej    .",
-                               "speed       .",
-                               "frugality   .",
-                               "cost        .",
-                               "accuracy    .",
-                               "balanced    .",
-                               "sensitivity .",
-                               "specificity ."), rownames(x_summary))
-
-if(all(is.na(x_summary$test))) {
-  x_summary$test <- rep("--", nrow(x_summary))
-  x_summary$train <- round(x_summary$train, 3)
-
-} else {
-
-  if(class(x_summary$train) == "numeric") {x_summary$train <- round(x_summary$train, 2)}
-  if(class(x_summary$test) == "numeric") {x_summary$test <- round(x_summary$test, 2)}
+  cat("\n")
 
 }
 
 
-print(x_summary)
-
 
 cat("\n")
 
-cat(params.text)
+cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
 
+cat("\n")
+
+for(i in 1:length(x$trees$inwords[[tree]])) {
+
+  cat(paste0("[", i, "] ", x$trees$inwords[[tree]][i], ".\n"))
 
 }
+cat("\n")
+
+
+
+
+if(is.null(x$trees$results$test$stats)) {
+
+  mydata <- "train"
+
+  hi = x$trees$results$train$stats$hi[tree]
+  mi = x$trees$results$train$stats$mi[tree]
+  fa = x$trees$results$train$stats$fa[tree]
+  cr = x$trees$results$train$stats$cr[tree]
+  title <- "Training"
+  N <- nrow(x$data$train)
+
+  } else {
+
+    mydata <- "test"
+
+    hi = x$trees$results$test$stats$hi[tree]
+    mi = x$trees$results$test$stats$mi[tree]
+    fa = x$trees$results$test$stats$fa[tree]
+    cr = x$trees$results$test$stats$cr[tree]
+    title <- "Testing"
+    N <- nrow(x$data$test)
+  }
+
+
+cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Accuracy\n", sep = ""), sep = "")
+
+
+
+
+cat(title, " Data: N = ", scales::comma(N), ", ",
+    "Pos (+) = ", scales::comma(hi + mi), " (", scales::percent((hi + mi) / (hi + mi + fa + cr)),") ",
+    # "- ", scales::comma(cr + fa), " (", scales::percent((cr + fa) / (hi + mi + fa + cr)),")",
+
+    "\n\n", sep = "")
+
+FFTrees:::console_confusionmatrix(hi = hi,
+                        mi = mi,
+                        fa = fa,
+                        cr = cr)
+}
+

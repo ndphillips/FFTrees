@@ -1,12 +1,14 @@
 #' Calculates thresholds that maximize a statistic (goal) for cues.
 #'
-#' @param x
-#' @param data_train
+#' @param x FFTrees.
+#' @param data_train dataframe.
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
+#' @importFrom testthat expect_true
 #' @return A dataframe containing thresholds and marginal classification statistics for each cue
 #' @export
 #' @examples
+#'
 #'
 #'\dontrun{
 #'  # What are the best thresholds for each cue in the mushrooms dataset?
@@ -16,18 +18,18 @@
 #'
 #'
 
-cuerank <- function(x = NULL,
+fftrees_cuerank <- function(x = NULL,
                     data_train = NULL,
                     rounding = NULL) {
 
 
-  expect_true(!is.null(data_train))
-  expect_true(!is.null(x))
+  testthat::expect_true(!is.null(data_train))
+  testthat::expect_true(!is.null(x))
 
   # Define criterion (vector) and cues (dataframe)
 
   cue_df <- data_train[,2:ncol(data_train), drop = FALSE]
-  criterion_v <- data_train %>% pull(x$metadata$criterion_name)
+  criterion_v <- data_train %>% dplyr::pull(x$metadata$criterion_name)
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
   cue_names <- names(cue_df)
@@ -37,7 +39,7 @@ cuerank <- function(x = NULL,
 
   # Validation: Make sure there is variance in the criterion!
 
-  expect_true(length(unique(criterion_v)) > 1)
+  testthat::expect_true(length(unique(criterion_v)) > 1)
 
 
   # Clean up and validation
@@ -82,7 +84,7 @@ cuerank <- function(x = NULL,
   # Get main information about current cue
 
   cue_i_name <- names(cue_df)[cue_i]
-  cue_i_class <- class(cue_df %>% pull(cue_i))
+  cue_i_class <- class(cue_df %>% dplyr::pull(cue_i))
   cue_i_v <- unlist(cue_df[, cue_i])
   cue_i_cost <- x$params$cost.cues[[cue_i_name]]
 
@@ -97,15 +99,15 @@ cuerank <- function(x = NULL,
           if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
             # "optimize" method
-            if(numthresh.method == "o") {
+            if(x$params$numthresh.method == "o") {
 
               # Get all possible (sorted) cue values
               cue_i_levels <- sort(unique(unlist(cue_i_v)))
 
               # If too long, reduce to numthresh.n
-              if(length(cue_i_levels) > numthresh.n) {
+              if(length(cue_i_levels) > x$params$numthresh.n) {
 
-                indicies <- round(seq(1, length(cue_i_levels), length.out = numthresh.n), 0)
+                indicies <- round(seq(1, length(cue_i_levels), length.out = x$params$numthresh.n), 0)
                 cue_i_levels <- cue_i_levels[indicies]
 
               }
@@ -113,7 +115,7 @@ cuerank <- function(x = NULL,
             }
 
             # "median" method
-            if(numthresh.method == "m") {
+            if(x$params$numthresh.method == "m") {
 
               if(length(unique(unlist(cue_i_v))) == 2) {cue_i_levels <- unique(unlist(cue_i_v))} else {
 
@@ -141,7 +143,7 @@ cuerank <- function(x = NULL,
 
         # If there are > 50% unique cue.levels, send a warning
 
-            if(length(cue_i_levels) > .5 * nrow(data)) {
+            if(length(cue_i_levels) > .5 * nrow(data_train)) {
 
               warning(paste0("The cue ", cue_names[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
           }
@@ -177,7 +179,7 @@ cuerank <- function(x = NULL,
       # Numeric, integer
       if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
-        cue_i_stats <- threshold_numeric_grid(thresholds = cue_i_levels,
+        cue_i_stats <- fftrees_threshold_numeric_grid(thresholds = cue_i_levels,
                                               cue_v = cue_i_v,
                                               criterion_v = criterion_v,
                                               sens.w = x$params$sens.w,
@@ -190,7 +192,7 @@ cuerank <- function(x = NULL,
       # factor, character, and logical
       if(substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
-        cue_i_stats <- threshold_factor_grid(thresholds = cue_i_levels,
+        cue_i_stats <- fftrees_threshold_factor_grid(thresholds = cue_i_levels,
                                              cue_v = cue_i_v,
                                              criterion_v = criterion_v,
                                              directions = directions,
@@ -222,7 +224,7 @@ cuerank <- function(x = NULL,
 
       # If all cue values are NA, then return empty results
 
-      cue_i_best <- threshold_factor_grid(thresholds = NULL,
+      cue_i_best <- fftrees_threshold_factor_grid(thresholds = NULL,
                                            cue_v = NULL,
                                            criterion_v = NULL,
                                            sens.w = sens.w,
@@ -241,9 +243,8 @@ cuerank <- function(x = NULL,
 
   rownames(cuerank_df) <- 1:nrow(cuerank_df)
 
-
     # Add cue costs
-  cuerank_df$costcue <- unlist(cost.cues[match(cuerank_df$cue, names(cost.cues))])
+  cuerank_df$costcue <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
 
   # Re-order
   cuerank_df <- cuerank_df[,c("cue", "class", setdiff(names(cuerank_df), c("cue", "class")))]
