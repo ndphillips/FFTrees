@@ -26,9 +26,9 @@ cues_names <- names(cue_df)
 # INITIAL TRAINING CUE ACCURACIES
 # ----------
 
-cue_best_df <- fftrees_cuerank(x,
-                               data_train = x$data$train)
-
+x <- fftrees_cuerank(x,
+                     newdata = x$data$train,
+                     data = "train")
 
 # ----------
 # GROW TREES
@@ -89,7 +89,7 @@ for(tree_i in 1:tree_n) {
 
   ## data
   data_current <- x$data$train
-  cue_df_current <- cue_df
+  cue_df_current <- x$cues$stats$train
 
   ## Determine exits for tree_i
 
@@ -97,7 +97,7 @@ for(tree_i in 1:tree_n) {
   level_n <- length(exits_i)
 
   ## Set up placeholders
-  cue_best_df.original <- cue_best_df
+  cue_best_df.original <- x$cues$stats$train
 
   # Decisions, levelout, and cost vectors
   decision_v <- rep(NA, cases_n)
@@ -121,7 +121,7 @@ for(tree_i in 1:tree_n) {
                            "direction" = NA,
                            "exit" = NA)
 
-  level_stat_names <- setdiff(names(fftrees_threshold_factor_grid()), c("threshold", "direction"))
+  level_stat_names <- setdiff(names(FFTrees:::fftrees_threshold_factor_grid()), c("threshold", "direction"))
   level_stats_i[level_stat_names] <- NA
 
   ## asif.stats shows cumulative classification statistics as if all exemplars were
@@ -178,9 +178,14 @@ if(x$params$algorithm == "dfan") {
   # If there is no variance in the criterion, then stop growth!
   if(all(duplicated(data_current)[-1L])) {grow.tree <- FALSE ; break}
 
+  # Create new dynamic cue ran
+
+  x <- FFTrees::fftrees_cuerank(x,
+                                newdata = data_current,
+                                data = "dynamic")
+
   # Calculate cue accuracies with remaining exemplars
-  cue_best_df_current <-  fftrees_cuerank(x = x,
-                                          data_train = data_current)
+  cue_best_df_current <-  x$cues$stats$dynamic
 
 }
 

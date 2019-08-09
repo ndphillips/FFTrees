@@ -206,12 +206,12 @@ testthat::expect_true(!is.null(cost.outcomes),
             info = "cost.outcomes is NULL")
 
 testthat::expect_is(cost.outcomes,
-          class = "list")
+                   class = "list",
+                   info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)")
 
 testthat::expect_equal(names(cost.outcomes),
-                       expected = c("hi", "mi", "fa", "cr"))
-
-
+                       expected = c("hi", "mi", "fa", "cr"),
+                       info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)")
 
 ## cost.cues =========================================
 
@@ -311,9 +311,19 @@ data <- model.frame(formula = formula,
 data <- data %>%
   dplyr::mutate_if(is.factor, paste)
 
+# Do the same to data.test
+
+data.test <- model.frame(formula = formula,
+                    data = data.test,
+                    na.action = NULL)
+
+## Convert factor columns to character
+
+data.test <- data.test %>%
+  dplyr::mutate_if(is.factor, paste)
+
 # Get cue names
 cue_names <- names(data)[2:ncol(data)]
-
 
 # Convert data to tibble
 
@@ -359,8 +369,11 @@ data <- data %>%
                             cases_n = nrow(data)),             # Number of cases
 
             cues = list(stats = list(train = NULL,
-                                     test = NULL),
-                        thresholds = list(train = NULL)),
+                                     test = NULL,
+                                     dynamic = NULL),
+                        thresholds = list(train = NULL,
+                                          test = NULL,
+                                          dynamic = NULL)),
 
             # Parameters
 

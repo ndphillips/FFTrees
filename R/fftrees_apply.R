@@ -27,10 +27,7 @@ fftrees_apply <- function(x,
 
   }
 
-
-
   criterion_v <- data[[x$metadata$criterion_name]]
-
 
   # Setup outputs
 
@@ -50,14 +47,13 @@ fftrees_apply <- function(x,
     output
 
   })
-  names(output_ls) <- output_names
 
+  names(output_ls) <- output_names
 
   # [level_stats_ls]
   #   A list with one element per tree, each containing cumulative level statistics
 
   level_stats_ls <- vector("list", length = x$trees$n)
-
 
   # LOOP
   #  Loop over trees
@@ -230,6 +226,59 @@ fftrees_apply <- function(x,
 
   }
 
+  # Sort trees by goal
+
+  if(x$params$goal == "cost") {
+
+    tree_rank <- rank(tree_stats$cost, ties.method = "first")
+
+  } else {
+
+    tree_rank <- rank(-tree_stats[[x$params$goal]], ties = "first")
+
+  }
+
+  # Get tree rankings by goal
+
+  tree_rank_df <- data.frame(tree = 1:nrow(tree_stats),
+                             tree_new = tree_rank)
+
+  # Update
+
+  tree_stats <- tree_stats %>%
+    left_join(tree_rank_df, by = "tree") %>%
+    select(-tree) %>%
+    rename(tree = tree_new) %>%
+    select(tree, everything()) %>%
+    arrange(tree)
+
+  level_stats <- level_stats %>%
+    left_join(tree_rank_df, by = "tree") %>%
+    select(-tree) %>%
+    rename(tree = tree_new) %>%
+    select(tree, everything()) %>%
+    arrange(tree, level)
+
+  output_ls$decision <- output_ls$decision %>%
+    select(tree_rank_df$tree_new) %>%
+    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
+
+  output_ls$levelout <- output_ls$levelout %>%
+    select(tree_rank_df$tree_new) %>%
+    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
+
+  output_ls$costout <- output_ls$costout %>%
+    select(tree_rank_df$tree_new) %>%
+    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
+
+  output_ls$costcue <- output_ls$costcue %>%
+    select(tree_rank_df$tree_new) %>%
+    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
+
+  output_ls$cost <- output_ls$cost %>%
+    select(tree_rank_df$tree_new) %>%
+    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
+
   # Add results to x -------------------------
 
   x$trees$results[[mydata]]$stats <- tree_stats
@@ -249,6 +298,11 @@ fftrees_apply <- function(x,
   } else {
 
     best_tree <- x$trees$results[[mydata]]$stats$tree[x$trees$results[[mydata]]$stats[[x$params$goal]] == max(x$trees$results[[mydata]]$stats[[x$params$goal]])]
+  }
+
+  if(1 %in% best_tree == FALSE) {
+
+    stop("Something is weird, the best tree is not labelled as number 1 (and it should be)")
   }
 
   # If multiple, take the simpler tree (with fewer nodes)

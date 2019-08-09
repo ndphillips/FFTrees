@@ -162,7 +162,13 @@ comp.pred <- function(formula,
                       algorithm = NULL,
                       model = NULL,
                       new.factors = "exclude") {
-
+#
+#   formula = x$formula
+#   data.train = x$data$train
+#   data.test = x$data$test
+#   algorithm = "lr"
+#   model = NULL
+#
 
   if(is.null(formula)) {stop("You must enter a valid formula")}
   if(is.null(algorithm)) {stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")}
@@ -489,8 +495,6 @@ comp.pred <- function(formula,
         #   pred.test <- predict(train.mod, data.test[cannot.pred.v == FALSE,])
         #
         # }
-
-
 
       }
     }
@@ -826,19 +830,25 @@ classtable <- function(prediction_v = NULL,
 
 
 
-console_confusionmatrix <- function(hi, mi, fa, cr) {
+console_confusionmatrix <- function(hi, mi, fa, cr, cost) {
 
 # Header Row
 cat("|", rep(" ", times = 8), "| True + | True - |\n", sep = "")
 
 # Line
-cat("|-", rep("-", times = 7), "|", rep("-", times = 8), "|", rep("-", times = 8), "|\n", sep = "")
+cat("|", rep("-", times = 8), "|", rep("-", times = 8), "|", rep("-", times = 8), "|\n", sep = "")
 
 # Decide + Row
 cat("|Decide +| ", crayon::green(scales::comma(hi)),
-    rep(" ", 6 - floor(log10(hi))), "| ",
+    crayon::silver(" hi"),
+
+
+    rep(" ", 3 - ifelse(hi > 0, floor(log10(hi)), 0)), "| ",
     crayon::red(fa),
-    rep(" ", 6 - floor(log10(fa))),
+    crayon::silver(" fa"),
+
+
+    rep(" ", 3 - ifelse(fa > 0, floor(log10(fa)), 0)),
     "| ", sep = "")
 cat(scales::comma(hi + fa))
 
@@ -847,9 +857,13 @@ cat("\n")
 # Decide - Row
 
 cat("|Decide -| ", crayon::red(scales::comma(mi)),
-    rep(" ", 6 - floor(log10(mi))), "| ",
+    crayon::silver(" mi"),
+
+    rep(" ", 3 - ifelse(mi > 0, floor(log10(mi)), 0)), "| ",
     crayon::green(cr),
-    rep(" ", 6 - floor(log10(cr))), "| ",
+    crayon::silver(" cr"),
+
+    rep(" ", 3 - ifelse(cr > 0, floor(log10(cr)), 0)), "| ",
     sep = "")
 
 cat(scales::comma(mi + cr))
@@ -863,10 +877,10 @@ cat("|-", rep("-", times = 7), "|", rep("-", times = 8), "|", rep("-", times = 8
 cat("           ")
 cat(scales::comma(hi + mi))
 cat(" ")
-cat(rep(" ", 5 - floor(log10(hi + mi))))
+cat(rep(" ", 5 - ifelse((hi + mi) > 0, floor(log10(hi + mi)), 0)))
 cat(scales::comma(cr + fa))
 
-cat(rep(" ", 5 - floor(log10(cr + fa))))
+cat(rep(" ", 5 - ifelse((cr + fa) > 0, floor(log10(cr + fa)), 0)))
 cat("")
 
 cat(scales::number(hi + mi + fa + cr))
@@ -884,6 +898,8 @@ cat("bacc =", scales::percent((hi / (hi + mi) + cr / (cr + fa)) / 2, accuracy = 
 cat("  sens =", scales::percent(hi / (hi + mi), accuracy = .1), sep = " ")
 cat("  spec =", scales::percent(cr / (cr + fa), accuracy = .1), sep = " ")
 cat("\n")
+cat("E(cost) =", scales::comma(cost, accuracy = .001), sep = " ")
+
 # cat("br   =", scales::percent((hi + mi) / (hi + cr + mi + fa), accuracy = .1), sep = " ")
 # cat("\n")
 

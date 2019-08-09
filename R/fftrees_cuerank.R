@@ -1,7 +1,7 @@
 #' Calculates thresholds that maximize a statistic (goal) for cues.
 #'
 #' @param x FFTrees.
-#' @param data_train dataframe.
+#' @param newdata dataframe.
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
 #' @importFrom testthat expect_true
@@ -19,17 +19,18 @@
 #'
 
 fftrees_cuerank <- function(x = NULL,
-                    data_train = NULL,
-                    rounding = NULL) {
+                            newdata = NULL,
+                            data = "train",
+                            rounding = NULL) {
 
-
-  testthat::expect_true(!is.null(data_train))
+  testthat::expect_true(!is.null(newdata))
   testthat::expect_true(!is.null(x))
+  testthat::expect_true(data %in% c("train", "test", "dynamic"))
 
   # Define criterion (vector) and cues (dataframe)
 
-  cue_df <- data_train[,2:ncol(data_train), drop = FALSE]
-  criterion_v <- data_train %>% dplyr::pull(x$metadata$criterion_name)
+  cue_df <- newdata[,2:ncol(newdata), drop = FALSE]
+  criterion_v <- newdata %>% dplyr::pull(x$metadata$criterion_name)
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
   cue_names <- names(cue_df)
@@ -143,7 +144,7 @@ fftrees_cuerank <- function(x = NULL,
 
         # If there are > 50% unique cue.levels, send a warning
 
-            if(length(cue_i_levels) > .5 * nrow(data_train)) {
+            if(length(cue_i_levels) > .5 * nrow(newdata)) {
 
               warning(paste0("The cue ", cue_names[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
           }
@@ -179,7 +180,7 @@ fftrees_cuerank <- function(x = NULL,
       # Numeric, integer
       if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
-        cue_i_stats <- fftrees_threshold_numeric_grid(thresholds = cue_i_levels,
+        cue_i_stats <- FFTrees:::fftrees_threshold_numeric_grid(thresholds = cue_i_levels,
                                               cue_v = cue_i_v,
                                               criterion_v = criterion_v,
                                               sens.w = x$params$sens.w,
@@ -192,7 +193,7 @@ fftrees_cuerank <- function(x = NULL,
       # factor, character, and logical
       if(substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
-        cue_i_stats <- fftrees_threshold_factor_grid(thresholds = cue_i_levels,
+        cue_i_stats <- FFTrees:::fftrees_threshold_factor_grid(thresholds = cue_i_levels,
                                              cue_v = cue_i_v,
                                              criterion_v = criterion_v,
                                              directions = directions,
@@ -201,6 +202,12 @@ fftrees_cuerank <- function(x = NULL,
                                              cost.outcomes = x$param$cost.outcomes,
                                              goal.threshold = x$params$goal.threshold)
       }
+
+
+      # Save results
+
+        x$cues$thresholds[[data]][[cue_i_name]] <- cue_i_stats
+
 
       # Get thresholds that maximizes goal.threshold
 
@@ -224,12 +231,12 @@ fftrees_cuerank <- function(x = NULL,
 
       # If all cue values are NA, then return empty results
 
-      cue_i_best <- fftrees_threshold_factor_grid(thresholds = NULL,
-                                           cue_v = NULL,
-                                           criterion_v = NULL,
-                                           sens.w = sens.w,
-                                           cost.outcomes = cost.outcomes,
-                                           goal.threshold = goal.threshold)
+      cue_i_best <- FFTrees:::fftrees_threshold_factor_grid(thresholds = NULL,
+                                                 cue_v = NULL,
+                                                 criterion_v = NULL,
+                                                 sens.w = sens.w,
+                                                 cost.outcomes = cost.outcomes,
+                                                 goal.threshold = goal.threshold)
 
     }
 
@@ -249,6 +256,9 @@ fftrees_cuerank <- function(x = NULL,
   # Re-order
   cuerank_df <- cuerank_df[,c("cue", "class", setdiff(names(cuerank_df), c("cue", "class")))]
 
-  return(cuerank_df)
+  x$cues$stats[[data]] <- cuerank_df
+
+  return(x)
+
 
 }

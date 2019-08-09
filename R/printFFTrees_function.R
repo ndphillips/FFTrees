@@ -49,24 +49,31 @@ if(is.null(x$params$main) == FALSE) {
 
 }
 
-cat(crayon::green("FFTrees ")) #, rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
+cat(crayon::blue("FFTrees ")) #, rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
 cat('\n')
-cat("-", x$trees$n, "fast-and-frugal trees predicting", crayon::underline(x$metadata$criterion_name), "\n")
+cat("- Trees: ", x$trees$n, " fast-and-frugal trees predicting ",
+    crayon::underline(x$metadata$criterion_name), "\n", sep = "")
+cat("- Outcome costs: [hi = ", x$params$cost.outcomes$hi, ", mi = ", x$params$cost.outcomes$mi,
+    ", fa = ", x$params$cost.outcomes$fa, ", cr = ", x$params$cost.outcomes$cr, "]\n", sep = "")
+
+out <- x$params$cost.cues[unlist(strsplit(train.cues, ","))]
+cat("- Cue costs: [", paste(names(out), "=", out, collapse = ", "), ", ...]\n", sep = "")
 
 if(tree == x$trees$best$train) {
 
-cat(paste("- FFT ", crayon::underline("#", x$trees$best$train, sep = ""), " optimises ", crayon::underline(x$params$goal), " using ", train.cues.n, " cues: {",
-          crayon::underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
+  cat(paste("- FFT ", crayon::underline("#", x$trees$best$train, sep = ""), " optimises ", crayon::underline(x$params$goal), " using ", train.cues.n, " cues: {",
+            crayon::underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
 
   cat("\n")
 
 }
 
 
-
 cat("\n")
 
 cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
+
+
 
 cat("\n")
 
@@ -90,6 +97,7 @@ if(is.null(x$trees$results$test$stats)) {
   cr = x$trees$results$train$stats$cr[tree]
   title <- "Training"
   N <- nrow(x$data$train)
+  cost <- x$trees$results$train$stats$cost[tree]
 
   } else {
 
@@ -101,12 +109,12 @@ if(is.null(x$trees$results$test$stats)) {
     cr = x$trees$results$test$stats$cr[tree]
     title <- "Testing"
     N <- nrow(x$data$test)
+    cost <- x$trees$results$test$stats$cost[tree]
+
   }
 
 
 cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Accuracy\n", sep = ""), sep = "")
-
-
 
 
 cat(title, " Data: N = ", scales::comma(N), ", ",
@@ -118,6 +126,7 @@ cat(title, " Data: N = ", scales::comma(N), ", ",
 FFTrees:::console_confusionmatrix(hi = hi,
                         mi = mi,
                         fa = fa,
-                        cr = cr)
+                        cr = cr,
+                        cost = cost)
 }
 

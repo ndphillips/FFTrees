@@ -126,7 +126,7 @@ FFTrees <- function(formula = NULL,
                     quiet = TRUE
 ) {
 #
-# #
+# # #
 # # #
 #   formula = NULL
 #   data = NULL
@@ -164,9 +164,9 @@ FFTrees <- function(formula = NULL,
 #   quiet = TRUE
 # #
 # #
-#   formula = diagnosis ~.
+#   formula = diagnosis ~ sex + age
 #   data = heartdisease
-
+#   train.p = .5
 
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {

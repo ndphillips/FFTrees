@@ -99,7 +99,6 @@ As we can see, this tree did not perform nearly as well as our earlier one.
 
 ## Iris.v
 
-
 ```{r fig.align = "center", out.width="250px", echo = FALSE}
 knitr::include_graphics("../inst/virginica.jpg")
 ```

@@ -2,7 +2,7 @@
 #'
 #' @description Plots an FFTrees object created by the FFTrees() function.
 #' @param x A FFTrees object created from \code{"FFTrees()"}
-#' @param data Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
+#' @param data One of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
 #' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)
 #' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
 #' @param main character. The main plot label.
@@ -74,36 +74,32 @@ plot.FFTrees <- function(
   ...
 ) {
 #
-# #
-  # x = x.FFTrees
-  # data = "test"
-  # what = 'tree'
-  # tree = "best.train"
-  # main = NULL
-  # decision.labels = NULL
-  # cue.cex = NULL
-  # threshold.cex = NULL
-  # decision.cex = 1
-  # comp = TRUE
-  # stats = TRUE
-  # cue.labels = NULL
-  #
-  # show.header = TRUE
-  # show.tree = NULL
-  # show.confusion = TRUE
-  # show.levels = FALSE
-  # show.roc = FALSE
-  # show.icons = FALSE
-  # show.iconguide = FALSE
-  #
-  # label.tree = "my label"
-  # label.performance = "my performance"
-  #
-  # n.per.icon = NULL
-  # which.tree = NULL
-  # level.type = "bar"
-  # decision.names = NULL
-
+# # #
+#   data = "train"
+#   what = 'tree'
+#   tree = "best.train"
+#   main = NULL
+#   hlines = TRUE
+#   cue.labels = NULL
+#   decision.labels = NULL
+#   cue.cex = NULL
+#   threshold.cex = NULL
+#   decision.cex = 1
+#   comp = TRUE
+#   stats = TRUE
+#   show.header = NULL
+#   show.tree = NULL
+#   show.confusion = NULL
+#   show.levels = NULL
+#   show.roc = NULL
+#   show.icons = NULL
+#   show.iconguide = NULL
+#   label.tree = NULL
+#   label.performance = NULL
+#   n.per.icon = NULL
+#   which.tree = NULL
+#   level.type = "bar"
+#   decision.names = NULL
 
 # Check for invalid or missing arguments
 
@@ -245,7 +241,6 @@ if(what != 'cues') {
 # --------------------------
 {
   # Extract important parameters from x
-  n.trees <- nrow(x$tree.stats$train)
   goal <- x$params$goal
 
   if(is.null(decision.labels)) {
@@ -319,15 +314,15 @@ if(what != 'cues') {
 
     }
 
-    if(is.numeric(tree) & (tree %in% 1:n.trees) == F) {
+    if(is.numeric(tree) & (tree %in% 1:x$trees$n) == F) {
 
-      stop(paste("You asked for a tree that does not exist. This object has", n.trees, "trees"))
+      stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees"))
 
     }
 
     if(class(data) == "character") {
 
-      if(data == "test" & is.null(x$tree.stats$test)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
+      if(data == "test" & is.null(x$trees$results$test$stats)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
 
     }
   }
@@ -337,20 +332,15 @@ if(what != 'cues') {
 
   if(tree == "best.train") {
 
-    if(("tree.max" %in% names(x)) == FALSE) {
-
-      tree <- x$tree.stats$train$tree[which.max(x$tree.stats$train[[goal]])]
-
-    } else {tree <- x$tree.max}
+    tree <- x$trees$best$train
 
   }
+
   if(tree == "best.test") {
 
-    tree <- x$tree.stats$test$tree[which.max(x$tree.stats$test[[goal]])]
+    tree <- x$trees$best$test
 
   }
-
-  if(length(tree) > 1) {tree <- tree[1]}
 
   # DEFINE CRITICAL OBJECTS
 
@@ -359,83 +349,45 @@ if(what != 'cues') {
   rf.stats <- NULL
   svm.stats <- NULL
 
-  if(data == "train") {
 
-    decision.v <- x$decision$train[,tree]
-    tree.stats <- x$tree.stats$train
-    level.stats <- x$level.stats$train[x$level.stats$train$tree == tree,]
 
-    if(comp == TRUE) {
+  decision.v <- x$trees$results[[data]]$decisions[,tree]
+  tree.stats <- x$trees$results[[data]]$stats
+  level.stats <- x$trees$results[[data]]$level_stats[x$trees$results[[data]]$level_stats$tree == tree,]
 
-      if(is.null(x$comp$lr$stats) == FALSE) {
-        lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.train,
-                               "spec" = x$comp$lr$stats$spec.train)
-      }
+  if(comp == TRUE) {
 
-      if(is.null(x$comp$cart$stats) == FALSE) {
-        cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.train, "spec" = x$comp$cart$stats$spec.train)
-
-      }
-
-      if(is.null(x$comp$rf$stats) == FALSE) {
-
-        rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.train, "spec" = x$comp$rf$stats$spec.train)
-
-      }
-
-      if(is.null(x$comp$svm$stats) == FALSE) {
-        svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.train, "spec" = x$comp$svm$stats$spec.train)
-      }
+    if(is.null(x$comp$lr$results) == FALSE) {
+      lr.stats <- data.frame("sens" = x$comp$lr$results[[data]]$sens,
+                             "spec" = x$comp$lr$results[[data]]$spec)
     }
 
-    n.exemplars <- x$data.desc$train$cases
-    n.pos <- x$data.desc$train$n.pos
-    n.neg <- x$data.desc$train$n.neg
-    mcu <- x$tree.stats$train$mcu[tree]
-    crit.br <- x$data.desc$train$criterion.br
+    if(is.null(x$comp$cart$results) == FALSE) {
 
-  }
-  if(data == "test") {
+      lcart.stats <- data.frame("sens" = x$comp$cart$results[[data]]$sens,
+                                "spec" = x$comp$cart$results[[data]]$spec)
 
-    decision.v <- x$decision$test[,tree]
-    tree.stats <- x$tree.stats$test
-    level.stats <- x$level.stats$test[x$level.stats$test$tree == tree,]
-
-    if(comp == TRUE) {
-
-      if(is.null(x$comp$lr$stats) == FALSE) {
-
-
-        lr.stats <- data.frame("sens" = x$comp$lr$stats$sens.test, "spec" = x$comp$lr$stats$spec.test)
-      }
-
-      if(is.null(x$comp$cart$stats) == FALSE) {
-
-        cart.stats <- data.frame("sens" = x$comp$cart$stats$sens.test, "spec" = x$comp$cart$stats$spec.test)
-
-      }
-
-      if(is.null(x$comp$rf$stats) == FALSE) {
-
-        rf.stats <- data.frame("sens" = x$comp$rf$stats$sens.test, "spec" = x$comp$rf$stats$spec.test)
-
-      }
-
-      if(is.null(x$comp$svm$stats) == FALSE) {
-
-        svm.stats <- data.frame("sens" = x$comp$svm$stats$sens.test, "spec" = x$comp$svm$stats$spec.test)
-
-
-      }
     }
 
-    n.exemplars <- x$data.desc$test$cases
-    n.pos <- x$data.desc$test$n.pos
-    n.neg <- x$data.desc$test$n.neg
-    mcu <- x$tree.stats$test$mcu[tree]
-    crit.br <- x$data.desc$test$criterion.br
+    if(is.null(x$comp$rf$results) == FALSE) {
 
+      rf.stats <- data.frame("sens" = x$comp$rf$results[[data]]$sens,
+                             "spec" = x$comp$rf$results[[data]]$spec)
+
+    }
+
+    if(is.null(x$comp$svm$results) == FALSE) {
+      svm.stats <- data.frame("sens" = x$comp$svm$results[[data]]$sens,
+                              "spec" = x$comp$svm$results[[data]]$spec)
+    }
   }
+
+  n.exemplars <- nrow(x$data[[data]])
+  n.pos <- sum(x$data[[data]][[x$metadata$criterion_name]])
+  n.neg <- sum(x$data[[data]][[x$metadata$criterion_name]] == FALSE)
+  mcu <-   x$trees$results[[data]]$stats$mcu[tree]
+  crit.br <- mean(x$data[[data]][[x$metadata$criterion_name]])
+
 
   final.stats <- tree.stats[tree,]
 
@@ -889,8 +841,8 @@ par(xpd = F)
 
 # Add p.signal and p.noise levels
 
-signal.p <- x$data.desc[[data]]$criterion.br
-noise.p <- 1 - x$data.desc[[data]]$criterion.br
+signal.p <- mean(x$data[[data]][[x$metadata$criterion_name]])
+noise.p <- 1 - signal.p
 
 p.rect.ylim <- c(.1, .6)
 
@@ -1001,7 +953,7 @@ segments(-plot.width, 0, - plot.width * .3, 0, col = panel.line.col, lwd = panel
 segments(plot.width, 0, plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 }
 
-if(is.null(label.tree)) {label.tree <- paste("FFT #", tree, " (of ", n.trees, ")", sep = "")}
+if(is.null(label.tree)) {label.tree <- paste("FFT #", tree, " (of ", x$trees$n, ")", sep = "")}
 
 text(x = 0, y = 0,
      label.tree,
@@ -1601,20 +1553,20 @@ if(show.confusion) {
 
   text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
-       "Cor Rej", cex = 1, font = 3, adj = 0)
+       "cr", cex = 1, font = 3, adj = 0)
 
   text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
-       "Miss", cex = 1, font = 3, adj = 0)
+       "mi", cex = 1, font = 3, adj = 0)
 
 
   text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
-       "False Al", cex = 1, font = 3, adj = 0)
+       "fa", cex = 1, font = 3, adj = 0)
 
   text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
        final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
-       "Hit", cex = 1, font = 3, adj = 0)
+       "hi", cex = 1, font = 3, adj = 0)
 
 
 }
@@ -1909,23 +1861,10 @@ if(show.roc) {
   if(comp == TRUE) {
 
   # CART
-if(is.null(x$comp$cart$stats) == FALSE) {
+if(is.null(x$comp$cart$results) == FALSE) {
 
-if(data == "train") {
-
-  cart.spec <- x$comp$cart$stats$spec.train
-  cart.sens <- x$comp$cart$stats$sens.train
-
-}
-
-if(data == "test") {
-
-  cart.spec <- x$comp$cart$stats$spec.test
-  cart.sens <- x$comp$cart$stats$sens.test
-
-}
-
-
+  cart.spec <- x$comp$cart$results[[data]]$spec
+  cart.sens <- x$comp$cart$results[[data]]$sens
 
 points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
@@ -1957,23 +1896,15 @@ par("xpd" = TRUE)
 
 
 }
+
 ## LR
 
-if(is.null(lr.stats) == FALSE) {
+if(is.null(x$comp$lr$results) == FALSE) {
 
-  if(data == "train") {
 
-    lr.spec <- x$comp$lr$stats$spec.train
-    lr.sens <- x$comp$lr$stats$sens.train
+    lr.spec <- x$comp$lr$results[[data]]$spec
+    lr.sens <- x$comp$lr$results[[data]]$sens
 
-  }
-
-  if(data == "test") {
-
-    lr.spec <- x$comp$lr$stats$spec.test
-    lr.sens <- x$comp$lr$stats$sens.test
-
-  }
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
@@ -2006,99 +1937,80 @@ par("xpd" = T)
 }
 
 ## rf
+if(is.null(x$comp$rf$results) == FALSE) {
 
-if(is.null(rf.stats) == FALSE) {
+      rf.spec <- x$comp$rf$results[[data]]$spec
+      rf.sens <- x$comp$rf$results[[data]]$sens
 
-  if(data == "train") {
+      points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
+             pch = 21, cex = 1.75,
+             col = transparent("purple", .1),
+             bg = transparent("purple", .9), lwd = 1)
 
-    rf.spec <- x$comp$rf$stats$spec.train
-    rf.sens <- x$comp$rf$stats$sens.train
+      points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
+             pch = "C", cex = .7, col = gray(.2), lwd = 1)
 
-  }
+      par("xpd" = FALSE)
 
-  if(data == "test") {
+      points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
+             pch = 21, cex = 2.5,
+             col = transparent("purple", .1),
+             bg = transparent("purple", .9))
 
-    rf.spec <- x$comp$rf$stats$spec.test
-    rf.sens <- x$comp$rf$stats$sens.test
+      points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
+             pch = "R", cex = .9, col = gray(.2))
 
-  }
+      text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+           final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
+           labels = "  RF", adj = 0, cex = .9)
 
-points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 1.75,
-       col = transparent("purple", .1),
-       bg = transparent("purple", .9))
+      par("xpd" = TRUE)
 
-points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
-       pch = "R", cex = .7, col = gray(.2))
 
-par("xpd" = F)
-
-points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2.5,
-       col = transparent("purple", .1),
-       bg = transparent("purple", .9))
-
-points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
-       pch = "R", cex = .9, col = gray(.2))
-
-text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
-     final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
-     labels = "  RF", adj = 0, cex = .9)
-
-par("xpd" = T)
-
-}
+    }
 
 ## svm
-    if(is.null(svm.stats) == FALSE) {
+    ## svm
+    if(is.null(x$comp$svm$results) == FALSE) {
 
-if(data == "train") {
+      svm.spec <- x$comp$svm$results[[data]]$spec
+      svm.sens <- x$comp$svm$results[[data]]$sens
 
-  svm.spec <- x$comp$svm$stats$spec.train
-  svm.sens <- x$comp$svm$stats$sens.train
+      points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
+             pch = 21, cex = 1.75,
+             col = transparent("orange", .1),
+             bg = transparent("orange", .9), lwd = 1)
 
-}
+      points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
+             pch = "C", cex = .7, col = gray(.2), lwd = 1)
 
-if(data == "test") {
+      par("xpd" = FALSE)
 
-  svm.spec <- x$comp$svm$stats$spec.test
-  svm.sens <- x$comp$svm$stats$sens.test
+      points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
+             pch = 21, cex = 2.5,
+             col = transparent("orange", .1),
+             bg = transparent("orange", .9))
 
-}
+      points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
+             final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
+             pch = "S", cex = .9, col = gray(.2))
 
-points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 1.75,
-       col = transparent("orange", .1),
-       bg = transparent("orange", .9))
+      text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
+           final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
+           labels = "  SVM", adj = 0, cex = .9)
 
-points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
-       pch = "S", cex = .7, col = gray(.2))
+      par("xpd" = TRUE)
 
-par("xpd" = F)
 
-points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
-       pch = 21, cex = 2.5,
-       col = transparent("orange", .1),
-       bg = transparent("orange", .9))
+    }
 
-points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
-       final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
-       pch = "S", cex = .9, col = gray(.2))
-
-text(final.roc.x.loc[1] + 1.13 * lloc$width[lloc$element == "roc"],
-     final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
-     labels = "  SVM", adj = 0, cex = .9)
-
-par("xpd" = T)
-
-}
 
   }
 
@@ -2106,7 +2018,7 @@ par("xpd" = T)
 {
 
   roc.order <- order(fft.spec.vec, decreasing = TRUE)
- # roc.order <- 1:n.trees
+ # roc.order <- 1:x$trees$n
 
   fft.sens.vec.ord <- fft.sens.vec[roc.order]
   fft.spec.vec.ord <- fft.spec.vec[roc.order]
@@ -2147,10 +2059,10 @@ par("xpd" = T)
 
 
   # Labels
-  if(comp == TRUE & any(is.null(x$comp$lr$stats) == FALSE,
-                        is.null(x$comp$cart$stats) == FALSE,
-                        is.null(x$comp$svm$stats) == FALSE,
-                        is.null(x$comp$rf$stats) == FALSE
+  if(comp == TRUE & any(is.null(x$comp$lr$results) == FALSE,
+                        is.null(x$comp$cart$results) == FALSE,
+                        is.null(x$comp$svm$results) == FALSE,
+                        is.null(x$comp$rf$results) == FALSE
                         )) {
 
   par("xpd" = FALSE)
