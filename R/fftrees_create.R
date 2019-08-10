@@ -190,6 +190,13 @@ testthat::expect_true(max.levels %in% 1:6,
 
 ## cost.outcomes =========================================
 
+if(!is.null(cost.outcomes) & goal != "cost") {
+
+  message("Note: You specified cost.outcomes but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth")
+
+}
+
+
 if(is.null(cost.outcomes)) {
 
 cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
@@ -214,6 +221,13 @@ testthat::expect_equal(names(cost.outcomes),
                        info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)")
 
 ## cost.cues =========================================
+
+if(!is.null(cost.cues) & goal != "cost") {
+
+  message("Note: You specified cost.cues but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth")
+
+}
+
 
 # Append cost.cues
 cost.cues <- FFTrees:::cost.cues.append(formula,
@@ -313,6 +327,8 @@ data <- data %>%
 
 # Do the same to data.test
 
+if(!is.null(data.test)) {
+
 data.test <- model.frame(formula = formula,
                     data = data.test,
                     na.action = NULL)
@@ -320,7 +336,10 @@ data.test <- model.frame(formula = formula,
 ## Convert factor columns to character
 
 data.test <- data.test %>%
-  dplyr::mutate_if(is.factor, paste)
+  dplyr::mutate_if(is.factor, paste) %>%
+  dplyr::as_tibble()
+
+}
 
 # Get cue names
 cue_names <- names(data)[2:ncol(data)]

@@ -3,7 +3,8 @@
 #' @param x FFTrees. An FFTrees object
 #' @importFrom stats anova predict glm as.formula var
 #'
-fftrees_grow_fan <- function(x) {
+fftrees_grow_fan <- function(x,
+                             repeat.cues = TRUE) {
 
 if(!x$params$quiet) {message(paste0("Growing FFTs with ", x$params$algorithm))}
 
@@ -113,9 +114,9 @@ for(tree_i in 1:tree_n) {
   ## level_stats_i shows cumulative classification decisions statistics at each level
   level_stats_i <- data.frame("level" = NA,
                            "cue" = NA,
-                           "costcue" = NA,
-                           "costcue.cum" = NA,
-                           "costout"= NA,
+                           "cost_cues" = NA,
+                           "cost_cues.cum" = NA,
+                           "cost_decisions"= NA,
                            "class" = NA,
                            "threshold" = NA,
                            "direction" = NA,
@@ -209,8 +210,8 @@ cuecost_v[is.na(decision_v)] <- cuecost_v[is.na(decision_v)] + cue_cost_new
 
 level_stats_i$level[level_current] <- level_current
 level_stats_i$cue[level_current] <- cues_name_new
-level_stats_i$costcue[level_current] <- cue_cost_new
-level_stats_i$costcue.cum[level_current] <- sum(level_stats_i$costcue[1:level_current])
+level_stats_i$cost_cues[level_current] <- cue_cost_new
+level_stats_i$cost_cues.cum[level_current] <- sum(level_stats_i$cost_cues[1:level_current])
 level_stats_i$class[level_current] <- cue_class_new
 level_stats_i$threshold[level_current] <- cue_threshold_new
 level_stats_i$direction[level_current] <- cue_direction_new
@@ -337,7 +338,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
   level_stats_i$exit[level_current] <- exit_current
 
 
-  level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout", "cost")]
+  level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")] <- results_cum[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")]
 
 }
 
@@ -409,7 +410,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
     level_stats_i$exit[last.level] <- .5
 
 
-    level_stats_i[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "costout")]
+    level_stats_i[last.level,  c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last.classtable[,c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
 
   }
 

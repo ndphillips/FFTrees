@@ -644,13 +644,13 @@ Add_Stats <- function(data,
   data$wacc <- with(data, sens * sens.w + spec * (1 - sens.w))
 
   # Outcome Cost
-  data$costout <- with(data, -1 * (hi * cost.outcomes$hi + fa * cost.outcomes$fa + mi * cost.outcomes$mi + cr * cost.outcomes$cr)) / data$n
+  data$cost_decisions <- with(data, -1 * (hi * cost.outcomes$hi + fa * cost.outcomes$fa + mi * cost.outcomes$mi + cr * cost.outcomes$cr)) / data$n
 
   # Total Cost
-  data$cost <- data$costout - cost.each
+  data$cost <- data$cost_decisions - cost.each
 
   # reorder
-  data <- data[, c("sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "costout", "cost")]
+  data <- data[, c("sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions", "cost")]
 
   return(data)
 
@@ -738,7 +738,7 @@ classtable <- function(prediction_v = NULL,
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
       # cost per case
-      costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
       # auc
@@ -772,7 +772,7 @@ classtable <- function(prediction_v = NULL,
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
       # cost per case
-      costout <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
       # auc
@@ -798,7 +798,7 @@ classtable <- function(prediction_v = NULL,
     bacc <- NA
     wacc <- NA
     dprime <- NA
-    costout <- NA
+    cost_decisions <- NA
     cost <- NA
     # auc <- NA
 
@@ -821,7 +821,7 @@ classtable <- function(prediction_v = NULL,
     bacc = bacc,
     wacc = wacc,
     dprime = dprime,
-    costout = costout,
+    cost_decisions = cost_decisions,
     cost = cost)
 
   return(result)

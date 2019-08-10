@@ -153,7 +153,7 @@ label.cex <- .8
 
 # Background
 rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
-     col = transparent("white", trans.val = .1),
+     col = yarrr::transparent("white", trans.val = .1),
      border = gray(.2))
 
 # Column labels

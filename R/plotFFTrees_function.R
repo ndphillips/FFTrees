@@ -75,33 +75,36 @@ plot.FFTrees <- function(
 ) {
 #
 # # #
-#   data = "train"
-#   what = 'tree'
-#   tree = "best.train"
-#   main = NULL
-#   hlines = TRUE
-#   cue.labels = NULL
-#   decision.labels = NULL
-#   cue.cex = NULL
-#   threshold.cex = NULL
-#   decision.cex = 1
-#   comp = TRUE
-#   stats = TRUE
-#   show.header = NULL
-#   show.tree = NULL
-#   show.confusion = NULL
-#   show.levels = NULL
-#   show.roc = NULL
-#   show.icons = NULL
-#   show.iconguide = NULL
-#   label.tree = NULL
-#   label.performance = NULL
-#   n.per.icon = NULL
-#   which.tree = NULL
-#   level.type = "bar"
-#   decision.names = NULL
+  # data = "train"
+  # what = 'tree'
+  # tree = "best.train"
+  # main = NULL
+  # hlines = TRUE
+  # cue.labels = NULL
+  # decision.labels = NULL
+  # cue.cex = NULL
+  # threshold.cex = NULL
+  # decision.cex = 1
+  # comp = TRUE
+  # stats = TRUE
+  # show.header = NULL
+  # show.tree = NULL
+  # show.confusion = NULL
+  # show.levels = NULL
+  # show.roc = NULL
+  # show.icons = NULL
+  # show.iconguide = NULL
+  # label.tree = NULL
+  # label.performance = NULL
+  # n.per.icon = NULL
+  # which.tree = NULL
+  # level.type = "bar"
+  # decision.names = NULL
 
 # Check for invalid or missing arguments
+
+# Input validation
+{
 
 if(what %in% c("cues", "tree", "roc") == FALSE) {
 
@@ -114,6 +117,8 @@ if(is.null(decision.names) == FALSE) {
   message("decision.names is deprecated, use decision.lables instead")
 
   decision.labels <- decision.names
+}
+
 }
 
 # If what == cues, then send inputs to showcues()
@@ -562,10 +567,10 @@ error.colfun <- circlize::colorRamp2(c(0, 50, 100),
 correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
                            colors = c("white", "green", "black"))
 
-error.bg <- transparent(error.colfun(35), .2)
-error.border <-  transparent(error.colfun(65), .1)
-correct.bg <- transparent(correct.colfun(35), .2)
-correct.border <-  transparent(correct.colfun(65), .1)
+error.bg <- yarrr::transparent(error.colfun(35), .2)
+error.border <-  yarrr::transparent(error.colfun(65), .1)
+correct.bg <- yarrr::transparent(correct.colfun(35), .2)
+correct.border <-  yarrr::transparent(correct.colfun(65), .1)
 
 max.cex <- 6
 min.cex <- 1
@@ -1869,8 +1874,8 @@ if(is.null(x$comp$cart$results) == FALSE) {
 points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 1.75,
-         col = transparent("red", .1),
-         bg = transparent("red", .9), lwd = 1)
+         col = yarrr::transparent("red", .1),
+         bg = yarrr::transparent("red", .9), lwd = 1)
 
   points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
@@ -1881,8 +1886,8 @@ par("xpd" = FALSE)
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
    final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
    pch = 21, cex = 2.5,
-   col = transparent("red", .1),
-   bg = transparent("red", .9))
+   col = yarrr::transparent("red", .1),
+   bg = yarrr::transparent("red", .9))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
    final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
@@ -1909,8 +1914,8 @@ if(is.null(x$comp$lr$results) == FALSE) {
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 1.75,
-       col = transparent("blue", .1),
-       bg = transparent("blue", .9))
+       col = yarrr::transparent("blue", .1),
+       bg = yarrr::transparent("blue", .9))
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
@@ -1921,8 +1926,8 @@ par("xpd" = F)
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2.5,
-       col = transparent("blue", .1),
-       bg = transparent("blue", .9))
+       col = yarrr::transparent("blue", .1),
+       bg = yarrr::transparent("blue", .9))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
@@ -1945,8 +1950,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 1.75,
-             col = transparent("purple", .1),
-             bg = transparent("purple", .9), lwd = 1)
+             col = yarrr::transparent("purple", .1),
+             bg = yarrr::transparent("purple", .9), lwd = 1)
 
       points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
@@ -1957,8 +1962,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 2.5,
-             col = transparent("purple", .1),
-             bg = transparent("purple", .9))
+             col = yarrr::transparent("purple", .1),
+             bg = yarrr::transparent("purple", .9))
 
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
@@ -1983,8 +1988,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 1.75,
-             col = transparent("orange", .1),
-             bg = transparent("orange", .9), lwd = 1)
+             col = yarrr::transparent("orange", .1),
+             bg = yarrr::transparent("orange", .9), lwd = 1)
 
       points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
@@ -1995,8 +2000,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 2.5,
-             col = transparent("orange", .1),
-             bg = transparent("orange", .9))
+             col = yarrr::transparent("orange", .1),
+             bg = yarrr::transparent("orange", .9))
 
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
@@ -2036,8 +2041,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
 
   points(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2.5, col = transparent("green", .3),
-         bg = transparent("white", .1))
+         pch = 21, cex = 2.5, col = yarrr::transparent("green", .3),
+         bg = yarrr::transparent("white", .1))
 
   text(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
@@ -2050,8 +2055,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
 
   points(final.roc.x.loc[1] + (1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec[tree] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 3, col = gray(1), #col = transparent("green", .3),
-         bg = transparent("green", .3), lwd = 1)
+         pch = 21, cex = 3, col = gray(1), #col = yarrr::transparent("green", .3),
+         bg = yarrr::transparent("green", .3), lwd = 1)
 
   text(final.roc.x.loc[1] + (1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec[tree] * lloc$height[lloc$element == "roc"],
@@ -2069,8 +2074,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2.5, col = transparent("green", .3),
-         bg = transparent("green", .7))
+         pch = 21, cex = 2.5, col = yarrr::transparent("green", .3),
+         bg = yarrr::transparent("green", .7))
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],
@@ -2096,5 +2101,6 @@ par(mfrow = c(1, 1))
 par(mar = c(5, 4, 4, 1) + .1)
 
 }
+
 }
 

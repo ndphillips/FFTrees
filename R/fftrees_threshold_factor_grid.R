@@ -129,7 +129,7 @@ testthat::expect_true(!any(is.na(cue_v)))
 
 
   # Order by goal.threshold and change column order
-  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc", "costout", "cost")]
+  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc", "cost_decisions", "cost")]
 
 
   # Remove invalid directions
@@ -149,7 +149,7 @@ testthat::expect_true(!any(is.na(cue_v)))
                           "bacc" = NA,
                           "acc" = NA,
                           "wacc" = NA,
-                          "costout" = NA,
+                          "cost_decisions" = NA,
                           "cost" = NA)
 
   }

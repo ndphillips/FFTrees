@@ -17,7 +17,7 @@
 \arguments{
 \item{x}{A FFTrees object created from \code{"FFTrees()"}}
 
-\item{data}{Either a dataframe of new data, or one of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.}
+\item{data}{One of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.}
 
 \item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)}
 

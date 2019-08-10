@@ -12,7 +12,6 @@ fftrees_apply <- function(x,
                           allNA.pred = FALSE
 ) {
 
-
   testthat::expect_true(mydata %in% c("train", "test"))
 
   if(mydata == "train") {
@@ -34,7 +33,7 @@ fftrees_apply <- function(x,
   #  [output_ls]
   #    A list containing dataframes with one row per case, and one column per tree
 
-  output_names <- c("decision", "levelout", "costout", "costcue", "cost")
+  output_names <- c("decision", "levelout", "cost_decisions", "cost_cues", "cost")
 
   output_ls <- lapply(1:length(output_names), FUN = function(i) {
 
@@ -43,6 +42,8 @@ fftrees_apply <- function(x,
                                    ncol = x$trees$n))
 
     names(output) <- paste("tree", 1:x$trees$n, sep = ".")
+
+    output <- tibble::as_tibble(output)
 
     output
 
@@ -84,8 +85,8 @@ fftrees_apply <- function(x,
 
     decision_v <- rep(NA, nrow(data))
     levelout_v <- rep(NA, nrow(data))
-    costcue_v <-  rep(NA, nrow(data))
-    costout_v <-  rep(NA, nrow(data))
+    cost_cues_v <-  rep(NA, nrow(data))
+    cost_decisions_v <-  rep(NA, nrow(data))
     cost_v <-  rep(NA, nrow(data))
 
     # level_stats_i contains cumulative level statistics
@@ -98,11 +99,11 @@ fftrees_apply <- function(x,
                                 exit = exit_v,
                                 stringsAsFactors = FALSE)
 
-    critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "costout")
+    critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions")
 
     # Add stat names to level_stats_i
     level_stats_i[critical_stats_v] <- NA
-    level_stats_i$costcue <- NA
+    level_stats_i$cost_cues <- NA
 
 
     # Loop over levels
@@ -155,32 +156,32 @@ fftrees_apply <- function(x,
 
       decision_v[classify.now] <- current.decisions[classify.now]
       levelout_v[classify.now] <- level_i
-      costcue_v[classify.now] <- costc.level.cum[level_i]
+      cost_cues_v[classify.now] <- costc.level.cum[level_i]
 
-      costout_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == TRUE] <- x$params$cost.outcomes$hi
-      costout_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == FALSE] <- x$params$cost.outcomes$fa
-      costout_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == TRUE] <- x$params$cost.outcomes$mi
-      costout_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == FALSE] <- x$params$cost.outcomes$cr
+      cost_decisions_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == TRUE] <- x$params$cost.outcomes$hi
+      cost_decisions_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == FALSE] <- x$params$cost.outcomes$fa
+      cost_decisions_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == TRUE] <- x$params$cost.outcomes$mi
+      cost_decisions_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == FALSE] <- x$params$cost.outcomes$cr
 
-      cost_v[classify.now] <- costcue_v[classify.now] + costout_v[classify.now]
+      cost_v[classify.now] <- cost_cues_v[classify.now] + cost_decisions_v[classify.now]
 
 
       # Get cumulative level stats
 
-      my_level_stats_i <- classtable(prediction_v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
+      my_level_stats_i <- FFTrees:::classtable(prediction_v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
                                      criterion_v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
                                      sens.w = x$params$sens.w,
-                                     cost.v = costcue_v[levelout_v <= level_i & is.finite(levelout_v)],
+                                     cost.v = cost_cues_v[levelout_v <= level_i & is.finite(levelout_v)],
                                      cost.outcomes = x$params$cost.outcomes)
 
 
-      # level_stats_i$costc <- sum(costcue[,tree_i], na.rm = TRUE)
+      # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[,critical_stats_v]
 
       # Add cue cost and cost
 
-      level_stats_i$costcue[level_i] <- mean(costcue_v[!is.na(costcue_v)])
-      level_stats_i$cost[level_i] <-level_stats_i$costcue[level_i]  + level_stats_i$costout[level_i]
+      level_stats_i$cost_cues[level_i] <- mean(cost_cues_v[!is.na(cost_cues_v)])
+      level_stats_i$cost[level_i] <-level_stats_i$cost_cues[level_i]  + level_stats_i$cost_decisions[level_i]
 
     }
 
@@ -190,8 +191,8 @@ fftrees_apply <- function(x,
 
     output_ls$decision[,tree_i] <- decision_v
     output_ls$levelout[,tree_i] <- levelout_v
-    output_ls$costcue[,tree_i] <- costcue_v
-    output_ls$costout[,tree_i] <- costout_v
+    output_ls$cost_cues[,tree_i] <- cost_cues_v
+    output_ls$cost_decisions[,tree_i] <- cost_decisions_v
     output_ls$cost[,tree_i] <- cost_v
 
 
@@ -209,7 +210,7 @@ fftrees_apply <- function(x,
 
     helper <- paste(level_stats$tree, level_stats$level, sep = ".")
     maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-    tree_stats <- cbind(x$trees$definitions[,c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "costcue", "cost")])
+    tree_stats <- cbind(x$trees$definitions[,c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cues", "cost")])
     names(tree_stats)[1] <- "tree"
     rownames(tree_stats) <- 1:nrow(tree_stats)
 
@@ -226,98 +227,15 @@ fftrees_apply <- function(x,
 
   }
 
-  # Sort trees by goal
-
-  if(x$params$goal == "cost") {
-
-    tree_rank <- rank(tree_stats$cost, ties.method = "first")
-
-  } else {
-
-    tree_rank <- rank(-tree_stats[[x$params$goal]], ties = "first")
-
-  }
-
-  # Get tree rankings by goal
-
-  tree_rank_df <- data.frame(tree = 1:nrow(tree_stats),
-                             tree_new = tree_rank)
-
-  # Update
-
-  tree_stats <- tree_stats %>%
-    left_join(tree_rank_df, by = "tree") %>%
-    select(-tree) %>%
-    rename(tree = tree_new) %>%
-    select(tree, everything()) %>%
-    arrange(tree)
-
-  level_stats <- level_stats %>%
-    left_join(tree_rank_df, by = "tree") %>%
-    select(-tree) %>%
-    rename(tree = tree_new) %>%
-    select(tree, everything()) %>%
-    arrange(tree, level)
-
-  output_ls$decision <- output_ls$decision %>%
-    select(tree_rank_df$tree_new) %>%
-    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
-
-  output_ls$levelout <- output_ls$levelout %>%
-    select(tree_rank_df$tree_new) %>%
-    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
-
-  output_ls$costout <- output_ls$costout %>%
-    select(tree_rank_df$tree_new) %>%
-    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
-
-  output_ls$costcue <- output_ls$costcue %>%
-    select(tree_rank_df$tree_new) %>%
-    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
-
-  output_ls$cost <- output_ls$cost %>%
-    select(tree_rank_df$tree_new) %>%
-    rename_at(vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
-
   # Add results to x -------------------------
 
   x$trees$results[[mydata]]$stats <- tree_stats
   x$trees$results[[mydata]]$level_stats <- level_stats
   x$trees$results[[mydata]]$decisions <- output_ls$decision
   x$trees$results[[mydata]]$levelout <- output_ls$levelout
-  x$trees$results[[mydata]]$costout <- output_ls$costout
-  x$trees$results[[mydata]]$costcue <- output_ls$costcue
+  x$trees$results[[mydata]]$cost_decisions <- output_ls$cost_decisions
+  x$trees$results[[mydata]]$cost_cues <- output_ls$cost_cues
   x$trees$results[[mydata]]$cost <- output_ls$cost
-
-  # Calculate best tree and save in x$trees$best ==============================
-
-  if(x$params$goal == "cost") {
-
-    best_tree <- x$trees$results[[mydata]]$stats$tree[x$trees$results[[mydata]]$stats[[x$params$goal]] == min(x$trees$results[[mydata]]$stats[[x$params$goal]])]
-
-  } else {
-
-    best_tree <- x$trees$results[[mydata]]$stats$tree[x$trees$results[[mydata]]$stats[[x$params$goal]] == max(x$trees$results[[mydata]]$stats[[x$params$goal]])]
-  }
-
-  if(1 %in% best_tree == FALSE) {
-
-    stop("Something is weird, the best tree is not labelled as number 1 (and it should be)")
-  }
-
-  # If multiple, take the simpler tree (with fewer nodes)
-
-  if(length(best_tree) > 1) {
-
-    best_tree <- x$trees$definitions %>%
-      dplyr::filter(tree %in% best_tree) %>%
-      dplyr::arrange(nodes) %>%
-      dplyr::slice(1) %>%
-      dplyr::pull(tree)
-
-  }
-
-  x$trees$best[[mydata]] <- best_tree
 
   return(x)
 

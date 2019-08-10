@@ -123,11 +123,11 @@ FFTrees <- function(formula = NULL,
                     force = FALSE,
                     verbose = NULL,
                     comp = NULL,
-                    quiet = TRUE
+                    quiet = FALSE
 ) {
 #
 # # #
-# # #
+# # # # # #
 #   formula = NULL
 #   data = NULL
 #   data.test = NULL
@@ -162,11 +162,12 @@ FFTrees <- function(formula = NULL,
 #   verbose = NULL
 #   comp = NULL
 #   quiet = TRUE
-# #
-# #
-#   formula = diagnosis ~ sex + age
+# # #
+# # #
+#   formula = diagnosis ~ .
 #   data = heartdisease
-#   train.p = .5
+#   cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
+#   goal = "bacc"
 
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {
@@ -254,6 +255,10 @@ x <- FFTrees:::fftrees_define(x, object = object)
 
 x <- FFTrees:::fftrees_apply(x, mydata = "train")
 
+# Rank trees by goal
+
+x <- FFTrees:::fftrees_ranktrees(x)
+
 # Test.........
 
 if(!is.null(x$data$test)) {
@@ -279,8 +284,8 @@ x <- FFTrees:::fftrees_fitcomp(x = x)
 #                   "tree.definitions" = tree.definitions,
 #                   "tree.stats" = treestats,
 #                   "cost" = list("cost" = cost,
-#                                  "outcomes" = costout,
-#                                  "cues" = costcue),
+#                                  "outcomes" = cost_decisions,
+#                                  "cues" = cost_cues),
 #                    # "history" = history,
 #                    "level.stats" = levelstats,
 #                    "decision" = decision,

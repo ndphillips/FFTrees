@@ -251,7 +251,7 @@ fftrees_cuerank <- function(x = NULL,
   rownames(cuerank_df) <- 1:nrow(cuerank_df)
 
     # Add cue costs
-  cuerank_df$costcue <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
+  cuerank_df$cost_cues <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
 
   # Re-order
   cuerank_df <- cuerank_df[,c("cue", "class", setdiff(names(cuerank_df), c("cue", "class")))]
