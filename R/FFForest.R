@@ -12,6 +12,8 @@
 #' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "bacc" = balanced accuracy, "d" = d-prime
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
 #' @param sens.w numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)
+#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param cost.cues list A list containing containing costs for each cue. Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number. Cues not present in \code{cost.cues} are assume to have 0 cost.
 #' @param quiet logical. Should progress reports be printed?
 #' @param cpus integer. Number of cpus to use. Any value larger than 1 will initiate parallel calculations in snowfall.
 #' @param do.comp,do.lr,do.cart,do.rf,do.svm logical. See arguments in \code{FFTrees()}
@@ -42,6 +44,8 @@ FFForest <- function(formula = NULL,
                      goal = "wacc",
                      goal.chase = "wacc",
                      sens.w = .5,
+                     cost.outcomes = NULL,
+                     cost.cues = NULL,
                      quiet = TRUE,
                      cpus = 1,
                      do.comp = FALSE,
@@ -52,7 +56,9 @@ FFForest <- function(formula = NULL,
                      rank.method = NULL,
                      hr.weight = NULL
 ) {
-#
+# #
+#   formula = diagnosis ~.
+#   data = heartdisease
 #   data.test = NULL
 #   max.levels = 5
 #   ntree = 10
@@ -61,7 +67,7 @@ FFForest <- function(formula = NULL,
 #   goal = "wacc"
 #   goal.chase = "wacc"
 #   sens.w = .5
-#   verbose = TRUE
+#   quiet = TRUE
 #   cpus = 1
 #   do.comp = FALSE
 #   do.lr = TRUE
@@ -70,29 +76,7 @@ FFForest <- function(formula = NULL,
 #   do.svm = TRUE
 #   rank.method = NULL
 #   hr.weight = NULL
-#
-#   formula = diagnosis ~.
-#   data = heartdisease
-#   ntree = 10
-#   train.p = .5
 
-
-# Check for deprecated arguments
-
-if(is.null(rank.method) == FALSE) {
-
-  warning("The argument rank.method is deprecated. Use algorithm instead.")
-
-  algorithm <- rank.method
-
-}
-if(is.null(hr.weight) == FALSE) {
-
-    warning("The argument hr.weight is deprecated. Use sens.weight instead.")
-
-    sens.weight <- hr.weight
-
-  }
 
 data.mf <- model.frame(formula = formula,
                        data = data)
@@ -126,6 +110,8 @@ result.i <- FFTrees(formula = formula,
                               goal.chase = goal.chase,
                               quiet = FALSE,
                               sens.w = sens.w,
+                              cost.outcomes = cost.outcomes,
+                              cost.cues = cost.cues,
                               do.comp = do.comp,
                               do.cart = do.cart,
                               do.lr = do.lr,
@@ -175,14 +161,11 @@ return(list("trees" = tree.stats.i,
 }
 
 
-
 result.ls <- parallel::mclapply(1:nrow(simulations), FUN = function(x) {
 
   if(!quiet) {cat(paste0(x, " of ", nrow(simulations), ", "))}
 
   return(getsim.fun(x))}, mc.cores = cpus)
-
-
 
 # Append final results to simulations
 
@@ -193,20 +176,12 @@ fft.models <- lapply(1:length(result.ls), FUN = function(x) {
 
 })
 
-best.tree.v <- sapply(1:length(result.ls), FUN = function(i) {
-
-  best.tree.i <- fft.models[[i]]$trees$best$train
-
-  return(best.tree.i)
-
-})
 
 decisions <- matrix(unlist(lapply(1:length(result.ls), FUN = function(i) {
 
   return(result.ls[[i]]$decisions)
 
 })), nrow = nrow(data), ncol = ntree)
-
 
 
 # Tree definitions
@@ -217,14 +192,11 @@ for(stat.i in c("nodes", "cues", "thresholds", "directions", "classes", "exits")
                                   FUN = function(x) {
 
                                     result.ls[[x]]$tree.definitions[[stat.i]][best.tree.v[x]]})
-
 }
-
 
 # Train stats
 
 for(stat.i in c("n", "hi", "mi", "fa", "sens", "spec", "acc", "bacc", "wacc", "dprime", "pci", "mcu")) {
-
 
   simulations[[paste0(stat.i, ".train")]] <- sapply(1:length(result.ls),
                                   FUN = function(x) {
@@ -235,10 +207,7 @@ for(stat.i in c("n", "hi", "mi", "fa", "sens", "spec", "acc", "bacc", "wacc", "d
                                                     FUN = function(x) {
 
                                                       result.ls[[x]]$trees$test[[stat.i]][best.tree.v[x]]})
-
 }
-
-
 
 # Get overall cue frequencies
 frequencies <- table(unlist(strsplit(simulations$cues, ";")))
@@ -281,7 +250,6 @@ FFForest.Test.Decisions <- sapply(1:nrow(simulations), FUN = function(x) {
                      formula = formula,
                      tree.definitions = simulations[x,])$decision
 
-
 })
 
 FFForest.Test.Decisions <- rowMeans(FFForest.Test.Decisions) >= .5
@@ -293,7 +261,6 @@ test.stats <- classtable(prediction.v = FFForest.Test.Decisions,
 if(is.null(data.test)) {test.stats <- NULL}
 
 forest.stats <- list(train = train.stats, test = test.stats)
-
 
 # Get single surrogate tree with highest agreement with FFForest
 {
@@ -339,7 +306,6 @@ if(do.lr) {
   names(lr.sim) <- gsub("lr.", replacement = "", x = names(lr.sim))
 
 } else {lr.sim <- NULL}
-
 
 
 if(do.cart) {

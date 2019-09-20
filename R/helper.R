@@ -828,63 +828,80 @@ classtable <- function(prediction_v = NULL,
 
 }
 
-
-
 console_confusionmatrix <- function(hi, mi, fa, cr, cost) {
+#
+# hi <- 6534
+# mi <- 5
+# fa <- 765
+# cr <- 54
+#   cost <- 0
+#
+
+num_space <- function(x) {
+
+  if(x == 0) {return(1)}
+
+  ceiling(log10(x)) + floor(log(x, base = 1000))
+
+  }
+
+col_width <- max(c(8, floor(log10(max(c(hi, mi, fa, cr)))) + floor(log(max(c(hi, mi, fa, cr)), base = 1000)) + 5))
 
 # Header Row
-cat("|", rep(" ", times = 8), "| True + | True - |\n", sep = "")
+cat("|", rep(" ", times = 9),
+    "| True +",
+    rep(" ", col_width - 7),
+    "| True -",
+    rep(" ", col_width - 7),
+    "|\n", sep = "")
 
 # Line
-cat("|", rep("-", times = 8), "|", rep("-", times = 8), "|", rep("-", times = 8), "|\n", sep = "")
+cat("|", rep("-", times = 9), "|", rep("-", times = col_width), "|", rep("-", times = col_width), "|\n", sep = "")
 
 # Decide + Row
-cat("|Decide +| ", crayon::green(scales::comma(hi)),
-    crayon::silver(" hi"),
-
-
-    rep(" ", 3 - ifelse(hi > 0, floor(log10(hi)), 0)), "| ",
+cat("|Decide +",
+  " ",
+    "| ",
+    crayon::silver("hi "),
+    crayon::green(scales::comma(hi)),
+    rep(" ", max(0, col_width - num_space(hi) - 4)),
+    "| ",
+    crayon::silver("fa "),
     crayon::red(fa),
-    crayon::silver(" fa"),
-
-
-    rep(" ", 3 - ifelse(fa > 0, floor(log10(fa)), 0)),
+    rep(" ", max(0, col_width - num_space(fa) - 4)),
     "| ", sep = "")
 cat(scales::comma(hi + fa))
 
 cat("\n")
 
+
 # Decide - Row
-
-cat("|Decide -| ", crayon::red(scales::comma(mi)),
-    crayon::silver(" mi"),
-
-    rep(" ", 3 - ifelse(mi > 0, floor(log10(mi)), 0)), "| ",
-    crayon::green(cr),
-    crayon::silver(" cr"),
-
-    rep(" ", 3 - ifelse(cr > 0, floor(log10(cr)), 0)), "| ",
-    sep = "")
-
+cat("|Decide -",
+    " ",
+    "| ",
+    crayon::silver("mi "),
+    crayon::red(scales::comma(mi)),
+    rep(" ", max(0, col_width - num_space(mi) - 4)),
+    "| ",
+    crayon::silver("cr "),
+    crayon::green(scales::comma(cr)),
+    rep(" ", max(0, col_width - num_space(cr) - 4)),
+    "| ", sep = "")
 cat(scales::comma(mi + cr))
 cat("\n")
 
 # Bottom line
-cat("|-", rep("-", times = 7), "|", rep("-", times = 8), "|", rep("-", times = 8), "|\n", sep = "")
-
+cat("|-", rep("-", times = 8), "|", rep("-", times = col_width), "|", rep("-", times = col_width), "|\n", sep = "")
 
 # Bottom total
-cat("           ")
+cat(rep(" ", times = 12), sep = "")
 cat(scales::comma(hi + mi))
-cat(" ")
-cat(rep(" ", 5 - ifelse((hi + mi) > 0, floor(log10(hi + mi)), 0)))
+cat(rep(" ", times = col_width - num_space(hi + mi)), " ", sep = "")
 cat(scales::comma(cr + fa))
 
-cat(rep(" ", 5 - ifelse((cr + fa) > 0, floor(log10(cr + fa)), 0)))
-cat("")
-
-cat(scales::number(hi + mi + fa + cr))
-
+cat(rep(" ", col_width - num_space(cr + fa) + 1), sep = "")
+cat("N = ")
+cat(crayon::underline(scales::comma(hi + mi + fa + cr), sep = ""), sep = "")
 cat("\n\n")
 
 cat("acc  =", scales::percent((hi + cr) / (hi + mi + cr + fa), accuracy = .1), sep = " ")

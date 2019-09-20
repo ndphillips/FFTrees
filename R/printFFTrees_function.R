@@ -57,16 +57,16 @@ cat("- Outcome costs: [hi = ", x$params$cost.outcomes$hi, ", mi = ", x$params$co
     ", fa = ", x$params$cost.outcomes$fa, ", cr = ", x$params$cost.outcomes$cr, "]\n", sep = "")
 
 out <- x$params$cost.cues[unlist(strsplit(train.cues, ","))]
-cat("- Cue costs: [", paste(names(out), "=", out, collapse = ", "), ", ...]\n", sep = "")
-
-if(tree == x$trees$best$train) {
-
-  cat(paste("- FFT ", crayon::underline("#", x$trees$best$train, sep = ""), " optimises ", crayon::underline(x$params$goal), " using ", train.cues.n, " cues: {",
-            crayon::underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
-
-  cat("\n")
-
-}
+# cat("- Cue costs: [", paste(names(out), "=", out, collapse = ", "), ", ...]\n", sep = "")
+#
+# if(tree == x$trees$best$train) {
+#
+#   cat(paste("- FFT ", crayon::underline("#", x$trees$best$train, sep = ""), " optimises ", crayon::underline(x$params$goal), " using ", train.cues.n, " cues: {",
+#             crayon::underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
+#
+#   cat("\n")
+#
+# }
 
 
 cat("\n")

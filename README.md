@@ -34,6 +34,14 @@ plot(heart.fft,
 
 
 ### Package updates
+
+1.5.0
+
+- New print method which includes an ASCII confusion matrix
+- Added tests throughout (finally)
+- Extensive code cleanup, which should speed things up.
+- FFTrees objects have a nicer internal structure.
+
 1.4.0
 
 - Big under the hood changes to make code more efficient (and prepare for c++). Code should be ~50% faster.

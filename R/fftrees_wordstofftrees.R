@@ -28,7 +28,6 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-
   # Remove \n (can happen if my.tree has line breaks)
 my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 

@@ -15,13 +15,15 @@ showcues <- function(x = NULL,
                      main = NULL,
                      top = 5) {
 
-  #
-  # x <- heart.fft
-  # data = "train"
-  # cue.accuracies <- NULL
-  # main = NULL
-  # top = 5
-  #
+
+#
+#
+# #
+#   data = "train"
+#   cue.accuracies <- NULL
+#   main = NULL
+#   top = 5
+
 
   palette <- "basel"
 
@@ -41,6 +43,12 @@ if(is.null(x) == FALSE) {
 goal <- x$params$goal
 
 if(data == "train") {
+
+  if(is.null(x$cues$stats$train)) {
+
+    stop("There are no training statistics in this object")
+
+    }
 
   cue.df <- x$cues$stats$train
 
