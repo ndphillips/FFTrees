@@ -5,8 +5,6 @@
 #'
 fftrees_ranktrees <- function(x, data = "train") {
 
-
-
   tree_stats <- x$trees$results[[data]]$stats
 
 # Sort trees by goal

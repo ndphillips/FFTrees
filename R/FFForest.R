@@ -52,29 +52,29 @@ FFForest <- function(formula = NULL,
                      rank.method = NULL,
                      hr.weight = NULL
 ) {
-
-  # data.test = NULL
-  # max.levels = 5
-  # ntree = 10
-  # train.p = .5
-  # algorithm = "ifan"
-  # goal = "wacc"3
-  # goal.chase = "wacc"
-  # sens.w = .5
-  # verbose = TRUE
-  # cpus = 1
-  # do.comp = FALSE
-  # do.lr = TRUE
-  # do.cart = TRUEbreast
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # rank.method = NULL
-  # hr.weight = NULL
-  #
-  # formula = diagnosis ~.
-  # data = heartdisease
-  # ntree = 10
-  # train.p = .5
+#
+#   data.test = NULL
+#   max.levels = 5
+#   ntree = 10
+#   train.p = .5
+#   algorithm = "ifan"
+#   goal = "wacc"
+#   goal.chase = "wacc"
+#   sens.w = .5
+#   verbose = TRUE
+#   cpus = 1
+#   do.comp = FALSE
+#   do.lr = TRUE
+#   do.cart = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   rank.method = NULL
+#   hr.weight = NULL
+#
+#   formula = diagnosis ~.
+#   data = heartdisease
+#   ntree = 10
+#   train.p = .5
 
 
 # Check for deprecated arguments
@@ -134,8 +134,8 @@ result.i <- FFTrees(formula = formula,
 
 decisions.i <- predict(result.i, data)
 
-tree.stats.i <- result.i$tree.stats
-tree.definitions.i <- result.i$tree.definitions
+tree.stats.i <- result.i$trees$results$train$stats
+tree.definitions.i <- result.i$trees$definitions
 comp.stats.i <- c()
 
 if(do.lr & do.comp) {
@@ -195,9 +195,7 @@ fft.models <- lapply(1:length(result.ls), FUN = function(x) {
 
 best.tree.v <- sapply(1:length(result.ls), FUN = function(i) {
 
-  best.tree.i <- which(result.ls[[i]]$trees$train[[goal]] == max(result.ls[[i]]$trees$train[[goal]]))
-
-  if(length(best.tree.i) > 1) {best.tree.i <- sample(best.tree.i, 1)}
+  best.tree.i <- fft.models[[i]]$trees$best$train
 
   return(best.tree.i)
 

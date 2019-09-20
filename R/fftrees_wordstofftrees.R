@@ -16,12 +16,23 @@
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
+  # my.tree <- x$trees$inwords[[1]]
+
 # Clean up my.tree
+
+  # Split into one sentence
+
+  if(length(my.tree) > 1) {
+
+    my.tree <- paste(my.tree, collapse = ". ")
+
+  }
+
 
   # Remove \n (can happen if my.tree has line breaks)
 my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 
-if(grepl(x$params$decision.labels[1], x = my.tree) == FALSE) {
+if(all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
 
 stop("Something is wrong with decision.labels as they are not in the my.tree.")}
 
@@ -40,6 +51,7 @@ exits.df <- data.frame(exit.char = x$params$decision.labels,
 cue.names.l <- tolower(x$metadata$cue_names)
 my.tree <- tolower(my.tree)
 decision.labels <- tolower(x$params$decision.labels)
+
 
 def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
 def <- def[2:length(def)]
@@ -89,17 +101,17 @@ exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
   # Indices of TRUE
 
   y <- unlist(strsplit(node.sentence, " "))
-  true.indices <- grep(x$params$decision.labels[2], x = y)
-  false.indices <- grep(x$params$decision.labels[1], x = y)
+  true.indices <- grep(tolower(decision.labels[2]), x = y)
+  false.indices <- grep(tolower(decision.labels[1]), x = y)
 
-  if(any(grepl(x$params$decision.labels[2], x)) & any(grepl(x$params$decision.labels[1], y))) {
+  if(any(grepl(decision.labels[2], x)) & any(grepl(decision.labels[1], y))) {
 
     if(min(true.indices) < min(false.indices)) {return(1)}
     if(min(true.indices) > min(false.indices)) {return(0)}
 
   }
 
-  if(any(grepl(x$params$decision.labels[2], y)) & !any(grepl(x$params$decision.labels[1], y))) {
+  if(any(grepl(decision.labels[2], y)) & !any(grepl(decision.labels[1], y))) {
 
     return(1)
   }

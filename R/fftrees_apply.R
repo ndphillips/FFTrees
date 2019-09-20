@@ -9,6 +9,7 @@
 
 fftrees_apply <- function(x,
                           mydata = NULL,
+                          newdata = NULL,
                           allNA.pred = FALSE
 ) {
 
@@ -20,7 +21,15 @@ fftrees_apply <- function(x,
 
   } else if (mydata == "test") {
 
+    if(is.null(newdata)) {
+
     testthat::expect_true(!is.null(x$data$test))
+
+    } else {
+
+      x$data$test <- newdata
+
+    }
 
     data <- x$data$test
 

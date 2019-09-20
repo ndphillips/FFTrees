@@ -37,7 +37,6 @@
 predict.FFTrees <- function(
   object = NULL,
   newdata = NULL,
-  data = NULL,
   tree = 1,
   type = "class",
   sens.w = NULL,
@@ -45,37 +44,47 @@ predict.FFTrees <- function(
   ...
 ) {
 
-  if(is.null(data)) {
+  # object = x
+  # newdata = heart.test
+  # tree = 1
+  # type = "class"
+  # sens.w = NULL
+  # method = "laplace"
 
-    if(is.null(newdata) == FALSE) {
 
-      data <- newdata} else {
+  # object = NULL
+  # newdata = heart.test
+  # tree = 1
+  # type = "class"
+  # sens.w = NULL
+  # method = "laplace"
+  #
+  #
+  # object <- FFTrees(diagnosis ~., data = heart.train)
 
-      stop("Either data or newdata must be specified.")
-
-      }
-
-  }
+  testthat::expect_true(!is.null(newdata))
 
   if(is.null(sens.w) == FALSE) {stop("sens.w is deprecated and will be ignored.")}
 
   goal <- object$params$goal
 
-  new.apply.tree <-  apply.tree(formula = object$formula,
-                                data = data,
-                                tree.definitions = object$tree.definitions)
+  new.apply.tree <-  FFTrees:::fftrees_apply(x = object,
+                                             mydata = "test",
+                                             newdata = newdata)
 
   # Calculate predictions from tree
-  predictions <- new.apply.tree$decision[,tree]
+  predictions <- new.apply.tree$trees$results$test$decisions[,tree] %>% dplyr::pull()
 
    if(type == "class") {output <- predictions}
 
 if(type == "prob") {
 
-output <- matrix(NA, nrow = nrow(data), ncol = 2)
+# For each case, determine where it is decided in the tree
+
+output <- matrix(NA, nrow = nrow(newdata), ncol = 2)
 
 # Get cumulative level stats for current tree in training data
-levelstats.c <- object$level.stats$train[object$level.stats$train$tree == tree,]
+levelstats.c <- object$trees$results$train$level_stats[object$trees$results$train$level_stats$tree == tree,]
 levels.n <- nrow(levelstats.c)
 
 # Get marginal counts for levels
@@ -97,17 +106,21 @@ ppv.lp.m <- (hi.m + 1) / (hi.m + fa.m + 2)
 # Loop over levels
 for(level.i in 1:levels.n) {
 
-  decide.now.0.log <- new.apply.tree$levelout[,tree] == level.i &
-                      new.apply.tree$decision[,tree] == 0
+  # Which cases are classified as FALSE in this level?
+  decide.now.0.log <- new.apply.tree$trees$results$test$levelout[,tree] == level.i &
+                      new.apply.tree$trees$results$test$decision[,tree] == 0
 
-  decide.now.1.log <- new.apply.tree$levelout[,tree] == level.i &
-                      new.apply.tree$decision[,tree] == 1
+  # Which cases are classified as TRUE in this level?
+  decide.now.1.log <- new.apply.tree$trees$results$test$levelout[,tree] == level.i &
+                        new.apply.tree$trees$results$test$decision[,tree] == 1
 
   if(method == "laplace") {
 
+    # Assign the npv for those assigned 0
  output[decide.now.0.log, 1] <- npv.lp.m[level.i]
  output[decide.now.0.log, 2] <- 1 - npv.lp.m[level.i]
 
+   # Assign the ppv for those assigned 1
  output[decide.now.1.log, 2] <- ppv.lp.m[level.i]
  output[decide.now.1.log, 1] <- 1 - ppv.lp.m[level.i]
 

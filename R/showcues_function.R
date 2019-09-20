@@ -42,14 +42,14 @@ goal <- x$params$goal
 
 if(data == "train") {
 
-  cue.df <- x$cue.accuracies$train
+  cue.df <- x$cues$stats$train
 
 }
 
 if(data == "test") {
 
-  if(is.null(x$cue.accuracies$test)) {stop("There are no test statistics")}
-  if(is.null(x$cue.accuracies$test) == FALSE) {cue.df <- x$cue.accuracies$test}
+  if(is.null(x$cues$stats$test)) {stop("There are no test statistics")}
+  if(is.null(x$cues$stats$test) == FALSE) {cue.df <- x$cues$stats$test}
 
 }
 
