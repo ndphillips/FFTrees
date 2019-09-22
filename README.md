@@ -37,10 +37,10 @@ plot(heart.fft,
 
 1.5.0
 
-- New print method which includes an ASCII confusion matrix
+- FFTrees objects have a nicer internal structure.
 - Added tests throughout (finally)
 - Extensive code cleanup, which should speed things up.
-- FFTrees objects have a nicer internal structure.
+- New print method which includes an ASCII confusion matrix
 
 1.4.0
 
