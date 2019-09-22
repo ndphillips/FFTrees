@@ -8,7 +8,6 @@ fftrees_grow_fan <- function(x,
 
 if(!x$params$quiet) {message(paste0("Growing FFTs with ", x$params$algorithm))}
 
-
 # Some global variables which could be changed later.
 
 exit.method <- "fixed"

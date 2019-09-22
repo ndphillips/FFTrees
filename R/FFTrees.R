@@ -128,46 +128,42 @@ FFTrees <- function(formula = NULL,
 #
 # # #
 # # # # # #
-#   formula = NULL
-#   data = NULL
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = NULL
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = NULL
-#   goal.chase = NULL
-#   goal.threshold = "bacc"
-#   numthresh.method = "o"
-#   numthresh.n = 10
-#   decision.labels = c("False", "True")
-#   main = NULL
-#   train.p = 1
-#   rounding = NULL
-#   repeat.cues = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   do.comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#   comp = NULL
-#   quiet = TRUE
-# # #
-# # #
-#   formula = diagnosis ~ .
-#   data = heartdisease
-#   cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
-#   goal = "bacc"
+#
+#
+  # formula = diagnosis ~.
+  # data = heart
+  # data.test = NULL
+  # algorithm = "ifan"
+  # max.levels = NULL
+  # sens.w = .5
+  # cost.outcomes = NULL
+  # cost.cues = NULL
+  # stopping.rule = "exemplars"
+  # stopping.par = .1
+  # goal = NULL
+  # goal.chase = NULL
+  # goal.threshold = "bacc"
+  # numthresh.method = "o"
+  # numthresh.n = 10
+  # decision.labels = c("False", "True")
+  # main = NULL
+  # train.p = 1
+  # rounding = NULL
+  # repeat.cues = TRUE
+  # my.tree = NULL
+  # tree.definitions = NULL
+  # do.comp = TRUE
+  # do.cart = TRUE
+  # do.lr = TRUE
+  # do.rf = TRUE
+  # do.svm = TRUE
+  # store.data = FALSE
+  # object = NULL
+  # rank.method = NULL
+  # force = FALSE
+  # verbose = NULL
+  # comp = NULL
+  # quiet = FALSE
 
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {
@@ -197,6 +193,12 @@ FFTrees <- function(formula = NULL,
 
 }
 
+# Convert factor NA to new missing factor level
+
+# data <- data %>%
+#   dplyr::mutate_if(is.factor, addNA)   %>%
+#   dplyr::mutate_if(is.character, addNA)
+
 # TRAINING / TEST SPLIT ---------------------------------------
 if(train.p < 1 && is.null(data.test)) {
 
@@ -216,6 +218,7 @@ if(train.p < 1 && is.null(data.test)) {
   }
 
 }
+
 
 # CREATE AN FFTREES OBJECT --------------------------------------------
 

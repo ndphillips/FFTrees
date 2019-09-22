@@ -672,7 +672,8 @@ classtable <- function(prediction_v = NULL,
                        sens.w = .5,
                        cost.v = NULL,
                        correction = .25,
-                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
+                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+                       na_prediction_action = "ignore") {
   #
   #
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
@@ -698,15 +699,36 @@ classtable <- function(prediction_v = NULL,
 
   if(((class(prediction_v) != "logical") | class(criterion_v) != "logical") & !is.null(prediction_v)) {stop("prediction_v and criterion_v must be logical")}
 
+
+
   # Remove NA criterion values
   prediction_v <- prediction_v[is.finite(criterion_v)]
   criterion_v <- criterion_v[is.finite(criterion_v)]
+
+  # Remove NA prediction values
+
+  # if(na_prediction_action == "ignore") {
+  #
+  #   bad_index <- !is.finite(prediction_v)
+  #
+  #   prediction_v <- prediction_v[-bad_index]
+  #   criterion_v <- criterion_v[-bad_index]
+  #
+  #
+  # }
 
   N <- min(length(criterion_v), length(prediction_v))
 
   if(N > 0) {
 
     if(var(prediction_v) > 0 & var(criterion_v) > 0) {
+
+
+      if(length(prediction_v) != length(criterion_v)) {
+
+        stop("length of prediction_v is", length(prediction_v), "and length of criterion_v is ",
+             length(criterion_v))
+      }
 
       cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
                                    positive = "TRUE")
@@ -845,7 +867,7 @@ num_space <- function(x) {
 
   }
 
-col_width <- max(c(8, floor(log10(max(c(hi, mi, fa, cr)))) + floor(log(max(c(hi, mi, fa, cr)), base = 1000)) + 5))
+col_width <- max(c(8, floor(log10(max(c(hi, mi, fa, cr)))) + floor(log(max(c(hi, mi, fa, cr)), base = 1000)) + 6))
 
 # Header Row
 cat("|", rep(" ", times = 9),
@@ -867,7 +889,7 @@ cat("|Decide +",
     rep(" ", max(0, col_width - num_space(hi) - 4)),
     "| ",
     crayon::silver("fa "),
-    crayon::red(fa),
+    crayon::red(scales::comma(fa)),
     rep(" ", max(0, col_width - num_space(fa) - 4)),
     "| ", sep = "")
 cat(scales::comma(hi + fa))

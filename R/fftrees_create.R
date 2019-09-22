@@ -103,7 +103,7 @@ if(is.null(goal)) {
   } else {
 
     goal <- "wacc"
-    if(quiet == FALSE) {message("Setting goal = 'waccc'")}
+    if(quiet == FALSE) {message("Setting goal = 'wacc'")}
 
   }
 }
@@ -127,7 +127,6 @@ if(goal == "cost" & is.null(goal.chase)) {
 
   if(quiet == FALSE) {message("Setting goal.chase = 'waccc'")}
 
-
 }
 
 testthat::expect_true(!is.null(goal.chase),
@@ -143,8 +142,6 @@ testthat::expect_true(!is.null(goal.threshold),
 testthat::expect_true(goal.threshold %in% goal_valid)
 
 
-
-
 ## numthresh.method ==================================
 
 numthresh.method_valid <- c("optimise", "median")
@@ -152,8 +149,6 @@ numthresh.method_valid <- c("optimise", "median")
 testthat::expect_true(substr(numthresh.method, 1, 1) %in% substr(numthresh.method_valid, 1, 1),
             info = paste0("numthresh.method is not valid\nTry one of the following: ",
             paste(numthresh.method_valid, collapse = ", ")))
-
-
 
 ## numthresh.n ==================================
 
@@ -196,7 +191,6 @@ if(!is.null(cost.outcomes) & goal != "cost") {
 
 }
 
-
 if(is.null(cost.outcomes)) {
 
 cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
@@ -216,8 +210,7 @@ testthat::expect_is(cost.outcomes,
                    class = "list",
                    info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)")
 
-testthat::expect_equal(names(cost.outcomes),
-                       expected = c("hi", "mi", "fa", "cr"),
+testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")),
                        info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)")
 
 ## cost.cues =========================================

@@ -17,15 +17,7 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                    cost.each = 0,
                                    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                    goal.threshold = "bacc") {
-#
-#   thresholds = cue_i_levels
-#   cue_v = cue_i_v
-#   criterion_v = criterion_v
-#   sens.w = sens.w
-#   directions = directions
-#   cost.each = cue_i_cost
-#   cost.outcomes = cost.outcomes
-#   goal.threshold = goal.threshold
+
 
   thresholds_n <- length(thresholds)
 
@@ -42,10 +34,10 @@ fftrees_threshold_numeric_grid <- function(thresholds,
     decisions_i <- cue_v > threshold_i
 
     # Calculate decisions
-    hi_i <- sum(decisions_i == TRUE & criterion_v == TRUE)
-    fa_i <- sum(decisions_i == TRUE & criterion_v == FALSE)
-    mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE)
-    cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE)
+    hi_i <- sum(decisions_i == TRUE & criterion_v == TRUE, na.rm = TRUE)
+    fa_i <- sum(decisions_i == TRUE & criterion_v == FALSE, na.rm = TRUE)
+    mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE, na.rm = TRUE)
+    cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE, na.rm = TRUE)
 
     n_i <- hi_i + fa_i + mi_i + cr_i
 
