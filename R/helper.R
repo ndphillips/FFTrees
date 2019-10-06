@@ -511,7 +511,7 @@ comp.pred <- function(formula,
     # Calculate training accuracy stats
 
     acc.train <- FFTrees:::classtable(prediction_v = as.logical(pred.train),
-                            criterion_v = as.logical(crit.train))
+                                      criterion_v = as.logical(crit.train))
 
   }
 
@@ -669,6 +669,7 @@ Add_Stats <- function(data,
 
 classtable <- function(prediction_v = NULL,
                        criterion_v,
+                       target = TRUE,
                        sens.w = .5,
                        cost.v = NULL,
                        correction = .25,
@@ -685,21 +686,23 @@ classtable <- function(prediction_v = NULL,
 
   if(is.null(cost.v)) {cost.v <- rep(0, length(prediction_v))}
 
-  if(any(c("FALSE", "TRUE") %in% paste(prediction_v))) {
+  if(class(prediction_v) != "logical") {
 
-    prediction_v <- as.logical(paste(prediction_v))
-
-  }
-
-  if(any(c("FALSE", "TRUE") %in% paste(criterion_v))) {
-
-    criterion_v <- as.logical(paste(criterion_v))
+    prediction_v <- prediction_v == target
 
   }
 
-  if(((class(prediction_v) != "logical") | class(criterion_v) != "logical") & !is.null(prediction_v)) {stop("prediction_v and criterion_v must be logical")}
+  if(class(criterion_v) != "logical") {
+
+    criterion_v <- criterion_v == target
+
+  }
 
 
+
+  if(((class(prediction_v) != "logical") | class(criterion_v) != "logical") & !is.null(prediction_v)) {
+
+    stop("prediction_v and criterion_v must be logical")}
 
   # Remove NA criterion values
   prediction_v <- prediction_v[is.finite(criterion_v)]
@@ -721,8 +724,7 @@ classtable <- function(prediction_v = NULL,
 
   if(N > 0) {
 
-    if(var(prediction_v) > 0 & var(criterion_v) > 0) {
-
+    if(!all(duplicated(prediction_v)[-1L]) & !all(duplicated(criterion_v)[-1L])) {
 
       if(length(prediction_v) != length(criterion_v)) {
 

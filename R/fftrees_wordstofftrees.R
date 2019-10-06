@@ -30,17 +30,17 @@ fftrees_wordstofftrees <- function(x,
 
   # Remove \n (can happen if my.tree has line breaks)
 my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
-
-if(all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
-
-stop("Something is wrong with decision.labels as they are not in the my.tree.")}
+#
+# if(all(grepl(x$metadata$decision.labels[1], x = my.tree) == FALSE)) {
+#
+# stop("Something is wrong with decision.labels as they are not in the my.tree.")}
 
 directions.df <- data.frame(directions = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
                             negations =  c("!=", "<=", "<",  ">=", ">",  "=",   "!=",    "!=",     "!=",       "<=",      ">="),
                             directions.f = c("=", ">", ">=", "<", "<=", "!=", "=", "=", "=", ">", "<"),
                             stringsAsFactors = FALSE)
 
-exits.df <- data.frame(exit.char = x$params$decision.labels,
+exits.df <- data.frame(exit.char = x$metadata$decision.labels,
                        exit = c("0", "1"),
                        stringsAsFactors = FALSE)
 
@@ -49,7 +49,7 @@ exits.df <- data.frame(exit.char = x$params$decision.labels,
 
 cue.names.l <- tolower(x$metadata$cue_names)
 my.tree <- tolower(my.tree)
-decision.labels <- tolower(x$params$decision.labels)
+decision.labels <- tolower(x$metadata$decision.labels)
 
 
 def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))

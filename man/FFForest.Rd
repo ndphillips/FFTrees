@@ -6,10 +6,10 @@
 \usage{
 FFForest(formula = NULL, data = NULL, data.test = NULL,
   max.levels = 5, ntree = 10, train.p = 0.5, algorithm = "ifan",
-  goal = "wacc", goal.chase = "wacc", sens.w = 0.5, quiet = TRUE,
-  cpus = 1, do.comp = FALSE, do.lr = TRUE, do.cart = TRUE,
-  do.rf = TRUE, do.svm = TRUE, rank.method = NULL,
-  hr.weight = NULL)
+  goal = "wacc", goal.chase = "wacc", sens.w = 0.5,
+  cost.outcomes = NULL, cost.cues = NULL, quiet = TRUE, cpus = 1,
+  do.comp = FALSE, do.lr = TRUE, do.cart = TRUE, do.rf = TRUE,
+  do.svm = TRUE, rank.method = NULL, hr.weight = NULL)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a binary criterion as a function of multiple variables}
@@ -31,6 +31,10 @@ FFForest(formula = NULL, data = NULL, data.test = NULL,
 \item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 
 \item{sens.w}{numeric. How much weight to give to maximizing hits versus minimizing false alarms (between 0 and 1)}
+
+\item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+
+\item{cost.cues}{list A list containing containing costs for each cue. Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number. Cues not present in \code{cost.cues} are assume to have 0 cost.}
 
 \item{quiet}{logical. Should progress reports be printed?}
 

@@ -2,6 +2,7 @@
 #'
 #' @param data dataframe. Training data
 #' @param formula formula. A formula
+#' @param target string.
 #' @param algorithm string.
 #' @param goal string.
 #' @param goal.chase string.
@@ -33,6 +34,7 @@
 #'
 fftrees_create <- function(data = NULL,
                            formula = NULL,
+                           target = NULL,
                            algorithm = NULL,
                            goal = NULL,
                            goal.chase = NULL,
@@ -74,7 +76,6 @@ testthat::expect_true(!is.null(formula),
             info = "formula is NULL")
 
 testthat::expect_is(formula, "formula")
-
 
 criterion_name <- paste(formula)[2]
 
@@ -247,13 +248,6 @@ testthat::expect_true(stopping.rule %in% stopping.rule_valid)
 testthat::expect_gt(stopping.par, expected = 0)
 testthat::expect_lt(stopping.par, expected = 1)
 
-## decision.labels ===================================
-
-testthat::expect_true(!is.null(decision.labels),
-            info = "decision.labels is NULL")
-
-testthat::expect_equal(length(decision.labels), 2)
-
 ## repeat.cues ============================================
 testthat::expect_is(repeat.cues, "logical")
 
@@ -275,25 +269,47 @@ testthat::expect_equal(length(unique(data[[criterion_name]])),
              expected = 2,
              info = "Your criterion does not have exactly 2 unique values")
 
+
+## Target is in criterion
+
+if(!is.null(target)) {
+
+  testthat::expect_true(target %in% unique(data[[criterion_name]]),
+                         info = "You specified a target but it is not in your criterion.")
+}
+
 ## Make criterion logical
+
+criterion_class <- class(data[[criterion_name]])
 
 if(class(data[[criterion_name]]) %in% c("character", "factor")) {
 
   # Save original values as decision.labels
-  decision.labels <- unique(data[[criterion_name]])
+  decision.labels <- paste(unique(data[[criterion_name]]))
+
+  # Determine target
+
+  if(is.null(target)) {
+
+    target <- paste(decision.labels[2])
+
+  }
 
   # Convert criterion to logical
-  data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]
+  data[[criterion_name]] <- data[[criterion_name]] == target
 
   if(quiet == FALSE) {
 
-    message("Setting target to ", criterion_name, " == ", decision.labels[2])
+    message("Setting target to ", criterion_name, " == ", target)
 
     }
 
+} else if (class(data[[criterion_name]]) == "logical") {
+
+  decision.labels <- c("FALSE", "TRUE")
+  target <- "TRUE"
+
 }
-
-
 
 ## Criterion is in data.test
 
@@ -304,6 +320,11 @@ testthat::expect_true(is.data.frame(data),
 
 testthat::expect_true(criterion_name %in% names(data.test),
             info = paste("The criterion", criterion_name, "is not in your data.test object"))
+
+
+# Convert criterion to logical
+data.test[[criterion_name]] <- data.test[[criterion_name]] == target
+
 
 }
 
@@ -376,6 +397,9 @@ data <- data %>%
                                                     level_stats = NULL))),
             # model
             metadata = list(criterion_name = criterion_name,            # Name of the criterion
+                            criterion_class = criterion_class,
+                            decision.labels = decision.labels,
+                            target = target,
                             cue_names = cue_names,
                             cues_n = ncol(data) - 1,                 # Cue names
                             cases_n = nrow(data)),             # Number of cases
@@ -401,7 +425,6 @@ data <- data %>%
                           max.levels = max.levels,
                           cost.outcomes = cost.outcomes,
                           cost.cues = cost.cues,
-                          decision.labels = decision.labels,
                           main = main,
                           repeat.cues = repeat.cues,
                           quiet = quiet,

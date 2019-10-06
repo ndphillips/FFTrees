@@ -241,12 +241,12 @@ asif.cuecost_v[cases_remaining] <- cue_cost_new
 # Calculate asif_cm
 
 asif_results <- classtable(prediction_v = asif.decision_v,
-                           criterion_v = criterion_v)
-
+                           criterion_v = criterion_v,
+                           target = x$metadata$target)
 
 # Add key stats to asif.stats
 
-asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "cost")] <-  c(asif_results$sens, asif_results$spec, asif_results$acc, asif_results$bacc, asif_results$wacc, asif_results$dprime, asif_results$cost)
+asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "cost")] <- c(asif_results$sens, asif_results$spec, asif_results$acc, asif_results$bacc, asif_results$wacc, asif_results$dprime, asif_results$cost)
 
 
   # If ASIF classification is perfect, then stop!
@@ -322,6 +322,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
   results_cum <- classtable(prediction_v = decision_v[cases_remaining == FALSE],
                             criterion_v = criterion_v[cases_remaining == FALSE],
+                            target = x$metadata$target,
                             sens.w = x$params$sens.w,
                             cost.v = cuecost_v[cases_remaining == FALSE],
                             cost.outcomes = x$params$cost.outcomes)
@@ -402,6 +403,7 @@ asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "co
 
     last.classtable <- classtable(prediction_v = as.logical(decision_v),
                                   criterion_v = as.logical(criterion_v),
+                                  target = x$metadata$target,
                                   sens.w = x$params$sens.w,
                                   cost.v = cuecost_v,
                                   cost.outcomes = x$params$cost.outcomes)

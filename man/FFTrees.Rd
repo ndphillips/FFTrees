@@ -5,8 +5,8 @@
 \title{Creates a fast-and-frugal trees (FFTrees) object.}
 \usage{
 FFTrees(formula = NULL, data = NULL, data.test = NULL,
-  algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
-  cost.outcomes = NULL, cost.cues = NULL,
+  target = NULL, algorithm = "ifan", max.levels = NULL,
+  sens.w = 0.5, cost.outcomes = NULL, cost.cues = NULL,
   stopping.rule = "exemplars", stopping.par = 0.1, goal = NULL,
   goal.chase = NULL, goal.threshold = "bacc", numthresh.method = "o",
   numthresh.n = 10, decision.labels = c("False", "True"),
@@ -14,7 +14,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   my.tree = NULL, tree.definitions = NULL, do.comp = TRUE,
   do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, do.svm = TRUE,
   store.data = FALSE, object = NULL, rank.method = NULL,
-  force = FALSE, verbose = NULL, comp = NULL, quiet = TRUE)
+  force = FALSE, verbose = NULL, comp = NULL, quiet = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}
@@ -22,6 +22,8 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
 \item{data}{dataframe. A training dataset.}
 
 \item{data.test}{dataframe. An optional testing dataset with the same structure as data.}
+
+\item{target}{string. The name of the target class (if criterion is a factor)}
 
 \item{algorithm}{character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.}
 

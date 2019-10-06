@@ -250,9 +250,9 @@ if(what != 'cues') {
 
   if(is.null(decision.labels)) {
 
-    if(("decision.labels" %in% names(x$params))) {
+    if(("decision.labels" %in% names(x$metadata))) {
 
-      decision.labels <- x$params$decision.labels
+      decision.labels <- x$metadata$decision.labels
 
     } else {decision.labels <- c(0, 1)}
 

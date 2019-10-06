@@ -43,6 +43,14 @@ predict.FFTrees <- function(
   method = "laplace",
   ...
 ) {
+#
+# object = out
+# newdata = data.test.fac
+# #
+# tree = 1
+# type = "class"
+# sens.w = NULL
+# method = "laplace"
 
   # object = x
   # newdata = heart.test
@@ -75,7 +83,26 @@ predict.FFTrees <- function(
   # Calculate predictions from tree
   predictions <- new.apply.tree$trees$results$test$decisions[,tree] %>% dplyr::pull()
 
-   if(type == "class") {output <- predictions}
+   if(type == "class") {
+
+     output <- predictions
+
+     # Convert from logical to class values
+
+     if(object$metadata$criterion_class %in% c("character", "factor")) {
+
+       output[output == TRUE] <- object$metadata$target
+       output[output == FALSE] <- object$metadata$decision.labels[object$metadata$decision.labels != object$metadata$target]
+
+       if(object$metadata$criterion_class == "factor") {
+
+       output <- factor(output, levels = object$metadata$decision.labels)
+
+       }
+
+     }
+
+     }
 
 if(type == "prob") {
 
@@ -94,7 +121,6 @@ hi.m <- levelstats.c$hi - c(0, levelstats.c$hi[1:(levels.n - 1)])
 mi.m <- levelstats.c$mi - c(0, levelstats.c$mi[1:(levels.n - 1)])
 fa.m <- levelstats.c$fa - c(0, levelstats.c$fa[1:(levels.n - 1)])
 cr.m <- levelstats.c$cr - c(0, levelstats.c$cr[1:(levels.n - 1)])
-
 
 npv.m <- cr.m / (cr.m + mi.m)
 ppv.m <- hi.m / (hi.m + fa.m)
@@ -137,6 +163,8 @@ for(level.i in 1:levels.n) {
   }
 
 }
+
+colnames(output) <- object$metadata$decision.labels
 
 
 }

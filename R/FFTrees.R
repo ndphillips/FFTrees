@@ -5,6 +5,7 @@
 #' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
+#' @param target string. The name of the target class (if criterion is a factor)
 #' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
@@ -93,6 +94,7 @@
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
+                    target = NULL,
                     algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .5,
@@ -105,7 +107,7 @@ FFTrees <- function(formula = NULL,
                     goal.threshold = "bacc",
                     numthresh.method = "o",
                     numthresh.n = 10,
-                    decision.labels = c("False", "True"),
+                    decision.labels = NULL,
                     main = NULL,
                     train.p = 1,
                     rounding = NULL,
@@ -125,45 +127,49 @@ FFTrees <- function(formula = NULL,
                     comp = NULL,
                     quiet = FALSE
 ) {
-#
-# # #
-# # # # # #
-#
-#
-  # formula = diagnosis ~.
-  # data = heart
-  # data.test = NULL
-  # algorithm = "ifan"
-  # max.levels = NULL
-  # sens.w = .5
-  # cost.outcomes = NULL
-  # cost.cues = NULL
-  # stopping.rule = "exemplars"
-  # stopping.par = .1
-  # goal = NULL
-  # goal.chase = NULL
-  # goal.threshold = "bacc"
-  # numthresh.method = "o"
-  # numthresh.n = 10
-  # decision.labels = c("False", "True")
-  # main = NULL
-  # train.p = 1
-  # rounding = NULL
-  # repeat.cues = TRUE
-  # my.tree = NULL
-  # tree.definitions = NULL
-  # do.comp = TRUE
-  # do.cart = TRUE
-  # do.lr = TRUE
-  # do.rf = TRUE
-  # do.svm = TRUE
-  # store.data = FALSE
-  # object = NULL
-  # rank.method = NULL
-  # force = FALSE
-  # verbose = NULL
-  # comp = NULL
-  # quiet = FALSE
+# #
+# #
+#   formula = NULL
+#   data = NULL
+#   data.test = NULL
+#   target = NULL
+#   algorithm = "ifan"
+#   max.levels = NULL
+#   sens.w = .5
+#   cost.outcomes = NULL
+#   cost.cues = NULL
+#   stopping.rule = "exemplars"
+#   stopping.par = .1
+#   goal = NULL
+#   goal.chase = NULL
+#   goal.threshold = "bacc"
+#   numthresh.method = "o"
+#   numthresh.n = 10
+#   decision.labels = NULL
+#   main = NULL
+#   train.p = 1
+#   rounding = NULL
+#   repeat.cues = TRUE
+#   my.tree = NULL
+#   tree.definitions = NULL
+#   do.comp = TRUE
+#   do.cart = TRUE
+#   do.lr = TRUE
+#   do.rf = TRUE
+#   do.svm = TRUE
+#   store.data = FALSE
+#   object = NULL
+#   rank.method = NULL
+#   force = FALSE
+#   verbose = NULL
+#   comp = NULL
+#   quiet = FALSE
+# #
+# #
+#   formula = diagnosis ~.
+#   data = data.train.fac
+#   data.test = data.test.fac
+
 
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {
@@ -225,6 +231,7 @@ if(train.p < 1 && is.null(data.test)) {
 x <- FFTrees:::fftrees_create(data = data,
                               formula = formula,
                               goal = goal,
+                              target = target,
                               data.test = data.test,
                               algorithm = algorithm,
                               goal.chase = goal.chase,
@@ -250,13 +257,15 @@ x <- FFTrees:::fftrees_create(data = data,
 
 # 1) GET FFTREES DEFINITIONS ----------------------------------------
 
-x <- FFTrees:::fftrees_define(x, object = object)
+x <- FFTrees:::fftrees_define(x,
+                              object = object)
 
 # 2) APPLY TREES TO TRAINING DATA -------------------------------
 
 # Training......
 
-x <- FFTrees:::fftrees_apply(x, mydata = "train")
+x <- FFTrees:::fftrees_apply(x,
+                             mydata = "train")
 
 # Rank trees by goal
 

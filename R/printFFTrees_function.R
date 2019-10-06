@@ -35,7 +35,7 @@ all.cues.n <- length(unique(unlist(strsplit(x$trees$definitions$cues, ";"))))
 n.cues <- x$trees$definitions$nodes[tree]
 
 if(x$trees$n == 1) {summary.text <- paste(x$params$algorithm, " FFT predicting ", x$metadata$criterion_name, " with up to ", n.cues, " nodes", sep = "")}
-if(x$trees$n > 1) {summary.text <- paste(x$trees$n, " FFTs predicting ", x$metadata$criterion_name, " (", x$params$decision.labels[1], " v ", x$params$decision.labels[2], ")", sep = "")}
+if(x$trees$n > 1) {summary.text <- paste(x$trees$n, " FFTs predicting ", x$metadata$criterion_name, " (", x$metadata$decision.labels[1], " v ", x$metadata$decision.labels[2], ")", sep = "")}
 
 params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', x$params$sens.w = ", x$params$x$params$sens.w, ", max.levels = ", x$params$max.levels)
 

@@ -3,7 +3,6 @@
 #' @param x FFTrees.
 #' @param newdata dataframe.
 #' @importFrom stats median var
-#' @importFrom progress progress_bar
 #' @importFrom testthat expect_true
 #' @return A dataframe containing thresholds and marginal classification statistics for each cue
 #' @export
@@ -68,18 +67,18 @@ fftrees_cuerank <- function(x = NULL,
 # }
 
 
-  if(!x$params$quiet) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
+  # if(!x$params$quiet) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
 
   # Loop over cues
   for(cue_i in 1:cue_n) {
 
-    # Progress update
-    if(!x$params$quiet) {
-
-      pb$tick()
-      Sys.sleep(1 / cue_n)
-
-    }
+    # # Progress update
+    # if(!x$params$quiet) {
+    #
+    #   pb$tick()
+    #   Sys.sleep(1 / cue_n)
+    #
+    # }
 
 
   # Get main information about current cue

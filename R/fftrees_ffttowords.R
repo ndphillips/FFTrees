@@ -28,7 +28,7 @@ fftrees_ffttowords <- function(x = NULL,
   directions.v <- unlist(strsplit(x$trees$definitions$directions[tree], ";"))
   thresholds.v <- unlist(strsplit(x$trees$definitions$thresholds[tree], ";"))
   exits.v <- unlist(strsplit(x$trees$definitions$exits[tree], ";"))
-  decision.labels <- x$params$decision.labels
+  decision.labels <- x$metadata$decision.labels
 
 
   nodes.n <- length(cues.v)

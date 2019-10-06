@@ -6,7 +6,7 @@
 \usage{
 classtable(prediction_v = NULL, criterion_v, sens.w = 0.5,
   cost.v = NULL, correction = 0.25, cost.outcomes = list(hi = 0, fa =
-  1, mi = 1, cr = 0))
+  1, mi = 1, cr = 0), na_prediction_action = "ignore")
 }
 \arguments{
 \item{prediction_v}{logical. A logical vector of predictions}

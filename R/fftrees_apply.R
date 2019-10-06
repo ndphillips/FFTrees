@@ -13,6 +13,7 @@ fftrees_apply <- function(x,
                           allNA.pred = FALSE
 ) {
 
+
   testthat::expect_true(mydata %in% c("train", "test"))
 
   if(mydata == "train") {
@@ -178,10 +179,11 @@ fftrees_apply <- function(x,
       # Get cumulative level stats
 
       my_level_stats_i <- FFTrees:::classtable(prediction_v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                     criterion_v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                     sens.w = x$params$sens.w,
-                                     cost.v = cost_cues_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                     cost.outcomes = x$params$cost.outcomes)
+                                               criterion_v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
+                                               target = x$metadata$target,
+                                               sens.w = x$params$sens.w,
+                                               cost.v = cost_cues_v[levelout_v <= level_i & is.finite(levelout_v)],
+                                               cost.outcomes = x$params$cost.outcomes)
 
 
       # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)

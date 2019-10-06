@@ -4,7 +4,7 @@
 \alias{fftrees_grow_fan}
 \title{Grows fast-and-frugal trees using the fan algorithm}
 \usage{
-fftrees_grow_fan(x)
+fftrees_grow_fan(x, repeat.cues = TRUE)
 }
 \arguments{
 \item{x}{FFTrees. An FFTrees object}
