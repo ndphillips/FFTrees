@@ -6,7 +6,7 @@
 \usage{
 classtable(prediction_v = NULL, criterion_v, sens.w = 0.5,
   cost.v = NULL, correction = 0.25, cost.outcomes = list(hi = 0, fa =
-  1, mi = 1, cr = 0))
+  1, mi = 1, cr = 0), na_prediction_action = "ignore")
 }
 \arguments{
 \item{prediction_v}{logical. A logical vector of predictions}
@@ -20,6 +20,8 @@ classtable(prediction_v = NULL, criterion_v, sens.w = 0.5,
 \item{correction}{numeric. Correction added to all counts for calculating dprime}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+
+\item{na_prediction_action}{not sure.}
 }
 \description{
 Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors

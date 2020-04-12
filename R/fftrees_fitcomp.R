@@ -1,6 +1,6 @@
 #' Fit competitive algorithms
 #'
-#' @param x
+#' @param x FFTrees.
 #'
 #'
 #'

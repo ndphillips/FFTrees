@@ -1,6 +1,7 @@
 #' Grows fast-and-frugal trees using the fan algorithm
 #'
 #' @param x FFTrees. An FFTrees object
+#' @param repeat.cues logical.
 #' @importFrom stats anova predict glm as.formula var
 #'
 fftrees_grow_fan <- function(x,

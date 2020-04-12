@@ -14,7 +14,7 @@ FFTrees(formula = NULL, data = NULL, data.test = NULL,
   my.tree = NULL, tree.definitions = NULL, do.comp = TRUE,
   do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, do.svm = TRUE,
   store.data = FALSE, object = NULL, rank.method = NULL,
-  force = FALSE, verbose = NULL, comp = NULL, quiet = TRUE)
+  force = FALSE, verbose = NULL, comp = NULL, quiet = FALSE)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}

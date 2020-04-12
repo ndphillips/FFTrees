@@ -86,26 +86,6 @@ plot(my.heart.fft)
 
 This one looks much better!
 
-Here's one more example using the `titanic` data. We'll create an FFT predicting whether a person survived the Titanic using the cues class, age, and sex:
-
-```{r}
-head(titanic[c("class", "age", "sex", "survived")])
-```
-
-```{r}
-my.titanic.tree <- "If age = {child}, predict True.
-                   If sex = {female}, predict True.
-                   If class = {first}, predict True.
-                   Otherwise, predict False"
-
-titanic.fft <- FFTrees(survived ~., 
-                      data = titanic, 
-                      my.tree = my.titanic.tree,
-                      comp = FALSE)
-
-plot(titanic.fft)
-```
-
 ### `tree.definitions`
 
 ```{r, echo = FALSE}

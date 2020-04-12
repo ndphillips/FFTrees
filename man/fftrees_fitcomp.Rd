@@ -7,7 +7,7 @@
 fftrees_fitcomp(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{FFTrees.}
 }
 \description{
 Fit competitive algorithms

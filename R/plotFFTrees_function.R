@@ -24,7 +24,6 @@
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
-#' @importFrom yarrr transparent piratepal
 #' @export
 #' @examples
 #'
@@ -400,16 +399,17 @@ if(what != 'cues') {
   n.levels <- nrow(level.stats)
   # Add marginal classification statistics to level.stats
   level.stats[c("hi.m", "mi.m", "fa.m", "cr.m")] <- NA
+
   for(i in 1:n.levels) {
 
     if(i == 1) {
 
-      level.stats[1, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[1, c("hi", "mi", "fa", "cr")]
+      level.stats[1, c("hi.m", "mi.m", "fa.m", "cr.m")] <- as.numeric(level.stats[1, c("hi", "mi", "fa", "cr")])
     }
 
     if(i > 1) {
 
-      level.stats[i, c("hi.m", "mi.m", "fa.m", "cr.m")] <- level.stats[i, c("hi", "mi", "fa", "cr")] - level.stats[i - 1, c("hi", "mi", "fa", "cr")]
+      level.stats[i, c("hi.m", "mi.m", "fa.m", "cr.m")] <- as.numeric(level.stats[i, c("hi", "mi", "fa", "cr")]) - as.numeric(level.stats[i - 1, c("hi", "mi", "fa", "cr")])
     }
 
   }
@@ -567,10 +567,10 @@ error.colfun <- circlize::colorRamp2(c(0, 50, 100),
 correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
                            colors = c("white", "green", "black"))
 
-error.bg <- yarrr::transparent(error.colfun(35), .2)
-error.border <-  yarrr::transparent(error.colfun(65), .1)
-correct.bg <- yarrr::transparent(correct.colfun(35), .2)
-correct.border <-  yarrr::transparent(correct.colfun(65), .1)
+error.bg <- scales::alpha(error.colfun(35), .8)
+error.border <-  scales::alpha(error.colfun(65), .9)
+correct.bg <- scales::alpha(correct.colfun(35), .8)
+correct.border <-  scales::alpha(correct.colfun(65), .9)
 
 max.cex <- 6
 min.cex <- 1
@@ -1582,7 +1582,7 @@ if(show.levels) {
 if(level.type %in% c("line", "bar")) {
 
 # Color function (taken from colorRamp2 function in circlize package)
-col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .1)
+col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .5)
 
 
 add.level.fun <- function(name,
@@ -1874,8 +1874,8 @@ if(is.null(x$comp$cart$results) == FALSE) {
 points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
          pch = 21, cex = 1.75,
-         col = yarrr::transparent("red", .1),
-         bg = yarrr::transparent("red", .9), lwd = 1)
+         col = scales::alpha("red", .5),
+         bg = scales::alpha("red", .3), lwd = 1)
 
   points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
@@ -1886,8 +1886,8 @@ par("xpd" = FALSE)
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
    final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
    pch = 21, cex = 2.5,
-   col = yarrr::transparent("red", .1),
-   bg = yarrr::transparent("red", .9))
+   col = scales::alpha("red", .1),
+   bg = scales::alpha("red", .3))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
    final.roc.y.loc[1] + label.loc[4] * lloc$height[lloc$element == "roc"],
@@ -1914,8 +1914,8 @@ if(is.null(x$comp$lr$results) == FALSE) {
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 1.75,
-       col = yarrr::transparent("blue", .1),
-       bg = yarrr::transparent("blue", .9))
+       col = scales::alpha("blue", .1),
+       bg = scales::alpha("blue", .2))
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + lr.sens * lloc$height[lloc$element == "roc"],
@@ -1926,8 +1926,8 @@ par("xpd" = F)
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
        pch = 21, cex = 2.5,
-       col = yarrr::transparent("blue", .1),
-       bg = yarrr::transparent("blue", .9))
+       col = scales::alpha("blue", .1),
+       bg = scales::alpha("blue", .2))
 
 points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + label.loc[3] * lloc$height[lloc$element == "roc"],
@@ -1950,8 +1950,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 1.75,
-             col = yarrr::transparent("purple", .1),
-             bg = yarrr::transparent("purple", .9), lwd = 1)
+             col = scales::alpha("purple", .1),
+             bg = scales::alpha("purple", .3), lwd = 1)
 
       points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
@@ -1962,8 +1962,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 2.5,
-             col = yarrr::transparent("purple", .1),
-             bg = yarrr::transparent("purple", .9))
+             col = scales::alpha("purple", .1),
+             bg = scales::alpha("purple", .3))
 
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[2] * lloc$height[lloc$element == "roc"],
@@ -1988,8 +1988,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 1.75,
-             col = yarrr::transparent("orange", .1),
-             bg = yarrr::transparent("orange", .9), lwd = 1)
+             col = scales::alpha("orange", .1),
+             bg = scales::alpha("orange", .3), lwd = 1)
 
       points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
@@ -2000,8 +2000,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
              pch = 21, cex = 2.5,
-             col = yarrr::transparent("orange", .1),
-             bg = yarrr::transparent("orange", .9))
+             col = scales::alpha("orange", .1),
+             bg = scales::alpha("orange", .3))
 
       points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + label.loc[1] * lloc$height[lloc$element == "roc"],
@@ -2041,8 +2041,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
 
   points(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2.5, col = yarrr::transparent("green", .3),
-         bg = yarrr::transparent("white", .1))
+         pch = 21, cex = 2.5, col = scales::alpha("green", .3),
+         bg = scales::alpha("white", .1))
 
   text(final.roc.x.loc[1] + (1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"],
        final.roc.y.loc[1] + fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"],
@@ -2055,8 +2055,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
 
   points(final.roc.x.loc[1] + (1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec[tree] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 3, col = gray(1), #col = yarrr::transparent("green", .3),
-         bg = yarrr::transparent("green", .3), lwd = 1)
+         pch = 21, cex = 3, col = gray(1), #col = scales::alpha("green", .3),
+         bg = scales::alpha("green", .3), lwd = 1)
 
   text(final.roc.x.loc[1] + (1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + fft.sens.vec[tree] * lloc$height[lloc$element == "roc"],
@@ -2074,8 +2074,8 @@ if(is.null(x$comp$rf$results) == FALSE) {
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],
-         pch = 21, cex = 2.5, col = yarrr::transparent("green", .3),
-         bg = yarrr::transparent("green", .7))
+         pch = 21, cex = 2.5, col = scales::alpha("green", .3),
+         bg = scales::alpha("green", .7))
 
   points(final.roc.x.loc[1] + 1.1 * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + label.loc[5] * lloc$height[lloc$element == "roc"],

@@ -153,26 +153,6 @@ An FFTrees object contains many different outputs, to see them all, run `names()
 names(heart.fft)
 ```
 
-Here is a brief description of each of the outputs:
-
-| Output| Description|
-|:------|:------------------------------------------------------------------|
-|     formula|    The formula used to generate the object|
-|     data.desc|    Descriptions of the original training and test data|
-|     cue.accuracies|    Cue thresholds and accuracies|
-|     tree.definitions|    Definitions of all trees, including cues, thresholds and exit directions|
-|     tree.stats|   Performance statistics for trees |
-|     cost|   Cost statistics for each case and tree.|
-|     level.stats|   Cumulative performance statistics for all trees.|
-|     decision|   Classification decisions|
-|     levelout|   The level at which each case is classified|
-|     tree.max|   The best performing training tree in the object.|
-|     inwords|   A verbal description of the trees.|
-|     auc|   Area under the curve statistics|
-|     params|   A list of parameters used in building the trees|
-|     comp|   Models and statistics for competitive algorithms (e.g.; regression, (non-frugal) decision trees, support vector machines)|
-|     data|   The original training and test data|
-
 ### Predicting new data
 
 To predict classifications for a new dataset, use the standard `predict()` function. For example, here's how to predict the classifications for data in the `heartdisease` object (which actually is just a combination of `heart.train` and `heart.test`)
@@ -182,7 +162,6 @@ To predict classifications for a new dataset, use the standard `predict()` funct
 predict(heart.fft, 
         data = heartdisease)
 ```
-
 
 ### Defining an FFT in words
 
@@ -195,7 +174,7 @@ If you want to define a specific FFT and apply that tree to data, you can define
 my.heart.fft <- FFTrees(formula = diagnosis ~.,
                         data = heart.train,
                         data.test = heart.test,
-                        main = "My custom Heart Disease FFT",
+                        main = "Custom Heart FFT",
                         my.tree = "If chol > 350, predict True. 
                                    If cp != {a}, predict False. 
                                    If age <= 35, predict False. Otherwise, predict True")
@@ -207,25 +186,5 @@ Here is the result (It's actually not too bad, although the first node is pretty
 plot(my.heart.fft)
 ```
 
-
-### Create a forest of FFTs
-
-The `FFForest()` function conducts a bootstrapped simulation on the training data, thus creating a forest of several FFTs. This can give you insight as to how important different cues are in the dataset
-
-```{r, eval = FALSE}
-# Create an FFForest object (can take a few minutes)
-heart.fff <- FFForest(formula = diagnosis ~., 
-                      data = heartdisease, 
-                      ntree = 10, 
-                      train.p = .5)
-```
-
-Plotting the result shows cue importance and co-occurrence relationships:
-
-```{r, fig.width = 10, fig.height = 7, out.width = "600px"}
-plot(heart.fff)
-```
-
-Here, we see that the three cues `cp`, `thal`, and `ca` occur the most often in the forest and thus appear to be the most important three cues in the dataset.
 
 ## References

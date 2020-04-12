@@ -1,6 +1,7 @@
 #' Rank trees by goal
 #'
 #' @param x FFTrees.
+#' @param data character.
 #'
 #'
 fftrees_ranktrees <- function(x, data = "train") {

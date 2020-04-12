@@ -25,17 +25,20 @@ showcues <- function(x = NULL,
 #   top = 5
 
 
-  palette <- "basel"
 
-  if(palette %in% yarrr::piratepal("names")) {
-
-    palette <- yarrr::piratepal(palette, length.out = top, trans = .1)
-
-  } else {
-
-    palette <- rep(palette, length.out = top)
-
-  }
+  palette <- rep(gray(.5, .5), length.out = top)
+#
+#   palette <- "basel"
+#
+#   if(palette %in% yarrr::piratepal("names")) {
+#
+#     palette <- yarrr::piratepal(palette, length.out = top, trans = .1)
+#
+#   } else {
+#
+#     palette <- rep(palette, length.out = top)
+#
+#   }
 
 
 if(is.null(x) == FALSE) {
@@ -161,7 +164,7 @@ label.cex <- .8
 
 # Background
 rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
-     col = yarrr::transparent("white", trans.val = .1),
+     col = scales::alpha("white", .2),
      border = gray(.2))
 
 # Column labels

@@ -4,10 +4,10 @@
 \alias{summary.FFTrees}
 \title{Returns summary information about an FFTrees x}
 \usage{
-\method{summary}{FFTrees}(x, tree = 1, ...)
+\method{summary}{FFTrees}(object, tree = 1, ...)
 }
 \arguments{
-\item{x}{An FFTrees x}
+\item{object}{FFTrees.}
 
 \item{tree}{integer. The tree to summarise}
 

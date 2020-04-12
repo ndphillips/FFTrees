@@ -4,10 +4,14 @@
 \alias{fftrees_apply}
 \title{Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics}
 \usage{
-fftrees_apply(x, mydata = NULL, allNA.pred = FALSE)
+fftrees_apply(x, mydata = NULL, newdata = NULL, allNA.pred = FALSE)
 }
 \arguments{
 \item{x}{FFTrees.}
+
+\item{mydata}{dataframe.}
+
+\item{newdata}{dataframe.}
 
 \item{allNA.pred}{logical. What should be predicted if all cue values in tree are NA? Default is FALSE}
 }

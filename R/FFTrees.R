@@ -126,12 +126,7 @@ FFTrees <- function(formula = NULL,
                     quiet = FALSE
 ) {
 #
-# # #
-# # # # # #
 #
-#
-  # formula = diagnosis ~.
-  # data = heart
   # data.test = NULL
   # algorithm = "ifan"
   # max.levels = NULL
@@ -164,6 +159,13 @@ FFTrees <- function(formula = NULL,
   # verbose = NULL
   # comp = NULL
   # quiet = FALSE
+  #
+  # formula = survived ~.
+  # data = titanic
+  # main = "Titanic"
+  # decision.labels = c("Died", "Survived")
+#
+
 
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {

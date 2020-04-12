@@ -2,6 +2,8 @@
 #'
 #' @param x FFTrees.
 #' @param newdata dataframe.
+#' @param data dataframe.
+#' @param rounding integer.
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
 #' @importFrom testthat expect_true

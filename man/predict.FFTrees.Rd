@@ -4,8 +4,9 @@
 \alias{predict.FFTrees}
 \title{Predict classifications from newdata using an FFTrees object}
 \usage{
-\method{predict}{FFTrees}(object = NULL, newdata = NULL, data = NULL,
-  tree = 1, type = "class", sens.w = NULL, method = "laplace", ...)
+\method{predict}{FFTrees}(object = NULL, newdata = NULL, tree = 1,
+  type = "class", sens.w = NULL, method = "laplace", data = NULL,
+  ...)
 }
 \arguments{
 \item{object}{An FFTrees object created from the FFTrees() function.}
@@ -41,15 +42,15 @@ Predict classifications from newdata using an FFTrees object
   # Create an FFTrees x from the training data
 
   breast.fft <- FFTrees(formula = diagnosis ~.,
-                              data = breast.train)
+                        data = breast.train)
 
  # Predict classes of test data
   breast.fft.pred <- predict(breast.fft,
-                             data = breast.test)
+                             newdata = breast.test)
 
  # Predict class probabilities
   breast.fft.pred <- predict(breast.fft,
-                             data = breast.test,
+                             newdata = breast.test,
                              type = "prob")
 
 }

@@ -11,6 +11,10 @@ fftrees_cuerank(x = NULL, newdata = NULL, data = "train",
 \item{x}{FFTrees.}
 
 \item{newdata}{dataframe.}
+
+\item{data}{dataframe.}
+
+\item{rounding}{integer.}
 }
 \value{
 A dataframe containing thresholds and marginal classification statistics for each cue

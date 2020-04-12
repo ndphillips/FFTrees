@@ -1,6 +1,8 @@
 #' Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics
 #'
 #' @param x FFTrees.
+#' @param mydata dataframe.
+#' @param newdata dataframe.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
 #' @importFrom testthat expect_true
 #' @return A list of length 4 containing

@@ -8,6 +8,8 @@ fftrees_ranktrees(x, data = "train")
 }
 \arguments{
 \item{x}{FFTrees.}
+
+\item{data}{character.}
 }
 \description{
 Rank trees by goal

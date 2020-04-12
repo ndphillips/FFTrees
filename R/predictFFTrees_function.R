@@ -22,15 +22,15 @@
 #'   # Create an FFTrees x from the training data
 #'
 #'   breast.fft <- FFTrees(formula = diagnosis ~.,
-#'                               data = breast.train)
+#'                         data = breast.train)
 #'
 #'  # Predict classes of test data
 #'   breast.fft.pred <- predict(breast.fft,
-#'                              data = breast.test)
+#'                              newdata = breast.test)
 #'
 #'  # Predict class probabilities
 #'   breast.fft.pred <- predict(breast.fft,
-#'                              data = breast.test,
+#'                              newdata = breast.test,
 #'                              type = "prob")
 #'
 
@@ -41,26 +41,12 @@ predict.FFTrees <- function(
   type = "class",
   sens.w = NULL,
   method = "laplace",
+  data = NULL,
   ...
 ) {
 
-  # object = x
-  # newdata = heart.test
-  # tree = 1
-  # type = "class"
-  # sens.w = NULL
-  # method = "laplace"
+  testthat::expect_true(is.null(data), info = "data is deprecated. Please use newdata instead")
 
-
-  # object = NULL
-  # newdata = heart.test
-  # tree = 1
-  # type = "class"
-  # sens.w = NULL
-  # method = "laplace"
-  #
-  #
-  # object <- FFTrees(diagnosis ~., data = heart.train)
 
   testthat::expect_true(!is.null(newdata))
 

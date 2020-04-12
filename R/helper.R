@@ -544,7 +544,7 @@ comp.pred <- function(formula,
     acc.train <- FFTrees:::classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
     acc.train[1, ] <- NA
 
-    acc.test <- FFTrees:::lasstable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.test <- FFTrees:::classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
     acc.test[1, ] <- NA
   }
 
@@ -664,6 +664,7 @@ Add_Stats <- function(data,
 #' @param cost.v list. An optional list of additional costs to be added to each case.
 #' @param correction numeric. Correction added to all counts for calculating dprime
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param na_prediction_action not sure.
 #' @importFrom stats qnorm
 #' @importFrom caret confusionMatrix
 

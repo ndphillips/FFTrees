@@ -102,7 +102,7 @@ Each tree has a decision threshold for each cue (regardless of whether or not it
 
 ```{r}
 # Show decision thresholds and marginal classification training accuracies for each cue
-heart.fft$cue.accuracies$train
+heart.fft$cues$stats$train
 ```
 
 You can also view the cue accuracies in an ROC plot with `plot()` combined with the `what = "cues"` argument. This will show the sensitivities and specificities for each cue, with the top 5 cues highlighted.
@@ -121,15 +121,11 @@ The `tree.definitions` dataframe contains definitions (cues, classes, exits, thr
 
 ```{r}
 # Print the definitions of all trees
-heart.fft$tree.definitions
+heart.fft$trees$definitions
 ```
 
-To understand how to read these definitions, let's start by understanding tree `r heart.fft$tree.max`, the tree with the highest training weighted accuracy (also called `tree.max`:
+To understand how to read these definitions, let's start by understanding tree `r heart.fft$trees$best$train`, the tree with the highest training weighted accuracy
 
-```{r}
-# Print the definitions of tree.max
-heart.fft$tree.definitions[heart.fft$tree.max,]
-```
 
 Separate levels in tree definitions are separated by colons `;`. For example, tree 4 has 3 cues in the order `thal`, `cp`, `ca`. The classes of the cues are `c` (character), `c` and `n` (numeric). The decision exits for the cues are 1 (positive), 0 (negative), and 0.5 (both positive and negative). This means that the first cue only makes positive decisions, the second cue only makes negative decisions, and the third cue makes *both* positive and negative decisions.
 
@@ -145,19 +141,18 @@ You can use the `inwords()` function to automatically return a verbal descriptio
 
 ```{r}
 # Describe the best training tree
-inwords(heart.fft)
-```
 
+inwords(heart.fft, tree = 1)
+```
 
 ### Accuracy statistics
 
-The `tree.stats` list contains classification statistics for all trees applied to both training `tree.stats$train` and test `tree.stats$test` data. Here are the training statistics for all trees
+Here are the training statistics for all trees
 
 ```{r}
 # Print training statistics for all trees
-heart.fft$tree.stats$train
+heart.fft$trees$results$train$stats
 ```
-
 
 ### decision
 
@@ -167,18 +162,8 @@ Here are is how each tree classified the first five cases in the training data:
 
 ```{r}
 # Look at the tree decisions for the first 5 training cases
-heart.fft$decision$train[1:5,]
-```
 
-### levelout
-
-The `levelout` list contains the levels at which each case was classified for each tree.
-
-Here are the levels at which the first 5 test cases were classified:
-
-```{r}
-# Look at the levels at which decisions are made for the first 5 test cases
-heart.fft$levelout$test[1:5,]
+heart.fft$trees$results$train$decisions[1:5, 1]
 ```
 
 ### Predicting new data with `predict()`
@@ -188,7 +173,7 @@ Once you've created an FFTrees object, you can use it to predict new data using 
 ```{r}
 # Predict classes for new data from the best training tree
 predict(heart.fft,
-        data = heartdisease[1:10,])
+        newdata = heartdisease[1:10,])
 ```
 
 To predict class probabilities, include the `type = "prob"` argument, this will return a matrix of class predictions, where the first column indicates 0 / FALSE, and the second column indicates 1 / TRUE.
@@ -196,10 +181,9 @@ To predict class probabilities, include the `type = "prob"` argument, this will 
 ```{r}
 # Predict class probabilities for new data from the best training tree
 predict(heart.fft,
-        data = heartdisease[1:10,],
+        newdata = heartdisease[1:10,],
         type = "prob")
 ```
-
 
 ## Visualising trees
 
@@ -212,7 +196,6 @@ plot(heart.fft,
      main = "Heart Disease",
      decision.labels = c("Healthy", "Disease"))
 ```
-
 
 
 ## Specify sensitivity weights with `sens.w`
@@ -262,27 +245,8 @@ plot(myheart.fft,
      main = "Specifying an FFT manually")
 ```
 
-As you can see, this FFT was pretty terrible with an overall accuracy of just `r round(myheart.fft$tree.stats$train$acc, 2)`.
+As you can see, this FFT was pretty terrible
 
-
-
-
-## Additional optional arguments
-
-The `FFTrees()` function has many optional arguments than change how trees are constructed. The arguments do not necessarily apply to all tree construction algorithns. See [FFTrees algorithm](FFTrees_algorithm.html) for an explanation of the FFT construction algorithms
-
-- `algorithm`: Which algorithm should be used in building the trees? 
-
-- `max.levels`: What is the maximum number of levels the trees should have? the larger `max.levels` is, the longer the trees will be, and the more trees will be created (due to the fact that all possible exit structures are used).
-
-- `goal.chase`: Which accuracy statistic should be maximized in building trees? That is, in calculating cue thresholds and cue rankings.
-
-- `goal`: What accuracy statistic should be maximized when *selecting* one of the (potentially many) trees? The default is weighted accuracy `wacc` which balances sensitivity and specificity according to a sensitivity weight given by `sens.w`. Alternatively, `acc` will maximize overall accuracy (eg., absolute percentage of correct decisions).
-
-
-- `train.p`: What percent of the data should be used for training (if `data.test` is not specified)? `train.p = .1` will randomly select 10% of the data for training and leave the remaining 90% for testing. Setting `train.p = 1` will train the trees to the entire dataset (and leave no data for testing).
-
-- `do.lr`, `do.cart`, `do.svm`, `do.rf`, `comp`: Should competitive algorithms (`lr` = least squares logistic regression, `cart` = regular (non-frugal) decision trees, `svm` = support vector machines, `rf` = random forests be) calculated? If the algorithm is running slowly, or if you don't care about the performance of other algorithms, set these to `FALSE`, either individually, or by setting `comp = FALSE` which turns them all off.
 
 
 
