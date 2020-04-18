@@ -4,8 +4,12 @@
 \alias{Add_Stats}
 \title{Adds decision statistics to a dataframe containing hr, cr, mi and fa}
 \usage{
-Add_Stats(data, sens.w = 0.5, cost.each = NULL,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0))
+Add_Stats(
+  data,
+  sens.w = 0.5,
+  cost.each = NULL,
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+)
 }
 \arguments{
 \item{data}{dataframe. With named (integer) columns hi, cr, mi, fa}

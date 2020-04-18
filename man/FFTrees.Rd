@@ -4,17 +4,42 @@
 \alias{FFTrees}
 \title{Creates a fast-and-frugal trees (FFTrees) object.}
 \usage{
-FFTrees(formula = NULL, data = NULL, data.test = NULL,
-  algorithm = "ifan", max.levels = NULL, sens.w = 0.5,
-  cost.outcomes = NULL, cost.cues = NULL,
-  stopping.rule = "exemplars", stopping.par = 0.1, goal = NULL,
-  goal.chase = NULL, goal.threshold = "bacc", numthresh.method = "o",
-  numthresh.n = 10, decision.labels = c("False", "True"),
-  main = NULL, train.p = 1, rounding = NULL, repeat.cues = TRUE,
-  my.tree = NULL, tree.definitions = NULL, do.comp = TRUE,
-  do.cart = TRUE, do.lr = TRUE, do.rf = TRUE, do.svm = TRUE,
-  store.data = FALSE, object = NULL, rank.method = NULL,
-  force = FALSE, verbose = NULL, comp = NULL, quiet = FALSE)
+FFTrees(
+  formula = NULL,
+  data = NULL,
+  data.test = NULL,
+  algorithm = "ifan",
+  max.levels = NULL,
+  sens.w = 0.5,
+  cost.outcomes = NULL,
+  cost.cues = NULL,
+  stopping.rule = "exemplars",
+  stopping.par = 0.1,
+  goal = NULL,
+  goal.chase = NULL,
+  goal.threshold = "bacc",
+  numthresh.method = "o",
+  numthresh.n = 10,
+  decision.labels = c("False", "True"),
+  main = NULL,
+  train.p = 1,
+  rounding = NULL,
+  repeat.cues = TRUE,
+  my.tree = NULL,
+  tree.definitions = NULL,
+  do.comp = TRUE,
+  do.cart = TRUE,
+  do.lr = TRUE,
+  do.rf = TRUE,
+  do.svm = TRUE,
+  store.data = FALSE,
+  object = NULL,
+  rank.method = NULL,
+  force = FALSE,
+  verbose = NULL,
+  comp = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{formula}{formula. A formula specifying a logical criterion as a function of 1 or more predictors.}

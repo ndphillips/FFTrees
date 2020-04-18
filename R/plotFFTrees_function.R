@@ -73,7 +73,8 @@ plot.FFTrees <- function(
   ...
 ) {
 #
-# # #
+
+  # x = heart.fft
   # data = "train"
   # what = 'tree'
   # tree = "best.train"
@@ -99,6 +100,7 @@ plot.FFTrees <- function(
   # which.tree = NULL
   # level.type = "bar"
   # decision.names = NULL
+
 
 # Check for invalid or missing arguments
 
@@ -397,20 +399,33 @@ if(what != 'cues') {
 
   # ADD LEVEL STATISTICS
   n.levels <- nrow(level.stats)
+
   # Add marginal classification statistics to level.stats
-  level.stats[c("hi.m", "mi.m", "fa.m", "cr.m")] <- NA
+  level.stats$hi.m <- NA
+  level.stats$mi.m <- NA
+  level.stats$fa.m <- NA
+  level.stats$cr.m <- NA
+
 
   for(i in 1:n.levels) {
 
     if(i == 1) {
 
-      level.stats[1, c("hi.m", "mi.m", "fa.m", "cr.m")] <- as.numeric(level.stats[1, c("hi", "mi", "fa", "cr")])
+      level.stats$hi.m[1] <- level.stats$hi[1]
+      level.stats$mi.m[1] <- level.stats$mi[1]
+      level.stats$fa.m[1] <- level.stats$fa[1]
+      level.stats$cr.m[1] <- level.stats$cr[1]
+
     }
 
     if(i > 1) {
 
-      level.stats[i, c("hi.m", "mi.m", "fa.m", "cr.m")] <- as.numeric(level.stats[i, c("hi", "mi", "fa", "cr")]) - as.numeric(level.stats[i - 1, c("hi", "mi", "fa", "cr")])
-    }
+      level.stats$hi.m[i] <- level.stats$hi[i] - level.stats$hi[i - 1]
+      level.stats$mi.m[i] <- level.stats$mi[i] - level.stats$mi[i - 1]
+      level.stats$fa.m[i] <- level.stats$fa[i] - level.stats$fa[i - 1]
+      level.stats$cr.m[i] <- level.stats$cr[i] - level.stats$cr[i - 1]
+
+          }
 
   }
 

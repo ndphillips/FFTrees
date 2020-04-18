@@ -4,7 +4,8 @@
 \name{titanic}
 \alias{titanic}
 \title{Titanic dataset}
-\format{A data frame containing 2,201 rows and 4 columns
+\format{
+A data frame containing 2,201 rows and 4 columns
 \describe{
   \item{class}{Factor - Class (first, second, third, or crew)}
   \item{age}{Factor - Age group (child or adult)}
@@ -12,7 +13,8 @@
   \item{survived}{Factor - Whether the passenger survived (1) or not (0)}
 
   ...
-}}
+}
+}
 \source{
 https://www.amstat.org/publications/jse/datasets/titanic.dat.txt
 }

@@ -47,7 +47,7 @@ my.tree = "If sex = 1, predict True.
 
 Here are some notes on specifying trees manually:
 
-- Each node must start with the word "If" and should in the form: `If CUE DIRECTION THRESHOLD, predict EXIT`.
+- Each node must start with the word "If" and should in the form: `If <CUE> <DIRECTION> <THRESHOLD>, predict <EXIT>`.
 - Numeric thresholds shold be specified directly (without brackets).
 - Factor thresholds must be specified within braces like `sex = {male}`. For factors with sets of values, values within a threshold should be separated by commas like `eyecolor = {blue,brown}`
 - Standard logical comparisons `=`, `!=`, `<`, `>=` (etc.) are valid. For numeric cues, only use `>`, `>=`, `<`, `<=`. For factors, only use `=` and `!=`.

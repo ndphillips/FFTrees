@@ -4,7 +4,8 @@
 \name{heartdisease}
 \alias{heartdisease}
 \title{Heart disease dataset}
-\format{A data frame containing 303 rows and 14 columns
+\format{
+A data frame containing 303 rows and 14 columns
 \describe{
   \item{age}{Age}
   \item{sex}{Sex, 1 = male, 0 = female}
@@ -24,7 +25,8 @@
 
 
   ...
-}}
+}
+}
 \source{
 https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 }

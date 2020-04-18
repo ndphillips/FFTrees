@@ -4,8 +4,7 @@
 \alias{showcues}
 \title{Visualizes cue accuracies from an FFTrees object in a ROC space}
 \usage{
-showcues(x = NULL, data = "train", cue.accuracies = NULL,
-  main = NULL, top = 5)
+showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL, top = 5)
 }
 \arguments{
 \item{x}{An FFTrees object}

@@ -4,8 +4,12 @@
 \alias{updateHistory}
 \title{Update the history of decisions from trees in an FFTrees object}
 \usage{
-updateHistory(object = NULL, newdata = NULL, tree.definitions = NULL,
-  formula = NULL)
+updateHistory(
+  object = NULL,
+  newdata = NULL,
+  tree.definitions = NULL,
+  formula = NULL
+)
 }
 \arguments{
 \item{object}{FFTrees. An FFTrees object}

@@ -4,7 +4,8 @@
 \name{contraceptive}
 \alias{contraceptive}
 \title{Contraceptive use data}
-\format{A data frame containing 1473 rows and 10 columns
+\format{
+A data frame containing 1473 rows and 10 columns
 \describe{
   \item{wife.age}{Numeric}
   \item{wife.edu}{Factor}
@@ -20,7 +21,8 @@
 
 
   ...
-}}
+}
+}
 \source{
 https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice
 }

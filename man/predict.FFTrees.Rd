@@ -4,9 +4,16 @@
 \alias{predict.FFTrees}
 \title{Predict classifications from newdata using an FFTrees object}
 \usage{
-\method{predict}{FFTrees}(object = NULL, newdata = NULL, tree = 1,
-  type = "class", sens.w = NULL, method = "laplace", data = NULL,
-  ...)
+\method{predict}{FFTrees}(
+  object = NULL,
+  newdata = NULL,
+  tree = 1,
+  type = "class",
+  sens.w = NULL,
+  method = "laplace",
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{An FFTrees object created from the FFTrees() function.}

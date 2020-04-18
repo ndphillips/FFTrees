@@ -4,14 +4,33 @@
 \alias{fftrees_create}
 \title{Create an FFTrees object}
 \usage{
-fftrees_create(data = NULL, formula = NULL, algorithm = NULL,
-  goal = NULL, goal.chase = NULL, goal.threshold = NULL,
-  numthresh.method = NULL, numthresh.n = NULL, sens.w = NULL,
-  max.levels = NULL, cost.outcomes = NULL, cost.cues = NULL,
-  stopping.rule = NULL, stopping.par = NULL, decision.labels = NULL,
-  main = NULL, my.tree = NULL, data.test = NULL,
-  repeat.cues = NULL, quiet = NULL, do.lr = TRUE, do.svm = TRUE,
-  do.cart = TRUE, do.rf = TRUE, do.comp = TRUE)
+fftrees_create(
+  data = NULL,
+  formula = NULL,
+  algorithm = NULL,
+  goal = NULL,
+  goal.chase = NULL,
+  goal.threshold = NULL,
+  numthresh.method = NULL,
+  numthresh.n = NULL,
+  sens.w = NULL,
+  max.levels = NULL,
+  cost.outcomes = NULL,
+  cost.cues = NULL,
+  stopping.rule = NULL,
+  stopping.par = NULL,
+  decision.labels = NULL,
+  main = NULL,
+  my.tree = NULL,
+  data.test = NULL,
+  repeat.cues = NULL,
+  quiet = NULL,
+  do.lr = TRUE,
+  do.svm = TRUE,
+  do.cart = TRUE,
+  do.rf = TRUE,
+  do.comp = TRUE
+)
 }
 \arguments{
 \item{data}{dataframe. Training data}

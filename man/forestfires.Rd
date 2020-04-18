@@ -4,7 +4,8 @@
 \name{forestfires}
 \alias{forestfires}
 \title{forestfires}
-\format{A data frame containing 517 rows and 13 columns
+\format{
+A data frame containing 517 rows and 13 columns
 \describe{
   \item{X}{Integer -x-axis spatial coordinate within the Montesinho park map: 1 to 9}
   \item{Y}{Integer - y-axis spatial coordinate within the Montesinho park map: 2 to 9}
@@ -23,7 +24,8 @@
 
 
   ...
-}}
+}
+}
 \source{
 http://archive.ics.uci.edu/ml/datasets/Forest+Fires
 }

@@ -4,8 +4,7 @@
 \alias{fftrees_cuerank}
 \title{Calculates thresholds that maximize a statistic (goal) for cues.}
 \usage{
-fftrees_cuerank(x = NULL, newdata = NULL, data = "train",
-  rounding = NULL)
+fftrees_cuerank(x = NULL, newdata = NULL, data = "train", rounding = NULL)
 }
 \arguments{
 \item{x}{FFTrees.}
