@@ -39,6 +39,8 @@ fftrees_apply <- function(x,
 
   criterion_v <- data[[x$metadata$criterion_name]]
 
+  criterion_n <- length(criterion_v)
+
   # Setup outputs
 
   #  [output_ls]
@@ -94,11 +96,15 @@ fftrees_apply <- function(x,
 
     # Define vectors of critical outputs for each case
 
-    decision_v <- rep(NA, nrow(data))
-    levelout_v <- rep(NA, nrow(data))
-    cost_cues_v <-  rep(NA, nrow(data))
-    cost_decisions_v <-  rep(NA, nrow(data))
-    cost_v <-  rep(NA, nrow(data))
+    results <- data.frame(criterion = criterion_v,
+                            decision = rep(NA, criterion_n),
+                            levelout = rep(NA, criterion_n),
+                            cost_cue = rep(NA, criterion_n),
+                            cost_decision = rep(NA, criterion_n),
+                            cost = rep(NA, criterion_n),
+                            classified = rep(FALSE, criterion_n),
+                            current_decision = rep(NA, criterion_n),
+                          classify_now = rep(NA, criterion_n))
 
     # level_stats_i contains cumulative level statistics
     level_stats_i <- data.frame(tree = tree_i,
@@ -127,25 +133,20 @@ fftrees_apply <- function(x,
       exit_i <- as.numeric(exit_v[level_i])
       threshold_i <- threshold_v[level_i]
 
-
-      # Determine which cases are classified / unclassified
-      unclassified.cases <- which(is.na(decision_v))
-      classified.cases <- which(is.na(decision_v) == FALSE)
-
       cue_values <- data[[cue_i]]
 
       if(is.character(threshold_i)) {threshold_i <- unlist(strsplit(threshold_i, ","))}
 
       if(substr(class_i, 1, 1) %in% c("n", "i")) {threshold_i <- as.numeric(threshold_i)}
 
-      if(direction_i == "!=") {current.decisions <- (cue_values %in% threshold_i) == FALSE}
-      if(direction_i == "=") {current.decisions <- cue_values %in% threshold_i}
-      if(direction_i == "<") {current.decisions <- cue_values < threshold_i}
-      if(direction_i == "<=") {current.decisions <- cue_values <= threshold_i}
-      if(direction_i == ">") {current.decisions <- cue_values > threshold_i}
-      if(direction_i == ">=") {current.decisions <- cue_values >= threshold_i}
+      if(direction_i == "!=") {results$current_decision <- (cue_values %in% threshold_i) == FALSE}
+      if(direction_i == "=") {results$current_decision <- cue_values %in% threshold_i}
+      if(direction_i == "<") {results$current_decision <- cue_values < threshold_i}
+      if(direction_i == "<=") {results$current_decision <- cue_values <= threshold_i}
+      if(direction_i == ">") {results$current_decision <- cue_values > threshold_i}
+      if(direction_i == ">=") {results$current_decision <- cue_values >= threshold_i}
 
-      if(exit_i == 0) {classify.now <- current.decisions == FALSE & is.na(decision_v)}
+      if(exit_i == 0) {results$classify_now <- results$current_decision == FALSE & is.na(decision)}
       if(exit_i == 1) {classify.now <- current.decisions == TRUE & is.na(decision_v)}
       if(exit_i == .5) {classify.now <- is.na(decision_v)}
 
@@ -205,7 +206,6 @@ fftrees_apply <- function(x,
     output_ls$cost_cues[,tree_i] <- cost_cues_v
     output_ls$cost_decisions[,tree_i] <- cost_decisions_v
     output_ls$cost[,tree_i] <- cost_v
-
 
   }
 

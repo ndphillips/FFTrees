@@ -116,7 +116,6 @@ if(is.null(x$trees$results$test$stats)) {
 
 cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Accuracy\n", sep = ""), sep = "")
 
-
 cat(title, " Data: N = ", scales::comma(N), ", ",
     "Pos (+) = ", scales::comma(hi + mi), " (", scales::percent((hi + mi) / (hi + mi + fa + cr)),") ",
     # "- ", scales::comma(cr + fa), " (", scales::percent((cr + fa) / (hi + mi + fa + cr)),")",
@@ -128,5 +127,12 @@ FFTrees:::console_confusionmatrix(hi = hi,
                         fa = fa,
                         cr = cr,
                         cost = cost)
+
+cat("\n")
+cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Speed and Frugality\n", sep = ""), sep = "")
+
+cat("mcu = ", round(x$trees$results$train$stats$mcu[x$trees$results$train$stats$tree == tree], 2), sep = "")
+cat(", pci = ", round(x$trees$results$train$stats$pci[x$trees$results$train$stats$tree == tree], 2), sep = "")
+
 }
 

@@ -113,7 +113,7 @@ Now, to calculate $mcu$ (mean cues used), we simply take the mean of this vector
 
 ```{r}
 # Calculate the mean (this is mcu)
-mean(heart.fft$levelout$train[,1])
+mean(heart.fft$trees$results$train$levelout$tree.1)
 ```
 
 Now that we know where $mcu$ comes from, $pci$ is easy: it's just the total number of cues in the dataset minus $mcu$ divided by the total number of cues in the data:

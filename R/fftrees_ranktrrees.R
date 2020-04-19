@@ -23,7 +23,8 @@ if(x$params$goal == "cost") {
 # Get tree rankings by goal
 
 tree_rank_df <- data.frame(tree = 1:nrow(tree_stats),
-                           tree_new = tree_rank)
+                           tree_new = tree_rank) %>%
+  dplyr::arrange(tree_new)
 
 # Update
 
@@ -52,23 +53,23 @@ level_stats_ranked <- x$trees$results$train$level_stats %>%
   tibble::as_tibble()
 
 decisions_ranked <- x$trees$results$train$decisions %>%
-  dplyr::select(tree_rank_df$tree_new) %>%
+  dplyr::select(tree_rank_df$tree) %>%
   dplyr::rename_at(dplyr::vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
 
 levelout_ranked <- x$trees$results$train$levelout %>%
-  dplyr::select(tree_rank_df$tree_new) %>%
+  dplyr::select(tree_rank_df$tree) %>%
   dplyr::rename_at(dplyr::vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
 
 cost_decisions_ranked <- x$trees$results$train$cost_decisions %>%
-  dplyr::select(tree_rank_df$tree_new) %>%
+  dplyr::select(tree_rank_df$tree) %>%
   dplyr::rename_at(dplyr::vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
 
 cost_cues_ranked <- x$trees$results$train$cost_cues %>%
-  dplyr::select(tree_rank_df$tree_new) %>%
+  dplyr::select(tree_rank_df$tree) %>%
   dplyr::rename_at(dplyr::vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
 
 cost_ranked <- x$trees$results$train$cost %>%
-  dplyr::select(tree_rank_df$tree_new) %>%
+  dplyr::select(tree_rank_df$tree) %>%
   dplyr::rename_at(dplyr::vars(1:x$trees$n), function(i) {paste0("tree.", 1:x$trees$n)})
 
 # Add results to x -------------------------
