@@ -31,7 +31,8 @@ Imports:
     caret,
     dplyr,
     testthat,
-    magrittr
+    magrittr,
+    tidyselect
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 7.1.0

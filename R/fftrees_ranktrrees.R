@@ -16,7 +16,7 @@ if(x$params$goal == "cost") {
 
 } else {
 
-  tree_rank <- rank(-tree_stats[[x$params$goal]], ties = "first")
+  tree_rank <- rank(-tree_stats[[x$params$goal]], ties.method = "first")
 
 }
 
