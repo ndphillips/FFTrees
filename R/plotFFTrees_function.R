@@ -350,43 +350,12 @@ if(what != 'cues') {
 
   # DEFINE CRITICAL OBJECTS
 
-  lr.stats <- NULL
-  cart.stats <- NULL
-  rf.stats <- NULL
-  svm.stats <- NULL
-
 
 
   decision.v <- x$trees$results[[data]]$decisions[,tree]
   tree.stats <- x$trees$results[[data]]$stats
   level.stats <- x$trees$results[[data]]$level_stats[x$trees$results[[data]]$level_stats$tree == tree,]
 
-  if(comp == TRUE) {
-
-    if(is.null(x$comp$lr$results) == FALSE) {
-      lr.stats <- data.frame("sens" = x$comp$lr$results[[data]]$sens,
-                             "spec" = x$comp$lr$results[[data]]$spec)
-    }
-
-    if(is.null(x$comp$cart$results) == FALSE) {
-
-      lcart.stats <- data.frame("sens" = x$comp$cart$results[[data]]$sens,
-                                "spec" = x$comp$cart$results[[data]]$spec)
-
-    }
-
-    if(is.null(x$comp$rf$results) == FALSE) {
-
-      rf.stats <- data.frame("sens" = x$comp$rf$results[[data]]$sens,
-                             "spec" = x$comp$rf$results[[data]]$spec)
-
-    }
-
-    if(is.null(x$comp$svm$results) == FALSE) {
-      svm.stats <- data.frame("sens" = x$comp$svm$results[[data]]$sens,
-                              "spec" = x$comp$svm$results[[data]]$spec)
-    }
-  }
 
   n.exemplars <- nrow(x$data[[data]])
   n.pos <- sum(x$data[[data]][[x$metadata$criterion_name]])
@@ -1881,10 +1850,11 @@ if(show.roc) {
   if(comp == TRUE) {
 
   # CART
-if(is.null(x$comp$cart$results) == FALSE) {
 
-  cart.spec <- x$comp$cart$results[[data]]$spec
-  cart.sens <- x$comp$cart$results[[data]]$sens
+if ("cart" %in% x$competition[[data]]$algorithm) {
+
+  cart.spec <-  x$competition[[data]]$spec[x$competition[[data]]$algorithm == "cart"]
+  cart.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
 
 points(final.roc.x.loc[1] + (1 - cart.spec) * lloc$width[lloc$element == "roc"],
          final.roc.y.loc[1] + cart.sens * lloc$height[lloc$element == "roc"],
@@ -1919,11 +1889,10 @@ par("xpd" = TRUE)
 
 ## LR
 
-if(is.null(x$comp$lr$results) == FALSE) {
+  if ("lr" %in% x$competition[[data]]$algorithm) {
 
-
-    lr.spec <- x$comp$lr$results[[data]]$spec
-    lr.sens <- x$comp$lr$results[[data]]$sens
+    lr.spec <-  x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
+    lr.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
 
 
 points(final.roc.x.loc[1] + (1 - lr.spec) * lloc$width[lloc$element == "roc"],
@@ -1957,10 +1926,10 @@ par("xpd" = T)
 }
 
 ## rf
-if(is.null(x$comp$rf$results) == FALSE) {
+if ("rf" %in% x$competition[[data]]$algorithm) {
 
-      rf.spec <- x$comp$rf$results[[data]]$spec
-      rf.sens <- x$comp$rf$results[[data]]$sens
+  rf.spec <-  x$competition[[data]]$spec[x$competition[[data]]$algorithm == "rf"]
+  rf.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "rf"]
 
       points(final.roc.x.loc[1] + (1 - rf.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + rf.sens * lloc$height[lloc$element == "roc"],
@@ -1994,11 +1963,10 @@ if(is.null(x$comp$rf$results) == FALSE) {
     }
 
 ## svm
-    ## svm
-    if(is.null(x$comp$svm$results) == FALSE) {
+if ("svm" %in% x$competition[[data]]$algorithm) {
 
-      svm.spec <- x$comp$svm$results[[data]]$spec
-      svm.sens <- x$comp$svm$results[[data]]$sens
+  svm.spec <-  x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
+  svm.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
 
       points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
              final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],

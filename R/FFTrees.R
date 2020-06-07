@@ -126,7 +126,7 @@ FFTrees <- function(formula = NULL,
                     quiet = FALSE
 ) {
 #
-#
+# #
   # data.test = NULL
   # algorithm = "ifan"
   # max.levels = NULL
@@ -160,8 +160,9 @@ FFTrees <- function(formula = NULL,
   # comp = NULL
   # quiet = FALSE
   #
-  # formula = survived ~.
-  # data = titanic
+  # formula = diagnosis ~.
+  # data = heart.train
+  # data.test = heart.test
   # main = "Titanic"
   # decision.labels = c("Died", "Survived")
 #
