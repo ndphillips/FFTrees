@@ -89,13 +89,6 @@ The output tells us several pieces of information:
 - The best tree, FFT \#1 uses three cues: `thal`, `cp`, and `ca`.
 - Several summary statistics for this tree in training and test data are then summarized.
 
-To summarise performance statistics for a tree across training and test data, use the `summary()` function (use the `tree = X` argument to specify a diffent tree)
-
-```{r}
-# Pring summary statistics of all trees
-summary(heart.fft)
-```
-
 All statistics can be derived from a 2 x 2 confusion table like the one below. For definitions of all accuracy statistics, look at the [accuracy statistic definitions](AccuracyStatistics.html) vignette.
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}

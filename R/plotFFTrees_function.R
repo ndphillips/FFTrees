@@ -47,7 +47,7 @@ plot.FFTrees <- function(
   x = NULL,
   data = "train",
   what = 'tree',
-  tree = "best.train",
+  tree = 1,
   main = NULL,
   hlines = TRUE,
   cue.labels = NULL,
@@ -328,7 +328,9 @@ if(what != 'cues') {
 
     if(class(data) == "character") {
 
-      if(data == "test" & is.null(x$trees$results$test$stats)) {stop("You asked to plot the test data but there are no test data in the FFTrees object")}
+      if(data == "test" & is.null(x$trees$stats$test)) {
+
+        stop("You asked to plot the test data but there are no test data in the FFTrees object")}
 
     }
   }
@@ -357,9 +359,9 @@ if(what != 'cues') {
 
 
 
-  decision.v <- x$trees$results[[data]]$decisions[,tree]
-  tree.stats <- x$trees$results[[data]]$stats
-  level.stats <- x$trees$results[[data]]$level_stats[x$trees$results[[data]]$level_stats$tree == tree,]
+  decision.v <- x$trees$decisions[[data]][[tree]]$decision
+  tree.stats <- x$trees$stats[[data]]
+  level.stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree,]
 
   if(comp == TRUE) {
 
@@ -389,10 +391,10 @@ if(what != 'cues') {
   }
 
   n.exemplars <- nrow(x$data[[data]])
-  n.pos <- sum(x$data[[data]][[x$metadata$criterion_name]])
-  n.neg <- sum(x$data[[data]][[x$metadata$criterion_name]] == FALSE)
-  mcu <-   x$trees$results[[data]]$stats$mcu[tree]
-  crit.br <- mean(x$data[[data]][[x$metadata$criterion_name]])
+  n.pos <- sum(x$data[[data]][[x$criterion_name]])
+  n.neg <- sum(x$data[[data]][[x$criterion_name]] == FALSE)
+  mcu <-   x$trees$stats[[data]]$mcu[tree]
+  crit.br <- mean(x$data[[data]][[x$criterion_name]])
 
 
   final.stats <- tree.stats[tree,]
@@ -861,7 +863,7 @@ par(xpd = F)
 
 # Add p.signal and p.noise levels
 
-signal.p <- mean(x$data[[data]][[x$metadata$criterion_name]])
+signal.p <- mean(x$data[[data]][[x$criterion_name]])
 noise.p <- 1 - signal.p
 
 p.rect.ylim <- c(.1, .6)

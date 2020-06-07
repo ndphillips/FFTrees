@@ -3,7 +3,8 @@
 #' @param object An FFTrees object created from the FFTrees() function.
 #' @param newdata dataframe. A dataframe of test data
 #' @param tree integer. Which tree in the object should be used? By default, tree = 1 is used
-#' @param type string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, or \code{"prob"} which returns a matrix of class probabilities.
+#' @param type string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, \code{"prob"} which returns a matrix of class probabilities,
+#'  or \code{"both"} which returns a matrix with both class and probability predictions.
 #' @param method string. Method of calculating class probabilities. Either 'laplace', which applies the Laplace correction, or 'raw' which applies no correction.
 #' @param ... Additional arguments passed on to \code{predict()}
 #' @param sens.w,data deprecated
@@ -47,10 +48,11 @@ predict.FFTrees <- function(
 
   testthat::expect_true(is.null(data), info = "data is deprecated. Please use newdata instead")
 
-
   testthat::expect_true(!is.null(newdata))
 
   if(is.null(sens.w) == FALSE) {stop("sens.w is deprecated and will be ignored.")}
+
+  testthat::expect_true(type %in% c("both", "class", "prob"))
 
   goal <- object$params$goal
 
@@ -59,18 +61,20 @@ predict.FFTrees <- function(
                                              newdata = newdata)
 
   # Calculate predictions from tree
-  predictions <- new.apply.tree$trees$results$test$decisions[,tree] %>% dplyr::pull()
+  predictions <- new.apply.tree$trees$decisions$test[[tree]]$decision
 
-   if(type == "class") {output <- predictions}
+  # Get classification output
+class_output <- predictions
 
-if(type == "prob") {
+  # Get probability output
+
 
 # For each case, determine where it is decided in the tree
 
-output <- matrix(NA, nrow = nrow(newdata), ncol = 2)
+prob_output <- matrix(NA, nrow = nrow(newdata), ncol = 2)
 
 # Get cumulative level stats for current tree in training data
-levelstats.c <- object$trees$results$train$level_stats[object$trees$results$train$level_stats$tree == tree,]
+levelstats.c <- new.apply.tree$trees$level_stats$train[new.apply.tree$trees$level_stats$train$tree == tree,]
 levels.n <- nrow(levelstats.c)
 
 # Get marginal counts for levels
@@ -93,39 +97,59 @@ ppv.lp.m <- (hi.m + 1) / (hi.m + fa.m + 2)
 for(level.i in 1:levels.n) {
 
   # Which cases are classified as FALSE in this level?
-  decide.now.0.log <- new.apply.tree$trees$results$test$levelout[,tree] == level.i &
-                      new.apply.tree$trees$results$test$decision[,tree] == 0
+  decide.now.0.log <- new.apply.tree$trees$decisions$test[[paste0("tree_", tree)]]$levelout == level.i &
+                      new.apply.tree$trees$decisions$test[[paste0("tree_", tree)]]$decision == FALSE
 
   # Which cases are classified as TRUE in this level?
-  decide.now.1.log <- new.apply.tree$trees$results$test$levelout[,tree] == level.i &
-                        new.apply.tree$trees$results$test$decision[,tree] == 1
+  decide.now.1.log <- new.apply.tree$trees$decisions$test[[paste0("tree_", tree)]]$levelout == level.i &
+                      new.apply.tree$trees$decisions$test[[paste0("tree_", tree)]]$decision == TRUE
 
   if(method == "laplace") {
 
     # Assign the npv for those assigned 0
- output[decide.now.0.log, 1] <- npv.lp.m[level.i]
- output[decide.now.0.log, 2] <- 1 - npv.lp.m[level.i]
+    prob_output[decide.now.0.log, 1] <- npv.lp.m[level.i]
+    prob_output[decide.now.0.log, 2] <- 1 - npv.lp.m[level.i]
 
    # Assign the ppv for those assigned 1
- output[decide.now.1.log, 2] <- ppv.lp.m[level.i]
- output[decide.now.1.log, 1] <- 1 - ppv.lp.m[level.i]
+    prob_output[decide.now.1.log, 2] <- ppv.lp.m[level.i]
+    prob_output[decide.now.1.log, 1] <- 1 - ppv.lp.m[level.i]
 
   }
 
   if(method == "raw") {
 
-  output[decide.now.0.log, 1] <- npv.m[level.i]
-  output[decide.now.0.log, 2] <- 1 - npv.m[level.i]
+    prob_output[decide.now.0.log, 1] <- npv.m[level.i]
+    prob_output[decide.now.0.log, 2] <- 1 - npv.m[level.i]
 
-  output[decide.now.1.log, 2] <- ppv.m[level.i]
-  output[decide.now.1.log, 1] <- 1 - ppv.m[level.i]
+    prob_output[decide.now.1.log, 2] <- ppv.m[level.i]
+    prob_output[decide.now.1.log, 1] <- 1 - ppv.m[level.i]
 
   }
 
 }
 
+  if (type == "prob") {
 
-}
+    colnames(prob_output) <- c("prob_0", "prob_1")
+output <-tibble::as_tibble(prob_output)
+
+
+  }
+
+  if (type == "class") {
+
+  output <- class_output
+
+  }
+
+  if(type == "both") {
+
+    output <- tibble::as_tibble(data.frame(class = class_output,
+                               prob_0 = prob_output[,1],
+                               prob_1 = prob_output[,2]))
+
+  }
+
 
   return(output)
 

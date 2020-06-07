@@ -16,12 +16,11 @@ correction <- .25
 
 # Extract key variables
 
-criterion_name <- x$metadata$criterion_name
+criterion_name <- x$criterion_name
 criterion_v <- x$data$train[[criterion_name]]
-cues_n <- x$metadata$cues_n
-cases_n <- x$metadata$cases_n
-cue_df <- x$data$train[,2:ncol(x$data$train)]
-cues_names <- names(cue_df)
+cues_n <- length(x$cue_names)
+cases_n <- nrow(x$data$train)
+cue_df <- x$data$train[,names(x$data$train) != criterion_name]
 
 # ----------
 # INITIAL TRAINING CUE ACCURACIES
@@ -470,8 +469,6 @@ level_stats_ls[[tree_i]] <- level_stats_i
 
 x$trees$definitions <- tree.definitions
 x$trees$n <- nrow(tree.definitions)
-
-
 
 return(x)
 

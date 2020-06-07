@@ -31,44 +31,16 @@ fftrees_cuerank <- function(x = NULL,
 
   # Define criterion (vector) and cues (dataframe)
 
-  cue_df <- newdata[,2:ncol(newdata), drop = FALSE]
-  criterion_v <- newdata %>% dplyr::pull(x$metadata$criterion_name)
+  cue_df <- newdata[names(newdata) != x$criterion_name]
+  criterion_v <- newdata %>% dplyr::pull(x$criterion_name)
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
-  cue_names <- names(cue_df)
-
 
   # Validity checks
 
   # Validation: Make sure there is variance in the criterion!
 
   testthat::expect_true(length(unique(criterion_v)) > 1)
-
-
-  # Clean up and validation
-#   {
-#   # Convert unordered factors to character, and ordered factors to integer
-#   for(i in 1:cue_n) {
-#
-#
-#     if(setequal(class(cue_df[,i]),c("ordered", "factor"))) {
-#
-#       cue_df[,i] <- as.numeric(cue_df[,i])
-#
-#     }
-#
-#     if(class(cue_df[,i]) == "factor") {
-#
-#       cue_df[,i] <- paste(cue_df[,i])
-#
-#     }
-#   }
-#
-#
-#
-#
-# }
-
 
   if(!x$params$quiet) {pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)}
 

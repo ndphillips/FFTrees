@@ -8,7 +8,7 @@
   x = NULL,
   data = "train",
   what = "tree",
-  tree = "best.train",
+  tree = 1,
   main = NULL,
   hlines = TRUE,
   cue.labels = NULL,

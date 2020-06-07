@@ -140,7 +140,7 @@ plot(iris.fft,
      tree = 2)     # Show tree #2
 ```
 
-As you can see, this tree does indeed have a higher specificity of 99%. However, it comes at a cost of a lower sensitivity of 82\%.
+As you can see, this tree does indeed have a higher specificity. However, it comes at a cost of a lower sensitivity
 
 
 

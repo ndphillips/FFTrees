@@ -125,43 +125,6 @@ FFTrees <- function(formula = NULL,
                     comp = NULL,
                     quiet = FALSE
 ) {
-# #
-# #
-#   formula = diagnosis ~.
-#   data = heart.train
-#   data.test = NULL
-#   algorithm = "ifan"
-#   max.levels = NULL
-#   sens.w = .5
-#   cost.outcomes = NULL
-#   cost.cues = NULL
-#   stopping.rule = "exemplars"
-#   stopping.par = .1
-#   goal = NULL
-#   goal.chase = NULL
-#   goal.threshold = "bacc"
-#   numthresh.method = "o"
-#   numthresh.n = 10
-#   decision.labels = c("False", "True")
-#   main = NULL
-#   train.p = 1
-#   rounding = NULL
-#   repeat.cues = TRUE
-#   my.tree = NULL
-#   tree.definitions = NULL
-#   do.comp = TRUE
-#   do.cart = TRUE
-#   do.lr = TRUE
-#   do.rf = TRUE
-#   do.svm = TRUE
-#   store.data = FALSE
-#   object = NULL
-#   rank.method = NULL
-#   force = FALSE
-#   verbose = NULL
-#   comp = NULL
-#   quiet = FALSE
-
 
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {
@@ -254,7 +217,8 @@ x <- FFTrees:::fftrees_define(x, object = object)
 
 # Training......
 
-x <- FFTrees:::fftrees_apply(x, mydata = "train")
+x <- FFTrees:::fftrees_apply(x,
+                             mydata = "train")
 
 # Rank trees by goal
 
@@ -276,7 +240,6 @@ x <- FFTrees:::fftrees_ffttowords(x = x,
 # FIT COMPETITIVE ALGORITHMS
 
 x <- FFTrees:::fftrees_fitcomp(x = x)
-
 
 return(x)
 
