@@ -42,7 +42,7 @@ exits.df <- data.frame(exit.char = x$params$decision.labels,
 
 # Split
 
-cue.names.l <- tolower(x$metadata$cue_names)
+cue.names.l <- tolower(x$cue_names)
 my.tree <- tolower(my.tree)
 decision.labels <- tolower(x$params$decision.labels)
 
@@ -75,7 +75,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
   })))
 
 # Convert cue names back to original (non lower) values
-cues.v <- x$metadata$cue_names[sapply(cues.v, FUN = function(x) {which(cue.names.l == x)})]
+cues.v <- x$cue_names[sapply(cues.v, FUN = function(x) {which(cue.names.l == x)})]
 
 }
 

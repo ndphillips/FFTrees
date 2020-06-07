@@ -22,7 +22,8 @@
 
 \item{tree}{integer. Which tree in the object should be used? By default, tree = 1 is used}
 
-\item{type}{string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, or \code{"prob"} which returns a matrix of class probabilities.}
+\item{type}{string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, \code{"prob"} which returns a matrix of class probabilities,
+or \code{"both"} which returns a matrix with both class and probability predictions.}
 
 \item{sens.w, data}{deprecated}
 

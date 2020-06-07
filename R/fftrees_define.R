@@ -4,7 +4,7 @@
 #' @param object FFTrees.
 #' @import testthat
 #'
-fftrees_define <- function(x, object) {
+fftrees_define <- function(x, object = NULL) {
 
   if(is.null(object) == FALSE) {
 

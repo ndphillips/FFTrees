@@ -346,46 +346,25 @@ data <- data %>%
 
   x <- list(
 
-            # Raw training data
-            data = list(train = data,
-                        test = data.test),
+            criterion_name = criterion_name,
+            cue_names = cue_names,
 
             # Formula
             formula = formula,                                  # Original formula
 
             # Tree info
             trees = list(n = NULL,
-                         best = list(train = NULL,
-                                     test = NULL),
+                         best = NULL,
                          definitions = NULL,
                          inwords = NULL,
-                         results = list(train = list(stats = NULL,
-                                                     decisions = NULL,
-                                                     levelout = NULL,
-                                                     cost = NULL,
-                                                     cost_decisions = NULL,
-                                                     cost_cues = NULL,
-                                                     level_stats = NULL),
+                         stats = NULL,
+                         level_stats = NULL,
+                         decisions = list(train = list(),
+                                          test = list())),
 
-                                        test = list(stats = NULL,
-                                                    decisions = NULL,
-                                                    levelout = NULL,
-                                                    cost = NULL,
-                                                    cost_decisions = NULL,
-                                                    cost_cues = NULL,
-                                                    level_stats = NULL))),
-            # model
-            metadata = list(criterion_name = criterion_name,            # Name of the criterion
-                            cue_names = cue_names,
-                            cues_n = ncol(data) - 1,                 # Cue names
-                            cases_n = nrow(data)),             # Number of cases
-
-            cues = list(stats = list(train = NULL,
-                                     test = NULL,
-                                     dynamic = NULL),
-                        thresholds = list(train = NULL,
-                                          test = NULL,
-                                          dynamic = NULL)),
+            # Raw training data
+            data = list(train = data,
+                        test = data.test),
 
             # Parameters
 

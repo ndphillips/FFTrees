@@ -151,19 +151,18 @@ Here are the training statistics for all trees
 
 ```{r}
 # Print training statistics for all trees
-heart.fft$trees$results$train$stats
+heart.fft$trees$stats$train
 ```
 
-### decision
+### Decisions
 
-The `decision` list contains the raw classification decisions for each tree for each training (and test) case.
+The `decision` list contains the raw classification decisions for each tree for each case.
 
-Here are is how each tree classified the first five cases in the training data:
+Here are is how decisions were made based on tree 1
 
 ```{r}
-# Look at the tree decisions for the first 5 training cases
-
-heart.fft$trees$results$train$decisions[1:5, 1]
+# Look at the tree decisisions
+heart.fft$trees$decisions$train$tree_1
 ```
 
 ### Predicting new data with `predict()`
@@ -181,9 +180,19 @@ To predict class probabilities, include the `type = "prob"` argument, this will 
 ```{r}
 # Predict class probabilities for new data from the best training tree
 predict(heart.fft,
-        newdata = heartdisease[1:10,],
+        newdata = heartdisease,
         type = "prob")
 ```
+
+Use type = "both" to get both classification and probability predictions for cases
+
+```{r}
+# Predict classes and probabilities
+predict(heart.fft,
+        newdata = heartdisease,
+        type = "both")
+```
+
 
 ## Visualising trees
 
@@ -197,36 +206,6 @@ plot(heart.fft,
      decision.labels = c("Healthy", "Disease"))
 ```
 
-
-## Specify sensitivity weights with `sens.w`
-
-In some decision tasks, one might wish to weight the algorithm's sensitivity differently than its specificity. For example, in cancer diagnosis, one might weight the algorithm's sensitivity, the probability of detecting true cancer higher than the probability of correctly detecting true non-cancer. In other words, a miss might be more costly than a false-alarm. By default, `FFTrees` weights these two measures equally. To weight one measure more than the other, include a sensitivity weight `sens.w`:
-
-
-```{r}
-# Breast cancer tree without specifying a sensitivity weight
-breast.fft <- FFTrees(diagnosis ~.,
-                      data = breastcancer)
-
-plot(breast.fft)
-```
-
-This FFT had a sensitivity of 0.93 and a specificity of 0.95.
-
-Now, let's create a new FFTrees object and specify a desired sensitivity weight of .7:
-
-```{r}
-# Breast cancer tree with a sensitivity weight of .7
-breast2.fft <- FFTrees(diagnosis ~.,
-                      data = breastcancer,
-                      sens.w = .7)
-
-plot(breast2.fft)
-```
-
-The sensitivity for this FFT is a bit higher at 0.98, however, it came at a cost of a lower specificity of 0.85
-
-- Specifying a `sens.w` value other than 0.5 does not (currently) actually affect how trees care constructed. Instead, it is used to select the tree with the highest weighted accuracy `wacc` score, where `wacc = sensitivity * sens.w + specificity * (1 - sens.w)` of all the trees contained in the `FFTrees` object.
 
 ## Define an FFT manually with `my.tree`
 
@@ -246,9 +225,4 @@ plot(myheart.fft,
 ```
 
 As you can see, this FFT was pretty terrible
-
-
-
-
-
 

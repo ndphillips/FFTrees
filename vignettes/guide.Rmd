@@ -1,6 +1,6 @@
 ---
 title: "FFTrees: Fast-and-frugal decision trees"
-author: "Nathaniel D. Phillips, Nathaniel.D.Phillips.is@gmail.com, http://ndphillips.github.io"
+author: "Nathaniel D. Phillips, Nathaniel.D.Phillips.is@gmail.com, https://www.linkedin.com/in/nathanieldphillips/"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib

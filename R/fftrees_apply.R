@@ -37,30 +37,27 @@ fftrees_apply <- function(x,
 
   }
 
-  criterion_v <- data[[x$metadata$criterion_name]]
+  criterion_v <- data[[x$criterion_name]]
+  criterion_n <- length(criterion_v)
 
   # Setup outputs
 
-  #  [output_ls]
+  #  [decisions_ls]
   #    A list containing dataframes with one row per case, and one column per tree
 
-  output_names <- c("decision", "levelout", "cost_decisions", "cost_cues", "cost")
+  decisions_ls <- lapply(1:x$trees$n, FUN = function(i) {
 
-  output_ls <- lapply(1:length(output_names), FUN = function(i) {
-
-    output <- as.data.frame(matrix(NA,
-                                   nrow = nrow(data),
-                                   ncol = x$trees$n))
-
-    names(output) <- paste("tree", 1:x$trees$n, sep = ".")
-
-    output <- tibble::as_tibble(output)
-
-    output
+     tibble::tibble(criterion = criterion_v,
+                              decision = rep(NA, criterion_n),
+                              levelout = rep(NA, criterion_n),
+                              cost_cue = rep(NA, criterion_n),
+                              cost_decision = rep(NA, criterion_n),
+                              cost = rep(NA, criterion_n),
+                              current_decision = rep(NA, criterion_n))
 
   })
 
-  names(output_ls) <- output_names
+  names(decisions_ls) <- paste0("tree_", 1:x$trees$n)
 
   # [level_stats_ls]
   #   A list with one element per tree, each containing cumulative level statistics
@@ -80,6 +77,8 @@ fftrees_apply <- function(x,
     direction_v <-  unlist(strsplit(x$trees$definitions$directions[tree_i], ";"))
     level_n <- x$trees$definitions$nodes[tree_i]
 
+    decisions_df <- decisions_ls[[tree_i]]
+
 
     costc.level <- sapply(cue_v, FUN = function(cue_i) {
 
@@ -92,13 +91,6 @@ fftrees_apply <- function(x,
     cue_cost_cum_level <- data.frame(level = 1:level_n,
                                      cue_cost_cum = costc.level.cum)
 
-    # Define vectors of critical outputs for each case
-
-    decision_v <- rep(NA, nrow(data))
-    levelout_v <- rep(NA, nrow(data))
-    cost_cues_v <-  rep(NA, nrow(data))
-    cost_decisions_v <-  rep(NA, nrow(data))
-    cost_v <-  rep(NA, nrow(data))
 
     # level_stats_i contains cumulative level statistics
     level_stats_i <- data.frame(tree = tree_i,
@@ -116,7 +108,6 @@ fftrees_apply <- function(x,
     level_stats_i[critical_stats_v] <- NA
     level_stats_i$cost_cues <- NA
 
-
     # Loop over levels
     for(level_i in 1:level_n) {
 
@@ -127,27 +118,25 @@ fftrees_apply <- function(x,
       exit_i <- as.numeric(exit_v[level_i])
       threshold_i <- threshold_v[level_i]
 
-
-      # Determine which cases are classified / unclassified
-      unclassified.cases <- which(is.na(decision_v))
-      classified.cases <- which(is.na(decision_v) == FALSE)
-
       cue_values <- data[[cue_i]]
+
+      decisions_df$current_cue_values <- cue_values
+
 
       if(is.character(threshold_i)) {threshold_i <- unlist(strsplit(threshold_i, ","))}
 
       if(substr(class_i, 1, 1) %in% c("n", "i")) {threshold_i <- as.numeric(threshold_i)}
 
-      if(direction_i == "!=") {current.decisions <- (cue_values %in% threshold_i) == FALSE}
-      if(direction_i == "=") {current.decisions <- cue_values %in% threshold_i}
-      if(direction_i == "<") {current.decisions <- cue_values < threshold_i}
-      if(direction_i == "<=") {current.decisions <- cue_values <= threshold_i}
-      if(direction_i == ">") {current.decisions <- cue_values > threshold_i}
-      if(direction_i == ">=") {current.decisions <- cue_values >= threshold_i}
+      if(direction_i == "!=") {decisions_df$current_decision <- (decisions_df$current_cue_values %in% threshold_i) == FALSE}
+      if(direction_i == "=") {decisions_df$current_decision <- decisions_df$current_cue_values %in% threshold_i}
+      if(direction_i == "<") {decisions_df$current_decision <- decisions_df$current_cue_values < threshold_i}
+      if(direction_i == "<=") {decisions_df$current_decision <- decisions_df$current_cue_values <= threshold_i}
+      if(direction_i == ">") {decisions_df$current_decision <- decisions_df$current_cue_values > threshold_i}
+      if(direction_i == ">=") {decisions_df$current_decision <- decisions_df$current_cue_values >= threshold_i}
 
-      if(exit_i == 0) {classify.now <- current.decisions == FALSE & is.na(decision_v)}
-      if(exit_i == 1) {classify.now <- current.decisions == TRUE & is.na(decision_v)}
-      if(exit_i == .5) {classify.now <- is.na(decision_v)}
+      if(exit_i == 0) {classify.now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)}
+      if(exit_i == 1) {classify.now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)}
+      if(exit_i == .5) {classify.now <- is.na(decisions_df$decision)}
 
       # Convert NAs
 
@@ -158,32 +147,32 @@ fftrees_apply <- function(x,
       #If it is the final node, then classify NA cases according to most common class
       if(exit_i %in% .5) {
 
-        current.decisions[is.na(current.decisions)] <- allNA.pred
+        decisions_df$current_decision[is.na(decisions_df$current_decision)] <- allNA.pred
 
       }
 
 
       # Define critical values for current decisions
 
-      decision_v[classify.now] <- current.decisions[classify.now]
-      levelout_v[classify.now] <- level_i
-      cost_cues_v[classify.now] <- costc.level.cum[level_i]
+      decisions_df$decision[classify.now] <- decisions_df$current_decision[classify.now]
+      decisions_df$levelout[classify.now] <- level_i
+      decisions_df$cost_cue[classify.now] <- costc.level.cum[level_i]
 
-      cost_decisions_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == TRUE] <- x$params$cost.outcomes$hi
-      cost_decisions_v[current.decisions[classify.now] == TRUE & criterion_v[classify.now] == FALSE] <- x$params$cost.outcomes$fa
-      cost_decisions_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == TRUE] <- x$params$cost.outcomes$mi
-      cost_decisions_v[current.decisions[classify.now] == FALSE & criterion_v[classify.now] == FALSE] <- x$params$cost.outcomes$cr
+      decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == TRUE] <- x$params$cost.outcomes$hi
+      decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
+      decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == TRUE] <- x$params$cost.outcomes$fa
+      decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$cr
 
-      cost_v[classify.now] <- cost_cues_v[classify.now] + cost_decisions_v[classify.now]
 
+      decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_decision
 
       # Get cumulative level stats
 
-      my_level_stats_i <- FFTrees:::classtable(prediction_v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                     criterion_v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                     sens.w = x$params$sens.w,
-                                     cost.v = cost_cues_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                     cost.outcomes = x$params$cost.outcomes)
+      my_level_stats_i <- FFTrees:::classtable(prediction_v = decisions_df$decision[!is.na(decisions_df$decision)],
+                                               criterion_v = decisions_df$criterion[!is.na(decisions_df$decision)],
+                                               sens.w = x$params$sens.w,
+                                               cost.v = decisions_df$cost_cue[!is.na(decisions_df$decision)],
+                                               cost.outcomes = x$params$cost.outcomes)
 
 
       # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)
@@ -191,20 +180,16 @@ fftrees_apply <- function(x,
 
       # Add cue cost and cost
 
-      level_stats_i$cost_cues[level_i] <- mean(cost_cues_v[!is.na(cost_cues_v)])
+      level_stats_i$cost_cues[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
       level_stats_i$cost[level_i] <-level_stats_i$cost_cues[level_i]  + level_stats_i$cost_decisions[level_i]
 
     }
 
-    # Add final tree results to level_stats_ls and output_ls
+    # Add final tree results to level_stats_ls and decisions_ls
 
     level_stats_ls[[tree_i]] <- level_stats_i
 
-    output_ls$decision[,tree_i] <- decision_v
-    output_ls$levelout[,tree_i] <- levelout_v
-    output_ls$cost_cues[,tree_i] <- cost_cues_v
-    output_ls$cost_decisions[,tree_i] <- cost_decisions_v
-    output_ls$cost[,tree_i] <- cost_v
+decisions_ls[[tree_i]] <- decisions_df[,names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
 
 
   }
@@ -225,28 +210,26 @@ fftrees_apply <- function(x,
     names(tree_stats)[1] <- "tree"
     rownames(tree_stats) <- 1:nrow(tree_stats)
 
-    # Add pci to treestats
-    #   pci is the number of cues looked up for each case divided by the maximum possible
 
-    n.lookups <- colSums(output_ls$levelout)
-    max.lookups <- nrow(data) * ncol(data)
+    # Calculate pci and mcu
 
-    tree_stats$pci <- 1 - n.lookups / max.lookups
+    for (tree_i in 1:x$trees$n) {
 
-    # Add mean cues per case (mcu)
-    tree_stats$mcu <- colMeans(output_ls$levelout)
+      max.lookups <- nrow(data) * length(x$cue_names)
+      n.lookups <- sum(decisions_ls[[tree_i]]$levelout)
+
+      tree_stats$pci[tree_i] <- 1 - n.lookups / max.lookups
+      tree_stats$mcu[tree_i] <- mean(decisions_ls[[tree_i]]$levelout)
+
+    }
 
   }
 
   # Add results to x -------------------------
 
-  x$trees$results[[mydata]]$stats <- tree_stats
-  x$trees$results[[mydata]]$level_stats <- level_stats
-  x$trees$results[[mydata]]$decisions <- output_ls$decision
-  x$trees$results[[mydata]]$levelout <- output_ls$levelout
-  x$trees$results[[mydata]]$cost_decisions <- output_ls$cost_decisions
-  x$trees$results[[mydata]]$cost_cues <- output_ls$cost_cues
-  x$trees$results[[mydata]]$cost <- output_ls$cost
+  x$trees$stats[[mydata]] <- tree_stats
+  x$trees$level_stats[[mydata]] <- level_stats
+  x$trees$decisions[[mydata]] <- decisions_ls
 
   return(x)
 

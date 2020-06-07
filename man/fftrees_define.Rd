@@ -4,7 +4,7 @@
 \alias{fftrees_define}
 \title{Create definitions of FFTrees}
 \usage{
-fftrees_define(x, object)
+fftrees_define(x, object = NULL)
 }
 \arguments{
 \item{x}{FFTrees.}

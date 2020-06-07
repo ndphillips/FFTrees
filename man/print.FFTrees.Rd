@@ -4,7 +4,7 @@
 \alias{print.FFTrees}
 \title{Prints summary information from an FFTrees object}
 \usage{
-\method{print}{FFTrees}(x = NULL, tree = NULL, ...)
+\method{print}{FFTrees}(x = NULL, tree = 1, ...)
 }
 \arguments{
 \item{x}{FFTrees. A FFTrees x created from FFTrees()}
