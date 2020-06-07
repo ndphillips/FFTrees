@@ -44,15 +44,15 @@ devtools::install_github("ndphillips/FFTrees")
 library(FFTrees)
 ```
 
-Create a fast-and-frugal tree predicting heart disease status ("Healthy" vs. "Diseased") based on a `heart.train` dataset, and test it on `heart.test` a testing dataset.
+Let's create a fast-and-frugal tree predicting heart disease status ("Healthy" vs. "Diseased") based on a `heart.train` dataset, and test it on `heart.test` a testing dataset.
 
-Here are the first new rows and columns of `heart.train`, our training dataset. The key column is `diagnosis`, a logical column  (TRUE and FALSE) which indicate, for each patient, whether or not they have heart disease.
+Here are the first new rows and columns of `heart.train`, our training dataset. The key column is `diagnosis`, a logical column  (TRUE and FALSE) which indicate, for each patient, whether or not they have heart disease. The `heart.test` dataset looks similar but with different cases (i.e.; patients)
 
 ```{r}
 knitr::kable(heart.train[1:7, 1:10])
 ```
 
-Now let's use `FFTrees()` to create a fast and frugal tree from these data.
+Now let's use `FFTrees()` to create a fast and frugal tree from the `heart.train` data and test their performance on `heart.test`
 
 ```{r example, fig.width = 6, fig.height = 6, out.width = "80%"}
 # Load package
@@ -64,14 +64,13 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
 
-# See the print method
+# See the print method which shows aggregatge statistics
 heart.fft
 
 # Plot the best tree applied to the test data
 plot(heart.fft,
      data = "test",
      main = "Heart Disease")
-
 
 # Compare results across algorithms in test data
 heart.fft$competition$test
