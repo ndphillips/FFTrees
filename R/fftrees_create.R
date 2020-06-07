@@ -391,16 +391,38 @@ data <- data %>%
                           do.rf = do.rf,
                           do.comp = do.comp),
 
-            # Competitive algorithms
 
-            comp = list(lr = list(model = NULL, results = list(train = list(stats = NULL),
-                                                               test = list(stats = NULL))),
-                        cart = list(model = NULL, results = list(train = list(stats = NULL),
-                                                                 test = list(stats = NULL))),
-                        rf = list(model = NULL, results = list(train = list(stats = NULL),
-                                                               test = list(stats = NULL))),
-                        svm = list(model = NULL, results = list(train = list(stats = NULL),
-                                                                test = list(stats = NULL)))))
+            # One row per algorithm competition
+
+            competition = list(train = data.frame(algorithm = NA,
+                                                  n = NA,
+                                                  hi = NA,
+                                                  fa = NA,
+                                                  mi = NA,
+                                                  cr = NA,
+                                                  sens = NA,
+                                                  spec = NA,
+                                                  far = NA,
+                                                  ppv = NA,
+                                                  npv = NA,
+                                                  acc = NA,
+                                                  bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA),
+                               test = data.frame(algorithm = NA,
+                                                 n = NA,
+                                                 hi = NA,
+                                                 fa = NA,
+                                                 mi = NA,
+                                                 cr = NA,
+                                                 sens = NA,
+                                                 spec = NA,
+                                                 far = NA,
+                                                 ppv = NA,
+                                                 npv = NA,
+                                                 acc = NA,
+                                                 bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA),
+                               models = list(lr = NULL, cart = NULL, rf = NULL, svm = NULL))
+
+            )
 
   class(x) <- "FFTrees"
 

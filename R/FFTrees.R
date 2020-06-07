@@ -126,6 +126,7 @@ FFTrees <- function(formula = NULL,
                     quiet = FALSE
 ) {
 
+
 # DEPRECATED ARGUMENTS -------------------------------------------------
 {
   if(is.null(verbose) == FALSE) {
