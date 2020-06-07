@@ -27,7 +27,7 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("ndphillips/FFTrees")
+devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 ```
 
 ## Examples
@@ -131,13 +131,13 @@ heart.fft$competition$test
 #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
 #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
 #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 58  8 15 72 0.7945205 0.9000 0.1000 0.8787879 0.8275862
+#> 4        rf 153 58  6 15 74 0.7945205 0.9250 0.0750 0.9062500 0.8314607
 #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
 #>         acc      bacc      cost cost_decisions cost_cues
 #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
 #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
 #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8496732 0.8472603 0.1503268      0.1503268        NA
+#> 4 0.8627451 0.8597603 0.1372549      0.1372549        NA
 #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 ```
 
@@ -160,35 +160,6 @@ my.fft <- FFTrees(formula = diagnosis ~.,
 #> Setting goal.chase = 'waccc'
 #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
 #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
-
-
-# See the print method
-heart.fft
-#> FFTrees 
-#> - Trees: 7 fast-and-frugal trees predicting diagnosis
-#> - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
-#> 
-#> FFT #1: Definition
-#> [1] If thal = {rd,fd}, decide Disease.
-#> [2] If cp != {a}, decide Healthy.
-#> [3] If ca <= 0, decide Healthy, otherwise, decide Disease.
-#> 
-#> FFT #1: Prediction Accuracy
-#> Prediction Data: N = 153, Pos (+) = 73 (48%) 
-#> 
-#> |         | True + | True - |
-#> |---------|--------|--------|
-#> |Decide + | hi 64  | fa 19  | 83
-#> |Decide - | mi 9   | cr 61  | 70
-#> |---------|--------|--------|
-#>             73       80       N = 153
-#> 
-#> acc  = 81.7%  ppv  = 77.1%  npv  = 87.1%
-#> bacc = 82.0%  sens = 87.7%  spec = 76.2%
-#> E(cost) = 0.183
-#> 
-#> FFT #1: Prediction Speed and Frugality
-#> mcu = 1.73, pci = 0.87
 
 # Plot my custom fft and see how it did
 plot(my.fft,

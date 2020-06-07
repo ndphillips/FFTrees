@@ -35,7 +35,7 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("ndphillips/FFTrees")
+devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 ```
 ## Examples
 
@@ -90,10 +90,6 @@ my.fft <- FFTrees(formula = diagnosis ~.,
                              If age < 45, predict Healthy.
                              If thal = {fd, normal}, predict Disease. 
                              Otherwise, predict Healthy")
-
-
-# See the print method
-heart.fft
 
 # Plot my custom fft and see how it did
 plot(my.fft,
