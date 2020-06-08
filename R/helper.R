@@ -510,14 +510,14 @@ comp.pred <- function(formula,
 
     # Calculate training accuracy stats
 
-    acc.train <- FFTrees:::classtable(prediction_v = as.logical(pred.train),
+    acc.train <- classtable(prediction_v = as.logical(pred.train),
                             criterion_v = as.logical(crit.train))
 
   }
 
   if(is.null(pred.train)) {
 
-    acc.train <- FFTrees:::classtable(c(TRUE, TRUE, FALSE), c(FALSE, FALSE, TRUE))
+    acc.train <- classtable(c(TRUE, TRUE, FALSE), c(FALSE, FALSE, TRUE))
     acc.train[1,] <- NA
 
   }
@@ -528,11 +528,11 @@ comp.pred <- function(formula,
     if("1" %in% paste(pred.test)) {pred.test <- as.logical(as.numeric(paste(pred.test)))}
 
 
-    acc.test <- FFTrees:::classtable(prediction_v = as.logical(pred.test),
+    acc.test <- classtable(prediction_v = as.logical(pred.test),
                                     criterion_v =  as.logical(crit.test))
   } else {
 
-    acc.test <- FFTrees:::classtable(prediction_v = c(TRUE, FALSE, TRUE),
+    acc.test <- classtable(prediction_v = c(TRUE, FALSE, TRUE),
                                      criterion_v = c(TRUE, TRUE, FALSE))
     acc.test[1,] <- NA
 
@@ -541,10 +541,10 @@ comp.pred <- function(formula,
 
   if(do.test == FALSE) {
 
-    acc.train <- FFTrees:::classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.train <- classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
     acc.train[1, ] <- NA
 
-    acc.test <- FFTrees:::classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.test <- classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
     acc.test[1, ] <- NA
   }
 
@@ -944,6 +944,22 @@ cat("E(cost) =", scales::comma(cost, accuracy = .001), sep = " ")
 # cat("\n")
 
 }
+
+
+#' \code{FFTrees} package
+#'
+#' Create fast and frugal trees
+#'
+#' @docType package
+#' @name FFTrees
+#' @importFrom dplyr %>%
+NULL
+
+## quiets concerns of R CMD check re: the .'s that appear in pipelines
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(".", "tree", "tree_new", "tree", "level"))
+
+
+
 
 
 

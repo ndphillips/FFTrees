@@ -9,8 +9,7 @@ inwords <- function(x, tree = 1) {
 
   testthat::expect_is(x, class = "FFTrees")
 
-
-  heart.fft$trees$inwords[[tree]]
+  x$trees$inwords[[tree]]
 
 
 }

@@ -121,7 +121,7 @@ for(tree_i in 1:tree_n) {
                            "direction" = NA,
                            "exit" = NA)
 
-  level_stat_names <- setdiff(names(FFTrees:::fftrees_threshold_factor_grid()), c("threshold", "direction"))
+  level_stat_names <- setdiff(names(fftrees_threshold_factor_grid()), c("threshold", "direction"))
   level_stats_i[level_stat_names] <- NA
 
   ## asif.stats shows cumulative classification statistics as if all exemplars were
@@ -180,7 +180,7 @@ if(x$params$algorithm == "dfan") {
 
   # Create new dynamic cue ran
 
-  x <- FFTrees::fftrees_cuerank(x,
+  x <- fftrees_cuerank(x,
                                 newdata = data_current,
                                 data = "dynamic")
 

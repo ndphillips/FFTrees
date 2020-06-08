@@ -223,7 +223,7 @@ if(!is.null(cost.cues) & goal != "cost") {
 
 
 # Append cost.cues
-cost.cues <- FFTrees:::cost.cues.append(formula,
+cost.cues <- cost.cues.append(formula,
                                         data,
                                         cost.cues = cost.cues)
 

@@ -168,7 +168,7 @@ fftrees_apply <- function(x,
 
       # Get cumulative level stats
 
-      my_level_stats_i <- FFTrees:::classtable(prediction_v = decisions_df$decision[!is.na(decisions_df$decision)],
+      my_level_stats_i <- classtable(prediction_v = decisions_df$decision[!is.na(decisions_df$decision)],
                                                criterion_v = decisions_df$criterion[!is.na(decisions_df$decision)],
                                                sens.w = x$params$sens.w,
                                                cost.v = decisions_df$cost_cue[!is.na(decisions_df$decision)],

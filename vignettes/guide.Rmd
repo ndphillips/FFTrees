@@ -49,7 +49,6 @@ Here is a complete list of the vignettes
 |     1|    [Heart Disease Tutorial](FFTrees_heart.html)| A complete example of using FFTrees to model heart disease diagnosis     |
 |      |    [Accuracy statistics](AccuracyStatistics.html)| Definitions of accuracy statistics used throughout the package|
 |     2|    [Creating FFTs with FFTrees()](FFTrees_function.html) |Description of  the main function `FFTrees()`|
-|     |    [FFT construction algorithms](FFTrees_algorithm.html)|Description of the algorithm(s) used to grow FFTs     |
 |      |    [Specifying FFTs directly](FFTrees_mytree.html)|How to create FFTs directly using `my.tree` without using one of the built-in algorithms|
 |     3|    [Visualizing FFTs with plot()](FFTrees_plot.html)|Plotting `FFTrees` objects, from full trees to icon arrays|
 |     4|    [Examples of FFTs](FFTrees_examples.html)|Lots of examples of FFTs from different datasets contained in the package|

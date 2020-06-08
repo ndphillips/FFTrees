@@ -184,7 +184,7 @@ if(train.p < 1 && is.null(data.test)) {
 
 # CREATE AN FFTREES OBJECT --------------------------------------------
 
-x <- FFTrees:::fftrees_create(data = data,
+x <- fftrees_create(data = data,
                               formula = formula,
                               goal = goal,
                               data.test = data.test,
@@ -212,35 +212,35 @@ x <- FFTrees:::fftrees_create(data = data,
 
 # 1) GET FFTREES DEFINITIONS ----------------------------------------
 
-x <- FFTrees:::fftrees_define(x, object = object)
+x <- fftrees_define(x, object = object)
 
 # 2) APPLY TREES TO TRAINING DATA -------------------------------
 
 # Training......
 
-x <- FFTrees:::fftrees_apply(x,
+x <- fftrees_apply(x,
                              mydata = "train")
 
 # Rank trees by goal
 
-x <- FFTrees:::fftrees_ranktrees(x)
+x <- fftrees_ranktrees(x)
 
 # Test.........
 
 if(!is.null(x$data$test)) {
 
-x <- FFTrees:::fftrees_apply(x, mydata = "test")
+x <- fftrees_apply(x, mydata = "test")
 
 }
 
 ## 3) DEFINE TREES IN WORDS
 
-x <- FFTrees:::fftrees_ffttowords(x = x,
+x <- fftrees_ffttowords(x = x,
                                   digits = 2)
 
 # FIT COMPETITIVE ALGORITHMS
 
-x <- FFTrees:::fftrees_fitcomp(x = x)
+x <- fftrees_fitcomp(x = x)
 
 return(x)
 

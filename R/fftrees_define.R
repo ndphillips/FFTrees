@@ -16,11 +16,11 @@ fftrees_define <- function(x, object = NULL) {
 
   } else if(!is.null(x$params$my.tree)) {
 
-    x <- FFTrees::fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
+    x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
 
   } else if(x$params$algorithm %in% c("ifan", "dfan")) {
 
-      x <- FFTrees:::fftrees_grow_fan(x)
+      x <- fftrees_grow_fan(x)
 
     } else {
 

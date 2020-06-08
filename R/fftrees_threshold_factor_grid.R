@@ -11,6 +11,7 @@
 #'
 #' @import testthat
 #' @importFrom  magrittr "%>%"
+#' @export
 #'
 #'
 fftrees_threshold_factor_grid <- function(thresholds = NULL,

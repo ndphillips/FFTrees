@@ -21,14 +21,3 @@ A dataframe containing thresholds and marginal classification statistics for eac
 \description{
 Calculates thresholds that maximize a statistic (goal) for cues.
 }
-\examples{
-
-
-\dontrun{
- # What are the best thresholds for each cue in the mushrooms dataset?
- mushrooms.cues <- cuerank(formula = poisonous ~.,
-                           data = mushrooms)
-}
-
-
-}

@@ -50,7 +50,7 @@ fftrees_fitcomp <- function(x) {
 
     if(do.lr) {
 
-      lr.acc <- FFTrees:::comp.pred(formula = x$formula,
+      lr.acc <- comp.pred(formula = x$formula,
                                     data.train = x$data$train,
                                     data.test = x$data$test,
                                     algorithm = "lr",
@@ -83,7 +83,7 @@ fftrees_fitcomp <- function(x) {
 
     if(do.cart) {
 
-      cart.acc <- FFTrees:::comp.pred(formula = x$formula,
+      cart.acc <- comp.pred(formula = x$formula,
                                       data.train = x$data$train,
                                       data.test = x$data$test,
                                       algorithm = "cart",
@@ -115,7 +115,7 @@ fftrees_fitcomp <- function(x) {
 
     if(do.rf) {
 
-      rf.acc <- FFTrees:::comp.pred(formula = x$formula,
+      rf.acc <- comp.pred(formula = x$formula,
                                     data.train = x$data$train,
                                     data.test = x$data$test,
                                     algorithm = "rf",
@@ -147,7 +147,7 @@ fftrees_fitcomp <- function(x) {
 
     if(do.svm) {
 
-      svm.acc <- FFTrees:::comp.pred(formula = x$formula,
+      svm.acc <- comp.pred(formula = x$formula,
                                      data.train = x$data$train,
                                      data.test = x$data$test,
                                      algorithm = "svm",

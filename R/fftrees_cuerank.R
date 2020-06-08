@@ -6,18 +6,8 @@
 #' @param rounding integer.
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
-#' @importFrom testthat expect_true
 #' @return A dataframe containing thresholds and marginal classification statistics for each cue
 #' @export
-#' @examples
-#'
-#'
-#'\dontrun{
-#'  # What are the best thresholds for each cue in the mushrooms dataset?
-#'  mushrooms.cues <- cuerank(formula = poisonous ~.,
-#'                            data = mushrooms)
-#'}
-#'
 #'
 
 fftrees_cuerank <- function(x = NULL,
@@ -120,14 +110,14 @@ fftrees_cuerank <- function(x = NULL,
 
             if(length(cue_i_levels) > .5 * nrow(newdata)) {
 
-              warning(paste0("The cue ", cue_names[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
+              warning(paste0("The cue ", names(cue_df)[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))}
           }
 
         # Check for cue levels containing protected characters (;)
 
         if(any(sapply(cue_i_levels, FUN = function(x) {grepl(";", x = x)}))) {
 
-          stop(paste0("The cue ", cue_names[cue_i], " contains the character ';' which is not allowed. Please replace this value in the data and try again."))
+          stop(paste0("The cue ", names(cue_df)[cue_i], " contains the character ';' which is not allowed. Please replace this value in the data and try again."))
 
           }
 
@@ -151,30 +141,35 @@ fftrees_cuerank <- function(x = NULL,
       # Step 2: Determine best direction and threshold for cue [cue_i_best]
       {
 
+
+        cost.outcomes = x$param$cost.outcomes
+        goal.threshold = x$params$goal.threshold
+        sens.w = x$params$sens.w
+
       # Numeric, integer
       if(substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
-        cue_i_stats <- FFTrees:::fftrees_threshold_numeric_grid(thresholds = cue_i_levels,
+        cue_i_stats <- fftrees_threshold_numeric_grid(thresholds = cue_i_levels,
                                               cue_v = cue_i_v,
                                               criterion_v = criterion_v,
-                                              sens.w = x$params$sens.w,
+                                              sens.w = sens.w,
                                               directions = directions,
                                               cost.each = cue_i_cost,
-                                              cost.outcomes = x$param$cost.outcomes,
-                                              goal.threshold = x$params$goal.threshold)
+                                              cost.outcomes = cost.outcomes,
+                                              goal.threshold = goal.threshold)
       }
 
       # factor, character, and logical
       if(substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
-        cue_i_stats <- FFTrees:::fftrees_threshold_factor_grid(thresholds = cue_i_levels,
+        cue_i_stats <- fftrees_threshold_factor_grid(thresholds = cue_i_levels,
                                              cue_v = cue_i_v,
                                              criterion_v = criterion_v,
                                              directions = directions,
-                                             sens.w = x$params$sens.w,
+                                             sens.w = sens.w,
                                              cost.each = cue_i_cost,
-                                             cost.outcomes = x$param$cost.outcomes,
-                                             goal.threshold = x$params$goal.threshold)
+                                             cost.outcomes = cost.outcomes,
+                                             goal.threshold = goal.threshold)
       }
 
 
@@ -205,7 +200,7 @@ fftrees_cuerank <- function(x = NULL,
 
       # If all cue values are NA, then return empty results
 
-      cue_i_best <- FFTrees:::fftrees_threshold_factor_grid(thresholds = NULL,
+      cue_i_best <- fftrees_threshold_factor_grid(thresholds = NULL,
                                                  cue_v = NULL,
                                                  criterion_v = NULL,
                                                  sens.w = sens.w,

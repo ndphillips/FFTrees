@@ -4,7 +4,8 @@
 #' @param data character.
 #'
 #'
-fftrees_ranktrees <- function(x, data = "train") {
+fftrees_ranktrees <- function(x,
+                              data = "train") {
 
   tree_stats <- x$trees$stats[[data]]
 

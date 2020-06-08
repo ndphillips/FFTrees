@@ -56,7 +56,7 @@ predict.FFTrees <- function(
 
   goal <- object$params$goal
 
-  new.apply.tree <-  FFTrees:::fftrees_apply(x = object,
+  new.apply.tree <-  fftrees_apply(x = object,
                                              mydata = "test",
                                              newdata = newdata)
 

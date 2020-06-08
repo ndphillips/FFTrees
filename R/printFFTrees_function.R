@@ -109,7 +109,7 @@ cat(title, " Data: N = ", scales::comma(N), ", ",
 
     "\n\n", sep = "")
 
-FFTrees:::console_confusionmatrix(hi = hi,
+console_confusionmatrix(hi = hi,
                         mi = mi,
                         fa = fa,
                         cr = cr,
