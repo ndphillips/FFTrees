@@ -2049,10 +2049,10 @@ if ("svm" %in% x$competition[[data]]$algorithm) {
 
 
   # Labels
-  if(comp == TRUE & any(is.null(x$comp$lr$results) == FALSE,
-                        is.null(x$comp$cart$results) == FALSE,
-                        is.null(x$comp$svm$results) == FALSE,
-                        is.null(x$comp$rf$results) == FALSE
+  if(comp == TRUE & any(is.null(x$competition$models$lr) == FALSE,
+                        is.null(x$competition$models$cart) == FALSE,
+                        is.null(x$competition$models$svm) == FALSE,
+                        is.null(x$competition$models$rf) == FALSE
                         )) {
 
   par("xpd" = FALSE)
