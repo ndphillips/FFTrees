@@ -7,6 +7,9 @@
 #' @importFrom testthat expect_true
 #' @return A list of length 4 containing
 #'
+#' @export
+#' @keywords internal
+#'
 #'
 
 fftrees_apply <- function(x,

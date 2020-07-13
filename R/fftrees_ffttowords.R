@@ -43,7 +43,7 @@ if(exits.i %in% c("0", "1")) {
 
     if(exits.i == "1") {
 
-      if(classes.v[i] == "c") {
+      if(classes.v[i] %in% c("c", "l")) {
 
         sentence.i <- paste0("If ", cues.v[i], " ", directions.v[i], " {", thresholds.v[i],
                              "}, decide ",decision.labels[2], "")
@@ -53,7 +53,10 @@ if(exits.i %in% c("0", "1")) {
       if(classes.v[i] %in% c("n", "i")) {
 
         threshold.i <- thresholds.v[i]
+
         threshold.i <- round(as.numeric(thresholds.v[i]), 2)
+
+
 
         sentence.i <- paste0("If ", cues.v[i], " ", directions.v[i], " ",threshold.i,
                              ", decide ",decision.labels[2])
@@ -73,26 +76,18 @@ if(exits.i %in% c("0", "1")) {
                             ">=" = "<",
                             "<=" = ">")
 
-      if(classes.v[i] == "c") {
+      if(classes.v[i] %in% c("c", "l")) {
 
         sentence.i <- paste0("If ", cues.v[i], " ", direction.i, " {", thresholds.v[i], "}, decide ",
                              decision.labels[1], "")
 
       }
 
-      if(classes.v[i] %in% c("n", "i", "l")) {
+      if(classes.v[i] %in% c("n", "i")) {
 
         threshold.i <- thresholds.v[i]
-
-        if(classes.v[i] == "l") {
-
-          threshold.i <- paste(thresholds.v[i])
-
-        } else {
-
         threshold.i <- round(as.numeric(thresholds.v[i]), 2)
 
-        }
 
         sentence.i <- paste0("If ", cues.v[i], " ", direction.i, " ", threshold.i,
                              ", decide ", decision.labels[1], "")
@@ -117,7 +112,7 @@ if(exits.i %in% c("0", "1")) {
 
       direction.pos.i <- directions.v[i]
 
-      if(classes.v[i] == "c") {
+      if(classes.v[i] %in% c("c", "l")) {
 
         sentence.i.1 <- paste0("If ", cues.v[i], " ", direction.neg.i, " {", thresholds.v[i], "}, decide ",
                              decision.labels[1])
@@ -131,15 +126,13 @@ if(exits.i %in% c("0", "1")) {
 
       }
 
-      if(classes.v[i] %in% c("n", "i", "l")) {
+      if(classes.v[i] %in% c("n", "i")) {
 
         threshold.i <- thresholds.v[i]
 
-        if(classes.v[i] %in% c("n", "i")) {
 
         threshold.i <- round(as.numeric(thresholds.v[i]), digits)
 
-        }
 
 
         sentence.i.1 <- paste0("If ", cues.v[i], " ", direction.neg.i, " ", thresholds.v[i], ", decide ",

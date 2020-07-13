@@ -16,7 +16,7 @@ test_that("train summary statistics are correct", {
 
   results_mcu <-as.numeric(x$trees$stats$train$mcu)
 
-  testthat::expect_true(all(levelstats_mcu == results_mcu))
+  testthat::expect_true(all(identical(levelstats_mcu, results_mcu)))
 
 
   # cost
@@ -29,7 +29,7 @@ test_that("train summary statistics are correct", {
 
   results_cost <- as.numeric(x$trees$stats$train$cost)
 
-  testthat::expect_true(all(levelstats_cost == results_cost))
+  testthat::expect_true(all(identical(levelstats_cost, results_cost)))
 
 
 })

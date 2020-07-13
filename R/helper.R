@@ -8,7 +8,7 @@ apply.break <- function(direction,
 ) {
 
   testthat::expect_true(direction %in% c("!=", "=", "<", "<=", ">", ">="))
-  testthat::expect_true(length(threshold.val) == 1)
+  testthat::expect_length(threshold.val, 1)
 
   # direction = cue_direction_new
   # threshold.val = cue_threshold_new
@@ -592,7 +592,7 @@ factclean <- function(
 
   model.can.predict <- rowMeans(can.predict.mtx) == 1
 
-  if(mean(model.can.predict) != 1 & show.warning == T) {
+  if (identical(mean(model.can.predict), 1) == FALSE & show.warning == TRUE) {
 
     warning(paste(sum(model.can.predict), " out of ",
                   nrow(data.test), " cases (", round(sum(model.can.predict == 0) / length(model.can.predict), 2) * 100,

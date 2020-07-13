@@ -21,3 +21,4 @@ A list of length 4 containing
 \description{
 Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics
 }
+\keyword{internal}

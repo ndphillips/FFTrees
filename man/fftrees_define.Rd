@@ -14,3 +14,4 @@ fftrees_define(x, object = NULL)
 \description{
 Create definitions of FFTrees
 }
+\keyword{internal}

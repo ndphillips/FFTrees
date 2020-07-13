@@ -31,6 +31,10 @@
 #'
 #' @return An FFTrees object.
 #'
+#' @export
+#' @keywords internal
+#'
+#'
 fftrees_create <- function(data = NULL,
                            formula = NULL,
                            algorithm = NULL,

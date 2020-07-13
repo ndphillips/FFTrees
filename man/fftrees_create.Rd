@@ -89,3 +89,4 @@ An FFTrees object.
 \description{
 Create an FFTrees object
 }
+\keyword{internal}

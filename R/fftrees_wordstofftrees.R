@@ -11,8 +11,6 @@
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
-  # my.tree <- x$trees$inwords[[1]]
-
 # Clean up my.tree
 
   # Split into one sentence
@@ -72,7 +70,7 @@ cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
   return(output)
 
-  })))
+})))
 
 # Convert cue names back to original (non lower) values
 cues.v <- x$cue_names[sapply(cues.v, FUN = function(x) {which(cue.names.l == x)})]

@@ -219,7 +219,7 @@ x <- fftrees_define(x, object = object)
 # Training......
 
 x <- fftrees_apply(x,
-                             mydata = "train")
+                    mydata = "train")
 
 # Rank trees by goal
 
@@ -236,7 +236,7 @@ x <- fftrees_apply(x, mydata = "test")
 ## 3) DEFINE TREES IN WORDS
 
 x <- fftrees_ffttowords(x = x,
-                                  digits = 2)
+                        digits = 2)
 
 # FIT COMPETITIVE ALGORITHMS
 

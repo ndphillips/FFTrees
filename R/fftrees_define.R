@@ -4,6 +4,10 @@
 #' @param object FFTrees.
 #' @import testthat
 #'
+#' @export
+#' @keywords internal
+#'
+#'
 fftrees_define <- function(x, object = NULL) {
 
   if(is.null(object) == FALSE) {
