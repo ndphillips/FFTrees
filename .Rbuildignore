@@ -7,3 +7,5 @@
 ^stylesheets
 ^index\.html
 ^README\.Rmd$
+^doc$
+^Meta$

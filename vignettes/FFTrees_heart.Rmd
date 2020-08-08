@@ -66,7 +66,7 @@ The resulting trees, decisions, and accuracy statistics are now stored in the `F
 
 #### Other arguments
 
-- `algorithm`: There are several different algorithms available to build FFTs, including "ifan" [@phillips2017FFTrees], "dfan"[@phillips2017FFTrees], "max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization].
+- `algorithm`: There are two different algorithms available to build FFTs "ifan" [@phillips2017FFTrees] and "dfan"[@phillips2017FFTrees]. ("max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization] are no longer supported)
 - `max.levels`: Changes the maximum number of levels allowed in the tree.
 
 The following arguments apply to the "ifan" and "dfan" algorithms only:

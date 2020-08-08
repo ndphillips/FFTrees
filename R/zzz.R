@@ -6,6 +6,7 @@
   packageStartupMessage("    / \\   ")
   packageStartupMessage(paste0("   F   Trees ", utils::packageVersion("FFTrees")))
   packageStartupMessage("")
-  packageStartupMessage("Nathaniel.D.Phillips.is@gmail.com")
-  packageStartupMessage("FFTrees.guide() opens the guide.")
+  packageStartupMessage("Email: Nathaniel.D.Phillips.is@gmail.com")
+  packageStartupMessage("LinkedIn: https://www.linkedin.com/in/nathanieldphillips/")
+  packageStartupMessage("FFTrees.guide() opens the main guide.")
 }

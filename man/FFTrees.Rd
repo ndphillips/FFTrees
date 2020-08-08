@@ -49,7 +49,7 @@ FFTrees(
 
 \item{data.test}{dataframe. An optional testing dataset with the same structure as data.}
 
-\item{algorithm}{character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.}
+\item{algorithm}{character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}}
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
 

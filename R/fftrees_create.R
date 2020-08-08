@@ -85,7 +85,7 @@ criterion_name <- paste(formula)[2]
 
 ## algorithm ==========================================
 
-algorithm_valid <- c("ifan", "dfan", "max", "zigzag")
+algorithm_valid <- c("ifan", "dfan")
 
 testthat::expect_true(!is.null(algorithm),
             info = "algorithm is NULL")

@@ -104,7 +104,6 @@ plot(my.fft,
 
 ## Citation
 
-
 *APA Citation*
 
 Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*, 12(4), 344-368.
@@ -113,7 +112,7 @@ We had a lot of fun creating FFTrees and hope you like it too! We have an articl
 
 If you use FFTrees in your work, please cite us and spread the word so we can continue developing the package
 
-Here are some example publications that have used FFTrees:
+Here are some example publications that have used FFTrees (find the full list at [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601))
 
 - [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. Journal of Neurology, 267(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
 - [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. Acta Orthopaedica, 91(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)

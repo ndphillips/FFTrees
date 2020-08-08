@@ -1,5 +1,10 @@
 # FFTrees 1.5
 
+## 1.5.7
+
+- Officially deprecated "max" and "zigzag" algorithms
+- Minor cleanup throughout
+
 ## 1.5.0
 
 - Fixed warnings for CRAN submission

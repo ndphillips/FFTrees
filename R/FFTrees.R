@@ -5,7 +5,7 @@
 #' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
-#' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}, \code{'max'}, or \code{'zigzag'}.
+#' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
@@ -152,6 +152,14 @@ FFTrees <- function(formula = NULL,
     do.comp <- comp
 
   }
+
+
+  if (any(c("zigzag", "max") %in% algorithm)) {
+
+    stop("'zigzag' and 'max' are no longer supported algorithms")
+
+  }
+
 
 }
 
