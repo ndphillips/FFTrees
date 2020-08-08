@@ -1,0 +1,72 @@
+---
+title: "costs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{costs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(FFTrees)
+```
+
+Here are the costs
+
+```{r}
+heart.cost
+```
+
+First, let's build the trees optimising balanced accuracy using `goal = "bacc"`
+
+```{r}
+# Build trees optimising balanced accuracy
+
+trees_bacc <- FFTrees(diagnosis ~.,
+                      data = heartdisease,
+                      cost.cues = heart.cost,
+                      goal = "bacc", 
+                      main = "Optimising Balanced Accuracy")
+```
+
+Here is the result
+
+```{r}
+trees_bacc
+```
+
+```{r, fig.width = 6, fig.height = 6, out.width = "90%"}
+plot(trees_bacc)
+```
+
+## Optimising cost with goal = "cost"
+
+Now let's try building the trees optimising cost. To do this, we'll set `goal = "cost"`
+
+```{r}
+# Build trees optimising cost
+
+trees_cost <- FFTrees(diagnosis ~.,
+                      data = heartdisease,
+                      cost.cues = heart.cost,
+                      goal = "cost", 
+                      main = "Optimising Cost")
+```
+
+Here is the result
+
+```{r}
+trees_cost
+```
+
+```{r, fig.width = 6, fig.height = 6, out.width = "90%"}
+plot(trees_cost)
+```
+

@@ -788,13 +788,13 @@ label.cex.fun <- function(i, label.box.text.cex = 2) {
 # --------------------------
 if(show.top) {
 
-par(mar = c(0, 0, 1, 0))
+par(mar = c(0, 0, .8, 0))
 
 plot(1, xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n",
      xlab = "", ylab = "", yaxt = "n", xaxt = "n")
 
 if(hlines) {
-segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+# segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
 }
 
 rect(.33, .8, .67, 1.2, col = "white", border = NA)
