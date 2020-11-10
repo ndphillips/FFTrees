@@ -546,17 +546,22 @@ if(n.levels >= 6) {
 # Colors
 
 exit.node.bg <- "white"
+#
+# error.colfun <- circlize::colorRamp2(c(0, 50, 100),
+#                            colors = c("white", "red", "black"))
+#
+# correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
+#                            colors = c("white", "green", "black"))
+#
+# error.bg <- scales::alpha(error.colfun(35), .8)
+# error.border <-  scales::alpha(error.colfun(65), .9)
+# correct.bg <- scales::alpha(correct.colfun(35), .8)
+# correct.border <-  scales::alpha(correct.colfun(65), .9)
 
-error.colfun <- circlize::colorRamp2(c(0, 50, 100),
-                           colors = c("white", "red", "black"))
-
-correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
-                           colors = c("white", "green", "black"))
-
-error.bg <- scales::alpha(error.colfun(35), .8)
-error.border <-  scales::alpha(error.colfun(65), .9)
-correct.bg <- scales::alpha(correct.colfun(35), .8)
-correct.border <-  scales::alpha(correct.colfun(65), .9)
+error.bg <- "#FF7352CC"
+error.border <- "#AD1A0AE6"
+correct.bg <- "#89FF6FCC"
+correct.border <- "#24AB18E6"
 
 max.cex <- 6
 min.cex <- 1
@@ -579,7 +584,6 @@ ball.box.max.shift.p <- .9
 ball.box.min.shift.p <- .4
 
 ball.box.fixed.x.shift <- c(ball.box.min.shift.p * plot.width, ball.box.max.shift.p * plot.width)
-
 
 # Determine N per ball
 
@@ -1568,7 +1572,9 @@ if(show.levels) {
 if(level.type %in% c("line", "bar")) {
 
 # Color function (taken from colorRamp2 function in circlize package)
-col.fun <- circlize::colorRamp2(c(0, .75, 1), c("red", "yellow", "green"), transparency = .5)
+# col.fun <- circlize::colorRamp2(c(0, .75, 1),
+#                                 c("red", "yellow", "green"),
+#                                 transparency = .5)
 
 
 add.level.fun <- function(name,

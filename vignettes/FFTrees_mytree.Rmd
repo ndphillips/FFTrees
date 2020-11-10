@@ -1,5 +1,5 @@
 ---
-title: "Specifying FFTs directly"
+title: "Manually specifying FFTs"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

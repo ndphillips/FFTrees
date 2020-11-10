@@ -30,8 +30,8 @@ test_that("Changing costs without changing goal does not affect tree", {
                         cost.outcomes = list(hi = 0, mi = 10, fa = 1, cr = 0),
                         goal = "bacc")
 
-  testthat::expect_identical(object = trees_bacc$trees$definitions,
-                   expected = trees_cost$trees$definitions)
+  testthat::expect_equal(object = trees_bacc$trees$definitions,
+                         expected = trees_cost$trees$definitions)
 
 })
 

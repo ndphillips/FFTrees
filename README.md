@@ -5,9 +5,9 @@
 
 [![Build
 Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Rdoc](http://www.rdocumentation.org/badges/version/FFTrees)](http://www.rdocumentation.org/packages/FFTrees)
-[![Downloads](http://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](http://www.r-pkg.org/pkg/FFTrees)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
+[![Rdoc](https://www.rdocumentation.org/badges/version/FFTrees)](https://www.rdocumentation.org/packages/FFTrees)
+[![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 
 The goal of FFTrees is to create and visualize fast-and-frugal decision
 trees (FFTs) from data with a binary outcome following the methods
@@ -39,7 +39,7 @@ library(FFTrees)
 #>   / \
 #>  F   O
 #>     / \
-#>    F   Trees 1.5.7
+#>    F   Trees 1.5.10
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
 #> LinkedIn: https://www.linkedin.com/in/nathanieldphillips/
@@ -157,13 +157,13 @@ heart.fft$competition$test
 #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
 #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
 #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 59  9 14 71 0.8082192 0.8875 0.1125 0.8676471 0.8352941
+#> 4        rf 153 58  9 15 71 0.7945205 0.8875 0.1125 0.8656716 0.8255814
 #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
 #>         acc      bacc      cost cost_decisions cost_cues
 #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
 #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
 #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8496732 0.8478596 0.1503268      0.1503268        NA
+#> 4 0.8431373 0.8410103 0.1568627      0.1568627        NA
 #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 ```
 

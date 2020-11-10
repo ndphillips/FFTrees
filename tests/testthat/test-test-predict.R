@@ -21,7 +21,7 @@ test_that("predict.FFTrees() works", {
   # Raw predictions have same length as heart.test
   testthat::expect_length(class_test_pred, nrow(data_test))
 
-  testthat::expect_true(nrow(prob_test_pred) == nrow(data_test))
+  testthat::expect_equal(nrow(prob_test_pred), nrow(data_test))
 
   # Cases predicted TRUE have higher overall probability than those predicted FALSE
   out <- aggregate(prob_1 ~ class, FUN = mean, data = both_test_pred)
@@ -30,7 +30,6 @@ test_that("predict.FFTrees() works", {
   # No variation in class outcomes when prob_1 is the same
   out <- aggregate(class ~ prob_1, FUN = sd, data = both_test_pred)
   testthat::expect_true(all(out$class == 0))
-
 
 
 })

@@ -1,10 +1,8 @@
 test_that("train summary statistics are correct", {
 
-
   x <- FFTrees(diagnosis ~.,
                data = heart.train,
                data.test = heart.test)
-
 
   # mcu
 
@@ -14,9 +12,9 @@ test_that("train summary statistics are correct", {
 
   }))
 
-  results_mcu <-as.numeric(x$trees$stats$train$mcu)
+  results_mcu <- as.numeric(x$trees$stats$train$mcu)
 
-  testthat::expect_true(all(identical(levelstats_mcu, results_mcu)))
+  testthat::expect_equal(levelstats_mcu, results_mcu)
 
 
   # cost
@@ -29,7 +27,6 @@ test_that("train summary statistics are correct", {
 
   results_cost <- as.numeric(x$trees$stats$train$cost)
 
-  testthat::expect_true(all(identical(levelstats_cost, results_cost)))
-
+  testthat::expect_equal(levelstats_cost, results_cost)
 
 })

@@ -1,8 +1,8 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
-Version: 1.5.7
-Date: 2020-08-08
+Version: 1.5.10
+Date: 2020-09-27
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut", "cre"),
                      email = "Nathaniel.D.Phillips.is@gmail.com"),
               person("Hansjoerg", "Neth", role = "aut"),
@@ -16,11 +16,8 @@ LazyData: TRUE
 Depends: R(>= 3.5.0)
 Imports:
     rpart,
-    circlize,
-    parallel,
     graphics,
     randomForest,
-    igraph,
     e1071,
     crayon,
     scales,
@@ -35,7 +32,7 @@ Imports:
     tidyselect
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
