@@ -107,6 +107,9 @@ plot.FFTrees <- function(
 # Input validation
 {
 
+  par0 <- par(no.readonly = TRUE)
+  on.exit(par(par0), add = TRUE)
+
 if(what %in% c("cues", "tree", "roc") == FALSE) {
 
   stop("what must be either 'cues', 'tree', or 'roc'")
@@ -115,7 +118,7 @@ if(what %in% c("cues", "tree", "roc") == FALSE) {
 
 if(is.null(decision.names) == FALSE) {
 
-  message("decision.names is deprecated, use decision.lables instead")
+  warning("decision.names is deprecated, use decision.lables instead")
 
   decision.labels <- decision.names
 }
@@ -300,7 +303,7 @@ if(what != 'cues') {
   {
     if(is.null(which.tree) == FALSE) {
 
-      message("The which.tree argument is depreciated and is now just called tree. Please use tree from now on to avoid this message.")
+      warning("The which.tree argument is deprecated and is now just called tree. Please use tree from now on to avoid this message.")
 
       tree <- which.tree
 
@@ -314,7 +317,7 @@ if(what != 'cues') {
 
     if(tree == "best.test" & is.null(x$tree.stats$test)) {
 
-      print("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
+      message("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
 
       tree <- "best.train"
 
