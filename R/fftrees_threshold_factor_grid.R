@@ -70,7 +70,11 @@ testthat::expect_true(!any(is.na(cue_v)))
   results <- cbind(results, Add_Stats(results,
                                       sens.w = sens.w,
                                       cost.outcomes = cost.outcomes))
-  results <- results[order(-results[goal.threshold]),]
+
+  # Order by goal.threshold and change column order
+  ord_new <- order(results[, goal.threshold], decreasing = TRUE)
+
+  results <- results[ord_new, ]
 
   # Loop 2 over cumulative thresholds
   # C++
@@ -128,10 +132,12 @@ testthat::expect_true(!any(is.na(cue_v)))
   # Add accuracy statistics
   results <- cbind(results, new_stats)
 
-
   # Order by goal.threshold and change column order
-  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc", "cost_decisions", "cost")]
+  ord_new <- order(results[,goal.threshold], decreasing = TRUE)
 
+  results <- results[ord_new, c("threshold", "direction", "n", "hi", "fa", "mi", "cr",
+                                "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
+                                "cost_decisions", "cost")]
 
   # Remove invalid directions
   results[results$direction %in% directions, ]
