@@ -76,7 +76,11 @@ if(nrow(cue.df) < top) {top <- nrow(cue.df)}
 
 cue.df$rank <- rank(-cue.df$wacc, ties.method = "first")
 
-cue.df <- cue.df[order(cue.df$rank),]
+
+# Order by goal.threshold and change column order
+ord_new <- order(cue.df$rank)
+
+cue.df <- cue.df[ord_new, ]
 
 cue.df$col <- rep(palette, length.out = nrow(cue.df))
 
@@ -87,7 +91,6 @@ if(is.null(main)) {
   if(is.null(x$params$main)) {
   main <- "Individual Cue Accuracies"
   } else {main <- x$params$main}
-
 
   }
 

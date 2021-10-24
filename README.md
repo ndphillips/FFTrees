@@ -5,7 +5,7 @@
 
 [![Build
 Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Rdoc](https://www.rdocumentation.org/badges/version/FFTrees)](https://www.rdocumentation.org/packages/FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 
@@ -39,7 +39,7 @@ library(FFTrees)
 #>   / \
 #>  F   O
 #>     / \
-#>    F   Trees 1.6.0
+#>    F   Trees 1.6.1
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
 #> LinkedIn: linkedin.com/in/nathanieldphillips/
@@ -47,8 +47,8 @@ library(FFTrees)
 ```
 
 Let’s create a fast-and-frugal tree predicting heart disease status
-(“Healthy” vs. “Diseased”) based on a `heart.train` dataset, and test
-it on `heart.test` a testing dataset.
+(“Healthy” vs. “Diseased”) based on a `heart.train` dataset, and test it
+on `heart.test` a testing dataset.
 
 Here are the first new rows and columns of our datasets. The key column
 is `diagnosis`, a logical column (TRUE and FALSE) which indicate, for
@@ -150,25 +150,24 @@ plot(heart.fft,
 <img src="man/figures/README-example-1.png" width="80%" />
 
 ``` r
-
 # Compare results across algorithms in test data
 heart.fft$competition$test
 #>   algorithm   n hi fa mi cr      sens   spec    far       ppv       npv
 #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
 #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
 #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 58  6 15 74 0.7945205 0.9250 0.0750 0.9062500 0.8314607
+#> 4        rf 153 56  6 17 74 0.7671233 0.9250 0.0750 0.9032258 0.8131868
 #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
 #>         acc      bacc      cost cost_decisions cost_cues
 #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
 #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
 #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8627451 0.8597603 0.1372549      0.1372549        NA
+#> 4 0.8496732 0.8460616 0.1503268      0.1503268        NA
 #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 ```
 
 Because fast-and-frugal trees are so simple, you can create one ‘from
-words’ and apply it to data\!
+words’ and apply it to data!
 
 ``` r
 # Create your own custom FFT 'in words' and apply it to data
@@ -204,7 +203,7 @@ Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W.
 fast-and-frugal decision trees. *Judgment and Decision Making*, 12(4),
 344-368.
 
-We had a lot of fun creating FFTrees and hope you like it too\! We have
+We had a lot of fun creating FFTrees and hope you like it too! We have
 an article introducing the `FFTrees` package in the journal Judgment and
 Decision Making titled FFTrees: [A toolbox to create, visualize,and
 evaluate fast-and-frugal decision
@@ -219,29 +218,29 @@ Here are some example publications that have used FFTrees (find the full
 list at [Google
 Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601))
 
-  - [Lötsch, J., Haehner, A., & Hummel, T. (2020).
+-   [Lötsch, J., Haehner, A., & Hummel, T. (2020).
     Machine-learning-derived rules set excludes risk of Parkinson’s
     disease in patients with olfactory or gustatory symptoms with high
-    accuracy. Journal of
-    Neurology, 267(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
-  - [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., &
+    accuracy. Journal of Neurology, 267(2),
+    469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
+-   [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., &
     Doung, Y. C. (2020). Radiographic parameter-driven decision tree
     reliably predicts aseptic mechanical failure of compressive
-    osseointegration fixation. Acta
-    Orthopaedica, 91(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
-  - [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N.,
+    osseointegration fixation. Acta Orthopaedica, 91(2),
+    171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
+-   [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N.,
     Appold, S., Belderbos, J., … & Mantel, F. (2020). Correlating dose
     variables with local tumor control in stereotactic body radiotherapy
-    for early stage non-small cell lung cancer: A modelling study
-    on 1500 individual treatments. International Journal of Radiation
+    for early stage non-small cell lung cancer: A modelling study on
+    1500 individual treatments. International Journal of Radiation
     Oncology\* Biology\*
     Physics.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
-  - [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P.
+-   [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P.
     J. (2019). Translating large-scale climate variability into crop
-    production forecast in Europe. Scientific
-    reports, 9(1), 1-13.](https://www.nature.com/articles/s41598-018-38091-4)
-  - [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E.,
+    production forecast in Europe. Scientific reports, 9(1),
+    1-13.](https://www.nature.com/articles/s41598-018-38091-4)
+-   [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E.,
     Derkay, C. S., Seedat, R. Y., … & Mortelliti, A. J. (2019). Age at
     diagnosis, but not HPV type, is strongly associated with clinical
-    course in recurrent respiratory papillomatosis. PloS
-    one, 14(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
+    course in recurrent respiratory papillomatosis. PloS one,
+    14(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)

@@ -81,8 +81,8 @@ fftrees_threshold_numeric_grid <- function(thresholds,
 
     results <- rbind(results_gt, results_lt)
 
-  }
 
+  }
 
   new_stats <-  Add_Stats(results,
                           sens.w = sens.w,
@@ -93,7 +93,11 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   results <- cbind(results, new_stats)
 
   # Order by goal.threshold and change column order
-  results <- results[order(-results[goal.threshold]), c("threshold", "direction", "n", "hi", "fa", "mi", "cr", "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc", "cost_decisions", "cost")]
+  ord_new <- order(results[,goal.threshold], decreasing = TRUE)
+
+  results <- results[ord_new, c("threshold", "direction", "n", "hi", "fa", "mi", "cr",
+                                 "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
+                                 "cost_decisions", "cost")]
 
   # Remove invalid directions
   results[results$direction %in% directions, ]
