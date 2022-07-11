@@ -15,31 +15,10 @@ showcues <- function(x = NULL,
                      main = NULL,
                      top = 5) {
 
-
-  #
-  #
-  # #
-  #   data = "train"
-  #   cue.accuracies <- NULL
-  #   main = NULL
-  #   top = 5
-
-
+  par0 <- par(no.readonly = TRUE)
+  on.exit(par(par0), add = TRUE)
 
   palette <- rep(gray(.5, .5), length.out = top)
-  #
-  #   palette <- "basel"
-  #
-  #   if(palette %in% yarrr::piratepal("names")) {
-  #
-  #     palette <- yarrr::piratepal(palette, length.out = top, trans = .1)
-  #
-  #   } else {
-  #
-  #     palette <- rep(palette, length.out = top)
-  #
-  #   }
-
 
   if (is.null(x) == FALSE) {
     goal <- x$params$goal

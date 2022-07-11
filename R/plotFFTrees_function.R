@@ -70,35 +70,6 @@ plot.FFTrees <- function(x = NULL,
                          level.type = "bar",
                          decision.names = NULL,
                          ...) {
-  #
-
-  # x = heart.fft
-  # data = "train"
-  # what = 'tree'
-  # tree = "best.train"
-  # main = NULL
-  # hlines = TRUE
-  # cue.labels = NULL
-  # decision.labels = NULL
-  # cue.cex = NULL
-  # threshold.cex = NULL
-  # decision.cex = 1
-  # comp = TRUE
-  # stats = TRUE
-  # show.header = NULL
-  # show.tree = NULL
-  # show.confusion = NULL
-  # show.levels = NULL
-  # show.roc = NULL
-  # show.icons = NULL
-  # show.iconguide = NULL
-  # label.tree = NULL
-  # label.performance = NULL
-  # n.per.icon = NULL
-  # which.tree = NULL
-  # level.type = "bar"
-  # decision.names = NULL
-
 
   # Check for invalid or missing arguments
 
@@ -2085,8 +2056,8 @@ plot.FFTrees <- function(x = NULL,
           }
         }
       } }}
-    # Reset plotting space
-    par(mfrow = c(1, 1))
-    par(mar = c(5, 4, 4, 1) + .1)
+    # # Reset plotting space
+    # par(mfrow = c(1, 1))
+    # par(mar = c(5, 4, 4, 1) + .1)
   }
 }
