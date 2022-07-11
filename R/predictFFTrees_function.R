@@ -12,45 +12,46 @@
 #' @examples
 #'
 #'
-#'   # Create training and test data
+#' # Create training and test data
 #'
-#'   set.seed(100)
-#'   breastcancer <- breastcancer[sample(nrow(breastcancer)),]
-#'   breast.train <- breastcancer[1:150,]
-#'   breast.test <- breastcancer[151:303,]
+#' set.seed(100)
+#' breastcancer <- breastcancer[sample(nrow(breastcancer)), ]
+#' breast.train <- breastcancer[1:150, ]
+#' breast.test <- breastcancer[151:303, ]
 #'
-#'   # Create an FFTrees x from the training data
+#' # Create an FFTrees x from the training data
 #'
-#'   breast.fft <- FFTrees(formula = diagnosis ~.,
-#'                               data = breast.train)
+#' breast.fft <- FFTrees(
+#'   formula = diagnosis ~ .,
+#'   data = breast.train
+#' )
 #'
-#'  # Predict classes of test data
-#'   breast.fft.pred <- predict(breast.fft,
-#'                              data = breast.test)
+#' # Predict classes of test data
+#' breast.fft.pred <- predict(breast.fft,
+#'   data = breast.test
+#' )
 #'
-#'  # Predict class probabilities
-#'   breast.fft.pred <- predict(breast.fft,
-#'                              data = breast.test,
-#'                              type = "prob")
+#' # Predict class probabilities
+#' breast.fft.pred <- predict(breast.fft,
+#'   data = breast.test,
+#'   type = "prob"
+#' )
 #'
-
-predict.FFTrees <- function(
-  object = NULL,
-  newdata = NULL,
-  tree = 1,
-  type = "class",
-  sens.w = NULL,
-  method = "laplace",
-  ...
-) {
-#
-# object = out
-# newdata = data.test.fac
-# #
-# tree = 1
-# type = "class"
-# sens.w = NULL
-# method = "laplace"
+predict.FFTrees <- function(object = NULL,
+                            newdata = NULL,
+                            tree = 1,
+                            type = "class",
+                            sens.w = NULL,
+                            method = "laplace",
+                            ...) {
+  #
+  # object = out
+  # newdata = data.test.fac
+  # #
+  # tree = 1
+  # type = "class"
+  # sens.w = NULL
+  # method = "laplace"
 
   # object = x
   # newdata = heart.test
@@ -72,103 +73,94 @@ predict.FFTrees <- function(
 
   testthat::expect_true(!is.null(newdata))
 
-  if(is.null(sens.w) == FALSE) {stop("sens.w is deprecated and will be ignored.")}
+  if (is.null(sens.w) == FALSE) {
+    stop("sens.w is deprecated and will be ignored.")
+  }
 
   goal <- object$params$goal
 
-  new.apply.tree <-  FFTrees:::fftrees_apply(x = object,
-                                             mydata = "test",
-                                             newdata = newdata)
+  new.apply.tree <- FFTrees:::fftrees_apply(
+    x = object,
+    mydata = "test",
+    newdata = newdata
+  )
 
   # Calculate predictions from tree
-  predictions <- new.apply.tree$trees$results$test$decisions[,tree] %>% dplyr::pull()
+  predictions <- new.apply.tree$trees$results$test$decisions[, tree] %>% dplyr::pull()
 
-   if(type == "class") {
+  if (type == "class") {
+    output <- predictions
 
-     output <- predictions
+    # Convert from logical to class values
 
-     # Convert from logical to class values
+    if (object$metadata$criterion_class %in% c("character", "factor")) {
+      output[output == TRUE] <- object$metadata$target
+      output[output == FALSE] <- object$metadata$decision.labels[object$metadata$decision.labels != object$metadata$target]
 
-     if(object$metadata$criterion_class %in% c("character", "factor")) {
-
-       output[output == TRUE] <- object$metadata$target
-       output[output == FALSE] <- object$metadata$decision.labels[object$metadata$decision.labels != object$metadata$target]
-
-       if(object$metadata$criterion_class == "factor") {
-
-       output <- factor(output, levels = object$metadata$decision.labels)
-
-       }
-
-     }
-
-     }
-
-if(type == "prob") {
-
-# For each case, determine where it is decided in the tree
-
-output <- matrix(NA, nrow = nrow(newdata), ncol = 2)
-
-# Get cumulative level stats for current tree in training data
-levelstats.c <- object$trees$results$train$level_stats[object$trees$results$train$level_stats$tree == tree,]
-levels.n <- nrow(levelstats.c)
-
-# Get marginal counts for levels
-
-n.m <- levelstats.c$n - c(0, levelstats.c$n[1:(levels.n - 1)])
-hi.m <- levelstats.c$hi - c(0, levelstats.c$hi[1:(levels.n - 1)])
-mi.m <- levelstats.c$mi - c(0, levelstats.c$mi[1:(levels.n - 1)])
-fa.m <- levelstats.c$fa - c(0, levelstats.c$fa[1:(levels.n - 1)])
-cr.m <- levelstats.c$cr - c(0, levelstats.c$cr[1:(levels.n - 1)])
-
-npv.m <- cr.m / (cr.m + mi.m)
-ppv.m <- hi.m / (hi.m + fa.m)
-
-# Laplace correction
-npv.lp.m <- (cr.m + 1) / (cr.m + mi.m + 2)
-ppv.lp.m <- (hi.m + 1) / (hi.m + fa.m + 2)
-
-# Loop over levels
-for(level.i in 1:levels.n) {
-
-  # Which cases are classified as FALSE in this level?
-  decide.now.0.log <- new.apply.tree$trees$results$test$levelout[,tree] == level.i &
-                      new.apply.tree$trees$results$test$decision[,tree] == 0
-
-  # Which cases are classified as TRUE in this level?
-  decide.now.1.log <- new.apply.tree$trees$results$test$levelout[,tree] == level.i &
-                        new.apply.tree$trees$results$test$decision[,tree] == 1
-
-  if(method == "laplace") {
-
-    # Assign the npv for those assigned 0
- output[decide.now.0.log, 1] <- npv.lp.m[level.i]
- output[decide.now.0.log, 2] <- 1 - npv.lp.m[level.i]
-
-   # Assign the ppv for those assigned 1
- output[decide.now.1.log, 2] <- ppv.lp.m[level.i]
- output[decide.now.1.log, 1] <- 1 - ppv.lp.m[level.i]
-
+      if (object$metadata$criterion_class == "factor") {
+        output <- factor(output, levels = object$metadata$decision.labels)
+      }
+    }
   }
 
-  if(method == "raw") {
+  if (type == "prob") {
 
-  output[decide.now.0.log, 1] <- npv.m[level.i]
-  output[decide.now.0.log, 2] <- 1 - npv.m[level.i]
+    # For each case, determine where it is decided in the tree
 
-  output[decide.now.1.log, 2] <- ppv.m[level.i]
-  output[decide.now.1.log, 1] <- 1 - ppv.m[level.i]
+    output <- matrix(NA, nrow = nrow(newdata), ncol = 2)
 
+    # Get cumulative level stats for current tree in training data
+    levelstats.c <- object$trees$results$train$level_stats[object$trees$results$train$level_stats$tree == tree, ]
+    levels.n <- nrow(levelstats.c)
+
+    # Get marginal counts for levels
+
+    n.m <- levelstats.c$n - c(0, levelstats.c$n[1:(levels.n - 1)])
+    hi.m <- levelstats.c$hi - c(0, levelstats.c$hi[1:(levels.n - 1)])
+    mi.m <- levelstats.c$mi - c(0, levelstats.c$mi[1:(levels.n - 1)])
+    fa.m <- levelstats.c$fa - c(0, levelstats.c$fa[1:(levels.n - 1)])
+    cr.m <- levelstats.c$cr - c(0, levelstats.c$cr[1:(levels.n - 1)])
+
+    npv.m <- cr.m / (cr.m + mi.m)
+    ppv.m <- hi.m / (hi.m + fa.m)
+
+    # Laplace correction
+    npv.lp.m <- (cr.m + 1) / (cr.m + mi.m + 2)
+    ppv.lp.m <- (hi.m + 1) / (hi.m + fa.m + 2)
+
+    # Loop over levels
+    for (level.i in 1:levels.n) {
+
+      # Which cases are classified as FALSE in this level?
+      decide.now.0.log <- new.apply.tree$trees$results$test$levelout[, tree] == level.i &
+        new.apply.tree$trees$results$test$decision[, tree] == 0
+
+      # Which cases are classified as TRUE in this level?
+      decide.now.1.log <- new.apply.tree$trees$results$test$levelout[, tree] == level.i &
+        new.apply.tree$trees$results$test$decision[, tree] == 1
+
+      if (method == "laplace") {
+
+        # Assign the npv for those assigned 0
+        output[decide.now.0.log, 1] <- npv.lp.m[level.i]
+        output[decide.now.0.log, 2] <- 1 - npv.lp.m[level.i]
+
+        # Assign the ppv for those assigned 1
+        output[decide.now.1.log, 2] <- ppv.lp.m[level.i]
+        output[decide.now.1.log, 1] <- 1 - ppv.lp.m[level.i]
+      }
+
+      if (method == "raw") {
+        output[decide.now.0.log, 1] <- npv.m[level.i]
+        output[decide.now.0.log, 2] <- 1 - npv.m[level.i]
+
+        output[decide.now.1.log, 2] <- ppv.m[level.i]
+        output[decide.now.1.log, 1] <- 1 - ppv.m[level.i]
+      }
+    }
+
+    colnames(output) <- object$metadata$decision.labels
   }
-
-}
-
-colnames(output) <- object$metadata$decision.labels
-
-
-}
 
   return(output)
-
 }

@@ -4,7 +4,5 @@
 #'
 
 FFTrees.guide <- function() {
-
   vignette("guide", package = "FFTrees")
-
 }

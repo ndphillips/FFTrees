@@ -9,24 +9,22 @@
 #'
 
 predict.FFForest <- function(object = NULL,
-  data = NULL,
-  threshold = .5,
-  ...
-) {
-
+                             data = NULL,
+                             threshold = .5,
+                             ...) {
   n.trees <- nrow(object$tree.sim)
   predictions <- matrix(NA, nrow = nrow(data), ncol = n.trees)
 
-  for(i in 1:n.trees) {
-
-    pred.i <- apply.tree(data = data,
-                         formula = object$formula,
-                         tree.definitions = object$tree.sim[i,])
+  for (i in 1:n.trees) {
+    pred.i <- apply.tree(
+      data = data,
+      formula = object$formula,
+      tree.definitions = object$tree.sim[i, ]
+    )
 
     pred.i <- pred.i$decision
 
-    predictions[,i] <- pred.i
-
+    predictions[, i] <- pred.i
   }
 
   # Convert prediction matrix to point predictions
@@ -36,5 +34,4 @@ predict.FFForest <- function(object = NULL,
   output <- pred.means >= threshold
 
   return(output)
-
 }

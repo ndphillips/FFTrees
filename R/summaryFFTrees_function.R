@@ -8,8 +8,6 @@
 summary.FFTrees <- function(x,
                             tree = 1,
                             ...) {
-
-
   train.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
   train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
@@ -29,11 +27,10 @@ summary.FFTrees <- function(x,
   train.wacc <- x$trees$results$train$stats$wacc[tree]
   train.cost <- x$trees$results$train$stats$cost[tree]
   train.acc <- x$trees$results$train$stats$acc[tree]
-  train.pci <-  x$trees$results$train$stats$pci[tree]
+  train.pci <- x$trees$results$train$stats$pci[tree]
   train.mcu <- x$trees$results$train$stats$mcu[tree]
 
-  if(is.null(x$trees$results$test$stats) == FALSE) {
-
+  if (is.null(x$trees$results$test$stats) == FALSE) {
     test.n <- nrow(x$data$test)
     test.hi <- x$trees$results$test$stats$hi[tree]
     test.mi <- x$trees$results$test$stats$mi[tree]
@@ -48,39 +45,42 @@ summary.FFTrees <- function(x,
     test.wacc <- x$trees$results$test$stats$wacc[tree]
     test.cost <- x$trees$results$test$stats$cost[tree]
     test.acc <- x$trees$results$test$stats$acc[tree]
-    test.pci <-  x$trees$results$test$stats$pci[tree]
+    test.pci <- x$trees$results$test$stats$pci[tree]
     test.mcu <- x$trees$results$test$stats$mcu[tree]
 
-    summary.df <- data.frame("train" = c(train.n,
-                                         train.hi,
-                                         train.mi,
-                                         train.fa,
-                                         train.cr,
-                                         train.mcu,
-                                         train.pci,
-                                         train.cost,
-                                         train.acc,
-                                         train.bacc,
-                                         train.sens,
-                                         train.spec),
-                             "test" = c(test.n,
-                                        test.hi,
-                                        test.mi,
-                                        test.fa,
-                                        test.cr,
-                                        test.mcu,
-                                        test.pci,
-                                        test.cost,
-                                        test.acc,
-                                        test.bacc,
-                                        test.sens,
-                                        test.spec)
+    summary.df <- data.frame(
+      "train" = c(
+        train.n,
+        train.hi,
+        train.mi,
+        train.fa,
+        train.cr,
+        train.mcu,
+        train.pci,
+        train.cost,
+        train.acc,
+        train.bacc,
+        train.sens,
+        train.spec
+      ),
+      "test" = c(
+        test.n,
+        test.hi,
+        test.mi,
+        test.fa,
+        test.cr,
+        test.mcu,
+        test.pci,
+        test.cost,
+        test.acc,
+        test.bacc,
+        test.sens,
+        test.spec
+      )
     )
-
   }
 
-  if(is.null(x$trees$results$test$stats)) {
-
+  if (is.null(x$trees$results$test$stats)) {
     test.n <- NA
     test.hi <- NA
     test.mi <- NA
@@ -96,49 +96,54 @@ summary.FFTrees <- function(x,
     test.bacc <- NA
     test.wacc <- NA
 
-    summary.df <- data.frame("train" = c(train.n,
-                                         train.hi,
-                                         train.mi,
-                                         train.fa,
-                                         train.cr,
-                                         train.mcu,
-                                         train.pci,
-                                         train.cost,
-                                         train.acc,
-                                         train.bacc,
-                                         train.sens,
-                                         train.spec),
-                                         "test" = c(test.n,
-                                                    test.hi,
-                                                    test.mi,
-                                                    test.fa,
-                                                    test.cr,
-                                                    test.mcu,
-                                                    test.pci,
-                                                    test.cost,
-                                                    test.acc,
-                                                    test.bacc,
-                                                    test.sens,
-                                                    test.spec))
-
-
+    summary.df <- data.frame(
+      "train" = c(
+        train.n,
+        train.hi,
+        train.mi,
+        train.fa,
+        train.cr,
+        train.mcu,
+        train.pci,
+        train.cost,
+        train.acc,
+        train.bacc,
+        train.sens,
+        train.spec
+      ),
+      "test" = c(
+        test.n,
+        test.hi,
+        test.mi,
+        test.fa,
+        test.cr,
+        test.mcu,
+        test.pci,
+        test.cost,
+        test.acc,
+        test.bacc,
+        test.sens,
+        test.spec
+      )
+    )
   }
 
-  rownames(summary.df) <- c("n",
-                            "hi",
-                            "mi",
-                            "fa",
-                            "cr",
-                            "mcu",
-                            "pci",
-                            "cost",
-                            "acc",
-                            "bacc",
-                            "sens",
-                            "spec")
+  rownames(summary.df) <- c(
+    "n",
+    "hi",
+    "mi",
+    "fa",
+    "cr",
+    "mcu",
+    "pci",
+    "cost",
+    "acc",
+    "bacc",
+    "sens",
+    "spec"
+  )
 
 
 
   return(summary.df)
-
 }

@@ -10,30 +10,19 @@
 fftrees_apply <- function(x,
                           mydata = NULL,
                           newdata = NULL,
-                          allNA.pred = FALSE
-) {
-
-
+                          allNA.pred = FALSE) {
   testthat::expect_true(mydata %in% c("train", "test"))
 
-  if(mydata == "train") {
-
+  if (mydata == "train") {
     data <- x$data$train
-
   } else if (mydata == "test") {
-
-    if(is.null(newdata)) {
-
-    testthat::expect_true(!is.null(x$data$test))
-
+    if (is.null(newdata)) {
+      testthat::expect_true(!is.null(x$data$test))
     } else {
-
       x$data$test <- newdata
-
     }
 
     data <- x$data$test
-
   }
 
   criterion_v <- data[[x$metadata$criterion_name]]
@@ -46,17 +35,16 @@ fftrees_apply <- function(x,
   output_names <- c("decision", "levelout", "cost_decisions", "cost_cues", "cost")
 
   output_ls <- lapply(1:length(output_names), FUN = function(i) {
-
     output <- as.data.frame(matrix(NA,
-                                   nrow = nrow(data),
-                                   ncol = x$trees$n))
+      nrow = nrow(data),
+      ncol = x$trees$n
+    ))
 
     names(output) <- paste("tree", 1:x$trees$n, sep = ".")
 
     output <- tibble::as_tibble(output)
 
     output
-
   })
 
   names(output_ls) <- output_names
@@ -69,45 +57,51 @@ fftrees_apply <- function(x,
   # LOOP
   #  Loop over trees
 
-  for(tree_i in 1:x$trees$n) {
+  for (tree_i in 1:x$trees$n) {
 
     # Extract defintions for current tree
     cue_v <- unlist(strsplit(x$trees$definitions$cues[tree_i], ";"))
     class_v <- unlist(strsplit(x$trees$definitions$classes[tree_i], ";"))
     exit_v <- unlist(strsplit(x$trees$definitions$exits[tree_i], ";"))
     threshold_v <- unlist(strsplit(x$trees$definitions$thresholds[tree_i], ";"))
-    direction_v <-  unlist(strsplit(x$trees$definitions$directions[tree_i], ";"))
+    direction_v <- unlist(strsplit(x$trees$definitions$directions[tree_i], ";"))
     level_n <- x$trees$definitions$nodes[tree_i]
 
 
     costc.level <- sapply(cue_v, FUN = function(cue_i) {
-
-      if(cue_i %in% names(x$params$cost.cues)) {cost.cue_i <- x$params$cost.cues[[cue_i]]} else {
-
-        cost.cue_i <- 0}})
+      if (cue_i %in% names(x$params$cost.cues)) {
+        cost.cue_i <- x$params$cost.cues[[cue_i]]
+      } else {
+        cost.cue_i <- 0
+      }
+    })
 
     costc.level.cum <- cumsum(costc.level)
 
-    cue_cost_cum_level <- data.frame(level = 1:level_n,
-                                     cue_cost_cum = costc.level.cum)
+    cue_cost_cum_level <- data.frame(
+      level = 1:level_n,
+      cue_cost_cum = costc.level.cum
+    )
 
     # Define vectors of critical outputs for each case
 
     decision_v <- rep(NA, nrow(data))
     levelout_v <- rep(NA, nrow(data))
-    cost_cues_v <-  rep(NA, nrow(data))
-    cost_decisions_v <-  rep(NA, nrow(data))
-    cost_v <-  rep(NA, nrow(data))
+    cost_cues_v <- rep(NA, nrow(data))
+    cost_decisions_v <- rep(NA, nrow(data))
+    cost_v <- rep(NA, nrow(data))
 
     # level_stats_i contains cumulative level statistics
-    level_stats_i <- data.frame(tree = tree_i,
-                                level = 1:level_n,
-                                cue = cue_v,
-                                class = class_v,
-                                threshold = threshold_v,
-                                direction = direction_v,
-                                exit = exit_v,
-                                stringsAsFactors = FALSE)
+    level_stats_i <- data.frame(
+      tree = tree_i,
+      level = 1:level_n,
+      cue = cue_v,
+      class = class_v,
+      threshold = threshold_v,
+      direction = direction_v,
+      exit = exit_v,
+      stringsAsFactors = FALSE
+    )
 
     critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions")
 
@@ -117,7 +111,7 @@ fftrees_apply <- function(x,
 
 
     # Loop over levels
-    for(level_i in 1:level_n) {
+    for (level_i in 1:level_n) {
 
       # Get definitions for current level
       cue_i <- cue_v[level_i]
@@ -133,32 +127,54 @@ fftrees_apply <- function(x,
 
       cue_values <- data[[cue_i]]
 
-      if(is.character(threshold_i)) {threshold_i <- unlist(strsplit(threshold_i, ","))}
+      if (is.character(threshold_i)) {
+        threshold_i <- unlist(strsplit(threshold_i, ","))
+      }
 
-      if(substr(class_i, 1, 1) %in% c("n", "i")) {threshold_i <- as.numeric(threshold_i)}
+      if (substr(class_i, 1, 1) %in% c("n", "i")) {
+        threshold_i <- as.numeric(threshold_i)
+      }
 
-      if(direction_i == "!=") {current.decisions <- (cue_values %in% threshold_i) == FALSE}
-      if(direction_i == "=") {current.decisions <- cue_values %in% threshold_i}
-      if(direction_i == "<") {current.decisions <- cue_values < threshold_i}
-      if(direction_i == "<=") {current.decisions <- cue_values <= threshold_i}
-      if(direction_i == ">") {current.decisions <- cue_values > threshold_i}
-      if(direction_i == ">=") {current.decisions <- cue_values >= threshold_i}
+      if (direction_i == "!=") {
+        current.decisions <- (cue_values %in% threshold_i) == FALSE
+      }
+      if (direction_i == "=") {
+        current.decisions <- cue_values %in% threshold_i
+      }
+      if (direction_i == "<") {
+        current.decisions <- cue_values < threshold_i
+      }
+      if (direction_i == "<=") {
+        current.decisions <- cue_values <= threshold_i
+      }
+      if (direction_i == ">") {
+        current.decisions <- cue_values > threshold_i
+      }
+      if (direction_i == ">=") {
+        current.decisions <- cue_values >= threshold_i
+      }
 
-      if(exit_i == 0) {classify.now <- current.decisions == FALSE & is.na(decision_v)}
-      if(exit_i == 1) {classify.now <- current.decisions == TRUE & is.na(decision_v)}
-      if(exit_i == .5) {classify.now <- is.na(decision_v)}
+      if (exit_i == 0) {
+        classify.now <- current.decisions == FALSE & is.na(decision_v)
+      }
+      if (exit_i == 1) {
+        classify.now <- current.decisions == TRUE & is.na(decision_v)
+      }
+      if (exit_i == .5) {
+        classify.now <- is.na(decision_v)
+      }
 
       # Convert NAs
 
       # If it is not the final node, then don't classify NA cases
-      if(exit_i %in% c(0, 1)) {classify.now[is.na(classify.now)] <- FALSE}
+      if (exit_i %in% c(0, 1)) {
+        classify.now[is.na(classify.now)] <- FALSE
+      }
 
 
-      #If it is the final node, then classify NA cases according to most common class
-      if(exit_i %in% .5) {
-
+      # If it is the final node, then classify NA cases according to most common class
+      if (exit_i %in% .5) {
         current.decisions[is.na(current.decisions)] <- allNA.pred
-
       }
 
 
@@ -178,35 +194,34 @@ fftrees_apply <- function(x,
 
       # Get cumulative level stats
 
-      my_level_stats_i <- FFTrees:::classtable(prediction_v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                               criterion_v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                               target = x$metadata$target,
-                                               sens.w = x$params$sens.w,
-                                               cost.v = cost_cues_v[levelout_v <= level_i & is.finite(levelout_v)],
-                                               cost.outcomes = x$params$cost.outcomes)
+      my_level_stats_i <- FFTrees:::classtable(
+        prediction_v = decision_v[levelout_v <= level_i & is.finite(levelout_v)],
+        criterion_v = criterion_v[levelout_v <= level_i & is.finite(levelout_v)],
+        target = x$metadata$target,
+        sens.w = x$params$sens.w,
+        cost.v = cost_cues_v[levelout_v <= level_i & is.finite(levelout_v)],
+        cost.outcomes = x$params$cost.outcomes
+      )
 
 
       # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)
-      level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[,critical_stats_v]
+      level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[, critical_stats_v]
 
       # Add cue cost and cost
 
       level_stats_i$cost_cues[level_i] <- mean(cost_cues_v[!is.na(cost_cues_v)])
-      level_stats_i$cost[level_i] <-level_stats_i$cost_cues[level_i]  + level_stats_i$cost_decisions[level_i]
-
+      level_stats_i$cost[level_i] <- level_stats_i$cost_cues[level_i] + level_stats_i$cost_decisions[level_i]
     }
 
     # Add final tree results to level_stats_ls and output_ls
 
     level_stats_ls[[tree_i]] <- level_stats_i
 
-    output_ls$decision[,tree_i] <- decision_v
-    output_ls$levelout[,tree_i] <- levelout_v
-    output_ls$cost_cues[,tree_i] <- cost_cues_v
-    output_ls$cost_decisions[,tree_i] <- cost_decisions_v
-    output_ls$cost[,tree_i] <- cost_v
-
-
+    output_ls$decision[, tree_i] <- decision_v
+    output_ls$levelout[, tree_i] <- levelout_v
+    output_ls$cost_cues[, tree_i] <- cost_cues_v
+    output_ls$cost_decisions[, tree_i] <- cost_decisions_v
+    output_ls$cost[, tree_i] <- cost_v
   }
 
   # Aggregate results
@@ -221,7 +236,7 @@ fftrees_apply <- function(x,
 
     helper <- paste(level_stats$tree, level_stats$level, sep = ".")
     maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-    tree_stats <- cbind(x$trees$definitions[,c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cues", "cost")])
+    tree_stats <- cbind(x$trees$definitions[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cues", "cost")])
     names(tree_stats)[1] <- "tree"
     rownames(tree_stats) <- 1:nrow(tree_stats)
 
@@ -235,7 +250,6 @@ fftrees_apply <- function(x,
 
     # Add mean cues per case (mcu)
     tree_stats$mcu <- colMeans(output_ls$levelout)
-
   }
 
   # Add results to x -------------------------
@@ -249,5 +263,4 @@ fftrees_apply <- function(x,
   x$trees$results[[mydata]]$cost <- output_ls$cost
 
   return(x)
-
 }

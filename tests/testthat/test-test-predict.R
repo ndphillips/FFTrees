@@ -1,9 +1,9 @@
 context("test-predictFFTrees")
 
 test_that("predict.FFTrees() works", {
-
-  x <- FFTrees(diagnosis ~.,
-               data = heart.train)
+  x <- FFTrees(diagnosis ~ .,
+    data = heart.train
+  )
 
   # Raw predictions are a logical vector
   expect_is(predict(x, newdata = heart.test), "logical")
@@ -14,5 +14,4 @@ test_that("predict.FFTrees() works", {
   expect_is(predict(x, newdata = heart.test, type = "prob"), "matrix")
 
   expect_true(nrow(predict(x, newdata = heart.test, type = "prob")) == nrow(heart.test))
-
 })
