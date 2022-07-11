@@ -81,18 +81,19 @@ Plots an FFTrees object created by the FFTrees() function.
 \examples{
 
 # Create FFTrees of the heart disease data
-heart.fft <- FFTrees(formula = diagnosis ~.,
-data = heartdisease)
+heart.fft <- FFTrees(
+  formula = diagnosis ~ .,
+  data = heartdisease
+)
 
 # Visualise the tree
 plot(heart.fft,
-     main = "Heart Disease Diagnosis",
-     decision.labels = c("Absent", "Present"))
+  main = "Heart Disease Diagnosis",
+  decision.labels = c("Absent", "Present")
+)
 
 
 # See the vignette for more details
 vignette("FFTrees_plot", package = "FFTrees")
-
-
 
 }

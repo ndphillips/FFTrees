@@ -19,9 +19,10 @@ Describes an FFT in words
 }
 \examples{
 
-heart.fft <- FFTrees(diagnosis ~.,
-                     data = heartdisease,
-                     decision.labels = c("Healthy", "Disease"))
+heart.fft <- FFTrees(diagnosis ~ .,
+  data = heartdisease,
+  decision.labels = c("Healthy", "Disease")
+)
 
 inwords(heart.fft)
 

@@ -41,7 +41,6 @@ library(FFTrees)
 #>    F   Trees 1.6.1
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
-#> LinkedIn: linkedin.com/in/nathanieldphillips/
 #> FFTrees.guide() opens the main guide.
 ```
 

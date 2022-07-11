@@ -40,25 +40,29 @@ Predict classifications from newdata using an FFTrees object
 \examples{
 
 
-  # Create training and test data
+# Create training and test data
 
-  set.seed(100)
-  breastcancer <- breastcancer[sample(nrow(breastcancer)),]
-  breast.train <- breastcancer[1:150,]
-  breast.test <- breastcancer[151:303,]
+set.seed(100)
+breastcancer <- breastcancer[sample(nrow(breastcancer)), ]
+breast.train <- breastcancer[1:150, ]
+breast.test <- breastcancer[151:303, ]
 
-  # Create an FFTrees x from the training data
+# Create an FFTrees x from the training data
 
-  breast.fft <- FFTrees(formula = diagnosis ~.,
-                        data = breast.train)
+breast.fft <- FFTrees(
+  formula = diagnosis ~ .,
+  data = breast.train
+)
 
- # Predict classes of test data
-  breast.fft.pred <- predict(breast.fft,
-                             newdata = breast.test)
+# Predict classes of test data
+breast.fft.pred <- predict(breast.fft,
+  newdata = breast.test
+)
 
- # Predict class probabilities
-  breast.fft.pred <- predict(breast.fft,
-                             newdata = breast.test,
-                             type = "prob")
+# Predict class probabilities
+breast.fft.pred <- predict(breast.fft,
+  newdata = breast.test,
+  type = "prob"
+)
 
 }

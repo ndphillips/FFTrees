@@ -11,7 +11,6 @@ vignette: >
 
 ```{r, echo = F, message = FALSE, results = 'hide'}
 library(FFTrees)
-options(digits = 3)
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
