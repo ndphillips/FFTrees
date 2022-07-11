@@ -1,11 +1,10 @@
-# FFTrees 1.6
+# develop
 
 ## 1.6.1
 
 * `plot.FFTrees` no longer saves graphic params changed in `par()`
 * `plot.FFTRrees`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`
 * Deprecation notes in `plot.FFTrees` are now returned as warnings, not messages
-
 
 # FFTrees 1.5
 

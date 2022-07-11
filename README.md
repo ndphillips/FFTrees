@@ -6,7 +6,6 @@
 [![Build
 Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Rdoc](https://www.rdocumentation.org/badges/version/FFTrees)](https://www.rdocumentation.org/packages/FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 
 The goal of FFTrees is to create and visualize fast-and-frugal decision
@@ -156,13 +155,13 @@ heart.fft$competition$test
 #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
 #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
 #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 58  7 15 73 0.7945205 0.9125 0.0875 0.8923077 0.8295455
+#> 4        rf 153 58 10 15 70 0.7945205 0.8750 0.1250 0.8529412 0.8235294
 #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
 #>         acc      bacc      cost cost_decisions cost_cues
 #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
 #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
 #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8562092 0.8535103 0.1437908      0.1437908        NA
+#> 4 0.8366013 0.8347603 0.1633987      0.1633987        NA
 #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 ```
 
