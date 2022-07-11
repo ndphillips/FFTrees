@@ -53,43 +53,43 @@
 #' @export
 #' @examples
 #'
-#'  # Create fast-and-frugal trees for heart disease
-#'  heart.fft <- FFTrees(formula = diagnosis ~.,
-#'                       data = heart.train,
-#'                       data.test = heart.test,
-#'                       main = "Heart Disease",
-#'                       decision.labels = c("Healthy", "Diseased"))
+#' # Create fast-and-frugal trees for heart disease
+#' heart.fft <- FFTrees(
+#'   formula = diagnosis ~ .,
+#'   data = heart.train,
+#'   data.test = heart.test,
+#'   main = "Heart Disease",
+#'   decision.labels = c("Healthy", "Diseased")
+#' )
 #'
-#'  # Print the result for summary info
-#'  heart.fft
+#' # Print the result for summary info
+#' heart.fft
 #'
-#'  # Plot the tree applied to training data
-#'  plot(heart.fft, stats = FALSE)
-#'  plot(heart.fft)
-#'  plot(heart.fft, data = "test")  # Now for testing data
-#'  plot(heart.fft, data = "test", tree = 2) # Look at tree number 2
+#' # Plot the tree applied to training data
+#' plot(heart.fft, stats = FALSE)
+#' plot(heart.fft)
+#' plot(heart.fft, data = "test") # Now for testing data
+#' plot(heart.fft, data = "test", tree = 2) # Look at tree number 2
 #'
 #'
-#'  ## Predict classes and probabilities for new data
+#' ## Predict classes and probabilities for new data
 #'
-#'  predict(heart.fft, newdata = heartdisease)
-#'  predict(heart.fft, newdata = heartdisease, type = "prob")
+#' predict(heart.fft, newdata = heartdisease)
+#' predict(heart.fft, newdata = heartdisease, type = "prob")
 #'
-#'  ### Create your own custom tree with my.tree
+#' ### Create your own custom tree with my.tree
 #'
-#'  custom.fft <- FFTrees(formula = diagnosis ~ .,
-#'                        data = heartdisease,
-#'                        my.tree = 'If chol > 300, predict True.
+#' custom.fft <- FFTrees(
+#'   formula = diagnosis ~ .,
+#'   data = heartdisease,
+#'   my.tree = "If chol > 300, predict True.
 #'                                   If sex = {m}, predict False,
-#'                                   If age > 70, predict True, otherwise predict False'
-#'                                   )
+#'                                   If age > 70, predict True, otherwise predict False"
+#' )
 #'
-#'  # Plot the custom tree (it's pretty terrible)
-#'  plot(custom.fft)
+#' # Plot the custom tree (it's pretty terrible)
+#' plot(custom.fft)
 #'
-#'
-#'
-
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
@@ -123,135 +123,125 @@ FFTrees <- function(formula = NULL,
                     force = FALSE,
                     verbose = NULL,
                     comp = NULL,
-                    quiet = FALSE
-) {
+                    quiet = FALSE) {
 
 
-# DEPRECATED ARGUMENTS -------------------------------------------------
-{
-  if(is.null(verbose) == FALSE) {
+  # DEPRECATED ARGUMENTS -------------------------------------------------
+  {
+    if (is.null(verbose) == FALSE) {
+      warning("The argument verbose is deprecated. Use progress instead.")
 
-    warning("The argument verbose is deprecated. Use progress instead.")
+      progress <- verbose
+    }
 
-    progress <- verbose
+    if (is.null(rank.method) == FALSE) {
+      warning("The argument rank.method is deprecated. Use algorithm instead.")
 
+      algorithm <- rank.method
+    }
+
+    if (is.null(comp) == FALSE) {
+      warning("The argument comp is deprecated. Use do.comp instead.")
+
+      do.comp <- comp
+    }
+
+
+    if (any(c("zigzag", "max") %in% algorithm)) {
+      stop("'zigzag' and 'max' are no longer supported algorithms")
+    }
   }
 
-  if(is.null(rank.method) == FALSE) {
+  # Convert factor NA to new missing factor level
 
-    warning("The argument rank.method is deprecated. Use algorithm instead.")
+  # data <- data %>%
+  #   dplyr::mutate_if(is.factor, addNA)   %>%
+  #   dplyr::mutate_if(is.character, addNA)
 
-    algorithm <- rank.method
+  # TRAINING / TEST SPLIT ---------------------------------------
+  if (train.p < 1 && is.null(data.test)) {
 
+    # Save original data
+    data_o <- data
+
+    train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
+      p = train.p
+    )[[1]]
+
+    data <- data_o[train_cases, ]
+    data.test <- data_o[-train_cases, ]
+
+    if (quiet == FALSE) {
+      message(
+        "Splitting data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
+        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set"
+      )
+    }
   }
 
-  if(is.null(comp) == FALSE) {
 
-    warning("The argument comp is deprecated. Use do.comp instead.")
+  # CREATE AN FFTREES OBJECT --------------------------------------------
 
-    do.comp <- comp
+  x <- fftrees_create(
+    data = data,
+    formula = formula,
+    goal = goal,
+    data.test = data.test,
+    algorithm = algorithm,
+    goal.chase = goal.chase,
+    goal.threshold = goal.threshold,
+    sens.w = sens.w,
+    max.levels = max.levels,
+    cost.outcomes = cost.outcomes,
+    cost.cues = cost.cues,
+    stopping.rule = stopping.rule,
+    stopping.par = stopping.par,
+    decision.labels = decision.labels,
+    main = main,
+    my.tree = my.tree,
+    repeat.cues = repeat.cues,
+    numthresh.method = numthresh.method,
+    numthresh.n = numthresh.n,
+    quiet = quiet,
+    do.lr = do.lr,
+    do.cart = do.cart,
+    do.svm = do.svm,
+    do.rf = do.rf,
+    do.comp = do.comp
+  )
 
+  # 1) GET FFTREES DEFINITIONS ----------------------------------------
+
+  x <- fftrees_define(x, object = object)
+
+  # 2) APPLY TREES TO TRAINING DATA -------------------------------
+
+  # Training......
+
+  x <- fftrees_apply(x,
+    mydata = "train"
+  )
+
+  # Rank trees by goal
+
+  x <- fftrees_ranktrees(x)
+
+  # Test.........
+
+  if (!is.null(x$data$test)) {
+    x <- fftrees_apply(x, mydata = "test")
   }
 
+  ## 3) DEFINE TREES IN WORDS
 
-  if (any(c("zigzag", "max") %in% algorithm)) {
+  x <- fftrees_ffttowords(
+    x = x,
+    digits = 2
+  )
 
-    stop("'zigzag' and 'max' are no longer supported algorithms")
+  # FIT COMPETITIVE ALGORITHMS
 
-  }
+  x <- fftrees_fitcomp(x = x)
 
-
+  return(x)
 }
-
-# Convert factor NA to new missing factor level
-
-# data <- data %>%
-#   dplyr::mutate_if(is.factor, addNA)   %>%
-#   dplyr::mutate_if(is.character, addNA)
-
-# TRAINING / TEST SPLIT ---------------------------------------
-if(train.p < 1 && is.null(data.test)) {
-
-  # Save original data
-  data_o <- data
-
-  train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
-                                            p = train.p)[[1]]
-
-  data <- data_o[train_cases,]
-  data.test <- data_o[-train_cases,]
-
-  if(quiet == FALSE) {
-
-    message("Splitting data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
-            scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set")
-  }
-
-}
-
-
-# CREATE AN FFTREES OBJECT --------------------------------------------
-
-x <- fftrees_create(data = data,
-                              formula = formula,
-                              goal = goal,
-                              data.test = data.test,
-                              algorithm = algorithm,
-                              goal.chase = goal.chase,
-                              goal.threshold = goal.threshold,
-                              sens.w = sens.w,
-                              max.levels = max.levels,
-                              cost.outcomes = cost.outcomes,
-                              cost.cues = cost.cues,
-                              stopping.rule = stopping.rule,
-                              stopping.par = stopping.par,
-                              decision.labels = decision.labels,
-                              main = main,
-                              my.tree = my.tree,
-                              repeat.cues = repeat.cues,
-                              numthresh.method = numthresh.method,
-                              numthresh.n = numthresh.n,
-                              quiet = quiet,
-                              do.lr = do.lr,
-                              do.cart = do.cart,
-                              do.svm = do.svm,
-                              do.rf = do.rf,
-                              do.comp = do.comp)
-
-# 1) GET FFTREES DEFINITIONS ----------------------------------------
-
-x <- fftrees_define(x, object = object)
-
-# 2) APPLY TREES TO TRAINING DATA -------------------------------
-
-# Training......
-
-x <- fftrees_apply(x,
-                    mydata = "train")
-
-# Rank trees by goal
-
-x <- fftrees_ranktrees(x)
-
-# Test.........
-
-if(!is.null(x$data$test)) {
-
-x <- fftrees_apply(x, mydata = "test")
-
-}
-
-## 3) DEFINE TREES IN WORDS
-
-x <- fftrees_ffttowords(x = x,
-                        digits = 2)
-
-# FIT COMPETITIVE ALGORITHMS
-
-x <- fftrees_fitcomp(x = x)
-
-return(x)
-
-}
-
-

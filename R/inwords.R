@@ -6,10 +6,7 @@
 #' @export
 #'
 inwords <- function(x, tree = 1) {
-
   testthat::expect_is(x, class = "FFTrees")
 
   x$trees$inwords[[tree]]
-
-
 }

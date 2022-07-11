@@ -1,13 +1,13 @@
 context("test-predictFFTrees")
 
 test_that("predict.FFTrees() works", {
+  data_train <- heart.train
+  data_test <- heart.test
 
-  data_train = heart.train
-  data_test = heart.test
 
-
-  x <- FFTrees(diagnosis ~.,
-               data = data_train)
+  x <- FFTrees(diagnosis ~ .,
+    data = data_train
+  )
 
 
   class_test_pred <- predict(x, newdata = data_test)
@@ -30,6 +30,4 @@ test_that("predict.FFTrees() works", {
   # No variation in class outcomes when prob_1 is the same
   out <- aggregate(class ~ prob_1, FUN = sd, data = both_test_pred)
   testthat::expect_true(all(out$class == 0))
-
-
 })

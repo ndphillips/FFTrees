@@ -59,19 +59,19 @@ Here is `heart.train` (the training dataset) which contains data from
 
 ``` r
 heart.train
-#> # A tibble: 150 x 14
-#>    diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang
-#>    <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>
-#>  1 FALSE        44     0 np         108   141     0 normal      175     0
-#>  2 FALSE        51     0 np         140   308     0 hypert…     142     0
-#>  3 FALSE        52     1 np         138   223     0 normal      169     0
-#>  4 TRUE         48     1 aa         110   229     0 normal      168     0
-#>  5 FALSE        59     1 aa         140   221     0 normal      164     1
-#>  6 FALSE        58     1 np         105   240     0 hypert…     154     1
-#>  7 FALSE        41     0 aa         126   306     0 normal      163     0
-#>  8 TRUE         39     1 a          118   219     0 normal      140     0
-#>  9 TRUE         77     1 a          125   304     0 hypert…     162     1
-#> 10 FALSE        41     0 aa         105   198     0 normal      168     0
+#> # A tibble: 150 × 14
+#>    diagnosis   age   sex cp    trestbps  chol   fbs restecg     thalach exang
+#>    <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>         <dbl> <dbl>
+#>  1 FALSE        44     0 np         108   141     0 normal          175     0
+#>  2 FALSE        51     0 np         140   308     0 hypertrophy     142     0
+#>  3 FALSE        52     1 np         138   223     0 normal          169     0
+#>  4 TRUE         48     1 aa         110   229     0 normal          168     0
+#>  5 FALSE        59     1 aa         140   221     0 normal          164     1
+#>  6 FALSE        58     1 np         105   240     0 hypertrophy     154     1
+#>  7 FALSE        41     0 aa         126   306     0 normal          163     0
+#>  8 TRUE         39     1 a          118   219     0 normal          140     0
+#>  9 TRUE         77     1 a          125   304     0 hypertrophy     162     1
+#> 10 FALSE        41     0 aa         105   198     0 normal          168     0
 #> # … with 140 more rows, and 4 more variables: oldpeak <dbl>, slope <chr>,
 #> #   ca <dbl>, thal <chr>
 ```
@@ -81,19 +81,19 @@ data from a new set of 153 patients:
 
 ``` r
 heart.test
-#> # A tibble: 153 x 14
-#>    diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang
-#>    <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>
-#>  1 FALSE        51     0 np         120   295     0 hypert…     157     0
-#>  2 TRUE         45     1 ta         110   264     0 normal      132     0
-#>  3 TRUE         53     1 a          123   282     0 normal       95     1
-#>  4 TRUE         45     1 a          142   309     0 hypert…     147     1
-#>  5 FALSE        66     1 a          120   302     0 hypert…     151     0
-#>  6 TRUE         48     1 a          130   256     1 hypert…     150     1
-#>  7 TRUE         55     1 a          140   217     0 normal      111     1
-#>  8 FALSE        56     1 aa         130   221     0 hypert…     163     0
-#>  9 TRUE         42     1 a          136   315     0 normal      125     1
-#> 10 FALSE        45     1 a          115   260     0 hypert…     185     0
+#> # A tibble: 153 × 14
+#>    diagnosis   age   sex cp    trestbps  chol   fbs restecg     thalach exang
+#>    <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>         <dbl> <dbl>
+#>  1 FALSE        51     0 np         120   295     0 hypertrophy     157     0
+#>  2 TRUE         45     1 ta         110   264     0 normal          132     0
+#>  3 TRUE         53     1 a          123   282     0 normal           95     1
+#>  4 TRUE         45     1 a          142   309     0 hypertrophy     147     1
+#>  5 FALSE        66     1 a          120   302     0 hypertrophy     151     0
+#>  6 TRUE         48     1 a          130   256     1 hypertrophy     150     1
+#>  7 TRUE         55     1 a          140   217     0 normal          111     1
+#>  8 FALSE        56     1 aa         130   221     0 hypertrophy     163     0
+#>  9 TRUE         42     1 a          136   315     0 normal          125     1
+#> 10 FALSE        45     1 a          115   260     0 hypertrophy     185     0
 #> # … with 143 more rows, and 4 more variables: oldpeak <dbl>, slope <chr>,
 #> #   ca <dbl>, thal <chr>
 ```
@@ -156,13 +156,13 @@ heart.fft$competition$test
 #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
 #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
 #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 56  6 17 74 0.7671233 0.9250 0.0750 0.9032258 0.8131868
+#> 4        rf 153 58  7 15 73 0.7945205 0.9125 0.0875 0.8923077 0.8295455
 #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
 #>         acc      bacc      cost cost_decisions cost_cues
 #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
 #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
 #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8496732 0.8460616 0.1503268      0.1503268        NA
+#> 4 0.8562092 0.8535103 0.1437908      0.1437908        NA
 #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 ```
 
