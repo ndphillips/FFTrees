@@ -29,7 +29,6 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 plot(heart.fft, data = "test")
 ```
 
-
 A fast-and-frugal tree (FFT) [@martignon2003naive] is a set of hierarchical rules for making decisions based on very little information (usually 4 or fewer). Specifically, it is a decision tree where each node has exactly two branches, where one (or in the cast of the final node, both) branches is an exit branch. 
 
 FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently preferable to more complex decision strategies (such as logistic regression) because they rarely over-fit data [@gigerenzer2009homo] and are easy to interpret and implement in real-world decision tasks [@marewski2012heuristic]. They have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
@@ -52,7 +51,6 @@ Here is a complete list of the vignettes
 |      |    [Specifying FFTs directly](FFTrees_mytree.html)|How to create FFTs directly using `my.tree` without using one of the built-in algorithms|
 |     3|    [Visualizing FFTs with plot()](FFTrees_plot.html)|Plotting `FFTrees` objects, from full trees to icon arrays|
 |     4|    [Examples of FFTs](FFTrees_examples.html)|Lots of examples of FFTs from different datasets contained in the package|
-
 
 ## Article and citation information
 
@@ -78,7 +76,6 @@ Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017).
 }
 ```
 
-
 ## Datasets
 
 The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with `FFTrees`
@@ -99,6 +96,5 @@ The latest developer version of FFTrees is always at [https://github.com/ndphill
 ```{r fig.align = "center", out.width="50%", echo = FALSE}
 knitr::include_graphics("../inst/FFTrees_Logo.jpg")
 ```
-
 
 ## Bibliography

@@ -99,7 +99,6 @@ plot(my.fft,
      main = "Custom FFT")
 ```
 
-
 ## Citation
 
 *APA Citation*
