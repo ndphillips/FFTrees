@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# FFTrees 1.6.2
+# FFTrees 1.6.3
 
 [![Build
 Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
@@ -38,7 +38,7 @@ library(FFTrees)
 #>   / \
 #>  F   O
 #>     / \
-#>    F   Trees 1.6.2
+#>    F   Trees 1.6.3
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
 #> FFTrees.guide() opens the main guide.
@@ -154,18 +154,26 @@ heart.fft$competition$test
 #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
 #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
 #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 58  9 15 71 0.7945205 0.8875 0.1125 0.8656716 0.8255814
+#> 4        rf 153 57  9 16 71 0.7808219 0.8875 0.1125 0.8636364 0.8160920
 #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
 #>         acc      bacc      cost cost_decisions cost_cues
 #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
 #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
 #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8431373 0.8410103 0.1568627      0.1568627        NA
+#> 4 0.8366013 0.8341610 0.1633987      0.1633987        NA
 #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 ```
 
 Because fast-and-frugal trees are so simple, you can create one ‘from
 words’ and apply it to data!
+
+For example, below we’ll create a tree with the following 4 nodes and
+evaluate its performance on the `heart.test` data
+
+1.  If sex = 1, predict Disease.
+2.  If age \< 45, predict Healthy.
+3.  If thal = {fd, normal}, predict Disease.
+4.  Otherwise, predict Healthy
 
 ``` r
 # Create your own custom FFT 'in words' and apply it to data
@@ -191,6 +199,9 @@ plot(my.fft,
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="80%" />
+
+As we can see, the tree has very high sensitivity but terrible
+specificity.
 
 ## Citation
 

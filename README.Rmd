@@ -80,6 +80,13 @@ heart.fft$competition$test
 
 Because fast-and-frugal trees are so simple, you can create one 'from words' and apply it to data!
 
+For example, below we'll create a tree with the following 4 nodes and evaluate its performance on the `heart.test` data
+
+1. If sex = 1, predict Disease.
+2. If age < 45, predict Healthy.
+3. If thal = {fd, normal}, predict Disease. 
+4. Otherwise, predict Healthy
+
 ```{r fig.width = 6, fig.height = 6, out.width = "80%"}
 # Create your own custom FFT 'in words' and apply it to data
 
@@ -98,6 +105,8 @@ plot(my.fft,
      data = "test",
      main = "Custom FFT")
 ```
+
+As we can see, the tree has very high sensitivity but terrible specificity.
 
 ## Citation
 
