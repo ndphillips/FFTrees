@@ -1,3 +1,7 @@
+# 1.6.4
+
+* Cleanup to get package back on CRAN after failed submission on July 16, 2022
+
 # 1.6.3
 
 * Additional cleanup to get package back on CRAN after failed submission on July 12, 2022

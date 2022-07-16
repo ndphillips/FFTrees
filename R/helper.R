@@ -235,7 +235,7 @@ comp.pred <- function(formula,
 
     # Convert character columns to factors
     for (col.i in 1:ncol(data.all)) {
-      if (any(c("logical", "character", "factor") %in% class(data.all[, col.i]))) {
+      if (inherits(data.all[,col.i], c("logical", "character", "factor"))) {
         data.all[, col.i] <- factor(data.all[, col.i])
       }
     }
@@ -362,7 +362,7 @@ comp.pred <- function(formula,
       cannot.pred.mtx <- matrix(0, nrow = nrow(data.test), ncol = ncol(data.test))
 
       for (i in 1:ncol(cannot.pred.mtx)) {
-        if (any(class(data.test[, i]) %in% c("factor", "character"))) {
+        if (inherits(data.test[, i], c("factor", "character"))) {
           cannot.pred.mtx[, i] <- data.test[, i] %in% factor.ls[[i]] == FALSE
         }
       }
@@ -667,11 +667,9 @@ classtable <- function(prediction_v = NULL,
     criterion_v <- as.logical(paste(criterion_v))
   }
 
-  if (((class(prediction_v) != "logical") | class(criterion_v) != "logical") & !is.null(prediction_v)) {
+  if (!inherits(prediction_v, "logical") | !inherits(criterion_v, "logical") & !is.null(prediction_v)) {
     stop("prediction_v and criterion_v must be logical")
   }
-
-
 
   # Remove NA criterion values
   prediction_v <- prediction_v[is.finite(criterion_v)]
