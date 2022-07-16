@@ -32,6 +32,9 @@ fftrees_threshold_numeric_grid(
 
 \item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
 }
+\value{
+A data frame containing accuracy statistics for several numeric thresholds
+}
 \description{
 Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue
 }

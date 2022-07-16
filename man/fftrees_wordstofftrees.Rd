@@ -11,6 +11,9 @@ fftrees_wordstofftrees(x, my.tree)
 
 \item{my.tree}{string. A string defining an FFT}
 }
+\value{
+An FFTrees object with a new definition defined by my.tree
+}
 \description{
 Converts text describing an FFT into an FFT definition.
 }

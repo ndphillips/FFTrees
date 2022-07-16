@@ -6,15 +6,14 @@
 #' @param main Main plot description
 #' @param top An integer indicating how many of the top cues to highlight
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
+#' @return A plot showing cue accuracies from an FFTrees object in a ROC space
 #' @export
 #'
-
 showcues <- function(x = NULL,
                      data = "train",
                      cue.accuracies = NULL,
                      main = NULL,
                      top = 5) {
-
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 

@@ -13,6 +13,9 @@
 
 \item{...}{additional arguments (currently ignored)}
 }
+\value{
+A data frame comtaining summary information about an FFT
+}
 \description{
 Returns summary information about an FFTrees x
 }

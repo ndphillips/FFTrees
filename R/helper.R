@@ -406,7 +406,7 @@ comp.pred <- function(formula,
 
         try.pred <- try(predict(train.mod, data.test), silent = TRUE)
 
-        if (class(try.pred) == "try-error") {
+        if (inherits(try.pred, "try-error")) {
           warning("svm crashed predicting new data. That's all I can say")
 
           pred.test <- NULL
@@ -446,7 +446,7 @@ comp.pred <- function(formula,
 
         try.pred <- try(predict(train.mod, data.test.2), silent = TRUE)
 
-        if (class(try.pred) == "try-error") {
+        if (inherits(try.pred, "try-error")) {
           warning("randomForest crashed predicting new data. That's all I can say")
 
           pred.test <- NULL

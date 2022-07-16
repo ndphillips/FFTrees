@@ -32,6 +32,9 @@ fftrees_threshold_factor_grid(
 
 \item{goal.threshold}{character.}
 }
+\value{
+A data frame containing accuracy statistics for several factor thresholds
+}
 \description{
 Performs a grid search over factor and returns accuracy statistics for a given factor cue
 }

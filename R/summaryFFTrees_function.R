@@ -2,9 +2,9 @@
 #' @param object FFTrees.
 #' @param tree integer. The tree to summarise
 #' @param ... additional arguments (currently ignored)
+#' @return A data frame comtaining summary information about an FFT
 #' @export
 #'
-
 summary.FFTrees <- function(object,
                             tree = 1,
                             ...) {
@@ -142,8 +142,6 @@ summary.FFTrees <- function(object,
     "sens",
     "spec"
   )
-
-
 
   return(summary.df)
 }

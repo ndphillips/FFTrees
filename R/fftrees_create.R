@@ -300,7 +300,8 @@ fftrees_create <- function(data = NULL,
 
   ## Make criterion logical
 
-  if (class(data[[criterion_name]]) %in% c("character", "factor")) {
+  if (inherits(data[[criterion_name]], "character") |
+    inherits(data[[criterion_name]], "factor")) {
 
     # Save original values as decision.labels
     decision.labels <- unique(data[[criterion_name]])
@@ -312,8 +313,6 @@ fftrees_create <- function(data = NULL,
       message("Setting target to ", criterion_name, " == ", decision.labels[2])
     }
   }
-
-
 
   ## Criterion is in data.test
 

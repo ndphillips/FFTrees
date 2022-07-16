@@ -1,4 +1,6 @@
-# develop
+# 1.6.2
+
+* Internal cleanup to get package back on CRAN.
 
 ## 1.6.1
 

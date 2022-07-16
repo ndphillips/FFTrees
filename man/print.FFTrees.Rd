@@ -13,6 +13,9 @@
 
 \item{...}{additional arguments passed to print.}
 }
+\value{
+Prints summary information about an FFT to the console
+}
 \description{
 Printing function for an FFTrees object
 }

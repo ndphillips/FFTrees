@@ -25,6 +25,7 @@
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
 #' @export
+#' @return A plot vizualizing an FFT
 #' @examples
 #'
 #' # Create FFTrees of the heart disease data
@@ -249,7 +250,7 @@ plot.FFTrees <- function(x = NULL,
             main <- x$params$main
           }
         } else {
-          if (class(data) == "character") {
+          if (inherits(data, "character")) {
             if (data == "train") {
               main <- "Data (Training)"
             }
@@ -258,7 +259,7 @@ plot.FFTrees <- function(x = NULL,
             }
           }
 
-          if (class(data) == "data.frame") {
+          if (inherits(data, "data.frame")) {
             main <- "Test Data"
           }
         }
@@ -275,7 +276,7 @@ plot.FFTrees <- function(x = NULL,
           tree <- which.tree
         }
 
-        if (class(x) != "FFTrees") {
+        if (!inherits(x, "FFTrees")) {
           stop("You did not include a valid FFTrees class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid FFTrees object with FFTrees() or specify the tree directly.")
         }
 
@@ -289,7 +290,7 @@ plot.FFTrees <- function(x = NULL,
           stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees"))
         }
 
-        if (class(data) == "character") {
+        if (inherits(data, "character")) {
           if (data == "test" & is.null(x$trees$stats$test)) {
             stop("You asked to plot the test data but there are no test data in the FFTrees object")
           }

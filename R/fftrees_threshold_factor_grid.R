@@ -12,7 +12,7 @@
 #' @import testthat
 #' @importFrom  magrittr "%>%"
 #' @export
-#'
+#' @return A data frame containing accuracy statistics for several factor thresholds
 #'
 fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                           cue_v = NULL,
@@ -160,8 +160,6 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
       "cost" = NA
     )
   }
-
-
 
   return(results)
 }

@@ -11,6 +11,9 @@ fftrees_define(x, object = NULL)
 
 \item{object}{FFTrees.}
 }
+\value{
+An FFTrees object with tree definitions
+}
 \description{
 Create definitions of FFTrees
 }

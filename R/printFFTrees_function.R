@@ -4,6 +4,7 @@
 #' @param x FFTrees. A FFTrees x created from FFTrees()
 #' @param tree integer. The tree to explore.
 #' @param ... additional arguments passed to print.
+#' @return Prints summary information about an FFT to the console
 #' @export
 
 print.FFTrees <- function(x = NULL,

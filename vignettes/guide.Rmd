@@ -54,7 +54,7 @@ Here is a complete list of the vignettes
 
 ## Article and citation information
 
-We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making [FFTrees Article PDF link](http://journal.sjdm.org/17/17217/jdm17217.pdf). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
+We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making [FFTrees Article PDF link](https://journal.sjdm.org/17/17217/jdm17217.pdf). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
 If you use FFTrees in your work, please cite us and spread the word so we can continue developing the package
 

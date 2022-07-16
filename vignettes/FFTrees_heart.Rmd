@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100,
 library(FFTrees)
 ```
 
-The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* available online at [http://journal.sjdm.org/17/17217/jdm17217.pdf](http://journal.sjdm.org/17/17217/jdm17217.pdf)
+The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* available online at [https://journal.sjdm.org/17/17217/jdm17217.pdf](https://journal.sjdm.org/17/17217/jdm17217.pdf)
 
 
 ## Step 1: Install and load the FFTrees package

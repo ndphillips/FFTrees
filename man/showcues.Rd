@@ -17,6 +17,9 @@ showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL, top = 5)
 
 \item{top}{An integer indicating how many of the top cues to highlight}
 }
+\value{
+A plot showing cue accuracies from an FFTrees object in a ROC space
+}
 \description{
 Visualizes cue accuracies from an FFTrees object in a ROC space
 }

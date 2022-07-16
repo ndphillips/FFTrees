@@ -11,6 +11,9 @@ inwords(x, tree = 1)
 
 \item{tree}{numeric. The tree to display}
 }
+\value{
+A string describing an FFT
+}
 \description{
 Display a verbal description of a tree in an FFTrees object
 }

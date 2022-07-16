@@ -75,6 +75,9 @@
 
 \item{...}{Currently ignored.}
 }
+\value{
+A plot vizualizing an FFT
+}
 \description{
 Plots an FFTrees object created by the FFTrees() function.
 }

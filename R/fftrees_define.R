@@ -6,6 +6,7 @@
 #'
 #' @export
 #' @keywords internal
+#' @return An FFTrees object with tree definitions
 #'
 #'
 fftrees_define <- function(x, object = NULL) {

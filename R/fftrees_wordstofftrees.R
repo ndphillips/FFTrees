@@ -1,10 +1,11 @@
-
 #' Converts text describing an FFT into an FFT definition.
 #'
 #' @param x FFTrees.
 #' @param my.tree string. A string defining an FFT
 #'
 #' @export
+#'
+#' @return An FFTrees object with a new definition defined by my.tree
 #'
 #' @importFrom stringr str_extract str_detect
 
