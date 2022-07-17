@@ -77,7 +77,7 @@ fftrees_cuerank <- function(x = NULL,
 
           # "median" method
           if (x$params$numthresh.method == "m") {
-            if (length(unique(unlist(cue_i_v))) == 2) {
+            if (isTRUE(all.equal(length(unique(unlist(cue_i_v))), 2))) {
               cue_i_levels <- unique(unlist(cue_i_v))
             } else {
               cue_i_levels <- median(unlist(cue_i_v))

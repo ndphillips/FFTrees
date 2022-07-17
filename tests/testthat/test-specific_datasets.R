@@ -1,7 +1,5 @@
 context("test-specific_datasets")
 
-
-
 test_that("Can replicate Phillips et al.2017 heartdisease trees", {
   phillips_trees <- FFTrees(diagnosis ~ .,
     data = heart.train,

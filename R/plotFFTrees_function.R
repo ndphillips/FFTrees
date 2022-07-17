@@ -286,7 +286,7 @@ plot.FFTrees <- function(x = NULL,
           tree <- "best.train"
         }
 
-        if (is.numeric(tree) & (tree %in% 1:x$trees$n) == F) {
+        if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
           stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees"))
         }
 
@@ -335,7 +335,6 @@ plot.FFTrees <- function(x = NULL,
       level.stats$fa.m <- NA
       level.stats$cr.m <- NA
 
-
       for (i in 1:n.levels) {
         if (i == 1) {
           level.stats$hi.m[1] <- level.stats$hi[1]
@@ -352,7 +351,6 @@ plot.FFTrees <- function(x = NULL,
         }
       }
     }
-
 
     # -------------------------
     # Define plotting parameters
@@ -1284,14 +1282,14 @@ plot.FFTrees <- function(x = NULL,
         # Update plot center
         # -----------------------
         {
-          if (level.stats$exit[level.i] == 0) {
+          if (identical(level.stats$exit[level.i], 0)) {
             subplot.center <- c(
               subplot.center[1] + 2,
               subplot.center[2] - 4
             )
           }
 
-          if (level.stats$exit[level.i] == 1) {
+          if (identical(level.stats$exit[level.i], 1)) {
             subplot.center <- c(
               subplot.center[1] - 2,
               subplot.center[2] - 4
@@ -1309,7 +1307,6 @@ plot.FFTrees <- function(x = NULL,
 
       fft.sens.vec <- tree.stats$sens
       fft.spec.vec <- tree.stats$spec
-
 
       # General plotting space
       {

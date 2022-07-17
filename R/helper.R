@@ -215,7 +215,7 @@ comp.pred <- function(formula,
 
     # Remove columns with no variance in training data
     if (is.null(data.train) == FALSE) {
-      if (length(unique(data.all[train.cases, 1])) == 1) {
+      if (isTRUE(all.equal(length(unique(data.all[train.cases, 1])), 1))) {
         do.test <- FALSE
       } else {
         do.test <- TRUE
@@ -562,7 +562,7 @@ factclean <- function(data.train,
     }
   }
 
-  model.can.predict <- rowMeans(can.predict.mtx) == 1
+  model.can.predict <- isTRUE(all.equal(rowMeans(can.predict.mtx), 1))
 
   if (identical(mean(model.can.predict), 1) == FALSE & show.warning == TRUE) {
     warning(paste(sum(model.can.predict), " out of ",
@@ -823,7 +823,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr, cost) {
   #
 
   num_space <- function(x) {
-    if (x == 0) {
+    if (isTRUE(all.equal(x, 0))) {
       return(1)
     }
 

@@ -28,8 +28,8 @@ fftrees_grow_fan <- function(x,
   # ----------
 
   x <- fftrees_cuerank(x,
-    newdata = x$data$train,
-    data = "train"
+                       newdata = x$data$train,
+                       data = "train"
   )
 
   # ----------
@@ -42,9 +42,9 @@ fftrees_grow_fan <- function(x,
     {
       if (x$params$max.levels > 1) {
         expand.ls <- lapply(1:(x$params$max.levels - 1),
-          FUN = function(x) {
-            return(c(0, 1))
-          }
+                            FUN = function(x) {
+                              return(c(0, 1))
+                            }
         )
 
         expand.ls[[length(expand.ls) + 1]] <- .5
@@ -59,7 +59,7 @@ fftrees_grow_fan <- function(x,
         )
       }
 
-      if (x$params$max.levels == 1) {
+      if (isTRUE(all.equal(x$params$max.levels, 1))) {
         tree_dm <- data.frame("exit.1" = .5)
       }
 
@@ -184,8 +184,8 @@ fftrees_grow_fan <- function(x,
             # Create new dynamic cue ran
 
             x <- fftrees_cuerank(x,
-              newdata = data_current,
-              data = "dynamic"
+                                 newdata = data_current,
+                                 data = "dynamic"
             )
 
             # Calculate cue accuracies with remaining exemplars
@@ -193,7 +193,9 @@ fftrees_grow_fan <- function(x,
           }
 
           # Get next cue based on maximizing goal
-          cue_best_i <- which(cue_best_df_current[[x$params$goal.chase]] == max(cue_best_df_current[[x$params$goal.chase]], na.rm = TRUE))
+
+          performance_max <- max(cue_best_df_current[[x$params$goal.chase]], na.rm = TRUE)
+          cue_best_i <- which(dplyr::near(cue_best_df_current[[x$params$goal.chase]], performance_max))
 
           # If there is a tie, take the first
           if (length(cue_best_i) > 1) {
@@ -261,11 +263,11 @@ fftrees_grow_fan <- function(x,
           # If ASIF classification is perfect, then stop!
 
           if (x$params$goal.chase != "cost") {
-            if (asif.stats[[x$params$goal.chase]][level_current] == 1) {
+            if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 1)) {
               grow.tree <- FALSE
             }
           } else {
-            if (asif.stats[[x$params$goal.chase]][level_current] == 0) {
+            if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 0)) {
               grow.tree <- FALSE
             }
           }
@@ -285,14 +287,14 @@ fftrees_grow_fan <- function(x,
 
         # Step 3) Classify exemplars in current level
         {
-          if (exit_current == 1 | exit_current == .5) {
+          if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .5)) {
             decide.1.index <- cases_remaining & cue.decisions == TRUE
 
             decision_v[decide.1.index] <- TRUE
             levelout_v[decide.1.index] <- level_current
           }
 
-          if (exit_current == 0 | exit_current == .5) {
+          if (exit_current == 0 | dplyr::near(exit_current, .5)) {
             decide.0.index <- is.na(decision_v) & cue.decisions == FALSE
 
             decision_v[decide.0.index] <- FALSE

@@ -149,13 +149,13 @@ fftrees_apply <- function(x,
         decisions_df$current_decision <- decisions_df$current_cue_values >= threshold_i
       }
 
-      if (exit_i == 0) {
+      if (isTRUE(all.equal(exit_i, 0))) {
         classify.now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
       }
-      if (exit_i == 1) {
+      if (isTRUE(all.equal(exit_i,  1))) {
         classify.now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)
       }
-      if (exit_i == .5) {
+      if (isTRUE(all.equal(exit_i, .5))) {
         classify.now <- is.na(decisions_df$decision)
       }
 
