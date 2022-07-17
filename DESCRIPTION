@@ -1,8 +1,8 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
-Version: 1.6.4
-Date: 2022-07-11
+Version: 1.6.5
+Date: 2022-07-17
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut", "cre"),
                      email = "Nathaniel.D.Phillips.is@gmail.com"),
               person("Hansjoerg", "Neth", role = "aut"),
@@ -24,7 +24,6 @@ Imports:
     tibble,
     stringr,
     progress,
-    pROC,
     caret,
     dplyr,
     testthat,
