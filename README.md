@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# FFTrees 1.6.5
+# FFTrees 1.6.6
 
 [![Build
 Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
@@ -38,7 +38,7 @@ library(FFTrees)
 #>   / \
 #>  F   O
 #>     / \
-#>    F   Trees 1.6.5
+#>    F   Trees 1.6.6
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
 #> FFTrees.guide() opens the main guide.

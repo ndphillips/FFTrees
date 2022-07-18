@@ -1,3 +1,7 @@
+# 1.6.6
+
+* Fixed bug causing `plot.FFTrees()` to not display plots properly.
+
 # 1.6.5
 
 * Cleanup to get package back on CRAN after failed submission on July 17, 2022

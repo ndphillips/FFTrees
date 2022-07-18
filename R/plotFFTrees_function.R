@@ -310,8 +310,6 @@ plot.FFTrees <- function(x = NULL,
 
       # DEFINE CRITICAL OBJECTS
 
-
-
       decision.v <- x$trees$decisions[[data]][[tree]]$decision
       tree.stats <- x$trees$stats[[data]]
       level.stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
@@ -840,6 +838,7 @@ plot.FFTrees <- function(x = NULL,
     # -------------------------
     # 2. TREE
     # --------------------------
+
     if (show.middle) {
       if (show.top == FALSE & show.bottom == FALSE) {
         par(mar = c(3, 3, 3, 3) + .1)
@@ -856,7 +855,6 @@ plot.FFTrees <- function(x = NULL,
         xaxt = "n", yaxt = "n",
         ylab = "", xlab = ""
       )
-
 
       # Add  frame
 
@@ -1282,14 +1280,15 @@ plot.FFTrees <- function(x = NULL,
         # Update plot center
         # -----------------------
         {
-          if (identical(level.stats$exit[level.i], 0)) {
+
+          if (identical(paste(level.stats$exit[level.i]), "0")) {
             subplot.center <- c(
               subplot.center[1] + 2,
               subplot.center[2] - 4
             )
           }
 
-          if (identical(level.stats$exit[level.i], 1)) {
+          if (identical(paste(level.stats$exit[level.i]), "1")) {
             subplot.center <- c(
               subplot.center[1] - 2,
               subplot.center[2] - 4
