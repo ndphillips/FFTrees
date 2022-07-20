@@ -48,20 +48,26 @@ devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 library(FFTrees)
 ```
 
-Let's create a fast-and-frugal tree predicting heart disease status (_Healthy_ vs. _Diseased_) based on a `heart.train` dataset, and test it on `heart.test` a testing dataset.
+Let's create a fast-and-frugal tree predicting heart disease status (_Healthy_ vs. _Diseased_) based on the `heartdisease` dataset. 
 
 
 ### Using data 
 
-Here are the first new rows and columns of our datasets. The key column is `diagnosis`, a logical column  (either `TRUE` or `FALSE`) which indicate the true state for each patient (i.e., whether or not they suffer from heart disease). 
+The `heartdisease` data provides medical information for 303\ patients that were tested for heart disease. 
+The full data were split into two subsets: 
+A `heart.train` dataset for fitting decision trees, and `heart.test` dataset for a testing the resulting trees.
 
-Here is `heart.train` (the training / fitting dataset) which contains data from `r nrow(heart.train)` patients:
+The criterion variable is `diagnosis`, a logical column  (either `TRUE` or `FALSE`) which indicate the true state for each patient (i.e., whether or not they suffer from heart disease). 
+
+Here are the first rows and columns of both subsets of the `heartdisease` data: 
+
+- `heart.train` (the training / fitting dataset) contains the data from `r nrow(heart.train)` patients: 
 
 ```{r data-train}
 heart.train
 ```
 
-Here is `heart.test` (the testing / prediction dataset)  which contains data from a new set of `r nrow(heart.test)` patients:
+- `heart.test` (the testing / prediction dataset) contains data from a new set of `r nrow(heart.test)` patients:
 
 ```{r data-test}
 heart.test
@@ -72,22 +78,26 @@ heart.test
 
 Now let's use `FFTrees()` to create fast-and-frugal trees from the `heart.train` data and test their performance on the `heart.test` data: 
 
+```{r set-seed, echo = FALSE}
+set.seed(246)  # for reproducible randomness
+```
+
 ```{r example-heart, fig.width = 6, fig.height = 6, out.width = "80%", fig.align='center'}
-# Create an FFTrees object from the heartdisease data
+# Create an FFTrees object from the heartdisease data: 
 heart.fft <- FFTrees(formula = diagnosis ~., 
                      data = heart.train,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
 
-# See the print method which shows aggregatge statistics
+# Printing an FFTrees object shows aggregate statistics: 
 heart.fft
 
-# Plot the best tree applied to the test data
+# Plot the best tree applied to the test data: 
 plot(heart.fft,
      data = "test",
      main = "Heart Disease")
 
-# Compare results across algorithms in test data
+# Compare results across algorithms in test data: 
 heart.fft$competition$test
 ```
 
