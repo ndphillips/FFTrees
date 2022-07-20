@@ -223,5 +223,25 @@ plot(myheart.fft,
      main = "Specifying an FFT manually")
 ```
 
-As you can see, this FFT was pretty terrible
+As you can see, this FFT was pretty terrible.
+
+
+## Vignettes
+
+<!-- Table of all vignettes: -->
+
+Here is a complete list of the vignettes available in the **FFTrees** package: 
+
+|   | Vignette | Description |
+|--:|:------------------------------|:-------------------------------------------------|
+|   | [Main guide](guide.html) | An overview of the **FFTrees** package |
+| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
+| 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
+| 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
+| 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
+
+
+<!-- eof. -->
 

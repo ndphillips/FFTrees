@@ -2,9 +2,9 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -15,79 +15,108 @@ knitr::opts_chunk$set(
 
 # FFTrees `r packageVersion("FFTrees")`
 
+<!-- Status badges: --> 
+
 [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 
-The goal of FFTrees is to create and visualize fast-and-frugal decision trees (FFTs) from data with a binary outcome following the methods described in [Phillips, Neth, Woike & Gaissmaier (2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
+
+<!-- Goal of R package: -->
+
+The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) from data with a binary outcome following the methods described in [Phillips, Neth, Woike & Gaissmaier (2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
+
 
 ## Installation
 
-You can install the released version of FFTrees from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of **FFTrees** from [CRAN](https://CRAN.R-project.org) with:
 
-``` r
+```{r install-cran, eval = FALSE}
 install.packages("FFTrees")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
 
-``` r
+```{r install-gitub, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 ```
+
 ## Examples
 
-```{r}
+```{r load-pkg}
 library(FFTrees)
 ```
 
-Let's create a fast-and-frugal tree predicting heart disease status ("Healthy" vs. "Diseased") based on a `heart.train` dataset, and test it on `heart.test` a testing dataset.
+Let's create a fast-and-frugal tree predicting heart disease status (_Healthy_ vs. _Diseased_) based on the `heartdisease` dataset. 
 
-Here are the first new rows and columns of our datasets. The key column is `diagnosis`, a logical column  (TRUE and FALSE) which indicate, for each patient, whether or not they have heart disease.
 
-Here is `heart.train` (the training dataset) which contains data from `r nrow(heart.train)` patients:
+### Using data 
 
-```{r}
+The `heartdisease` data provides medical information for 303\ patients that were tested for heart disease. 
+The full data were split into two subsets: 
+A `heart.train` dataset for fitting decision trees, and `heart.test` dataset for a testing the resulting trees.
+
+The criterion variable is `diagnosis`, a logical column  (either `TRUE` or `FALSE`) which indicate the true state for each patient (i.e., whether or not they suffer from heart disease). 
+
+Here are the first rows and columns of both subsets of the `heartdisease` data: 
+
+- `heart.train` (the training / fitting dataset) contains the data from `r nrow(heart.train)` patients: 
+
+```{r data-train}
 heart.train
 ```
 
-Here is `heart.test` (the testing / prediction dataset)  which contains data from a new set of `r nrow(heart.test)` patients:
+- `heart.test` (the testing / prediction dataset) contains data from a new set of `r nrow(heart.test)` patients:
 
-```{r}
+```{r data-test}
 heart.test
 ```
 
-Now let's use `FFTrees()` to create a fast and frugal tree from the `heart.train` data and test their performance on `heart.test`
 
-```{r example, fig.width = 6, fig.height = 6, out.width = "80%"}
-# Create an FFTrees object from the heartdisease data
+### Creating fast-and-frugal trees (FFTs) 
+
+Now let's use `FFTrees()` to create fast-and-frugal trees from the `heart.train` data and test their performance on the `heart.test` data: 
+
+```{r set-seed, echo = FALSE}
+set.seed(246)  # for reproducible randomness
+```
+
+```{r example-heart, fig.width = 6, fig.height = 6, out.width = "80%", fig.align='center'}
+# Create an FFTrees object from the heartdisease data: 
 heart.fft <- FFTrees(formula = diagnosis ~., 
                      data = heart.train,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
 
-# See the print method which shows aggregatge statistics
+# Printing an FFTrees object shows aggregate statistics: 
 heart.fft
 
-# Plot the best tree applied to the test data
+# Plot the best tree applied to the test data: 
 plot(heart.fft,
      data = "test",
      main = "Heart Disease")
 
-# Compare results across algorithms in test data
+# Compare results across algorithms in test data: 
 heart.fft$competition$test
 ```
 
-Because fast-and-frugal trees are so simple, you can create one 'from words' and apply it to data!
+<!-- FFTs by verbal description: -->
 
-For example, below we'll create a tree with the following 4 nodes and evaluate its performance on the `heart.test` data
+### Building FFTs from verbal description 
 
-1. If sex = 1, predict Disease.
-2. If age < 45, predict Healthy.
-3. If thal = {fd, normal}, predict Disease. 
-4. Otherwise, predict Healthy
+Because fast-and-frugal trees are so simple, we even can create one 'from words' and apply it to data!
 
-```{r fig.width = 6, fig.height = 6, out.width = "80%"}
+For example, let's create a tree with the following three nodes and evaluate its performance on the `heart.test` data:
+
+1. If `sex = 1`, predict _Disease_.
+2. If `age < 45`, predict _Healthy_.
+3. If `thal = {fd, normal}`, predict _Disease_,   
+otherwise, predict _Healthy_. 
+
+The conditions can directly be supplied to the `my.tree` argument of `FFTrees()`: 
+
+```{r example-heart-verbal, fig.width = 6, fig.height = 6, out.width = "80%", fig.align='center'}
 # Create your own custom FFT 'in words' and apply it to data
 
 # Create my own fft
@@ -106,23 +135,50 @@ plot(my.fft,
      main = "Custom FFT")
 ```
 
-As we can see, the tree has very high sensitivity but terrible specificity.
+As we can see, this particular tree is somewhat biased: 
+It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases). 
+Its overall _accuracy_ exceeds the data's baseline by a fair amount. 
+
 
 ## Citation
 
-*APA Citation*
+We had a lot of fun creating **FFTrees** and hope you like it too! 
+We have an article introducing the **FFTrees**  package in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) [\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf)\ ].  
 
-Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*, 12(4), 344-368.
 
-We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making titled FFTrees: [A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
+**Citation** (in APA format): 
 
-If you use FFTrees in your work, please cite us and spread the word so we can continue developing the package
+- Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
+FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
+_Judgment and Decision Making_, _12_ (4), 344–368. 
 
-Here are some example publications that have used FFTrees (find the full list at [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601))
 
-- [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. Journal of Neurology, 267(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
-- [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. Acta Orthopaedica, 91(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
-- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modelling study on 1500 individual treatments. International Journal of Radiation Oncology* Biology* Physics.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
-- [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J. (2019). Translating large-scale climate variability into crop production forecast in Europe. Scientific reports, 9(1), 1-13.](https://www.nature.com/articles/s41598-018-38091-4)
-- [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E., Derkay, C. S., Seedat, R. Y., ... & Mortelliti, A. J. (2019). Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. PloS one, 14(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
+We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them. 
+If you use **FFTrees** in your work, please cite us and spread the word so we can continue developing the package. 
 
+<!-- Examples uses/publications: -->
+
+Here are some example publications that have used **FFTrees** (find the full list at [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)): 
+
+- [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. 
+_Journal of Neurology_, _267_(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
+
+- [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. _Acta Orthopaedica_, _91_(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
+
+- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modelling study on 1500 individual treatments. 
+_International Journal of Radiation Oncology * Biology * Physics_.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
+
+- [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J. (2019). 
+Translating large-scale climate variability into crop production forecast in Europe. 
+_Scientific Reports_, _9_(1), 1-13.](https://www.nature.com/articles/s41598-018-38091-4)
+
+- [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E., Derkay, C. S., Seedat, R. Y., ... & Mortelliti, A. J. (2019). Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. _PloS One_, _14_(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
+
+
+<!-- footer: -->
+
+----
+
+[File `README.Rmd` last updated on `r Sys.Date()`.] 
+
+<!-- eof. -->

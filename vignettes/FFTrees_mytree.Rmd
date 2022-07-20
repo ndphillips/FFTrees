@@ -24,9 +24,15 @@ knitr::opts_chunk$set(echo = TRUE,
 library(FFTrees)
 ```
 
-There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function, either as a sentence using the `my.tree` argument (the easier way), or as a dataframe using the `tree.definitions` argument (the harder way). Both of these methods will bypass the tree construction algorithms built into `FFTrees`.
+There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function: 
 
-### `my.tree`
+1. as a sentence using the `my.tree` argument (the easier way), or  
+2. as a dataframe using the `tree.definitions` argument (the harder way).  
+
+Both of these methods will bypass the tree construction algorithms built into the **FFTrees** package.
+
+
+## `my.tree`
 
 The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. When this argument is specified in `FFTrees()`, the function (specifically `wordstoFFT()` will try to extract the specified FFT from the argument.
 
@@ -90,3 +96,23 @@ plot(my.heart.fft)
 ```
 
 This one looks much better!
+
+
+## Vignettes
+
+<!-- Table of all vignettes: -->
+
+Here is a complete list of the vignettes available in the **FFTrees** package: 
+
+|   | Vignette | Description |
+|--:|:------------------------------|:-------------------------------------------------|
+|   | [Main guide](guide.html) | An overview of the **FFTrees** package |
+| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
+| 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
+| 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
+| 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
+
+
+<!-- eof. -->

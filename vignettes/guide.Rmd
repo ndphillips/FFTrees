@@ -17,7 +17,7 @@ library(FFTrees)
 
 ## Fast-and-Frugal Trees (FFTs)
 
-```{r fig1, fig.width = 6.5, fig.height = 6, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease status"}
+```{r fig1, fig.width = 7.2, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease status"}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
@@ -29,45 +29,56 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 plot(heart.fft, data = "test")
 ```
 
-A fast-and-frugal tree (FFT) [@martignon2003naive] is a set of hierarchical rules for making decisions based on very little information (usually 4 or fewer). Specifically, it is a decision tree where each node has exactly two branches, where one (or in the cast of the final node, both) branches is an exit branch. 
+A _fast-and-frugal tree_ (FFT) [@martignon2003naive] is a set of hierarchical rules for making decisions based on very little pieces of information (usually\ 4 or fewer cues). 
+Specifically, it is a decision tree where each node has exactly 2\ branches, where one (or in the cast of the final node, both) branches is an exit branch. 
 
-FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. They are frequently preferable to more complex decision strategies (such as logistic regression) because they rarely over-fit data [@gigerenzer2009homo] and are easy to interpret and implement in real-world decision tasks [@marewski2012heuristic]. They have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
+FFTs are simple, transparent decision strategies that use minimal information to make decisions [see @gigerenzer1999fast;@gigerenzer1999good]. 
+They are frequently preferable to more complex decision strategies (such as logistic regression) because they rarely over-fit data [@gigerenzer2009homo] and are easy to interpret and implement in real-world decision tasks [@marewski2012heuristic]. 
+FFTs have been used in real world tasks from detecting depression [@jenny2013simple], to making fast decisions in emergency rooms [@green1997alters].
 
-The purpose of the FFTrees package is to make it easy to produce, display, and evaluate FFTs. The main function in the package is `FFTrees()` which takes formula `formula` and dataset `data` arguments and returns several FFTs which attempt to classify training cases into criterion classes. 
+The purpose of the **FFTrees** package is to make it easy to produce, display, and evaluate FFTs. 
+The package's main function is `FFTrees()` which takes formula\ `formula` and dataset\ `data` arguments and returns several FFTs that attempt to classify training cases into criterion classes. 
 
 ## How to use the FFTrees package
 
-To get started with FFTrees, we recommend looking at the [Heart Disease Tutorial](FFTrees_heart.html). This tutorial will take you through all of the basics steps of creating, visualising, and evaluating fast-and-frugal trees.
+To get started with **FFTrees**, we recommend studying the [Heart Disease Tutorial](FFTrees_heart.html). 
+This tutorial will take you through all of the basics steps of creating, visualising, and evaluating fast-and-frugal trees (FFTs). 
 
 ### Vignettes
 
-Here is a complete list of the vignettes
+<!-- Table of all vignettes: -->
 
-| | Vignette Link| Description |
+Here is a complete list of the vignettes available in the **FFTrees** package: 
+
+|   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
-|     1|    [Heart Disease Tutorial](FFTrees_heart.html)| A complete example of using FFTrees to model heart disease diagnosis     |
-|      |    [Accuracy statistics](AccuracyStatistics.html)| Definitions of accuracy statistics used throughout the package|
-|     2|    [Creating FFTs with FFTrees()](FFTrees_function.html) |Description of  the main function `FFTrees()`|
-|      |    [Specifying FFTs directly](FFTrees_mytree.html)|How to create FFTs directly using `my.tree` without using one of the built-in algorithms|
-|     3|    [Visualizing FFTs with plot()](FFTrees_plot.html)|Plotting `FFTrees` objects, from full trees to icon arrays|
-|     4|    [Examples of FFTs](FFTrees_examples.html)|Lots of examples of FFTs from different datasets contained in the package|
+|   | [Main guide](guide.html) | An overview of the **FFTrees** package |
+| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
+| 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
+| 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
+| 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
+
 
 ## Article and citation information
 
 We had a lot of fun creating FFTrees and hope you like it too! We have an article introducing the `FFTrees` package in the journal Judgment and Decision Making [FFTrees Article PDF link](https://journal.sjdm.org/17/17217/jdm17217.pdf). We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
-If you use FFTrees in your work, please cite us and spread the word so we can continue developing the package
+If you use **FFTrees** in your work, please cite us and spread the word so we can continue developing the package. 
 
-*APA Citation*
+**Citation** (in APA format): 
 
-Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. *Judgment and Decision Making*, 12(4), 344-368.
+- Phillips, Nathaniel D., Neth, Hansjörg, Woike, Jan K., & Gaissmaier, W. (2017). 
+FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
+_Judgment and Decision Making_, 12(4), 344--368.
 
-*BibTeX Citation*
+**BibTeX Citation**
 
-```{r, eval = FALSE}
-@article{phillips2017FFTrees,
+```{r bibtex-citation, eval = FALSE}
+@article{FFTrees,
  title = {FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
- author = {Phillips, Nathaniel D and Neth, Hansjoerg and Woike, Jan K and Gaissmaier, Wolfgang},
+ author = {Phillips, Nathaniel D and Neth, Hansjörg and Woike, Jan K and Gaissmaier, Wolfgang},
  year = 2017, 
  journal = {Judgment and Decision Making},
  volume = 12,
@@ -78,7 +89,7 @@ Phillips, Nathaniel D., Neth, Hansjoerg, Woike, Jan K., & Gaissmaier, W. (2017).
 
 ## Datasets
 
-The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with `FFTrees`
+The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with **FFTrees**: 
 
 - `heartdisease` -- Patients suspected of having heart disease [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
 - `breastcancer` -- Patients suspected of having breast cancer [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
@@ -91,7 +102,8 @@ The package contains several datasets taken from the [UCI Machine Learning Repos
 
 ## GitHub
 
-The latest developer version of FFTrees is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). For comments, tips, and bug reports, please post an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues) or email me at Nathaniel.D.Phillips.is@gmail.com.
+The latest developer version of **FFTrees** is always at [https://github.com/ndphillips/FFTrees](https://github.com/ndphillips/FFTrees). 
+For comments, tips, and bug reports, please post an issue at [https://github.com/ndphillips/FFTrees/issues](https://github.com/ndphillips/FFTrees/issues) or email me at Nathaniel.D.Phillips.is@gmail.com.
 
 ```{r fig.align = "center", out.width="50%", echo = FALSE}
 knitr::include_graphics("../inst/FFTrees_Logo.jpg")
