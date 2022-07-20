@@ -11,7 +11,6 @@ vignette: >
 
 ```{r, echo = F, message = FALSE, results = 'hide'}
 library(FFTrees)
-options(digits = 3)
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
@@ -99,7 +98,6 @@ As we can see, this tree did not perform nearly as well as our earlier one.
 
 ## Iris.v
 
-
 ```{r fig.align = "center", out.width="250px", echo = FALSE}
 knitr::include_graphics("../inst/virginica.jpg")
 ```
@@ -141,7 +139,7 @@ plot(iris.fft,
      tree = 2)     # Show tree #2
 ```
 
-As you can see, this tree does indeed have a higher specificity of 99%. However, it comes at a cost of a lower sensitivity of 82\%.
+As you can see, this tree does indeed have a higher specificity. However, it comes at a cost of a lower sensitivity
 
 
 

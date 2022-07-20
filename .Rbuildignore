@@ -6,3 +6,6 @@
 ^params\.json
 ^stylesheets
 ^index\.html
+^README\.Rmd$
+^doc$
+^Meta$

@@ -6,6 +6,9 @@
 \usage{
 FFTrees.guide()
 }
+\value{
+No return value, called for side effects
+}
 \description{
 Opens the FFTrees package guide
 }

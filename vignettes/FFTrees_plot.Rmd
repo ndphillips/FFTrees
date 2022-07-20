@@ -116,27 +116,23 @@ Here is the best training tree applied to the training data:
 
 ```{r, fig.width = 6, fig.height = 6.5, fig.align='center'}
 plot(titanic.pred.fft,
-     tree = "best.train")
+     tree = 1)
 ```
 
-The best training tree (tree #3) had a high specificity of 92%, but a low hit rate of just 48%. However, as we can see in the ROC table, LR didn't perform much better, and CART did even worse than tree #3.
+The best training tree (tree #1) had a high specificity of 92%, but a low hit rate of just 48%. However, as we can see in the ROC table, LR didn't perform much better, and CART did even worse than tree #3.
 
 Now let's apply the same tree to the test dataset:
 
 ```{r, fig.width = 6, fig.height = 6.5, fig.align='center'}
 plot(titanic.pred.fft,
-     tree = "best.train",
+     tree = 1,
      data = "test")
 ```
 
-Performance has actually increased in this test data (e.g.; the hit-rate is up to 54%). However, both logistic regression and CART did similarly. 
-
-Let's visualise tree #4, the most liberal tree with the highest hit-rate:
+Let's visualise tree #2, the most liberal tree with the highest sensitivity:
 
 ```{r, fig.width = 6, fig.height = 6.5, fig.align='center'}
 plot(titanic.pred.fft,
-     tree = 4,
+     tree = 2,
      data = "test")
 ```
-
-Tree #4 was able to increase the testing hit-rate up to 65%, but at a cost of a lower specificity of 70%.

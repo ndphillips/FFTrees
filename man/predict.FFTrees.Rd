@@ -4,8 +4,16 @@
 \alias{predict.FFTrees}
 \title{Predict classifications from newdata using an FFTrees object}
 \usage{
-\method{predict}{FFTrees}(object = NULL, newdata = NULL, data = NULL,
-  tree = 1, type = "class", sens.w = NULL, method = "laplace", ...)
+\method{predict}{FFTrees}(
+  object = NULL,
+  newdata = NULL,
+  tree = 1,
+  type = "class",
+  sens.w = NULL,
+  method = "laplace",
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{An FFTrees object created from the FFTrees() function.}
@@ -14,7 +22,8 @@
 
 \item{tree}{integer. Which tree in the object should be used? By default, tree = 1 is used}
 
-\item{type}{string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, or \code{"prob"} which returns a matrix of class probabilities.}
+\item{type}{string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, \code{"prob"} which returns a matrix of class probabilities,
+or \code{"both"} which returns a matrix with both class and probability predictions.}
 
 \item{sens.w, data}{deprecated}
 
@@ -31,25 +40,29 @@ Predict classifications from newdata using an FFTrees object
 \examples{
 
 
-  # Create training and test data
+# Create training and test data
 
-  set.seed(100)
-  breastcancer <- breastcancer[sample(nrow(breastcancer)),]
-  breast.train <- breastcancer[1:150,]
-  breast.test <- breastcancer[151:303,]
+set.seed(100)
+breastcancer <- breastcancer[sample(nrow(breastcancer)), ]
+breast.train <- breastcancer[1:150, ]
+breast.test <- breastcancer[151:303, ]
 
-  # Create an FFTrees x from the training data
+# Create an FFTrees x from the training data
 
-  breast.fft <- FFTrees(formula = diagnosis ~.,
-                              data = breast.train)
+breast.fft <- FFTrees(
+  formula = diagnosis ~ .,
+  data = breast.train
+)
 
- # Predict classes of test data
-  breast.fft.pred <- predict(breast.fft,
-                             data = breast.test)
+# Predict classes of test data
+breast.fft.pred <- predict(breast.fft,
+  newdata = breast.test
+)
 
- # Predict class probabilities
-  breast.fft.pred <- predict(breast.fft,
-                             data = breast.test,
-                             type = "prob")
+# Predict class probabilities
+breast.fft.pred <- predict(breast.fft,
+  newdata = breast.test,
+  type = "prob"
+)
 
 }

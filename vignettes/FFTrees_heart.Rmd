@@ -11,7 +11,6 @@ vignette: >
 ---
 
 ```{r, echo = FALSE}
-options(digits = 3)
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
@@ -20,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100,
 library(FFTrees)
 ```
 
-The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* available online at [http://journal.sjdm.org/17/17217/jdm17217.pdf](http://journal.sjdm.org/17/17217/jdm17217.pdf)
+The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* available online at [https://journal.sjdm.org/17/17217/jdm17217.pdf](https://journal.sjdm.org/17/17217/jdm17217.pdf)
 
 
 ## Step 1: Install and load the FFTrees package
@@ -66,7 +65,7 @@ The resulting trees, decisions, and accuracy statistics are now stored in the `F
 
 #### Other arguments
 
-- `algorithm`: There are several different algorithms available to build FFTs, including "ifan" [@phillips2017FFTrees], "dfan"[@phillips2017FFTrees], "max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization].
+- `algorithm`: There are two different algorithms available to build FFTs "ifan" [@phillips2017FFTrees] and "dfan"[@phillips2017FFTrees]. ("max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization] are no longer supported)
 - `max.levels`: Changes the maximum number of levels allowed in the tree.
 
 The following arguments apply to the "ifan" and "dfan" algorithms only:
@@ -88,13 +87,6 @@ The output tells us several pieces of information:
 - The tree with the highest weighted sensitivity `wacc` with a sensitivity weight of 0.5 is selected as the best tree.
 - The best tree, FFT \#1 uses three cues: `thal`, `cp`, and `ca`.
 - Several summary statistics for this tree in training and test data are then summarized.
-
-To summarise performance statistics for a tree across training and test data, use the `summary()` function (use the `tree = X` argument to specify a diffent tree)
-
-```{r}
-# Pring summary statistics of all trees
-summary(heart.fft)
-```
 
 All statistics can be derived from a 2 x 2 confusion table like the one below. For definitions of all accuracy statistics, look at the [accuracy statistic definitions](AccuracyStatistics.html) vignette.
 
@@ -153,26 +145,6 @@ An FFTrees object contains many different outputs, to see them all, run `names()
 names(heart.fft)
 ```
 
-Here is a brief description of each of the outputs:
-
-| Output| Description|
-|:------|:------------------------------------------------------------------|
-|     formula|    The formula used to generate the object|
-|     data.desc|    Descriptions of the original training and test data|
-|     cue.accuracies|    Cue thresholds and accuracies|
-|     tree.definitions|    Definitions of all trees, including cues, thresholds and exit directions|
-|     tree.stats|   Performance statistics for trees |
-|     cost|   Cost statistics for each case and tree.|
-|     level.stats|   Cumulative performance statistics for all trees.|
-|     decision|   Classification decisions|
-|     levelout|   The level at which each case is classified|
-|     tree.max|   The best performing training tree in the object.|
-|     inwords|   A verbal description of the trees.|
-|     auc|   Area under the curve statistics|
-|     params|   A list of parameters used in building the trees|
-|     comp|   Models and statistics for competitive algorithms (e.g.; regression, (non-frugal) decision trees, support vector machines)|
-|     data|   The original training and test data|
-
 ### Predicting new data
 
 To predict classifications for a new dataset, use the standard `predict()` function. For example, here's how to predict the classifications for data in the `heartdisease` object (which actually is just a combination of `heart.train` and `heart.test`)
@@ -182,7 +154,6 @@ To predict classifications for a new dataset, use the standard `predict()` funct
 predict(heart.fft, 
         data = heartdisease)
 ```
-
 
 ### Defining an FFT in words
 
@@ -195,7 +166,7 @@ If you want to define a specific FFT and apply that tree to data, you can define
 my.heart.fft <- FFTrees(formula = diagnosis ~.,
                         data = heart.train,
                         data.test = heart.test,
-                        main = "My custom Heart Disease FFT",
+                        main = "Custom Heart FFT",
                         my.tree = "If chol > 350, predict True. 
                                    If cp != {a}, predict False. 
                                    If age <= 35, predict False. Otherwise, predict True")
@@ -207,25 +178,5 @@ Here is the result (It's actually not too bad, although the first node is pretty
 plot(my.heart.fft)
 ```
 
-
-### Create a forest of FFTs
-
-The `FFForest()` function conducts a bootstrapped simulation on the training data, thus creating a forest of several FFTs. This can give you insight as to how important different cues are in the dataset
-
-```{r, eval = FALSE}
-# Create an FFForest object (can take a few minutes)
-heart.fff <- FFForest(formula = diagnosis ~., 
-                      data = heartdisease, 
-                      ntree = 10, 
-                      train.p = .5)
-```
-
-Plotting the result shows cue importance and co-occurrence relationships:
-
-```{r, fig.width = 10, fig.height = 7, out.width = "600px"}
-plot(heart.fff)
-```
-
-Here, we see that the three cues `cp`, `thal`, and `ca` occur the most often in the forest and thus appear to be the most important three cues in the dataset.
 
 ## References

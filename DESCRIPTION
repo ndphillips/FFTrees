@@ -1,35 +1,37 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
-Version: 1.4.0.9000
-Date: 2019-08-01
+Version: 1.6.6
+Date: 2022-07-18
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut", "cre"),
                      email = "Nathaniel.D.Phillips.is@gmail.com"),
               person("Hansjoerg", "Neth", role = "aut"),
               person("Jan", "Woike", role = "aut"),
               person("Wolfgang", "Gaissmaer", role = "aut"))
 Maintainer: Nathaniel Phillips <Nathaniel.D.Phillips.is@gmail.com>
-Description: Create, visualize, and test fast-and-frugal decision trees (FFTs). FFTs are very simple decision trees for
-    binary classification problems. FFTs can be preferable to more complex algorithms because they are easy to communicate, require very little information, and are
-    robust against overfitting.
+Description: Create, visualize, and test fast-and-frugal decision trees (FFTs) using methods described in Phillips, Neth, Woike & Gaissmaier. (2017). FFTs are very simple decision trees for
+    binary classification problems. FFTs can be preferable to more complex algorithms because they are easy to communicate, 
+    require very little information, and are robust against overfitting.
 LazyData: TRUE
-Depends: R(>= 2.10)
+Depends: R(>= 3.5.0)
 Imports:
     rpart,
-    yarrr,
-    circlize,
-    parallel,
     graphics,
     randomForest,
-    igraph,
     e1071,
+    crayon,
+    scales,
+    tibble,
     stringr,
     progress,
-    pROC,
-    caret
+    caret,
+    dplyr,
+    testthat,
+    magrittr,
+    tidyselect
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 7.2.0
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

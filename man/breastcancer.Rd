@@ -4,7 +4,8 @@
 \name{breastcancer}
 \alias{breastcancer}
 \title{Dataset: Physiological dataset for 699 patients tested for breast cancer.}
-\format{A data frame containing 699 rows and 9 columns
+\format{
+A data frame containing 699 rows and 9 columns
 \describe{
   \item{thickness}{Clump Thickness}
   \item{cellsize.unif}{Uniformity of Cell Size}
@@ -20,7 +21,8 @@
 
 
   ...
-}}
+}
+}
 \source{
 https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
 }

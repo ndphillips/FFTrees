@@ -4,8 +4,14 @@
 \alias{comp.pred}
 \title{Wrapper for classfication algorithms}
 \usage{
-comp.pred(formula, data.train, data.test = NULL, algorithm = NULL,
-  model = NULL, new.factors = "exclude")
+comp.pred(
+  formula,
+  data.train,
+  data.test = NULL,
+  algorithm = NULL,
+  model = NULL,
+  new.factors = "exclude"
+)
 }
 \arguments{
 \item{formula}{a formula}
