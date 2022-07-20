@@ -1,43 +1,47 @@
-# 1.6.6
+
+# FFTrees 1.6
+
+## 1.6.6
 
 * Fixed bug causing `plot.FFTrees()` to not display plots properly.
 
-# 1.6.5
+## 1.6.5
 
-* Cleanup to get package back on CRAN after failed submission on July 17, 2022
+* Cleanup to get package back on CRAN after failed submission on July 17, 2022. 
 
-# 1.6.4
+## 1.6.4
 
-* Cleanup to get package back on CRAN after failed submission on July 16, 2022
+* Cleanup to get package back on CRAN after failed submission on July 16, 2022. 
 
-# 1.6.3
+## 1.6.3
 
-* Additional cleanup to get package back on CRAN after failed submission on July 12, 2022
+* Additional cleanup to get package back on CRAN after failed submission on July 12, 2022. 
 
-# 1.6.2
+## 1.6.2
 
 * Internal cleanup to get package back on CRAN.
 
 ## 1.6.1
 
-* `plot.FFTrees` no longer saves graphic params changed in `par()`
-* `plot.FFTRrees`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`
-* Deprecation notes in `plot.FFTrees` are now returned as warnings, not messages
+* `plot.FFTrees` no longer saves graphic params changed in `par()`. 
+* `plot.FFTRrees`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`. 
+* Deprecation notes in `plot.FFTrees` are now returned as warnings, not messages. 
+
 
 # FFTrees 1.5
 
 ## 1.5.7
 
-- Officially deprecated "max" and "zigzag" algorithms
-- Minor cleanup throughout
+- Officially deprecated "max" and "zigzag" algorithms. 
+- Minor cleanup throughout. 
 
 ## 1.5.0
 
-- Fixed warnings for CRAN submission
+- Fixed warnings for CRAN submission. 
 - FFTrees objects have a nicer internal structure.
-- Added tests throughout (finally)
+- Added tests throughout (finally). 
 - Extensive code cleanup, which should speed things up.
-- New print method which includes an ASCII confusion matrix
+- New print method which includes an ASCII confusion matrix. 
 
 # FFTrees 1.4
 
@@ -60,9 +64,9 @@
 
 ### 1.3.4
 
-- Added class probability predictions with `predict.FFTrees(type = "prob")`
+- Added class probability predictions with `predict.FFTrees(type = "prob")`. 
 
-- Updated `print.FFTrees()` to display FFT #1 'in words' (from the `inwords(x)` function)
+- Updated `print.FFTrees()` to display FFT #1 'in words' (from the `inwords(x)` function). 
 
 ### 1.3.3
 
@@ -70,7 +74,7 @@
 
 - Added `label.tree`, `label.performance` arguments to `plot.FFTrees()` that allow you to specify plot (sub) labels. 
 
-- Bug fixes
+- Bug fixes: 
     - Issues when passing an existing FFTrees object to a new call to FFTrees().
 
 
@@ -98,7 +102,7 @@
 
 ## 1.2.0
 
-- Changed wording of statistics throughout package. `hr` (hit rate) and `far` (false alarm rate) are now `sens` for sensitivity, and `spec` for specificity (1 - false alarm rate)
+- Changed wording of statistics throughout package. `hr` (hit rate) and `far` (false alarm rate) are now `sens` for sensitivity, and `spec` for specificity (1 - false alarm rate). 
 
 - The `rank.method` argument is now deprecated. Use `algorithm` instead.
 
@@ -127,7 +131,7 @@
 
 - Trees can now use the same cue multiple times within a tree. To do this, set `rank.method = "c"` and `repeat.cues = TRUE`.
 
-- Bug-fixes
+- Bug-fixes: 
    - You can (and should!) now have a column of NAs for the criterion in test datasets to represent data where the criterion is unknown.
    - `FFTrees()` now supports a single predictor (e.g.; `formula = diagnosis ~ age`) which previously did not work.
 
@@ -137,12 +141,12 @@
 - Updated, clearer `print.FFTrees()` method to see important info about an FFTrees object in matrix format.
 - Training and testing statistics are now always in seperate objects (e.g.; `data$train`, `data$test`) to avoid confusion.
 
-- Bug-fixes
+- Bug-fixes: 
     - `predict.FFTrees()` now works much better by passing a new dataset (`data.test`) as a test dataset for an existing FFTrees object.
 
 ## 1.1.5
 
-- Bug-fixes
+- Bug-fixes: 
     - Plotting parameters `mar` and `layout` are now reset after running `plot.FFTrees()`
 
 ## 1.1.4
@@ -152,4 +156,10 @@
     - Changed `which.tree` argument in `plot.FFTrees()` to `tree` to conform to blog posts.
     - `predict.FFTrees()` now works better with `tibble` inputs.
     
-- Changed the `fft` label to `FFTrees` throughout the package to avoid confusion with fast fourier transform. Thus, the main tree building function is now `FFTrees()` and the new tree object class is `FFTrees`
+- Changed the `fft` label to `FFTrees` throughout the package to avoid confusion with fast fourier transform. Thus, the main tree building function is now `FFTrees()` and the new tree object class is `FFTrees`. 
+
+<!-- footer: --> 
+
+---- 
+
+File `NEWS.md` last updated on 2022-07-20. 
