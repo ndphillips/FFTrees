@@ -14,11 +14,13 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100,
 ```
 
 
-```{r, echo = F, message = F, results = 'hide'}
+```{r, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
-In this guide, we'll cover how accuracy statistics are calculated for FFTs and the **FFTrees** package. 
+## Accuracy Statistics in **FFTrees** 
+
+In this vignette, we cover how accuracy statistics are calculated for FFTs and the **FFTrees** package. 
 Most of these measures are not specific to FFTs and can be used for any classification algorithm. 
 
 First, let's look at the accuracy statistics from a heart disease FFT: 
@@ -143,11 +145,30 @@ Now that we know where $mcu$ comes from, $pci$ is just as simple --- it's just t
 
 <!-- Reference for further measures: -->
 
+### Additional measures 
+
 For additional measures based on the frequency counts of a 2x2 matrix, see [Table 3](https://www.frontiersin.org/articles/10.3389/fpsyg.2020.567817/full#h5) of 
 
 - Neth, H., Gradwohl, N., Streeb, D., Keim, D.A., & Gaissmaier, W. (2021). 
 Perspectives on the 2×2 matrix: Solving semantically distinct problems based on a shared structure of binary contingencies. 
 _Frontiers in Psychology_, _11_, 567817. doi: [10.3389/fpsyg.2020.567817](https://doi.org/10.3389/fpsyg.2020.567817)
+
+
+## Vignettes
+
+<!-- Table of all vignettes: -->
+
+Here is a complete list of the vignettes available in the **FFTrees** package: 
+
+|   | Vignette | Description |
+|--:|:------------------------------|:-------------------------------------------------|
+|   | [Main guide](guide.html) | An overview of the **FFTrees** package |
+| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
+| 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
+| 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
+| 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
 
 <!-- eof. -->
