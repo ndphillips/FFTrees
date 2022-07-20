@@ -1,6 +1,6 @@
 ---
-title: "FFTrees Accuracy Statistics"
-author: "Nathaniel Phillips"
+title: "Accuracy Statistics in FFTrees"
+author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -18,11 +18,12 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100,
 library(FFTrees)
 ```
 
-In this guide, we'll cover how accuracy statisics are calculated for FFTs. Most of these measures are not specific to FFTs and can be used for any classification algorithm.
+In this guide, we'll cover how accuracy statistics are calculated for FFTs and the **FFTrees** package. 
+Most of these measures are not specific to FFTs and can be used for any classification algorithm. 
 
-First, let's look at the accuracy statistics from a heart disease FFT:
+First, let's look at the accuracy statistics from a heart disease FFT: 
 
-```{r}
+```{r fft-example, out.width="50%", fig.align = "center", echo = FALSE, fig.cap = "**Figure 1**: Example FFT for the `heartdisease` data."}
 # Create an FFTrees object predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heartdisease)
@@ -30,78 +31,94 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 plot(heart.fft)
 ```
 
-You'll notice a 2 x 2 table in the bottom-left hand side of the plot. This is a *2 x 2 Confusion Table* [Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix). All accuracy measures can be derived from this table. Here is a generic version of a confusion table:
+You'll notice a 2\ x\ 2 table in the bottom-left hand side of the plot. 
+This is a _2\ x\ 2 matrix_ or _confusion table_ (see [Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix) or [Neth et al., 2021](https://doi.org/10.3389/fpsyg.2020.567817) for details). 
+A wide range of accuracy measures can be derived from this simple matrix. 
+Here is a generic version of a confusion table: 
 
-```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}
+```{r confusion-table, fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "**Figure 2**: A 2x2 matrix illustrating the frequency counts of 4 possible outcomes."}
 knitr::include_graphics("../inst/confusiontable.jpg")
 ```
 
-The table cross-tabulates the decisions of the algorithm (rows) with actual criterion values (columns) and contains counts of observations for all four resulting cells. Counts in cells a and d refer to correct decisions due to the match between predicted and criterion values, whereas counts in cells b and c refer to errors due to the mismatch between predicted and criterion values. Both correct decisions and errors come in two types: Cell *hi* represents hits, positive criterion values correctly predicted to be positive, and cell *cr* represents correct rejections, negative criterion values correctly predicted to be negative. As for errors, cell *fa* represents false alarms, negative criterion values erroneously predicted to be positive, and cell *mi* represents misses, positive criterion values erroneously predicted
-to be negative. Given this structure, an accurate decision algorithm aims to maximize the frequencies in cells *hi* and *cr* while minimizing those in cells *fa* and *mi*.
+The 2\ x\ 2 matrix cross-tabulates the decisions of the algorithm (rows) with actual criterion values (columns) and contains counts of observations for all four resulting cells. 
+Counts in cells\ a and\ d refer to correct decisions due to the match between predicted and criterion values, whereas counts in cells\ b and\ c refer to errors due to the mismatch between predicted and criterion values. 
+Both correct decisions and errors come in two types: 
+
+- Cell *hi* represents hits, positive criterion values correctly predicted to be positive, and cell *cr* represents correct rejections, negative criterion values correctly predicted to be negative. 
+
+- As for errors, cell *fa* represents false alarms, negative criterion values erroneously predicted to be positive, and cell *mi* represents misses, positive criterion values erroneously predicted to be negative. 
+
+Given this structure, an accurate decision algorithm aims to maximize the frequencies in cells\ *hi* and\ *cr* while minimizing those in cells\ *fa* and\ *mi*. 
 
 
-| Output| Description| Formula
-|:------|:------------------------------|:----------------------|
-|     hi|    Number of hits|$N(Decision = 1 \land Truth = 1)$) |
-|     mi|   Number of misses| $N(Decision = 0 \land Truth = 1)$) |
-|     fa|    Number of false-alarms| $N(Decision = 1 \land Truth = 0)$) |
-|     cr|   Number of correct rejections| $N(Decision = 0 \land Truth = 0)$) |
-|     n|    Total number of cases| $hi + mi + fa + cr$|
+| Output | Description                   | Formula | 
+|:-------|:------------------------------|:----------------------|
+|   hi |  Number of hits   | $N(Decision = 1 \land Truth = 1)$ |
+|   mi |  Number of misses | $N(Decision = 0 \land Truth = 1)$ |
+|   fa |  Number of false-alarms | $N(Decision = 1 \land Truth = 0)$ |
+|   cr |  Number of correct rejections | $N(Decision = 0 \land Truth = 0)$ |
+|    n |  Total number of cases| $hi + mi + fa + cr$ |
 
-Table: Definitions of raw frequencies in a confusion table. The notation $N()$ means number of cases.
+**Table 1**: Definitions of raw frequencies in a confusion table. The notation $N()$ means number of cases (or frequency counts). 
+
 
 ### Conditional accuracy statistics
 
 The first set of accuracy statistics are based on subsets of the data, conditional on either algorithm decisions (positive predictive value and negative predictive value), or criterion values (sensitivity and specificity). In other words, they are based on either rows or columns of the confusion table:
 
 
-| Output| Description| Formula
+| Output| Description | Formula | 
 |:------|:------------------------------|:----------------------|
-|     sens|  Sensitivity  | $p(Decision = 1 \vert Truth = 1) = hi / (hi + mi)$|
-|     spec|   Specificity  | $p(Decision = 0 \vert Truth = 0) = cr / (cr + fa)$|
-|     far|   False alarm rate  | $1 - spec$|
-|     ppv|   Positive predictive value  | $p(Truth = 1 \vert Decision = 1) = hi / (hi + fa)$|
-|     npv|   Negative predictive value  | $p(Truth = 0 \vert Decision = 0) = cr / (cr + mi)$|
+| sens | Sensitivity  | $p(Decision = 1 \vert Truth = 1) = hi / (hi + mi)$ |
+| spec | Specificity  | $p(Decision = 0 \vert Truth = 0) = cr / (cr + fa)$ |
+| far  | False alarm rate  | $1 - spec$ |
+| ppv  | Positive predictive value  | $p(Truth = 1 \vert Decision = 1) = hi / (hi + fa)$ |
+| npv  | Negative predictive value  | $p(Truth = 0 \vert Decision = 0) = cr / (cr + mi)$ |
 
-Table: Conditional accuracy statistics based on either rows or columns of the confusion table.
+**Table 2**: Conditional accuracy statistics based on either rows or columns of the confusion table.
 
 
-Sensitivity (aka., hit-rate) is defined as $sens = hi/(hi+mi)$ and represents the percentage of cases with positive criterion values that were correctly predicted by the algorithm. Similarly, specificity (aka., correct rejection rate, or the compliment of the false alarm rate) is defined as $spec = cr/(fa + cr)$ and represents the percentage of cases with negative criterion values correctly predicted by the algorithm.
+The _sensitivity_ (aka. _hit-rate_) is defined as $sens = hi/(hi+mi)$ and represents the percentage of cases with positive criterion values that were correctly predicted by the algorithm. 
+Similarly, _specificity_ (aka. _correct rejection rate_, or the complement of the _false alarm rate_) is defined as $spec = cr/(fa + cr)$ and represents the percentage of cases with negative criterion values correctly predicted by the algorithm.
 
-Positive-predictive value $ppv$ and negative predictive value $npv$ are the flip-side of $sens$ and $spec$ as they are conditional accuracies based on decisions (not on true criterion values).
+The _positive-predictive value_ $ppv$ and _negative predictive value_ $npv$ are the flip-sides of $sens$ and $spec$, as they are conditional accuracies based on decision outcomes (rather than on true criterion values). 
+
 
 ### Aggregate accuracy statistics
 
-The next accuracy statistics are based on all four cells in the confusion table.
+Additional accuracy statistics are based on all four cells in the confusion table: 
 
-| Output| Description| Formula
+| Output| Description| Formula | 
 |:------|:------------------------------|:----------------------|
-|     acc|   Accuracy |  $(hi + cr) / (hi + mi + fa + cr)$|
-|     bacc|   Balanced accuracy  | $sens \times .5 + spec \times .5$|
-|     wacc|   Weighted accuracy  | $sens \times w + spec \times w$|
-|     bpv|   Balanced predictive value  |  $ppv \times .5 + npv \times .5$|
-|     dprime|   D-prime  | $zsens - zfar$|
+| acc    | Accuracy |  $(hi + cr) / (hi + mi + fa + cr)$ |
+| bacc   | Balanced accuracy  | $sens \times .5 + spec \times .5$ |
+| wacc   | Weighted accuracy  | $sens \times w + spec \times w$   |
+| bpv    | Balanced predictive value  |  $ppv \times .5 + npv \times .5$ |
+| dprime | D-prime | $zsens - zfar$ |
 
-Table: Aggreagte accuracy statistics based on all four cells of the confusion table.
+**Table 3**: Aggreagte accuracy statistics based on all four cells of the confusion table.
 
 Overall accuracy (`acc`) is defined as the overall percentage of correct decisions ignoring the difference between hits and correct rejections. $bacc$ and $wacc$ are averages of sensitivity and specificity, whlie $bpv$ is an average of predictive value. $dprime$ is the difference in standardized (z-score) transformed $sens$ and $far$
 
-### Speed and Frugality statistics
+
+### Speed and frugality statistics
 
 The next two statistics measure the speed and frugality of a fast-and-frugal tree. Unlike the accuracy statistics above, they are *not* based on the confusion table. Rather, they depend on how much information the trees use to make decisions.
 
-| Output| Description| Formula
+| Output| Description| Formula | 
 |:------|:-----------------------------------------|:----------------------|
-|     mcu|   Mean cues used: Average number of cue values used in making classifications, averaged across all cases| |
-|     pci|   Percentage of cues ignored: Percentage of cues ignored when classifying cases | $N(CuesInData) - mcu$|
+| mcu   | Mean cues used: Average number of cue values used in making classifications, averaged across all cases | |
+| pci   | Percentage of cues ignored: Percentage of cues ignored when classifying cases | $N(CuesInData) - mcu$ |
 
-To see exactly where these statistics come from, let's look at the results for `heart.fft` (FFT \#1):
+To see exactly where these statistics come from, let's look at the results for `heart.fft` (FFT \#1): 
 
 ```{r}
 heart.fft
 ```
 
-According to this output, FFT \#1 has $mcu = 1.73$ and $pci = 0.88$. You can easily calculate these measures directly from the `x$levelout` output from an `FFTrees` object. This object contains the level (i.e., node) where each case was classified:
+According to this output, FFT \#1 has $mcu = 1.73$ and $pci = 0.88$. 
+We can easily calculate these measures directly from the `x$levelout` output from an `FFTrees` object. 
+This object contains the level (i.e., node) where each case was classified:
 
 ```{r}
 # A vector of nodes at which each case was classified in FFT #1
@@ -115,7 +132,7 @@ Now, to calculate $mcu$ (mean cues used), we simply take the mean of this vector
 mean(heart.fft$trees$decisions$train$tree_1$levelout)
 ```
 
-Now that we know where $mcu$ comes from, $pci$ is easy: it's just the total number of cues in the dataset minus $mcu$ divided by the total number of cues in the data:
+Now that we know where $mcu$ comes from, $pci$ is just as simple --- it's just the total number of cues in the dataset minus $mcu$, divided by the total number of cues in the data: 
 
 ```{r}
 # Calculate pci (percent cues ignored) directly:
@@ -124,4 +141,13 @@ Now that we know where $mcu$ comes from, $pci$ is easy: it's just the total numb
 (ncol(heartdisease) - heart.fft$trees$stats$train$mcu[1]) / ncol(heartdisease)
 ```
 
+<!-- Reference for further measures: -->
 
+For additional measures based on the frequency counts of a 2x2 matrix, see [Table 3](https://www.frontiersin.org/articles/10.3389/fpsyg.2020.567817/full#h5) of 
+
+- Neth, H., Gradwohl, N., Streeb, D., Keim, D.A., & Gaissmaier, W. (2021). 
+Perspectives on the 2×2 matrix: Solving semantically distinct problems based on a shared structure of binary contingencies. 
+_Frontiers in Psychology_, _11_, 567817. doi: [10.3389/fpsyg.2020.567817](https://doi.org/10.3389/fpsyg.2020.567817)
+
+
+<!-- eof. -->
