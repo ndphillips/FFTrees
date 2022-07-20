@@ -162,4 +162,6 @@
 
 ---- 
 
-File `NEWS.md` last updated on 2022-07-20. 
+[File `NEWS.md` last updated on 2022-07-20.] 
+
+<!-- eof. -->

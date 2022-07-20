@@ -15,15 +15,17 @@ knitr::opts_chunk$set(
 
 # FFTrees `r packageVersion("FFTrees")`
 
-<!-- Status badges: -->
+<!-- Status badges: --> 
 
 [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 
-<!-- Goal: -->
 
-The goal of **FFTrees** is to create and visualize fast-and-frugal decision trees (FFTs) from data with a binary outcome following the methods described in [Phillips, Neth, Woike & Gaissmaier (2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
+<!-- Goal of R package: -->
+
+The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) from data with a binary outcome following the methods described in [Phillips, Neth, Woike & Gaissmaier (2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
+
 
 ## Installation
 
@@ -126,22 +128,23 @@ Its overall _accuracy_ exceeds the data's baseline by a fair amount.
 
 ## Citation
 
-**APA Citation** 
+We had a lot of fun creating **FFTrees** and hope you like it too! 
+We have an article introducing the **FFTrees**  package in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) [\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf)\ ].  
+
+
+**Citation** (in APA format): 
 
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
 _Judgment and Decision Making_, _12_ (4), 344–368. 
-[ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf) ] 
 
-We had a lot of fun creating **FFTrees** and hope you like it too! 
-We have an article introducing the **FFTrees**  package in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf). 
-We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them.
 
+We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them. 
 If you use **FFTrees** in your work, please cite us and spread the word so we can continue developing the package. 
 
 <!-- Examples uses/publications: -->
 
-Here are some example publications that have used FFTrees (find the full list at [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)): 
+Here are some example publications that have used **FFTrees** (find the full list at [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)): 
 
 - [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. 
 _Journal of Neurology_, _267_(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
@@ -149,7 +152,7 @@ _Journal of Neurology_, _267_(2), 469-478.](https://link.springer.com/article/10
 - [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. _Acta Orthopaedica_, _91_(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
 
 - [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modelling study on 1500 individual treatments. 
-_International Journal of Radiation Oncology Biology Physics_.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
+_International Journal of Radiation Oncology * Biology * Physics_.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
 
 - [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J. (2019). 
 Translating large-scale climate variability into crop production forecast in Europe. 
@@ -157,5 +160,11 @@ _Scientific Reports_, _9_(1), 1-13.](https://www.nature.com/articles/s41598-018-
 
 - [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E., Derkay, C. S., Seedat, R. Y., ... & Mortelliti, A. J. (2019). Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. _PloS One_, _14_(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
 
+
+<!-- footer: -->
+
+----
+
+[File `README.Rmd` last updated on `r Sys.Date()`.] 
 
 <!-- eof. -->
