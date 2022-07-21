@@ -3,6 +3,8 @@ title: "Accuracy Statistics in FFTrees"
 author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: fft.bib
+csl: apa.csl 
 vignette: >
   %\VignetteIndexEntry{Accuracy Statistics}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,9 +20,10 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100,
 library(FFTrees)
 ```
 
+
 ## Accuracy Statistics in **FFTrees** 
 
-In this vignette, we cover how accuracy statistics are calculated for FFTs and the **FFTrees** package. 
+In this vignette, we cover how accuracy statistics are calculated for FFTs and the **FFTrees** package [as described in @phillips2017FFTrees]. 
 Most of these measures are not specific to FFTs and can be used for any classification algorithm. 
 
 First, let's look at the accuracy statistics from a heart disease FFT: 
@@ -69,13 +72,13 @@ Given this structure, an accurate decision algorithm aims to maximize the freque
 The first set of accuracy statistics are based on subsets of the data, conditional on either algorithm decisions (positive predictive value and negative predictive value), or criterion values (sensitivity and specificity). In other words, they are based on either rows or columns of the confusion table:
 
 
-| Output| Description | Formula | 
-|:------|:------------------------------|:----------------------|
-| sens | Sensitivity  | $p(Decision = 1 \vert Truth = 1) = hi / (hi + mi)$ |
-| spec | Specificity  | $p(Decision = 0 \vert Truth = 0) = cr / (cr + fa)$ |
-| far  | False alarm rate  | $1 - spec$ |
-| ppv  | Positive predictive value  | $p(Truth = 1 \vert Decision = 1) = hi / (hi + fa)$ |
-| npv  | Negative predictive value  | $p(Truth = 0 \vert Decision = 0) = cr / (cr + mi)$ |
+| Output | Description | Formula | 
+|:------ |:------------------------------|:----------------------|
+| sens   | Sensitivity  | $p(Decision = 1 \vert Truth = 1) = hi / (hi + mi)$ |
+| spec   | Specificity  | $p(Decision = 0 \vert Truth = 0) = cr / (cr + fa)$ |
+| far    | False alarm rate  | $1 - spec$ |
+| ppv    | Positive predictive value  | $p(Truth = 1 \vert Decision = 1) = hi / (hi + fa)$ |
+| npv    | Negative predictive value  | $p(Truth = 0 \vert Decision = 0) = cr / (cr + mi)$ |
 
 **Table 2**: Conditional accuracy statistics based on either rows or columns of the confusion table.
 
@@ -90,12 +93,12 @@ The _positive-predictive value_ $ppv$ and _negative predictive value_ $npv$ are 
 
 Additional accuracy statistics are based on all four cells in the confusion table: 
 
-| Output| Description| Formula | 
-|:------|:------------------------------|:----------------------|
-| acc    | Accuracy |  $(hi + cr) / (hi + mi + fa + cr)$ |
+| Output | Description | Formula | 
+|:------ |:------------------------------|:----------------------|
+| acc    | Accuracy | $(hi + cr) / (hi + mi + fa + cr)$ |
 | bacc   | Balanced accuracy  | $sens \times .5 + spec \times .5$ |
 | wacc   | Weighted accuracy  | $sens \times w + spec \times w$   |
-| bpv    | Balanced predictive value  |  $ppv \times .5 + npv \times .5$ |
+| bpv    | Balanced predictive value  | $ppv \times .5 + npv \times .5$ |
 | dprime | D-prime | $zsens - zfar$ |
 
 **Table 3**: Aggreagte accuracy statistics based on all four cells of the confusion table.
@@ -114,7 +117,7 @@ The next two statistics measure the speed and frugality of a fast-and-frugal tre
 
 To see exactly where these statistics come from, let's look at the results for `heart.fft` (FFT \#1): 
 
-```{r}
+```{r fft-heart}
 heart.fft
 ```
 
@@ -122,23 +125,23 @@ According to this output, FFT \#1 has $mcu = 1.73$ and $pci = 0.88$.
 We can easily calculate these measures directly from the `x$levelout` output from an `FFTrees` object. 
 This object contains the level (i.e., node) where each case was classified:
 
-```{r}
-# A vector of nodes at which each case was classified in FFT #1
+```{r fft-levelout}
+# A vector of nodes at which each case was classified in FFT #1:
 heart.fft$trees$decisions$train$tree_1$levelout
 ```
 
-Now, to calculate $mcu$ (mean cues used), we simply take the mean of this vector:
+Now, to calculate\ $mcu$ (the _mean number of cues used_), we simply take the mean of this vector:
 
-```{r}
-# Calculate the mean (this is mcu)
+```{r fft-mcu}
+# Calculate the mean number or cues used (mcu): 
 mean(heart.fft$trees$decisions$train$tree_1$levelout)
 ```
 
-Now that we know where $mcu$ comes from, $pci$ is just as simple --- it's just the total number of cues in the dataset minus $mcu$, divided by the total number of cues in the data: 
+Now that we know where\ $mcu$ comes from, computing $pci$ (i.e., the _percentage of cues ignored_) is just as simple --- it's just the total number of cues in the dataset minus\ $mcu$, divided by the total number of cues in the data: 
 
-```{r}
-# Calculate pci (percent cues ignored) directly:
-# (N.Cues - mcu) / (N.Cues)
+```{r fft-pci}
+# Calculate pci (percentage of cues ignored) as 
+# (N.Cues - mcu) / N.Cues):
 
 (ncol(heartdisease) - heart.fft$trees$stats$train$mcu[1]) / ncol(heartdisease)
 ```
@@ -147,11 +150,10 @@ Now that we know where $mcu$ comes from, $pci$ is just as simple --- it's just t
 
 ### Additional measures 
 
-For additional measures based on the frequency counts of a 2x2 matrix, see [Table 3](https://www.frontiersin.org/articles/10.3389/fpsyg.2020.567817/full#h5) of 
+For additional measures based on the frequency counts of a 2x2 matrix, see [Table 3](https://www.frontiersin.org/articles/10.3389/fpsyg.2020.567817/full#h5) of [@neth2021matrix]: 
 
 - Neth, H., Gradwohl, N., Streeb, D., Keim, D.A., & Gaissmaier, W. (2021). 
-Perspectives on the 2×2 matrix: Solving semantically distinct problems based on a shared structure of binary contingencies. 
-_Frontiers in Psychology_, _11_, 567817. doi: [10.3389/fpsyg.2020.567817](https://doi.org/10.3389/fpsyg.2020.567817)
+Perspectives on the 2×2 matrix: Solving semantically distinct problems based on a shared structure of binary contingencies. _Frontiers in Psychology_, _11_, 567817. doi: [10.3389/fpsyg.2020.567817](https://doi.org/10.3389/fpsyg.2020.567817)
 
 
 ## Vignettes
@@ -170,5 +172,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 | 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
 | 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
+
+## References
 
 <!-- eof. -->
