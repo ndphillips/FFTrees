@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 
-# FFTrees 1.6.6.9000
+# FFTrees 1.6.6.9001
 
 <!-- Status badges: -->
 
@@ -37,7 +37,7 @@ And the development version from [GitHub](https://github.com/) with:
     #>   / \
     #>  F   O
     #>     / \
-    #>    F   Trees 1.6.6.9000
+    #>    F   Trees 1.6.6.9001
     #> 
     #> Email: Nathaniel.D.Phillips.is@gmail.com
     #> FFTrees.guide() opens the main guide.
