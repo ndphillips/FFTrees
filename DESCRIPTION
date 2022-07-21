@@ -12,7 +12,8 @@ Maintainer: Nathaniel Phillips <Nathaniel.D.Phillips.is@gmail.com>
 Description: Create, visualize, and test fast-and-frugal decision trees (FFTs) using methods described in Phillips, Neth, Woike & Gaissmaier. (2017). FFTs are very simple decision trees for
     binary classification problems. FFTs can be preferable to more complex algorithms because they are easy to communicate, 
     require very little information, and are robust against overfitting.
-LazyData: TRUE
+LazyData: true
+Encoding: UTF-8
 Depends: R(>= 3.5.0)
 Imports:
     rpart,
@@ -29,9 +30,9 @@ Imports:
     testthat,
     magrittr,
     tidyselect
+Suggests: knitr,
+    rmarkdown
 License: CC0
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 7.2.0
-Suggests: knitr,
-    rmarkdown
 VignetteBuilder: knitr
