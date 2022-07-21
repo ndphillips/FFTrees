@@ -10,50 +10,67 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = FALSE}
+```{r setup, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
-
-```{r, echo = F, message = F, results = 'hide'}
+```{r load-pkg-1, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
-The following example follows the tutorial presented in @phillips2017FFTrees *FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.* available online at [https://journal.sjdm.org/17/17217/jdm17217.pdf](https://journal.sjdm.org/17/17217/jdm17217.pdf)
+
+## Creating FFTs for heart disease
+
+The following example follows the tutorial presented in @phillips2017FFTrees (freely available in [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf)):
+
+- Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
+FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
+_Judgment and Decision Making_, _12_ (4), 344–368.
+
+This tutorial explains how to use the **FFTrees** package to create, evaluate and visualize FFTs in four simple steps. 
 
 
-## Step 1: Install and load the FFTrees package
+### Step\ 1: Install and load the FFTrees package
 
-You can install FFTrees from CRAN using `install.packages()` (you only need to do this once)
+We can install FFTrees from CRAN using `install.packages()`. (We only need to do this once.) 
 
-```{r, eval = FALSE}
-# Install the package from CRAN
+```{r install-pkg, eval = FALSE}
+# Install the package from CRAN:
 install.packages("FFTrees")
 ```
 
-To use the package, you first need to load it into your current R session. You can load the package using `library()`
+To use the package, we first need to load it into your current R session. 
+We load the package using `library()`: 
 
-```{r, eval = TRUE, message = TRUE}
-# Load the package
+```{r load-pkg-2, eval = TRUE, message = TRUE}
+# Load the package:
 library(FFTrees)
 ```
 
-The package contains several guides (like this one). To open the main guide, run `FFTrees.guide()`
+The **FFTrees** package contains several vignettes that guide through the package's functionality (like this one). 
+To open the main guide, run `FFTrees.guide()`: 
 
-```{r, eval = FALSE}
-# Open the main package guide
-FFTrees.guide() 
+```{r load-guide, eval = FALSE}
+# Open the main package guide: 
+FFTrees.guide()
 ```
 
-## Step 2: Create FFTs from training data (and test on testing data)
 
-In this example, we will create FFTs from a heart disease data set. The training data are in an object called `heart.train`, and the testing data are in an object called `heart.test`. For these data, we will predict `diagnosis`, a binary criterion that indicates whether each patent has or does not have heart disease (i.e., is at high-risk or low-risk).
+### Step\ 2: Create FFTs from training data (and test on testing data)
 
-To create the `FFTrees` object, we'll use the function `FFTrees()` with two main arguments: `formula`, a formula indicating the binary criterion as a function of one or more predictors to be considered for the tree (the shorthand `formula = diagnosis ~ .` means to include all predictors), and `data`, the training data.
+In this example, we will create FFTs from a heart disease data set. 
+The training data are in an object called `heart.train`, and the testing data are in an object called `heart.test`. For these data, we will predict `diagnosis`, a binary criterion that indicates whether each patent has or does not have heart disease (i.e., is at high-risk or low-risk).
 
-```{r, message = FALSE}
-# Create an FFTrees object
+To create an `FFTrees` object, we use the function `FFTrees()` with two main arguments: 
 
+1. `formula` expects a formula indicating a binary criterion variable as a function of one or more predictor variable(s) to be considered for the tree. The shorthand `formula = diagnosis ~ .` means to include all predictor variables. 
+
+2. `data` specifies the training data used to construct the FFTs (which must include the criterion variable). 
+
+Here is how we can construct our first FFTs: 
+
+```{r fft-make, message = FALSE}
+# Create an FFTrees object:
 heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
                      data = heart.train,                # Training data
                      data.test = heart.test,            # Testing data
@@ -61,50 +78,56 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) pr
                      decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
 ```
 
-The resulting trees, decisions, and accuracy statistics are now stored in the `FFTrees` object called `heart.fft`.
+The resulting trees, decisions, and accuracy statistics are now stored in an `FFTrees` object called `heart.fft`.
 
 #### Other arguments
 
-- `algorithm`: There are two different algorithms available to build FFTs "ifan" [@phillips2017FFTrees] and "dfan"[@phillips2017FFTrees]. ("max" [@martignon2008categorization], and "zigzag" [@martignon2008categorization] are no longer supported)
+- `algorithm`: There are two different algorithms available to build FFTs `"ifan"` [@phillips2017FFTrees] and `"dfan"` [@phillips2017FFTrees]. (`"max"` [@martignon2008categorization], and `"zigzag"` [@martignon2008categorization] are no longer supported). 
+
 - `max.levels`: Changes the maximum number of levels allowed in the tree.
 
 The following arguments apply to the "ifan" and "dfan" algorithms only:
 
-- `goal.chase`: The `goal.chase` argument changes which statistic is maximized during tree construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost". The default is "wacc" with a sensitivity weight of 0.50 (which is identical to "bacc")
-- `goal`: The `goal` argument changes which statistic is maximized when *selecting* trees after construction (for the "ifan" and "dfan" algorithms only). Possible arguments include "acc", "bacc", "wacc", "dprime", and "cost".
-- `my.tree`: You can define a tree verbally as a sentence using the `my.tree` argument. See [Defining an FFT verbally](FFTrees_mytree.html) for examples.
+- `goal.chase`: The `goal.chase` argument changes which statistic is maximized during tree construction (for the `"ifan"` and `"dfan"` algorithms). Possible arguments include `"acc"`, `"bacc"`, `"wacc"`, `"dprime"`, and `"cost"`. The default is `"wacc"` with a sensitivity weight of\ 0.50 (which renders it identical to `"bacc"`). 
 
-## Step 3: Inspect and summarize FFTs
+- `goal`: The `goal` argument changes which statistic is maximized when _selecting_ trees after construction (for the `"ifan"` and `"dfan"` algorithms). Possible arguments include `"acc"`, `"bacc"`, `"wacc"`, `"dprime"`, and `"cost"`.
 
-Now we can inspect and summarize the trees. We will start by printing the object to return basic information to the console:
+- `my.tree`: We can define a tree verbally as a sentence using the `my.tree` argument. 
+See the [Defining an FFT verbally](FFTrees_mytree.html) vignette for details. 
 
-```{r}
-heart.fft   # Print the object
+
+### Step\ 3: Inspect and summarize FFTs
+
+Now we can inspect and summarize the generated decision trees. 
+We will start by printing the `FFTrees` object to return basic information to the console: 
+
+```{r fft-print}
+# Print an FFTrees object:
+heart.fft  
 ```
 
 The output tells us several pieces of information:
 
-- The tree with the highest weighted sensitivity `wacc` with a sensitivity weight of 0.5 is selected as the best tree.
-- The best tree, FFT \#1 uses three cues: `thal`, `cp`, and `ca`.
-- Several summary statistics for this tree in training and test data are then summarized.
+- The tree with the highest weighted sensitivity\ `wacc` with a sensitivity weight of\ 0.5 is selected as the best tree.
 
-All statistics can be derived from a 2 x 2 confusion table like the one below. For definitions of all accuracy statistics, look at the [accuracy statistic definitions](AccuracyStatistics.html) vignette.
+- Here, the best tree, FFT\ \#1 uses three cues: `thal`, `cp`, and `ca`.
 
-```{r fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "Confusion table illustrating frequencies of 4 possible outcomes."}
+- Several summary statistics for this tree in training and test data are summarized.
+
+All statistics to evaluate each tree can be derived from a 2\ x\ 2 confusion table:  
+
+```{r fft-confusion-table, out.width="50%", echo = FALSE, fig.cap = "**Table 1**: A 2x2 confusion table illustrating the types of frequency counts for 4 possible outcomes."}
 knitr::include_graphics("../inst/confusiontable.jpg")
 ```
 
+For definitions of all accuracy statistics, see the [accuracy statistics](AccuracyStatistics.html) vignette.
 
+### Step\ 4: Visualise the final FFT
 
-## Step 4: Visualise the final FFT
+Use `plot()` to visualize an FFT (an `FFTrees` object):
 
-[Plotting FFTrees](FFTrees_plot.html)
-
-To visualize a tree, use `plot()`:
-
-```{r, fig.width = 6.5, fig.height = 6}
-# Plot the best FFT when applied to the test data
-
+```{r fft-plot, fig.width = 6.5, fig.height = 6}
+# Plot the best FFT when applied to the test data:
 plot(heart.fft,              # An FFTrees object
      data = "test")          # Which data to plot? "train" or "test"
 ```
@@ -112,11 +135,13 @@ plot(heart.fft,              # An FFTrees object
 #### Other arguments
 
 - `tree`: Which tree in the object should beplotted? To plot a tree other than the best fitting tree (FFT \#1), just specify another tree as an integer (e.g.; `plot(heart.fft, tree = 2)`).
+
 - `data`: For which dataset should statistics be shown? Either `data = "train"` (the default), or `data = "test"`
+
 - `stats`: Should accuracy statistics be shown with the tree? To show only the tree, without any performance statistics, include the argument `stats = FALSE`
 
-```{r, fig.width = 10, fig.height = 6}
-# Plot only the tree without accuracy statistics
+```{r fft-no-stats, fig.width = 8, fig.height = 5, fig.align='center'}
+# Plot only the tree, without accuracy statistics:
 plot(heart.fft, 
      stats = FALSE)
 ```
@@ -125,44 +150,43 @@ plot(heart.fft,
 
 - `what`: To show individual cue accuracies in ROC space, include the argument `what = "cues"`:
 
-```{r}
+```{r fft-cues}
 # Show marginal cue accuracies in ROC space
 plot(heart.fft, 
      what = "cues")
 ```
 
+See the [Plotting FFTrees](FFTrees_plot.html) vignette for details on plotting FFTs. 
 
 
-## Additional Steps
+### Additional Steps
 
-### Accesing outputs
+#### Accessing outputs
 
-An FFTrees object contains many different outputs, to see them all, run `names()`
+An `FFTrees` object contains many different outputs, to see them all, run `names()`
 
-```{r}
-# Show the names of all of the outputs in heart.fft
-
+```{r fft-names}
+# Show the names of all of the outputs in heart.fft:
 names(heart.fft)
 ```
 
-### Predicting new data
+#### Predicting for new data
 
-To predict classifications for a new dataset, use the standard `predict()` function. For example, here's how to predict the classifications for data in the `heartdisease` object (which actually is just a combination of `heart.train` and `heart.test`)
+To predict classifications for a new dataset, use the standard `predict()` function. 
+For example, here's how to predict the classifications for data in the `heartdisease` object (which actually is just a combination of `heart.train` and `heart.test`): 
 
-```{r, eval = FALSE}
-# Predict classifications for a new dataset
+```{r fft-predict, eval = FALSE}
+# Predict classifications for a new dataset:
 predict(heart.fft, 
         data = heartdisease)
 ```
 
-### Defining an FFT in words
+#### Defining an FFT in words
 
-[Defining an FFT verbally](FFTrees_mytree.html)
+To define a specific FFT and apply this tree to data, we can define it by providing a verbal description to the `my.tree` argument: 
 
-If you want to define a specific FFT and apply that tree to data, you can define it using the `my.tree` argument.
-
-```{r}
-# Create an FFT manuly
+```{r fft-my-tree}
+# Create an FFT manually (from description):
 my.heart.fft <- FFTrees(formula = diagnosis ~.,
                         data = heart.train,
                         data.test = heart.test,
@@ -172,11 +196,13 @@ my.heart.fft <- FFTrees(formula = diagnosis ~.,
                                    If age <= 35, predict False. Otherwise, predict True")
 ```
 
-Here is the result (It's actually not too bad, although the first node is pretty worthless)
+Here is the resulting tree: (It's actually not too bad, although the first node is pretty worthless)
 
-```{r, fig.width = 6.5, fig.height = 6}
+```{r plot-my-fft, fig.width = 6.5, fig.height = 6}
 plot(my.heart.fft)
 ```
+
+See the [Defining an FFT verbally](FFTrees_mytree.html) vignette for details on defining FFTs from verbal descriptions. 
 
 
 ## Vignettes
