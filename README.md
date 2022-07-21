@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 
-# FFTrees 1.6.6.9000
+# FFTrees 1.6.6.9001
 
 <!-- Status badges: -->
 
@@ -42,7 +42,7 @@ library(FFTrees)
 #>   / \
 #>  F   O
 #>     / \
-#>    F   Trees 1.6.6.9000
+#>    F   Trees 1.6.6.9001
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
 #> FFTrees.guide() opens the main guide.
@@ -235,8 +235,8 @@ have an article introducing the **FFTrees** package in the journal
 *Judgment and Decision Making*, entitled [FFTrees: A toolbox to create,
 visualize,and evaluate fast-and-frugal decision
 trees](https://journal.sjdm.org/17/17217/jdm17217.pdf)
-\[ [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
-[PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf) \].
+( [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+[PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf) ).
 
 **Citation** (in APA format):
 
@@ -291,6 +291,6 @@ Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2055283105915586
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-20.\]
+\[File `README.Rmd` last updated on 2022-07-21.\]
 
 <!-- eof. -->

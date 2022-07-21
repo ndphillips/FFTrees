@@ -1,0 +1,24 @@
+citHeader("To cite FFTrees in derivations and publications use:")
+
+citEntry(entry = "article",
+         title        = "FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees",
+         author       = personList(as.person("Nathaniel D Phillips"),
+                                   as.person("Hansjörg Neth"),
+                                   as.person("Jan K Woike"),
+                                   as.person("Wolfgang Gaissmaier")),
+         year         = "2017",
+         journal      = "Judgment and Decision Making",
+         volume       = "12",
+         number       = "4",
+         pages        = "344--368",
+         address      = "PDF at <https://journal.sjdm.org/17/17217/jdm17217.pdf>",
+         note         = "R package (version 1.6.6, July 18, 2022)",
+         url          = "https://CRAN.R-project.org/package=FFTrees",
+
+         textVersion  =
+           paste("Phillips, N. D., Neth, H., Woike, J. K., & Gaissmaier, W. (2017).",
+                 "FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.",
+                 "Judgment and Decision Making, 12 (4), 344--368.",
+                 "PDF at <https://journal.sjdm.org/17/17217/jdm17217.pdf>.",
+                 "R package at <https://CRAN.R-project.org/package=FFTrees>.")
+         )
