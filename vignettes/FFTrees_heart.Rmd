@@ -22,7 +22,7 @@ library(FFTrees)
 
 ## Creating FFTs for heart disease
 
-The following example follows the tutorial presented in @phillips2017FFTrees (freely available in [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf)):
+The following example follows the tutorial presented in @phillips2017FFTrees (freely available in [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)):
 
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
