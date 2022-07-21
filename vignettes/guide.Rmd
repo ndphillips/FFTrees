@@ -11,13 +11,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = F, message = FALSE, results = 'hide'}
+```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
+
 ## Fast-and-Frugal Trees (FFTs)
 
-```{r fig1, fig.width = 7.2, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease status"}
+```{r fig-1, fig.width = 7.2, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease status."}
 # Create a fast-and-frugal tree (FFT) predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,

@@ -11,15 +11,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r load-pkg, echo = F, message = F, results = 'hide'}
+```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
+```
+
+
+```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
 ## Visualizing FFTrees 
 
-We can visualize an `FFTrees` object\ `x` in one of two ways: 
-First, we can visualize cue accuracies with `plot(x, what = 'cues')`. 
-Second, we can visualize individual trees and performance statistics with `plot(x)`.
+The main function `FFTrees()` creates fast-and-frugal trees (FFTs) as R objects of the type `FFTrees`. 
+We can visualize an `FFTrees` object\ `x` in two main ways: 
+
+1. by visualizing cue accuracies with `plot(x, what = 'cues')`. 
+
+2. by visualizing individual trees and performance statistics with `plot(x)`.
+
+In the following, we illustrate both ways by creating FFTs based on the `titanic` dataset (included in the **FFTrees** package). 
+
 
 ### The Titanic data 
 
@@ -33,6 +44,7 @@ For each passenger, we know what passenger class (s)he was, his/her age, his/her
 Here is how the first few rows of the dataframe look:
 
 ```{r titanic-data-head}
+# Inspect titanic data: 
 head(titanic)
 ```
 
@@ -41,8 +53,7 @@ Our goal is to build FFTrees that predict whether or not a passenger will surviv
 First, let's create an `FFTrees` object (called `titanic.fft`) from the `titanic` dataset: 
 
 ```{r titanic-fft, message = FALSE, results = 'hide'}
-# Create fast-and-frugal trees from the titanic data
-
+# Create fast-and-frugal trees from the titanic data:
 titanic.fft <- FFTrees(formula = survived ~.,
                        data = titanic,
                        main = "Titanic", 
@@ -54,37 +65,51 @@ titanic.fft <- FFTrees(formula = survived ~.,
 We can visualize individual cue accuracies (specifically their sensitivities and specificities) by including the `what = 'cues'` argument within the `plot()` function. 
 Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
 
-```{r titanic-cues, fig.width = 6, fig.height = 6.5, fig.align = 'center', out.width = "80%"}
+```{r titanic-cues, fig.width = 6, fig.height = 6.5, fig.align = 'center', out.width = "80%", fig.cap="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset."}
 plot(titanic.fft,
      what = 'cues')
 ```
 
-Wow. None of the cues did very well on their own. Good performing cues should be in the top left hand of the graph (i.e.; low false alarm rate and high hit rate). It looks like the best cue was `sex`, followed by `class`. `age` was a pretty terrible cue.
+Given the axes of this plot, good performing cues should be near the top left corner of the graph (i.e., low false alarm rate and high hit rate). 
+This implies here that _none_ of the cues predicts very well on its own. It looks like the best cue is `sex` (indicated as\ 1), followed by `class` (2). By contrast, `age` (3) seems a pretty terrible cue for predicting survival. 
+
 
 ### Plotting a tree
 
-To plot the tree from an FFTrees object, use `plot()`. Let's plot one of the trees:
+To plot the tree from an `FFTrees` object, use `plot()`. Let's plot one of the trees (the best one, given our current goal):
 
-```{r titanic-plot, fig.width = 6, fig.height = 6.5, fig.align = 'center'}
+```{r titanic-plot, fig.width = 6, fig.height = 6.5, fig.align = 'center', fig.cap="**Figure 2**: Plotting the best FFT of an `FFTrees` object."}
 plot(titanic.fft)
 ```
 
-The resulting figure contains a lot of information, Here are its main elements:
+The resulting figure contains a lot of information in various panels. 
+Here are its main elements: 
 
-- The top row of the plot shows the main dataset information. 
+1. _Basic dataset information_: 
+The top row of the plot shows basic information on the current dataset: 
+Its population size\ (N) and the baseline frequencies of the two categories of the criterion variable. 
 
-- The middle row shows the tree as well as how many examples were classified at each level in the tree. 
-For example, this tree could be understood as: "If the person is *not* male, predict they survived. Then, if the person is neither in first nor second class, predict they died. Finally, if the person is a child, predict they survived."
+2. _FFT and classification performance_: 
+The middle row shows the tree (in the center) as well as how many cases (here: persons) were classified at each level in the tree (on either side). 
+For example, the current tree (Tree\ #1 of\ 4) can be understood as: 
+    - If a person is female, predict that they survived. 
+    - Otherwise, if a person is neither in first nor in second class, predict that they died. 
+    - Finally, if the person is a child, predict they survived,  otherwise predict that they died. 
 
-- The bottom row shows general performance statistics of the tree. 
-If fitting data (i.e.; data used to build the tree) are displayed, we'll see a "Fitting" label. 
+3. _Accuracy and performance information_: 
+The bottom row shows general performance statistics of the FFT:  
+The current tree was trained on the entire dataset of `r nrow(titanic)`\ cases. 
+If fitting data (i.e., data used to build the tree) are displayed, we'll see a "Fitting" label. 
 If a testing dataset separate from the one used to build the tree is used, we'll see a "Prediction" label. 
-The classification table on the left side shows the relationship between tree decisions and the truth. 
-CR (Correct Rejection) and H (Hit) are correct decisions. MI (Miss) and FA (False-alarm) are incorrect decisions. 
-The next three levels show cumulative tree performance in terms of Specificity, Hit Rate, D-prime, and AUC (area under the curve). 
-Finally, the plot on the right shows an ROC curve comparing the performance of all trees in the FFTrees object. 
-Additionally, the performance of logistic regression (blue) and CART (red) are shown. 
-The tree plotted in the middle row is highlighted in a solid green color (i the case above, tree #3).
+
+    - The classification table on the left side shows the relationship between the true criterion states (as columns) and predicted decisions (as rows). The abbreviations _hi_ (hits) and _cr_ (Correct rejections) denote correct decisions; _mi_ (misses) and _fa_ (false-alarms) denote incorrect decisions.
+    
+    - A range of vertical levels show the tree's cumulative performance in terms of frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balance accuracy (see [Accuracy statistics](AccuracyStatistics.html) for details). 
+    
+    - Finally, the plot on the right shows an ROC\ curve comparing the performance of all trees in the `FFTrees` object. 
+    Additionally, the performance of logistic regression (blue) and CART (red) are shown. 
+    The tree plotted in the middle panel is highlighted in a solid green color (i.e., Figure\ 2 shows Tree\ #1). 
+
 
 ### Additional arguments
 
@@ -92,62 +117,74 @@ We can specify additional arguments to the `plot()` command that will change wha
 
 - `stats`: If you want to visualise a tree without any statistics, include the argument `stats = FALSE`:
 
-```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "70%"}
-# Show the best training titanic fast-and-frugal tree without statistics
+```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "70%", fig.cap="**Figure 3**: A plain FFT plot (without statistics).}
+# Show the best training FFT without statistics:
 plot(titanic.fft,
      stats = FALSE)
 ```
 
-- `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, `show.iconguide`: These arguments allow you to selectively turn on or turn off specific elements in the overall plot. Here are some examples:
+- `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, `show.iconguide`: 
+These arguments allow us to selectively turn on or turn off specific elements in the overall plot. 
+Here are some examples: 
 
-
-```{r titanic-args, fig.align = 'center', fig.height = 9, fig.width = 11, out.width = "70%"}
+```{r titanic-args, fig.align = 'center', fig.height = 9, fig.width = 11, out.width = "70%", fig.cap="**Figure 4**: Plotting selected elements."}
+# Hide some elements of the FFT plot: 
 plot(titanic.fft,
-     show.icons = FALSE,     # Turn off icons
-     show.iconguide = FALSE, # Turn off icon guide
-     show.header = FALSE     # Turn off header
+     show.icons = FALSE,     # hide icons
+     show.iconguide = FALSE, # hide icon guide
+     show.header = FALSE     # hide header
      )
 ```
 
-- `tree`: Which tree do you want to plot? You can specify an integer such as `tree = 2`, which will plot the tree #2 in the FFTrees object, or `tree = "best.train"` (the default) which will use the best training tree -- that is, the tree with the highest training `wacc` (weighted accuracy) value.
+- `tree`: Which tree do we want to plot? 
+We can either specify an integer value such as `tree = 2`, which will plot the Tree\ #2 in the `FFTrees` object, or `tree = "best.train"` (the default) which will use the best training tree ---\ that is, the tree with the highest training\ `wacc` (weighted accuracy) value. 
 
-- `data`: Which data do you want to apply the tree to? You can specify `data = "train"` or `data = "test"` to use the training or testing datasets stored in the `FFTrees` object. Alternatively, you can specify a new dataset (e.g.; `data = test.data`. If you specify a new dataset, the function will automatically apply the tree to the new data and calculate performance statistics (using the `predict.FFTrees()` function).
+- `data`: Which data do we want to apply the tree to? 
+We can specify `data = "train"` or `data = "test"` to use the training or testing datasets, respectively, stored in the `FFTrees` object. 
+Alternatively, you we specify a new dataset (e.g.; `data = test.data`. When specifying a new dataset, the function will automatically apply the tree to the new data and calculate performance statistics (using the `predict.FFTrees()` function). 
 
-For example, let's repeat the previous analysis, but now we'll create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50% training set, and a 50% testing set (note: you could also define an explicit test data set with the `data.test` argument)
+For example, we can repeat the previous analysis, but now let's create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50%\ training set, and a distinct 50%\ testing set. (Note: We could also define an explicit test data set with the `data.test` argument.) 
 
 ```{r titanic-pred, message = FALSE, results = 'hide'}
-set.seed(100) # For replicability of the training/test split
+set.seed(100)  # for replicability of the training/test split
 titanic.pred.fft <- FFTrees(formula = survived ~.,
                             data = titanic,
                             main = "Titanic", 
                             decision.labels = c("Died", "Survived"),
-                            train.p = .5)
+                            train.p = .5  # use 50% of the data for training
+                            )
 ```
 
-Here is the best training tree applied to the training data:
+Here is the best training tree applied to the _training_ data:
 
-```{r titanic-train, fig.width = 6, fig.height = 6.5, fig.align='center'}
+```{r titanic-train, fig.width = 6, fig.height = 6.5, fig.align='center', fig.cap="**Figure 5**: Plotting the best FFT on _training_ data."}
 plot(titanic.pred.fft,
      tree = 1)
 ```
 
-The best training tree (tree #1) had a high specificity of 92%, but a low hit rate of just 48%. However, as we can see in the ROC table, LR didn't perform much better, and CART did even worse than tree #3.
+The best training tree (Tree\ #1) had a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
+The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
+However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART did even worse than Tree\ #1.
 
-Now let's apply the same tree to the test dataset:
+Now let's apply the same tree to the _test_ data: 
 
-```{r titanic-test, fig.width = 6, fig.height = 6.5, fig.align='center'}
+```{r titanic-test, fig.width = 6, fig.height = 6.5, fig.align='center', fig.cap="**Figure 6**: Plotting the best FFT on _test_ data."}
 plot(titanic.pred.fft,
      tree = 1,
      data = "test")
 ```
 
-Let's visualise Tree\ #2, the most liberal tree (with the highest sensitivity): 
+Both the sensitivity and specificity values have decreased somewhat, which is typical when using a model (fitted on training data) for predicting new (test) data. 
 
-```{r titanic-viz-2, fig.width = 6, fig.height = 6.5, fig.align='center'}
+Let's visualize Tree\ #2, the most liberal tree (with the highest sensitivity): 
+
+```{r titanic-viz-2, fig.width = 6, fig.height = 6.5, fig.align='center', fig.cap="**Figure 7**: Plotting Tree\ #2."} 
 plot(titanic.pred.fft,
      tree = 2,
      data = "test")
 ```
+
+This alternative tree has a better sensitivity (of\ 60%), but its overall accuracy decreased to about baseline level (of\ 67%).  
 
 
 ## Vignettes

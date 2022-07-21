@@ -2,9 +2,9 @@
 title: "Creating FFTrees with FFTrees()"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl 
-output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Creating FFTrees with FFTrees()}
   %\VignetteEngine{knitr::rmarkdown}

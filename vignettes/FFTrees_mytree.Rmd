@@ -3,13 +3,15 @@ title: "Manually specifying FFTs"
 author: "Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: fft.bib
+csl: apa.csl 
 vignette: >
   %\VignetteIndexEntry{Manually specifying FFTs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = FALSE}
+```{r setup, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
                       fig.width = 7.5, 
                       fig.height = 7.5, 
@@ -20,31 +22,36 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 
-```{r, echo = F, message = F, results = 'hide'}
+```{r load-pkg-0, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
+
+## Manually specifying FFTs 
+
+We typically create fast-and-frugal trees (FFTs) from data by using the `FFTrees()` function (see the [Main guide](guide.html), the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) and for details). 
+However, we sometimes may want to design and test some specific FFT
 
 There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function: 
 
 1. as a sentence using the `my.tree` argument (the easier way), or  
-2. as a dataframe using the `tree.definitions` argument (the harder way).  
+2. as a data frame using the `tree.definitions` argument (the harder way).  
 
 Both of these methods will bypass the tree construction algorithms built into the **FFTrees** package.
 
 
-## `my.tree`
+### `my.tree`
 
 The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. When this argument is specified in `FFTrees()`, the function (specifically `wordstoFFT()` will try to extract the specified FFT from the argument.
 
-For example, let's look at the columns sex, age and thal in the heartdisease data:
+For example, let's look at the columns sex, age and thal in the `heartdisease` data:
 
-```{r}
+```{r data}
 head(heartdisease[c("sex", "age", "thal")])
 ```
 
 Here's how we could specify an FFT using these cues as a sentence:
 
-```{r, eval = FALSE}
+```{r fft-description, eval = FALSE}
 my.tree = "If sex = 1, predict True.
            If age < 45, predict False. 
            If thal = {fd, normal}, predict True. Otherwise, predict False"
@@ -61,7 +68,7 @@ Here are some notes on specifying trees manually:
 
 Now, let's pass the `my.tree` argument to `FFTrees()` to force apply our FFT to the heartdisease data:
 
-```{r}
+```{r my-tree}
 # Pass a verbally defined FFT to FFTrees with the my.tree argument
 my.heart.fft <- FFTrees(diagnosis ~.,
                         data = heartdisease,
@@ -73,17 +80,17 @@ my.heart.fft <- FFTrees(diagnosis ~.,
 
 Let's see how well our FFT did:
 
-```{r}
+```{r plot-my-tree}
 # Plot 
 plot(my.heart.fft)
 ```
 
-As you can see, this FFT is pretty terrible -- it has a high sensitivity, but a terrible specificity. 
+As you can see, this FFT is pretty terrible --- it has a high sensitivity (of\ 85%), but much lower specificity (of\ 63%). 
 
-Let's see if we can come up with a better one using the cues `thal`, `cp`, and `ca`
+Let's see if we can come up with a better FFT by using the cues\ `thal`, `cp`, and\ `ca`: 
 
-```{r}
-# Specify an FFt verbally with the my.tree argument
+```{r verbal-spec-fft}
+# Specify an FFt verbally with the my.tree argument: 
 my.heart.fft <- FFTrees(diagnosis ~.,
                         data = heartdisease,
                         my.tree = "If thal = {rd,fd}, predict True.
@@ -91,11 +98,11 @@ my.heart.fft <- FFTrees(diagnosis ~.,
                                    If ca > 1, predict True. 
                                    Otherwise, predict False")
 
-# Plot 
+# Plot resulting FFT:
 plot(my.heart.fft)
 ```
 
-This one looks much better!
+This FFT looks much better --- but check out whether you can create even better ones! 
 
 
 ## Vignettes

@@ -11,12 +11,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = FALSE}
+```{r setup, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
 ```
 
-
-```{r, echo = FALSE, message = FALSE, results = 'hide'}
+```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
