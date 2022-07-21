@@ -117,7 +117,7 @@ We can specify additional arguments to the `plot()` command that will change wha
 
 - `stats`: If you want to visualise a tree without any statistics, include the argument `stats = FALSE`:
 
-```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "70%", fig.cap="**Figure 3**: A plain FFT plot (without statistics).}
+```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "70%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
 # Show the best training FFT without statistics:
 plot(titanic.fft,
      stats = FALSE)
