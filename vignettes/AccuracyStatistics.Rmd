@@ -147,9 +147,12 @@ Now that we know where\ $mcu$ comes from, computing $pci$ (i.e., the _percentage
 
 <!-- Reference for further measures: -->
 
+
 ### Additional measures 
 
-For additional measures based on the frequency counts of a 2x2 matrix, see [Table 3](https://www.frontiersin.org/articles/10.3389/fpsyg.2020.567817/full#h5) of [@neth2021matrix]: 
+There is a wide range of additional measures that can be used to quantify classification performance. 
+Most of these can easily be computed from the numerical information provided in an `FFTrees` object. 
+For alternative measures based on the frequency counts of a 2x2\ matrix, see [Table 3](https://www.frontiersin.org/articles/10.3389/fpsyg.2020.567817/full#h5) of @neth2021matrix: 
 
 - Neth, H., Gradwohl, N., Streeb, D., Keim, D.A., & Gaissmaier, W. (2021). 
 Perspectives on the 2×2 matrix: Solving semantically distinct problems based on a shared structure of binary contingencies. _Frontiers in Psychology_, _11_, 567817. doi: [10.3389/fpsyg.2020.567817](https://doi.org/10.3389/fpsyg.2020.567817)
