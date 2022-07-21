@@ -143,7 +143,7 @@ Its overall _accuracy_ exceeds the data's baseline by a fair amount.
 ## Citation
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
-We have an article introducing the **FFTrees**  package in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) [\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf)\ ].  
+We have an article introducing the **FFTrees**  package in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) (\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](http://journal.sjdm.org/17/17217/jdm17217.pdf)\ ).  
 
 
 **Citation** (in APA format): 
