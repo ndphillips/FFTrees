@@ -1,6 +1,6 @@
 ---
 title: "Creating FFTrees with FFTrees()"
-author: "Nathaniel Phillips"
+author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -66,61 +66,88 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
                      data.test = heart.test)
 ```
 
-- If we wanted to only consider specific variables, like `sex` and `age`, for our trees, we could specify `formula = diagnosis ~ age + sex`. 
+<!-- Alternative formula: -->
+
+If we wanted to only consider specific variables, like\ `sex` and\ `age`, for our trees, we could specify `formula = diagnosis ~ age + sex`. 
 
 
 ### Elements of an `FFTrees` object
 
 The `FFTrees()` function returns an object of the `FFTrees` class. 
-There are many elements in an `FFTrees` object. Here are their names:
+There are many elements in an `FFTrees` object. 
+We can obtain these elements by printing their names: 
 
 ```{r print-names}
-# Print the names of the elements of an FFTrees object:
+# See the elements of an FFTrees object:
 names(heart.fft)
 ```
 
-<!-- ToDo: The following list seems outdated: -->
+Inspecting these elements provides a wealth of information on the range of FFTs contained in the current `FFTrees` object: 
 
-- `formula`: The formula used to create the FFTrees object.
-- `data.desc`: Basic information about the datasets.
-- `cue.accuracies`: Thresholds and marginal accuracies for each cue.
-- `tree.definitions`: Definitions of all trees in the object.
-- `tree.stats`: Classification statistics for all trees (tree definitions are also included here).
-- `level.stats`: Cumulative classification statistics for each level of each tree.
-- `decision`: Classification decisions for each case (row) for each tree (column).
-- `levelout`: The level at which each case (row) is classified for each tree (column).
-- `auc`: Area under the curve statistics
-- `params`: Parameters used in tree construction
-- `comp`: Models and statistics for alternative classification algorithms.
+<!-- Current list: -->
+
+- `criterion_name`: The name of the (predicted) criterion variable. 
+- `cue_names`: The names of all cue variables (predictors). 
+- `formula`: The formula used to create the `FFTrees` object. 
+- `trees`: Information on all trees in the object, with list elements that specify the definitions and performance of each FFT.
+- `data`: Information on the datasets used to train and test the FFTs. 
+- `params`: The parameters used for constructing FFTs. 
+- `competition`: Models and statistics of alternative classification algorithms.
+- `cues`: Information on all cue variables (predictors), with list elements that specify their thresholds and performance when training FFTs. 
+
+<!-- OLD list (seems outdated): -->
+
+<!-- - `formula`: The formula used to create the `FFTrees` object. -->
+<!-- - `data.desc`: Basic information about the datasets. -->
+<!-- - `cue.accuracies`: Thresholds and marginal accuracies for each cue. -->
+<!-- - `tree.definitions`: Definitions of all trees in the object. -->
+<!-- - `tree.stats`: Classification statistics for all trees (tree definitions are also included here). -->
+<!-- - `level.stats`: Cumulative classification statistics for each level of each tree. -->
+<!-- - `decision`: Classification decisions for each case (row) for each tree (column). -->
+<!-- - `levelout`: The level at which each case (row) is classified for each tree (column). -->
+<!-- - `auc`: Area under the curve statistics -->
+<!-- - `params`: Parameters used in tree construction.  -->
+<!-- - `comp`: Models and statistics for alternative classification algorithms. -->
+
+
+### Basic performance characteristics of FFTs 
 
 We can view basic information about the `FFTrees` object by printing its name. 
 The default tree construction algorithm `ifan` creates multiple trees with different exit structures. 
 When printing an `FFTrees` object, we automatically obtain the information about the tree with the highest value of the `goal` statistic. By default, the `goal` is set to weighed accuracy\ `wacc`:
 
-```{r print-fftrees-object}
-# Printing an FFTrees object shows details of the best tree, given the current goal:
+```{r print-fftrees-object-default}
+# Performance of the best tree, given the current goal:
 heart.fft
 ```
 
-Here is a description of the statistics provided:
+Here is a description of the statistics provided by default: 
 
-| Statistic| Long name | Definition |
-|:----- |:---------|:----------------------------------|
-| `n`   | N        | The number of cases considered    |
-| `mcu` | Mean cues used | On average, how many cues were needed to classify cases? 
-In other words, what percent of the available information was used on average? |
-| `pci` | Percent cues ignored | The percent of data that was _ignored_ when classifying cases with a given tree. 
-This is identical to `mcu / cues.n`, where `cues.n` is the total number of cues in the data. |
+| Statistic | Long name | Definition |
+|:----- |:--------- |:----------------------------------|
+| `N`   | Number of cases | The total number of cases considered. |
+| `mcu` | Mean cues used | On average, how many cues were needed to classify cases? In other words, what percent of the available information was used on average? |
+| `pci` | Percent cues ignored | The percent of data that was _ignored_ when classifying cases with a given tree. This is identical to `mcu / cues.n`, where `cues.n` is the total number of cues in the data. |
 | `sens`| Sensitivity | The percentage (or conditional probability) of true positive cases correctly classified. |
 | `spec`| Specificity | The percentage (or conditional probability) of true negative cases correctly classified. |
 | `acc` | Accuracy    | The percentage of cases that were correctly classified. |
-| `wacc`| Weighted accuracy | The weighted average of sensitivity and specificity, 
-where sensitivity is weighted by `sens.w` (by default, `sens.w = .5`). |
+| `wacc`| Weighted accuracy | The weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, `sens.w = .5`). |
+
+**Table 1**: Description of FFTs' basic accuracy and speed/frugality statistics. 
+
+<!-- Same for alternative FFTs: -->
+
+To obtain the same information for another FFT of an `FFTrees` object, we can call `print()` with a numeric `tree` parameter. For instance, the following expression would provide the basic performance characteristics of Tree\ 3:
+
+```{r print-fftrees-object-else, eval = FALSE}
+# Performance of alternative FFTs (Tree 3) in an FFTrees object: 
+print(heart.fft, tree = 3)
+```
 
 
-### Cue accuracy statistics 
+### Cue performance information 
 
-Each tree has a decision threshold for each cue (regardless of whether or not it is actually used in the tree) that maximizes the `goal` value of that cue when it is applied to the entire training dataset. 
+Each FFT has a decision threshold for each cue (regardless of whether or not it is actually used in the tree) that maximizes the `goal` value of that cue when it is applied to the entire training dataset. 
 We can obtain cue accuracy statistics using the calculated decision thresholds from the `cue.accuracies` list. 
 If the object has test data, we can see the marginal cue accuracies in the test data (using the thresholds calculated from the training data):
 
@@ -146,37 +173,54 @@ The `tree.definitions` data frame contains definitions (cues, classes, exits, th
 The combination of these five pieces of information (as well as their order), define and describe _how_ a tree makes decisions: 
 
 ```{r fft-definitions}
-# Print the definitions of all trees
+# See the definitions of all trees:
 heart.fft$trees$definitions
 ```
 
-To understand how to read these definitions, let's start by understanding tree `r heart.fft$trees$best$train`, the tree with the highest training weighted accuracy: 
+Separate levels in tree definitions are separated by colons\ (`;`). 
+To understand how to read these definitions, let's start by understanding Tree\ 1, the tree with the highest weighted accuracy during training: 
 
-Separate levels in tree definitions are separated by colons `;`. 
-For example, Tree\ #3 has three cues in the order `thal`, `cp`, `ca`. 
-The classes of the cues are\ `c` (character), `c` and\ `n` (numeric). 
-The decision exits for the cues are 1\ (positive), 0\ (negative), and\ 0.5 (both positive and negative). 
-This means that the first cue only makes positive decisions, the second cue only makes negative decisions, and the third cue makes _both_ positive and negative decisions. 
+<!-- Explaining Tree\ 1: -->
 
-The decision thresholds are `rd` and `fd` for the first cue, `a` for the second cue, and `0` for the third cue while the cue directions are `=` for the first cue, `=` for the second cue, and `>` for the third cue. 
-Note that cue directions indicate how the tree _would_ make positive decisions _if_ it had a positive exit for that cue. If the tree has a positive exit for the given cue, then cases that satisfy this threshold and direction are classified as positive. However, if the tree has only a negative exit for a given cue, then cases that do _not_ satisfy the given thresholds are classified as negative. 
+- _Nodes, classes, and cues_:  
 
-From this information, we can understand and verbalize Tree\ \#3 as follows: 
+    - Tree\ 1 has three cues in the order `thal`, `cp`, `ca`. 
+    
+    - The classes of the cues are\ `c` (character), `c` and\ `n` (numeric). 
 
-1. If `thal` is equal to either `rd` or `fd`, predict a positive criterion value. 
-2. Otherwise, if `cp` is not equal to `a`, predict a negative value. 
-3. Otherwise, if `ca` is greater than\ 0, predict a positive value,  
-else predict a negative value. 
+- _Exits, directions, and thresholds_: 
 
-We can use the `inwords()` function to automatically return a verbal description of the tree with the highest training accuracy (i.e., Tree\ #1) of an `FFTrees` object: 
+    - The decision _exits_ for the cues are 1\ (positive), 0\ (negative), and\ 0.5 (both positive and negative). This means that the first cue only makes positive decisions, the second cue only makes negative decisions, and the third cue makes _both_ positive and negative decisions.  
+    
+    - The decision _thresholds_ are `rd` and `fd` for the first cue, `a` for the second cue, and\ `0` for the third cue. 
+    
+    - The corresponding cue _directions_ are\ `=` for the first cue, `=` for the second cue, and\ `>` for the third cue. Note that cue directions indicate how the tree _would_ make positive decisions _if_ it had a positive exit for that cue. If the tree has a positive exit for the given cue, then cases that satisfy this threshold and direction are classified as having a _positive_ criterion value. However, if the tree has only a negative exit for a given cue, then cases that do _not_ satisfy the given thresholds are classified as _negative_. 
+
+<!-- As list of nodes: -->
+
+From this information, we can understand and verbalize Tree\ 1 as follows: 
+
+1. If `thal` is equal to either\ `rd` or\ `fd`, predict a _positive_ criterion value. 
+2. Otherwise, if `cp` is not equal to\ `a`, predict a _negative_ value. 
+3. Otherwise, if `ca` is greater than\ 0, predict a _positive_ value,   
+else predict a _negative_ value. 
+
+Note that `heart.fft$trees$definitions` also reveals that Tree\ 3 and Tree\ 5 use the same cues and cue directions as Tree\ 1. However, they differ in the exit structures of the first and second cues (or nodes). 
+
+<!-- ToDo: Mention option to edit data frame to design/modify FFTs here? -->
+
+<!-- Using inwords() for verbal description: -->
+
+Applying the `inwords()` function to an `FFTrees` object returns a verbal description of a tree. 
+For instance, to obtain a verbal description of the tree with the highest training accuracy (i.e., Tree\ #1), we can ask for: 
 
 ```{r fft-inwords}
-# Describe the best training tree (#1):
+# Describe the best training tree (i.e., Tree #1):
 inwords(heart.fft, tree = 1)
 ```
 
 
-### Accuracy statistics
+### Accuracy statistics of FFTs 
 
 The performance of an FFT on a specific dataset is characterized by a range of accuracy statistics. 
 Here are the training statistics for all trees in `heart.fft`: 
@@ -196,14 +240,14 @@ heart.fft$trees$stats$test
 See the [Accuracy statistics](AccuracyStatistics.html) vignette for the definitions of accuracy statistics used throughout the **FFTrees** package. 
 
 
-### Classification decisions
+### Classification decisions 
 
-The `decision` list contains the raw classification decisions for each tree and each case.
+The `decision` list contains the raw classification decisions for each tree and each case, as well as detailed information on the costs of each classification. 
 
-Here are is how decisions were made based on Tree\ #1: 
+For instance, here are the decisions made by Tree\ 1 on the training data: 
 
-```{r fft-decisions-1}
-# Inspect decisisions of Tree #1:
+```{r fft-decisions}
+# Inspect the decisions of Tree 1:
 heart.fft$trees$decisions$train$tree_1
 ```
 
@@ -211,7 +255,10 @@ heart.fft$trees$decisions$train$tree_1
 ### Predicting new cases with `predict()`
 
 Once we have created an `FFTrees` object, we can use it to predict new data using `predict()`. 
-In this example, we'll use the `heart.fft` object to make predictions for cases\ 1 through\ 10 of the `heartdisease` dataset. 
+
+<!-- Predicting cases / classification outcomes: -->
+
+First, we'll use the `heart.fft` object to make predictions for cases\ 1 through\ 10 of the `heartdisease` dataset. 
 By default, the tree with the best training\ `wacc` values is used to predict the value of the binary criterion variable: 
 
 ```{r fft-predict-class}
@@ -219,6 +266,10 @@ By default, the tree with the best training\ `wacc` values is used to predict th
 predict(heart.fft,
         newdata = heartdisease[1:10, ])
 ```
+
+If we wanted to use an alternative FFT of an `FFTrees` object for predicting the criterion outcomes of new data, we could specify its number in the `tree` argument of the `predict()` function. 
+
+<!-- Predicting probabilities: -->
 
 To predict class probabilities, we can include the `type = "prob"` argument. 
 This will return a matrix of class predictions, where the first column indicates the probabilities for a case being classified as\ 0 / `FALSE`, and the second column indicates the probability for a case being classified as\ 1 / `TRUE`:
@@ -242,7 +293,7 @@ predict(heart.fft,
 
 ### Visualising trees
 
-Once we have created an `FFTrees` object using the `FFTrees()` function we can visualize the tree (and ROC\ curves) using `plot()`. The following code will visualize the best training tree applied to the test data: 
+Once we have created an `FFTrees` object using the `FFTrees()` function we can visualize the tree (and ROC\ curves) using the `plot()` function. The following code will visualize the best training tree applied to the test data: 
 
 ```{r fft-plot, fig.width = 7, fig.height = 7}
 plot(heart.fft,
@@ -255,28 +306,32 @@ See the [Plotting FFTrees objects](FFTrees_plot.html) vignette for more details 
 
 ### Manually defining an FFT 
 
-We can also define a specific FFT to apply to a dataset using the `my.tree` argument. 
+We can also design a specific FFT and apply it to a dataset by using the `my.tree` argument of `FFTrees()`. 
 To do so, we specify the FFT as a sentence, making sure to correctly spell the cue names as they appear in the data. Sets of factor cues can be specified using (curly) brackets. 
-For example, we can manually define an FFT by using the sentence 
+
+For example, we can manually define an FFT by using the sentence: 
 
 - `"If chol > 300, predict True. If thal = {fd,rd}, predict False. Otherwise, predict True"`
 
-```{r fft-my-tree}
+```{r fft-my-tree-def}
 # Manually define a tree using the my.tree argument:
 myheart.fft <- FFTrees(diagnosis ~., 
                        data = heartdisease, 
                        my.tree = "If chol > 300, predict True. 
                                   If thal = {fd,rd}, predict False. 
                                   Otherwise, predict True")
+```
 
-# Here is the result
+Here is a plot of the resulting FFT:
+
+```{r fft-my-tree-plot}
 plot(myheart.fft, 
      main = "Specifying an FFT manually")
 ```
 
-As we can see, the performance of this particular tree is pretty terrible --- but this allows you to easily build better FFTs yourself. 
+As we can see, the performance of this particular tree is pretty terrible ---\ but this should motivate you to build better FFTs yourself! 
 
-See the [Specifying FFTs directly](FFTrees_mytree.html) vignette for more details on specifying FFTs from verbal descriptions. 
+See the [Specifying FFTs directly](FFTrees_mytree.html) vignette for more details on designing FFTs from their descriptions. 
 
 
 ## Vignettes

@@ -116,7 +116,36 @@ So check out whether you can create even better ones!
 
 
 <!-- ToDo: 2nd way to specify an FFT:  -->
+
 <!--       2. as a data frame using the `tree.definitions` argument  -->
+
+```{r design-fft-df, echo = FALSE, eval = FALSE}
+# Modify an existing FFT:
+heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                     data = heart.train,                # Training data
+                     data.test = heart.test,            # Testing data
+                     main = "Heart Disease",            # General label
+                     decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
+
+# Current FFTs:
+heart.fft$trees$definition
+
+# Start from an existing FFT: 
+my.fft <- heart.fft$trees$definitions[1, ]  
+
+# Make some changes:
+my.fft["tree"]  <- 8 
+my.fft["exits"] <- c("1;1;0.5")
+
+# Add to existing FFTs (as a new / 8th row):
+heart.fft$trees$definition[8, ] <- my.fft
+heart.fft$trees$n <- 8
+
+# Use new FFT to predict same / new data:
+predict(heart.fft, newdata = heartdisease, tree = 8)  # yields an ERROR...
+```
+
+See the section on **Tree definitions** in the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette for details on understanding and changing tree definitions. 
 
 
 ## Vignettes
