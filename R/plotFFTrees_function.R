@@ -1,49 +1,75 @@
 #' Plots an FFTrees object.
 #'
-#' @description Plots an FFTrees object created by the FFTrees() function.
-#' @param x A FFTrees object created from \code{"FFTrees()"}
-#' @param data One of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.
-#' @param what string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)
-#' @param tree integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"
-#' @param main character. The main plot label.
-#' @param hlines logical. Should horizontal panel separation lines be shown?
-#' @param cue.labels character. An optional string of labels for the cues / nodes.
-#' @param decision.labels character. A string vector of length 2 indicating the content-specific name for noise and signal cases.
-#' @param cue.cex numeric. The size of the cue labels.
-#' @param threshold.cex numeric. The size of the threshold labels.
-#' @param decision.cex numeric. The size of the decision labels.
-#' @param comp logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)
-#' @param stats logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.
-#' @param show.header,show.tree,show.confusion,show.levels,show.roc,show.icons,show.iconguide logical. Logical arguments indicating which specific elements of the plot to show.
-#' @param label.tree,label.performance string. Optional arguments to define lables for the tree and performance section(s).
-#' @param n.per.icon Number of cases per icon
+#' @description Plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#'
+#' @param x An \code{FFTrees} object created by the main \code{\link{FFTrees}} function.
+#' @param data The data to be plotted (as a string), either \code{'train'} or \test{'test'}. The corresponding dataset in object \code{x} will be used.
+#' @param what What should be plotted (as a string)?
+#' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
+#' \code{'cues'} shows the marginal accuracy of cues in an ROC space,
+#' \code{"roc"} shows an ROC curve of the tree(s).
+#'
+#' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
+#' To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
+#' use \code{"best.train"} or \code{"best.test"}.
+#'
+#' @param main The main plot label (as character string).
+#' @param hlines Should horizontal panel separation lines be shown (as a logical value)?
+#' @param cue.labels An optional string of labels for the cues / nodes (as a character vector).
+#' @param decision.labels A character vector of length 2 indicating the content-specific names for noise and signal predictions/exits.
+#' @param cue.cex The size of the cue labels (as numeric).
+#' @param threshold.cex The size of the threshold labels (as numeric).
+#' @param decision.cex The size of the decision labels (as numeric).
+#' @param comp Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available, as logical)?
+#' @param stats Should statistical information be plotted (as logical)?
+#' If \code{FALSE}, only the tree (without any reference to statistics) will be plotted.
+#'
+#' @param show.header Show header with basic data properties (in top panel, as logical)?
+#'
+#' @param show.iconguide Show icon guide (in middle panel, as logical)?
+#' @param show.tree Show nodes and exits of FFT (in middle panel, as logical)?
+#' @param show.icons Show exit cases as icon arrays (in middle panel, as logical)?
+#'
+#' @param show.confusion Show 2x2 confusion matrix (in bottom panel, as logical)?
+#' @param show.levels Show performance levels (in bottom panel, as logical)?
+#' @param show.roc Show ROC curve (in bottom panel, as logical)?
+
+#' @param label.tree
+#' @param label.performance string. Optional arguments to define labels for the tree and performance section(s).
+#'
+#' @param n.per.icon Number of cases per icon.
+#' @param level.type How should bottom levels be drawn (as a string)?
+#' Can be \code{"bar"} (the default) or \code{"line"}.
+#'
 #' @param which.tree deprecated argument, only for backwards compatibility, use \code{"tree"} instead.
-#' @param level.type string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}
-#' @param decision.names deprecated arguments.
+#' @param decision.names deprecated argument.
 #' @param ... Currently ignored.
+#'
+#' @return A plot vizualizing an FFT
+#'
+#' @examples
+#'
+#' # Create FFTs for the heartdisease data:
+#' heart.fft <- FFTrees(
+#'    formula = diagnosis ~ .,
+#'    data = heartdisease
+#'    )
+#'
+#' # Visualise the 1st tree:
+#' plot(heart.fft,
+#'      main = "Heart Disease Diagnosis",
+#'      decision.labels = c("Absent", "Present")
+#'      )
+#'
+#' # See the vignette for more details:
+#' vignette("FFTrees_plot", package = "FFTrees")
+#'
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb
+#'
 #' @export
-#' @return A plot vizualizing an FFT
-#' @examples
-#'
-#' # Create FFTrees of the heart disease data
-#' heart.fft <- FFTrees(
-#'   formula = diagnosis ~ .,
-#'   data = heartdisease
-#' )
-#'
-#' # Visualise the tree
-#' plot(heart.fft,
-#'   main = "Heart Disease Diagnosis",
-#'   decision.labels = c("Absent", "Present")
-#' )
-#'
-#'
-#' # See the vignette for more details
-#' vignette("FFTrees_plot", package = "FFTrees")
-#'
+
 plot.FFTrees <- function(x = NULL,
                          data = "train",
                          what = "tree",
@@ -72,9 +98,9 @@ plot.FFTrees <- function(x = NULL,
                          decision.names = NULL,
                          ...) {
 
-  # Check for invalid or missing arguments
+  # Check for invalid or missing arguments:
 
-  # Input validation
+  # Input validation:
   {
     par0 <- par(no.readonly = TRUE)
     on.exit(par(par0), add = TRUE)
@@ -97,7 +123,7 @@ plot.FFTrees <- function(x = NULL,
 
   if (what != "cues") {
 
-    # Determine layout
+    # Determine layout:
     {
       if (what == "tree") {
         if (stats == TRUE) {
@@ -159,8 +185,7 @@ plot.FFTrees <- function(x = NULL,
         show.top <- FALSE
       }
 
-
-      # Top, middle, bottom
+      # Top, middle, bottom:
       if (show.header & show.tree & (show.confusion | show.levels | show.roc)) {
         show.top <- TRUE
         show.middle <- TRUE
@@ -172,7 +197,7 @@ plot.FFTrees <- function(x = NULL,
         )
       }
 
-      # Top and middle
+      # Top and middle:
       if (show.header & show.tree & (show.confusion == FALSE & show.levels == FALSE & show.roc == FALSE)) {
         show.top <- TRUE
         show.middle <- TRUE
@@ -180,11 +205,10 @@ plot.FFTrees <- function(x = NULL,
 
         layout(matrix(1:2, nrow = 2, ncol = 1),
                widths = c(6),
-               heights = c(1.2, 3)
-        )
+               heights = c(1.2, 3))
       }
 
-      # Middle and bottom
+      # Middle and bottom:
       if (show.header == FALSE & show.tree & (show.confusion | show.levels | show.roc)) {
         show.top <- FALSE
         show.middle <- TRUE
@@ -196,7 +220,7 @@ plot.FFTrees <- function(x = NULL,
         )
       }
 
-      # Middle
+      # Middle:
       if (show.header == FALSE & show.tree & (show.confusion == FALSE & show.levels == FALSE & show.roc == FALSE)) {
         show.top <- FALSE
         show.middle <- TRUE
@@ -208,7 +232,7 @@ plot.FFTrees <- function(x = NULL,
         )
       }
 
-      # Bottom
+      # Bottom:
       if (show.header == FALSE & show.tree == FALSE) {
         show.top <- FALSE
         show.middle <- FALSE
