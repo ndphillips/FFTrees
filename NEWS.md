@@ -1,5 +1,11 @@
 
-# FFTrees 1.6
+# FFTrees 1.6+
+
+Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees):
+
+* Fixed bug to show correct point labels in ROC curve panel of `plot.FFTrees()`. 
+* Revised vignettes. 
+
 
 ## 1.6.6
 
@@ -23,9 +29,9 @@
 
 ## 1.6.1
 
-* `plot.FFTrees` no longer saves graphic params changed in `par()`. 
-* `plot.FFTRrees`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`. 
-* Deprecation notes in `plot.FFTrees` are now returned as warnings, not messages. 
+* `plot.FFTrees()` no longer saves graphic params changed in `par()`. 
+* `plot.FFTRrees()`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`. 
+* Deprecation notes in `plot.FFTrees()` are now returned as warnings, not messages. 
 
 
 # FFTrees 1.5
@@ -41,7 +47,8 @@
 - FFTrees objects have a nicer internal structure.
 - Added tests throughout (finally). 
 - Extensive code cleanup, which should speed things up.
-- New print method which includes an ASCII confusion matrix. 
+- New print method includes an ASCII confusion matrix. 
+
 
 # FFTrees 1.4
 
@@ -51,6 +58,7 @@
 - Many inputs such as `cost.cues` and `cost.outcomes` are now specified as named lists to avoid confusion.
 - New cost outputs separate costs from cues, outcomes, and total costs.
 - Changes to input defaults for `goal` and `goal.chase`.
+
 
 # FFTrees 1.3
 
@@ -92,6 +100,7 @@
 
 - Added support for two FFT construction algorithms from Martignon et al. (2008): `"zigzag"` and `"max"`. The algorithms are contained in the file `heuristic_algorithm.R` and can be implemented in `FFTrees()` as arguments to `algorithm`.
 
+
 # FFTrees 1.2
 
 ## 1.2.3
@@ -124,6 +133,7 @@
 
 - Bug-fixes
     - Fixed a bug where levels with no classifications are not plotted correctly.
+
 
 ## FFTrees 1.1
 
@@ -162,6 +172,6 @@
 
 ---- 
 
-[File `NEWS.md` last updated on 2022-07-20.] 
+[File `NEWS.md` last updated on 2022-07-22.] 
 
 <!-- eof. -->
