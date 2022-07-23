@@ -1,14 +1,20 @@
-#' Visualizes cue accuracies from an FFTrees object in a ROC space
+#' Visualizes cue accuracies in ROC space.
 #'
-#' @param x An FFTrees object
-#' @param data A string indicating whether or not to show training ("train") or testing ("test") cue accuracies
-#' @param cue.accuracies dataframe. An optional dataframe specifying cue accuracies directly (without specifying an FFTrees object x)
-#' @param main Main plot description
-#' @param top An integer indicating how many of the top cues to highlight
+#' @description \code{showcues} plots the cue accuracies of an \code{FFTrees} object
+#' created by the \code{\link{FFTrees}} function as points in ROC space.
+#'
+#' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#' @param data A string indicating whether or not to show training (\code{"train"}) or testing (\code{"test"}) cue accuracies
+#' @param cue.accuracies An optional dataframe specifying cue accuracies directly (without specifying an \code{FFTrees} object x)
+#' @param main Main plot description.
+#' @param top How many of the top cues should be highlighted (as an integer)?
+#'
+#' @return A plot showing cue accuracies (of an \code{FFTrees} object) in ROC space.
+#'
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
-#' @return A plot showing cue accuracies from an FFTrees object in a ROC space
-#' @export
 #'
+#' @export
+
 showcues <- function(x = NULL,
                      data = "train",
                      cue.accuracies = NULL,
