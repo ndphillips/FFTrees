@@ -20,11 +20,14 @@ showcues <- function(x = NULL,
                      cue.accuracies = NULL,
                      main = NULL,
                      top = 5) {
+
+  # preparations:
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 
-  palette <- rep(gray(.5, .5), length.out = top)
+  palette <- rep(gray(.5, .5), length.out = top)  # colors
 
+  # read inputs:
   if (is.null(x) == FALSE) {
     goal <- x$params$goal
 
@@ -56,15 +59,14 @@ showcues <- function(x = NULL,
 
   cue.df$rank <- rank(-cue.df$wacc, ties.method = "first")
 
-
-  # Order by goal.threshold and change column order
+  # Order by goal.threshold and change column order:
   ord_new <- order(cue.df$rank)
 
   cue.df <- cue.df[ord_new, ]
 
   cue.df$col <- rep(palette, length.out = nrow(cue.df))
 
-  # GENERAL PLOTTING SPACE
+  # GENERAL PLOTTING SPACE:
 
   if (is.null(main)) {
     if (is.null(x$params$main)) {
@@ -74,15 +76,18 @@ showcues <- function(x = NULL,
     }
   }
 
+  # Main plot:
   plot(1,
     xlim = c(0, 1), ylim = c(0, 1), type = "n",
-    xlab = "1 - Specificity", ylab = "Sensitivity", main = main,
+    main = main,
+    xlab = expression(1 - Specificity), # was: "1 - Specificity",
+    ylab = "Sensitivity",
     yaxt = "n", xaxt = "n"
   )
 
+  # axes:
   axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
   axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
-
 
   # if(data == "test") {mtext("Testing", 3, line = .5, cex = 1)}
   # if(data == "train") {mtext("Training", 3, line = .5, cex = 1)}
@@ -94,7 +99,7 @@ showcues <- function(x = NULL,
   abline(v = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1))
   abline(a = 0, b = 1, col = gray(.7), lty = 1)
 
-  # Non-top cues
+  # Non-top cues:
 
   if (any(cue.df$rank > top)) {
     with(cue.df[cue.df$rank > top, ], points(1 - spec, sens, cex = 1))
@@ -107,9 +112,10 @@ showcues <- function(x = NULL,
     ))
   }
 
-  # Top x cues
+  # Top x cues:
 
   for (i in top:1) {
+
     with(
       cue.df[cue.df$rank == i, ],
       points(
@@ -125,10 +131,10 @@ showcues <- function(x = NULL,
       # pos = 3,
       cex = 1
     ))
-  }
 
+  } # for (i in top:1)..
 
-  # Bottom right label
+  # Bottom right label:
   location.df <- data.frame(
     element = c("points", "point.num", "cue.name", "cue.thresh", "sens", "spec", "wacc"),
     x.loc = c(.5, .5, .67, .68, .83, .9, .97),
@@ -146,17 +152,16 @@ showcues <- function(x = NULL,
   cue.lab.y <- rev(seq((cue.box.y0 + cue.lab.h / 2), cue.box.y1 - cue.lab.h / 2, length.out = top))
   cue.sep.y <- seq(cue.box.y0 + cue.lab.h, cue.box.y1 - cue.lab.h, length.out = top - 1)
 
-  header.y <- mean(c(cue.box.y1, .48))
+  header.y  <- mean(c(cue.box.y1, .48))
   label.cex <- .8
 
-  # Background
+  # Background:
   rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
     col = scales::alpha("white", .2),
     border = gray(.2)
   )
 
-  # Column labels
-
+  # Column labels:
   text(
     x = c(
       location.df[location.df$element == "point.num", ]$x.loc,
@@ -177,8 +182,7 @@ showcues <- function(x = NULL,
 
   segments(rep(cue.box.x0, 4), cue.sep.y, rep(1.02, 4), cue.sep.y, lty = 3)
 
-
-  # Points
+  # Points:
   points(
     x = rep(location.df[location.df$element == "point.num", ]$x.loc, top),
     y = cue.lab.y,
@@ -189,7 +193,7 @@ showcues <- function(x = NULL,
     cex = 3
   )
 
-  # Cue numbers
+  # Cue numbers:
   text(
     x = rep(location.df[location.df$element == "point.num", ]$x.loc, top),
     y = cue.lab.y,
@@ -198,8 +202,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-
-  # Cue names
+  # Cue names:
   text(
     x = rep(location.df[location.df$element == "cue.name", ]$x.loc, top),
     y = cue.lab.y,
@@ -208,10 +211,9 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # Thresholds
+  # Thresholds:
   thresh.text <- paste(cue.df$direction[cue.df$rank <= top], cue.df$threshold[cue.df$rank <= top])
   thresh.text[nchar(thresh.text) > 10] <- paste(substr(thresh.text[nchar(thresh.text) > 10], start = 1, stop = 10), "...", sep = "")
-
 
   text(
     x = rep(location.df[location.df$element == "cue.thresh", ]$x.loc, top),
@@ -221,7 +223,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # HR
+  # HR:
   text(
     x = rep(location.df[location.df$element == "sens", ]$x.loc, top),
     y = cue.lab.y,
@@ -230,8 +232,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # FAR
-
+  # FAR:
   text(
     x = rep(location.df[location.df$element == "spec", ]$x.loc, top),
     y = cue.lab.y,
@@ -240,8 +241,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # v
-
+  # v:
   text(
     x = rep(location.df[location.df$element == "wacc", ]$x.loc, top),
     y = cue.lab.y,
@@ -249,4 +249,7 @@ showcues <- function(x = NULL,
     adj = location.df[location.df$element == "wacc", ]$adj,
     cex = label.cex
   )
-}
+
+} # showcues().
+
+# eof.
