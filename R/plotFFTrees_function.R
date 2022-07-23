@@ -1,8 +1,15 @@
 #' Plots an FFTrees object.
 #'
-#' @description Plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#' @description \code{plot.FFTrees} plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #'
-#' @param x An \code{FFTrees} object created by the main \code{\link{FFTrees}} function.
+#' \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
+#' called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.
+#'
+#' \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and metrics of classification performance.
+#'
+#' Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
+#'
+#' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #' @param data The data to be plotted (as a string), either \code{'train'} or \test{'test'}. The corresponding dataset in object \code{x} will be used.
 #' @param what What should be plotted (as a string)?
 #' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
@@ -34,34 +41,45 @@
 #' @param show.levels Show performance levels (in bottom panel, as logical)?
 #' @param show.roc Show ROC curve (in bottom panel, as logical)?
 
-#' @param label.tree
-#' @param label.performance string. Optional arguments to define labels for the tree and performance section(s).
+#' @param label.tree Labels for the FFT's nodes (as character string, optional).
+#' @param label.performance Labels for the performance section (as character string, optional).
 #'
-#' @param n.per.icon Number of cases per icon.
-#' @param level.type How should bottom levels be drawn (as a string)?
-#' Can be \code{"bar"} (the default) or \code{"line"}.
+#' @param n.per.icon Number of cases per icon (as numeric).
+#' @param level.type How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.
 #'
-#' @param which.tree deprecated argument, only for backwards compatibility, use \code{"tree"} instead.
+#' @param which.tree deprecated argument, included for backwards compatibility, use \code{"tree"} instead.
 #' @param decision.names deprecated argument.
 #' @param ... Currently ignored.
 #'
-#' @return A plot vizualizing an FFT
+#' @return A plot visualizing and describing an FFT.
 #'
 #' @examples
-#'
 #' # Create FFTs for the heartdisease data:
 #' heart.fft <- FFTrees(
 #'    formula = diagnosis ~ .,
 #'    data = heartdisease
 #'    )
 #'
-#' # Visualise the 1st tree:
+#' # Visualise the default FFT:
 #' plot(heart.fft,
 #'      main = "Heart Disease Diagnosis",
 #'      decision.labels = c("Absent", "Present")
 #'      )
 #'
-#' # See the vignette for more details:
+#' # Visualize FFT #2 (with customized labels):
+#' plot(heart.fft,
+#'      tree = 2,
+#'      main = "An FFT for heart disease diagnosis",
+#'      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
+#'      decision.labels = c("Healthy", "Disease"),
+#'      label.tree = c("FFT with 4 nodes"),
+#'      show.header = FALSE,
+#'      show.confusion = FALSE,
+#'      show.levels = FALSE,
+#'      show.roc = FALSE
+#'      )
+#'
+#' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
 #'
 #' @importFrom stats anova predict formula model.frame
