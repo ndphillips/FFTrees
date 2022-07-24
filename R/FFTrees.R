@@ -1,11 +1,17 @@
-#' Creates a fast-and-frugal trees (FFTrees) object.
+#' Creates a fast-and-frugal trees (FFTs) (as an \code{FFTrees} object).
 #'
-#' This is the workhorse function for the \code{FFTrees} package. It creates (one or more) fast-and-frugal decision trees trained on a training dataset and tested on an optional test dataset.
+#' @description \code{FFTrees} is the workhorse function of the \strong{FFTrees} package.
 #'
-#' @param formula formula. A formula specifying a logical criterion as a function of 1 or more predictors.
+#' \code{FFTrees} creates (one or more) fast-and-frugal decision trees (FFTs) that predict the values of a binary criterion variable based on multiple predictor variables (cues).
+#'
+#' The criterion and preditor variables are specified in \code{formula} notation.
+#'
+#' Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
+#'
+#' @param formula formula. A formula specifying a logical criterion variable as a function of 1 or more predictor variables (cues).
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
-#' @param algorithm character. The algorithm to create FFTs. Can be \code{'ifan'}, \code{'dfan'}
+#' @param algorithm character. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
@@ -30,8 +36,8 @@
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
 #' @param rank.method,verbose,comp deprecated arguments.
 #' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
-#' @importFrom stats anova predict glm as.formula formula sd
-#' @return An \code{FFTrees} object with the following elements
+#'
+#' @return An \code{FFTrees} object with the following elements:
 #'
 #' \describe{
 #'   \item{formula}{The formula specified when creating the FFTs.}
@@ -50,46 +56,47 @@
 #'   \item{data}{The original training and test data (only included when \code{store.data = TRUE})}
 #'   }
 #'
-#' @export
 #' @examples
 #'
-#' # Create fast-and-frugal trees for heart disease
-#' heart.fft <- FFTrees(
-#'   formula = diagnosis ~ .,
-#'   data = heart.train,
-#'   data.test = heart.test,
-#'   main = "Heart Disease",
-#'   decision.labels = c("Healthy", "Diseased")
-#' )
+#' # Create fast-and-frugal trees (FFTs) for heart disease:
+#' heart.fft <- FFTrees(formula = diagnosis ~ .,
+#'                      data = heart.train,
+#'                      data.test = heart.test,
+#'                      main = "Heart Disease",
+#'                      decision.labels = c("Healthy", "Diseased")
+#'                      )
 #'
-#' # Print the result for summary info
+#' # Print a summary of the result:
 #' heart.fft
 #'
-#' # Plot the tree applied to training data
+#' # Plot an FFT applied to training data:
 #' plot(heart.fft, stats = FALSE)
 #' plot(heart.fft)
-#' plot(heart.fft, data = "test") # Now for testing data
-#' plot(heart.fft, data = "test", tree = 2) # Look at tree number 2
 #'
+#' # Apply FFT to (new) testing data:
+#' plot(heart.fft, data = "test")
+#' plot(heart.fft, data = "test", tree = 2)  # Plot Tree #2
 #'
-#' ## Predict classes and probabilities for new data
-#'
+#' # Predict classes and probabilities for new data:
 #' predict(heart.fft, newdata = heartdisease)
 #' predict(heart.fft, newdata = heartdisease, type = "prob")
 #'
-#' ### Create your own custom tree with my.tree
-#'
+#' # Create custom trees with my.tree:
 #' custom.fft <- FFTrees(
 #'   formula = diagnosis ~ .,
 #'   data = heartdisease,
 #'   my.tree = "If chol > 300, predict True.
 #'                                   If sex = {m}, predict False,
 #'                                   If age > 70, predict True, otherwise predict False"
-#' )
+#'                                   )
 #'
-#' # Plot the custom tree (it's pretty terrible)
+#' # Plot the (pretty terrible) custom tree:
 #' plot(custom.fft)
 #'
+#' @importFrom stats anova predict glm as.formula formula sd
+#'
+#' @export
+
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
@@ -125,8 +132,7 @@ FFTrees <- function(formula = NULL,
                     comp = NULL,
                     quiet = FALSE) {
 
-
-  # DEPRECATED ARGUMENTS -------------------------------------------------
+  # DEPRECATED ARGUMENTS: ------
   {
     if (is.null(verbose) == FALSE) {
       warning("The argument verbose is deprecated. Use progress instead.")
@@ -158,14 +164,16 @@ FFTrees <- function(formula = NULL,
   #   dplyr::mutate_if(is.factor, addNA)   %>%
   #   dplyr::mutate_if(is.character, addNA)
 
-  # TRAINING / TEST SPLIT ---------------------------------------
+
+  # TRAINING / TEST SPLIT: ------
+
   if (train.p < 1 && is.null(data.test)) {
 
     # Save original data
     data_o <- data
 
     train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
-      p = train.p
+                                              p = train.p
     )[[1]]
 
     data <- data_o[train_cases, ]
@@ -180,7 +188,7 @@ FFTrees <- function(formula = NULL,
   }
 
 
-  # CREATE AN FFTREES OBJECT --------------------------------------------
+  # Create an FFTrees object: ------
 
   x <- fftrees_create(
     data = data,
@@ -210,38 +218,43 @@ FFTrees <- function(formula = NULL,
     do.comp = do.comp
   )
 
-  # 1) GET FFTREES DEFINITIONS ----------------------------------------
+  # 1) Get FFTrees definitions: ----
 
   x <- fftrees_define(x, object = object)
 
-  # 2) APPLY TREES TO TRAINING DATA -------------------------------
+  # 2) Apply to training data:  ----
 
   # Training......
 
   x <- fftrees_apply(x,
-    mydata = "train"
+                     mydata = "train"
   )
 
-  # Rank trees by goal
-
+  # Rank trees by goal:
   x <- fftrees_ranktrees(x)
 
-  # Test.........
+  # 3) Apply to test data: ----
 
   if (!is.null(x$data$test)) {
     x <- fftrees_apply(x, mydata = "test")
   }
 
-  ## 3) DEFINE TREES IN WORDS
+  # 4) Define trees in words: ------
 
   x <- fftrees_ffttowords(
     x = x,
     digits = 2
   )
 
-  # FIT COMPETITIVE ALGORITHMS
+  # 5) Fit competitive algorithms: ----
 
   x <- fftrees_fitcomp(x = x)
 
+
+  # Output: ------
+
   return(x)
-}
+
+} # FFTrees().
+
+# eof.
