@@ -35,68 +35,105 @@
 )
 }
 \arguments{
-\item{x}{A FFTrees object created from \code{"FFTrees()"}}
+\item{x}{An \code{FFTrees} object created by the \code{\link{FFTrees}} function.}
 
-\item{data}{One of two strings 'train' or 'test'. In this case, the corresponding dataset in the x object will be used.}
+\item{data}{The data to be plotted (as a string), either \code{"train"} or \code{"test"}. The corresponding dataset in object \code{x} will be used.}
 
-\item{what}{string. What should be plotted? \code{'tree'} (the default) shows one tree (specified by \code{'tree'}). \code{'cues'} shows the marginal accuracy of cues in an ROC space, \code{"roc"} shows an roc curve of the tree(s)}
+\item{what}{What should be plotted (as a string)?
+\code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
+\code{'cues'} shows the marginal accuracy of cues in an ROC space,
+\code{"roc"} shows an ROC curve of the tree(s).}
 
-\item{tree}{integer. An integer indicating which tree to plot (only valid when the tree argument is non-empty). To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction, use "best.train" or "best.test"}
+\item{tree}{The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
+To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
+use \code{"best.train"} or \code{"best.test"}.}
 
-\item{main}{character. The main plot label.}
+\item{main}{The main plot label (as character string).}
 
-\item{hlines}{logical. Should horizontal panel separation lines be shown?}
+\item{hlines}{Should horizontal panel separation lines be shown (as logical)?}
 
-\item{cue.labels}{character. An optional string of labels for the cues / nodes.}
+\item{cue.labels}{An optional string of labels for the cues / nodes (as character vector).}
 
-\item{decision.labels}{character. A string vector of length 2 indicating the content-specific name for noise and signal cases.}
+\item{decision.labels}{A character vector of length 2 indicating the content-specific names for noise and signal predictions/exits.}
 
-\item{cue.cex}{numeric. The size of the cue labels.}
+\item{cue.cex}{The size of the cue labels (as numeric).}
 
-\item{threshold.cex}{numeric. The size of the threshold labels.}
+\item{threshold.cex}{The size of the threshold labels (as numeric).}
 
-\item{decision.cex}{numeric. The size of the decision labels.}
+\item{decision.cex}{The size of the decision labels (as numeric).}
 
-\item{comp}{logical. Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available?)}
+\item{comp}{Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available, as logical)?}
 
-\item{stats}{logical. Should statistical information be plotted? If \code{FALSE}, then only the tree (without any reference to statistics) will be plotted.}
+\item{stats}{Should statistical information be plotted (as logical)?
+If \code{FALSE}, only the tree (without any reference to statistics) will be plotted.}
 
-\item{show.header, show.tree, show.confusion, show.levels, show.roc, show.icons, show.iconguide}{logical. Logical arguments indicating which specific elements of the plot to show.}
+\item{show.header}{Show header with basic data properties (in top panel, as logical)?}
 
-\item{label.tree, label.performance}{string. Optional arguments to define lables for the tree and performance section(s).}
+\item{show.tree}{Show nodes and exits of FFT (in middle panel, as logical)?}
 
-\item{n.per.icon}{Number of cases per icon}
+\item{show.confusion}{Show 2x2 confusion matrix (in bottom panel, as logical)?}
 
-\item{which.tree}{deprecated argument, only for backwards compatibility, use \code{"tree"} instead.}
+\item{show.levels}{Show performance levels (in bottom panel, as logical)?}
 
-\item{level.type}{string. How should bottom levels be drawn? Can be \code{"bar"} or \code{"line"}}
+\item{show.roc}{Show ROC curve (in bottom panel, as logical)?}
 
-\item{decision.names}{deprecated arguments.}
+\item{show.icons}{Show exit cases as icon arrays (in middle panel, as logical)?}
+
+\item{show.iconguide}{Show icon guide (in middle panel, as logical)?}
+
+\item{label.tree}{Label for the FFT (optional, as character string).}
+
+\item{label.performance}{Labels for the performance section (optional, as character string).}
+
+\item{n.per.icon}{Number of cases per icon (as numeric).}
+
+\item{which.tree}{deprecated argument, included for backwards compatibility, use \code{"tree"} instead.}
+
+\item{level.type}{How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.}
+
+\item{decision.names}{deprecated argument.}
 
 \item{...}{Currently ignored.}
 }
 \value{
-A plot vizualizing an FFT
+A plot visualizing and describing an FFT.
 }
 \description{
-Plots an FFTrees object created by the FFTrees() function.
+\code{plot.FFTrees} plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+
+\code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
+called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.
+
+\code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and metrics of classification performance.
+
+Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
 }
 \examples{
+# Create FFTs (for heartdisease data):
+heart.fft <- FFTrees(formula = diagnosis ~ .,
+                     data = heartdisease
+                     )
 
-# Create FFTrees of the heart disease data
-heart.fft <- FFTrees(
-  formula = diagnosis ~ .,
-  data = heartdisease
-)
-
-# Visualise the tree
+# Visualise the default FFT:
 plot(heart.fft,
-  main = "Heart Disease Diagnosis",
-  decision.labels = c("Absent", "Present")
-)
+     main = "Heart Disease Diagnosis",
+     decision.labels = c("Absent", "Present")
+     )
 
+# Visualize FFT #2 (with customized labels):
+plot(heart.fft,
+     tree = 2,
+     main = "An FFT for heart disease diagnosis",
+     cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
+     decision.labels = c("Healthy", "Disease"),
+     label.tree = c("FFT with 4 nodes"),
+     show.header = FALSE,
+     show.confusion = FALSE,
+     show.levels = FALSE,
+     show.roc = FALSE
+     )
 
-# See the vignette for more details
+# For more details, see
 vignette("FFTrees_plot", package = "FFTrees")
 
 }
