@@ -10,7 +10,7 @@
 #' Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
-#' @param data The data to be plotted (as a string), either \code{'train'} or \test{'test'}. The corresponding dataset in object \code{x} will be used.
+#' @param data The data to be plotted (as a string), either \code{"train"} or \code{"test"}. The corresponding dataset in object \code{x} will be used.
 #' @param what What should be plotted (as a string)?
 #' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
 #' \code{'cues'} shows the marginal accuracy of cues in an ROC space,
