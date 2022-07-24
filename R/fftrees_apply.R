@@ -1,21 +1,32 @@
-#' Applies a fast-and-frugal tree to a dataset and generates several accuracy statistics
+#' Applies a FFT to a dataset and generates accuracy statistics.
 #'
-#' @param x FFTrees.
+#' @description \code{fftrees_apply} applies a fast-and-frugal tree (FFT, as an \code{FFTrees} object)
+#' to a dataset and generates corresponding accuracy statistics.
+#'
+#' @param x An FFT to apply (as an \code{FFTrees} object).
 #' @param mydata dataframe.
 #' @param newdata dataframe.
-#' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is FALSE
-#' @importFrom testthat expect_true
-#' @return A list of length 4 containing
+#' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is \code{FALSE}.
 #'
-#' @export
+#' @return A list of length 4 containing FFTs.
+#'
 #' @keywords internal
 #'
+#' @seealso
+#' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from data.
 #'
+#' @importFrom testthat expect_true
+#'
+#' @export
 
 fftrees_apply <- function(x,
                           mydata = NULL,
                           newdata = NULL,
                           allNA.pred = FALSE) {
+
+  # Prepare: ------
+
   testthat::expect_true(mydata %in% c("train", "test"))
 
   if (mydata == "train") {
@@ -33,7 +44,8 @@ fftrees_apply <- function(x,
   criterion_v <- data[[x$criterion_name]]
   criterion_n <- length(criterion_v)
 
-  # Setup outputs
+
+  # Setup outputs: ------
 
   #  [decisions_ls]
   #    A list containing dataframes with one row per case, and one column per tree
@@ -57,8 +69,9 @@ fftrees_apply <- function(x,
 
   level_stats_ls <- vector("list", length = x$trees$n)
 
-  # LOOP
-  #  Loop over trees
+  # LOOP: ------
+
+  #  Loop over trees:
 
   for (tree_i in 1:x$trees$n) {
 
@@ -71,7 +84,6 @@ fftrees_apply <- function(x,
     level_n <- x$trees$definitions$nodes[tree_i]
 
     decisions_df <- decisions_ls[[tree_i]]
-
 
     costc.level <- sapply(cue_v, FUN = function(cue_i) {
       if (cue_i %in% names(x$params$cost.cues)) {
@@ -88,8 +100,7 @@ fftrees_apply <- function(x,
       cue_cost_cum = costc.level.cum
     )
 
-
-    # level_stats_i contains cumulative level statistics
+    # level_stats_i contains cumulative level statistics:
     level_stats_i <- data.frame(
       tree = tree_i,
       level = 1:level_n,
@@ -103,14 +114,14 @@ fftrees_apply <- function(x,
 
     critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions")
 
-    # Add stat names to level_stats_i
+    # Add stat names to level_stats_i:
     level_stats_i[critical_stats_v] <- NA
     level_stats_i$cost_cues <- NA
 
-    # Loop over levels
+    # Loop over levels: ----
     for (level_i in 1:level_n) {
 
-      # Get definitions for current level
+      # Get definitions for current level:
       cue_i <- cue_v[level_i]
       class_i <- class_v[level_i]
       direction_i <- direction_v[level_i]
@@ -120,7 +131,6 @@ fftrees_apply <- function(x,
       cue_values <- data[[cue_i]]
 
       decisions_df$current_cue_values <- cue_values
-
 
       if (is.character(threshold_i)) {
         threshold_i <- unlist(strsplit(threshold_i, ","))
@@ -159,21 +169,20 @@ fftrees_apply <- function(x,
         classify.now <- is.na(decisions_df$decision)
       }
 
-      # Convert NAs
+      # Convert NAs: ----
 
-      # If it is not the final node, then don't classify NA cases
+      # If it is not the final node, then don't classify NA cases:
       if (exit_i %in% c(0, 1)) {
         classify.now[is.na(classify.now)] <- FALSE
       }
 
-
-      # If it is the final node, then classify NA cases according to most common class
+      # If it is the final node, then classify NA cases according to most common class:
       if (exit_i %in% .5) {
         decisions_df$current_decision[is.na(decisions_df$current_decision)] <- allNA.pred
       }
 
 
-      # Define critical values for current decisions
+      # Define critical values for current decisions: ----
 
       decisions_df$decision[classify.now] <- decisions_df$current_decision[classify.now]
       decisions_df$levelout[classify.now] <- level_i
@@ -184,10 +193,9 @@ fftrees_apply <- function(x,
       decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == TRUE] <- x$params$cost.outcomes$fa
       decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$cr
 
-
       decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_decision
 
-      # Get cumulative level stats
+      # Get cumulative level stats: ----
 
       my_level_stats_i <- classtable(
         prediction_v = decisions_df$decision[!is.na(decisions_df$decision)],
@@ -197,24 +205,23 @@ fftrees_apply <- function(x,
         cost.outcomes = x$params$cost.outcomes
       )
 
-
       # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[, critical_stats_v]
 
-      # Add cue cost and cost
+      # Add cue cost and cost: ----
 
       level_stats_i$cost_cues[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
       level_stats_i$cost[level_i] <- level_stats_i$cost_cues[level_i] + level_stats_i$cost_decisions[level_i]
     }
 
-    # Add final tree results to level_stats_ls and decisions_ls
+    # Add final tree results to level_stats_ls and decisions_ls: ----
 
     level_stats_ls[[tree_i]] <- level_stats_i
 
     decisions_ls[[tree_i]] <- decisions_df[, names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
   }
 
-  # Aggregate results
+  # Aggregate results: ----
   {
 
     # Combine all levelstats into one dataframe
@@ -231,7 +238,7 @@ fftrees_apply <- function(x,
     rownames(tree_stats) <- 1:nrow(tree_stats)
 
 
-    # Calculate pci and mcu
+    # Calculate pci and mcu: ----
 
     for (tree_i in 1:x$trees$n) {
       max.lookups <- nrow(data) * length(x$cue_names)
@@ -242,11 +249,15 @@ fftrees_apply <- function(x,
     }
   }
 
-  # Add results to x -------------------------
+  # Add results to x: ------
 
   x$trees$stats[[mydata]] <- tree_stats
   x$trees$level_stats[[mydata]] <- level_stats
   x$trees$decisions[[mydata]] <- decisions_ls
 
+  # Output: ------
   return(x)
-}
+
+} # fftrees_apply().
+
+# eof.

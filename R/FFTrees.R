@@ -15,27 +15,44 @@
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param algorithm character. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
-#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}
-#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
-#' @param cost.cues list A list containing containing costs for each cue. Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number. Cues not present in \code{cost.cues} are assume to have 0 cost.
-#' @param stopping.rule character. A string indicating the method to stop growing trees. "levels" means the tree grows until a certain level. "exemplars" means the tree grows until a certain number of unclassified exemplars remain. "statdelta" means the tree grows until the change in the criterion statistic is less than a specified level.
-#' @param stopping.par numeric. A number indicating the parameter for the stopping rule. For stopping.rule == "levels", this is the number of levels. For stopping rule == "exemplars", this is the smallest percentage of examplars allowed in the last level.
-#' @param goal character. A string indicating the statistic to maximize when selecting final trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
-#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy, "cost" = cost.
-#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy
+#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}.
+#'
+#' @param cost.outcomes A list of length 4 with names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'} specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
+#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20, respectively, while correct decisions have no costs.
+#' @param cost.cues A list containing costs for each cue.
+#' Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number.
+#' Cues not present in \code{cost.cues} are assumed to have no costs (i.e., a value of 0).
+#'
+#' @param stopping.rule character. A string indicating the method to stop growing trees.
+#' \code{"levels"} means the tree grows until a certain level;
+#' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
+#' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
+#' @param stopping.par numeric. A number indicating the parameter for the stopping rule.
+#' For stopping.rule \code{"levels"}, this is the number of levels.
+#' For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
+#' @param goal character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy.
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy, \code{"cost"} = cue costs.
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param numthresh.n integer. Number of numeric thresholds to try.
-#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}
-#' @param main string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}
+#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
+#' @param main string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}.
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
 #' @param quiet logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.
 #' @param repeat.cues logical. Can cues occur multiple times within a tree?
 #' @param my.tree string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE"}
 #' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
-#' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? cart = regular (non-frugal) trees with \code{rpart}, lr = logistic regression with \code{glm}, rf = random forests with \code{randomForest}, svm = support vector machines with \code{e1071}. Setting \code{comp = FALSE} sets all these arguments to FALSE.
-#' @param store.data logical. Should training / test data be stored in the object? Default is FALSE.
+#'
+#' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison?
+#' \code{cart} = regular (non-frugal) trees with \strong{rpart};
+#' \code{lr} = logistic regression with \strong{glm};
+#' \code{rf} = random forests with \strong{randomForest};
+#' \code{svm} = support vector machines with \strong{e1071}.
+#' Setting \code{comp = FALSE} sets all these arguments to \code{FALSE}.
+#' @param store.data logical. Should training / test data be stored in the object? Default is \code{FALSE}.
 #' @param object FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
+#'
 #' @param rank.method,verbose,comp deprecated arguments.
 #' @param force logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.
 #'
@@ -45,7 +62,7 @@
 #'   \item{formula}{The formula specified when creating the FFTs.}
 #'   \item{data.desc}{Descriptive statistics of the data}
 #'   \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm}
-#'   \item{tree.definitions}{Definitions of each tree created by \code{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
+#'   \item{tree.definitions}{Definitions of each tree created by \strong{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
 #'   \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
 #'   \item{cost}{A list of cost information for each case in each tree.}
 #'   \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
@@ -140,6 +157,7 @@ FFTrees <- function(formula = NULL,
                     quiet = FALSE) {
 
   # DEPRECATED ARGUMENTS: ------
+
   {
     if (is.null(verbose) == FALSE) {
       warning("The argument verbose is deprecated. Use progress instead.")
