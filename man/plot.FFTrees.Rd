@@ -137,3 +137,11 @@ plot(heart.fft,
 vignette("FFTrees_plot", package = "FFTrees")
 
 }
+\seealso{
+\code{\link{showcues}} for plotting cue accuracies;
+\code{\link{FFTrees}} for creating FFTs from data.
+
+Other plot functions: 
+\code{\link{showcues}()}
+}
+\concept{plot functions}

@@ -38,3 +38,11 @@ showcues(heart.fft,
          main = "Cue accuracies for predicting heart disease")
 
 }
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
+
+Other plot functions: 
+\code{\link{plot.FFTrees}()}
+}
+\concept{plot functions}

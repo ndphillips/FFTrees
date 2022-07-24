@@ -168,3 +168,8 @@ custom.fft <- FFTrees(
 plot(custom.fft)
 
 }
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{inwords}} for obtaining a verbal description of FFTs;
+\code{\link{showcues}} for plotting cue accuracies.
+}

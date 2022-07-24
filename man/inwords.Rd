@@ -2,18 +2,23 @@
 % Please edit documentation in R/inwords.R
 \name{inwords}
 \alias{inwords}
-\title{Display a verbal description of a tree in an FFTrees object}
+\title{Displays a verbal description of an FFT.}
 \usage{
 inwords(x, tree = 1)
 }
 \arguments{
-\item{x}{FFTrees.}
+\item{x}{An \code{FFTrees} object.}
 
-\item{tree}{numeric. The tree to display}
+\item{tree}{The tree to display (as numeric).}
 }
 \value{
-A string describing an FFT
+A verbal description of an FFT (as a string).
 }
 \description{
-Display a verbal description of a tree in an FFTrees object
+\code{inwords} provides a verbal description of a fast-and-frugal tree (FFT)
+from an \code{FFTrees} object.
+}
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
 }
