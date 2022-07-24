@@ -3,7 +3,7 @@
 \docType{package}
 \name{FFTrees}
 \alias{FFTrees}
-\title{Creates a fast-and-frugal trees (FFTs) (as an \code{FFTrees} object).}
+\title{Main function to create fast-and-frugal trees (FFTs).}
 \usage{
 FFTrees(
   formula = NULL,
@@ -120,12 +120,14 @@ An \code{FFTrees} object with the following elements:
   }
 }
 \description{
-\code{FFTrees} is the workhorse function of the \strong{FFTrees} package.
+\code{FFTrees} is the workhorse function of the \strong{FFTrees} package for creating fast-and-frugal trees (FFTs).
 
-\code{FFTrees} creates (one or more) fast-and-frugal decision trees (FFTs) that predict the values of a binary criterion variable based on multiple predictor variables (cues).
+FFTs are decision algorithms for solving binary classification tasks, i.e., they predict the values of a binary criterion variable based on multiple predictor variables (cues).
+
+Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
+that can then be printed, plotted, and examined further.
 
 The criterion and preditor variables are specified in \code{formula} notation.
-
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 
 Create fast and frugal trees
