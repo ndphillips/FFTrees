@@ -21,8 +21,9 @@
 #' use \code{"best.train"} or \code{"best.test"}.
 #'
 #' @param main The main plot label (as character string).
-#' @param hlines Should horizontal panel separation lines be shown (as a logical value)?
-#' @param cue.labels An optional string of labels for the cues / nodes (as a character vector).
+#' @param hlines Should horizontal panel separation lines be shown (as logical)?
+#'
+#' @param cue.labels An optional string of labels for the cues / nodes (as character vector).
 #' @param decision.labels A character vector of length 2 indicating the content-specific names for noise and signal predictions/exits.
 #' @param cue.cex The size of the cue labels (as numeric).
 #' @param threshold.cex The size of the threshold labels (as numeric).
@@ -41,8 +42,8 @@
 #' @param show.levels Show performance levels (in bottom panel, as logical)?
 #' @param show.roc Show ROC curve (in bottom panel, as logical)?
 
-#' @param label.tree Labels for the FFT's nodes (as character string, optional).
-#' @param label.performance Labels for the performance section (as character string, optional).
+#' @param label.tree Label for the FFT (optional, as character string).
+#' @param label.performance Labels for the performance section (optional, as character string).
 #'
 #' @param n.per.icon Number of cases per icon (as numeric).
 #' @param level.type How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.
@@ -54,11 +55,10 @@
 #' @return A plot visualizing and describing an FFT.
 #'
 #' @examples
-#' # Create FFTs for the heartdisease data:
-#' heart.fft <- FFTrees(
-#'    formula = diagnosis ~ .,
-#'    data = heartdisease
-#'    )
+#' # Create FFTs (for heartdisease data):
+#' heart.fft <- FFTrees(formula = diagnosis ~ .,
+#'                      data = heartdisease
+#'                      )
 #'
 #' # Visualise the default FFT:
 #' plot(heart.fft,
