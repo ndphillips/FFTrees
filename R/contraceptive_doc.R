@@ -1,8 +1,7 @@
-#' Contraceptive use data
+#' Contraceptive use data.
 #'
+#' @format A data frame containing 1473 rows and 10 columns.
 #'
-#'
-#' @format A data frame containing 1473 rows and 10 columns
 #' \describe{
 #'   \item{wife.age}{Numeric}
 #'   \item{wife.edu}{Factor}
@@ -15,11 +14,14 @@
 #'   \item{media}{Numeric}
 #'   \item{cont.crit}{numeric}
 #'
-#'
-#'
 #'   ...
 #' }
+#'
+#' @family datasets
+#'
 #' @source https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice
 #'
-#'
+
 "contraceptive"
+
+# eof.
