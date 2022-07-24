@@ -24,6 +24,12 @@
 #' showcues(heart.fft,
 #'          main = "Cue accuracies for predicting heart disease")
 #'
+#' @family plot functions
+#'
+#' @seealso
+#' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from data.
+#'
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #'
 #' @export

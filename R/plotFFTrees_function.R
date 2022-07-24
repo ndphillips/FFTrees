@@ -82,6 +82,12 @@
 #' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
 #'
+#' @family plot functions
+#'
+#' @seealso
+#' \code{\link{showcues}} for plotting cue accuracies;
+#' \code{\link{FFTrees}} for creating FFTs from data.
+#'
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #' @importFrom grDevices gray col2rgb rgb

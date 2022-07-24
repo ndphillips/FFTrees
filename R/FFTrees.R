@@ -93,6 +93,11 @@
 #' # Plot the (pretty terrible) custom tree:
 #' plot(custom.fft)
 #'
+#' @seealso
+#' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{inwords}} for obtaining a verbal description of FFTs;
+#' \code{\link{showcues}} for plotting cue accuracies.
+#'
 #' @importFrom stats anova predict glm as.formula formula sd
 #'
 #' @export
