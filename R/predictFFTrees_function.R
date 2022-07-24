@@ -1,43 +1,50 @@
-#' Predict classifications from newdata using an FFTrees object
+#' Predicts classification outcomes or probabilities from data.
 #'
-#' @param object An FFTrees object created from the FFTrees() function.
-#' @param newdata dataframe. A dataframe of test data
-#' @param tree integer. Which tree in the object should be used? By default, tree = 1 is used
+#' @description \code{predict.FFTrees} predicts binary classification outcomes or their probabilities from new data
+#' (using an \code{FFTrees} object).
+#'
+#' @param object An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#' @param newdata dataframe. A data frame of test data.
+#' @param tree integer. Which tree in the object should be used? By default, \code{tree = 1} is used.
 #' @param type string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, \code{"prob"} which returns a matrix of class probabilities,
 #'  or \code{"both"} which returns a matrix with both class and probability predictions.
 #' @param method string. Method of calculating class probabilities. Either 'laplace', which applies the Laplace correction, or 'raw' which applies no correction.
-#' @param ... Additional arguments passed on to \code{predict()}
+#' @param ... Additional arguments passed on to \code{predict}.
+#'
 #' @param sens.w,data deprecated
+#'
 #' @return Either a logical vector of predictions, or a matrix of class probabilities.
-#' @export
+#'
 #' @examples
-#'
-#'
-#' # Create training and test data
-#'
+#' # Create training and test data:
 #' set.seed(100)
 #' breastcancer <- breastcancer[sample(nrow(breastcancer)), ]
 #' breast.train <- breastcancer[1:150, ]
-#' breast.test <- breastcancer[151:303, ]
+#' breast.test  <- breastcancer[151:303, ]
 #'
-#' # Create an FFTrees x from the training data
-#'
+#' # Create an FFTrees object from the training data:
 #' breast.fft <- FFTrees(
 #'   formula = diagnosis ~ .,
 #'   data = breast.train
 #' )
 #'
-#' # Predict classes of test data
+#' # Predict classes for test data:
 #' breast.fft.pred <- predict(breast.fft,
 #'   newdata = breast.test
 #' )
 #'
-#' # Predict class probabilities
+#' # Predict class probabilities for test data:
 #' breast.fft.pred <- predict(breast.fft,
 #'   newdata = breast.test,
 #'   type = "prob"
 #' )
 #'
+#' @seealso
+#' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from data.
+#'
+#' @export
+
 predict.FFTrees <- function(object = NULL,
                             newdata = NULL,
                             tree = 1,
@@ -46,8 +53,9 @@ predict.FFTrees <- function(object = NULL,
                             method = "laplace",
                             data = NULL,
                             ...) {
-  testthat::expect_true(is.null(data), info = "data is deprecated. Please use newdata instead")
 
+  # Prepare: ------
+  testthat::expect_true(is.null(data), info = "data is deprecated. Please use newdata instead")
   testthat::expect_true(!is.null(newdata))
 
   if (is.null(sens.w) == FALSE) {
@@ -64,24 +72,24 @@ predict.FFTrees <- function(object = NULL,
     newdata = newdata
   )
 
-  # Calculate predictions from tree
+  # Calculate predictions from tree: ------
+
   predictions <- new.apply.tree$trees$decisions$test[[tree]]$decision
 
-  # Get classification output
+  # Get classification output: ----
+
   class_output <- predictions
 
-  # Get probability output
+  # Get probability output: ----
 
-
-  # For each case, determine where it is decided in the tree
-
+  # For each case, determine where it is decided in the tree:
   prob_output <- matrix(NA, nrow = nrow(newdata), ncol = 2)
 
   # Get cumulative level stats for current tree in training data
   levelstats.c <- new.apply.tree$trees$level_stats$train[new.apply.tree$trees$level_stats$train$tree == tree, ]
   levels.n <- nrow(levelstats.c)
 
-  # Get marginal counts for levels
+  # Get marginal counts for levels:
 
   n.m <- levelstats.c$n - c(0, levelstats.c$n[1:(levels.n - 1)])
   hi.m <- levelstats.c$hi - c(0, levelstats.c$hi[1:(levels.n - 1)])
@@ -89,15 +97,14 @@ predict.FFTrees <- function(object = NULL,
   fa.m <- levelstats.c$fa - c(0, levelstats.c$fa[1:(levels.n - 1)])
   cr.m <- levelstats.c$cr - c(0, levelstats.c$cr[1:(levels.n - 1)])
 
-
   npv.m <- cr.m / (cr.m + mi.m)
   ppv.m <- hi.m / (hi.m + fa.m)
 
-  # Laplace correction
+  # Laplace correction:
   npv.lp.m <- (cr.m + 1) / (cr.m + mi.m + 2)
   ppv.lp.m <- (hi.m + 1) / (hi.m + fa.m + 2)
 
-  # Loop over levels
+  # Loop over levels:
   for (level.i in 1:levels.n) {
 
     # Which cases are classified as FALSE in this level?
@@ -146,5 +153,9 @@ predict.FFTrees <- function(object = NULL,
   }
 
 
+  # Output: ------
   return(output)
-}
+
+} # predict.FFTrees().
+
+# eof.

@@ -1,9 +1,11 @@
-#' Heartdisease testing dataset
+#' Heartdisease testing dataset.
 #'
-#' Testing data for a heart disease dataset. These data are used to test the prediction performance of a model trained on the \code{heart.train} data.
-#' The dataset \code{heartdisease} contains both datasets.
+#' Testing data for a \code{\link{heartdisease}} dataset.
+#' These data are used to test the prediction performance of a model trained on the \code{\link{heart.train}} data.
+#' The dataset \code{\link{heartdisease}} contains both datasets.
 #'
-#' @format A data frame containing 153 rows and 14 columns
+#' @format A data frame containing 153 rows and 14 columns.
+#'
 #' \describe{
 #'   \item{age}{Age}
 #'   \item{sex}{Sex, 1 = male, 0 = female}
@@ -20,11 +22,15 @@
 #'   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversable defect}
 #'   \item{diagnosis}{1 = Heart disease, 0 = No Heart disease}
 #'
-#'
-#'
 #'   ...
 #' }
+#'
+#' @family datasets
+#'
+#' @seealso \code{\link{heartdisease}} dataset.
+#'
 #' @source https://archive.ics.uci.edu/ml/datasets/Heart+Disease
-#'
-#'
+
 "heart.test"
+
+# eof.

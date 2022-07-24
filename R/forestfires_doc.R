@@ -1,9 +1,9 @@
-#' forestfires
+#' Forest fires dataset.
 #'
 #' A dataset of forest fire statistics.
 #'
+#' @format A data frame containing 517 rows and 13 columns.
 #'
-#' @format A data frame containing 517 rows and 13 columns
 #' \describe{
 #'   \item{X}{Integer -x-axis spatial coordinate within the Montesinho park map: 1 to 9}
 #'   \item{Y}{Integer - y-axis spatial coordinate within the Montesinho park map: 2 to 9}
@@ -19,11 +19,13 @@
 #'   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
 #'   \item{area}{Numeric - the burned area of the forest (in ha): 0.00 to 1090.84 }
 #'
-#'
-#'
 #'   ...
 #' }
+#'
+#' @family datasets
+#'
 #' @source http://archive.ics.uci.edu/ml/datasets/Forest+Fires
 
-#'
 "forestfires"
+
+# eof.

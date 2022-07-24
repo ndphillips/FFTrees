@@ -3,15 +3,13 @@
 \docType{data}
 \name{heart.cost}
 \alias{heart.cost}
-\title{Cue costs for the heartdisease dataa}
+\title{Cue costs for the heartdisease data.}
 \format{
-A data frame containing 153 rows and 14 columns
+A data frame containing 153 rows and 14 columns.
+
 \describe{
   \item{cue}{The name of the cue}
   \item{cost}{The cost of the cue}
-
-
-
   ...
 }
 }
@@ -22,6 +20,28 @@ https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/
 heart.cost
 }
 \description{
-Cue costs for the heartdisease dataa
+This data further characterizes the variables (cues) in the \code{\link{heartdisease}} dataset.
 }
+\seealso{
+\code{\link{heartdisease}} dataset.
+
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

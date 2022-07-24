@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_create.R
 \name{fftrees_create}
 \alias{fftrees_create}
-\title{Create an FFTrees object}
+\title{Create FFTs.}
 \usage{
 fftrees_create(
   data = NULL,
@@ -33,9 +33,9 @@ fftrees_create(
 )
 }
 \arguments{
-\item{data}{dataframe. Training data}
+\item{data}{Training data (as data frame).}
 
-\item{formula}{formula. A formula}
+\item{formula}{A formula (with a binary criterion variable).}
 
 \item{algorithm}{string.}
 
@@ -84,9 +84,13 @@ fftrees_create(
 \item{do.comp}{logical.}
 }
 \value{
-An FFTrees object.
+An \code{FFTrees} object.
 }
 \description{
-Create an FFTrees object
+\code{fftrees_create} creates fast-and-frugal trees (FFTs, as an \code{FFTrees} object).
+}
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
 }
 \keyword{internal}

@@ -1,9 +1,12 @@
-#' Fertility data set
+#' Fertility data set.
 #'
+#' @format A data frame containing 100 rows and 10 columns.
 #'
+#' @family datasets
 #'
-#' @format A data frame containing 100 rows and 10 columns
 #' @source https://archive.ics.uci.edu/ml/datasets/Fertility
 #'
-#'
+
 "fertility"
+
+# eof.

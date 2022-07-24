@@ -3,9 +3,10 @@
 \docType{data}
 \name{breastcancer}
 \alias{breastcancer}
-\title{Dataset: Physiological dataset for 699 patients tested for breast cancer.}
+\title{Physiological dataset of patients tested for breast cancer.}
 \format{
-A data frame containing 699 rows and 9 columns
+A data frame containing 699 patients (rows) and 9 variables (columns).
+
 \describe{
   \item{thickness}{Clump Thickness}
   \item{cellsize.unif}{Uniformity of Cell Size}
@@ -18,8 +19,6 @@ A data frame containing 699 rows and 9 columns
   \item{mitoses}{Mitoses}
   \item{diagnosis}{Is cancer present? T or F}
 
-
-
   ...
 }
 }
@@ -30,6 +29,26 @@ https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
 breastcancer
 }
 \description{
-Dataset: Physiological dataset for 699 patients tested for breast cancer.
+Physiological dataset of patients tested for breast cancer.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

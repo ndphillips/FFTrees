@@ -2,24 +2,47 @@
 % Please edit documentation in R/showcues_function.R
 \name{showcues}
 \alias{showcues}
-\title{Visualizes cue accuracies from an FFTrees object in a ROC space}
+\title{Visualizes cue accuracies (as points in ROC space).}
 \usage{
 showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL, top = 5)
 }
 \arguments{
-\item{x}{An FFTrees object}
+\item{x}{An \code{FFTrees} object created by the \code{\link{FFTrees}} function.}
 
-\item{data}{A string indicating whether or not to show training ("train") or testing ("test") cue accuracies}
+\item{data}{A string indicating whether to show cue accuracies in training (\code{"train"}) or testing (\code{"test"}).}
 
-\item{cue.accuracies}{dataframe. An optional dataframe specifying cue accuracies directly (without specifying an FFTrees object x)}
+\item{cue.accuracies}{An optional data frame specifying cue accuracies directly (without specifying an \code{FFTrees} object x).}
 
-\item{main}{Main plot description}
+\item{main}{Main plot title (as character string).}
 
-\item{top}{An integer indicating how many of the top cues to highlight}
+\item{top}{How many of the top cues should be highlighted (as an integer)?}
 }
 \value{
-A plot showing cue accuracies from an FFTrees object in a ROC space
+A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC space).
 }
 \description{
-Visualizes cue accuracies from an FFTrees object in a ROC space
+\code{showcues} plots the cue accuracies of an \code{FFTrees} object
+created by the \code{\link{FFTrees}} function (as points in ROC space).
 }
+\examples{
+# Create fast-and-frugal trees (FFTs) for heart disease:
+heart.fft <- FFTrees(formula = diagnosis ~ .,
+                     data = heart.train,
+                     data.test = heart.test,
+                     main = "Heart Disease",
+                     decision.labels = c("Healthy", "Diseased")
+                     )
+
+# Show cue accuracies (in ROC space):
+showcues(heart.fft,
+         main = "Cue accuracies for predicting heart disease")
+
+}
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
+
+Other plot functions: 
+\code{\link{plot.FFTrees}()}
+}
+\concept{plot functions}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{creditapproval}
 \alias{creditapproval}
-\title{Credit approval data}
+\title{Credit approval data.}
 \format{
 A data frame containing 690 rows and 15 columns
 }
@@ -14,6 +14,26 @@ https://archive.ics.uci.edu/ml/datasets/Credit+Approval
 creditapproval
 }
 \description{
-Credit approval data
+Credit approval data.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

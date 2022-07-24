@@ -3,9 +3,10 @@
 \docType{data}
 \name{car}
 \alias{car}
-\title{Car acceptability data}
+\title{Car acceptability data.}
 \format{
-A data frame containing 1728 rows and 7 columns
+A data frame containing 1728 cars (rows) and 7 variables (columns).
+
 \describe{
   \item{buying.price}{Numeric}
   \item{maint.price}{Factor}
@@ -14,9 +15,6 @@ A data frame containing 1728 rows and 7 columns
   \item{luggage}{Numeric}
   \item{safety}{Factor}
   \item{acceptability}{Factor}
-
-
-
   ...
 }
 }
@@ -27,6 +25,26 @@ http://archive.ics.uci.edu/ml/datasets/Car+Evaluation
 car
 }
 \description{
-Car acceptability data
+Car acceptability data.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

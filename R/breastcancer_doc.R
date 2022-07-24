@@ -1,7 +1,7 @@
-#' Dataset: Physiological dataset for 699 patients tested for breast cancer.
+#' Physiological dataset of patients tested for breast cancer.
 #'
+#' @format A data frame containing 699 patients (rows) and 9 variables (columns).
 #'
-#' @format A data frame containing 699 rows and 9 columns
 #' \describe{
 #'   \item{thickness}{Clump Thickness}
 #'   \item{cellsize.unif}{Uniformity of Cell Size}
@@ -14,9 +14,13 @@
 #'   \item{mitoses}{Mitoses}
 #'   \item{diagnosis}{Is cancer present? T or F}
 #'
-#'
-#'
 #'   ...
 #' }
+#'
+#' @family datasets
+#'
 #' @source https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
+
 "breastcancer"
+
+# eof.

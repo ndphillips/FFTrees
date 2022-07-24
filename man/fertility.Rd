@@ -3,9 +3,9 @@
 \docType{data}
 \name{fertility}
 \alias{fertility}
-\title{Fertility data set}
+\title{Fertility data set.}
 \format{
-A data frame containing 100 rows and 10 columns
+A data frame containing 100 rows and 10 columns.
 }
 \source{
 https://archive.ics.uci.edu/ml/datasets/Fertility
@@ -14,6 +14,26 @@ https://archive.ics.uci.edu/ml/datasets/Fertility
 fertility
 }
 \description{
-Fertility data set
+Fertility data set.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

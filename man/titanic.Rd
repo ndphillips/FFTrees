@@ -3,9 +3,10 @@
 \docType{data}
 \name{titanic}
 \alias{titanic}
-\title{Titanic dataset}
+\title{Titanic dataset.}
 \format{
-A data frame containing 2,201 rows and 4 columns
+A data frame containing 2,201 rows and 4 columns.
+
 \describe{
   \item{class}{Factor - Class (first, second, third, or crew)}
   \item{age}{Factor - Age group (child or adult)}
@@ -22,6 +23,26 @@ https://www.amstat.org/publications/jse/datasets/titanic.dat.txt
 titanic
 }
 \description{
-A dataset indicating who survived on the Titanic
+A dataset indicating who survived on the Titanic.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

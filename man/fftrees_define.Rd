@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_define.R
 \name{fftrees_define}
 \alias{fftrees_define}
-\title{Create definitions of FFTrees}
+\title{Create definitions of FFTs.}
 \usage{
 fftrees_define(x, object = NULL)
 }
@@ -15,6 +15,6 @@ fftrees_define(x, object = NULL)
 An FFTrees object with tree definitions
 }
 \description{
-Create definitions of FFTrees
+\code{fftrees_define} creates definitions of fast-and-frugal trees (FFTs, as an \code{FFTrees} object).
 }
 \keyword{internal}
