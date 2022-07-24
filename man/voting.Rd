@@ -3,9 +3,9 @@
 \docType{data}
 \name{voting}
 \alias{voting}
-\title{Voting data set}
+\title{Voting data set.}
 \format{
-A data frame containing 435 rows and 16 columns
+A data frame containing 435 rows and 16 columns.
 }
 \source{
 https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records
@@ -14,6 +14,26 @@ https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records
 voting
 }
 \description{
-Voting data set
+Voting data set.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

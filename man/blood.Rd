@@ -3,9 +3,10 @@
 \docType{data}
 \name{blood}
 \alias{blood}
-\title{Blood donation dataset}
+\title{Blood donation dataset.}
 \format{
-A data frame containing 748 rows and 5 columns
+A data frame containing 748 rows and 5 columns.
+
 \describe{
   \item{recency}{Months since last donation}
   \item{frequency}{Total number of donations}
@@ -22,6 +23,26 @@ https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center
 blood
 }
 \description{
-Blood donation dataset
+Blood donation dataset.
 }
+\seealso{
+Other datasets: 
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

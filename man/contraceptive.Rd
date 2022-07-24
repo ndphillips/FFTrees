@@ -3,9 +3,10 @@
 \docType{data}
 \name{contraceptive}
 \alias{contraceptive}
-\title{Contraceptive use data}
+\title{Contraceptive use data.}
 \format{
-A data frame containing 1473 rows and 10 columns
+A data frame containing 1473 rows and 10 columns.
+
 \describe{
   \item{wife.age}{Numeric}
   \item{wife.edu}{Factor}
@@ -18,8 +19,6 @@ A data frame containing 1473 rows and 10 columns
   \item{media}{Numeric}
   \item{cont.crit}{numeric}
 
-
-
   ...
 }
 }
@@ -30,6 +29,26 @@ https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice
 contraceptive
 }
 \description{
-Contraceptive use data
+Contraceptive use data.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

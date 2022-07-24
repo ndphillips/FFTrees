@@ -3,9 +3,9 @@
 \docType{data}
 \name{sonar}
 \alias{sonar}
-\title{Sonar data set}
+\title{Sonar data set.}
 \format{
-A data frame containing 208 rows and 60 columns
+A data frame containing 208 rows and 60 columns.
 }
 \source{
 https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)
@@ -14,6 +14,26 @@ https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Ro
 sonar
 }
 \description{
-Sonar data set
+Sonar data set.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

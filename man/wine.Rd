@@ -3,9 +3,9 @@
 \docType{data}
 \name{wine}
 \alias{wine}
-\title{Wine tasting dataset}
+\title{Wine tasting dataset.}
 \format{
-A data frame containing 6497 rows and 13 columns
+A data frame containing 6497 rows and 13 columns.
 }
 \source{
 http://archive.ics.uci.edu/ml/datasets/Wine+Quality
@@ -14,6 +14,26 @@ http://archive.ics.uci.edu/ml/datasets/Wine+Quality
 wine
 }
 \description{
-Chemical and tasting data from wines in North Portugal
+Chemical and tasting data from wines in North Portugal.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}}
+}
+\concept{datasets}
 \keyword{datasets}

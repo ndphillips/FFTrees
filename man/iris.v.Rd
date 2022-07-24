@@ -3,9 +3,9 @@
 \docType{data}
 \name{iris.v}
 \alias{iris.v}
-\title{Iris data set}
+\title{Iris data set.}
 \format{
-A data frame containing 150 rows and 4 columns
+A data frame containing 150 rows and 4 columns.
 }
 \source{
 https://archive.ics.uci.edu/ml/datasets/Iris
@@ -14,6 +14,26 @@ https://archive.ics.uci.edu/ml/datasets/Iris
 iris.v
 }
 \description{
-Iris data set
+Iris data set.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

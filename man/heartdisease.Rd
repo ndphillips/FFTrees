@@ -3,9 +3,10 @@
 \docType{data}
 \name{heartdisease}
 \alias{heartdisease}
-\title{Heart disease dataset}
+\title{Heart disease dataset.}
 \format{
-A data frame containing 303 rows and 14 columns
+A data frame containing 303 rows and 14 columns.
+
 \describe{
   \item{age}{Age}
   \item{sex}{Sex, 1 = male, 0 = female}
@@ -22,8 +23,6 @@ A data frame containing 303 rows and 14 columns
   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversable defect}
   \item{diagnosis}{1 = Heart disease, 0 = No Heart disease}
 
-
-
   ...
 }
 }
@@ -34,6 +33,28 @@ https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 heartdisease
 }
 \description{
-Data for 303 patients tested for heart disease
+Data for 303 patients tested for heart disease.
 }
+\seealso{
+\code{\link{heart.cost}} dataset for cost information.
+
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

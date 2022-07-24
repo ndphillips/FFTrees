@@ -3,9 +3,10 @@
 \docType{data}
 \name{forestfires}
 \alias{forestfires}
-\title{forestfires}
+\title{Forest fires dataset.}
 \format{
-A data frame containing 517 rows and 13 columns
+A data frame containing 517 rows and 13 columns.
+
 \describe{
   \item{X}{Integer -x-axis spatial coordinate within the Montesinho park map: 1 to 9}
   \item{Y}{Integer - y-axis spatial coordinate within the Montesinho park map: 2 to 9}
@@ -21,8 +22,6 @@ A data frame containing 517 rows and 13 columns
   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
   \item{area}{Numeric - the burned area of the forest (in ha): 0.00 to 1090.84 }
 
-
-
   ...
 }
 }
@@ -35,4 +34,24 @@ forestfires
 \description{
 A dataset of forest fire statistics.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

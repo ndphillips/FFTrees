@@ -3,9 +3,10 @@
 \docType{data}
 \name{heart.test}
 \alias{heart.test}
-\title{Heartdisease testing dataset}
+\title{Heartdisease testing dataset.}
 \format{
-A data frame containing 153 rows and 14 columns
+A data frame containing 153 rows and 14 columns.
+
 \describe{
   \item{age}{Age}
   \item{sex}{Sex, 1 = male, 0 = female}
@@ -22,8 +23,6 @@ A data frame containing 153 rows and 14 columns
   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversable defect}
   \item{diagnosis}{1 = Heart disease, 0 = No Heart disease}
 
-
-
   ...
 }
 }
@@ -34,7 +33,30 @@ https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 heart.test
 }
 \description{
-Testing data for a heart disease dataset. These data are used to test the prediction performance of a model trained on the \code{heart.train} data.
-The dataset \code{heartdisease} contains both datasets.
+Testing data for a \code{\link{heartdisease}} dataset.
+These data are used to test the prediction performance of a model trained on the \code{\link{heart.train}} data.
+The dataset \code{\link{heartdisease}} contains both datasets.
 }
+\seealso{
+\code{\link{heartdisease}} dataset.
+
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{mushrooms}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}

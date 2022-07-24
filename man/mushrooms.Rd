@@ -3,14 +3,17 @@
 \docType{data}
 \name{mushrooms}
 \alias{mushrooms}
-\title{Mushrooms dataset}
+\title{Mushrooms dataset.}
 \format{
-A data frame containing 8,124 rows and 23 columns (see http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names for column descriptions)
+A data frame containing 8,124 rows and 23 columns.
+
+See http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names for column descriptions.
+
 \describe{
-  \item{poisonous}{numeric}
-  \item{cshape}{character}
-  \item{csurface}{character}
-  \item{ccolor}{character}
+ \item{poisonous}{numeric}
+ \item{cshape}{character}
+ \item{csurface}{character}
+ \item{ccolor}{character}
  \item{bruises}{character}
  \item{odor}{numeric}
  \item{gattach}{character}
@@ -30,6 +33,7 @@ A data frame containing 8,124 rows and 23 columns (see http://archive.ics.uci.ed
  \item{sporepc}{character}
  \item{population}{character}
  \item{habitat}{character}
+
   ...
 }
 }
@@ -40,6 +44,26 @@ http://archive.ics.uci.edu/ml/datasets/Mushroom
 mushrooms
 }
 \description{
-Mushrooms dataset
+Mushrooms dataset.
 }
+\seealso{
+Other datasets: 
+\code{\link{blood}},
+\code{\link{breastcancer}},
+\code{\link{car}},
+\code{\link{contraceptive}},
+\code{\link{creditapproval}},
+\code{\link{fertility}},
+\code{\link{forestfires}},
+\code{\link{heart.cost}},
+\code{\link{heart.test}},
+\code{\link{heart.train}},
+\code{\link{heartdisease}},
+\code{\link{iris.v}},
+\code{\link{sonar}},
+\code{\link{titanic}},
+\code{\link{voting}},
+\code{\link{wine}}
+}
+\concept{datasets}
 \keyword{datasets}
