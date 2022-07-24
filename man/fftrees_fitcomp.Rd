@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_fitcomp.R
 \name{fftrees_fitcomp}
 \alias{fftrees_fitcomp}
-\title{Fit competitive algorithms}
+\title{Fit competitive algorithms.}
 \usage{
 fftrees_fitcomp(x)
 }
@@ -10,5 +10,5 @@ fftrees_fitcomp(x)
 \item{x}{FFTrees.}
 }
 \description{
-Fit competitive algorithms
+Fit competitive algorithms.
 }
