@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictFFTrees_function.R
 \name{predict.FFTrees}
 \alias{predict.FFTrees}
-\title{Predict classifications from newdata using an FFTrees object}
+\title{Predicts classification outcomes or probabilities from data.}
 \usage{
 \method{predict}{FFTrees}(
   object = NULL,
@@ -16,11 +16,11 @@
 )
 }
 \arguments{
-\item{object}{An FFTrees object created from the FFTrees() function.}
+\item{object}{An \code{FFTrees} object created by the \code{\link{FFTrees}} function.}
 
-\item{newdata}{dataframe. A dataframe of test data}
+\item{newdata}{dataframe. A data frame of test data.}
 
-\item{tree}{integer. Which tree in the object should be used? By default, tree = 1 is used}
+\item{tree}{integer. Which tree in the object should be used? By default, \code{tree = 1} is used.}
 
 \item{type}{string. What should be predicted? Can be \code{"class"}, which returns a vector of class predictions, \code{"prob"} which returns a matrix of class probabilities,
 or \code{"both"} which returns a matrix with both class and probability predictions.}
@@ -29,40 +29,41 @@ or \code{"both"} which returns a matrix with both class and probability predicti
 
 \item{method}{string. Method of calculating class probabilities. Either 'laplace', which applies the Laplace correction, or 'raw' which applies no correction.}
 
-\item{...}{Additional arguments passed on to \code{predict()}}
+\item{...}{Additional arguments passed on to \code{predict}.}
 }
 \value{
 Either a logical vector of predictions, or a matrix of class probabilities.
 }
 \description{
-Predict classifications from newdata using an FFTrees object
+\code{predict.FFTrees} predicts binary classification outcomes or their probabilities from new data
+(using an \code{FFTrees} object).
 }
 \examples{
-
-
-# Create training and test data
-
+# Create training and test data:
 set.seed(100)
 breastcancer <- breastcancer[sample(nrow(breastcancer)), ]
 breast.train <- breastcancer[1:150, ]
-breast.test <- breastcancer[151:303, ]
+breast.test  <- breastcancer[151:303, ]
 
-# Create an FFTrees x from the training data
-
+# Create an FFTrees object from the training data:
 breast.fft <- FFTrees(
   formula = diagnosis ~ .,
   data = breast.train
 )
 
-# Predict classes of test data
+# Predict classes for test data:
 breast.fft.pred <- predict(breast.fft,
   newdata = breast.test
 )
 
-# Predict class probabilities
+# Predict class probabilities for test data:
 breast.fft.pred <- predict(breast.fft,
   newdata = breast.test,
   type = "prob"
 )
 
+}
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
 }
