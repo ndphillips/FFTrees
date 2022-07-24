@@ -1,15 +1,28 @@
-#' Visualizes cue accuracies in ROC space.
+#' Visualizes cue accuracies (as points in ROC space).
 #'
 #' @description \code{showcues} plots the cue accuracies of an \code{FFTrees} object
-#' created by the \code{\link{FFTrees}} function as points in ROC space.
+#' created by the \code{\link{FFTrees}} function (as points in ROC space).
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
-#' @param data A string indicating whether or not to show training (\code{"train"}) or testing (\code{"test"}) cue accuracies
-#' @param cue.accuracies An optional dataframe specifying cue accuracies directly (without specifying an \code{FFTrees} object x)
-#' @param main Main plot description.
+#' @param data A string indicating whether to show cue accuracies in training (\code{"train"}) or testing (\code{"test"}).
+#' @param cue.accuracies An optional data frame specifying cue accuracies directly (without specifying an \code{FFTrees} object x).
+#' @param main Main plot title (as character string).
 #' @param top How many of the top cues should be highlighted (as an integer)?
 #'
-#' @return A plot showing cue accuracies (of an \code{FFTrees} object) in ROC space.
+#' @return A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC space).
+#'
+#' @examples
+#' # Create fast-and-frugal trees (FFTs) for heart disease:
+#' heart.fft <- FFTrees(formula = diagnosis ~ .,
+#'                      data = heart.train,
+#'                      data.test = heart.test,
+#'                      main = "Heart Disease",
+#'                      decision.labels = c("Healthy", "Diseased")
+#'                      )
+#'
+#' # Show cue accuracies (in ROC space):
+#' showcues(heart.fft,
+#'          main = "Cue accuracies for predicting heart disease")
 #'
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #'
@@ -21,33 +34,40 @@ showcues <- function(x = NULL,
                      main = NULL,
                      top = 5) {
 
-  # preparations:
+  # 0. Parameters: ------
+
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 
   palette <- rep(gray(.5, .5), length.out = top)  # colors
 
-  # read inputs:
+
+  # 1. Read inputs (into cue.df): ------
+
   if (is.null(x) == FALSE) {
+
     goal <- x$params$goal
 
     if (data == "train") {
       if (is.null(x$cues$stats$train)) {
-        stop("There are no training statistics in this object")
+        stop("There are no training statistics in this object.")
       }
 
       cue.df <- x$cues$stats$train
+
     }
 
     if (data == "test") {
       if (is.null(x$cues$stats$test)) {
-        stop("There are no test statistics")
+        stop("There are no test statistics in this object.")
       }
       if (is.null(x$cues$stats$test) == FALSE) {
+
         cue.df <- x$cues$stats$test
+
       }
     }
-  }
+  } # if (is.null(x).
 
   if (is.null(x) & is.null(cue.accuracies) == FALSE) {
     cue.df <- cue.accuracies
@@ -64,28 +84,30 @@ showcues <- function(x = NULL,
 
   cue.df <- cue.df[ord_new, ]
 
-  cue.df$col <- rep(palette, length.out = nrow(cue.df))
+  cue.df$col <- rep(palette, length.out = nrow(cue.df)) # colors
 
-  # GENERAL PLOTTING SPACE:
 
+  # 2. Setup main plot: ------
+
+  # Main title:
   if (is.null(main)) {
     if (is.null(x$params$main)) {
-      main <- "Individual Cue Accuracies"
+      main <- "Individual cue accuracies"
     } else {
       main <- x$params$main
     }
   }
 
-  # Main plot:
+  # Plotting area:
   plot(1,
-    xlim = c(0, 1), ylim = c(0, 1), type = "n",
-    main = main,
-    xlab = expression(1 - Specificity), # was: "1 - Specificity",
-    ylab = "Sensitivity",
-    yaxt = "n", xaxt = "n"
+       xlim = c(0, 1), ylim = c(0, 1), type = "n",
+       main = main,
+       xlab = expression(1 - Specificity), # was: "1 - Specificity",
+       ylab = "Sensitivity",
+       yaxt = "n", xaxt = "n"
   )
 
-  # axes:
+  # Axes:
   axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
   axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
 
@@ -99,21 +121,23 @@ showcues <- function(x = NULL,
   abline(v = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1))
   abline(a = 0, b = 1, col = gray(.7), lty = 1)
 
-  # Non-top cues:
+
+  # 3. Plot cues (as points): ------
+
+  #    a. Non-top cues: ----
 
   if (any(cue.df$rank > top)) {
     with(cue.df[cue.df$rank > top, ], points(1 - spec, sens, cex = 1))
     with(cue.df[cue.df$rank > top, ], text(1 - spec, sens,
-      labels = rank,
-      pos = 3,
-      cex = .8,
-      pch = 21,
-      bg = "white"
+                                           labels = rank,
+                                           pos = 3,
+                                           cex = .8,
+                                           pch = 21,
+                                           bg = "white"
     ))
   }
 
-  # Top x cues:
-
+  #    b. Top-x cues: ----
   for (i in top:1) {
 
     with(
@@ -127,14 +151,16 @@ showcues <- function(x = NULL,
     )
 
     with(cue.df[cue.df$rank == i, ], text(1 - spec, sens,
-      labels = rank,
-      # pos = 3,
-      cex = 1
+                                          labels = rank,
+                                          # pos = 3,
+                                          cex = 1
     ))
 
   } # for (i in top:1)..
 
-  # Bottom right label:
+
+  # 4. Bottom right label: ------
+
   location.df <- data.frame(
     element = c("points", "point.num", "cue.name", "cue.thresh", "sens", "spec", "wacc"),
     x.loc = c(.5, .5, .67, .68, .83, .9, .97),
@@ -157,11 +183,11 @@ showcues <- function(x = NULL,
 
   # Background:
   rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
-    col = scales::alpha("white", .2),
-    border = gray(.2)
+       col = scales::alpha("white", .2),
+       border = gray(.2)
   )
 
-  # Column labels:
+  #    a. Column labels: ----
   text(
     x = c(
       location.df[location.df$element == "point.num", ]$x.loc,
@@ -181,6 +207,8 @@ showcues <- function(x = NULL,
   segments(cue.box.x0, cue.box.y1, 1.02, cue.box.y1)
 
   segments(rep(cue.box.x0, 4), cue.sep.y, rep(1.02, 4), cue.sep.y, lty = 3)
+
+  #    b. Cue names, directions, and thresholds: ----
 
   # Points:
   points(
@@ -211,9 +239,10 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # Thresholds:
+  # Cue directions & thresholds:
   thresh.text <- paste(cue.df$direction[cue.df$rank <= top], cue.df$threshold[cue.df$rank <= top])
-  thresh.text[nchar(thresh.text) > 10] <- paste(substr(thresh.text[nchar(thresh.text) > 10], start = 1, stop = 10), "...", sep = "")
+  mnc <- 12  # max number of characters
+  thresh.text[nchar(thresh.text) > mnc] <- paste(substr(thresh.text[nchar(thresh.text) > mnc], start = 1, stop = mnc), "...", sep = "") # truncate strings
 
   text(
     x = rep(location.df[location.df$element == "cue.thresh", ]$x.loc, top),
@@ -223,7 +252,10 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # HR:
+
+  #    c. Cue accuracy stats: ----
+
+  # sens:
   text(
     x = rep(location.df[location.df$element == "sens", ]$x.loc, top),
     y = cue.lab.y,
@@ -232,7 +264,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # FAR:
+  # spec:
   text(
     x = rep(location.df[location.df$element == "spec", ]$x.loc, top),
     y = cue.lab.y,
@@ -241,7 +273,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # v:
+  # wacc:
   text(
     x = rep(location.df[location.df$element == "wacc", ]$x.loc, top),
     y = cue.lab.y,
@@ -249,6 +281,8 @@ showcues <- function(x = NULL,
     adj = location.df[location.df$element == "wacc", ]$adj,
     cex = label.cex
   )
+
+  # Currently NO output!
 
 } # showcues().
 
