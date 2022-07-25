@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_ranktrees.R
 \name{fftrees_ranktrees}
 \alias{fftrees_ranktrees}
-\title{Rank trees by goal}
+\title{Rank trees by goal.}
 \usage{
 fftrees_ranktrees(x, data = "train")
 }
@@ -12,5 +12,5 @@ fftrees_ranktrees(x, data = "train")
 \item{data}{character.}
 }
 \description{
-Rank trees by goal
+Rank trees by goal.
 }
