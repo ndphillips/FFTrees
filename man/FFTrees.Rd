@@ -143,7 +143,7 @@ that can then be printed, plotted, and examined further.
 The criterion and preditor variables are specified in \code{formula} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 
-Create fast and frugal trees
+Create fast-and-frugal trees (FFTs).
 }
 \examples{
 
@@ -185,6 +185,7 @@ plot(custom.fft)
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{print.FFTrees}} for printing summary information of FFTs;
 \code{\link{inwords}} for obtaining a verbal description of FFTs;
 \code{\link{showcues}} for plotting cue accuracies.
 }

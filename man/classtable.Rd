@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{classtable}
 \alias{classtable}
-\title{Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors}
+\title{Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors.}
 \usage{
 classtable(
   prediction_v = NULL,
@@ -30,5 +30,5 @@ classtable(
 \item{na_prediction_action}{not sure.}
 }
 \description{
-Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors
+Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors.
 }

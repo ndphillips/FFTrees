@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_threshold_numeric_grid.R
 \name{fftrees_threshold_numeric_grid}
 \alias{fftrees_threshold_numeric_grid}
-\title{Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue}
+\title{Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue.}
 \usage{
 fftrees_threshold_numeric_grid(
   thresholds,
@@ -16,25 +16,28 @@ fftrees_threshold_numeric_grid(
 )
 }
 \arguments{
-\item{thresholds}{numeric. A vector of thresholds to consider}
+\item{thresholds}{numeric. A vector of thresholds to consider.}
 
-\item{cue_v}{numeric. Feature values}
+\item{cue_v}{numeric. Feature values.}
 
-\item{criterion_v}{logical. Criterion values}
+\item{criterion_v}{logical. Criterion values.}
 
-\item{directions}{character. Possible directions to consider}
+\item{directions}{character. Possible directions to consider.}
 
 \item{sens.w}{numeric.}
 
-\item{cost.each}{numeric. Cost to add to each value (e.g.; cost of  the cue)}
+\item{cost.each}{numeric. Cost to add to each value (e.g.; cost of  the cue).}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 
-\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy}
+\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy.}
 }
 \value{
-A data frame containing accuracy statistics for several numeric thresholds
+A data frame containing accuracy statistics for several numeric thresholds.
 }
 \description{
-Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue
+Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue.
+}
+\seealso{
+\code{\link{fftrees_threshold_factor_grid}} for factor cues.
 }

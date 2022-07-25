@@ -1,20 +1,25 @@
-#' Returns summary information about an FFTrees x
+#' Returns summary information about an \code{FFTrees} object.
+#'
 #' @param object FFTrees.
 #' @param tree integer. The tree to summarise
 #' @param ... additional arguments (currently ignored)
-#' @return A data frame comtaining summary information about an FFT
-#' @export
 #'
+#' @return A data frame comtaining summary information about an FFT
+#'
+#' @export
+
 summary.FFTrees <- function(object,
                             tree = 1,
                             ...) {
-  train.cues <- paste(unique(unlist(strsplit(object$trees$definitions$cues[tree], ";"))), collapse = ",")
+
+  # Collect object info: ----
+  train.cues   <- paste(unique(unlist(strsplit(object$trees$definitions$cues[tree], ";"))), collapse = ",")
   train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
-  all.cues <- paste(unique(unlist(strsplit(object$trees$definitions$cues, ";"))), collapse = ",")
+  all.cues   <- paste(unique(unlist(strsplit(object$trees$definitions$cues, ";"))), collapse = ",")
   all.cues.n <- length(unique(unlist(strsplit(object$trees$definitions$cues, ";"))))
 
-  train.n <- nrow(object$data$train)
+  train.n  <- nrow(object$data$train)
   train.hi <- object$trees$results$train$stats$hi[tree]
   train.mi <- object$trees$results$train$stats$mi[tree]
   train.cr <- object$trees$results$train$stats$cr[tree]
@@ -30,8 +35,11 @@ summary.FFTrees <- function(object,
   train.pci <- object$trees$results$train$stats$pci[tree]
   train.mcu <- object$trees$results$train$stats$mcu[tree]
 
+  # 1. Stats exist: ----
   if (is.null(object$trees$results$test$stats) == FALSE) {
+
     test.n <- nrow(object$data$test)
+
     test.hi <- object$trees$results$test$stats$hi[tree]
     test.mi <- object$trees$results$test$stats$mi[tree]
     test.cr <- object$trees$results$test$stats$cr[tree]
@@ -49,12 +57,16 @@ summary.FFTrees <- function(object,
     test.mcu <- object$trees$results$test$stats$mcu[tree]
 
     summary.df <- data.frame(
+
       "train" = c(
+
         train.n,
+
         train.hi,
         train.mi,
         train.fa,
         train.cr,
+
         train.mcu,
         train.pci,
         train.cost,
@@ -63,12 +75,16 @@ summary.FFTrees <- function(object,
         train.sens,
         train.spec
       ),
+
       "test" = c(
+
         test.n,
+
         test.hi,
         test.mi,
         test.fa,
         test.cr,
+
         test.mcu,
         test.pci,
         test.cost,
@@ -80,29 +96,38 @@ summary.FFTrees <- function(object,
     )
   }
 
+  # 2. No stats exist: ----
   if (is.null(object$trees$results$test$stats)) {
-    test.n <- NA
+
+    # Initialize: ----
+    test.n  <- NA
+
     test.hi <- NA
     test.mi <- NA
     test.fa <- NA
     test.cr <- NA
-    test.pci <- NA
+
     test.mcu <- NA
+    test.pci <- NA
     test.sens <- NA
     test.far <- NA
     test.spec <- NA
     test.acc <- NA
-    test.cost <- NA
     test.bacc <- NA
     test.wacc <- NA
+    test.cost <- NA
+
 
     summary.df <- data.frame(
       "train" = c(
+
         train.n,
+
         train.hi,
         train.mi,
         train.fa,
         train.cr,
+
         train.mcu,
         train.pci,
         train.cost,
@@ -111,12 +136,16 @@ summary.FFTrees <- function(object,
         train.sens,
         train.spec
       ),
+
       "test" = c(
+
         test.n,
+
         test.hi,
         test.mi,
         test.fa,
         test.cr,
+
         test.mcu,
         test.pci,
         test.cost,
@@ -128,12 +157,15 @@ summary.FFTrees <- function(object,
     )
   }
 
+  # Set row names: ----
   rownames(summary.df) <- c(
     "n",
+
     "hi",
     "mi",
     "fa",
     "cr",
+
     "mcu",
     "pci",
     "cost",
@@ -143,5 +175,9 @@ summary.FFTrees <- function(object,
     "spec"
   )
 
+  # Output: ----
   return(summary.df)
-}
+
+} # summary.FFTrees().
+
+# eof.

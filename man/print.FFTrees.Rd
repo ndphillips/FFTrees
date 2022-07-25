@@ -2,20 +2,26 @@
 % Please edit documentation in R/printFFTrees_function.R
 \name{print.FFTrees}
 \alias{print.FFTrees}
-\title{Prints summary information from an FFTrees object}
+\title{Prints summary information of fast-and-frugal trees (FFTs).}
 \usage{
 \method{print}{FFTrees}(x = NULL, tree = 1, ...)
 }
 \arguments{
-\item{x}{FFTrees. A FFTrees x created from FFTrees()}
+\item{x}{An \code{FFTrees} object created by \code{\link{FFTrees}}.}
 
-\item{tree}{integer. The tree to explore.}
+\item{tree}{The tree to explore (as integer).}
 
-\item{...}{additional arguments passed to print.}
+\item{...}{additional arguments passed to \code{print}.}
 }
 \value{
-Prints summary information about an FFT to the console
+Prints summary information about an FFT to the console.
 }
 \description{
-Printing function for an FFTrees object
+\code{print.FFTrees} provides summary information
+on FFTs from an \code{FFTrees} object.
+}
+\seealso{
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{inwords}} for obtaining a verbal description of FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
 }

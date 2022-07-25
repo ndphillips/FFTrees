@@ -3,9 +3,21 @@
 
 Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees):
 
-* Fixed bug to show correct point labels in ROC curve panel of `plot.FFTrees()`. 
-* Revised vignettes. 
+## Major
 
+* none yet.
+
+## Minor
+
+* Fixed bug to show correct point labels in ROC curve panel of `plot.FFTrees()`. 
+
+## Details 
+
+* Revised vignettes. 
+* First pass of cleaning code and documentation.
+
+
+<!-- Released versions: --> 
 
 ## 1.6.6
 
@@ -54,7 +66,7 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 ## 1.4.0
 
-- Big under the hood changes to make code more efficient (and prepare for c++). Code should be ~50% faster.
+- Big under the hood changes to make code more efficient (and prepare for C++). Code should be ~50% faster.
 - Many inputs such as `cost.cues` and `cost.outcomes` are now specified as named lists to avoid confusion.
 - New cost outputs separate costs from cues, outcomes, and total costs.
 - Changes to input defaults for `goal` and `goal.chase`.
@@ -83,22 +95,24 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 - Added `label.tree`, `label.performance` arguments to `plot.FFTrees()` that allow you to specify plot (sub) labels. 
 
 - Bug fixes: 
-    - Issues when passing an existing FFTrees object to a new call to FFTrees().
+    - Issues when passing an existing `FFTrees` object to a new call to `FFTrees()`.
 
 
 ### 1.3.0
 
-- Many additional vignettes (e.g.; Accuracy Statistics and Heart Disease Tutorial) and updates to existing vignettes.
+- Many additional vignettes (e.g.; _Accuracy Statistics and Heart Disease Tutorial_) and updates to existing vignettes.
 
-- Added `cost.outcomes` and `cost.cues` to allow the user to specify specify the cost of outcomes and cues. Also added a new `cost` statistic throughout outputs.
+- Added `cost.outcomes` and `cost.cues` to allow the user to specify specify the cost of outcomes and cues. Also added a `cost` statistic throughout outputs.
 
-- Added `inwords()`, a function that converts an FFTrees object to words.
+- Added `inwords()`, a function that converts an `FFTrees` object to words.
 
-- Added `my.tree` argument to `FFTrees()` that allows the user to specify an FFT verbally. E.g., `my.tree = 'If age > 30, predict True. If sex = {m}, predict False. Otherwise, predict True'`.
+- Added `my.tree` argument to `FFTrees()` that allows the user to specify an FFT verbally.  
+E.g., `my.tree = 'If age > 30, predict True. If sex = {m}, predict False. Otherwise, predict True'`.
 
-- Added positive predictive value `ppv`, negative predictive value `npv` and balanced predictive value `bpv` as primary accuracy statistics throughout.
+- Added positive predictive value `ppv`, negative predictive value `npv` and balanced predictive value `bpv`, as primary accuracy statistics throughout.
 
-- Added support for two FFT construction algorithms from Martignon et al. (2008): `"zigzag"` and `"max"`. The algorithms are contained in the file `heuristic_algorithm.R` and can be implemented in `FFTrees()` as arguments to `algorithm`.
+- Added support for two FFT construction algorithms from Martignon et al. (2008): `"zigzag"` and `"max"`. 
+The algorithms are contained in the file `heuristic_algorithm.R` and can be implemented in `FFTrees()` as arguments to `algorithm`.
 
 
 # FFTrees 1.2
@@ -111,7 +125,7 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 ## 1.2.0
 
-- Changed wording of statistics throughout package. `hr` (hit rate) and `far` (false alarm rate) are now `sens` for sensitivity, and `spec` for specificity (1 - false alarm rate). 
+- Changed wording of statistics throughout package. `hr` (_hit rate_) and `far` (_false alarm rate_) are now `sens` for _sensitivity_, and `spec` for _specificity_ ($1 - $false alarm rate). 
 
 - The `rank.method` argument is now deprecated. Use `algorithm` instead.
 
@@ -119,19 +133,22 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 - Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp.pred()` wrapper function.
 
-- Added `FFForest()`, a function for creating forests of ffts, and `plot.FFForest()`, for visualizing forests of ffts. This function is very much still in development.
+- Added `FFForest()`, a function for creating forests of FFTs, and `plot.FFForest()`, for visualizing forests of FFTs. 
+This function is very much still in development.
 
-- Added random forests and support vector machines for comparison in `FFTrees()` using the `randomForest` and `e1071` packages.
+- Added random forests and support vector machines for comparison in `FFTrees()` using the **randomForest** and **e1071** packages.
 
 - Changed logistic regression algorithm from the default `glm()` version to `glmnet()` for a regularized version.
 
-- `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new FFTrees object.
+- `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new `FFTrees` object.
 
-- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. This replaces the former `showcues()` function.
+- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. 
+This replaces the former `showcues()` function.
 
-- Many cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls). You can also control whether the results from competing algorithms are displayed or not with the `comp` argument.
+- Many cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls). 
+You can also control whether the results from competing algorithms are displayed or not with the `comp` argument.
 
-- Bug-fixes
+- Bug-fixes: 
     - Fixed a bug where levels with no classifications are not plotted correctly.
 
 
@@ -151,17 +168,17 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 - Updated, clearer `print.FFTrees()` method to see important info about an FFTrees object in matrix format.
 - Training and testing statistics are now always in seperate objects (e.g.; `data$train`, `data$test`) to avoid confusion.
 
-- Bug-fixes: 
+- Bug-fixes:  
     - `predict.FFTrees()` now works much better by passing a new dataset (`data.test`) as a test dataset for an existing FFTrees object.
 
 ## 1.1.5
 
-- Bug-fixes: 
+- Bug-fixes:  
     - Plotting parameters `mar` and `layout` are now reset after running `plot.FFTrees()`
 
 ## 1.1.4
 
-- Bug-fixes
+- Bug-fixes:  
     - Plotting no longer fails when there is only one branch in the tree.
     - Changed `which.tree` argument in `plot.FFTrees()` to `tree` to conform to blog posts.
     - `predict.FFTrees()` now works better with `tibble` inputs.
@@ -172,6 +189,6 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 ---- 
 
-[File `NEWS.md` last updated on 2022-07-22.] 
+[File `NEWS.md` last updated on 2022-07-25.] 
 
 <!-- eof. -->

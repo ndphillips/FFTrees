@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{factclean}
 \alias{factclean}
-\title{Does miscellaneous cleaning of prediction datasets}
+\title{Does miscellaneous cleaning of prediction datasets.}
 \usage{
 factclean(data.train, data.test, show.warning = T)
 }
@@ -14,5 +14,5 @@ factclean(data.train, data.test, show.warning = T)
 \item{show.warning}{...}
 }
 \description{
-Does miscellaneous cleaning of prediction datasets
+Does miscellaneous cleaning of prediction datasets.
 }

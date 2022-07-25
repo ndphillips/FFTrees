@@ -41,8 +41,8 @@
 
 \item{what}{What should be plotted (as a string)?
 \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
-\code{'cues'} shows the marginal accuracy of cues in an ROC space,
-\code{"roc"} shows an ROC curve of the tree(s).}
+\code{'cues'} shows the marginal accuracy of cues in ROC space,
+\code{"roc"} shows the performance of tree(s) (and comparison algorithms) in ROC space.}
 
 \item{tree}{The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
@@ -114,7 +114,7 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,
                      data = heartdisease
                      )
 
-# Visualise the default FFT:
+# Visualize the default FFT (Tree #1):
 plot(heart.fft,
      main = "Heart Disease Diagnosis",
      decision.labels = c("Absent", "Present")
@@ -133,11 +133,15 @@ plot(heart.fft,
      show.roc = FALSE
      )
 
+# Visualize cue accuracies:
+plot(heart.fft, what = "cues")
+
 # For more details, see
 vignette("FFTrees_plot", package = "FFTrees")
 
 }
 \seealso{
+\code{\link{print.FFTrees}} for printing summary information of FFTs;
 \code{\link{showcues}} for plotting cue accuracies;
 \code{\link{FFTrees}} for creating FFTs from data.
 

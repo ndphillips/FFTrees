@@ -1,26 +1,26 @@
 #' Converts text describing an FFT into an FFT definition.
 #'
-#' @param x FFTrees.
-#' @param my.tree string. A string defining an FFT
+#' @param x An \code{FFTrees} object.
+#' @param my.tree string. A verbal string defining an FFT.
 #'
-#' @export
-#'
-#' @return An FFTrees object with a new definition defined by my.tree
+#' @return An \code{FFTrees} object with a new definition defined by \code{my.tree}.
 #'
 #' @importFrom stringr str_extract str_detect
+#'
+#' @export
 
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
-  # Clean up my.tree
+  # Clean up my.tree: ----
 
-  # Split into one sentence
+  # Split into one sentence:
 
   if (length(my.tree) > 1) {
     my.tree <- paste(my.tree, collapse = ". ")
   }
 
-  # Remove \n (can happen if my.tree has line breaks)
+  # Remove \n (can happen if my.tree has line breaks):
   my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 
   if (all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
@@ -41,7 +41,7 @@ fftrees_wordstofftrees <- function(x,
   )
 
 
-  # Split
+  # Split: ----
 
   cue.names.l <- tolower(x$cue_names)
   my.tree <- tolower(my.tree)
@@ -53,7 +53,7 @@ fftrees_wordstofftrees <- function(x,
   nodes.n <- length(def)
 
 
-  # cues.v
+  # cues.v: ----
   {
     cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
@@ -72,9 +72,9 @@ fftrees_wordstofftrees <- function(x,
         }))
       }
 
-
-
+      # Output: ----
       return(output)
+
     })))
 
     # Convert cue names back to original (non lower) values
@@ -83,45 +83,56 @@ fftrees_wordstofftrees <- function(x,
     })]
   }
 
-  # classes.v
+  # classes.v: ----
   {
     classes.v <- rep(NA, nodes.n)
 
     contains.brack <- stringr::str_detect(def[1:nodes.n], "\\[") | stringr::str_detect(def[1:nodes.n], "\\{")
     classes.v[contains.brack] <- "c"
     classes.v[contains.brack == FALSE] <- "n"
+
   }
 
-  # exits.v
+  # exits.v: ----
   {
     exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
-      # Indices of TRUE
+      # Indices of TRUE:
 
       y <- unlist(strsplit(node.sentence, " "))
       true.indices <- grep(tolower(decision.labels[2]), x = y)
       false.indices <- grep(tolower(decision.labels[1]), x = y)
 
       if (any(grepl(decision.labels[2], x)) & any(grepl(decision.labels[1], y))) {
+
         if (min(true.indices) < min(false.indices)) {
+
+          # Output: ----
           return(1)
         }
+
         if (min(true.indices) > min(false.indices)) {
+
+          # Output: ----
           return(0)
         }
       }
 
       if (any(grepl(decision.labels[2], y)) & !any(grepl(decision.labels[1], y))) {
+
+        # Output: ----
         return(1)
       }
 
       if (!any(grepl("v", y)) & any(grepl(decision.labels[1], y))) {
+
+        # Output: ----
         return(0)
       }
     }))
   }
 
-  # thresholds.v
+  # thresholds.v: ----
   {
     thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 
@@ -149,11 +160,13 @@ fftrees_wordstofftrees <- function(x,
         threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\{|\\}"))[2], pattern = " ", "")
       }
 
+      # Output: ----
       return(threshold.i)
+
     })
   }
 
-  # directions.v
+  # directions.v: ----
   {
     # Look for directions in sentences
 
@@ -165,15 +178,16 @@ fftrees_wordstofftrees <- function(x,
 
       output <- output[length(output)]
 
-
+      # Output: ----
       return(output)
+
     })))
 
     directions.index <- sapply(directions.v, function(direction.i) {
       which(direction.i == directions.df$directions)
     })
 
-    # Look for negations in sentences
+    # Look for negations in sentences: ----
     negations <- c("not")
 
     # Which sentences have negations?
@@ -182,26 +196,27 @@ fftrees_wordstofftrees <- function(x,
         stringr::str_detect(node.sentence, negation.i)
       }))
 
+      # Output: ----
       return(output)
+
     }))
 
-    # Convert negation directions
+    # Convert negation directions: ----
     directions.v[negations.log] <- directions.df$negations[directions.index[negations.log]]
 
-    # now convert to directions.f
+    # now convert to directions.f:
     directions.v <- directions.df$directions.f[match(directions.v, table = directions.df$directions)]
 
-    # If any directions are 0, then flip the direction
-
+    # If any directions are 0, then flip the direction:
     flip.direction.log <- exits.v == 0
 
     directions.v[flip.direction.log] <- directions.df$negations[match(directions.v[flip.direction.log], table = directions.df$directions)]
   }
 
-  # Set final exit to .5
+  # Set final exit to .5:
   exits.v[nodes.n] <- ".5"
 
-  # Save result in tree.definitions
+  # Save result in tree.definitions: ----
 
   x$trees$definitions <- data.frame(
     tree = 1,
@@ -215,5 +230,9 @@ fftrees_wordstofftrees <- function(x,
 
   x$trees$n <- 1
 
+  # Output: ----
   return(x)
-}
+
+} # fftrees_wordstofftrees().
+
+# eof.

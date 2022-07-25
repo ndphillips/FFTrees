@@ -23,6 +23,8 @@ A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC sp
 \description{
 \code{showcues} plots the cue accuracies of an \code{FFTrees} object
 created by the \code{\link{FFTrees}} function (as points in ROC space).
+
+\code{showcues} is called when the main \code{\link{plot.FFTrees}} function is set to \code{what = "cues"}.
 }
 \examples{
 # Create fast-and-frugal trees (FFTs) for heart disease:

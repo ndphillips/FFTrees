@@ -2,15 +2,15 @@
 % Please edit documentation in R/fftrees_grow_fan.R
 \name{fftrees_grow_fan}
 \alias{fftrees_grow_fan}
-\title{Grows fast-and-frugal trees using the fan algorithm}
+\title{Grows fast-and-frugal trees (FFTs) using the \code{fan} algorithm.}
 \usage{
 fftrees_grow_fan(x, repeat.cues = TRUE)
 }
 \arguments{
-\item{x}{FFTrees. An FFTrees object}
+\item{x}{An \code{FFTrees} object.}
 
 \item{repeat.cues}{logical.}
 }
 \description{
-Grows fast-and-frugal trees using the fan algorithm
+Grows fast-and-frugal trees (FFTs) using the \code{fan} algorithm.
 }

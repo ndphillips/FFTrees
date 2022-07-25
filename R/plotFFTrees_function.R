@@ -11,10 +11,11 @@
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #' @param data The data to be plotted (as a string), either \code{"train"} or \code{"test"}. The corresponding dataset in object \code{x} will be used.
+#'
 #' @param what What should be plotted (as a string)?
 #' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
-#' \code{'cues'} shows the marginal accuracy of cues in an ROC space,
-#' \code{"roc"} shows an ROC curve of the tree(s).
+#' \code{'cues'} shows the marginal accuracy of cues in ROC space,
+#' \code{"roc"} shows the performance of tree(s) (and comparison algorithms) in ROC space.
 #'
 #' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 #' To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
@@ -50,6 +51,7 @@
 #'
 #' @param which.tree deprecated argument, included for backwards compatibility, use \code{"tree"} instead.
 #' @param decision.names deprecated argument.
+#'
 #' @param ... Currently ignored.
 #'
 #' @return A plot visualizing and describing an FFT.
@@ -60,7 +62,7 @@
 #'                      data = heartdisease
 #'                      )
 #'
-#' # Visualise the default FFT:
+#' # Visualize the default FFT (Tree #1):
 #' plot(heart.fft,
 #'      main = "Heart Disease Diagnosis",
 #'      decision.labels = c("Absent", "Present")
@@ -79,12 +81,16 @@
 #'      show.roc = FALSE
 #'      )
 #'
+#' # Visualize cue accuracies:
+#' plot(heart.fft, what = "cues")
+#'
 #' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
 #'
 #' @family plot functions
 #'
 #' @seealso
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
 #' \code{\link{showcues}} for plotting cue accuracies;
 #' \code{\link{FFTrees}} for creating FFTs from data.
 #'
@@ -129,20 +135,26 @@ plot.FFTrees <- function(x = NULL,
     par0 <- par(no.readonly = TRUE)
     on.exit(par(par0), add = TRUE)
 
+    # what:
+    what <- tolower(what)
+
     if (what %in% c("cues", "tree", "roc") == FALSE) {
-      stop("what must be either 'cues', 'tree', or 'roc'")
+      stop("plot.FFTrees: what must be either 'cues', 'tree', or 'roc'.")
     }
 
     if (is.null(decision.names) == FALSE) {
-      warning("decision.names is deprecated, use decision.lables instead")
+
+      warning("plot.FFTrees: decision.names is deprecated, use decision.labels instead.")
 
       decision.labels <- decision.names
     }
   }
 
-  # If what == cues, then send inputs to showcues()
+  # If what == cues, then send inputs to showcues():
   if (what == "cues") {
+
     showcues(x = x, data = data, main = main)
+
   }
 
   if (what != "cues") {
@@ -2068,7 +2080,7 @@ plot.FFTrees <- function(x = NULL,
     }
     }
 
-    # # Reset plotting space
+    # # Reset plotting space:
     # par(mfrow = c(1, 1))
     # par(mar = c(5, 4, 4, 1) + .1)
 
