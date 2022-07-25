@@ -19,17 +19,31 @@ following the methods described in [Phillips, Neth, Woike & Gaissmaier
 
 ## Installation
 
-You can install the released version of **FFTrees** from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of **FFTrees** [from
+CRAN](https://CRAN.R-project.org/package=FFTrees) with:
 
     install.packages("FFTrees")
 
-And the development version from [GitHub](https://github.com/) with:
+And the development version [from
+GitHub](https://github.com/ndphillips/FFTrees) with:
 
     # install.packages("devtools")
     devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
+## Purpose
+
+*Fast-and-frugal trees* (FFTs) are decision algorithms for solving
+binary classification tasks in an effective and efficient fashion. Their
+performance when predicting cases for new data competes with machine
+learning techniques such as logistic regression (LR), support-vector
+machines (SVM), and random forests (RF), but are typically simpler and
+more transparent.
+
 ## Examples
+
+As an example, let’s create a FFT predicting heart disease status
+(*Healthy* vs. *Diseased*) based on the `heartdisease` dataset included
+in **FFTrees**:
 
     library(FFTrees)
     #> 
@@ -42,22 +56,16 @@ And the development version from [GitHub](https://github.com/) with:
     #> Email: Nathaniel.D.Phillips.is@gmail.com
     #> FFTrees.guide() opens the main guide.
 
-Let’s create a fast-and-frugal tree predicting heart disease status
-(*Healthy* vs. *Diseased*) based on the `heartdisease` dataset.
+    dim(heartdisease)
+    #> [1] 303  14
 
 ### Using data
 
 The `heartdisease` data provides medical information for 303 patients
 that were tested for heart disease. The full data were split into two
 subsets: A `heart.train` dataset for fitting decision trees, and
-`heart.test` dataset for a testing the resulting trees.
-
-The criterion variable is `diagnosis`, a logical column (either `TRUE`
-or `FALSE`) which indicate the true state for each patient (i.e.,
-whether or not they suffer from heart disease).
-
-Here are the first rows and columns of both subsets of the
-`heartdisease` data:
+`heart.test` dataset for a testing the resulting trees. Here are the
+first rows and columns of both subsets of the `heartdisease` data:
 
 -   `heart.train` (the training / fitting dataset) contains the data
     from 150 patients:
@@ -102,6 +110,10 @@ Here are the first rows and columns of both subsets of the
     #> 10 FALSE        45     1 a          115   260     0 hypertrophy     185     0
     #> # … with 143 more rows, and 4 more variables: oldpeak <dbl>, slope <chr>,
     #> #   ca <dbl>, thal <chr>
+
+The criterion variable is `diagnosis`, a logical column (either `TRUE`
+or `FALSE`) which indicate the true state for each patient (i.e.,
+whether or not they suffer from heart disease).
 
 ### Creating fast-and-frugal trees (FFTs)
 
@@ -280,6 +292,6 @@ Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2055283105915586
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-24.\]
+\[File `README.Rmd` last updated on 2022-07-25.\]
 
 <!-- eof. -->
