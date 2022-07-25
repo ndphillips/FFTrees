@@ -114,7 +114,7 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,
                      data = heartdisease
                      )
 
-# Visualise the default FFT:
+# Visualize the default FFT (Tree #1):
 plot(heart.fft,
      main = "Heart Disease Diagnosis",
      decision.labels = c("Absent", "Present")
@@ -132,6 +132,9 @@ plot(heart.fft,
      show.levels = FALSE,
      show.roc = FALSE
      )
+
+# Visualize cue accuracies:
+plot(heart.fft, what = "cues")
 
 # For more details, see
 vignette("FFTrees_plot", package = "FFTrees")
