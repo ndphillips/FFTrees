@@ -11,10 +11,11 @@
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #' @param data The data to be plotted (as a string), either \code{"train"} or \code{"test"}. The corresponding dataset in object \code{x} will be used.
+#'
 #' @param what What should be plotted (as a string)?
 #' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
-#' \code{'cues'} shows the marginal accuracy of cues in an ROC space,
-#' \code{"roc"} shows an ROC curve of the tree(s).
+#' \code{'cues'} shows the marginal accuracy of cues in ROC space,
+#' \code{"roc"} shows the performance of tree(s) (and comparison algorithms) in ROC space.
 #'
 #' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 #' To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
@@ -50,6 +51,7 @@
 #'
 #' @param which.tree deprecated argument, included for backwards compatibility, use \code{"tree"} instead.
 #' @param decision.names deprecated argument.
+#'
 #' @param ... Currently ignored.
 #'
 #' @return A plot visualizing and describing an FFT.
