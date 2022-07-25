@@ -1,4 +1,9 @@
+# Final steps:
+
+# Feedback message (on console):
+
 .onAttach <- function(libname, pkgname) {
+
   packageStartupMessage("")
   packageStartupMessage("   O      ")
   packageStartupMessage("  / \\     ")
@@ -8,4 +13,7 @@
   packageStartupMessage("")
   packageStartupMessage("Email: Nathaniel.D.Phillips.is@gmail.com")
   packageStartupMessage("FFTrees.guide() opens the main guide.")
-}
+
+} # .onAttach().
+
+# eof.
