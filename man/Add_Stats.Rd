@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{Add_Stats}
 \alias{Add_Stats}
-\title{Adds decision statistics to a dataframe containing hr, cr, mi and fa}
+\title{Adds decision statistics to a dataframe containing hr, cr, mi, and fa.}
 \usage{
 Add_Stats(
   data,
@@ -21,5 +21,5 @@ Add_Stats(
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
 }
 \description{
-Adds decision statistics to a dataframe containing hr, cr, mi and fa
+Adds decision statistics to a dataframe containing hr, cr, mi, and fa.
 }

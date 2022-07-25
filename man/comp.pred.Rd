@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{comp.pred}
 \alias{comp.pred}
-\title{Wrapper for classfication algorithms}
+\title{Wrapper for classfication algorithms.}
 \usage{
 comp.pred(
   formula,
@@ -16,9 +16,9 @@ comp.pred(
 \arguments{
 \item{formula}{a formula}
 
-\item{data.train}{dataframe. A training dataset}
+\item{data.train}{dataframe. A training dataset.}
 
-\item{data.test}{dataframe. A testing dataset}
+\item{data.test}{dataframe. A testing dataset.}
 
 \item{algorithm}{string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests}
 
