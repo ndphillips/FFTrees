@@ -44,7 +44,7 @@ print.FFTrees <- function(x = NULL,
   params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', x$params$sens.w = ", x$params$x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
 
-  # Confusion table: ----
+  # General info: ----
 
   if (is.null(x$params$main) == FALSE) {
     cat(x$params$main)
@@ -81,17 +81,25 @@ print.FFTrees <- function(x = NULL,
 
   cat("\n")
 
+
+  # FFT definition: ----
+
   cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
 
   cat("\n")
 
   for (i in 1:length(x$trees$inwords[[tree]])) {
+
     cat(paste0("[", i, "] ", x$trees$inwords[[tree]][i], ".\n"))
+
   }
 
   cat("\n")
 
-  if (is.null(x$trees$stats$test)) {
+
+  # Get parameter values: ----
+
+  if (is.null(x$trees$stats$test)) { # (a) training:
 
     mydata <- "train"
     title <- "Training"
@@ -104,7 +112,7 @@ print.FFTrees <- function(x = NULL,
     N <- nrow(x$data$train)
     cost <- x$trees$stats$train$cost[tree]
 
-  } else {
+  } else { # (b) prediction:
 
     mydata <- "test"
     title <- "Prediction"
@@ -119,7 +127,8 @@ print.FFTrees <- function(x = NULL,
 
   }
 
-  # Accuracy: ----
+
+  # Accuracy information: ----
 
   cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Accuracy\n", sep = ""), sep = "")
 
@@ -131,7 +140,10 @@ print.FFTrees <- function(x = NULL,
       sep = ""
   )
 
-  console_confusionmatrix(
+
+  # Confusion table: ----
+
+  console_confusionmatrix( # See utility function from helper.R:
 
     hi = hi,
     mi = mi,
@@ -139,7 +151,9 @@ print.FFTrees <- function(x = NULL,
     cr = cr,
 
     cost = cost
+
   )
+
 
   # Speed and frugality: ----
 
@@ -149,6 +163,9 @@ print.FFTrees <- function(x = NULL,
 
   cat("mcu = ", round(x$trees$stats[[mydata]]$mcu[tree], 2), sep = "")
   cat(", pci = ", round(x$trees$stats[[mydata]]$pci[tree], 2), sep = "")
+
+
+  # Currently NO output.
 
 } # print.FFTrees().
 
