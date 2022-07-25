@@ -2,20 +2,20 @@
 % Please edit documentation in R/fftrees_ffttowords.R
 \name{fftrees_ffttowords}
 \alias{fftrees_ffttowords}
-\title{Describes an FFT in words}
+\title{Describes a fast-and-frugal tree (FFT) in words.}
 \usage{
 fftrees_ffttowords(x = NULL, digits = 2)
 }
 \arguments{
-\item{x}{FFTrees. An FFTrees object created with FFTrees()}
+\item{x}{An \code{FFTrees} object created with \code{\link{FFTrees}}.}
 
-\item{digits}{integer. How many digits to round numeric values}
+\item{digits}{How many digits to round numeric values (as integer)?}
 }
 \value{
-A list of string vectors
+A list of string vectors.
 }
 \description{
-Describes an FFT in words
+Describes a fast-and-frugal tree (FFT) in words.
 }
 \examples{
 
