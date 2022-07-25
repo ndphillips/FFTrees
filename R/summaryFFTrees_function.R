@@ -1,10 +1,10 @@
 #' Returns summary information about an \code{FFTrees} object.
 #'
-#' @param object FFTrees.
-#' @param tree integer. The tree to summarise
-#' @param ... additional arguments (currently ignored)
+#' @param object An \code{FFTrees} object.
+#' @param tree The tree to summarize (as an integer).
+#' @param ... Additional arguments (currently ignored).
 #'
-#' @return A data frame comtaining summary information about an FFT
+#' @return A data frame containing summary information about an FFT.
 #'
 #' @export
 
@@ -20,10 +20,12 @@ summary.FFTrees <- function(object,
   all.cues.n <- length(unique(unlist(strsplit(object$trees$definitions$cues, ";"))))
 
   train.n  <- nrow(object$data$train)
+
   train.hi <- object$trees$results$train$stats$hi[tree]
   train.mi <- object$trees$results$train$stats$mi[tree]
   train.cr <- object$trees$results$train$stats$cr[tree]
   train.fa <- object$trees$results$train$stats$fa[tree]
+
   train.nodes <- train.cues.n
   train.sens <- object$trees$results$train$stats$sens[tree]
   train.far <- object$trees$results$train$stats$far[tree]
@@ -35,7 +37,7 @@ summary.FFTrees <- function(object,
   train.pci <- object$trees$results$train$stats$pci[tree]
   train.mcu <- object$trees$results$train$stats$mcu[tree]
 
-  # 1. Stats exist: ----
+  # A. Stats exist: ----
   if (is.null(object$trees$results$test$stats) == FALSE) {
 
     test.n <- nrow(object$data$test)
@@ -96,7 +98,7 @@ summary.FFTrees <- function(object,
     )
   }
 
-  # 2. No stats exist: ----
+  # B. No stats exist: ----
   if (is.null(object$trees$results$test$stats)) {
 
     # Initialize: ----
@@ -116,7 +118,6 @@ summary.FFTrees <- function(object,
     test.bacc <- NA
     test.wacc <- NA
     test.cost <- NA
-
 
     summary.df <- data.frame(
       "train" = c(
@@ -157,7 +158,7 @@ summary.FFTrees <- function(object,
     )
   }
 
-  # Set row names: ----
+  # Set row names:
   rownames(summary.df) <- c(
     "n",
 
@@ -176,6 +177,7 @@ summary.FFTrees <- function(object,
   )
 
   # Output: ----
+
   return(summary.df)
 
 } # summary.FFTrees().
