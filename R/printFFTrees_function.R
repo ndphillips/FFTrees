@@ -3,7 +3,7 @@
 #' @description \code{print.FFTrees} provides summary information
 #' on FFTs from an \code{FFTrees} object.
 #'
-#' @param x An \coce{FFTrees} object created by \code{\link{FFTrees}}.
+#' @param x An \code{FFTrees} object created by \code{\link{FFTrees}}.
 #' @param tree The tree to explore (as integer).
 #' @param ... additional arguments passed to \code{print}.
 #'
@@ -22,17 +22,21 @@ print.FFTrees <- function(x = NULL,
 
   # Prepare: ----
 
-  train.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
+  train.cues   <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
   train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
-  all.cues <- paste(unique(unlist(strsplit(x$trees$definitions$cues, ";"))), collapse = ",")
+  all.cues   <- paste(unique(unlist(strsplit(x$trees$definitions$cues, ";"))), collapse = ",")
   all.cues.n <- length(unique(unlist(strsplit(x$trees$definitions$cues, ";"))))
 
   n.cues <- x$trees$definitions$nodes[tree]
 
+
+  # Intro: ----
+
   if (x$trees$n == 1) {
     summary.text <- paste(x$params$algorithm, " FFT predicting ", x$criterion_name, " with up to ", n.cues, " nodes", sep = "")
   }
+
   if (x$trees$n > 1) {
     summary.text <- paste(x$trees$n, " FFTs predicting ", x$criterion_name, " (", x$params$decision.labels[1], " v ", x$params$decision.labels[2], ")", sep = "")
   }
@@ -48,7 +52,9 @@ print.FFTrees <- function(x = NULL,
   }
 
   cat(crayon::blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
+
   cat("\n")
+
   cat("- Trees: ", x$trees$n, " fast-and-frugal trees predicting ",
       crayon::underline(x$criterion_name), "\n",
       sep = ""
