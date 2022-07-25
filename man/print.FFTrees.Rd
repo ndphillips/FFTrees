@@ -7,7 +7,7 @@
 \method{print}{FFTrees}(x = NULL, tree = 1, ...)
 }
 \arguments{
-\item{x}{An \coce{FFTrees} object created by \code{\link{FFTrees}}.}
+\item{x}{An \code{FFTrees} object created by \code{\link{FFTrees}}.}
 
 \item{tree}{The tree to explore (as integer).}
 
