@@ -3,6 +3,8 @@
 #' @description \code{showcues} plots the cue accuracies of an \code{FFTrees} object
 #' created by the \code{\link{FFTrees}} function (as points in ROC space).
 #'
+#' \code{showcues} is called when the main \code{\link{plot.FFTrees}} function is set to \code{what = "cues"}.
+#'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #' @param data A string indicating whether to show cue accuracies in training (\code{"train"}) or testing (\code{"test"}).
 #' @param cue.accuracies An optional data frame specifying cue accuracies directly (without specifying an \code{FFTrees} object x).
@@ -55,8 +57,11 @@ showcues <- function(x = NULL,
     goal <- x$params$goal
 
     if (data == "train") {
+
       if (is.null(x$cues$stats$train)) {
+
         stop("There are no training statistics in this object.")
+
       }
 
       cue.df <- x$cues$stats$train
@@ -64,9 +69,13 @@ showcues <- function(x = NULL,
     }
 
     if (data == "test") {
+
       if (is.null(x$cues$stats$test)) {
+
         stop("There are no test statistics in this object.")
+
       }
+
       if (is.null(x$cues$stats$test) == FALSE) {
 
         cue.df <- x$cues$stats$test
@@ -76,11 +85,15 @@ showcues <- function(x = NULL,
   } # if (is.null(x).
 
   if (is.null(x) & is.null(cue.accuracies) == FALSE) {
+
     cue.df <- cue.accuracies
+
   }
 
   if (nrow(cue.df) < top) {
+
     top <- nrow(cue.df)
+
   }
 
   cue.df$rank <- rank(-cue.df$wacc, ties.method = "first")
@@ -97,10 +110,15 @@ showcues <- function(x = NULL,
 
   # Main title:
   if (is.null(main)) {
+
     if (is.null(x$params$main)) {
+
       main <- "Individual cue accuracies"
+
     } else {
+
       main <- x$params$main
+
     }
   }
 
@@ -291,5 +309,12 @@ showcues <- function(x = NULL,
   # Currently NO output!
 
 } # showcues().
+
+
+# ToDo: ------
+
+# - allow using color palette again (for top cues).
+#
+# - fix bug: Currently no cue statistics for "test" data in FFTrees object.
 
 # eof.

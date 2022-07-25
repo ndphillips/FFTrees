@@ -62,7 +62,7 @@
 #'                      data = heartdisease
 #'                      )
 #'
-#' # Visualise the default FFT:
+#' # Visualize the default FFT (Tree #1):
 #' plot(heart.fft,
 #'      main = "Heart Disease Diagnosis",
 #'      decision.labels = c("Absent", "Present")
@@ -80,6 +80,9 @@
 #'      show.levels = FALSE,
 #'      show.roc = FALSE
 #'      )
+#'
+#' # Visualize cue accuracies:
+#' plot(heart.fft, what = "cues")
 #'
 #' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
@@ -132,20 +135,26 @@ plot.FFTrees <- function(x = NULL,
     par0 <- par(no.readonly = TRUE)
     on.exit(par(par0), add = TRUE)
 
+    # what:
+    what <- tolower(what)
+
     if (what %in% c("cues", "tree", "roc") == FALSE) {
-      stop("what must be either 'cues', 'tree', or 'roc'")
+      stop("plot.FFTrees: what must be either 'cues', 'tree', or 'roc'.")
     }
 
     if (is.null(decision.names) == FALSE) {
-      warning("decision.names is deprecated, use decision.lables instead")
+
+      warning("plot.FFTrees: decision.names is deprecated, use decision.labels instead.")
 
       decision.labels <- decision.names
     }
   }
 
-  # If what == cues, then send inputs to showcues()
+  # If what == cues, then send inputs to showcues():
   if (what == "cues") {
+
     showcues(x = x, data = data, main = main)
+
   }
 
   if (what != "cues") {
