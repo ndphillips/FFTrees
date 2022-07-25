@@ -85,6 +85,7 @@
 #' @family plot functions
 #'
 #' @seealso
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
 #' \code{\link{showcues}} for plotting cue accuracies;
 #' \code{\link{FFTrees}} for creating FFTs from data.
 #'
@@ -2068,7 +2069,7 @@ plot.FFTrees <- function(x = NULL,
     }
     }
 
-    # # Reset plotting space
+    # # Reset plotting space:
     # par(mfrow = c(1, 1))
     # par(mar = c(5, 4, 4, 1) + .1)
 
