@@ -104,7 +104,7 @@ We will start by printing the `FFTrees` object to return basic information to th
 
 ```{r fft-print}
 # Print an FFTrees object:
-heart.fft  
+heart.fft
 ```
 
 The output tells us several pieces of information:
