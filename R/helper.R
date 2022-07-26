@@ -1026,15 +1026,18 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
 
   cat(rep(" ", times = (9 - nchar(sum_lbl))), sep = "")
   cat(sum_lbl)
-  cat("    ")  # cat("  | ")
+  cat("    ")  #  w/o |
+  # cat("  | ")  # with |
 
   cat(rep(" ", max(1, col_width - 2 - num_space(hi + mi))), sep = "")
   cat(scales::comma(hi + mi))
-  cat(" | ")
+  cat("   ")  #  w/o |
+  # cat(" | ")  # with |
 
   cat(rep(" ", max(1, col_width - 2 - num_space(cr + fa))), sep = "")
   cat(scales::comma(cr + fa))
-  cat(" | ")
+  cat("   ")  #  w/o |
+  # cat(" | ")  # with |
 
   cat("N = ")
   cat(crayon::underline(scales::comma(hi + mi + fa + cr), sep = ""), sep = "")
