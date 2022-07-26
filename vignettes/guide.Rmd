@@ -1,5 +1,5 @@
 ---
-title: "FFTrees: Fast-and-frugal decision trees"
+title: "FFTrees package overview"
 author: "Nathaniel D. Phillips, Nathaniel.D.Phillips.is@gmail.com, www.linkedin.com/in/nathanieldphillips/"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
