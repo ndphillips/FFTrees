@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 
-# FFTrees 1.6.6.9004
+# FFTrees 1.6.6.9005
 
 <!-- Status badges: -->
 
@@ -57,7 +57,7 @@ library(FFTrees)
 #>   / \
 #>  F   O
 #>     / \
-#>    F   Trees 1.6.6.9004
+#>    F   Trees 1.6.6.9005
 #> 
 #> Email: Nathaniel.D.Phillips.is@gmail.com
 #> FFTrees.guide() opens the main guide.
@@ -148,9 +148,9 @@ heart.fft
 #> - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
 #> 
 #> FFT #1: Definition
-#> [1] If thal = {rd,fd}, decide Disease.
-#> [2] If cp != {a}, decide Healthy.
-#> [3] If ca <= 0, decide Healthy, otherwise, decide Disease.
+#> [1] If thal = {rd,fd}, decide Disease..
+#> [2] If cp != {a}, decide Healthy..
+#> [3] If ca <= 0, decide Healthy, otherwise, decide Disease..
 #> 
 #> FFT #1: Prediction Accuracy
 #> Prediction Data: N = 153, Pos (+) = 73 (48%) 
@@ -213,9 +213,9 @@ The conditions can directly be supplied to the `my.tree` argument of
 `FFTrees()`:
 
 ``` r
-# Create your own custom FFT 'in words' and apply it to data
+# Create custom FFT 'in words' and apply it to data:
 
-# Create my own fft
+# Create my own FFT (from verbal description):
 my.fft <- FFTrees(formula = diagnosis ~., 
                   data = heart.train,
                   data.test = heart.test, 
@@ -223,16 +223,16 @@ my.fft <- FFTrees(formula = diagnosis ~.,
                   my.tree = "If sex = 1, predict Disease.
                              If age < 45, predict Healthy.
                              If thal = {fd, normal}, predict Disease. 
-                             Otherwise, predict Healthy")
+                             Otherwise, predict Healthy.")
 #> Setting goal = 'wacc'
 #> Setting goal.chase = 'waccc'
 #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
 #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
-# Plot my custom fft and see how it did
+# Plot and evaluate my custom FFT:
 plot(my.fft,
      data = "test",
-     main = "Custom FFT")
+     main = "My custom FFT")
 ```
 
 <img src="man/figures/README-example-heart-verbal-1.png" width="80%" style="display: block; margin: auto;" />
