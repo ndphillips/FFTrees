@@ -6,7 +6,7 @@
 #' @param object FFTrees.
 #'
 #' @keywords internal
-#' @return An FFTrees object with tree definitions
+#' @return An \code{FFTrees} object with tree definitions.
 #'
 #' @import testthat
 #'
