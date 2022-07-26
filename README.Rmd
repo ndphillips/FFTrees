@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 <!-- Goal of R package: -->
 
-The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) from data with a binary outcome following the methods described in [Phillips, Neth, Woike & Gaissmaier (2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
+The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) from data with a binary outcome following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)). 
 
 
 ## Installation

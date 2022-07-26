@@ -14,8 +14,9 @@ Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://tra
 
 The R package **FFTrees** creates, visualizes and evaluates
 *fast-and-frugal decision trees* (FFTs) from data with a binary outcome
-following the methods described in [Phillips, Neth, Woike & Gaissmaier
-(2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
+following the methods described in Phillips, Neth, Woike & Gaissmaier
+(2017, [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+[PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
 
 ## Installation
 
@@ -154,15 +155,15 @@ heart.fft
 #> FFT #1: Prediction Accuracy
 #> Prediction Data: N = 153, Pos (+) = 73 (48%) 
 #> 
-#> |         | True + | True - |
-#> |---------|--------|--------|
-#> |Decide + | hi 64  | fa 19  | 83
-#> |Decide - | mi 9   | cr 61  | 70
-#> |---------|--------|--------|
-#>             73       80       N = 153
+#> |          | True + | True - | Totals:
+#> |----------|--------|--------|
+#> | Decide + | hi  64 | fa  19 |      83
+#> | Decide - | mi   9 | cr  61 |      70
+#> |----------|--------|--------|
+#>   Totals:        73       80   N = 153
 #> 
-#> acc  = 81.7%  ppv  = 77.1%  npv  = 87.1%
-#> bacc = 82.0%  sens = 87.7%  spec = 76.2%
+#> acc  = 81.7%   ppv  = 77.1%   npv  = 87.1%
+#> bacc = 82.0%   sens = 87.7%   spec = 76.2%
 #> E(cost) = 0.183
 #> 
 #> FFT #1: Prediction Speed and Frugality
@@ -305,6 +306,6 @@ Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2055283105915586
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-25.\]
+\[File `README.Rmd` last updated on 2022-07-26.\]
 
 <!-- eof. -->
