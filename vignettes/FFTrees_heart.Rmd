@@ -123,14 +123,15 @@ knitr::include_graphics("../inst/confusiontable.jpg")
 
 For definitions of all accuracy statistics, see the [accuracy statistics](AccuracyStatistics.html) vignette.
 
+
 ### Step\ 4: Visualise the final FFT
 
 Use `plot()` to visualize an FFT (an `FFTrees` object):
 
 ```{r fft-plot, fig.width = 6.5, fig.height = 6}
-# Plot the best FFT when applied to the test data:
-plot(heart.fft,              # An FFTrees object
-     data = "test")          # Which data to plot? "train" or "test"
+# Plot the best FFT when applied to test data:
+plot(heart.fft,      # an FFTrees object
+     data = "test")  # data to plot ("train" or "test")?
 ```
 
 #### Other arguments
