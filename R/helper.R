@@ -924,12 +924,6 @@ num_space <- function(x) {
   if (isTRUE(all.equal(x, 0))) { return(1) }
 
   # else:
-
-  # bug:
-  # ceiling(log10(x)) + floor(log(x, base = 1000))
-  # ERROR: num_space(100) yields 2, rather than 3.
-
-  # fix:
   nchar(scales::comma(x))
 
 } # num_space().
