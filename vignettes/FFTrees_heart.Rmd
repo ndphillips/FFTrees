@@ -153,9 +153,9 @@ plot(heart.fft,
 - `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
 
 ```{r fft-cues}
-# Plot cue accuracies (in ROC space):
+# Plot cue accuracies for training data (in ROC space):
 plot(heart.fft, 
-     data = "test", 
+     data = "train", 
      what = "cues")
 ```
 
