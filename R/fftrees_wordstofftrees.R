@@ -46,6 +46,7 @@ fftrees_wordstofftrees <- function(x,
   my.tree <- tolower(my.tree)
   decision.labels <- tolower(x$params$decision.labels)
 
+
   # Split: ----
 
   def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
@@ -96,10 +97,10 @@ fftrees_wordstofftrees <- function(x,
   {
     exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
-      # Indices of TRUE:
       y <- unlist(strsplit(node.sentence, " "))
-      true.indices  <- grep(tolower(decision.labels[2]), x = y)
-      false.indices <- grep(tolower(decision.labels[1]), x = y)
+
+      true.indices  <- grep(tolower(decision.labels[2]), x = y)  # indices of TRUE
+      false.indices <- grep(tolower(decision.labels[1]), x = y)  # indices of FALSE
 
       if (any(grepl(decision.labels[2], x)) & any(grepl(decision.labels[1], y))) {
 
@@ -207,7 +208,6 @@ fftrees_wordstofftrees <- function(x,
   exits.v[nodes.n] <- ".5"
 
   # Save result in tree.definitions: ----
-
   x$trees$definitions <- data.frame(
     tree = 1,
     nodes = nodes.n,
