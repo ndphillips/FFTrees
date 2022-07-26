@@ -1,5 +1,19 @@
 #' Describes a fast-and-frugal tree (FFT) in words.
 #'
+#' @description \code{fftrees_ffttowords} provides a verbal description
+#' of an FFT (in an \code{FFTrees} object).
+#'
+#' \code{fftrees_ffttowords} is the complement to
+#' \code{\link{fftrees_wordstofftrees}}, which parses a verbal description
+#' of an FFT into an \code{FFTrees} object.
+#'
+#' The final sentence (or tree node) of the FFT's description
+#' always predicts positive criterion values (i.e., TRUE instances) first,
+#' before predicting negative criterion values (i.e., FALSE instances).
+#' Note that this may require a reversal of cue directions (if the
+#' original tree description predicted FALSE instances
+#' before predicting TRUE instances).
+#'
 #' @param x An \code{FFTrees} object created with \code{\link{FFTrees}}.
 #' @param digits How many digits to round numeric values (as integer)?
 #'
@@ -13,6 +27,12 @@
 #' )
 #'
 #' inwords(heart.fft)
+#'
+#' @seealso
+#' \code{\link{fftrees_wordstofftrees}} for converting a verbal description
+#' of an FFT into an \code{FFTrees} object;
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from data.
 #'
 #' @export
 
@@ -113,31 +133,41 @@ fftrees_ffttowords <- function(x = NULL,
 
       if (exits.i %in% c(".5", "0.5")) {
 
-        # Negate direction: WHY???
-        direction.neg.i <- switch(directions.v[i],
-                                  "=" = "!=",
-                                  "!=" = "=",
-                                  ">" = "<=",
-                                  "<" = ">=",
-                                  ">=" = "<",
-                                  "<=" = ">"
-        )
-
         direction.pos.i <- directions.v[i]
+
+        # # Negate direction:
+        # direction.neg.i <- switch(directions.v[i],
+        #                           "=" = "!=",
+        #                           "!=" = "=",
+        #                           ">" = "<=",
+        #                           "<" = ">=",
+        #                           ">=" = "<",
+        #                           "<=" = ">"
+        # )
+
+        # WHY??? Negation is only indicated when left exit == decision.labels[2]!
+        # +++ here now +++
 
         if (classes.v[i] %in% c("c", "l")) {
 
-          # Negate direction:
+          # # Negative directions (FALSE cases first):
+          # sentence.i.1 <- paste0(
+          #   "If ", cues.v[i], " ", direction.neg.i, " {", thresholds.v[i], "}, decide ",
+          #   decision.labels[1], "") # FALSE cases
+          #
+          # sentence.i.2 <- paste0(
+          #   ", otherwise, decide ",
+          #   decision.labels[2], ".") # TRUE cases
+
+          # Positive directions (TRUE cases first):
           sentence.i.1 <- paste0(
-            "If ", cues.v[i], " ", direction.neg.i, " {", thresholds.v[i], "}, decide ",
-            decision.labels[1], "")
+            "If ", cues.v[i], " ", direction.pos.i, " {", thresholds.v[i], "}, decide ",
+            decision.labels[2], "") # TRUE cases
 
           sentence.i.2 <- paste0(
             ", otherwise, decide ",
-            decision.labels[2], ".")
+            decision.labels[1], ".") # FALSE cases
 
-          # sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " {", thresholds.v[i], "}, predict ",
-          #                       decision.labels[2])
 
         }
 
@@ -146,18 +176,24 @@ fftrees_ffttowords <- function(x = NULL,
           threshold.i <- thresholds.v[i]
           threshold.i <- round(as.numeric(thresholds.v[i]), digits)
 
-          # Negate direction:
+          # # Negative directions (FALSE cases first):
+          # sentence.i.1 <- paste0(
+          #   "If ", cues.v[i], " ", direction.neg.i, " ", thresholds.v[i],
+          #   ", decide ", decision.labels[1], "") # FALSE cases
+          #
+          # sentence.i.2 <- paste0(
+          #   ", otherwise, decide ",
+          #   decision.labels[2], ".") # TRUE cases
+
+          # Positive directions (TRUE cases first):
           sentence.i.1 <- paste0(
-            "If ", cues.v[i], " ", direction.neg.i, " ", thresholds.v[i],
-            ", decide ", decision.labels[1], "")
+            "If ", cues.v[i], " ", direction.pos.i, " ", thresholds.v[i],
+            ", decide ", decision.labels[2], "") # TRUE cases
 
           sentence.i.2 <- paste0(
             ", otherwise, decide ",
-            decision.labels[2], "."
-          )
+            decision.labels[1], ".") # FALSE cases
 
-          # sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " ", thresholds.v[i], ", predict ",
-          #                        decision.labels[2])
         }
 
         sentence.i <- paste0(sentence.i.1, sentence.i.2, collapse = "")
