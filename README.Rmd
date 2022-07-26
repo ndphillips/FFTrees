@@ -114,10 +114,10 @@ For example, let's create a tree with the following three nodes and evaluate its
 
 1. If `sex = 1`, predict _Disease_.
 2. If `age < 45`, predict _Healthy_.
-3. If `thal = {fd, normal}`, predict _Disease_,   
-otherwise, predict _Healthy_. 
+3. If `thal = {fd, normal}`, predict _Healthy_,   
+otherwise, predict _Disease_. 
 
-The conditions can directly be supplied to the `my.tree` argument of `FFTrees()`: 
+These conditions can directly be supplied to the `my.tree` argument of `FFTrees()`: 
 
 ```{r example-heart-verbal, fig.width = 6, fig.height = 6, out.width = "80%", fig.align='center'}
 # Create custom FFT 'in words' and apply it to data:
@@ -129,8 +129,8 @@ my.fft <- FFTrees(formula = diagnosis ~.,
                   decision.labels = c("Healthy", "Disease"),
                   my.tree = "If sex = 1, predict Disease.
                              If age < 45, predict Healthy.
-                             If thal = {fd, normal}, predict Disease. 
-                             Otherwise, predict Healthy.")
+                             If thal = {fd, normal}, predict Healthy,  
+                             Otherwise, predict Disease.")
 
 # Plot and evaluate my custom FFT:
 plot(my.fft,
@@ -139,9 +139,7 @@ plot(my.fft,
 ```
 
 As we can see, this particular tree is somewhat biased: 
-It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases). 
-Its overall _accuracy_ exceeds the data's baseline by a fair amount. 
-
+It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases).  Overall, the _accuracy_ of our custom tree exceeds the data's baseline by a fair amount, but exploring the **FFTrees** package further will make it easy to design better FFTs.
 
 ## Citation
 
