@@ -41,12 +41,16 @@ fftrees_ffttowords <- function(x = NULL,
       exits.i <- paste(exits.v[i])
 
       if (exits.i %in% c("0", "1")) {
+
+        # 1. Node with positive exit:
         if (exits.i == "1") {
+
           if (classes.v[i] %in% c("c", "l")) {
+
             sentence.i <- paste0(
               "If ", cues.v[i], " ", directions.v[i], " {", thresholds.v[i],
-              "}, decide ", decision.labels[2], ""
-            )
+              "}, decide ", decision.labels[2], ".")
+
           }
 
           if (classes.v[i] %in% c("n", "i")) {
@@ -56,11 +60,12 @@ fftrees_ffttowords <- function(x = NULL,
 
             sentence.i <- paste0(
               "If ", cues.v[i], " ", directions.v[i], " ", threshold.i,
-              ", decide ", decision.labels[2]
-            )
+              ", decide ", decision.labels[2], ".")
+
           }
         }
 
+        # 2. Node with negative exit:
         if (exits.i == "0") {
 
           # Negate the direction:
@@ -74,20 +79,22 @@ fftrees_ffttowords <- function(x = NULL,
           )
 
           if (classes.v[i] %in% c("c", "l")) {
+
             sentence.i <- paste0(
               "If ", cues.v[i], " ", direction.i, " {", thresholds.v[i], "}, decide ",
-              decision.labels[1], ""
-            )
+              decision.labels[1], ".")
+
           }
 
           if (classes.v[i] %in% c("n", "i")) {
+
             threshold.i <- thresholds.v[i]
             threshold.i <- round(as.numeric(thresholds.v[i]), 2)
 
             sentence.i <- paste0(
               "If ", cues.v[i], " ", direction.i, " ", threshold.i,
-              ", decide ", decision.labels[1], ""
-            )
+              ", decide ", decision.labels[1], ".")
+
           }
         }
 
@@ -95,6 +102,7 @@ fftrees_ffttowords <- function(x = NULL,
 
       }
 
+      # 3. Final node: ----
       if (exits.i %in% c(".5", "0.5")) {
 
         # Negate the direction:
@@ -110,18 +118,27 @@ fftrees_ffttowords <- function(x = NULL,
         direction.pos.i <- directions.v[i]
 
         if (classes.v[i] %in% c("c", "l")) {
+
+          # negate direction:
           sentence.i.1 <- paste0(
             "If ", cues.v[i], " ", direction.neg.i, " {", thresholds.v[i], "}, decide ",
             decision.labels[1]
           )
 
+          # # NOT negate direction:
+          # sentence.i.1 <- paste0(
+          #   "If ", cues.v[i], " ", direction.pos.i, " {", thresholds.v[i], "}, decide ",
+          #   decision.labels[1]
+          # )
+
+
           sentence.i.2 <- paste0(
             ", otherwise, decide ",
-            decision.labels[2]
-          )
+            decision.labels[2], ".")
 
           # sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " {", thresholds.v[i], "}, predict ",
           #                       decision.labels[2])
+
         }
 
         if (classes.v[i] %in% c("n", "i")) {
@@ -130,13 +147,12 @@ fftrees_ffttowords <- function(x = NULL,
           threshold.i <- round(as.numeric(thresholds.v[i]), digits)
 
           sentence.i.1 <- paste0(
-            "If ", cues.v[i], " ", direction.neg.i, " ", thresholds.v[i], ", decide ",
-            decision.labels[1]
-          )
+            "If ", cues.v[i], " ", direction.neg.i, " ", thresholds.v[i],
+            ", decide ", decision.labels[1], "")
 
           sentence.i.2 <- paste0(
             ", otherwise, decide ",
-            decision.labels[2]
+            decision.labels[2], "."
           )
 
           # sentence.i.2 <- paste0(", otherwise, if ", cues.v[i], " ", direction.pos.i, " ", thresholds.v[i], ", predict ",
@@ -146,11 +162,14 @@ fftrees_ffttowords <- function(x = NULL,
         sentence.i <- paste0(sentence.i.1, sentence.i.2, collapse = "")
 
         sentences.v <- c(sentences.v, sentence.i)
+
       }
     }
 
-    sentences.comb <- paste(sentences.v, collapse = ". ")
+    # # Combine sentences:
+    # sentences.comb <- paste(sentences.v, collapse = ". ")
 
+    # Add to FFTrees x:
     x$trees$inwords[[tree]] <- sentences.v
 
   } # for (tree).
@@ -158,7 +177,6 @@ fftrees_ffttowords <- function(x = NULL,
   # Output: ----
 
   return(x)
-
 
 } # fftrees_ffttowords().
 
