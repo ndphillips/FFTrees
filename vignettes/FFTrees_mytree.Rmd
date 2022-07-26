@@ -79,19 +79,21 @@ Now, let's pass the `my.tree` argument to `FFTrees()` to force apply our FFT to 
 
 ```{r create-my-tree}
 # Pass a verbally defined FFT to FFTrees with the my.tree argument: 
-my.heart.fft <- FFTrees(diagnosis ~.,
-                        data = heartdisease,
-                        my.tree = "If sex = 1, predict True.
-                                   If age < 45, predict False. 
-                                   If thal = {fd, normal}, predict True. 
-                                   Otherwise, predict False.")
+my_fft <- FFTrees(diagnosis ~.,
+                  data = heartdisease,
+                  my.tree = "If sex = 1, predict True.
+                             If age < 45, predict False. 
+                             If thal = {fd, normal}, predict True. 
+                             Otherwise, predict False.")
 ```
 
-Let's see how well our manually constructed FFT did:
+Let's see how well our manually constructed FFT (`my_fft`) did:
 
 ```{r plot-my-tree, fig.cap="**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`."}
 # Plot an FFTrees object:
-plot(my.heart.fft)
+plot(my_fft)
+
+# inwords(my_fft)
 ```
 
 As we can see, this FFT is pretty bad --- it has a high sensitivity (of\ 85%), but suffers from a much lower specificity (of only\ 43%). 
@@ -100,18 +102,20 @@ Let's see if we can come up with a better FFT by using the cues\ `thal`, `cp`, a
 
 ```{r verbal-spec-fft, fig.cap="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`."}
 # Specify an alternative FFT with the my.tree argument: 
-my.heart.fft <- FFTrees(diagnosis ~.,
-                        data = heartdisease,
-                        my.tree = "If thal = {rd,fd}, predict True.
-                                   If cp != {a}, predict False. 
-                                   If ca > 1, predict True. 
-                                   Otherwise, predict False.")
+my_fft_2 <- FFTrees(diagnosis ~.,
+                    data = heartdisease,
+                    my.tree = "If thal = {rd,fd}, predict True.
+                               If cp != {a}, predict False. 
+                               If ca > 1, predict True. 
+                               Otherwise, predict False.")
 
 # Plot resulting FFT:
-plot(my.heart.fft)
+plot(my_fft_2)
+
+# inwords(my_fft_2)
 ```
 
-This FFT performs a bit better, but is still far from perfect. 
+This alternative FFT (`my_fft_2`) performs a bit better, but is still far from perfect. 
 So check out whether you can create even better ones! 
 
 
