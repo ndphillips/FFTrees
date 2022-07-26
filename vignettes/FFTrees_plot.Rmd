@@ -104,7 +104,7 @@ If a testing dataset separate from the one used to build the tree is used, we'll
 
     - The classification table on the left side shows the relationship between the true criterion states (as columns) and predicted decisions (as rows). The abbreviations _hi_ (hits) and _cr_ (Correct rejections) denote correct decisions; _mi_ (misses) and _fa_ (false-alarms) denote incorrect decisions.
     
-    - A range of vertical levels show the tree's cumulative performance in terms of frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balance accuracy (see [Accuracy statistics](AccuracyStatistics.html) for details). 
+    - A range of vertical levels show the tree's cumulative performance in terms of frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balance accuracy (see [Accuracy statistics](FFTrees_accuracy_statistics.html) for details). 
     
     - Finally, the plot on the right shows an ROC\ curve comparing the performance of all trees in the `FFTrees` object. 
     Additionally, the performance of logistic regression (blue) and CART (red) are shown. 
@@ -197,7 +197,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
-| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
 | 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
