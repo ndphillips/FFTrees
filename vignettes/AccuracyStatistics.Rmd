@@ -1,5 +1,5 @@
 ---
-title: "Accuracy Statistics in FFTrees"
+title: "Accuracy Statistics"
 author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
