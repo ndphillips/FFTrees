@@ -1,9 +1,25 @@
-#' Converts text describing an FFT into an FFT definition.
+#' Converts text describing an FFT into an \code{FFTrees} object.
+#'
+#' @description \code{fftrees_wordstofftrees} converts a verbal description
+#' of an FFT into a tree definition (of an \code{FFTrees} object).
+#'
+#' \code{fftrees_wordstofftrees} is the complement of
+#' \code{\link{fftrees_ffttowords}}, which converts a tree definition
+#' (of an \code{FFTrees} object) into a verbal description.
+#'
+#' Note that the parsing of \code{fftrees_wordstofftrees}
+#' ignores the 2nd part of the final sentence (i.e., the part
+#' beginning with "otherwise").
 #'
 #' @param x An \code{FFTrees} object.
 #' @param my.tree string. A verbal string defining an FFT.
 #'
-#' @return An \code{FFTrees} object with a new definition defined by \code{my.tree}.
+#' @return An \code{FFTrees} object with a new tree definition as described by \code{my.tree}.
+#'
+#' @seealso
+#' \code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from data.
 #'
 #' @importFrom stringr str_extract str_detect
 #'
@@ -15,15 +31,15 @@ fftrees_wordstofftrees <- function(x,
   # Parameters / options: ----
 
   directions.df <- data.frame(
-    directions = c("=", ">", ">=", "<", "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
-    negations = c("!=", "<=", "<", ">=", ">", "=", "!=", "!=", "!=", "<=", ">="),
-    directions.f = c("=", ">", ">=", "<", "<=", "!=", "=", "=", "=", ">", "<"),
+    directions   = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
+    negations    = c("!=", "<=", "<",  ">=", ">",  "=",  "!=",    "!=",     "!=",       "<=",      ">="),
+    directions.f = c("=",  ">",  ">=", "<",  "<=", "!=", "=",     "=",      "=",        ">",       "<"),
     stringsAsFactors = FALSE
   )
 
   exits.df <- data.frame(
     exit.char = x$params$decision.labels,
-    exit = c("0", "1"),
+    exit = c("0", "1"), # 0:left vs. 1:right
     stringsAsFactors = FALSE
   )
 
@@ -47,10 +63,19 @@ fftrees_wordstofftrees <- function(x,
   decision.labels <- tolower(x$params$decision.labels)
 
 
-  # Split: ----
+  # Split my.tree into def parts: ----
 
   def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
-  def <- def[2:length(def)]
+  def <- def[2:length(def)]  # remove initial empty string
+  # print(def)  # 4debugging
+
+  def_fin_2 <- unlist(strsplit(def[length(def)], split = "otherwise", fixed = TRUE))
+  # print(def_fin_2)  # 4debugging
+
+  # Drop final sentence (beginning with "otherwise"):
+  def <- c(def[-length(def)], def_fin_2[1])
+  # print(def)  # 4debugging
+
   nodes.n <- length(def)
 
 
@@ -126,6 +151,8 @@ fftrees_wordstofftrees <- function(x,
       }
 
     }))
+
+    # print(exits.v)  # 4debugging
   }
 
   # thresholds.v: ----
@@ -197,10 +224,12 @@ fftrees_wordstofftrees <- function(x,
     # Now convert to directions.f:
     directions.v <- directions.df$directions.f[match(directions.v, table = directions.df$directions)]
 
-    # If any directions are 0, then flip their direction:
+    # If any directions are 0, flip their direction:
     flip.direction.log <- (exits.v == 0)
 
     directions.v[flip.direction.log] <- directions.df$negations[match(directions.v[flip.direction.log], table = directions.df$directions)]
+
+    # print(directions.v) # 4debugging
 
   }
 
@@ -221,6 +250,7 @@ fftrees_wordstofftrees <- function(x,
   x$trees$n <- 1
 
   # Output: ----
+
   return(x)
 
 } # fftrees_wordstofftrees().

@@ -180,18 +180,17 @@ FFTrees <- function(formula = NULL,
 
 
     if (any(c("zigzag", "max") %in% algorithm)) {
-      stop("'zigzag' and 'max' are no longer supported algorithms")
+      stop("'zigzag' and 'max' are no longer supported algorithms.")
     }
   }
 
-  # Convert factor NA to new missing factor level
-
+  # Convert factor NA to new missing factor level:
   # data <- data %>%
   #   dplyr::mutate_if(is.factor, addNA)   %>%
   #   dplyr::mutate_if(is.character, addNA)
 
 
-  # TRAINING / TEST SPLIT: ------
+  # TRAINING / TEST split: ------
 
   if (train.p < 1 && is.null(data.test)) {
 
@@ -237,10 +236,10 @@ FFTrees <- function(formula = NULL,
     numthresh.method = numthresh.method,
     numthresh.n = numthresh.n,
     quiet = quiet,
-    do.lr = do.lr,
+    do.lr   = do.lr,
     do.cart = do.cart,
-    do.svm = do.svm,
-    do.rf = do.rf,
+    do.svm  = do.svm,
+    do.rf   = do.rf,
     do.comp = do.comp
   )
 
@@ -250,8 +249,7 @@ FFTrees <- function(formula = NULL,
 
   # 2) Apply to training data:  ----
 
-  # Training......
-
+  # Training...:
   x <- fftrees_apply(x,
                      mydata = "train"
   )
