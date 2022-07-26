@@ -12,20 +12,7 @@
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
-  # Clean up my.tree: ----
-
-  # Split into one sentence:
-
-  if (length(my.tree) > 1) {
-    my.tree <- paste(my.tree, collapse = ". ")
-  }
-
-  # Remove \n (can happen if my.tree has line breaks):
-  my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
-
-  if (all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
-    stop("Something is wrong with decision.labels as they are not in the my.tree.")
-  }
+  # Parameters / options: ----
 
   directions.df <- data.frame(
     directions = c("=", ">", ">=", "<", "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
@@ -41,12 +28,25 @@ fftrees_wordstofftrees <- function(x,
   )
 
 
-  # Split: ----
+  # Clean up my.tree: ----
+
+  # Split into one sentence:
+  if (length(my.tree) > 1) {
+    my.tree <- paste(my.tree, collapse = ". ")
+  }
+
+  # Remove \n (can happen if my.tree has line breaks):
+  my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
+
+  if (all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
+    stop("Some decision.labels are not in my.tree.")
+  }
 
   cue.names.l <- tolower(x$cue_names)
   my.tree <- tolower(my.tree)
   decision.labels <- tolower(x$params$decision.labels)
 
+  # Split: ----
 
   def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
   def <- def[2:length(def)]
@@ -72,12 +72,11 @@ fftrees_wordstofftrees <- function(x,
         }))
       }
 
-      # Output: ----
       return(output)
 
     })))
 
-    # Convert cue names back to original (non lower) values
+    # Convert cue names back to original (non lower) values:
     cues.v <- x$cue_names[sapply(cues.v, FUN = function(x) {
       which(cue.names.l == x)
     })]
@@ -98,37 +97,33 @@ fftrees_wordstofftrees <- function(x,
     exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
       # Indices of TRUE:
-
       y <- unlist(strsplit(node.sentence, " "))
-      true.indices <- grep(tolower(decision.labels[2]), x = y)
+      true.indices  <- grep(tolower(decision.labels[2]), x = y)
       false.indices <- grep(tolower(decision.labels[1]), x = y)
 
       if (any(grepl(decision.labels[2], x)) & any(grepl(decision.labels[1], y))) {
 
         if (min(true.indices) < min(false.indices)) {
 
-          # Output: ----
           return(1)
         }
 
         if (min(true.indices) > min(false.indices)) {
 
-          # Output: ----
           return(0)
         }
       }
 
       if (any(grepl(decision.labels[2], y)) & !any(grepl(decision.labels[1], y))) {
 
-        # Output: ----
         return(1)
       }
 
       if (!any(grepl("v", y)) & any(grepl(decision.labels[1], y))) {
 
-        # Output: ----
         return(0)
       }
+
     }))
   }
 
@@ -136,10 +131,10 @@ fftrees_wordstofftrees <- function(x,
   {
     thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 
-      # Get definition
+      # Get definition:
       x <- def[i]
 
-      # Remove the name of the cue
+      # Remove the name of the cue:
       x <- gsub(pattern = tolower(cues.v[i]), replacement = "", x = x)
 
       # Is there a number?
@@ -148,19 +143,16 @@ fftrees_wordstofftrees <- function(x,
       # Is there a brace?
       bracket.log <- grepl("\\{", x = x)
 
-      # If there is a number and no brace, get the number
-
+      # If there is a number and no brace, get the number:
       if (!bracket.log & num.log) {
         threshold.i <- stringr::str_extract(x, "[-+]?\\d+\\.*\\d*")
       }
 
-      # If there is a brace get what's inside the braces (and remove any spaces)
-
+      # If there is a brace get what's inside the braces (and remove any spaces):
       if (bracket.log) {
         threshold.i <- stringr::str_replace_all(unlist(strsplit(x, "\\{|\\}"))[2], pattern = " ", "")
       }
 
-      # Output: ----
       return(threshold.i)
 
     })
@@ -168,17 +160,15 @@ fftrees_wordstofftrees <- function(x,
 
   # directions.v: ----
   {
-    # Look for directions in sentences
+    # Look for directions in sentences:
 
     directions.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
       output <- which(sapply(directions.df$directions, FUN = function(direction.i) {
         stringr::str_detect(node.sentence, direction.i)
       }))
 
-
       output <- output[length(output)]
 
-      # Output: ----
       return(output)
 
     })))
@@ -196,7 +186,6 @@ fftrees_wordstofftrees <- function(x,
         stringr::str_detect(node.sentence, negation.i)
       }))
 
-      # Output: ----
       return(output)
 
     }))
@@ -204,13 +193,14 @@ fftrees_wordstofftrees <- function(x,
     # Convert negation directions: ----
     directions.v[negations.log] <- directions.df$negations[directions.index[negations.log]]
 
-    # now convert to directions.f:
+    # Now convert to directions.f:
     directions.v <- directions.df$directions.f[match(directions.v, table = directions.df$directions)]
 
-    # If any directions are 0, then flip the direction:
-    flip.direction.log <- exits.v == 0
+    # If any directions are 0, then flip their direction:
+    flip.direction.log <- (exits.v == 0)
 
     directions.v[flip.direction.log] <- directions.df$negations[match(directions.v[flip.direction.log], table = directions.df$directions)]
+
   }
 
   # Set final exit to .5:
