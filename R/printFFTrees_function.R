@@ -82,15 +82,15 @@ print.FFTrees <- function(x = NULL,
   cat("\n")
 
 
-  # FFT definition: ----
+  # FFT description: ----
 
   cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
 
   cat("\n")
 
-  for (i in 1:length(x$trees$inwords[[tree]])) {
+  for (i in 1:length(x$trees$inwords[[tree]])) { # for each sentence:
 
-    cat(paste0("[", i, "] ", x$trees$inwords[[tree]][i], ".\n"))
+    cat(paste0("[", i, "] ", x$trees$inwords[[tree]][i], "\n"))
 
   }
 
