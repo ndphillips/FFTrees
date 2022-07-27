@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_wordstofftrees.R
 \name{fftrees_wordstofftrees}
 \alias{fftrees_wordstofftrees}
-\title{Converts text describing an FFT into an FFT definition.}
+\title{Converts text describing an FFT into an \code{FFTrees} object.}
 \usage{
 fftrees_wordstofftrees(x, my.tree)
 }
@@ -12,8 +12,22 @@ fftrees_wordstofftrees(x, my.tree)
 \item{my.tree}{string. A verbal string defining an FFT.}
 }
 \value{
-An \code{FFTrees} object with a new definition defined by \code{my.tree}.
+An \code{FFTrees} object with a new tree definition as described by \code{my.tree}.
 }
 \description{
-Converts text describing an FFT into an FFT definition.
+\code{fftrees_wordstofftrees} converts a verbal description
+of an FFT into a tree definition (of an \code{FFTrees} object).
+
+\code{fftrees_wordstofftrees} is the complement of
+\code{\link{fftrees_ffttowords}}, which converts a tree definition
+(of an \code{FFTrees} object) into a verbal description.
+
+Note that the parsing of \code{fftrees_wordstofftrees}
+ignores the 2nd part of the final sentence (i.e., the part
+beginning with "otherwise").
+}
+\seealso{
+\code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
+\code{\link{print.FFTrees}} for printing summary information of FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
 }

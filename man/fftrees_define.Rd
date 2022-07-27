@@ -12,9 +12,10 @@ fftrees_define(x, object = NULL)
 \item{object}{FFTrees.}
 }
 \value{
-An FFTrees object with tree definitions
+An \code{FFTrees} object with tree definitions.
 }
 \description{
-\code{fftrees_define} creates definitions of fast-and-frugal trees (FFTs, as an \code{FFTrees} object).
+\code{fftrees_define} creates definitions of fast-and-frugal trees
+(FFTs, as an \code{FFTrees} object).
 }
 \keyword{internal}

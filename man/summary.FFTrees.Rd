@@ -7,14 +7,14 @@
 \method{summary}{FFTrees}(object, tree = 1, ...)
 }
 \arguments{
-\item{object}{FFTrees.}
+\item{object}{An \code{FFTrees} object.}
 
-\item{tree}{integer. The tree to summarise}
+\item{tree}{The tree to summarize (as an integer).}
 
-\item{...}{additional arguments (currently ignored)}
+\item{...}{Additional arguments (currently ignored).}
 }
 \value{
-A data frame comtaining summary information about an FFT
+A data frame containing summary information about an FFT.
 }
 \description{
 Returns summary information about an \code{FFTrees} object.
