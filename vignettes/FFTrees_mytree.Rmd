@@ -1,6 +1,6 @@
 ---
 title: "Manually specifying FFTs"
-author: "Nathaniel Phillips"
+author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -13,8 +13,8 @@ vignette: >
 
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
-                      fig.width = 7.5, 
-                      fig.height = 7.5, 
+                      fig.width = 7, 
+                      fig.height = 7, 
                       dpi = 100, 
                       out.width = "600px", 
                       fig.align='center', 
@@ -43,13 +43,16 @@ Both of these methods will bypass the tree construction algorithms built into th
 
 ### Using `my.tree`
 
-The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. When this argument is specified in `FFTrees()`, the function (specifically `wordstoFFT()` will try to extract the specified FFT from the argument.
+The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
+When this argument is specified in `FFTrees()`, the function (specifically, an auxiliary `fftrees_wordstofftrees()` function) will try to convert the verbal description into the definition of a FFT (of an `FFTrees` object). 
 
-For example, let's look at the columns `sex`, `age` and `thal` in the `heartdisease` data:
+For example, let's look at the `heartdisease` data to find out how the predictor variables `sex`, `age` and\ `thal` predict the criterion variable (`diagnosis`):
 
-```{r heart-data}
-head(heartdisease[c("sex", "age", "thal")])
+```{r heart-data, echo = FALSE}
+knitr::kable(head(heartdisease[c("sex", "age", "thal", "diagnosis")]))
 ```
+
+Table: **Table 1**: Three cues and binary criterion variable for first cases of the `heartdisease` data.
 
 Here's how we could specify an FFT using these cues as a sentence:
 
@@ -59,26 +62,32 @@ my.tree = "If sex = 1, predict True.
            If thal = {fd, normal}, predict True. Otherwise, predict False."
 ```
 
-Here are some notes on specifying trees manually:
+<!-- Instructions: -->
+
+Here are some **instructions** for manually specifying trees: 
 
 - Each node must start with the word "If" and should correspond to the form: `If <CUE> <DIRECTION> <THRESHOLD>, predict <EXIT>`.
 
-- Numeric thresholds should be specified directly (without brackets). 
+- Numeric thresholds should be specified directly (without brackets), like `age > 21`. 
 
-- Factor thresholds must be specified within curly braces like `sex = {male}`. 
-For factors with sets of values, values within a threshold should be separated by commas like `eyecolor = {blue,brown}`. 
+- For categorical variables, factor thresholds must be specified within curly braces, like `sex = {male}`. 
+For factors with sets of values, categories within a threshold should be separated by commas like `eyecolor = {blue,brown}`. 
 
-- Standard logical comparisons `=`, `!=`, `<`, `>=` (etc.) are valid. 
+- To specify cue directions, standard logical comparisons `=`, `!=`, `<`, `>=` (etc.) are valid. 
 For numeric cues, only use `>`, `>=`, `<`, or\ `<=`. For factors, only use `=` or\ `!=`.
 
 - Positive exits are indicated by `True`, while negative exits are specified by `False`. 
-The final node will be forced to have a bi-directional exit. 
+
+- The final node of an FFT is always bi-directional (i.e., has both a positive and a negative exit). 
+The description of the final node always mentions its positive (`True`) exit first. 
 The text `Otherwise, predict EXIT` that we have included in the example above is actually not necessary (and ignored). 
 
-Now, let's pass the `my.tree` argument to `FFTrees()` to force apply our FFT to the `heartdisease` data:
+<!-- Example: -->
+
+Now, let's pass the verbal `my.tree` argument to `FFTrees()` to create a corresponding FFT and apply it to the `heartdisease` data:
 
 ```{r create-my-tree}
-# Pass a verbally defined FFT to FFTrees with the my.tree argument: 
+# Pass a verbal description of an FFT to FFTrees (using my.tree): 
 my_fft <- FFTrees(diagnosis ~.,
                   data = heartdisease,
                   my.tree = "If sex = 1, predict True.
@@ -89,17 +98,21 @@ my_fft <- FFTrees(diagnosis ~.,
 
 Let's see how well our manually constructed FFT (`my_fft`) did:
 
-```{r plot-my-tree, fig.cap="**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`."}
-# Plot an FFTrees object:
-plot(my_fft)
+```{r plot-my-tree, fig.cap="**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show='hold'}
+# Inspect an FFTrees object:
+plot(my_fft)  # plot overview
+# my_fft      # print summary
 ```
 
-As we can see, this FFT is pretty bad --- it has a high sensitivity (of\ 91%), but suffers from an abysmal specificity (of only\ 10%). 
+As it turns out, this FFT is pretty bad: 
+It has high sensitivity (of\ 91%), but its abysmal specificity (of only\ 10%) allows for many false alarms. 
+Consequently, its accuracy measures are only around baseline level. 
 
-Let's see if we can come up with a better FFT by using the cues\ `thal`, `cp`, and\ `ca`: 
+Let's see if we can come up with a better FFT.
+The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
-```{r verbal-spec-fft, fig.cap="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`."}
-# Specify an alternative FFT with the my.tree argument: 
+```{r verbal-spec-fft, fig.cap="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show='hold'}
+# Specify an alternative FFT: 
 my_fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease,
                     my.tree = "If thal = {rd,fd}, predict True.
@@ -107,52 +120,60 @@ my_fft_2 <- FFTrees(diagnosis ~.,
                                If ca > 1, predict True. 
                                Otherwise, predict False.")
 
-# Plot resulting FFT:
-plot(my_fft_2)
+# Inspect:
+plot(my_fft_2)  # plot overview
+# my_fft_2      # print summary 
 ```
 
-This alternative FFT (`my_fft_2`) performs much better overall ---\ and is nicely balancing sensitivity and specificity\ --- but is still far from perfect. 
-So check out whether you can create even better ones! 
-
+This alternative FFT is nicely balancing sensitivity and specificity and performs much better overall. 
+Nevertheless, it is still far from perfect --- so check out whether you can create even better ones! 
 
 <!-- TESTing: --> 
 
-<!-- Notes: -->
-<!-- In `fftrees_wordstofftrees()`, "Otherwise" part is being ignored. --> 
-<!-- In `fftrees_ffttowords()`, final sentence always predicts positive instances first. --> 
+<!-- 1. In `fftrees_wordstofftrees()`, "Otherwise" part is being ignored. --> 
+<!-- 2. In `fftrees_ffttowords()`, the final sentence always predicts positive (True) instances first. --> 
 
-```{r testing-my-tree, echo = FALSE, eval = FALSE}
+```{r checking-my-tree, echo = FALSE, eval = FALSE}
 # 1. FFT with 2 cues (final cue is categorical): ------ 
 my_fft_1 <- FFTrees(diagnosis ~.,
                     data = heartdisease,
                     my.tree = "If age < 45, predict False. 
-                               If thal = {fd, normal}, predict False.     
+                               If thal = {fd, normal}, predict True.
                                Otherwise, predict the opposite.")
 
 # inspect:
 my_fft_1$trees$definitions
-# Note: Corrected the error in final direction: 
+# Note 1: 
+# Corrected an error in the direction definition of the final node: 
 # When 1st part of last sentence predicts TRUE, 
 # the final direction must not be negated.
 
 plot(my_fft_1)
-inwords(my_fft_1)
 my_fft_1
+inwords(my_fft_1)
 
-# 2. Reverse cues (i.e, final cue is numeric): ------ 
+
+# 2. Reverse the cues (i.e, final cue is numeric): ------ 
 my_fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease,
-                    my.tree = "If thal = {fd, normal}, predict False.     
-                               If age > 45, predict True. 
-                               Otherwise, predict the opposite.")
-
+                    my.tree = "If thal = {fd, normal}, predict True.     
+                               If age < 45, predict False. 
+                               Otherwise, etc.")
 # inspect:
 my_fft_2$trees$definitions
+# Note 2: 
+# The final sentence always predicts positive (True) instances first. 
+# When the description predicted False instances first, the cue direction is reversed. 
+
 plot(my_fft_2)
 inwords(my_fft_2)
 my_fft_2
 
-# 3. Example from Nathaniel: 
+# Comparing my_fft_1 and my_fft_2 shows that cue order matters:
+# In my_fft_1, the initial age cue causes few misses, but the 2nd thal cue makes more error than correct cases.
+# In my_fft_2, the initial thal cue causes many false alarms, and the 2nd age cue also is too liberal (on FA).
+
+# 3. Example used by Nathaniel: 
 my_fft_3 <- FFTrees(formula = diagnosis ~., 
                     data = heart.train,
                     data.test = heart.test, 
@@ -160,7 +181,7 @@ my_fft_3 <- FFTrees(formula = diagnosis ~.,
                     my.tree = "If sex = 1, predict Disease.
                               If age < 45, predict Healthy.
                               If thal = {fd, normal}, predict Disease. 
-                              Otherwise, predict Healthy")
+                              Otherwise, etc.")
 
 my_fft_3$trees$definitions
 plot(my_fft_3)
