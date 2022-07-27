@@ -194,7 +194,7 @@ FFTrees <- function(formula = NULL,
 
   if (train.p < 1 && is.null(data.test)) {
 
-    # Save original data
+    # Save original data:
     data_o <- data
 
     train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
