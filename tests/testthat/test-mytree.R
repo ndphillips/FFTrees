@@ -66,3 +66,29 @@ test_that("Can build tree based off of custom tree in words (v2)", {
     )
   )
 })
+
+test_that("custom tree in readme is built successfully", {
+
+  # Create my own FFT (from verbal description):
+  my.fft <- FFTrees(
+    formula = diagnosis ~ .,
+    data = heart.train,
+    data.test = heart.test,
+    decision.labels = c("Healthy", "Disease"),
+    my.tree = "If sex = 1, predict Disease.
+                             If age < 45, predict Healthy.
+                             If thal = {fd, normal}, predict Healthy,
+                             Otherwise, predict Disease."
+  )
+
+  expect_identical(
+    object = my.fft$trees$definitions,
+    expected = structure(list(
+      tree = 1L, nodes = 3L, classes = "n;n;c", cues = "sex;age;thal",
+      directions = "=;>=;!=", thresholds = "1;45;fd,normal", exits = "1;0;.5"
+    ), class = c(
+      "tbl_df",
+      "tbl", "data.frame"
+    ), row.names = c(NA, -1L))
+  )
+})
