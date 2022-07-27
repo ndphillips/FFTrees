@@ -69,18 +69,19 @@ test_that("Can build tree based off of custom tree in words (v2)", {
 
 test_that("A custom tree in my.tree is built successfully (v3)", {
 
-  # Create my own FFT (from verbal description,
+  # Create my.fft (from a verbal FFT description,
   # with the final node predicting the True (1:right) criterion value first:
+
   my.fft <- FFTrees(
     formula = diagnosis ~ .,
     data = heart.train,
     data.test = heart.test,
     decision.labels = c("Healthy", "Disease"),
     my.tree = "If sex = 1, predict Disease.
-    If age < 45, predict Healthy.
-    If thal = {fd, normal}, predict Healthy,
-    (and ignore the rest of this sentence)."
-  )
+               If age < 45, predict Healthy.
+               If thal = {fd, normal}, predict Healthy,
+               (and ignore the rest of this sentence)."
+    )
 
   expect_identical(
     object = my.fft$trees$definitions,
@@ -94,4 +95,6 @@ test_that("A custom tree in my.tree is built successfully (v3)", {
   )
 })
 
+
 # eof.
+
