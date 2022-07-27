@@ -1,24 +1,28 @@
 
 # FFTrees 1.6+
 
-Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees):
+<!-- Note version and date of last release: --> 
+
+Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees): 
+**FFTrees** version\ 1.6.6 [on 2022-07-18]:  
 
 ## Major
 
-* none yet.
+* Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
 
 ## Minor
 
-* Improved readability of 2x2 confusion table (when printing FFTs). 
 * Fixed bug to show correct point labels in ROC curve panel of `plot.FFTrees()`. 
+* Improved readability of 2x2 confusion table (when printing FFTs). 
 
 ## Details 
 
-* Revised vignettes. 
-* First pass of cleaning code and documentation.
+* Revised text, links, and appearance of vignettes. 
+* Cleanup of code and documentation.
 
+------ 
 
-<!-- Released versions: --> 
+# Released versions 
 
 ## 1.6.6
 
@@ -188,8 +192,8 @@ You can also control whether the results from competing algorithms are displayed
 
 <!-- footer: --> 
 
----- 
+------ 
 
-[File `NEWS.md` last updated on 2022-07-26.] 
+[File `NEWS.md` last updated on 2022-07-27.] 
 
 <!-- eof. -->
