@@ -1,6 +1,6 @@
 # helper.R:
 # Collection of various utility functions.
-# ---------------------------------------
+# ----------------------------------------
 
 # apply.break: ------
 
@@ -914,106 +914,161 @@ classtable <- function(prediction_v = NULL,
 } # classtable().
 
 
+# num_space: ------
+
+# Computes width of representation of x (as number of digits, in base 10)
+# when using scales::comma(x) (as in console_confusionmatrix() below).
+
+num_space <- function(x) {
+
+  if (isTRUE(all.equal(x, 0))) { return(1) }
+
+  # else:
+  nchar(scales::comma(x))
+
+} # num_space().
+
+
 # console_confusionmatrix: ------
 
-console_confusionmatrix <- function(hi, mi, fa, cr, cost) {
+console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
 
-  # hi <- 6534
-  # mi <- 5
-  # fa <- 765
-  # cr <- 54
-  #
-  # cost <- 0
+  # hi <- 6534  # 4debugging
+  # mi <-    5
+  # fa <-  765
+  # cr <-   54
+  # cost <-  0
 
-  num_space <- function(x) {
+  sum_lbl <- "Totals:"  # "Sums:"
 
-    if (isTRUE(all.equal(x, 0))) {
-      return(1)
-    }
+  # Number of digits in N:
+  ndg_N <- num_space(hi + mi + fa + cr)
 
-    ceiling(log10(x)) + floor(log(x, base = 1000))
+  # Column width (of columns 2 & 3):
+  col_width <- max(c(8, ndg_N + 5))
 
-  }
 
-  col_width <- max(c(8, floor(log10(max(c(hi, mi, fa, cr)))) + floor(log(max(c(hi, mi, fa, cr)), base = 1000)) + 6))
+  # Header row: ----
 
-  # Header row:
-  cat("|", rep(" ", times = 9),
+  cat("|",
+      rep(" ", times = 10),
       "| True +",
       rep(" ", col_width - 7),
       "| True -",
       rep(" ", col_width - 7),
-      "|\n",
+      "|",
+      rep(" ", nchar(" N = ") + ndg_N - nchar(sum_lbl)),
+      sum_lbl,
+      "\n",
       sep = ""
   )
 
-  # Line:
-  cat("|", rep("-", times = 9), "|", rep("-", times = col_width), "|", rep("-", times = col_width), "|\n", sep = "")
+  # Top line:
+  cat("|", rep("-", times = 10), "|", rep("-", times = col_width), "|", rep("-", times = col_width), "|\n", sep = "")
 
-  # Decide + Row:
-  cat("|Decide +",
-      " ",
-      "| ",
-      crayon::silver("hi "),
+
+  # Decide + row: ----
+
+  cat("| Decide +",
+      " | ",
+      crayon::silver("hi"),
+      rep(" ", max(1, col_width - 4 - num_space(hi))),
       crayon::green(scales::comma(hi)),
-      rep(" ", max(0, col_width - num_space(hi) - 4)),
-      "| ",
-      crayon::silver("fa "),
+      # rep(" ", max(0, col_width - num_space(hi) - 4)),
+      " | ",
+      crayon::silver("fa"),
+      rep(" ", max(1, col_width - 4 - num_space(fa))),
       crayon::red(scales::comma(fa)),
-      rep(" ", max(0, col_width - num_space(fa) - 4)),
-      "| ",
+      # rep(" ", max(0, col_width - num_space(fa) - 4)),
+      " | ",
       sep = ""
   )
+
+  cat(rep(" ", max(1, 4 + ndg_N - num_space(hi + fa))), sep = "")
   cat(scales::comma(hi + fa))
 
   cat("\n")
 
-  # Decide - Row:
-  cat("|Decide -",
-      " ",
-      "| ",
-      crayon::silver("mi "),
+
+  # Decide - row: ----
+
+  cat("| Decide -",
+      " | ",
+      crayon::silver("mi"),
+      rep(" ", max(1, col_width - 4 - num_space(mi))),
       crayon::red(scales::comma(mi)),
-      rep(" ", max(0, col_width - num_space(mi) - 4)),
-      "| ",
-      crayon::silver("cr "),
+      # rep(" ", max(0, col_width - num_space(mi) - 4)),
+      " | ",
+      crayon::silver("cr"),
+      rep(" ", max(1, col_width - 4 - num_space(cr))),
       crayon::green(scales::comma(cr)),
-      rep(" ", max(0, col_width - num_space(cr) - 4)),
-      "| ",
+      # rep(" ", max(0, col_width - num_space(cr) - 4)),
+      " | ",
       sep = ""
   )
+
+  cat(rep(" ", max(1, 4 + ndg_N - num_space(mi + cr))), sep = "")
   cat(scales::comma(mi + cr))
+
   cat("\n")
 
   # Bottom line:
-  cat("|-", rep("-", times = 8), "|", rep("-", times = col_width), "|", rep("-", times = col_width), "|\n", sep = "")
+  cat("|-", rep("-", times = 9), "|", rep("-", times = col_width), "|", rep("-", times = col_width), "|\n", sep = "")
 
-  # Bottom total:
-  cat(rep(" ", times = 12), sep = "")
+
+  # Bottom totals: ----
+
+  cat(rep(" ", times = (9 - nchar(sum_lbl))), sep = "")
+  cat(sum_lbl)
+  cat("    ")  #  w/o |
+  # cat("  | ")  # with |
+
+  cat(rep(" ", max(1, col_width - 2 - num_space(hi + mi))), sep = "")
   cat(scales::comma(hi + mi))
-  cat(rep(" ", times = col_width - num_space(hi + mi)), " ", sep = "")
-  cat(scales::comma(cr + fa))
+  cat("   ")  #  w/o |
+  # cat(" | ")  # with |
 
-  cat(rep(" ", col_width - num_space(cr + fa) + 1), sep = "")
+  cat(rep(" ", max(1, col_width - 2 - num_space(cr + fa))), sep = "")
+  cat(scales::comma(cr + fa))
+  cat("   ")  #  w/o |
+  # cat(" | ")  # with |
+
   cat("N = ")
   cat(crayon::underline(scales::comma(hi + mi + fa + cr), sep = ""), sep = "")
+
   cat("\n\n")
+
+
+  # Accuracy info: ----
 
   cat("acc  =", scales::percent((hi + cr) / (hi + mi + cr + fa), accuracy = .1), sep = " ")
 
-  cat("  ppv  =", scales::percent(hi / (hi + fa), accuracy = .1), sep = " ")
-  cat("  npv  =", scales::percent(cr / (cr + mi), accuracy = .1), sep = " ")
+  cat("   ppv  =", scales::percent(hi / (hi + fa), accuracy = .1), sep = " ")
+  cat("   npv  =", scales::percent(cr / (cr + mi), accuracy = .1), sep = " ")
+
   cat("\n")
 
   cat("bacc =", scales::percent((hi / (hi + mi) + cr / (cr + fa)) / 2, accuracy = .1), sep = " ")
 
-  cat("  sens =", scales::percent(hi / (hi + mi), accuracy = .1), sep = " ")
-  cat("  spec =", scales::percent(cr / (cr + fa), accuracy = .1), sep = " ")
+  cat("   sens =", scales::percent(hi / (hi + mi), accuracy = .1), sep = " ")
+  cat("   spec =", scales::percent(cr / (cr + fa), accuracy = .1), sep = " ")
+
   cat("\n")
-  cat("E(cost) =", scales::comma(cost, accuracy = .001), sep = " ")
+
+
+  # Base rate / baseline info: ----
 
   # cat("br   =", scales::percent((hi + mi) / (hi + cr + mi + fa), accuracy = .1), sep = " ")
   # cat("\n")
+
+
+  # Cost info: ----
+
+  # ToDo: Consider moving cost info below confusion matrix
+  #       (as it's a function of it, but not an accuracy measure).
+
+  cat("E(cost) =", scales::comma(cost, accuracy = .001), sep = " ")
+
 
 } # console_confusionmatrix().
 

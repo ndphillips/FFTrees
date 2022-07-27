@@ -11,9 +11,20 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+# URLs:
+url_pkg_CRAN   <- "https://CRAN.R-project.org/package=FFTrees"
+url_pkg_GitHub <- "https://github.com/ndphillips/FFTrees"
+url_pkg_issues <- "https://github.com/ndphillips/FFTrees/issues"
+
+url_JDM_issue <- "https://journal.sjdm.org/vol12.4.html"
+url_JDM_html  <- "https://journal.sjdm.org/17/17217/jdm17217.html"
+url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 ```
 
-# FFTrees `r packageVersion("FFTrees")`
+<!-- Title, version and logo: -->
+
+# FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: --> 
 
@@ -23,37 +34,35 @@ knitr::opts_chunk$set(
 
 <!-- Goal of R package: -->
 
-The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) from data with a binary outcome following the methods described in [Phillips, Neth, Woike & Gaissmaier (2017)](https://journal.sjdm.org/17/17217/jdm17217.pdf).
-
+The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, as\ [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
 
 ## Installation
 
-You can install the released version of **FFTrees** [from CRAN](https://CRAN.R-project.org/package=FFTrees) with:
+To install the latest release of **FFTrees** [from CRAN](`r url_pkg_CRAN`) evaluate: 
 
 ```{r install-cran, eval = FALSE}
 install.packages("FFTrees")
 ```
 
-And the development version [from GitHub](https://github.com/ndphillips/FFTrees) with:
+The current development version of **FFTrees** can be installed [from GitHub](`r url_pkg_GitHub`) with: 
 
 ```{r install-gitub, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 ```
 
-## Purpose 
+## What are fast-and-frugal trees (FFTs)?
 
-_Fast-and-frugal trees_\ (FFTs) are decision algorithms for solving binary classification tasks in an effective and efficient fashion. 
-Their performance when predicting cases for new data competes with machine learning techniques such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF), but are typically simpler and more transparent. 
+_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems. 
+The performance of FFTs when predicting cases for new data competes with machine learning techniques such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
+FFTs can be preferable to more complex algorithms because they are easy to communicate, require very little information, and are robust against overfitting.
 
 ## Examples
 
 As an example, let's create a FFT predicting heart disease status (_Healthy_ vs. _Diseased_) based on the `heartdisease` dataset included in **FFTrees**: 
 
 ```{r load-pkg}
-library(FFTrees)
-
-dim(heartdisease)
+library(FFTrees)  # load pkg
 ```
 
 ### Using data 
@@ -114,39 +123,38 @@ For example, let's create a tree with the following three nodes and evaluate its
 
 1. If `sex = 1`, predict _Disease_.
 2. If `age < 45`, predict _Healthy_.
-3. If `thal = {fd, normal}`, predict _Disease_,   
-otherwise, predict _Healthy_. 
+3. If `thal = {fd, normal}`, predict _Healthy_,   
+otherwise, predict _Disease_. 
 
-The conditions can directly be supplied to the `my.tree` argument of `FFTrees()`: 
+These conditions can directly be supplied to the `my.tree` argument of `FFTrees()`: 
 
 ```{r example-heart-verbal, fig.width = 6, fig.height = 6, out.width = "80%", fig.align='center'}
-# Create your own custom FFT 'in words' and apply it to data
+# Create custom FFT 'in words' and apply it to data:
 
-# Create my own fft
+# Create my own FFT (from verbal description):
 my.fft <- FFTrees(formula = diagnosis ~., 
                   data = heart.train,
                   data.test = heart.test, 
                   decision.labels = c("Healthy", "Disease"),
                   my.tree = "If sex = 1, predict Disease.
                              If age < 45, predict Healthy.
-                             If thal = {fd, normal}, predict Disease. 
-                             Otherwise, predict Healthy")
+                             If thal = {fd, normal}, predict Healthy,  
+                             Otherwise, predict Disease.")
 
-# Plot my custom fft and see how it did
+# Plot and evaluate my custom FFT:
 plot(my.fft,
      data = "test",
-     main = "Custom FFT")
+     main = "My custom FFT")
 ```
 
 As we can see, this particular tree is somewhat biased: 
-It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases). 
-Its overall _accuracy_ exceeds the data's baseline by a fair amount. 
+It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases).  Overall, the _accuracy_ of our custom tree exceeds the data's baseline by a fair amount, but exploring the **FFTrees** package further will make it easy to design better FFTs.
 
 
-## Citation
+## References
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
-We have an article introducing the **FFTrees**  package in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) (\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)\ ).  
+As a comprehensive, but understandable introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
 
 
 **Citation** (in APA format): 
@@ -156,12 +164,12 @@ FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision t
 _Judgment and Decision Making_, _12_ (4), 344–368. 
 
 
-We encourage you to read the article to learn more about the history of FFTs and how the FFTrees package creates them. 
-If you use **FFTrees** in your work, please cite us and spread the word so we can continue developing the package. 
+We encourage you to read [the article](`r url_JDM_issue`) to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
+If you use **FFTrees** in your own work, please cite us and share your experiences (e.g., [on Github](`r url_pkg_issues`)) so we can continue developing the package. 
 
-<!-- Examples uses/publications: -->
+<!-- Examples uses/publications (with links): -->
 
-Here are some example publications that have used **FFTrees** (find the full list at [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)): 
+Here are some scientific publications that have used **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list): 
 
 - [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. 
 _Journal of Neurology_, _267_(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)

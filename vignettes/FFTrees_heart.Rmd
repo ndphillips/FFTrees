@@ -104,7 +104,7 @@ We will start by printing the `FFTrees` object to return basic information to th
 
 ```{r fft-print}
 # Print an FFTrees object:
-heart.fft  
+heart.fft
 ```
 
 The output tells us several pieces of information:
@@ -121,16 +121,17 @@ All statistics to evaluate each tree can be derived from a 2\ x\ 2 confusion tab
 knitr::include_graphics("../inst/confusiontable.jpg")
 ```
 
-For definitions of all accuracy statistics, see the [accuracy statistics](AccuracyStatistics.html) vignette.
+For definitions of all accuracy statistics, see the [accuracy statistics](FFTrees_accuracy_statistics.html) vignette.
+
 
 ### Step\ 4: Visualise the final FFT
 
 Use `plot()` to visualize an FFT (an `FFTrees` object):
 
 ```{r fft-plot, fig.width = 6.5, fig.height = 6}
-# Plot the best FFT when applied to the test data:
-plot(heart.fft,              # An FFTrees object
-     data = "test")          # Which data to plot? "train" or "test"
+# Plot the best FFT when applied to test data:
+plot(heart.fft,      # an FFTrees object
+     data = "test")  # data to plot ("train" or "test")?
 ```
 
 #### Other arguments
@@ -152,9 +153,9 @@ plot(heart.fft,
 - `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
 
 ```{r fft-cues}
-# Plot cue accuracies (in ROC space):
+# Plot cue accuracies for training data (in ROC space):
 plot(heart.fft, 
-     data = "test", 
+     data = "train", 
      what = "cues")
 ```
 
@@ -217,7 +218,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
-| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
 | 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |

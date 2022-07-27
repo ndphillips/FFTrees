@@ -120,32 +120,41 @@ iris.fft <- FFTrees(formula = virginica ~.,
                     decision.labels = c("Not-V", "V"))
 ```
 
+For summary information, we could print the `FTrees` object:
+
+```{r iris-fft-print, eval = FALSE, results = 'hide'}
+iris.fft
+```
+
+However, let's take a look at the individual cue accuracies during training instead... 
 
 #### iris cue accuracies
 
-First, let's look at the individual cue training accuracies:
+We can plot the cue accuracies during training by specifying `what = "cues"`:
 
 ```{r iris-plot-cues}
-# Plot cue values for iris FFTrees: 
+# Plot cue values: 
 plot(iris.fft, 
      what = "cues")
 ```
 
-It looks like the cues `pet.wid` and `pet.len` are the best predictors. 
-Based on this, we should expect the final trees will likely use just one or both of these cues
-
+It looks like the two cues\ `pet.wid` and\ `pet.len` are the best predictors. 
+Based on this, we should expect the final trees will likely use one or both of these cues.
 
 #### iris FFT
 
-Now let's plot the best tree
+Now let's examine the best tree:
 
 ```{r iris-plot-fft}
-# Plot best FFT in iris FFTrees: 
+# Plot best FFT: 
 plot(iris.fft)
 ```
 
-Indeed, it looks like the best tree only uses the `pet.wid` and `pet.len` cues. 
+Indeed, it turns out that the best tree only uses the\ `pet.wid` and\ `pet.len` cues. 
 In our test dataset, the tree had a sensitivity of\ 100% and a specificity of\ 94%.
+
+
+#### Alternative FFTs
 
 Now, this tree did quite well, but what if someone wanted a tree with the lowest possible false alarm rate? 
 If we look at the ROC plot in the bottom left corner of the plot above, we can see that Tree\ #2 has a specificity close to\ 100%. 
@@ -161,7 +170,7 @@ As we can see, this tree does indeed have a higher specificity (of\ 98%).
 However, this increase comes at a cost of a lower sensitivity (of\ 90%). 
 
 Such trade-offs between measures are typical when fitting and predicting real-world data. 
-Importantly, FFTs (and the **FFTrees** package) help us to render these trade-offs more transparent. 
+Importantly, FFTs (and the **FFTrees** package) help us to render such trade-offs more transparent. 
 
 
 ## Vignettes
@@ -174,7 +183,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
-| 2 | [Accuracy statistics](AccuracyStatistics.html) | Definitions of accuracy statistics used throughout the package |
+| 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
 | 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |

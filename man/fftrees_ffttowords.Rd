@@ -15,7 +15,19 @@ fftrees_ffttowords(x = NULL, digits = 2)
 A list of string vectors.
 }
 \description{
-Describes a fast-and-frugal tree (FFT) in words.
+\code{fftrees_ffttowords} provides a verbal description
+of an FFT (in an \code{FFTrees} object).
+
+\code{fftrees_ffttowords} is the complement to
+\code{\link{fftrees_wordstofftrees}}, which parses a verbal description
+of an FFT into an \code{FFTrees} object.
+
+The final sentence (or tree node) of the FFT's description
+always predicts positive criterion values (i.e., TRUE instances) first,
+before predicting negative criterion values (i.e., FALSE instances).
+Note that this may require a reversal of cue directions (if the
+original tree description predicted FALSE instances
+before predicting TRUE instances).
 }
 \examples{
 
@@ -26,4 +38,10 @@ heart.fft <- FFTrees(diagnosis ~ .,
 
 inwords(heart.fft)
 
+}
+\seealso{
+\code{\link{fftrees_wordstofftrees}} for converting a verbal description
+of an FFT into an \code{FFTrees} object;
+\code{\link{print.FFTrees}} for printing summary information of FFTs;
+\code{\link{FFTrees}} for creating FFTs from data.
 }

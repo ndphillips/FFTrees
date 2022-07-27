@@ -9,6 +9,7 @@ Changes since last release on [CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 ## Minor
 
+* Improved readability of 2x2 confusion table (when printing FFTs). 
 * Fixed bug to show correct point labels in ROC curve panel of `plot.FFTrees()`. 
 
 ## Details 
@@ -189,6 +190,6 @@ You can also control whether the results from competing algorithms are displayed
 
 ---- 
 
-[File `NEWS.md` last updated on 2022-07-25.] 
+[File `NEWS.md` last updated on 2022-07-26.] 
 
 <!-- eof. -->
