@@ -11,9 +11,20 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+# URLs:
+url_pkg_CRAN   <- "https://CRAN.R-project.org/package=FFTrees"
+url_pkg_GitHub <- "https://github.com/ndphillips/FFTrees"
+url_pkg_issues <- "https://github.com/ndphillips/FFTrees/issues"
+
+url_JDM_issue <- "https://journal.sjdm.org/vol12.4.html"
+url_JDM_html  <- "https://journal.sjdm.org/17/17217/jdm17217.html"
+url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 ```
 
-# FFTrees `r packageVersion("FFTrees")`
+<!-- Title, version and logo: -->
+
+# FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: --> 
 
@@ -23,17 +34,17 @@ knitr::opts_chunk$set(
 
 <!-- Goal of R package: -->
 
-The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, as\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)). 
+The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, as\ [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
 
 ## Installation
 
-To install the latest release of **FFTrees** [from CRAN](https://CRAN.R-project.org/package=FFTrees) evaluate: 
+To install the latest release of **FFTrees** [from CRAN](`r url_pkg_CRAN`) evaluate: 
 
 ```{r install-cran, eval = FALSE}
 install.packages("FFTrees")
 ```
 
-The current development version of **FFTrees** can be installed [from GitHub](https://github.com/ndphillips/FFTrees) with: 
+The current development version of **FFTrees** can be installed [from GitHub](`r url_pkg_GitHub`) with: 
 
 ```{r install-gitub, eval = FALSE}
 # install.packages("devtools")
@@ -143,7 +154,7 @@ It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease
 ## References
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
-As a comprehensive, but understandable introduction to FFTs and the **FFTrees** package, we recommend reading our article in the journal _Judgment and Decision Making_, entitled [FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) (2017, as\ [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)\ ).  
+As a comprehensive, but understandable introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
 
 
 **Citation** (in APA format): 
@@ -153,10 +164,10 @@ FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision t
 _Judgment and Decision Making_, _12_ (4), 344–368. 
 
 
-We encourage you to read the article to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
-If you use **FFTrees** in your own work, please cite us and share your experiences (e.g., [on Github](https://github.com/ndphillips/FFTrees/issues)) so we can continue developing the package. 
+We encourage you to read [the article](`r url_JDM_issue`) to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
+If you use **FFTrees** in your own work, please cite us and share your experiences (e.g., [on Github](`r url_pkg_issues`)) so we can continue developing the package. 
 
-<!-- Examples uses/publications: -->
+<!-- Examples uses/publications (with links): -->
 
 Here are some scientific publications that have used **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list): 
 

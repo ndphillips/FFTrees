@@ -1,7 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
+<!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9006
+# FFTrees 1.6.6.9006 <img src = "./inst/FFTrees_logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -233,12 +234,12 @@ further will make it easy to design better FFTs.
 ## References
 
 We had a lot of fun creating **FFTrees** and hope you like it too! As a
-comprehensive, but understandable introduction to FFTs and the
-**FFTrees** package, we recommend reading our article in the journal
-*Judgment and Decision Making*, entitled [FFTrees: A toolbox to create,
-visualize,and evaluate fast-and-frugal decision
-trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) (2017,
-as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+comprehensive, but understandable introduction to FFTs, we recommend
+reading our article in the journal *Judgment and Decision Making*
+([2017, volume 12, issue 4](https://journal.sjdm.org/vol12.4.html)),
+entitled *FFTrees: A toolbox to create, visualize,and evaluate
+fast-and-frugal decision trees* (available in
+[html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf) ).
 
 **Citation** (in APA format):
@@ -248,14 +249,15 @@ as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
     fast-and-frugal decision trees. *Judgment and Decision Making*, *12*
     (4), 344–368.
 
-We encourage you to read the article to learn more about the history of
-FFTs and how the **FFTrees** package creates, visualizes, and evaluates
-them. If you use **FFTrees** in your own work, please cite us and share
-your experiences (e.g., [on
+We encourage you to read [the
+article](https://journal.sjdm.org/vol12.4.html) to learn more about the
+history of FFTs and how the **FFTrees** package creates, visualizes, and
+evaluates them. If you use **FFTrees** in your own work, please cite us
+and share your experiences (e.g., [on
 Github](https://github.com/ndphillips/FFTrees/issues)) so we can
 continue developing the package.
 
-<!-- Examples uses/publications: -->
+<!-- Examples uses/publications (with links): -->
 
 Here are some scientific publications that have used **FFTrees** (see
 [Google
