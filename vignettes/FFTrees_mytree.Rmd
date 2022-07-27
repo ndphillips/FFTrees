@@ -73,7 +73,7 @@ For numeric cues, only use `>`, `>=`, `<`, or\ `<=`. For factors, only use `=` o
 
 - Positive exits are indicated by `True`, while negative exits are specified by `False`. 
 The final node will be forced to have a bi-directional exit. 
-The text `Otherwise, predict EXIT` that we have included in the example above is actually not necessary. 
+The text `Otherwise, predict EXIT` that we have included in the example above is actually not necessary (and ignored). 
 
 Now, let's pass the `my.tree` argument to `FFTrees()` to force apply our FFT to the `heartdisease` data:
 
@@ -109,8 +109,6 @@ my_fft_2 <- FFTrees(diagnosis ~.,
 
 # Plot resulting FFT:
 plot(my_fft_2)
-
-# inwords(my_fft_2)
 ```
 
 This alternative FFT (`my_fft_2`) performs much better overall ---\ and is nicely balancing sensitivity and specificity\ --- but is still far from perfect. 
@@ -119,7 +117,9 @@ So check out whether you can create even better ones!
 
 <!-- TESTing: --> 
 
-<!-- Note: "Otherwise" part is being ignored! -->
+<!-- Notes: -->
+<!-- In `fftrees_wordstofftrees()`, "Otherwise" part is being ignored. --> 
+<!-- In `fftrees_ffttowords()`, final sentence always predicts positive instances first. --> 
 
 ```{r testing-my-tree, echo = FALSE, eval = FALSE}
 # 1. FFT with 2 cues (final cue is categorical): ------ 
@@ -151,6 +151,21 @@ my_fft_2$trees$definitions
 plot(my_fft_2)
 inwords(my_fft_2)
 my_fft_2
+
+# 3. Example from Nathaniel: 
+my_fft_3 <- FFTrees(formula = diagnosis ~., 
+                    data = heart.train,
+                    data.test = heart.test, 
+                    decision.labels = c("Healthy", "Disease"),
+                    my.tree = "If sex = 1, predict Disease.
+                              If age < 45, predict Healthy.
+                              If thal = {fd, normal}, predict Disease. 
+                              Otherwise, predict Healthy")
+
+my_fft_3$trees$definitions
+plot(my_fft_3)
+inwords(my_fft_3)
+my_fft_3
 ```
 
 
