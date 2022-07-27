@@ -13,32 +13,34 @@ Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://tra
 <!-- Goal of R package: -->
 
 The R package **FFTrees** creates, visualizes and evaluates
-*fast-and-frugal decision trees* (FFTs) from data with a binary outcome
-following the methods described in Phillips, Neth, Woike & Gaissmaier
-(2017, [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+*fast-and-frugal decision trees* (FFTs) for solving binary
+classification tasks following the methods described in Phillips, Neth,
+Woike & Gaissmaier (2017,
+as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
 
 ## Installation
 
-You can install the released version of **FFTrees** [from
-CRAN](https://CRAN.R-project.org/package=FFTrees) with:
+To install the latest release of **FFTrees** [from
+CRAN](https://CRAN.R-project.org/package=FFTrees) evaluate:
 
     install.packages("FFTrees")
 
-And the development version [from
+The current development version of **FFTrees** can be installed [from
 GitHub](https://github.com/ndphillips/FFTrees) with:
 
     # install.packages("devtools")
     devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
-## Purpose
+## What are fast-and-frugal trees (FFTs)?
 
-*Fast-and-frugal trees* (FFTs) are decision algorithms for solving
-binary classification tasks in an effective and efficient fashion. Their
-performance when predicting cases for new data competes with machine
+*Fast-and-frugal trees* (FFTs) are simple and transparent decision
+algorithms for solving binary classification problems. The performance
+of FFTs when predicting cases for new data competes with machine
 learning techniques such as logistic regression (LR), support-vector
-machines (SVM), and random forests (RF), but are typically simpler and
-more transparent.
+machines (SVM), and random forests (RF). FFTs can be preferable to more
+complex algorithms because they are easy to communicate, require very
+little information, and are robust against overfitting.
 
 ## Examples
 
@@ -46,7 +48,7 @@ As an example, let’s create a FFT predicting heart disease status
 (*Healthy* vs. *Diseased*) based on the `heartdisease` dataset included
 in **FFTrees**:
 
-    library(FFTrees)
+    library(FFTrees)  # load pkg
     #> 
     #>    O
     #>   / \
@@ -56,9 +58,6 @@ in **FFTrees**:
     #> 
     #> Email: Nathaniel.D.Phillips.is@gmail.com
     #> FFTrees.guide() opens the main guide.
-
-    dim(heartdisease)
-    #> [1] 303  14
 
 ### Using data
 
@@ -231,14 +230,15 @@ suffers from low *specificity* (i.e., not so good at identifying
 data’s baseline by a fair amount, but exploring the **FFTrees** package
 further will make it easy to design better FFTs.
 
-## Citation
+## References
 
-We had a lot of fun creating **FFTrees** and hope you like it too! We
-have an article introducing the **FFTrees** package in the journal
+We had a lot of fun creating **FFTrees** and hope you like it too! As a
+comprehensive, but understandable introduction to FFTs and the
+**FFTrees** package, we recommend reading our article in the journal
 *Judgment and Decision Making*, entitled [FFTrees: A toolbox to create,
 visualize,and evaluate fast-and-frugal decision
-trees](https://journal.sjdm.org/17/17217/jdm17217.pdf)
-( [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+trees](https://journal.sjdm.org/17/17217/jdm17217.pdf) (2017,
+as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf) ).
 
 **Citation** (in APA format):
@@ -249,15 +249,18 @@ trees](https://journal.sjdm.org/17/17217/jdm17217.pdf)
     (4), 344–368.
 
 We encourage you to read the article to learn more about the history of
-FFTs and how the FFTrees package creates them. If you use **FFTrees** in
-your work, please cite us and spread the word so we can continue
-developing the package.
+FFTs and how the **FFTrees** package creates, visualizes, and evaluates
+them. If you use **FFTrees** in your own work, please cite us and share
+your experiences (e.g., [on
+Github](https://github.com/ndphillips/FFTrees/issues)) so we can
+continue developing the package.
 
 <!-- Examples uses/publications: -->
 
-Here are some example publications that have used **FFTrees** (find the
-full list at [Google
-Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)):
+Here are some scientific publications that have used **FFTrees** (see
+[Google
+Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)
+for the full list):
 
 -   [Lötsch, J., Haehner, A., & Hummel, T. (2020).
     Machine-learning-derived rules set excludes risk of Parkinson’s
