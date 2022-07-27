@@ -162,7 +162,7 @@ plot(heart.fft,
 See the [Plotting FFTrees](FFTrees_plot.html) vignette for details on plotting FFTs. 
 
 
-### Additional Steps
+### Additional steps
 
 #### Accessing outputs
 
@@ -196,14 +196,16 @@ my.heart.fft <- FFTrees(formula = diagnosis ~.,
                         main = "Custom Heart FFT",
                         my.tree = "If chol > 350, predict True. 
                                    If cp != {a}, predict False. 
-                                   If age <= 35, predict False. Otherwise, predict True")
+                                   If age <= 35, predict False, otherwise, predict True.")
 ```
 
-Here is the resulting tree: (It's actually not too bad, although the first node is pretty worthless)
+Here is the resulting tree: 
 
 ```{r plot-my-fft, fig.width = 6.5, fig.height = 6}
 plot(my.heart.fft)
 ```
+
+It's actually not too bad, although the first node is pretty worthless (as it only classifies 3 cases, all as false alarms). 
 
 See the [Defining an FFT verbally](FFTrees_mytree.html) vignette for details on defining FFTs from verbal descriptions. 
 

@@ -12,7 +12,7 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7, dpi = 100, out.width = "600px", fig.align = 'center', message = FALSE)
 ```
 
 
@@ -29,12 +29,12 @@ We can visualize an `FFTrees` object\ `x` in two main ways:
 
 2. by visualizing individual trees and performance statistics with `plot(x)`.
 
-In the following, we illustrate both ways by creating FFTs based on the `titanic` dataset (included in the **FFTrees** package). 
+In the following, we illustrate both ways by creating FFTs based on the `titanic` data (included in the **FFTrees** package). 
 
 
 ### The Titanic data 
 
-```{r titanic-image, fig.align = "center", out.width="70%", echo = FALSE}
+```{r titanic-image, fig.align = "center", out.width="50%", echo = FALSE}
 knitr::include_graphics("../inst/titanic.jpg")
 ```
 
@@ -74,16 +74,17 @@ Given the axes of this plot, good performing cues should be near the top left co
 This implies here that _none_ of the cues predicts very well on its own. It looks like the best cue is `sex` (indicated as\ 1), followed by `class` (2). By contrast, `age` (3) seems a pretty terrible cue for predicting survival. 
 
 
-### Plotting a tree
+### Visualizing FFTs and their performance 
 
-To plot the tree from an `FFTrees` object, use `plot()`. Let's plot one of the trees (the best one, given our current goal):
+To visualize the tree from an `FFTrees` object, use `plot()`. 
+Let's plot one of the trees (the best one, given our current goal):
 
 ```{r titanic-plot, fig.width = 6, fig.height = 6.5, fig.align = 'center', fig.cap="**Figure 2**: Plotting the best FFT of an `FFTrees` object."}
 plot(titanic.fft)
 ```
 
-The resulting figure contains a lot of information in various panels. 
-Here are its main elements: 
+The resulting figure contains a lot of information in three distinct panels. 
+Here is a summary of their contents: 
 
 1. _Basic dataset information_: 
 The top row of the plot shows basic information on the current dataset: 
@@ -97,7 +98,7 @@ For example, the current tree (Tree\ #1 of\ 4) can be understood as:
     - Finally, if the person is a child, predict they survived,  otherwise predict that they died. 
 
 3. _Accuracy and performance information_: 
-The bottom row shows general performance statistics of the FFT:  
+The bottom row shows general performance statistics of the\ FFT:  
 The current tree was trained on the entire dataset of `r nrow(titanic)`\ cases. 
 If fitting data (i.e., data used to build the tree) are displayed, we'll see a "Fitting" label. 
 If a testing dataset separate from the one used to build the tree is used, we'll see a "Prediction" label. 
@@ -117,7 +118,7 @@ We can specify additional arguments to the `plot()` command that will change wha
 
 - `stats`: If you want to visualise a tree without any statistics, include the argument `stats = FALSE`:
 
-```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "70%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
+```{r titanic-stats, fig.align = 'center', fig.height = 6.5, fig.width = 10, out.width = "75%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
 # Show the best training FFT without statistics:
 plot(titanic.fft,
      stats = FALSE)
@@ -127,7 +128,7 @@ plot(titanic.fft,
 These arguments allow us to selectively turn on or turn off specific elements in the overall plot. 
 Here are some examples: 
 
-```{r titanic-args, fig.align = 'center', fig.height = 9, fig.width = 11, out.width = "70%", fig.cap="**Figure 4**: Plotting selected elements."}
+```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 8, out.width = "75%", fig.cap="**Figure 4**: Plotting selected elements."}
 # Hide some elements of the FFT plot: 
 plot(titanic.fft,
      show.icons = FALSE,     # hide icons
@@ -162,9 +163,9 @@ plot(titanic.pred.fft,
      tree = 1)
 ```
 
-The best training tree (Tree\ #1) had a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
-The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
-However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART did even worse than Tree\ #1.
+The best training tree (Tree\ #1) had a high specificity of\ $92$%, but a much lower sensitivity of just\ $53$%. 
+The overall accuracy of the tree's classifications is at\ $79$%, which exceeds the baseline, but is far from perfect. 
+However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART perfomed even worse than Tree\ #1.
 
 Now let's apply the same tree to the _test_ data: 
 
@@ -184,7 +185,7 @@ plot(titanic.pred.fft,
      data = "test")
 ```
 
-This alternative tree has a better sensitivity (of\ 60%), but its overall accuracy decreased to about baseline level (of\ 67%).  
+This alternative tree has a better sensitivity (of\ $60$%), but its overall accuracy decreased to about baseline level (of\ $67$%).  
 
 
 ## Vignettes

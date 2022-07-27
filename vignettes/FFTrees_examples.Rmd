@@ -190,6 +190,11 @@ Such trade-offs between measures are typical when fitting and predicting real-wo
 Importantly, FFTs (and the **FFTrees** package) help us to render such trade-offs more transparent. 
 
 
+### Titanic data
+
+For example FFTs that predict people's survival of the _Titanic_ disaster (using the `titanic` data), see the [Visualizing FFTs with plot()](FFTrees_plot.html) vignette. 
+
+
 ## Vignettes
 
 <!-- Table of all vignettes: -->
