@@ -46,15 +46,18 @@ Both of these methods will bypass the tree construction algorithms built into th
 The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
 When this argument is specified in `FFTrees()`, the function (specifically, an auxiliary `fftrees_wordstofftrees()` function) will try to convert the verbal description into the definition of a FFT (of an `FFTrees` object). 
 
-For example, let's look at the `heartdisease` data to find out how the predictor variables `sex`, `age` and\ `thal` predict the criterion variable (`diagnosis`):
+For example, let's look at the `heartdisease` data to find out how some predictor variables (e.g., `sex`, `age`, etc.) predict the criterion variable (`diagnosis`):
 
 ```{r heart-data, echo = FALSE}
-knitr::kable(head(heartdisease[c("sex", "age", "thal", "diagnosis")]))
+knitr::kable(head(heartdisease[c("sex", "age", "thal", "cp", "ca", 
+                                 "diagnosis")]))
 ```
 
-Table: **Table 1**: Three cues and binary criterion variable for first cases of the `heartdisease` data.
+Table: **Table 1**: Five cues and the binary criterion variable `diagnosis` for the first cases of the `heartdisease` data. 
 
-Here's how we could specify an FFT using these cues as a sentence:
+<!-- Verbal description of an FFT: -->
+
+Here's how we could verbally describe an FFT by using the first three cues in conditional sentences: 
 
 ```{r fft-description, eval = FALSE}
 my.tree = "If sex = 1, predict True.
@@ -62,7 +65,9 @@ my.tree = "If sex = 1, predict True.
            If thal = {fd, normal}, predict True. Otherwise, predict False."
 ```
 
-<!-- Instructions: -->
+As we will see, the `FFTrees()` function will accept this description (in its `my.tree` argument), create a corresponding FFT, and evaluate it on a corresponding dataset. 
+
+#### How to define FFTs 
 
 Here are some **instructions** for manually specifying trees: 
 
@@ -82,7 +87,8 @@ For numeric cues, only use `>`, `>=`, `<`, or\ `<=`. For factors, only use `=` o
 The description of the final node always mentions its positive (`True`) exit first. 
 The text `Otherwise, predict EXIT` that we have included in the example above is actually not necessary (and ignored). 
 
-<!-- Example: -->
+
+#### Example 
 
 Now, let's pass the verbal `my.tree` argument to `FFTrees()` to create a corresponding FFT and apply it to the `heartdisease` data:
 
@@ -108,7 +114,10 @@ As it turns out, this FFT is pretty bad:
 It has high sensitivity (of\ 91%), but its abysmal specificity (of only\ 10%) allows for many false alarms. 
 Consequently, its accuracy measures are only around baseline level. 
 
-Let's see if we can come up with a better FFT.
+
+#### Creating an alternative FFT
+
+Let's see if we can come up with a better FFT. 
 The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
 ```{r verbal-spec-fft, fig.cap="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show='hold'}
@@ -173,7 +182,8 @@ my_fft_2
 # In my_fft_1, the initial age cue causes few misses, but the 2nd thal cue makes more error than correct cases.
 # In my_fft_2, the initial thal cue causes many false alarms, and the 2nd age cue also is too liberal (on FA).
 
-# 3. Example used by Nathaniel: 
+
+# 3. Example used by Nathaniel (and skipping "otherwise" part of final node): 
 my_fft_3 <- FFTrees(formula = diagnosis ~., 
                     data = heart.train,
                     data.test = heart.test, 
@@ -181,7 +191,7 @@ my_fft_3 <- FFTrees(formula = diagnosis ~.,
                     my.tree = "If sex = 1, predict Disease.
                               If age < 45, predict Healthy.
                               If thal = {fd, normal}, predict Disease. 
-                              Otherwise, etc.")
+                              (etc.)")
 
 my_fft_3$trees$definitions
 plot(my_fft_3)
