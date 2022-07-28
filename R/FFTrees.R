@@ -52,13 +52,11 @@
 #' \code{svm} = support vector machines with \strong{e1071}.
 #' Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.
 #'
-#' @param store.data logical. Should training / test data be stored in the object? Default is \code{store.data = FALSE}.
-#'
 #' @param object FFTrees. An optional existing \code{FFTrees} object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
 #' @param force logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.
 #' @param quiet logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly. Default is \code{quiet = FALSE} (i.e., show progress).
 #'
-#' @param comp,rank.method,verbose Deprecated arguments (replaced and to be retired).
+#' @param comp,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
 #' @return An \code{FFTrees} object with the following elements:
 #'
@@ -171,27 +169,21 @@ FFTrees <- function(formula = NULL,
                     object = NULL,
                     force = FALSE,
                     quiet = FALSE,
-                    # Deprecated args:    Use instead:
-                    comp = NULL,        # do.comp
-                    verbose = NULL,     # progress
-                    rank.method = NULL, # algorithm
-                    store.data = NULL   # ?
+                    # Deprecated args:     Use instead:
+                    comp = NULL,         # do.comp
+                    rank.method = NULL,  # algorithm
+                    store.data = NULL,   # (none)
+                    verbose = NULL       # progress
 ) {
 
   # Preparation: ------
 
-  # A. Handle deprecated arguments: ----
+  # A. Handle deprecated arguments and options: ----
   {
     if (is.null(comp) == FALSE) {
       warning("The argument comp is deprecated. Use do.comp instead.")
 
       do.comp <- comp
-    }
-
-    if (is.null(verbose) == FALSE) {
-      warning("The argument verbose is deprecated. Use progress instead.")
-
-      progress <- verbose
     }
 
     if (is.null(rank.method) == FALSE) {
@@ -203,6 +195,14 @@ FFTrees <- function(formula = NULL,
     if (is.null(store.data) == FALSE) {
       warning("The argument store.data is deprecated and ignored.")
     }
+
+    if (is.null(verbose) == FALSE) {
+      warning("The argument verbose is deprecated. Use progress instead.")
+
+      progress <- verbose
+    }
+
+    # Deprecated options:
 
     if (any(c("max", "zigzag") %in% algorithm)) {
       stop("The 'max' and 'zigzag' algorithms are no longer supported.")

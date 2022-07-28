@@ -33,17 +33,17 @@ FFTrees(
   do.lr = TRUE,
   do.rf = TRUE,
   do.svm = TRUE,
-  store.data = FALSE,
   object = NULL,
-  rank.method = NULL,
   force = FALSE,
-  verbose = NULL,
+  quiet = FALSE,
   comp = NULL,
-  quiet = FALSE
+  rank.method = NULL,
+  store.data = NULL,
+  verbose = NULL
 )
 }
 \arguments{
-\item{formula}{formula. A formula specifying a logical criterion variable as a function of 1 or more predictor variables (cues).}
+\item{formula}{formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).}
 
 \item{data}{dataframe. A training dataset.}
 
@@ -83,7 +83,7 @@ For stopping rule \code{"exemplars"}, this is the smallest percentage of exampla
 
 \item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.}
 
-\item{main}{string. An optional label for the dataset. Passed on to other functions like \code{plot.FFTrees()}, and \code{print.FFTrees()}.}
+\item{main}{string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.}
 
 \item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.}
 
@@ -91,56 +91,70 @@ For stopping rule \code{"exemplars"}, this is the smallest percentage of exampla
 
 \item{repeat.cues}{logical. Can cues occur multiple times within a tree?}
 
-\item{my.tree}{string. A string representing an FFT in words. For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE"}}
+\item{my.tree}{string. A string representing a verbal description of an FFT, i.e., an FFT in words.
+For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
 
 \item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
 
-\item{do.comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison?
+\item{do.comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? All TRUE by default. Options are:
 \code{cart} = regular (non-frugal) trees with \strong{rpart};
 \code{lr} = logistic regression with \strong{glm};
 \code{rf} = random forests with \strong{randomForest};
 \code{svm} = support vector machines with \strong{e1071}.
-Setting \code{comp = FALSE} sets all these arguments to \code{FALSE}.}
+Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.}
 
-\item{store.data}{logical. Should training / test data be stored in the object? Default is \code{FALSE}.}
+\item{object}{FFTrees. An optional existing \code{FFTrees} object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
 
-\item{object}{FFTrees. An optional existing FFTrees object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
+\item{force}{logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.}
 
-\item{rank.method, verbose, comp}{deprecated arguments.}
+\item{quiet}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly. Default is \code{quiet = FALSE} (i.e., show progress).}
 
-\item{force}{logical. If TRUE, forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense.}
-
-\item{quiet}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly.}
+\item{comp, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
 }
 \value{
 An \code{FFTrees} object with the following elements:
 
+Current elements:
+
+\describe{
+  \item{criterion_name}{The name of the binary criterion variable (as character).}
+  \item{cue_names}{The names of all potential predictor variables (cues) in the data (as character).}
+  \item{formula}{The \code{\link{formula}} specified when creating the FFTs.}
+  \item{trees}{A list of FFTs created, with further details contained in \code{n}, \code{best}, \code{definitions}, \code{inwords}, \code{stats}, \code{level_stats}, and \code{decisions}.}
+  \item{data}{The original training and test data (if available).}
+  \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}).}
+  \item{competition}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
+  \item{cues}{A list of cue information, with further details contained in \code{thresholds} and \code{stats}.}
+}
+
+Older elements:
+
 \describe{
   \item{formula}{The formula specified when creating the FFTs.}
-  \item{data.desc}{Descriptive statistics of the data}
-  \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm}
+  \item{data.desc}{Descriptive statistics of the data.}
+  \item{cue.accuracies}{Marginal accuracies of each cue given a decision threshold calculated with the specified algorithm.}
   \item{tree.definitions}{Definitions of each tree created by \strong{FFTrees}. Each row corresponds to one tree. Different levels within a tree are separated by semi-colons. See above for more details.}
-  \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately}
+  \item{tree.stats}{Tree definitions and classification statistics. Training and test data are stored separately.}
   \item{cost}{A list of cost information for each case in each tree.}
-  \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately}
+  \item{level.stats}{Cumulative classification statistics at each tree level. Training and test data are stored separately.}
   \item{decision}{Final classification decisions. Each row is a case and each column is a tree. For example, row 1 in column 2 is the classification decision of tree number 2 for the first case. Training and test data are stored separately.}
   \item{levelout}{The level at which each case is classified in each tree. Rows correspond to cases and columns correspond to trees. Training and test data are stored separately.}
   \item{tree.max}{The index of the 'final' tree specified by the algorithm. For algorithms that only return a single tree, this value is always 1.}
   \item{inwords}{A verbal definition of \code{tree.max}.}
-  \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal})}
+  \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}).}
   \item{comp}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
-  \item{data}{The original training and test data (only included when \code{store.data = TRUE})}
+  \item{data}{The original training and test data (only included when \code{store.data = TRUE}).}
   }
 }
 \description{
 \code{FFTrees} is the workhorse function of the \strong{FFTrees} package for creating fast-and-frugal trees (FFTs).
 
-FFTs are decision algorithms for solving binary classification tasks, i.e., they predict the values of a binary criterion variable based on multiple predictor variables (cues).
+FFTs are decision algorithms for solving binary classification tasks, i.e., they predict the values of a binary criterion variable based on 1 or multiple predictor variables (cues).
 
 Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
 that can then be printed, plotted, and examined further.
 
-The criterion and preditor variables are specified in \code{formula} notation.
+The criterion and preditor variables are specified in \code{\link{formula}} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 
 Create fast-and-frugal trees (FFTs).
@@ -175,9 +189,9 @@ custom.fft <- FFTrees(
   formula = diagnosis ~ .,
   data = heartdisease,
   my.tree = "If chol > 300, predict True.
-                                  If sex = {m}, predict False,
-                                  If age > 70, predict True, otherwise predict False"
-                                  )
+             If sex = {m}, predict False,
+             If age > 70, predict True, otherwise predict False."
+             )
 
 # Plot the (pretty terrible) custom tree:
 plot(custom.fft)
