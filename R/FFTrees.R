@@ -178,7 +178,7 @@ FFTrees <- function(formula = NULL,
 
   # Preparation: ------
 
-  # A. Handle deprecated arguments and options: ----
+  # a. Handle deprecated arguments and options: ----
   {
     if (is.null(comp) == FALSE) {
       warning("The argument comp is deprecated. Use do.comp instead.")
@@ -215,7 +215,7 @@ FFTrees <- function(formula = NULL,
   #   dplyr::mutate_if(is.character, addNA)
 
 
-  # B. Training / Test split: ----
+  # b. Training / Test split: ----
 
   if (train.p < 1 && is.null(data.test)) {
 
@@ -232,13 +232,13 @@ FFTrees <- function(formula = NULL,
     if (quiet == FALSE) {
       message(
         "Splitting data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
-        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set"
+        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set."
       )
     }
   }
 
 
-  # C. Create an FFTrees object: ----
+  # 1. Create an FFTrees object: ------
 
   x <- fftrees_create(
     data = data,
@@ -260,21 +260,21 @@ FFTrees <- function(formula = NULL,
     repeat.cues = repeat.cues,
     numthresh.method = numthresh.method,
     numthresh.n = numthresh.n,
-    quiet = quiet,
     do.lr   = do.lr,
     do.cart = do.cart,
     do.svm  = do.svm,
     do.rf   = do.rf,
-    do.comp = do.comp
+    do.comp = do.comp,
+    quiet = quiet
   )
 
 
-  # 1. Get FFTrees definitions: ------
+  # 2. Get FFTrees definitions: ------
 
   x <- fftrees_define(x, object = object)
 
 
-  # 2. Apply to training data:  ------
+  # 3. Apply to training data:  ------
 
   # Training...:
   x <- fftrees_apply(x,
@@ -285,14 +285,14 @@ FFTrees <- function(formula = NULL,
   x <- fftrees_ranktrees(x)
 
 
-  # 3. Apply to test data: ------
+  # 4. Apply to test data: ------
 
   if (!is.null(x$data$test)) {
     x <- fftrees_apply(x, mydata = "test")
   }
 
 
-  # 4. Define trees in words: ------
+  # 5. Define trees in words: ------
 
   x <- fftrees_ffttowords(
     x = x,
@@ -300,7 +300,7 @@ FFTrees <- function(formula = NULL,
   )
 
 
-  # 5. Fit competitive algorithms: ------
+  # 6. Fit competitive algorithms: ------
 
   x <- fftrees_fitcomp(x = x)
 
