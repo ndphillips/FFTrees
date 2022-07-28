@@ -52,7 +52,7 @@ The critical dependent variable (or binary criterion variable) is `diagnosis`. T
 
 ### Creating trees with `FFTrees()`
 
-To illustrate the difference between fitting and prediction, we will train the FFTs on `heart.train`, and test their prediction performance in `heart.test`. 
+To illustrate the difference between fitting and prediction, we will _train_ the FFTs on `heart.train`, and _test_ their prediction performance in `heart.test`. 
 Note that we can also automate the training / test split using the `train.p` argument in `FFTrees()`. 
 Setting `train.p` will randomly split `train.p`\% of the original data into a training set. 
 
@@ -86,16 +86,23 @@ Inspecting these elements provides a wealth of information on the range of FFTs 
 
 <!-- Current list: -->
 
-- `criterion_name`: The name of the (predicted) criterion variable. 
-- `cue_names`: The names of all cue variables (predictors). 
-- `formula`: The formula used to create the `FFTrees` object. 
-- `trees`: Information on all trees in the object, with list elements that specify the definitions and performance of each FFT.
-- `data`: Information on the datasets used to train and test the FFTs. 
-- `params`: The parameters used for constructing FFTs. 
-- `competition`: Models and statistics of alternative classification algorithms.
-- `cues`: Information on all cue variables (predictors), with list elements that specify their thresholds and performance when training FFTs. 
+1. `criterion_name`: The name of the (predicted) binary criterion variable. 
 
-<!-- OLD list (seems outdated): -->
+2. `cue_names`: The names of all potential cue variables (predictors). 
+
+3. `formula`: The formula used to create the `FFTrees` object. 
+
+4. `trees`: Information on all trees contained in the object, with list elements that specify their number\ `n`, the `best` tree, as well as tree `definitions`, verbal descriptions (`inwords`), `decisions`, and the performance characteristics (`stats` and `level_stats`) of each FFT.
+
+5. `data`: The datasets used to `train` and `test` the FFTs (if applicable). 
+
+6. `params`: The parameters used for constructing FFTs (currently `r length(names(heart.fft$params))` parameters). 
+
+7. `competition`: Models and statistics of alternative classification algorithms (for `test`, `train`, and `models`).
+
+8. `cues`: Information on all cue variables (predictors), with list elements that specify their `thresholds` and performance `stats` when training FFTs. 
+
+<!-- OLD list (outdated): -->
 
 <!-- - `formula`: The formula used to create the `FFTrees` object. -->
 <!-- - `data.desc`: Basic information about the datasets. -->
@@ -113,8 +120,10 @@ Inspecting these elements provides a wealth of information on the range of FFTs 
 ### Basic performance characteristics of FFTs 
 
 We can view basic information about the `FFTrees` object by printing its name. 
-The default tree construction algorithm `ifan` creates multiple trees with different exit structures. 
-When printing an `FFTrees` object, we automatically obtain the information about the tree with the highest value of the `goal` statistic. By default, the `goal` is set to weighed accuracy\ `wacc`:
+As the default tree construction algorithm\ `ifan` creates multiple trees with different exit structures, an `FFTrees` object typically contains many FFTs. 
+
+When printing an `FFTrees` object, we automatically get the performance on the `test` data (i.e., for _prediction_, rather than _fitting_) and obtain the information about the tree with the highest value of the `goal` statistic. 
+By default, the `goal` is set to weighed accuracy\ `wacc`:
 
 ```{r print-fftrees-object-default}
 # Performance of the best tree, given the current goal:
@@ -135,14 +144,21 @@ Here is a description of the statistics provided by default:
 
 **Table 1**: Description of FFTs' basic accuracy and speed/frugality statistics. 
 
-<!-- Same for alternative FFTs: -->
 
-To obtain the same information for another FFT of an `FFTrees` object, we can call `print()` with a numeric `tree` parameter. For instance, the following expression would provide the basic performance characteristics of Tree\ 3:
+See the [Accuracy statistics](FFTrees_accuracy_statistics.html) vignette for details on the accuracy statistics used throughout the **FFTrees** package. 
+
+
+<!-- Print performance of alternative FFTs: -->
+
+To obtain the same information for another FFT of an `FFTrees` object, we can call `print()` with a numeric `tree` parameter. 
+For instance, the following expression would provide the basic performance characteristics of Tree\ 3:
 
 ```{r print-fftrees-object-else, eval = FALSE}
 # Performance of alternative FFTs (Tree 3) in an FFTrees object: 
 print(heart.fft, tree = 3)
 ```
+
+Alternatively, we could visualize the same tree and its performance by calling `plot(heart.fft, tree = 3, data = "test")`. 
 
 
 ### Cue performance information 
@@ -165,6 +181,8 @@ plot(heart.fft,
      main = "Heartdisease cue accuracy",
      what = "cues")
 ```
+
+See the [Plotting FFTrees objects](FFTrees_plot.html) vignette for more details on visualizing cue accuracies and FFTs. 
 
 
 ### Tree definitions
