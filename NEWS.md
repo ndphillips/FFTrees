@@ -8,6 +8,7 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 ## Major
 
+* Added `data` argument to `print.FFTrees()` to optionally print an FFT's training performance, rather than reporting predictions on test data whenever available. 
 * Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
 
 ## Minor
