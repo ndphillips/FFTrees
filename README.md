@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9007 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.6.6.9008 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -55,7 +55,7 @@ in **FFTrees**:
     #>   / \
     #>  F   O
     #>     / \
-    #>    F   Trees 1.6.6.9007
+    #>    F   Trees 1.6.6.9008
     #> 
     #> Email: Nathaniel.D.Phillips.is@gmail.com
     #> FFTrees.guide() opens the main guide.
@@ -126,10 +126,10 @@ Now let’s use `FFTrees()` to create fast-and-frugal trees from the
                          data = heart.train,
                          data.test = heart.test, 
                          decision.labels = c("Healthy", "Disease"))
-    #> Setting goal = 'wacc'
-    #> Setting goal.chase = 'waccc'
-    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
-    #> Growing FFTs with ifan
+    #> Setting goal = 'wacc'.
+    #> Setting goal.chase = 'wacc'.
+    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0).
+    #> Growing FFTs with ifan:
     #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
     # Printing an FFTrees object shows aggregate statistics: 
@@ -212,9 +212,9 @@ These conditions can directly be supplied to the `my.tree` argument of
                                  If age < 45, predict Healthy.
                                  If thal = {fd, normal}, predict Healthy,  
                                  Otherwise, predict Disease.")
-    #> Setting goal = 'wacc'
-    #> Setting goal.chase = 'waccc'
-    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
+    #> Setting goal = 'wacc'.
+    #> Setting goal.chase = 'wacc'.
+    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0).
     #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
     # Plot and evaluate my custom FFT:
@@ -299,6 +299,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-27.\]
+\[File `README.Rmd` last updated on 2022-07-28.\]
 
 <!-- eof. -->
