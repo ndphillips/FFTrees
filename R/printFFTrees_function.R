@@ -3,8 +3,14 @@
 #' @description \code{print.FFTrees} provides summary information
 #' on FFTs from an \code{FFTrees} object.
 #'
+#' By default, \code{print.FFTrees} prints the performance characteristics for prediction (i.e., for predicting test data, rather than for fitting training data).
+#' When no statistics for prediction performance (on test data) are available or when explicitly asking for fitting performance, use \code{data = "train"}.
+#'
 #' @param x An \code{FFTrees} object created by \code{\link{FFTrees}}.
 #' @param tree The tree to explore (as integer).
+#' @param data character. Must be either \code{'test'} (i.e., report prediction performance by default) or \code{'train'} (fitting performance).
+#' When no statistics for prediction performance (on test data) is available in \code{x}, performance for fitting training data is reported.
+#'
 #' @param ... additional arguments passed to \code{print}.
 #'
 #' @return Prints summary information about an FFT to the console.
@@ -18,9 +24,12 @@
 
 print.FFTrees <- function(x = NULL,
                           tree = 1,
+                          data = "test",  # "test" or "train"
                           ...) {
 
-  # Prepare: ----
+  # Prepare: ------
+
+  # - Get cue info: ----
 
   train.cues   <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
   train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
@@ -30,8 +39,24 @@ print.FFTrees <- function(x = NULL,
 
   n.cues <- x$trees$definitions$nodes[tree]
 
+  # - Validate data argument: ----
 
-  # Intro: ----
+  data <- tolower(data)  # for robustness
+
+  if (!data %in% c("test", "train")){ # unknown value:
+
+    message("The data to print must be 'test' or 'train'. Using 'test' data...")
+    data <- "test"
+  }
+
+  if (data == "test" & is.null(x$trees$stats$test)){ # use "train" data:
+
+    message("No 'test' data available in x. Using training data...")
+    data <- "train"
+  }
+
+
+  # Introductory text: ------
 
   if (x$trees$n == 1) {
     summary.text <- paste(x$params$algorithm, " FFT predicting ", x$criterion_name, " with up to ", n.cues, " nodes", sep = "")
@@ -44,7 +69,7 @@ print.FFTrees <- function(x = NULL,
   params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', x$params$sens.w = ", x$params$x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
 
-  # General info: ----
+  # General info on FFTrees object x: ------
 
   if (is.null(x$params$main) == FALSE) {
     cat(x$params$main)
@@ -82,7 +107,7 @@ print.FFTrees <- function(x = NULL,
   cat("\n")
 
 
-  # FFT description: ----
+  # Specific FFT description: ------
 
   cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
 
@@ -97,12 +122,12 @@ print.FFTrees <- function(x = NULL,
   cat("\n")
 
 
-  # Get parameter values: ----
+  # Get parameter values: ------
 
-  if (is.null(x$trees$stats$test)) { # (a) training:
+  if (data == "train") { # (a) use stats of training data:
 
     mydata <- "train"
-    title <- "Training"
+    title  <- "Training"
 
     hi <- x$trees$stats$train$hi[tree]
     mi <- x$trees$stats$train$mi[tree]
@@ -112,10 +137,10 @@ print.FFTrees <- function(x = NULL,
     N <- nrow(x$data$train)
     cost <- x$trees$stats$train$cost[tree]
 
-  } else { # (b) prediction:
+  } else { # else (data == "test"): use stats of test/prediction data (by default):
 
     mydata <- "test"
-    title <- "Prediction"
+    title  <- "Prediction"
 
     hi <- x$trees$stats$test$hi[tree]
     mi <- x$trees$stats$test$mi[tree]
@@ -128,7 +153,7 @@ print.FFTrees <- function(x = NULL,
   }
 
 
-  # Accuracy information: ----
+  # Accuracy information: ------
 
   cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Accuracy\n", sep = ""), sep = "")
 
@@ -141,7 +166,7 @@ print.FFTrees <- function(x = NULL,
   )
 
 
-  # Confusion table: ----
+  # Confusion table: ------
 
   console_confusionmatrix( # See utility function from helper.R:
 
@@ -155,7 +180,7 @@ print.FFTrees <- function(x = NULL,
   )
 
 
-  # Speed and frugality: ----
+  # Speed and frugality: ------
 
   cat("\n\n")
 
@@ -165,8 +190,13 @@ print.FFTrees <- function(x = NULL,
   cat(", pci = ", round(x$trees$stats[[mydata]]$pci[tree], 2), sep = "")
 
 
-  # Currently NO output.
+  # Currently NO output (only side-effects).
 
 } # print.FFTrees().
+
+
+# ToDo: ------
+
+# - etc.
 
 # eof.
