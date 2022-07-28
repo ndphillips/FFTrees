@@ -18,7 +18,7 @@ fftrees_define <- function(x, object = NULL) {
 
   if (is.null(object) == FALSE) {
 
-    testthat::expect_is(object, "FFTrees", info = "You specified an object, but it is not of class 'FFTrees'")
+    testthat::expect_is(object, "FFTrees", info = "You specified an object, but it is not of class 'FFTrees'.")
     testthat::expect_true(!is.null(object$trees$definitions))
 
     # Use trees in object:
