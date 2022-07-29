@@ -69,7 +69,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     results$threshold <- thresholds
 
     # Add accuracy statistics:
-    results <- cbind(results, Add_Stats(results,
+    results <- cbind(results, add_stats(results,
                                         sens.w = sens.w,
                                         cost.outcomes = cost.outcomes
     ))
@@ -124,7 +124,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     results <- results_cum
 
     # Add accuracy statistics: ----
-    new_stats <- Add_Stats(
+    new_stats <- add_stats(
       data = results,
       sens.w = sens.w,
       cost.outcomes = cost.outcomes,

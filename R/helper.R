@@ -4,9 +4,7 @@
 
 # apply.break: ------
 
-# Apply break function:
-#
-#   Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
+# Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
 
 apply.break <- function(direction,
                         threshold.val,
@@ -123,6 +121,7 @@ cost.cues.append <- function(formula,
 
 } # cost.cues.append().
 
+
 # text.outline: ------
 
 # adds text with a white background - taken from Dirk Wulff www.dirkwulff.org
@@ -169,7 +168,7 @@ transparent <- function(orig.col = "red",
     final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
       3,
       i
-      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
   }
 
   return(final.col)
@@ -179,9 +178,10 @@ transparent <- function(orig.col = "red",
 
 # comp.pred: ------
 
-#' Wrapper for classfication algorithms.
+#' Wrapper for classifcation algorithms
 #'
-#' This function is a wrapper for many classification algorithms such as CART (rpart::rpart), logistic regression (glm), support vector machines (svm::svm) and random forests (randomForest::randomForest)
+#' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
+#' logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
 #'
 #' @param formula a formula
 #' @param data.train dataframe. A training dataset.
@@ -604,26 +604,28 @@ comp.pred <- function(formula,
 
 # factclean: ------
 
-#' Does miscellaneous cleaning of prediction datasets.
+#' Clean factor variables in prediction data
 #'
 #' @param data.train A training dataset
 #' @param data.test A testing dataset
-#' @param show.warning ...
+#' @param show.warning logical
 
 factclean <- function(data.train,
                       data.test,
                       show.warning = T) {
 
 
-  # Look for new factor values in test set not in training set:
+  # 1. Look for new factor values in test set that are not in training set: ----
 
   orig.vals.ls <- lapply(1:ncol(data.train), FUN = function(x) {
     unique(data.train[, x])
   })
 
+  # 2. can.predict.mtx: ----
   can.predict.mtx <- matrix(1, nrow = nrow(data.test), ncol = ncol(data.test))
 
   for (i in 1:ncol(can.predict.mtx)) {
+
     test.vals.i <- data.test[, i]
 
     if (is.numeric(test.vals.i)) {
@@ -637,6 +639,7 @@ factclean <- function(data.train,
     }
   }
 
+  # 3. model.can.predict: ----
   model.can.predict <- isTRUE(all.equal(rowMeans(can.predict.mtx), 1))
 
   if (identical(mean(model.can.predict), 1) == FALSE & show.warning == TRUE) {
@@ -648,6 +651,8 @@ factclean <- function(data.train,
     ))
   }
 
+  # Output: ----
+
   output <- data.test[model.can.predict, ]
 
   return(output)
@@ -655,23 +660,37 @@ factclean <- function(data.train,
 } # factclean().
 
 
-# Add_Stats: ------
+# add_stats: ------
 
-#' Adds decision statistics to a dataframe containing hr, cr, mi, and fa.
+#' Add decision statistics to data (containing counts of a 2x2 contingency table)
 #'
-#' @param data dataframe. With named (integer) columns hi, cr, mi, fa
-#' @param sens.w numeric. Sensitivity weight
-#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue)
-#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' \code{add_stats} assumes \code{data} input with 2x2 frequency counts
+#' (named \code{"hr"}, \code{"cr"}, \code{"mi}, and \code{"fa"}) and
+#' computes various decision accuracy and cost measures.
+#'
+#' Providing \code{cost.each} and \code{cost.outcomes} (as a named list) allows computing
+#' cost information for the counts of corresponding classification decisions.
+#'
+#' @param data A data frame with (integer) values named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}.
+#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
+#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).
+#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"mi"}, \code{"fa"}, \code{"cr"},  and
+#' specifying the costs of a hit, miss, false alarm, and correct rejection, respectively.
+#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
+#' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
 
-Add_Stats <- function(data,
+add_stats <- function(data,
                       sens.w = .5,
                       cost.each = NULL,
                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
 
+  # Prepare: ----
+
   if (is.null(cost.each)) {
     cost.each <- 0
   }
+
+  # Measures: ----
 
   # Accuracy:
   data$acc <- with(data, (hi + cr) / (hi + cr + fa + mi))
@@ -706,14 +725,17 @@ Add_Stats <- function(data,
   # reorder:
   data <- data[, c("sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions", "cost")]
 
+
+  # Output: ----
+
   return(data)
 
-} # Add_Stats().
+} # add_stats().
 
 
 # classtable: ------
 
-#' Calculates several classification statistics from binary prediction and criterion (e.g.; truth) vectors.
+#' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
 #'
 #' @param prediction_v logical. A logical vector of predictions
 #' @param criterion_v logical A logical vector of criterion (true) values
@@ -761,6 +783,7 @@ classtable <- function(prediction_v = NULL,
   prediction_v <- prediction_v[is.finite(criterion_v)]
   criterion_v <- criterion_v[is.finite(criterion_v)]
 
+
   # Remove NA prediction values:
 
   # if(na_prediction_action == "ignore") {
@@ -776,8 +799,11 @@ classtable <- function(prediction_v = NULL,
   N <- min(length(criterion_v), length(prediction_v))
 
   if (N > 0) {
+
     if (var(prediction_v) > 0 & var(criterion_v) > 0) {
+
       if (length(prediction_v) != length(criterion_v)) {
+
         stop(
           "length of prediction_v is", length(prediction_v), "and length of criterion_v is ",
           length(criterion_v)
@@ -818,10 +844,9 @@ classtable <- function(prediction_v = NULL,
       cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
-      # auc
-      #
-      #     auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
-      #                                 predictor = as.numeric(prediction_v))$auc)
+      # AUC:
+      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
+      #                             predictor = as.numeric(prediction_v))$auc)
 
     } else {
 
@@ -908,6 +933,8 @@ classtable <- function(prediction_v = NULL,
     cost = cost
 
   )
+
+  # Output:
 
   return(result)
 
