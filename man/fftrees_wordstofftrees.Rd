@@ -29,5 +29,5 @@ beginning with "otherwise").
 \seealso{
 \code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
 \code{\link{print.FFTrees}} for printing summary information of FFTs;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

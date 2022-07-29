@@ -125,8 +125,7 @@ plot(heart.fft,
      tree = 2,
      main = "An FFT for heart disease diagnosis",
      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-     decision.labels = c("Healthy", "Disease"),
-     label.tree = c("FFT with 4 nodes"),
+     decision.labels = c("ok", "sick"),
      show.header = FALSE,
      show.confusion = FALSE,
      show.levels = FALSE,
@@ -143,7 +142,7 @@ vignette("FFTrees_plot", package = "FFTrees")
 \seealso{
 \code{\link{print.FFTrees}} for printing summary information of FFTs;
 \code{\link{showcues}} for plotting cue accuracies;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
 Other plot functions: 
 \code{\link{showcues}()}
