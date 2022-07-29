@@ -3,9 +3,12 @@
 #' @description \code{fftrees_apply} applies a fast-and-frugal tree (FFT, as an \code{FFTrees} object)
 #' to a dataset and generates corresponding accuracy statistics.
 #'
+#' \code{fftrees_apply} is called internally by the main \code{\link{FFTrees}} function
+#' (with \code{mydata = "train"} and --- if test data exists --- \code{mydata = "test"}).
+#'
 #' @param x An FFT to apply (as an \code{FFTrees} object).
-#' @param mydata dataframe.
-#' @param newdata dataframe.
+#' @param mydata character. Data type to which FFT should be applied (either \code{"train"} or \code{"test"}).
+#' @param newdata dataframe. New data to which FFT should be applied.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is \code{FALSE}.
 #'
 #' @return A list of length 4 containing FFTs.
@@ -13,7 +16,6 @@
 #' @keywords internal
 #'
 #' @seealso
-#' \code{\link{plot.FFTrees}} for plotting FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom testthat expect_true
@@ -69,9 +71,9 @@ fftrees_apply <- function(x,
 
   level_stats_ls <- vector("list", length = x$trees$n)
 
-  # LOOP: ------
+  # LOOPs: ------
 
-  #  Loop over trees:
+  #  Loop over trees: ----
 
   for (tree_i in 1:x$trees$n) {
 
@@ -249,6 +251,7 @@ fftrees_apply <- function(x,
     }
   }
 
+
   # Add results to x: ------
 
   x$trees$stats[[mydata]] <- tree_stats
@@ -256,6 +259,7 @@ fftrees_apply <- function(x,
   x$trees$decisions[[mydata]] <- decisions_ls
 
   # Output: ------
+
   return(x)
 
 } # fftrees_apply().

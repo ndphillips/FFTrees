@@ -254,23 +254,22 @@ FFTrees <- function(formula = NULL,
 
   # 3. Apply to training data:  ------
 
-  # Training...:
-  x <- fftrees_apply(x,
-                     mydata = "train"
-  )
+  x <- fftrees_apply(x, mydata = "train")
 
-  # Rank trees by goal:
+
+  # 4. Rank trees by goal: ------
+
   x <- fftrees_ranktrees(x)
 
 
-  # 4. Apply to test data: ------
+  # 5. Apply to test data: ------
 
   if (!is.null(x$data$test)) {
     x <- fftrees_apply(x, mydata = "test")
   }
 
 
-  # 5. Define trees in words: ------
+  # 6. Define trees in words: ------
 
   x <- fftrees_ffttowords(
     x = x,
@@ -278,7 +277,7 @@ FFTrees <- function(formula = NULL,
   )
 
 
-  # 6. Fit competitive algorithms: ------
+  # 7. Fit competitive algorithms: ------
 
   x <- fftrees_fitcomp(x = x)
 
