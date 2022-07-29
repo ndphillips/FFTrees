@@ -942,7 +942,8 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
   sum_lbl <- "Totals:"  # "Sums:"
 
   # Number of digits in N:
-  ndg_N <- num_space(hi + mi + fa + cr)
+  N <- (hi + mi + fa + cr)
+  ndg_N <- num_space(N)
 
   # Column width (of columns 2 & 3):
   col_width <- max(c(8, ndg_N + 5))
@@ -1034,21 +1035,21 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
   # cat(" | ")  # with |
 
   cat("N = ")
-  cat(crayon::underline(scales::comma(hi + mi + fa + cr), sep = ""), sep = "")
+  cat(crayon::underline(scales::comma(N), sep = ""), sep = "")
 
   cat("\n\n")
 
 
   # Accuracy info: ----
 
-  cat("acc  =", scales::percent((hi + cr) / (hi + mi + cr + fa), accuracy = .1), sep = " ")
+  cat("acc  =", scales::percent((hi + cr) / N, accuracy = .1), sep = " ")
 
   cat("   ppv  =", scales::percent(hi / (hi + fa), accuracy = .1), sep = " ")
   cat("   npv  =", scales::percent(cr / (cr + mi), accuracy = .1), sep = " ")
 
   cat("\n")
 
-  cat("bacc =", scales::percent((hi / (hi + mi) + cr / (cr + fa)) / 2, accuracy = .1), sep = " ")
+  cat("bacc =", scales::percent(((hi / (hi + mi)) + (cr / (cr + fa))) / 2, accuracy = .1), sep = " ")
 
   cat("   sens =", scales::percent(hi / (hi + mi), accuracy = .1), sep = " ")
   cat("   spec =", scales::percent(cr / (cr + fa), accuracy = .1), sep = " ")
@@ -1056,19 +1057,24 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
   cat("\n")
 
 
-  # Base rate / baseline info: ----
+  # Baseline info: Rate of positive criterion values / "True +" cases: ----
+  # cat("br   =", scales::percent((hi + mi) / N, accuracy = .1), sep = " ")
 
-  # cat("br   =", scales::percent((hi + mi) / (hi + cr + mi + fa), accuracy = .1), sep = " ")
+  # Bias info: Rate of positive decisions / "Decide +" cases: ----
+  # cat("   bias =", scales::percent((hi + fa) / N, accuracy = .1), sep = " ")
+
+
   # cat("\n")
 
 
   # Cost info: ----
 
-  # ToDo: Consider moving cost info below confusion matrix
-  #       (as it's a function of it, but not an accuracy measure).
+  # Moved cost info to speed & frugality feedback (in printFFTrees_function.R),
+  # as cost is NOT an accuracy measure:
+  # cat("E(cost) =", scales::comma(cost, accuracy = .001), sep = " ")
 
-  cat("E(cost) =", scales::comma(cost, accuracy = .001), sep = " ")
 
+  # Output: none. ------
 
 } # console_confusionmatrix().
 
@@ -1085,7 +1091,11 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
 
 NULL
 
+
+# R version check: ------
+
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines:
 if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new", "tree", "level"))
+
 
 # eof.

@@ -72,7 +72,9 @@ print.FFTrees <- function(x = NULL,
   # General info on FFTrees object x: ------
 
   if (is.null(x$params$main) == FALSE) {
-    cat(x$params$main)
+
+    cat(x$params$main)  # object title
+
     cat("\n")
   }
 
@@ -107,7 +109,7 @@ print.FFTrees <- function(x = NULL,
   cat("\n")
 
 
-  # Specific FFT description: ------
+  # FFT description: ------
 
   cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
 
@@ -126,8 +128,8 @@ print.FFTrees <- function(x = NULL,
 
   if (data == "train") { # (a) use stats of training data:
 
+    task   <- "Training"
     mydata <- "train"
-    title  <- "Training"
 
     hi <- x$trees$stats$train$hi[tree]
     mi <- x$trees$stats$train$mi[tree]
@@ -139,8 +141,8 @@ print.FFTrees <- function(x = NULL,
 
   } else { # else (data == "test"): use stats of test/prediction data (by default):
 
+    task   <- "Prediction"
     mydata <- "test"
-    title  <- "Prediction"
 
     hi <- x$trees$stats$test$hi[tree]
     mi <- x$trees$stats$test$mi[tree]
@@ -155,20 +157,30 @@ print.FFTrees <- function(x = NULL,
 
   # Accuracy information: ------
 
-  cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Accuracy\n", sep = ""), sep = "")
+  cat(crayon::blue("FFT #", tree, ": ", crayon::underline(task), " Accuracy\n", sep = ""), sep = "")
 
-  cat(title, " Data: N = ", scales::comma(N), ", ",
-      "Pos (+) = ", scales::comma(hi + mi), " (", scales::percent((hi + mi) / (hi + mi + fa + cr)), ") ",
-      # "- ", scales::comma(cr + fa), " (", scales::percent((cr + fa) / (hi + mi + fa + cr)),")",
+  # - Data info: ----
 
-      "\n\n",
+  cat(task, " data: N = ", scales::comma(N), ", ",
+
+      # Prevalence (positive criterion values / True +):
+      "Pos (+) = ", scales::comma(hi + mi), " (", scales::percent((hi + mi) / N), ") ",
+      # "- ", scales::comma(cr + fa), " (", scales::percent((cr + fa) / N,")",
+
+      # ", ",
+
+      # Bias (positive decisions / Decisions +:
+      # "Dec (+) = ", scales::comma(hi + fa), " (", scales::percent((hi + fa) / N), ") ",
+
       sep = ""
   )
 
+  cat("\n\n")
 
-  # Confusion table: ------
 
-  console_confusionmatrix( # See utility function from helper.R:
+  # - Confusion table: ----
+
+  console_confusionmatrix( # See utility function in helper.R:
 
     hi = hi,
     mi = mi,
@@ -179,18 +191,21 @@ print.FFTrees <- function(x = NULL,
 
   )
 
+  cat("\n")
 
-  # Speed and frugality: ------
+
+  # Speed, frugality, and cost: ------
+
+  cat(crayon::blue("FFT #", tree, ": ", crayon::underline(task), " Speed, Frugality, and Cost\n", sep = ""), sep = "")
+
+  cat("mcu = ", round(x$trees$stats[[mydata]]$mcu[tree], 2), sep = "")
+  cat(",  pci = ", round(x$trees$stats[[mydata]]$pci[tree], 2), sep = "")
+  cat(",  E(cost) = ", scales::comma(cost, accuracy = .001), sep = "")
 
   cat("\n\n")
 
-  cat(crayon::blue("FFT #", tree, ": ", crayon::underline(title), " Speed and Frugality\n", sep = ""), sep = "")
 
-  cat("mcu = ", round(x$trees$stats[[mydata]]$mcu[tree], 2), sep = "")
-  cat(", pci = ", round(x$trees$stats[[mydata]]$pci[tree], 2), sep = "")
-
-
-  # Currently NO output (only side-effects).
+  # Output: none. ------
 
 } # print.FFTrees().
 
