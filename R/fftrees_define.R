@@ -16,7 +16,7 @@
 #' @keywords internal
 #'
 #' @seealso
-#' \code{\link{fftrees_create}} for creating FFTs;
+#' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
 #' \code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
 #' \code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.

@@ -9,7 +9,7 @@
 #' @param repeat.cues logical.
 #'
 #' @seealso
-#' \code{\link{fftrees_create}} for creating FFTs;
+#' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
 #' \code{\link{fftrees_define}} for defining FFTs;
 #' \code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
 #' \code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
