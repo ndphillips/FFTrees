@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{factclean}
 \alias{factclean}
-\title{Does miscellaneous cleaning of prediction datasets.}
+\title{Clean factor variables in prediction data}
 \usage{
 factclean(data.train, data.test, show.warning = T)
 }
@@ -11,8 +11,8 @@ factclean(data.train, data.test, show.warning = T)
 
 \item{data.test}{A testing dataset}
 
-\item{show.warning}{...}
+\item{show.warning}{logical}
 }
 \description{
-Does miscellaneous cleaning of prediction datasets.
+Clean factor variables in prediction data
 }
