@@ -91,7 +91,7 @@
 #' @seealso
 #' \code{\link{print.FFTrees}} for printing summary information of FFTs;
 #' \code{\link{showcues}} for plotting cue accuracies;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot

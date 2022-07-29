@@ -18,7 +18,7 @@
 #' @seealso
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
 #' \code{\link{inwords}} for obtaining a verbal description of FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export
 

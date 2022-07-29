@@ -14,7 +14,7 @@
 #'
 #' @seealso
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom testthat expect_true
 #'
