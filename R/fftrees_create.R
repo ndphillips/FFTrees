@@ -76,18 +76,18 @@ fftrees_create <- function(data = NULL,
   # data: ----
 
   testthat::expect_true(!is.null(data),
-                        info = "data is NULL."
+                        info = "data is NULL"
   )
 
   testthat::expect_true(is.data.frame(data),
-                        info = "Object is not a dataframe."
+                        info = "Object is not a dataframe"
   )
 
 
   # formula: ----
 
   testthat::expect_true(!is.null(formula),
-                        info = "formula is NULL."
+                        info = "formula is NULL"
   )
 
   testthat::expect_is(formula, "formula")
@@ -101,7 +101,7 @@ fftrees_create <- function(data = NULL,
   algorithm_valid <- c("ifan", "dfan")
 
   testthat::expect_true(!is.null(algorithm),
-                        info = "algorithm is NULL."
+                        info = "algorithm is NULL"
   )
 
   testthat::expect_true(algorithm %in% algorithm_valid)
@@ -116,18 +116,18 @@ fftrees_create <- function(data = NULL,
       goal <- "cost"
 
       if (quiet == FALSE) {
-        message("Setting goal = 'cost'.")
+        message("Setting goal = 'cost'")
       }
     } else {
       goal <- "wacc"
       if (quiet == FALSE) {
-        message("Setting goal = 'wacc'.")
+        message("Setting goal = 'wacc'")
       }
     }
   }
 
   testthat::expect_true(!is.null(goal),
-                        info = "goal is NULL."
+                        info = "goal is NULL"
   )
 
   testthat::expect_true(goal %in% goal_valid)
@@ -139,18 +139,18 @@ fftrees_create <- function(data = NULL,
     goal.chase <- "cost"
 
     if (quiet == FALSE) {
-      message("Setting goal.chase = 'cost'.")
+      message("Setting goal.chase = 'cost'")
     }
   } else if (is.null(goal.chase)) {
     goal.chase <- "wacc"
 
     if (quiet == FALSE) {
-      message("Setting goal.chase = 'wacc'.")
+      message("Setting goal.chase = 'wacc'")
     }
   }
 
   testthat::expect_true(!is.null(goal.chase),
-                        info = "goal.chase is NULL."
+                        info = "goal.chase is NULL"
   )
 
   testthat::expect_true(goal.chase %in% goal_valid)
@@ -158,7 +158,7 @@ fftrees_create <- function(data = NULL,
   # goal.threshold: ----
 
   testthat::expect_true(!is.null(goal.threshold),
-                        info = "goal.threshold is NULL."
+                        info = "goal.threshold is NULL"
   )
 
   testthat::expect_true(goal.threshold %in% goal_valid)
@@ -190,7 +190,7 @@ fftrees_create <- function(data = NULL,
   # sens.w: ----
 
   testthat::expect_true(!is.null(sens.w),
-                        info = "sens.w is NULL."
+                        info = "sens.w is NULL"
   )
 
   testthat::expect_lte(sens.w, expected = 1)
@@ -209,11 +209,11 @@ fftrees_create <- function(data = NULL,
   }
 
   testthat::expect_true(!is.null(max.levels),
-                        info = "max.levels is NULL."
+                        info = "max.levels is NULL"
   )
 
   testthat::expect_true(max.levels %in% 1:6,
-                        info = "max.levels must be an integer between 1 and 6."
+                        info = "max.levels must be an integer between 1 and 6"
   )
 
 
@@ -227,21 +227,21 @@ fftrees_create <- function(data = NULL,
     cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
 
     if (quiet == FALSE) {
-      message("Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0).")
+      message("Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)")
     }
   }
 
   testthat::expect_true(!is.null(cost.outcomes),
-                        info = "cost.outcomes is NULL."
+                        info = "cost.outcomes is NULL"
   )
 
   testthat::expect_is(cost.outcomes,
                       class = "list",
-                      info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)."
+                      info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
   )
 
   testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")),
-                        info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)."
+                        info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
   )
 
 
@@ -259,7 +259,7 @@ fftrees_create <- function(data = NULL,
   )
 
   testthat::expect_true(!is.null(cost.cues),
-                        info = "cost.cues is NULL."
+                        info = "cost.cues is NULL"
   )
 
   testthat::expect_is(cost.cues,
@@ -267,7 +267,7 @@ fftrees_create <- function(data = NULL,
   )
 
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
-                        info = "At least one of the values you specified in cost.cues is not in data."
+                        info = "At least one of the values specified in cost.cues is not in data"
   )
 
   # stopping.rule: ----
@@ -286,7 +286,7 @@ fftrees_create <- function(data = NULL,
   # decision.labels: ----
 
   testthat::expect_true(!is.null(decision.labels),
-                        info = "decision.labels is NULL."
+                        info = "decision.labels is NULL"
   )
 
   testthat::expect_equal(length(decision.labels), 2)
@@ -302,7 +302,7 @@ fftrees_create <- function(data = NULL,
   # Criterion is in data: ----
 
   testthat::expect_true(criterion_name %in% names(data),
-                        info = paste("The criterion", criterion_name, "is not in your data object.")
+                        info = paste("The criterion", criterion_name, "is not in data")
   )
 
   # No missing criterion values: ----
@@ -315,7 +315,7 @@ fftrees_create <- function(data = NULL,
 
   testthat::expect_equal(length(unique(data[[criterion_name]])),
                          expected = 2,
-                         info = "Your criterion does not have exactly 2 unique values."
+                         info = "The criterion variable is non-binary"
   )
 
 
@@ -344,7 +344,7 @@ fftrees_create <- function(data = NULL,
     )
 
     testthat::expect_true(criterion_name %in% names(data.test),
-                          info = paste("The criterion", criterion_name, "is not in data.test object.")
+                          info = paste("The criterion", criterion_name, "is not in data.test")
     )
   }
 
