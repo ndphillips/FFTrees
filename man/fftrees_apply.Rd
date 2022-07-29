@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_apply.R
 \name{fftrees_apply}
 \alias{fftrees_apply}
-\title{Applies a FFT to a dataset and generates accuracy statistics.}
+\title{Apply an FFT to data and generate accuracy statistics}
 \usage{
 fftrees_apply(x, mydata = NULL, newdata = NULL, allNA.pred = FALSE)
 }

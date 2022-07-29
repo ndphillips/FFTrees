@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFFTrees_function.R
 \name{plot.FFTrees}
 \alias{plot.FFTrees}
-\title{Plots an FFTrees object.}
+\title{Plot an \code{FFTrees} object}
 \usage{
 \method{plot}{FFTrees}(
   x = NULL,
@@ -99,7 +99,7 @@ If \code{FALSE}, only the tree (without any reference to statistics) will be plo
 A plot visualizing and describing an FFT.
 }
 \description{
-\code{plot.FFTrees} plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+\code{plot.FFTrees} visualizes an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 
 \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
 called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.

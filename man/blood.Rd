@@ -3,7 +3,7 @@
 \docType{data}
 \name{blood}
 \alias{blood}
-\title{Blood donation dataset.}
+\title{Blood donation data}
 \format{
 A data frame containing 748 rows and 5 columns.
 
@@ -23,7 +23,7 @@ https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center
 blood
 }
 \description{
-Blood donation dataset.
+Blood donation data
 }
 \seealso{
 Other datasets: 

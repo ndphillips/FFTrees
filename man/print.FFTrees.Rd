@@ -2,7 +2,7 @@
 % Please edit documentation in R/printFFTrees_function.R
 \name{print.FFTrees}
 \alias{print.FFTrees}
-\title{Prints summary information of fast-and-frugal trees (FFTs).}
+\title{Print summary information of fast-and-frugal trees (FFTs)}
 \usage{
 \method{print}{FFTrees}(x = NULL, tree = 1, data = "test", ...)
 }
@@ -20,8 +20,7 @@ When no statistics for prediction performance (on test data) is available in \co
 Prints summary information about an FFT to the console.
 }
 \description{
-\code{print.FFTrees} provides summary information
-on FFTs from an \code{FFTrees} object.
+\code{print.FFTrees} provides summary information on FFTs from an \code{FFTrees} object.
 
 By default, \code{print.FFTrees} prints the performance characteristics for prediction (i.e., for predicting test data, rather than for fitting training data).
 When no statistics for prediction performance (on test data) are available or when explicitly asking for fitting performance, use \code{data = "train"}.

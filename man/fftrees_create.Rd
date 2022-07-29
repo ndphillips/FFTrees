@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_create.R
 \name{fftrees_create}
 \alias{fftrees_create}
-\title{Create FFTrees objects.}
+\title{Create an object of class \code{FFTrees}}
 \usage{
 fftrees_create(
   data = NULL,

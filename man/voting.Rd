@@ -3,7 +3,7 @@
 \docType{data}
 \name{voting}
 \alias{voting}
-\title{Voting data set.}
+\title{Voting data}
 \format{
 A data frame containing 435 rows and 16 columns.
 }
@@ -14,7 +14,7 @@ https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records
 voting
 }
 \description{
-Voting data set.
+Voting data
 }
 \seealso{
 Other datasets: 

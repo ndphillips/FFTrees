@@ -3,7 +3,7 @@
 \docType{data}
 \name{contraceptive}
 \alias{contraceptive}
-\title{Contraceptive use data.}
+\title{Contraceptive use data}
 \format{
 A data frame containing 1473 rows and 10 columns.
 
@@ -29,7 +29,7 @@ https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice
 contraceptive
 }
 \description{
-Contraceptive use data.
+Contraceptive use data
 }
 \seealso{
 Other datasets: 

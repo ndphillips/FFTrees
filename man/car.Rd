@@ -3,7 +3,7 @@
 \docType{data}
 \name{car}
 \alias{car}
-\title{Car acceptability data.}
+\title{Car acceptability data}
 \format{
 A data frame containing 1728 cars (rows) and 7 variables (columns).
 
@@ -25,7 +25,7 @@ http://archive.ics.uci.edu/ml/datasets/Car+Evaluation
 car
 }
 \description{
-Car acceptability data.
+Car acceptability data
 }
 \seealso{
 Other datasets: 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_ffttowords.R
 \name{fftrees_ffttowords}
 \alias{fftrees_ffttowords}
-\title{Describes a fast-and-frugal tree (FFT) in words.}
+\title{Describe a fast-and-frugal tree (FFT) in words}
 \usage{
 fftrees_ffttowords(x = NULL, digits = 2)
 }

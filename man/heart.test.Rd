@@ -3,7 +3,7 @@
 \docType{data}
 \name{heart.test}
 \alias{heart.test}
-\title{Heartdisease testing dataset.}
+\title{Heartdisease testing data}
 \format{
 A data frame containing 153 rows and 14 columns.
 
@@ -33,8 +33,8 @@ https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 heart.test
 }
 \description{
-Testing data for a \code{\link{heartdisease}} dataset.
-These data are used to test the prediction performance of a model trained on the \code{\link{heart.train}} data.
+Testing data for a \code{\link{heartdisease}} data.
+This subset is used to test the prediction performance of a model trained on the \code{\link{heart.train}} data.
 The dataset \code{\link{heartdisease}} contains both datasets.
 }
 \seealso{

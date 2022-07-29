@@ -3,7 +3,7 @@
 \docType{data}
 \name{mushrooms}
 \alias{mushrooms}
-\title{Mushrooms dataset.}
+\title{Mushrooms data}
 \format{
 A data frame containing 8,124 rows and 23 columns.
 
@@ -44,7 +44,7 @@ http://archive.ics.uci.edu/ml/datasets/Mushroom
 mushrooms
 }
 \description{
-Mushrooms dataset.
+Data on the features of poisonous vs. non-poisonous mushrooms.
 }
 \seealso{
 Other datasets: 

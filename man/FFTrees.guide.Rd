@@ -2,7 +2,7 @@
 % Please edit documentation in R/FFTreesguide_function.R
 \name{FFTrees.guide}
 \alias{FFTrees.guide}
-\title{Opens the \strong{FFTrees} package guide.}
+\title{Open the \strong{FFTrees} package guide}
 \usage{
 FFTrees.guide()
 }
@@ -10,5 +10,5 @@ FFTrees.guide()
 No return value, called for side effects.
 }
 \description{
-Opens the \strong{FFTrees} package guide.
+Open the \strong{FFTrees} package guide
 }

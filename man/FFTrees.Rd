@@ -3,7 +3,7 @@
 \docType{package}
 \name{FFTrees}
 \alias{FFTrees}
-\title{Main function to create fast-and-frugal trees (FFTs).}
+\title{Main function to create and apply fast-and-frugal trees (FFTs)}
 \usage{
 FFTrees(
   formula = NULL,

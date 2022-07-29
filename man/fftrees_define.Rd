@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_define.R
 \name{fftrees_define}
 \alias{fftrees_define}
-\title{Create definitions of FFTs.}
+\title{Create FFT definitions}
 \usage{
 fftrees_define(x, object = NULL)
 }

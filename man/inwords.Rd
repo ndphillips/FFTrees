@@ -2,7 +2,7 @@
 % Please edit documentation in R/inwords.R
 \name{inwords}
 \alias{inwords}
-\title{Displays a verbal description of an FFT.}
+\title{Provide a verbal description of an FFT}
 \usage{
 inwords(x, tree = 1)
 }
@@ -15,8 +15,8 @@ inwords(x, tree = 1)
 A verbal description of an FFT (as a string).
 }
 \description{
-\code{inwords} provides a verbal description of a fast-and-frugal tree (FFT)
-from an \code{FFTrees} object.
+\code{inwords} generates and provides a verbal description
+of a fast-and-frugal tree (FFT) from an \code{FFTrees} object.
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;

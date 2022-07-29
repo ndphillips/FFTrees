@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_wordstofftrees.R
 \name{fftrees_wordstofftrees}
 \alias{fftrees_wordstofftrees}
-\title{Converts text describing an FFT into an \code{FFTrees} object.}
+\title{Convert a text description of an FFT into an \code{FFTrees} object}
 \usage{
 fftrees_wordstofftrees(x, my.tree)
 }

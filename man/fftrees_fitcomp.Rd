@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_fitcomp.R
 \name{fftrees_fitcomp}
 \alias{fftrees_fitcomp}
-\title{Fits competitive algorithms.}
+\title{Fit competitive algorithms}
 \usage{
 fftrees_fitcomp(x)
 }
@@ -10,8 +10,8 @@ fftrees_fitcomp(x)
 \item{x}{An \code{FFTrees} object.}
 }
 \description{
-\code{fftrees_fitcomp} fits competitive algorithms (e.g., LR, CART, RF, SVM)
-to the data and parameters specified in an \code{FFTrees} object.
+\code{fftrees_fitcomp} fits competitive algorithms for binary classification tasks
+(e.g., LR, CART, RF, SVM) to the data and parameters specified in an \code{FFTrees} object.
 
 \code{fftrees_fitcomp} is called by the main \code{\link{FFTrees}} function
 when creating FFTs from and applying them to data (unless \code{do.comp = FALSE}).

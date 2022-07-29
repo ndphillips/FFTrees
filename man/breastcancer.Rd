@@ -3,7 +3,7 @@
 \docType{data}
 \name{breastcancer}
 \alias{breastcancer}
-\title{Physiological dataset of patients tested for breast cancer.}
+\title{Physiological data of patients tested for breast cancer}
 \format{
 A data frame containing 699 patients (rows) and 9 variables (columns).
 
@@ -29,7 +29,7 @@ https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
 breastcancer
 }
 \description{
-Physiological dataset of patients tested for breast cancer.
+Physiological data of patients tested for breast cancer
 }
 \seealso{
 Other datasets: 

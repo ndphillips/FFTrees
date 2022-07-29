@@ -2,7 +2,7 @@
 % Please edit documentation in R/showcues_function.R
 \name{showcues}
 \alias{showcues}
-\title{Visualizes cue accuracies (as points in ROC space).}
+\title{Visualize cue accuracies (as points in ROC space)}
 \usage{
 showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL, top = 5)
 }

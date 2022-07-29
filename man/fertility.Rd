@@ -3,7 +3,7 @@
 \docType{data}
 \name{fertility}
 \alias{fertility}
-\title{Fertility data set.}
+\title{Fertility data}
 \format{
 A data frame containing 100 rows and 10 columns.
 }
@@ -14,7 +14,7 @@ https://archive.ics.uci.edu/ml/datasets/Fertility
 fertility
 }
 \description{
-Fertility data set.
+Fertility data
 }
 \seealso{
 Other datasets: 

@@ -3,7 +3,7 @@
 \docType{data}
 \name{creditapproval}
 \alias{creditapproval}
-\title{Credit approval data.}
+\title{Credit approval data}
 \format{
 A data frame containing 690 rows and 15 columns
 }
@@ -14,7 +14,7 @@ https://archive.ics.uci.edu/ml/datasets/Credit+Approval
 creditapproval
 }
 \description{
-Credit approval data.
+Credit approval data
 }
 \seealso{
 Other datasets: 

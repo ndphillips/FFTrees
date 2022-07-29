@@ -3,7 +3,7 @@
 \docType{data}
 \name{titanic}
 \alias{titanic}
-\title{Titanic dataset.}
+\title{Titanic survival data}
 \format{
 A data frame containing 2,201 rows and 4 columns.
 
@@ -23,7 +23,7 @@ https://www.amstat.org/publications/jse/datasets/titanic.dat.txt
 titanic
 }
 \description{
-A dataset indicating who survived on the Titanic.
+Data indicating who survived on the Titanic.
 }
 \seealso{
 Other datasets: 

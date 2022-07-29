@@ -2,7 +2,7 @@
 % Please edit documentation in R/summaryFFTrees_function.R
 \name{summary.FFTrees}
 \alias{summary.FFTrees}
-\title{Returns summary information about an \code{FFTrees} object.}
+\title{Summarize an \code{FFTrees} object}
 \usage{
 \method{summary}{FFTrees}(object, tree = 1, ...)
 }
@@ -17,5 +17,5 @@
 A data frame containing summary information about an FFT.
 }
 \description{
-Returns summary information about an \code{FFTrees} object.
+Summarize an \code{FFTrees} object
 }
