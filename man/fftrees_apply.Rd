@@ -9,9 +9,9 @@ fftrees_apply(x, mydata = NULL, newdata = NULL, allNA.pred = FALSE)
 \arguments{
 \item{x}{An FFT to apply (as an \code{FFTrees} object).}
 
-\item{mydata}{dataframe.}
+\item{mydata}{character. Data type to which FFT should be applied (either \code{"train"} or \code{"test"}).}
 
-\item{newdata}{dataframe.}
+\item{newdata}{dataframe. New data to which FFT should be applied.}
 
 \item{allNA.pred}{logical. What should be predicted if all cue values in tree are NA? Default is \code{FALSE}.}
 }
@@ -21,9 +21,11 @@ A list of length 4 containing FFTs.
 \description{
 \code{fftrees_apply} applies a fast-and-frugal tree (FFT, as an \code{FFTrees} object)
 to a dataset and generates corresponding accuracy statistics.
+
+\code{fftrees_apply} is called internally by the main \code{\link{FFTrees}} function
+(with \code{mydata = "train"} and --- if test data exists --- \code{mydata = "test"}).
 }
 \seealso{
-\code{\link{plot.FFTrees}} for plotting FFTs;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }
 \keyword{internal}
