@@ -17,7 +17,7 @@ to create new FFTs by applying the \code{fan} algorithms
 (specifically, either \code{ifan} or \code{dfan}) to data.
 }
 \seealso{
-\code{\link{fftrees_create}} for creating FFTs;
+\code{\link{fftrees_create}} for creating \code{FFTrees} objects;
 \code{\link{fftrees_define}} for defining FFTs;
 \code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
 \code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
