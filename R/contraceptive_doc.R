@@ -1,4 +1,4 @@
-#' Contraceptive use data.
+#' Contraceptive use data
 #'
 #' @format A data frame containing 1473 rows and 10 columns.
 #'

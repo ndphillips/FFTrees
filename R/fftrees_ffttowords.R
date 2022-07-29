@@ -1,4 +1,4 @@
-#' Describes a fast-and-frugal tree (FFT) in words.
+#' Describe a fast-and-frugal tree (FFT) in words
 #'
 #' @description \code{fftrees_ffttowords} provides a verbal description
 #' of an FFT (in an \code{FFTrees} object).

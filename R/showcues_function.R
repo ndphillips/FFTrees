@@ -1,4 +1,4 @@
-#' Visualizes cue accuracies (as points in ROC space).
+#' Visualize cue accuracies (as points in ROC space)
 #'
 #' @description \code{showcues} plots the cue accuracies of an \code{FFTrees} object
 #' created by the \code{\link{FFTrees}} function (as points in ROC space).

@@ -1,4 +1,4 @@
-#' Applies a FFT to a dataset and generates accuracy statistics.
+#' Apply an FFT to data and generate accuracy statistics
 #'
 #' @description \code{fftrees_apply} applies a fast-and-frugal tree (FFT, as an \code{FFTrees} object)
 #' to a dataset and generates corresponding accuracy statistics.

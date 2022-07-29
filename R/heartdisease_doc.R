@@ -1,6 +1,6 @@
-#' Heart disease dataset.
+#' Heart disease data
 #'
-#' Data for 303 patients tested for heart disease.
+#' A dataset of 303 patients tested for heart disease.
 #'
 #' @format A data frame containing 303 rows and 14 columns.
 #'

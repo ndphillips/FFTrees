@@ -1,7 +1,6 @@
-#' Prints summary information of fast-and-frugal trees (FFTs).
+#' Print summary information of fast-and-frugal trees (FFTs)
 #'
-#' @description \code{print.FFTrees} provides summary information
-#' on FFTs from an \code{FFTrees} object.
+#' @description \code{print.FFTrees} provides summary information on FFTs from an \code{FFTrees} object.
 #'
 #' By default, \code{print.FFTrees} prints the performance characteristics for prediction (i.e., for predicting test data, rather than for fitting training data).
 #' When no statistics for prediction performance (on test data) are available or when explicitly asking for fitting performance, use \code{data = "train"}.

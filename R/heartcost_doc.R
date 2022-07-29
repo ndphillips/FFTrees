@@ -1,4 +1,4 @@
-#' Cue costs for the heartdisease data.
+#' Cue costs for the heartdisease data
 #'
 #' This data further characterizes the variables (cues) in the \code{\link{heartdisease}} dataset.
 #'

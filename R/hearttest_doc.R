@@ -1,7 +1,7 @@
-#' Heartdisease testing dataset.
+#' Heartdisease testing data
 #'
-#' Testing data for a \code{\link{heartdisease}} dataset.
-#' These data are used to test the prediction performance of a model trained on the \code{\link{heart.train}} data.
+#' Testing data for a \code{\link{heartdisease}} data.
+#' This subset is used to test the prediction performance of a model trained on the \code{\link{heart.train}} data.
 #' The dataset \code{\link{heartdisease}} contains both datasets.
 #'
 #' @format A data frame containing 153 rows and 14 columns.

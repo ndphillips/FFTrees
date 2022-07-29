@@ -1,4 +1,4 @@
-#' Fertility data set.
+#' Fertility data
 #'
 #' @format A data frame containing 100 rows and 10 columns.
 #'

@@ -1,6 +1,6 @@
-#' Plots an FFTrees object.
+#' Plot an \code{FFTrees} object
 #'
-#' @description \code{plot.FFTrees} plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#' @description \code{plot.FFTrees} visualizes an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #'
 #' \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
 #' called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.

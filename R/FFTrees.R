@@ -1,4 +1,4 @@
-#' Main function to create fast-and-frugal trees (FFTs).
+#' Main function to create and apply fast-and-frugal trees (FFTs)
 #'
 #' @description \code{FFTrees} is the workhorse function of the \strong{FFTrees} package for creating fast-and-frugal trees (FFTs).
 #'

@@ -1,11 +1,11 @@
-#' Calculates thresholds that maximize a statistic (goal) for cues in data.
+#' Calculate thresholds that optimize some statistic (goal) for cues in data
 #'
 #' @param x An \code{FFTrees} object.
 #' @param newdata dataframe.
 #' @param data dataframe.
 #' @param rounding integer.
 #'
-#' @return A dataframe containing thresholds and marginal classification statistics for each cue
+#' @return A data frame containing thresholds and marginal classification statistics for each cue
 #'
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
@@ -223,6 +223,7 @@ fftrees_cuerank <- function(x = NULL,
 
   } # for (cue_i).
 
+
   # Set rownames: ----
 
   rownames(cuerank_df) <- 1:nrow(cuerank_df)
@@ -230,6 +231,7 @@ fftrees_cuerank <- function(x = NULL,
   # Add cue costs: ----
 
   cuerank_df$cost_cues <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
+
 
   # Output: ----
 

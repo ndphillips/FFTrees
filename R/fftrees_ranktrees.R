@@ -1,4 +1,4 @@
-#' Ranks trees by goal.
+#' Rank FFTs by current goal
 #'
 #' @description \code{fftrees_ranktrees} ranks trees in an \code{FFTrees} object \code{x}
 #' based on the current goal (either \code{"cost"} or as specified in \code{x$params$goal}).

@@ -1,8 +1,8 @@
-#' Heartdisease training dataset.
+#' Heartdisease training data
 #'
-#' Training data for a binary prediction model (here: FFT) on the \code{\link{heartdisease}} dataset.
-#' The corresponding dataset for model testing is \code{\link{heart.test}}.
-#' The dataset \code{\link{heartdisease}} contains both datasets.
+#' Training data for a binary prediction model (here: FFT) on (a subset of) the \code{\link{heartdisease}} data.
+#' The complementary subset for model testing is \code{\link{heart.test}}.
+#' The data in \code{\link{heartdisease}} contains both subsets.
 #'
 #' @format A data frame containing 150 rows and 14 columns.
 #'

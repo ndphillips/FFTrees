@@ -1,4 +1,4 @@
-#' Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue.
+#' Perform a grid search over thresholds and return accuracy statistics for a given numeric cue
 #'
 #' @param thresholds numeric. A vector of thresholds to consider.
 #' @param cue_v numeric. Feature values.

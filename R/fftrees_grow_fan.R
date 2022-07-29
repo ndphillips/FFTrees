@@ -1,4 +1,4 @@
-#' Grows fast-and-frugal trees (FFTs) using the \code{fan} algorithm.
+#' Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithm
 #'
 #' @description \code{fftrees_grow_fan} is called by \code{\link{fftrees_define}}
 #' to create new FFTs by applying the \code{fan} algorithms

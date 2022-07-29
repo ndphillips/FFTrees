@@ -1,4 +1,4 @@
-#' Create FFTrees objects.
+#' Create an object of class \code{FFTrees}
 #'
 #' @description \code{fftrees_create} creates an \code{FFTrees} object.
 #'

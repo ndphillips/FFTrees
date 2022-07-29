@@ -1,4 +1,4 @@
-#' Voting data set.
+#' Voting data
 #'
 #' @format A data frame containing 435 rows and 16 columns.
 #'

@@ -1,4 +1,4 @@
-#' Create definitions of FFTs.
+#' Create FFT definitions
 #'
 #' @description \code{fftrees_define} creates definitions of fast-and-frugal trees
 #' (FFTs, as an \code{FFTrees} object).

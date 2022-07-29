@@ -1,4 +1,4 @@
-#' Forest fires dataset.
+#' Forest fires data
 #'
 #' A dataset of forest fire statistics.
 #'

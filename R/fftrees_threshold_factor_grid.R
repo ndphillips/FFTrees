@@ -1,4 +1,4 @@
-#' Performs a grid search over factor and returns accuracy statistics for a given factor cue.
+#' Perform a grid search over factor and return accuracy statistics for a given factor cue
 #'
 #' @param thresholds numeric. A vector of factor thresholds to consider.
 #' @param cue_v numeric. Feature values.

@@ -1,4 +1,4 @@
-#' Physiological dataset of patients tested for breast cancer.
+#' Physiological data of patients tested for breast cancer
 #'
 #' @format A data frame containing 699 patients (rows) and 9 variables (columns).
 #'

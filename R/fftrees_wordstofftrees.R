@@ -1,4 +1,4 @@
-#' Converts text describing an FFT into an \code{FFTrees} object.
+#' Convert a text description of an FFT into an \code{FFTrees} object
 #'
 #' @description \code{fftrees_wordstofftrees} converts a verbal description
 #' of an FFT into a tree definition (of an \code{FFTrees} object).
