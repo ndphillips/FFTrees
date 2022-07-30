@@ -7,8 +7,9 @@
 #' \code{\link{fftrees_ffttowords}}, which converts a tree definition
 #' (of an \code{FFTrees} object) into a verbal description.
 #'
-#' Note that the parsing of \code{fftrees_wordstofftrees}
-#' ignores the 2nd part of the final sentence (i.e., the part
+#' To increase robustness, the parsing of \code{fftrees_wordstofftrees}
+#' allows for lower- or uppercase spellings (but not typographical variants)
+#' and ignores the else-part of the final sentence (i.e., the part
 #' beginning with "otherwise").
 #'
 #' @param x An \code{FFTrees} object.
@@ -74,21 +75,22 @@ fftrees_wordstofftrees <- function(x,
     stop(paste0("The decision label '", x$params$decision.labels[2], "' does not occur in my.tree."))  # feedback in original spelling
   }
 
-  # Note: As the final 'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
+  # Note: As the final else/'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
   #       Thus, enforcing that both exit types are mentioned (at least once) is too restrictive.
   # ToDo: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
 
 
-  # Split my.tree into def parts: ------
+  # Split my.tree into def parts (dropping "otherwise" clause): ------
 
   def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
   def <- def[2:length(def)]  # remove initial empty string
   # print(def)  # 4debugging
 
   def_fin_2 <- unlist(strsplit(def[length(def)], split = "otherwise", fixed = TRUE))
+  # ToDo: Could be generalized to include "else", "in other cases", etc.
   # print(def_fin_2)  # 4debugging
 
-  # Drop final sentence (beginning with "otherwise"):
+  # Drop the final sub-sentence (beginning with "otherwise"):
   def <- c(def[-length(def)], def_fin_2[1])
   # print(def)  # 4debugging
 
