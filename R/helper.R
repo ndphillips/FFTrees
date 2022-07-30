@@ -665,7 +665,7 @@ factclean <- function(data.train,
 #' Add decision statistics to data (containing counts of a 2x2 contingency table)
 #'
 #' \code{add_stats} assumes \code{data} input with 2x2 frequency counts
-#' (named \code{"hr"}, \code{"cr"}, \code{"mi}, and \code{"fa"}) and
+#' (named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}) and
 #' computes various decision accuracy and cost measures.
 #'
 #' Providing \code{cost.each} and \code{cost.outcomes} (as a named list) allows computing
@@ -674,7 +674,7 @@ factclean <- function(data.train,
 #' @param data A data frame with (integer) values named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}.
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).
-#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"mi"}, \code{"fa"}, \code{"cr"},  and
+#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"mi"}, \code{"fa"}, \code{"cr"}, and
 #' specifying the costs of a hit, miss, false alarm, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
