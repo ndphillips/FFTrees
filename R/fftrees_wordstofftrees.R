@@ -1,9 +1,9 @@
 #' Convert a text description of an FFT into an \code{FFTrees} object
 #'
 #' @description \code{fftrees_wordstofftrees} converts a verbal description
-#' of an FFT into a tree definition (of an \code{FFTrees} object).
+#' of an FFT (provided as a text string) into a tree definition (of an \code{FFTrees} object).
 #'
-#' \code{fftrees_wordstofftrees} is the complement of
+#' \code{fftrees_wordstofftrees} is the complement function to
 #' \code{\link{fftrees_ffttowords}}, which converts a tree definition
 #' (of an \code{FFTrees} object) into a verbal description.
 #'
@@ -56,30 +56,27 @@ fftrees_wordstofftrees <- function(x,
   my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 
 
+  # Use lowercase spelling (for robustness against typos):
+  my.tree         <- tolower(my.tree)
+  cue.names.l     <- tolower(x$cue_names)
+  decision.labels <- tolower(x$params$decision.labels)
+
+
   # Verify that both decision labels/exit types occur (at least once) in my.tree:
 
-  lbl_0 <- x$params$decision.labels[1]  # exit type 0: left/False
+  lbl_0 <- decision.labels[1]  # exit type 0: left/False
   if (all(grepl(lbl_0, x = my.tree) == FALSE)) {
-    stop(paste0("The decision label '", lbl_0, "' does not occur in my.tree."))
+    stop(paste0("The decision label '", x$params$decision.labels[1], "' does not occur in my.tree."))  # feedback in original spelling
   }
 
-  lbl_1 <- x$params$decision.labels[2]  # exit type 1: right/True
+  lbl_1 <- decision.labels[2]  # exit type 1: right/True
   if (all(grepl(lbl_1, x = my.tree) == FALSE)) {
-    stop(paste0("The decision label '", lbl_1, "' does not occur in my.tree."))
+    stop(paste0("The decision label '", x$params$decision.labels[2], "' does not occur in my.tree."))  # feedback in original spelling
   }
 
   # Note: As the final 'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
   #       Thus, enforcing that both exit types are mentioned (at least once) is too restrictive.
   # ToDo: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
-  #
-  # Also, consider allowing entering decision.labels in upper or lowercase spellings?
-  # (i.e., move tolower() conversions before these checks)?
-
-
-  # Use lowercase (for robustness):
-  my.tree         <- tolower(my.tree)
-  cue.names.l     <- tolower(x$cue_names)
-  decision.labels <- tolower(x$params$decision.labels)
 
 
   # Split my.tree into def parts: ------
