@@ -28,7 +28,7 @@
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
-  # Parameters / options: ----
+  # Parameters / options: ------
 
   directions.df <- data.frame(
     directions   = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
@@ -44,26 +44,45 @@ fftrees_wordstofftrees <- function(x,
   )
 
 
-  # Clean up my.tree: ----
+  # Clean up and check my.tree: ------
 
-  # Split into one sentence:
+  # Collapse into one sentence:
   if (length(my.tree) > 1) {
     my.tree <- paste(my.tree, collapse = ". ")
   }
 
-  # Remove \n (can happen if my.tree has line breaks):
+
+  # Remove line breaks (\n):
   my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 
-  if (all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
-    stop("Some decision.labels are not in my.tree.")
+
+  # Verify that both decision labels/exit types occur (at least once) in my.tree:
+
+  lbl_0 <- x$params$decision.labels[1]  # exit type 0: left/False
+  if (all(grepl(lbl_0, x = my.tree) == FALSE)) {
+    stop(paste0("The decision label '", lbl_0, "' does not occur in my.tree."))
   }
 
-  cue.names.l <- tolower(x$cue_names)
-  my.tree <- tolower(my.tree)
+  lbl_1 <- x$params$decision.labels[2]  # exit type 1: right/True
+  if (all(grepl(lbl_1, x = my.tree) == FALSE)) {
+    stop(paste0("The decision label '", lbl_1, "' does not occur in my.tree."))
+  }
+
+  # Note: As the final 'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
+  #       Thus, enforcing that both exit types are mentioned (at least once) is too restrictive.
+  # ToDo: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
+  #
+  # Also, consider allowing entering decision.labels in upper or lowercase spellings?
+  # (i.e., move tolower() conversions before these checks)?
+
+
+  # Use lowercase (for robustness):
+  my.tree         <- tolower(my.tree)
+  cue.names.l     <- tolower(x$cue_names)
   decision.labels <- tolower(x$params$decision.labels)
 
 
-  # Split my.tree into def parts: ----
+  # Split my.tree into def parts: ------
 
   def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
   def <- def[2:length(def)]  # remove initial empty string
@@ -79,7 +98,9 @@ fftrees_wordstofftrees <- function(x,
   nodes.n <- length(def)
 
 
-  # cues.v: ----
+  # Extract FFT elements from def: ------
+
+  # 1. cues.v: ----
   {
     cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
@@ -108,7 +129,7 @@ fftrees_wordstofftrees <- function(x,
     })]
   }
 
-  # classes.v: ----
+  # 2. classes.v: ----
   {
     classes.v <- rep(NA, nodes.n)
 
@@ -118,7 +139,7 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # exits.v: ----
+  # 3. exits.v: ----
   {
     exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
@@ -155,7 +176,7 @@ fftrees_wordstofftrees <- function(x,
     # print(exits.v)  # 4debugging
   }
 
-  # thresholds.v: ----
+  # 4. thresholds.v: ----
   {
     thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 
@@ -186,7 +207,7 @@ fftrees_wordstofftrees <- function(x,
     })
   }
 
-  # directions.v: ----
+  # 5. directions.v: ----
   {
     # Look for directions in sentences:
 
@@ -233,10 +254,13 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # Set final exit to .5:
+  # Set final exit to .5: ------
+
   exits.v[nodes.n] <- ".5"
 
-  # Save result in tree.definitions: ----
+
+  # Save result in tree.definitions: ------
+
   x$trees$definitions <- data.frame(
     tree = 1,
     nodes = nodes.n,
@@ -249,7 +273,8 @@ fftrees_wordstofftrees <- function(x,
 
   x$trees$n <- 1
 
-  # Output: ----
+
+  # Output: ------
 
   return(x)
 
