@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9008 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.6.6.9009 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -44,17 +44,13 @@ use, and communicate.
 To install the latest release of **FFTrees** [from
 CRAN](https://CRAN.R-project.org/package=FFTrees) evaluate:
 
-``` r
-install.packages("FFTrees")
-```
+    install.packages("FFTrees")
 
 The current development version of **FFTrees** can be installed [from
 GitHub](https://github.com/ndphillips/FFTrees) with:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
-```
+    # install.packages("devtools")
+    devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
 ## Examples
 
@@ -62,18 +58,16 @@ As an example, let’s create a FFT predicting heart disease status
 (*Healthy* vs. *Diseased*) based on the `heartdisease` dataset included
 in **FFTrees**:
 
-``` r
-library(FFTrees)  # load pkg
-#> 
-#>    O
-#>   / \
-#>  F   O
-#>     / \
-#>    F   Trees 1.6.6.9008
-#> 
-#> Email: Nathaniel.D.Phillips.is@gmail.com
-#> FFTrees.guide() opens the main guide.
-```
+    library(FFTrees)  # load pkg
+    #> 
+    #>    O
+    #>   / \
+    #>  F   O
+    #>     / \
+    #>    F   Trees 1.6.6.9009
+    #> 
+    #> Email: Nathaniel.D.Phillips.is@gmail.com
+    #> FFTrees.guide() opens the main guide.
 
 ### Using data
 
@@ -86,48 +80,46 @@ first rows and columns of both subsets of the `heartdisease` data:
 -   `heart.train` (the training / fitting dataset) contains the data
     from 150 patients:
 
-``` r
-heart.train
-#> # A tibble: 150 × 14
-#>    diagnosis   age   sex cp    trest…¹  chol   fbs restecg thalach exang oldpeak
-#>    <lgl>     <dbl> <dbl> <chr>   <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
-#>  1 FALSE        44     0 np        108   141     0 normal      175     0     0.6
-#>  2 FALSE        51     0 np        140   308     0 hypert…     142     0     1.5
-#>  3 FALSE        52     1 np        138   223     0 normal      169     0     0  
-#>  4 TRUE         48     1 aa        110   229     0 normal      168     0     1  
-#>  5 FALSE        59     1 aa        140   221     0 normal      164     1     0  
-#>  6 FALSE        58     1 np        105   240     0 hypert…     154     1     0.6
-#>  7 FALSE        41     0 aa        126   306     0 normal      163     0     0  
-#>  8 TRUE         39     1 a         118   219     0 normal      140     0     1.2
-#>  9 TRUE         77     1 a         125   304     0 hypert…     162     1     0  
-#> 10 FALSE        41     0 aa        105   198     0 normal      168     0     0  
-#> # … with 140 more rows, 3 more variables: slope <chr>, ca <dbl>, thal <chr>,
-#> #   and abbreviated variable name ¹​trestbps
-#> # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names
-```
+<!-- -->
+
+    heart.train
+    #> # A tibble: 150 × 14
+    #>    diagnosis   age   sex cp    trestbps  chol   fbs restecg     thalach exang
+    #>    <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>         <dbl> <dbl>
+    #>  1 FALSE        44     0 np         108   141     0 normal          175     0
+    #>  2 FALSE        51     0 np         140   308     0 hypertrophy     142     0
+    #>  3 FALSE        52     1 np         138   223     0 normal          169     0
+    #>  4 TRUE         48     1 aa         110   229     0 normal          168     0
+    #>  5 FALSE        59     1 aa         140   221     0 normal          164     1
+    #>  6 FALSE        58     1 np         105   240     0 hypertrophy     154     1
+    #>  7 FALSE        41     0 aa         126   306     0 normal          163     0
+    #>  8 TRUE         39     1 a          118   219     0 normal          140     0
+    #>  9 TRUE         77     1 a          125   304     0 hypertrophy     162     1
+    #> 10 FALSE        41     0 aa         105   198     0 normal          168     0
+    #> # … with 140 more rows, and 4 more variables: oldpeak <dbl>, slope <chr>,
+    #> #   ca <dbl>, thal <chr>
 
 -   `heart.test` (the testing / prediction dataset) contains data from a
     new set of 153 patients:
 
-``` r
-heart.test
-#> # A tibble: 153 × 14
-#>    diagnosis   age   sex cp    trest…¹  chol   fbs restecg thalach exang oldpeak
-#>    <lgl>     <dbl> <dbl> <chr>   <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
-#>  1 FALSE        51     0 np        120   295     0 hypert…     157     0     0.6
-#>  2 TRUE         45     1 ta        110   264     0 normal      132     0     1.2
-#>  3 TRUE         53     1 a         123   282     0 normal       95     1     2  
-#>  4 TRUE         45     1 a         142   309     0 hypert…     147     1     0  
-#>  5 FALSE        66     1 a         120   302     0 hypert…     151     0     0.4
-#>  6 TRUE         48     1 a         130   256     1 hypert…     150     1     0  
-#>  7 TRUE         55     1 a         140   217     0 normal      111     1     5.6
-#>  8 FALSE        56     1 aa        130   221     0 hypert…     163     0     0  
-#>  9 TRUE         42     1 a         136   315     0 normal      125     1     1.8
-#> 10 FALSE        45     1 a         115   260     0 hypert…     185     0     0  
-#> # … with 143 more rows, 3 more variables: slope <chr>, ca <dbl>, thal <chr>,
-#> #   and abbreviated variable name ¹​trestbps
-#> # ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names
-```
+<!-- -->
+
+    heart.test
+    #> # A tibble: 153 × 14
+    #>    diagnosis   age   sex cp    trestbps  chol   fbs restecg     thalach exang
+    #>    <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>         <dbl> <dbl>
+    #>  1 FALSE        51     0 np         120   295     0 hypertrophy     157     0
+    #>  2 TRUE         45     1 ta         110   264     0 normal          132     0
+    #>  3 TRUE         53     1 a          123   282     0 normal           95     1
+    #>  4 TRUE         45     1 a          142   309     0 hypertrophy     147     1
+    #>  5 FALSE        66     1 a          120   302     0 hypertrophy     151     0
+    #>  6 TRUE         48     1 a          130   256     1 hypertrophy     150     1
+    #>  7 TRUE         55     1 a          140   217     0 normal          111     1
+    #>  8 FALSE        56     1 aa         130   221     0 hypertrophy     163     0
+    #>  9 TRUE         42     1 a          136   315     0 normal          125     1
+    #> 10 FALSE        45     1 a          115   260     0 hypertrophy     185     0
+    #> # … with 143 more rows, and 4 more variables: oldpeak <dbl>, slope <chr>,
+    #> #   ca <dbl>, thal <chr>
 
 The criterion variable is `diagnosis`, a logical column (either `TRUE`
 or `FALSE`) which indicate the true state for each patient (i.e.,
@@ -138,70 +130,66 @@ whether or not they suffer from heart disease).
 Now let’s use `FFTrees()` to create fast-and-frugal trees from the
 `heart.train` data and test their performance on the `heart.test` data:
 
-``` r
-# Create an FFTrees object from the heartdisease data: 
-heart.fft <- FFTrees(formula = diagnosis ~., 
-                     data = heart.train,
-                     data.test = heart.test, 
-                     decision.labels = c("Healthy", "Disease"))
-#> Setting goal = 'wacc'.
-#> Setting goal.chase = 'wacc'.
-#> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0).
-#> Growing FFTs with ifan:
-#> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
+    # Create an FFTrees object from the heartdisease data: 
+    heart.fft <- FFTrees(formula = diagnosis ~., 
+                         data = heart.train,
+                         data.test = heart.test, 
+                         decision.labels = c("Healthy", "Disease"))
+    #> Setting goal = 'wacc'
+    #> Setting goal.chase = 'wacc'
+    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
+    #> Growing FFTs with ifan:
+    #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
-# Printing an FFTrees object shows aggregate statistics: 
-heart.fft
-#> FFTrees 
-#> - Trees: 7 fast-and-frugal trees predicting diagnosis
-#> - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
-#> 
-#> FFT #1: Definition
-#> [1] If thal = {rd,fd}, decide Disease.
-#> [2] If cp != {a}, decide Healthy.
-#> [3] If ca > 0, decide Disease, otherwise, decide Healthy.
-#> 
-#> FFT #1: Prediction Accuracy
-#> Prediction Data: N = 153, Pos (+) = 73 (48%) 
-#> 
-#> |          | True + | True - | Totals:
-#> |----------|--------|--------|
-#> | Decide + | hi  64 | fa  19 |      83
-#> | Decide - | mi   9 | cr  61 |      70
-#> |----------|--------|--------|
-#>   Totals:        73       80   N = 153
-#> 
-#> acc  = 81.7%   ppv  = 77.1%   npv  = 87.1%
-#> bacc = 82.0%   sens = 87.7%   spec = 76.2%
-#> E(cost) = 0.183
-#> 
-#> FFT #1: Prediction Speed and Frugality
-#> mcu = 1.73, pci = 0.87
+    # Printing an FFTrees object shows aggregate statistics: 
+    heart.fft
+    #> FFTrees 
+    #> - Trees: 7 fast-and-frugal trees predicting diagnosis
+    #> - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
+    #> 
+    #> FFT #1: Definition
+    #> [1] If thal = {rd,fd}, decide Disease.
+    #> [2] If cp != {a}, decide Healthy.
+    #> [3] If ca > 0, decide Disease, otherwise, decide Healthy.
+    #> 
+    #> FFT #1: Prediction Accuracy
+    #> Prediction data: N = 153, Pos (+) = 73 (48%) 
+    #> 
+    #> |          | True + | True - | Totals:
+    #> |----------|--------|--------|
+    #> | Decide + | hi  64 | fa  19 |      83
+    #> | Decide - | mi   9 | cr  61 |      70
+    #> |----------|--------|--------|
+    #>   Totals:        73       80   N = 153
+    #> 
+    #> acc  = 81.7%   ppv  = 77.1%   npv  = 87.1%
+    #> bacc = 82.0%   sens = 87.7%   spec = 76.2%
+    #> 
+    #> FFT #1: Prediction Speed, Frugality, and Cost
+    #> mcu = 1.73,  pci = 0.87,  E(cost) = 0.183
 
-# Plot the best tree applied to the test data: 
-plot(heart.fft,
-     data = "test",
-     main = "Heart Disease")
-```
+    # Plot the best tree applied to the test data: 
+    plot(heart.fft,
+         data = "test",
+         main = "Heart Disease")
 
 <img src="man/figures/README-example-heart-1.png" width="80%" style="display: block; margin: auto;" />
 
-``` r
-# Compare results across algorithms in test data: 
-heart.fft$competition$test
-#>   algorithm   n hi fa mi cr      sens   spec    far       ppv       npv
-#> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
-#> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
-#> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
-#> 4        rf 153 59  8 14 72 0.8082192 0.9000 0.1000 0.8805970 0.8372093
-#> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
-#>         acc      bacc      cost cost_decisions cost_cues
-#> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
-#> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
-#> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
-#> 4 0.8562092 0.8541096 0.1437908      0.1437908        NA
-#> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
-```
+
+    # Compare results across algorithms in test data: 
+    heart.fft$competition$test
+    #>   algorithm   n hi fa mi cr      sens   spec    far       ppv       npv
+    #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
+    #> 2        lr 153 55 13 18 67 0.7534247 0.8375 0.1625 0.8088235 0.7882353
+    #> 3      cart 153 50 19 23 61 0.6849315 0.7625 0.2375 0.7246377 0.7261905
+    #> 4        rf 153 59  8 14 72 0.8082192 0.9000 0.1000 0.8805970 0.8372093
+    #> 5       svm 153 55  7 18 73 0.7534247 0.9125 0.0875 0.8870968 0.8021978
+    #>         acc      bacc      cost cost_decisions cost_cues
+    #> 1 0.8169935 0.8196062 0.1830065      0.1830065         0
+    #> 2 0.7973856 0.7954623 0.2026144      0.2026144        NA
+    #> 3 0.7254902 0.7237158 0.2745098      0.2745098        NA
+    #> 4 0.8562092 0.8541096 0.1437908      0.1437908        NA
+    #> 5 0.8366013 0.8329623 0.1633987      0.1633987        NA
 
 <!-- FFTs by verbal description: -->
 
@@ -221,28 +209,26 @@ evaluate its performance on the `heart.test` data:
 These conditions can directly be supplied to the `my.tree` argument of
 `FFTrees()`:
 
-``` r
-# Create custom FFT 'in words' and apply it to data:
+    # Create custom FFT 'in words' and apply it to data:
 
-# Create my own FFT (from verbal description):
-my.fft <- FFTrees(formula = diagnosis ~., 
-                  data = heart.train,
-                  data.test = heart.test, 
-                  decision.labels = c("Healthy", "Disease"),
-                  my.tree = "If sex = 1, predict Disease.
-                             If age < 45, predict Healthy.
-                             If thal = {fd, normal}, predict Healthy,  
-                             Otherwise, predict Disease.")
-#> Setting goal = 'wacc'.
-#> Setting goal.chase = 'wacc'.
-#> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0).
-#> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
+    # Create my own FFT (from verbal description):
+    my.fft <- FFTrees(formula = diagnosis ~., 
+                      data = heart.train,
+                      data.test = heart.test, 
+                      decision.labels = c("Healthy", "Disease"),
+                      my.tree = "If sex = 1, predict Disease.
+                                 If age < 45, predict Healthy.
+                                 If thal = {fd, normal}, predict Healthy,  
+                                 Otherwise, predict Disease.")
+    #> Setting goal = 'wacc'
+    #> Setting goal.chase = 'wacc'
+    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
+    #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
-# Plot and evaluate my custom FFT:
-plot(my.fft,
-     data = "test",
-     main = "My custom FFT")
-```
+    # Plot and evaluate my custom FFT:
+    plot(my.fft,
+         data = "test",
+         main = "My custom FFT")
 
 <img src="man/figures/README-example-heart-verbal-1.png" width="80%" style="display: block; margin: auto;" />
 
@@ -321,6 +307,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-28.\]
+\[File `README.Rmd` last updated on 2022-07-30.\]
 
 <!-- eof. -->
