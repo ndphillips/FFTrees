@@ -50,7 +50,7 @@ print.FFTrees <- function(x = NULL,
 
   if (data == "test" & is.null(x$trees$stats$test)){ # use "train" data:
 
-    message("No 'test' data available in x. Using training data...")
+    message("No 'test' data available. Using training data...")
     data <- "train"
   }
 
