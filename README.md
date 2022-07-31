@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9009 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.6.6.9010 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -64,7 +64,7 @@ in **FFTrees**:
     #>   / \
     #>  F   O
     #>     / \
-    #>    F   Trees 1.6.6.9009
+    #>    F   Trees 1.6.6.9010
     #> 
     #> Email: Nathaniel.D.Phillips.is@gmail.com
     #> FFTrees.guide() opens the main guide.
@@ -307,6 +307,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-30.\]
+\[File `README.Rmd` last updated on 2022-07-31.\]
 
 <!-- eof. -->
