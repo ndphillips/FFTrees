@@ -486,7 +486,7 @@ fftrees_create <- function(data = NULL,
     )
   )
 
-  class(x) <- "FFTrees"  # assign class
+  class(x) <- "FFTrees"
 
   # Output: ------
 
