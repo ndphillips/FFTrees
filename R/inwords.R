@@ -1,7 +1,7 @@
-#' Displays a verbal description of an FFT.
+#' Provide a verbal description of an FFT
 #'
-#' @description \code{inwords} provides a verbal description of a fast-and-frugal tree (FFT)
-#' from an \code{FFTrees} object.
+#' @description \code{inwords} generates and provides a verbal description
+#' of a fast-and-frugal tree (FFT) from an \code{FFTrees} object.
 #'
 #' @param x An \code{FFTrees} object.
 #' @param tree The tree to display (as numeric).
@@ -10,7 +10,8 @@
 #'
 #' @seealso
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export
 

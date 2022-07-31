@@ -3,7 +3,7 @@
 \docType{data}
 \name{iris.v}
 \alias{iris.v}
-\title{Iris data set.}
+\title{Iris data}
 \format{
 A data frame containing 150 rows and 4 columns.
 }
@@ -14,7 +14,7 @@ https://archive.ics.uci.edu/ml/datasets/Iris
 iris.v
 }
 \description{
-Iris data set.
+Iris data
 }
 \seealso{
 Other datasets: 

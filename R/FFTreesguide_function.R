@@ -1,4 +1,4 @@
-#' Opens the \strong{FFTrees} package guide.
+#' Open the \strong{FFTrees} package guide
 #'
 #' @importFrom utils vignette
 #'

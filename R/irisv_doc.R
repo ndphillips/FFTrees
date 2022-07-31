@@ -1,4 +1,5 @@
-#' Iris data set.
+#' Iris data
+#'
 #'
 #' @format A data frame containing 150 rows and 4 columns.
 #'

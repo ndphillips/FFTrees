@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_cuerank.R
 \name{fftrees_cuerank}
 \alias{fftrees_cuerank}
-\title{Calculates thresholds that maximize a statistic (goal) for cues in data.}
+\title{Calculate thresholds that optimize some statistic (goal) for cues in data}
 \usage{
 fftrees_cuerank(x = NULL, newdata = NULL, data = "train", rounding = NULL)
 }
@@ -16,8 +16,8 @@ fftrees_cuerank(x = NULL, newdata = NULL, data = "train", rounding = NULL)
 \item{rounding}{integer.}
 }
 \value{
-A dataframe containing thresholds and marginal classification statistics for each cue
+A data frame containing thresholds and marginal classification statistics for each cue
 }
 \description{
-Calculates thresholds that maximize a statistic (goal) for cues in data.
+Calculate thresholds that optimize some statistic (goal) for cues in data
 }

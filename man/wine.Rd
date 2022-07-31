@@ -3,7 +3,7 @@
 \docType{data}
 \name{wine}
 \alias{wine}
-\title{Wine tasting dataset.}
+\title{Wine tasting data}
 \format{
 A data frame containing 6497 rows and 13 columns.
 }

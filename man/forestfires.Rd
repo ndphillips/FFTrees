@@ -3,7 +3,7 @@
 \docType{data}
 \name{forestfires}
 \alias{forestfires}
-\title{Forest fires dataset.}
+\title{Forest fires data}
 \format{
 A data frame containing 517 rows and 13 columns.
 

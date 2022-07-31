@@ -2,14 +2,17 @@
 % Please edit documentation in R/printFFTrees_function.R
 \name{print.FFTrees}
 \alias{print.FFTrees}
-\title{Prints summary information of fast-and-frugal trees (FFTs).}
+\title{Print summary information of fast-and-frugal trees (FFTs)}
 \usage{
-\method{print}{FFTrees}(x = NULL, tree = 1, ...)
+\method{print}{FFTrees}(x = NULL, tree = 1, data = "test", ...)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object created by \code{\link{FFTrees}}.}
 
 \item{tree}{The tree to explore (as integer).}
+
+\item{data}{character. Must be either \code{'test'} (i.e., report prediction performance by default) or \code{'train'} (fitting performance).
+When no statistics for prediction performance (on test data) is available in \code{x}, performance for fitting training data is reported.}
 
 \item{...}{additional arguments passed to \code{print}.}
 }
@@ -17,11 +20,13 @@
 Prints summary information about an FFT to the console.
 }
 \description{
-\code{print.FFTrees} provides summary information
-on FFTs from an \code{FFTrees} object.
+\code{print.FFTrees} provides summary information on FFTs from an \code{FFTrees} object.
+
+By default, \code{print.FFTrees} prints the performance characteristics for prediction (i.e., for predicting test data, rather than for fitting training data).
+When no statistics for prediction performance (on test data) are available or when explicitly asking for fitting performance, use \code{data = "train"}.
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;
 \code{\link{inwords}} for obtaining a verbal description of FFTs;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

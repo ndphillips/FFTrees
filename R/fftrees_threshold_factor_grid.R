@@ -1,4 +1,4 @@
-#' Performs a grid search over factor and returns accuracy statistics for a given factor cue.
+#' Perform a grid search over factor and return accuracy statistics for a given factor cue
 #'
 #' @param thresholds numeric. A vector of factor thresholds to consider.
 #' @param cue_v numeric. Feature values.
@@ -69,7 +69,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     results$threshold <- thresholds
 
     # Add accuracy statistics:
-    results <- cbind(results, Add_Stats(results,
+    results <- cbind(results, add_stats(results,
                                         sens.w = sens.w,
                                         cost.outcomes = cost.outcomes
     ))
@@ -124,7 +124,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     results <- results_cum
 
     # Add accuracy statistics: ----
-    new_stats <- Add_Stats(
+    new_stats <- add_stats(
       data = results,
       sens.w = sens.w,
       cost.outcomes = cost.outcomes,

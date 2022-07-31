@@ -1,6 +1,6 @@
-#' Plots an FFTrees object.
+#' Plot an \code{FFTrees} object
 #'
-#' @description \code{plot.FFTrees} plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#' @description \code{plot.FFTrees} visualizes an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #'
 #' \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
 #' called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.
@@ -73,8 +73,7 @@
 #'      tree = 2,
 #'      main = "An FFT for heart disease diagnosis",
 #'      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-#'      decision.labels = c("Healthy", "Disease"),
-#'      label.tree = c("FFT with 4 nodes"),
+#'      decision.labels = c("ok", "sick"),
 #'      show.header = FALSE,
 #'      show.confusion = FALSE,
 #'      show.levels = FALSE,
@@ -92,7 +91,7 @@
 #' @seealso
 #' \code{\link{print.FFTrees}} for printing summary information of FFTs;
 #' \code{\link{showcues}} for plotting cue accuracies;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom stats anova predict formula model.frame
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
@@ -327,28 +326,28 @@ plot.FFTrees <- function(x = NULL,
       # Check for problems and deprecated arguments: ----
       {
         if (is.null(which.tree) == FALSE) {
-          warning("The which.tree argument is deprecated and is now just called tree. Please use tree from now on to avoid this message.")
+          warning("The 'which.tree' argument is deprecated and replaced by 'tree'.")
 
           tree <- which.tree
         }
 
         if (!inherits(x, "FFTrees")) {
-          stop("You did not include a valid FFTrees class object or specify the tree directly with level.names, level.classes (etc.). Either create a valid FFTrees object with FFTrees() or specify the tree directly.")
+          stop("You did not include a valid FFTrees class object or specify the tree directly with 'level.names', 'level.classes' (etc.).\nEither create a valid FFTrees object with FFTrees() or specify the tree directly.")
         }
 
-        if (tree == "best.test" & is.null(x$tree.stats$test)) {
-          message("You wanted to plot the best test tree (tree = 'best.test') but there were no test data, I'll plot the best training tree instead")
+        if (tree == "best.test" & is.null(x$tree$stats$test)) {
+          warning("You asked to plot the best test tree, but there were no test data. I'll plot the best training tree instead...")
 
           tree <- "best.train"
         }
 
         if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
-          stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees"))
+          stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees."))
         }
 
         if (inherits(data, "character")) {
           if (data == "test" & is.null(x$trees$stats$test)) {
-            stop("You asked to plot the test data but there are no test data in the FFTrees object")
+            stop("You asked to plot test data, but there are no test data in the FFTrees object.")
           }
         }
       }
@@ -357,12 +356,13 @@ plot.FFTrees <- function(x = NULL,
       # DEFINE PLOTTING TREE: ------
 
       if (tree == "best.train") {
-        tree <- x$trees$best$train
+        tree <- x$trees$best$train  # ToDo: Is NULL (even when train/test data is available)!
       }
 
       if (tree == "best.test") {
-        tree <- x$trees$best$test
+        tree <- x$trees$best$test  # ToDo: Is NULL (even when train/test data is available)!
       }
+
 
       # DEFINE CRITICAL OBJECTS: ------
 
@@ -370,21 +370,20 @@ plot.FFTrees <- function(x = NULL,
       tree.stats <- x$trees$stats[[data]]
       level.stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
 
-
       n.exemplars <- nrow(x$data[[data]])
       n.pos <- sum(x$data[[data]][[x$criterion_name]])
       n.neg <- sum(x$data[[data]][[x$criterion_name]] == FALSE)
       mcu <- x$trees$stats[[data]]$mcu[tree]
       crit.br <- mean(x$data[[data]][[x$criterion_name]])
 
-
       final.stats <- tree.stats[tree, ]
+
 
       # ADD LEVEL STATISTICS: ------
 
       n.levels <- nrow(level.stats)
 
-      # Add marginal classification statistics to level.stats
+      # Add marginal classification statistics to level.stats:
       level.stats$hi.m <- NA
       level.stats$mi.m <- NA
       level.stats$fa.m <- NA

@@ -36,6 +36,22 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 
 The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, as\ [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
 
+## What are fast-and-frugal trees (FFTs)?
+
+_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems.   
+The performance of FFTs when predicting cases for new data competes with machine learning techniques such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
+FFTs can be preferable to more complex algorithms because they require very little information, are robust against overfitting, and are easy to interpret, use, and communicate.  
+
+<!-- Quote (cited in guide.Rmd):   --> 
+<!-- In the words of @burton2020:  --> 
+<!-- "human users could interpret, justify, control, and interact with a fast-and-frugal decision aid..."  -->
+<!-- [@burton2020. p.\ 229] -->
+
+<!-- Full quote: -->
+<!-- These fast-and-frugal trees (Hafenbrädl et al.,2016; Phillips, Neth, Woike, & Gaissmaier, 2017) are especially relevant to the algorithm aversion discussion not only because they allowthe human decision maker to dictate the external measures upon which an augmented decision will be judged, but also because they are transparent. This in turn suggests that human users could interpret, justify, control, and interact with a fast-and-frugal decision aid, which touches on virtually all the drivers of algorithm aversion covered in this review.  -->
+<!-- Source: [@burton2020. p.\ 229] -->
+
+
 ## Installation
 
 To install the latest release of **FFTrees** [from CRAN](`r url_pkg_CRAN`) evaluate: 
@@ -51,11 +67,6 @@ The current development version of **FFTrees** can be installed [from GitHub](`r
 devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 ```
 
-## What are fast-and-frugal trees (FFTs)?
-
-_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems. 
-The performance of FFTs when predicting cases for new data competes with machine learning techniques such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
-FFTs can be preferable to more complex algorithms because they are easy to communicate, require very little information, and are robust against overfitting.
 
 ## Examples
 

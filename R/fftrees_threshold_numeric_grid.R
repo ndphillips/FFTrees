@@ -1,4 +1,4 @@
-#' Performs a grid search over thresholds and returns accuracy statistics for a given numeric cue.
+#' Perform a grid search over thresholds and return accuracy statistics for a given numeric cue
 #'
 #' @param thresholds numeric. A vector of thresholds to consider.
 #' @param cue_v numeric. Feature values.
@@ -78,7 +78,7 @@ fftrees_threshold_numeric_grid <- function(thresholds,
     results <- rbind(results_gt, results_lt)
   }
 
-  new_stats <- Add_Stats(results,
+  new_stats <- add_stats(results,
                          sens.w = sens.w,
                          cost.outcomes = cost.outcomes,
                          cost.each = cost.each

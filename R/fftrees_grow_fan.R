@@ -1,8 +1,19 @@
-#' Grows fast-and-frugal trees (FFTs) using the \code{fan} algorithm.
+#' Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithm
+#'
+#' @description \code{fftrees_grow_fan} is called by \code{\link{fftrees_define}}
+#' to create new FFTs by applying the \code{fan} algorithms
+#' (specifically, either \code{ifan} or \code{dfan}) to data.
 #'
 #' @param x An \code{FFTrees} object.
 #'
 #' @param repeat.cues logical.
+#'
+#' @seealso
+#' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
+#' \code{\link{fftrees_define}} for defining FFTs;
+#' \code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
+#' \code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom stats anova predict glm as.formula var
 
@@ -12,20 +23,19 @@ fftrees_grow_fan <- function(x,
   # Prepare: ------
 
   if (!x$params$quiet) {
-    message(paste0("Growing FFTs with ", x$params$algorithm))
+    message(paste0("Growing FFTs with ", x$params$algorithm, ":"))
   }
 
   # Some global variables which could be changed later:
   exit.method <- "fixed"
-  correction <- .25
+  correction  <- .25
 
   # Extract key variables:
   criterion_name <- x$criterion_name
   criterion_v <- x$data$train[[criterion_name]]
-  cues_n <- length(x$cue_names)
+  cues_n  <- length(x$cue_names)
   cases_n <- nrow(x$data$train)
-  cue_df <- x$data$train[, names(x$data$train) != criterion_name]
-
+  cue_df  <- x$data$train[, names(x$data$train) != criterion_name]
 
 
   # Initial training of cue accuracies: ------
@@ -437,7 +447,7 @@ fftrees_grow_fan <- function(x,
 
 
   # Summarize tree definitions and statistics: ----
-  #   tree.definitions
+  #   tree.definitions:
 
   {
 

@@ -3,7 +3,7 @@
 \docType{data}
 \name{sonar}
 \alias{sonar}
-\title{Sonar data set.}
+\title{Sonar data}
 \format{
 A data frame containing 208 rows and 60 columns.
 }
@@ -14,7 +14,7 @@ https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Ro
 sonar
 }
 \description{
-Sonar data set.
+Sonar data
 }
 \seealso{
 Other datasets: 

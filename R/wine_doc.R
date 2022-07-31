@@ -1,4 +1,4 @@
-#' Wine tasting dataset.
+#' Wine tasting data
 #'
 #' Chemical and tasting data from wines in North Portugal.
 #'

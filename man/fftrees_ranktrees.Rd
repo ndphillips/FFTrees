@@ -2,15 +2,22 @@
 % Please edit documentation in R/fftrees_ranktrees.R
 \name{fftrees_ranktrees}
 \alias{fftrees_ranktrees}
-\title{Rank trees by goal.}
+\title{Rank FFTs by current goal}
 \usage{
 fftrees_ranktrees(x, data = "train")
 }
 \arguments{
-\item{x}{FFTrees.}
+\item{x}{An \code{FFTrees} object.}
 
-\item{data}{character.}
+\item{data}{character. Default is \code{data = "train"}.}
 }
 \description{
-Rank trees by goal.
+\code{fftrees_ranktrees} ranks trees in an \code{FFTrees} object \code{x}
+based on the current goal (either \code{"cost"} or as specified in \code{x$params$goal}).
+
+\code{fftrees_ranktrees} is called by the main \code{\link{FFTrees}} function
+when creating FFTs from and applying them to data.
+}
+\seealso{
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

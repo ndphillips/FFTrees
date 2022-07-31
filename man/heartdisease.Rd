@@ -3,7 +3,7 @@
 \docType{data}
 \name{heartdisease}
 \alias{heartdisease}
-\title{Heart disease dataset.}
+\title{Heart disease data}
 \format{
 A data frame containing 303 rows and 14 columns.
 
@@ -33,7 +33,7 @@ https://archive.ics.uci.edu/ml/datasets/Heart+Disease
 heartdisease
 }
 \description{
-Data for 303 patients tested for heart disease.
+A dataset of 303 patients tested for heart disease.
 }
 \seealso{
 \code{\link{heart.cost}} dataset for cost information.

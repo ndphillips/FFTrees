@@ -1,4 +1,4 @@
-#' Sonar data set.
+#' Sonar data
 #'
 #' @format A data frame containing 208 rows and 60 columns.
 #'

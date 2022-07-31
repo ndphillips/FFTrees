@@ -1,4 +1,4 @@
-#' Returns summary information about an \code{FFTrees} object.
+#' Summarize an \code{FFTrees} object
 #'
 #' @param object An \code{FFTrees} object.
 #' @param tree The tree to summarize (as an integer).
@@ -13,6 +13,7 @@ summary.FFTrees <- function(object,
                             ...) {
 
   # Collect object info: ----
+
   train.cues   <- paste(unique(unlist(strsplit(object$trees$definitions$cues[tree], ";"))), collapse = ",")
   train.cues.n <- length(unique(unlist(strsplit(train.cues, ","))))
 
@@ -38,6 +39,7 @@ summary.FFTrees <- function(object,
   train.mcu <- object$trees$results$train$stats$mcu[tree]
 
   # A. Stats exist: ----
+
   if (is.null(object$trees$results$test$stats) == FALSE) {
 
     test.n <- nrow(object$data$test)
@@ -98,7 +100,9 @@ summary.FFTrees <- function(object,
     )
   }
 
+
   # B. No stats exist: ----
+
   if (is.null(object$trees$results$test$stats)) {
 
     # Initialize: ----
@@ -159,6 +163,7 @@ summary.FFTrees <- function(object,
   }
 
   # Set row names:
+
   rownames(summary.df) <- c(
     "n",
 
@@ -175,6 +180,7 @@ summary.FFTrees <- function(object,
     "sens",
     "spec"
   )
+
 
   # Output: ----
 

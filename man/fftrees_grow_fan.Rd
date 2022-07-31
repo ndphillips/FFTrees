@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_grow_fan.R
 \name{fftrees_grow_fan}
 \alias{fftrees_grow_fan}
-\title{Grows fast-and-frugal trees (FFTs) using the \code{fan} algorithm.}
+\title{Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithm}
 \usage{
 fftrees_grow_fan(x, repeat.cues = TRUE)
 }
@@ -12,5 +12,14 @@ fftrees_grow_fan(x, repeat.cues = TRUE)
 \item{repeat.cues}{logical.}
 }
 \description{
-Grows fast-and-frugal trees (FFTs) using the \code{fan} algorithm.
+\code{fftrees_grow_fan} is called by \code{\link{fftrees_define}}
+to create new FFTs by applying the \code{fan} algorithms
+(specifically, either \code{ifan} or \code{dfan}) to data.
+}
+\seealso{
+\code{\link{fftrees_create}} for creating \code{FFTrees} objects;
+\code{\link{fftrees_define}} for defining FFTs;
+\code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
+\code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

@@ -1,6 +1,8 @@
-#' Create FFTs.
+#' Create an object of class \code{FFTrees}
 #'
-#' @description \code{fftrees_create} creates fast-and-frugal trees (FFTs, as an \code{FFTrees} object).
+#' @description \code{fftrees_create} creates an \code{FFTrees} object.
+#'
+#' \code{fftrees_create} is called internally by the main \code{\link{FFTrees}} function.
 #'
 #' @param data Training data (as data frame).
 #' @param formula A formula (with a binary criterion variable).
@@ -21,20 +23,22 @@
 #' @param my.tree string.
 #' @param data.test dataframe.
 #' @param repeat.cues logical.
-#' @param quiet logical
+#'
 #' @param do.lr logical.
 #' @param do.cart logical.
 #' @param do.svm logical.
 #' @param do.rf logical.
 #' @param do.comp logical.
 #'
+#' @param quiet logical
+#'
 #' @return An \code{FFTrees} object.
 #'
 #' @keywords internal
 #'
 #' @seealso
-#' \code{\link{plot.FFTrees}} for plotting FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{fftrees_define}} for defining FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom magrittr "%>%"
 #' @import testthat
@@ -60,30 +64,30 @@ fftrees_create <- function(data = NULL,
                            my.tree = NULL,
                            data.test = NULL,
                            repeat.cues = NULL,
-                           quiet = NULL,
                            do.lr = TRUE,
                            do.svm = TRUE,
                            do.cart = TRUE,
                            do.rf = TRUE,
-                           do.comp = TRUE) {
+                           do.comp = TRUE,
+                           quiet = NULL) {
 
-  # Validation tests: ------
+  # 1. Validation tests: ------
 
-  ## data: ----
+  # data: ----
 
   testthat::expect_true(!is.null(data),
-    info = "data is NULL"
+                        info = "data is NULL"
   )
 
   testthat::expect_true(is.data.frame(data),
-    info = "Object is not a dataframe"
+                        info = "Object is not a dataframe"
   )
 
 
-  ## formula: ----
+  # formula: ----
 
   testthat::expect_true(!is.null(formula),
-    info = "formula is NULL"
+                        info = "formula is NULL"
   )
 
   testthat::expect_is(formula, "formula")
@@ -92,17 +96,18 @@ fftrees_create <- function(data = NULL,
   criterion_name <- paste(formula)[2]
 
 
-  ## algorithm: ----
+  # algorithm: ----
 
   algorithm_valid <- c("ifan", "dfan")
 
   testthat::expect_true(!is.null(algorithm),
-    info = "algorithm is NULL"
+                        info = "algorithm is NULL"
   )
 
   testthat::expect_true(algorithm %in% algorithm_valid)
 
-  ## goal: ----
+
+  # goal: ----
 
   goal_valid <- c("bacc", "wacc", "dprime", "cost", "acc")
 
@@ -122,12 +127,13 @@ fftrees_create <- function(data = NULL,
   }
 
   testthat::expect_true(!is.null(goal),
-    info = "goal is NULL"
+                        info = "goal is NULL"
   )
 
   testthat::expect_true(goal %in% goal_valid)
 
-  ## goal.chase: ----
+
+  # goal.chase: ----
 
   if (goal == "cost" & is.null(goal.chase)) {
     goal.chase <- "cost"
@@ -139,59 +145,60 @@ fftrees_create <- function(data = NULL,
     goal.chase <- "wacc"
 
     if (quiet == FALSE) {
-      message("Setting goal.chase = 'waccc'")
+      message("Setting goal.chase = 'wacc'")
     }
   }
 
   testthat::expect_true(!is.null(goal.chase),
-    info = "goal.chase is NULL"
+                        info = "goal.chase is NULL"
   )
 
   testthat::expect_true(goal.chase %in% goal_valid)
 
-  ## goal.threshold: ----
+  # goal.threshold: ----
 
   testthat::expect_true(!is.null(goal.threshold),
-    info = "goal.threshold is NULL"
+                        info = "goal.threshold is NULL"
   )
 
   testthat::expect_true(goal.threshold %in% goal_valid)
 
 
-  ## numthresh.method: ----
+  # numthresh.method: ----
 
   numthresh.method_valid <- c("optimise", "median")
 
   testthat::expect_true(substr(numthresh.method, 1, 1) %in% substr(numthresh.method_valid, 1, 1),
-    info = paste0(
-      "numthresh.method is not valid\nTry one of the following: ",
-      paste(numthresh.method_valid, collapse = ", ")
-    )
+                        info = paste0(
+                          "numthresh.method is not valid\nTry one of the following: ",
+                          paste(numthresh.method_valid, collapse = ", ")
+                        )
   )
 
-  ## numthresh.n: ----
+  # numthresh.n: ----
 
   numthresh.n_valid <- c(3:20)
 
   testthat::expect_true(numthresh.n %in% numthresh.n_valid,
-    info = paste0(
-      "numthresh.n is not valid\nTry one of the following: ",
-      paste(numthresh.n_valid, collapse = ", ")
-    )
+                        info = paste0(
+                          "numthresh.n is not valid\nTry one of the following: ",
+                          paste(numthresh.n_valid, collapse = ", ")
+                        )
   )
 
 
-  ## sens.w: ----
+  # sens.w: ----
 
   testthat::expect_true(!is.null(sens.w),
-    info = "sens.w is NULL"
+                        info = "sens.w is NULL"
   )
 
   testthat::expect_lte(sens.w, expected = 1)
 
   testthat::expect_gte(sens.w, expected = 0)
 
-  ## max.levels: ----
+
+  # max.levels: ----
 
   if (is.null(max.levels)) {
     max.levels <- 4
@@ -202,17 +209,18 @@ fftrees_create <- function(data = NULL,
   }
 
   testthat::expect_true(!is.null(max.levels),
-    info = "max.levels is NULL"
+                        info = "max.levels is NULL"
   )
 
   testthat::expect_true(max.levels %in% 1:6,
-    info = "max.levels must be an integer between 1 and 6"
+                        info = "max.levels must be an integer between 1 and 6"
   )
 
-  ## cost.outcomes: ----
+
+  # cost.outcomes: ----
 
   if (!is.null(cost.outcomes) & goal != "cost") {
-    message("Note: You specified cost.outcomes but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth")
+    message("Note: You specified cost.outcomes but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
   }
 
   if (is.null(cost.outcomes)) {
@@ -224,97 +232,102 @@ fftrees_create <- function(data = NULL,
   }
 
   testthat::expect_true(!is.null(cost.outcomes),
-    info = "cost.outcomes is NULL"
+                        info = "cost.outcomes is NULL"
   )
 
   testthat::expect_is(cost.outcomes,
-    class = "list",
-    info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
+                      class = "list",
+                      info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
   )
 
   testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")),
-    info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
+                        info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
   )
 
-  ## cost.cues: ----
+
+  # cost.cues: ----
 
   if (!is.null(cost.cues) & goal != "cost") {
-    message("Note: You specified cost.cues but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth")
+    message("Note: You specified cost.cues but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
   }
 
 
-  # Append cost.cues
+  # Append cost.cues:
   cost.cues <- cost.cues.append(formula,
-    data,
-    cost.cues = cost.cues
+                                data,
+                                cost.cues = cost.cues
   )
 
   testthat::expect_true(!is.null(cost.cues),
-    info = "cost.cues is NULL"
+                        info = "cost.cues is NULL"
   )
 
   testthat::expect_is(cost.cues,
-    class = "list"
+                      class = "list"
   )
 
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
-    info = "At least one of the values you specified in cost.cues is not in data"
+                        info = "At least one of the values specified in cost.cues is not in data"
   )
 
-  ## stopping.rule: ----
+  # stopping.rule: ----
 
   stopping.rule_valid <- c("exemplars", "levels")
 
   testthat::expect_true(stopping.rule %in% stopping.rule_valid)
 
 
-  ## stopping.par: ----
+  # stopping.par: ----
 
   testthat::expect_gt(stopping.par, expected = 0)
   testthat::expect_lt(stopping.par, expected = 1)
 
-  ## decision.labels: ----
+
+  # decision.labels: ----
 
   testthat::expect_true(!is.null(decision.labels),
-    info = "decision.labels is NULL"
+                        info = "decision.labels is NULL"
   )
 
   testthat::expect_equal(length(decision.labels), 2)
 
-  ## repeat.cues: ----
+
+  # repeat.cues: ----
   testthat::expect_is(repeat.cues, "logical")
 
 
-  # Data quality checks: ------
 
-  ## Criterion is in data: ----
+  # 2. Data quality checks: ------
+
+  # Criterion is in data: ----
 
   testthat::expect_true(criterion_name %in% names(data),
-    info = paste("The criterion", criterion_name, "is not in your data object")
+                        info = paste("The criterion", criterion_name, "is not in data")
   )
 
-  ## No missing criterion values: ----
+  # No missing criterion values: ----
 
   testthat::expect_true(all(!is.na(data[[criterion_name]])),
-    info = "At least one of the criterion values are missing. Please remove these cases and try again."
+                        info = "At least one of the criterion values are missing. Please remove these cases and try again."
   )
 
-  ## Criterion has two unique values: : ----
+  # Criterion has two unique values: : ----
 
   testthat::expect_equal(length(unique(data[[criterion_name]])),
-    expected = 2,
-    info = "Your criterion does not have exactly 2 unique values"
+                         expected = 2,
+                         info = "The criterion variable is non-binary"
   )
 
-  ## Make criterion logical: ----
+
+  # Make criterion logical: ----
 
   if (inherits(data[[criterion_name]], "character") |
-    inherits(data[[criterion_name]], "factor")) {
+      inherits(data[[criterion_name]], "factor")) {
 
-    # Save original values as decision.labels
+    # Save original values as decision.labels:
     decision.labels <- unique(data[[criterion_name]])
 
-    # Convert criterion to logical
+    # Convert criterion to logical:
     data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]
 
     if (quiet == FALSE) {
@@ -322,19 +335,21 @@ fftrees_create <- function(data = NULL,
     }
   }
 
-  ## Criterion is in data.test: ----
+
+  # Check that criterion is in data.test: ----
 
   if (!is.null(data.test)) {
     testthat::expect_true(is.data.frame(data),
-      info = "Object is not a dataframe"
+                          info = "Object is not a dataframe."
     )
 
     testthat::expect_true(criterion_name %in% names(data.test),
-      info = paste("The criterion", criterion_name, "is not in your data.test object")
+                          info = paste("The criterion", criterion_name, "is not in data.test")
     )
   }
 
-  ## Remove cues not specified in formula: ----
+
+  # Remove cues not included in formula: ----
 
   data <- model.frame(
     formula = formula,
@@ -342,29 +357,32 @@ fftrees_create <- function(data = NULL,
     na.action = NULL
   )
 
-  ## Convert factor columns to character: ----
+
+  # Convert factors to character variables: ----
 
   data <- data %>%
     dplyr::mutate_if(is.factor, paste)
 
   # Do the same to data.test:
-
   if (!is.null(data.test)) {
+
     data.test <- model.frame(
       formula = formula,
       data = data.test,
       na.action = NULL
     )
 
-    ## Convert factor columns to character: ----
+    # Convert factor columns to character:
 
     data.test <- data.test %>%
       dplyr::mutate_if(is.factor, paste) %>%
       dplyr::as_tibble()
   }
 
-  # Get cue names
+  # Get cue names: ----
+
   cue_names <- names(data)[2:ncol(data)]
+
 
   # Convert data to tibble: ----
 
@@ -372,16 +390,17 @@ fftrees_create <- function(data = NULL,
     tibble::as_tibble()
 
 
-  # Create FFTrees object: ------
+
+  # 3. Create the FFTrees object: ------
 
   x <- list(
     criterion_name = criterion_name,
     cue_names = cue_names,
 
-    # Formula
-    formula = formula, # Original formula
+    # Formula:
+    formula = formula, # original formula
 
-    # Tree info
+    # Tree info:
     trees = list(
       n = NULL,
       best = NULL,
@@ -395,14 +414,13 @@ fftrees_create <- function(data = NULL,
       )
     ),
 
-    # Raw training data
+    # Raw training data:
     data = list(
       train = data,
       test = data.test
     ),
 
-    # Parameters
-
+    # Parameters:
     params = list(
       algorithm = algorithm,
       goal = goal,
@@ -430,8 +448,8 @@ fftrees_create <- function(data = NULL,
 
 
     # One row per algorithm competition:
-
     competition = list(
+
       train = data.frame(
         algorithm = NA,
         n = NA,
@@ -447,6 +465,7 @@ fftrees_create <- function(data = NULL,
         acc = NA,
         bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA
       ),
+
       test = data.frame(
         algorithm = NA,
         n = NA,
@@ -462,6 +481,7 @@ fftrees_create <- function(data = NULL,
         acc = NA,
         bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA
       ),
+
       models = list(lr = NULL, cart = NULL, rf = NULL, svm = NULL)
     )
   )
@@ -469,6 +489,7 @@ fftrees_create <- function(data = NULL,
   class(x) <- "FFTrees"
 
   # Output: ------
+
   return(x)
 
 } # fftrees_create().

@@ -1,7 +1,15 @@
-#' Fit competitive algorithms.
+#' Fit competitive algorithms
 #'
-#' @param x FFTrees.
+#' @description \code{fftrees_fitcomp} fits competitive algorithms for binary classification tasks
+#' (e.g., LR, CART, RF, SVM) to the data and parameters specified in an \code{FFTrees} object.
 #'
+#' \code{fftrees_fitcomp} is called by the main \code{\link{FFTrees}} function
+#' when creating FFTs from and applying them to data (unless \code{do.comp = FALSE}).
+#'
+#' @param x An \code{FFTrees} object.
+#'
+#' @seealso
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
 fftrees_fitcomp <- function(x) {
 
@@ -44,6 +52,7 @@ fftrees_fitcomp <- function(x) {
       message("Fitting other algorithms for comparison (disable with do.comp = FALSE) ...")
     }
   }
+
 
   # LR: ----
 
@@ -141,6 +150,7 @@ fftrees_fitcomp <- function(x) {
     }
   }
 
+
   # SVM: ----
 
   {
@@ -172,7 +182,9 @@ fftrees_fitcomp <- function(x) {
     }
   }
 
+
   # Output: ------
+
   return(x)
 
 } # fftrees_fitcomp().

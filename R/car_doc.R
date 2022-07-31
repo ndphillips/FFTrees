@@ -1,4 +1,4 @@
-#' Car acceptability data.
+#' Car acceptability data
 #'
 #' @format A data frame containing 1728 cars (rows) and 7 variables (columns).
 #'

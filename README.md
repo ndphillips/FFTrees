@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9007 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.6.6.9010 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -20,6 +20,25 @@ Woike & Gaissmaier (2017,
 as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
 
+## What are fast-and-frugal trees (FFTs)?
+
+*Fast-and-frugal trees* (FFTs) are simple and transparent decision
+algorithms for solving binary classification problems.  
+The performance of FFTs when predicting cases for new data competes with
+machine learning techniques such as logistic regression (LR),
+support-vector machines (SVM), and random forests (RF). FFTs can be
+preferable to more complex algorithms because they require very little
+information, are robust against overfitting, and are easy to interpret,
+use, and communicate.
+
+<!-- Quote (cited in guide.Rmd):   -->
+<!-- In the words of @burton2020:  -->
+<!-- "human users could interpret, justify, control, and interact with a fast-and-frugal decision aid..."  -->
+<!-- [@burton2020. p.\ 229] -->
+<!-- Full quote: -->
+<!-- These fast-and-frugal trees (Hafenbrädl et al.,2016; Phillips, Neth, Woike, & Gaissmaier, 2017) are especially relevant to the algorithm aversion discussion not only because they allowthe human decision maker to dictate the external measures upon which an augmented decision will be judged, but also because they are transparent. This in turn suggests that human users could interpret, justify, control, and interact with a fast-and-frugal decision aid, which touches on virtually all the drivers of algorithm aversion covered in this review.  -->
+<!-- Source: [@burton2020. p.\ 229] -->
+
 ## Installation
 
 To install the latest release of **FFTrees** [from
@@ -33,16 +52,6 @@ GitHub](https://github.com/ndphillips/FFTrees) with:
     # install.packages("devtools")
     devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
-## What are fast-and-frugal trees (FFTs)?
-
-*Fast-and-frugal trees* (FFTs) are simple and transparent decision
-algorithms for solving binary classification problems. The performance
-of FFTs when predicting cases for new data competes with machine
-learning techniques such as logistic regression (LR), support-vector
-machines (SVM), and random forests (RF). FFTs can be preferable to more
-complex algorithms because they are easy to communicate, require very
-little information, and are robust against overfitting.
-
 ## Examples
 
 As an example, let’s create a FFT predicting heart disease status
@@ -55,7 +64,7 @@ in **FFTrees**:
     #>   / \
     #>  F   O
     #>     / \
-    #>    F   Trees 1.6.6.9007
+    #>    F   Trees 1.6.6.9010
     #> 
     #> Email: Nathaniel.D.Phillips.is@gmail.com
     #> FFTrees.guide() opens the main guide.
@@ -127,9 +136,9 @@ Now let’s use `FFTrees()` to create fast-and-frugal trees from the
                          data.test = heart.test, 
                          decision.labels = c("Healthy", "Disease"))
     #> Setting goal = 'wacc'
-    #> Setting goal.chase = 'waccc'
+    #> Setting goal.chase = 'wacc'
     #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
-    #> Growing FFTs with ifan
+    #> Growing FFTs with ifan:
     #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
     # Printing an FFTrees object shows aggregate statistics: 
@@ -144,7 +153,7 @@ Now let’s use `FFTrees()` to create fast-and-frugal trees from the
     #> [3] If ca > 0, decide Disease, otherwise, decide Healthy.
     #> 
     #> FFT #1: Prediction Accuracy
-    #> Prediction Data: N = 153, Pos (+) = 73 (48%) 
+    #> Prediction data: N = 153, Pos (+) = 73 (48%) 
     #> 
     #> |          | True + | True - | Totals:
     #> |----------|--------|--------|
@@ -155,10 +164,9 @@ Now let’s use `FFTrees()` to create fast-and-frugal trees from the
     #> 
     #> acc  = 81.7%   ppv  = 77.1%   npv  = 87.1%
     #> bacc = 82.0%   sens = 87.7%   spec = 76.2%
-    #> E(cost) = 0.183
     #> 
-    #> FFT #1: Prediction Speed and Frugality
-    #> mcu = 1.73, pci = 0.87
+    #> FFT #1: Prediction Speed, Frugality, and Cost
+    #> mcu = 1.73,  pci = 0.87,  E(cost) = 0.183
 
     # Plot the best tree applied to the test data: 
     plot(heart.fft,
@@ -213,7 +221,7 @@ These conditions can directly be supplied to the `my.tree` argument of
                                  If thal = {fd, normal}, predict Healthy,  
                                  Otherwise, predict Disease.")
     #> Setting goal = 'wacc'
-    #> Setting goal.chase = 'waccc'
+    #> Setting goal.chase = 'wacc'
     #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
     #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
@@ -299,6 +307,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-07-27.\]
+\[File `README.Rmd` last updated on 2022-07-31.\]
 
 <!-- eof. -->

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{comp.pred}
 \alias{comp.pred}
-\title{Wrapper for classfication algorithms.}
+\title{Wrapper for classifcation algorithms}
 \usage{
 comp.pred(
   formula,
@@ -27,5 +27,6 @@ comp.pred(
 \item{new.factors}{string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.}
 }
 \description{
-This function is a wrapper for many classification algorithms such as CART (rpart::rpart), logistic regression (glm), support vector machines (svm::svm) and random forests (randomForest::randomForest)
+\code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
+logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
 }

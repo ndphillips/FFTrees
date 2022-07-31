@@ -3,7 +3,7 @@
 \docType{data}
 \name{heart.cost}
 \alias{heart.cost}
-\title{Cue costs for the heartdisease data.}
+\title{Cue costs for the heartdisease data}
 \format{
 A data frame containing 153 rows and 14 columns.
 

@@ -1,6 +1,6 @@
-#' Titanic dataset.
+#' Titanic survival data
 #'
-#' A dataset indicating who survived on the Titanic.
+#' Data indicating who survived on the Titanic.
 #'
 #' @format A data frame containing 2,201 rows and 4 columns.
 #'

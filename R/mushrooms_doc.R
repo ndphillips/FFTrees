@@ -1,4 +1,6 @@
-#' Mushrooms dataset.
+#' Mushrooms data
+#'
+#' Data on the features of poisonous vs. non-poisonous mushrooms.
 #'
 #' @format A data frame containing 8,124 rows and 23 columns.
 #'

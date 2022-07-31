@@ -1,14 +1,15 @@
-#' Converts text describing an FFT into an \code{FFTrees} object.
+#' Convert a text description of an FFT into an \code{FFTrees} object
 #'
 #' @description \code{fftrees_wordstofftrees} converts a verbal description
-#' of an FFT into a tree definition (of an \code{FFTrees} object).
+#' of an FFT (provided as a text string) into a tree definition (of an \code{FFTrees} object).
 #'
-#' \code{fftrees_wordstofftrees} is the complement of
+#' \code{fftrees_wordstofftrees} is the complement function to
 #' \code{\link{fftrees_ffttowords}}, which converts a tree definition
 #' (of an \code{FFTrees} object) into a verbal description.
 #'
-#' Note that the parsing of \code{fftrees_wordstofftrees}
-#' ignores the 2nd part of the final sentence (i.e., the part
+#' To increase robustness, the parsing of \code{fftrees_wordstofftrees}
+#' allows for lower- or uppercase spellings (but not typographical variants)
+#' and ignores the else-part of the final sentence (i.e., the part
 #' beginning with "otherwise").
 #'
 #' @param x An \code{FFTrees} object.
@@ -19,7 +20,7 @@
 #' @seealso
 #' \code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
 #' \code{\link{print.FFTrees}} for printing summary information of FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom stringr str_extract str_detect
 #'
@@ -28,7 +29,7 @@
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
-  # Parameters / options: ----
+  # Parameters / options: ------
 
   directions.df <- data.frame(
     directions   = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
@@ -44,42 +45,61 @@ fftrees_wordstofftrees <- function(x,
   )
 
 
-  # Clean up my.tree: ----
+  # Clean up and check my.tree: ------
 
-  # Split into one sentence:
+  # Collapse into one sentence:
   if (length(my.tree) > 1) {
     my.tree <- paste(my.tree, collapse = ". ")
   }
 
-  # Remove \n (can happen if my.tree has line breaks):
+
+  # Remove line breaks (\n):
   my.tree <- gsub(pattern = "\n", replacement = "", x = my.tree)
 
-  if (all(grepl(x$params$decision.labels[1], x = my.tree) == FALSE)) {
-    stop("Some decision.labels are not in my.tree.")
-  }
 
-  cue.names.l <- tolower(x$cue_names)
-  my.tree <- tolower(my.tree)
+  # Use lowercase spelling (for robustness against typos):
+  my.tree         <- tolower(my.tree)
+  cue.names.l     <- tolower(x$cue_names)
   decision.labels <- tolower(x$params$decision.labels)
 
 
-  # Split my.tree into def parts: ----
+  # Verify that both decision labels/exit types occur (at least once) in my.tree:
+
+  lbl_0 <- decision.labels[1]  # exit type 0: left/False
+  if (all(grepl(lbl_0, x = my.tree) == FALSE)) {
+    warning(paste0("The decision label '", x$params$decision.labels[1], "' does not occur in my.tree."))
+  }
+
+  lbl_1 <- decision.labels[2]  # exit type 1: right/True
+  if (all(grepl(lbl_1, x = my.tree) == FALSE)) {
+    warning(paste0("The decision label '", x$params$decision.labels[2], "' does not occur in my.tree."))
+  }
+
+  # Note: As the final else/'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
+  #       Thus, enforcing that both exit types are mentioned (at least once) is too restrictive.
+  # Done: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
+
+
+  # Split my.tree into def parts (dropping "otherwise" clause): ------
 
   def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
   def <- def[2:length(def)]  # remove initial empty string
   # print(def)  # 4debugging
 
   def_fin_2 <- unlist(strsplit(def[length(def)], split = "otherwise", fixed = TRUE))
+  # ToDo: Could be generalized to include "else", "in other cases", etc.
   # print(def_fin_2)  # 4debugging
 
-  # Drop final sentence (beginning with "otherwise"):
+  # Drop the final sub-sentence (beginning with "otherwise"):
   def <- c(def[-length(def)], def_fin_2[1])
   # print(def)  # 4debugging
 
   nodes.n <- length(def)
 
 
-  # cues.v: ----
+  # Extract FFT elements from def: ------
+
+  # 1. cues.v: ----
   {
     cues.v <- names(unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
@@ -108,7 +128,7 @@ fftrees_wordstofftrees <- function(x,
     })]
   }
 
-  # classes.v: ----
+  # 2. classes.v: ----
   {
     classes.v <- rep(NA, nodes.n)
 
@@ -118,7 +138,7 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # exits.v: ----
+  # 3. exits.v: ----
   {
     exits.v <- unlist(lapply(def[1:nodes.n], FUN = function(node.sentence) {
 
@@ -155,7 +175,7 @@ fftrees_wordstofftrees <- function(x,
     # print(exits.v)  # 4debugging
   }
 
-  # thresholds.v: ----
+  # 4. thresholds.v: ----
   {
     thresholds.v <- sapply(1:nodes.n, FUN = function(i) {
 
@@ -186,7 +206,7 @@ fftrees_wordstofftrees <- function(x,
     })
   }
 
-  # directions.v: ----
+  # 5. directions.v: ----
   {
     # Look for directions in sentences:
 
@@ -233,10 +253,13 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # Set final exit to .5:
+  # Set final exit to .5: ------
+
   exits.v[nodes.n] <- ".5"
 
-  # Save result in tree.definitions: ----
+
+  # Save result in tree.definitions: ------
+
   x$trees$definitions <- data.frame(
     tree = 1,
     nodes = nodes.n,
@@ -249,7 +272,8 @@ fftrees_wordstofftrees <- function(x,
 
   x$trees$n <- 1
 
-  # Output: ----
+
+  # Output: ------
 
   return(x)
 

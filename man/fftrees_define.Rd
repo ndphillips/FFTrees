@@ -2,14 +2,14 @@
 % Please edit documentation in R/fftrees_define.R
 \name{fftrees_define}
 \alias{fftrees_define}
-\title{Create definitions of FFTs.}
+\title{Create FFT definitions}
 \usage{
 fftrees_define(x, object = NULL)
 }
 \arguments{
-\item{x}{FFTrees.}
+\item{x}{An \code{FFTrees} object.}
 
-\item{object}{FFTrees.}
+\item{object}{An \code{FFTrees} object.}
 }
 \value{
 An \code{FFTrees} object with tree definitions.
@@ -17,5 +17,16 @@ An \code{FFTrees} object with tree definitions.
 \description{
 \code{fftrees_define} creates definitions of fast-and-frugal trees
 (FFTs, as an \code{FFTrees} object).
+
+\code{fftrees_define} usually passes passes \code{x} either
+to \code{\link{fftrees_grow_fan}} (to create new FFTs by applying algorithms to data) or
+to \code{\link{fftrees_wordstofftrees}} (if \code{my.tree} is specified).
+If \code{object} is provided, \code{fftrees_define} uses the trees from this \code{FFTrees} object.
+}
+\seealso{
+\code{\link{fftrees_create}} for creating \code{FFTrees} objects;
+\code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
+\code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }
 \keyword{internal}

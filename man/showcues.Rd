@@ -2,7 +2,7 @@
 % Please edit documentation in R/showcues_function.R
 \name{showcues}
 \alias{showcues}
-\title{Visualizes cue accuracies (as points in ROC space).}
+\title{Visualize cue accuracies (as points in ROC space)}
 \usage{
 showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL, top = 5)
 }
@@ -42,7 +42,8 @@ showcues(heart.fft,
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{print.FFTrees}} for printing summary information of FFTs;
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
 Other plot functions: 
 \code{\link{plot.FFTrees}()}

@@ -1,4 +1,4 @@
-#' Blood donation dataset.
+#' Blood donation data
 #'
 #' @format A data frame containing 748 rows and 5 columns.
 #'

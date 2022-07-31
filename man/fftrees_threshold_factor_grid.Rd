@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_threshold_factor_grid.R
 \name{fftrees_threshold_factor_grid}
 \alias{fftrees_threshold_factor_grid}
-\title{Performs a grid search over factor and returns accuracy statistics for a given factor cue.}
+\title{Perform a grid search over factor and return accuracy statistics for a given factor cue}
 \usage{
 fftrees_threshold_factor_grid(
   thresholds = NULL,
@@ -36,7 +36,7 @@ fftrees_threshold_factor_grid(
 A data frame containing accuracy statistics for several factor thresholds
 }
 \description{
-Performs a grid search over factor and returns accuracy statistics for a given factor cue.
+Perform a grid search over factor and return accuracy statistics for a given factor cue
 }
 \seealso{
 \code{\link{fftrees_threshold_numeric_grid}} for numeric cues.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictFFTrees_function.R
 \name{predict.FFTrees}
 \alias{predict.FFTrees}
-\title{Predicts classification outcomes or probabilities from data.}
+\title{Predict classification outcomes or probabilities from data}
 \usage{
 \method{predict}{FFTrees}(
   object = NULL,
@@ -35,8 +35,8 @@ or \code{"both"} which returns a matrix with both class and probability predicti
 Either a logical vector of predictions, or a matrix of class probabilities.
 }
 \description{
-\code{predict.FFTrees} predicts binary classification outcomes or their probabilities from new data
-(using an \code{FFTrees} object).
+\code{predict.FFTrees} predicts binary classification outcomes or their probabilities from \code{newdata}
+for an \code{FFTrees} object.
 }
 \examples{
 # Create training and test data:
@@ -65,5 +65,6 @@ breast.fft.pred <- predict(breast.fft,
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{print.FFTrees}} for printing summary information of FFTs;
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

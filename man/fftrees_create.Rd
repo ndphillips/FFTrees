@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_create.R
 \name{fftrees_create}
 \alias{fftrees_create}
-\title{Create FFTs.}
+\title{Create an object of class \code{FFTrees}}
 \usage{
 fftrees_create(
   data = NULL,
@@ -24,12 +24,12 @@ fftrees_create(
   my.tree = NULL,
   data.test = NULL,
   repeat.cues = NULL,
-  quiet = NULL,
   do.lr = TRUE,
   do.svm = TRUE,
   do.cart = TRUE,
   do.rf = TRUE,
-  do.comp = TRUE
+  do.comp = TRUE,
+  quiet = NULL
 )
 }
 \arguments{
@@ -71,8 +71,6 @@ fftrees_create(
 
 \item{repeat.cues}{logical.}
 
-\item{quiet}{logical}
-
 \item{do.lr}{logical.}
 
 \item{do.svm}{logical.}
@@ -82,15 +80,19 @@ fftrees_create(
 \item{do.rf}{logical.}
 
 \item{do.comp}{logical.}
+
+\item{quiet}{logical}
 }
 \value{
 An \code{FFTrees} object.
 }
 \description{
-\code{fftrees_create} creates fast-and-frugal trees (FFTs, as an \code{FFTrees} object).
+\code{fftrees_create} creates an \code{FFTrees} object.
+
+\code{fftrees_create} is called internally by the main \code{\link{FFTrees}} function.
 }
 \seealso{
-\code{\link{plot.FFTrees}} for plotting FFTs;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{fftrees_define}} for defining FFTs;
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }
 \keyword{internal}

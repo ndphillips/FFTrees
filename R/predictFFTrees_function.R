@@ -1,7 +1,7 @@
-#' Predicts classification outcomes or probabilities from data.
+#' Predict classification outcomes or probabilities from data
 #'
-#' @description \code{predict.FFTrees} predicts binary classification outcomes or their probabilities from new data
-#' (using an \code{FFTrees} object).
+#' @description \code{predict.FFTrees} predicts binary classification outcomes or their probabilities from \code{newdata}
+#' for an \code{FFTrees} object.
 #'
 #' @param object An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #' @param newdata dataframe. A data frame of test data.
@@ -41,7 +41,8 @@
 #'
 #' @seealso
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export
 

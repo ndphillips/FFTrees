@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFFTrees_function.R
 \name{plot.FFTrees}
 \alias{plot.FFTrees}
-\title{Plots an FFTrees object.}
+\title{Plot an \code{FFTrees} object}
 \usage{
 \method{plot}{FFTrees}(
   x = NULL,
@@ -99,7 +99,7 @@ If \code{FALSE}, only the tree (without any reference to statistics) will be plo
 A plot visualizing and describing an FFT.
 }
 \description{
-\code{plot.FFTrees} plots an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+\code{plot.FFTrees} visualizes an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 
 \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
 called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.
@@ -125,8 +125,7 @@ plot(heart.fft,
      tree = 2,
      main = "An FFT for heart disease diagnosis",
      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-     decision.labels = c("Healthy", "Disease"),
-     label.tree = c("FFT with 4 nodes"),
+     decision.labels = c("ok", "sick"),
      show.header = FALSE,
      show.confusion = FALSE,
      show.levels = FALSE,
@@ -143,7 +142,7 @@ vignette("FFTrees_plot", package = "FFTrees")
 \seealso{
 \code{\link{print.FFTrees}} for printing summary information of FFTs;
 \code{\link{showcues}} for plotting cue accuracies;
-\code{\link{FFTrees}} for creating FFTs from data.
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
 Other plot functions: 
 \code{\link{showcues}()}

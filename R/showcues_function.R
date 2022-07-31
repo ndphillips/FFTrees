@@ -1,4 +1,4 @@
-#' Visualizes cue accuracies (as points in ROC space).
+#' Visualize cue accuracies (as points in ROC space)
 #'
 #' @description \code{showcues} plots the cue accuracies of an \code{FFTrees} object
 #' created by the \code{\link{FFTrees}} function (as points in ROC space).
@@ -30,7 +30,8 @@
 #'
 #' @seealso
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
-#' \code{\link{FFTrees}} for creating FFTs from data.
+#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
 #'
@@ -48,6 +49,8 @@ showcues <- function(x = NULL,
   on.exit(par(par0), add = TRUE)
 
   palette <- rep(gray(.5, .5), length.out = top)  # colors
+  # palette <- c("deepskyblue", "deeppink", "forestgreen", "darkorange", "gold",
+  #              "firebrick", "grey50", "black")[1:top]
 
 
   # 1. Read inputs (into cue.df): ------
@@ -135,15 +138,17 @@ showcues <- function(x = NULL,
   axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
   axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
 
-  # if(data == "test") {mtext("Testing", 3, line = .5, cex = 1)}
-  # if(data == "train") {mtext("Training", 3, line = .5, cex = 1)}
+  # Subtitle/margin text:
+  # if (data == "test")  {mtext("Testing",  3, line = .5, adj = 1, cex = .9)}
+  # if (data == "train") {mtext("Training", 3, line = .5, adj = 1, cex = .9)}
 
   par("xpd" = FALSE)
 
+  # Plot region:
   rect(-100, -100, 100, 100, col = gray(.96))
-  abline(h = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1))
-  abline(v = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1))
-  abline(a = 0, b = 1, col = gray(.7), lty = 1)
+  abline(h = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1)) # horizontal grid
+  abline(v = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1)) # vertical grid
+  abline(a = 0, b = 1, col = gray(.60), lty = 1)  # diagonal
 
 
   # 3. Plot cues (as points): ------
@@ -151,6 +156,7 @@ showcues <- function(x = NULL,
   #    a. Non-top cues: ----
 
   if (any(cue.df$rank > top)) {
+
     with(cue.df[cue.df$rank > top, ], points(1 - spec, sens, cex = 1))
     with(cue.df[cue.df$rank > top, ], text(1 - spec, sens,
                                            labels = rank,
@@ -212,6 +218,7 @@ showcues <- function(x = NULL,
   )
 
   #    a. Column labels: ----
+
   text(
     x = c(
       location.df[location.df$element == "point.num", ]$x.loc,
