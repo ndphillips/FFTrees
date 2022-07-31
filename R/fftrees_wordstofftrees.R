@@ -67,17 +67,17 @@ fftrees_wordstofftrees <- function(x,
 
   lbl_0 <- decision.labels[1]  # exit type 0: left/False
   if (all(grepl(lbl_0, x = my.tree) == FALSE)) {
-    stop(paste0("The decision label '", x$params$decision.labels[1], "' does not occur in my.tree."))  # feedback in original spelling
+    warning(paste0("The decision label '", x$params$decision.labels[1], "' does not occur in my.tree."))
   }
 
   lbl_1 <- decision.labels[2]  # exit type 1: right/True
   if (all(grepl(lbl_1, x = my.tree) == FALSE)) {
-    stop(paste0("The decision label '", x$params$decision.labels[2], "' does not occur in my.tree."))  # feedback in original spelling
+    warning(paste0("The decision label '", x$params$decision.labels[2], "' does not occur in my.tree."))
   }
 
   # Note: As the final else/'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
   #       Thus, enforcing that both exit types are mentioned (at least once) is too restrictive.
-  # ToDo: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
+  # Done: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
 
 
   # Split my.tree into def parts (dropping "otherwise" clause): ------
