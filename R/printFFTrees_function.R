@@ -44,13 +44,12 @@ print.FFTrees <- function(x = NULL,
 
   if (!data %in% c("test", "train")){ # unknown value:
 
-    message("The data to print must be 'test' or 'train'. Using 'test' data...")
-    data <- "test"
+    stop("The data to print must be 'test' or 'train'.")
   }
 
   if (data == "test" & is.null(x$trees$stats$test)){ # use "train" data:
 
-    message("No 'test' data available. Using training data...")
+    message("No 'test' data available. I'll print the best training tree instead...")
     data <- "train"
   }
 
