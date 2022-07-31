@@ -336,7 +336,7 @@ plot.FFTrees <- function(x = NULL,
         }
 
         if (tree == "best.test" & is.null(x$tree$stats$test)) {
-          message("You asked to plot the best test tree, but there were no test data. I'll plot the best training tree instead...")
+          warning("You asked to plot the best test tree, but there were no test data. I'll plot the best training tree instead...")
 
           tree <- "best.train"
         }

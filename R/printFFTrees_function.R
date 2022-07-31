@@ -49,7 +49,8 @@ print.FFTrees <- function(x = NULL,
 
   if (data == "test" & is.null(x$trees$stats$test)){ # use "train" data:
 
-    message("No 'test' data available. I'll print the best training tree instead...")
+    warning("You asked to print 'test' data, but there were no test data. I'll print the best training tree instead...")
+
     data <- "train"
   }
 
