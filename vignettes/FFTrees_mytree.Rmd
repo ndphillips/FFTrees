@@ -203,12 +203,14 @@ fft_3
 # 4. The shortest possible my.tree: ------ 
 fft_4 <- FFTrees(formula = survived ~., 
                  data = titanic, main = "My test 4", 
-                 my.tree = "If sex = {female} true, else false.")
+                 my.tree = "If sex = {female} true.") # ignore otherwise/else part
 
 plot(fft_4)
-# Note good specificity (i.e., few false alarms, relative to high number of correct rejections), 
-# but poor sensitivity (many misses).
-# Overall accuracy is 10% above baseline (predicting False for all cases).
+# Note:
+# - Warning that 'False' does not occur in specification, but FFT is valid and constructed.
+# - fft_4 shows good specificity (i.e., few false alarms, relative to high number of correct rejections), 
+#   but poor sensitivity (many misses).
+#   Overall accuracy is 10% above baseline (predicting False for all cases).
 ```
 
 
