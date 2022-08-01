@@ -134,13 +134,6 @@ plot.FFTrees <- function(x = NULL,
     par0 <- par(no.readonly = TRUE)
     on.exit(par(par0), add = TRUE)
 
-    # what:
-    what <- tolower(what)
-
-    if (what %in% c("cues", "tree", "roc") == FALSE) {
-      stop("plot.FFTrees: what must be either 'cues', 'tree', or 'roc'.")
-    }
-
     if (is.null(decision.names) == FALSE) {
 
       warning("plot.FFTrees: decision.names is deprecated, use decision.labels instead.")
@@ -149,13 +142,25 @@ plot.FFTrees <- function(x = NULL,
     }
   }
 
-  # If what == cues, then send inputs to showcues():
-  if (what == "cues") {
+  # Handle what:
+  what <- tolower(what)
 
-    showcues(x = x, data = data, main = main)
+  if (what %in% c("cues", "tree", "roc") == FALSE) {
+    stop("plot.FFTrees: what must be either 'cues', 'tree', or 'roc'.")
+  }
+
+  if (what == "cues") { # Handle special case:
+
+    showcues(x = x, main = main)  # pass inputs to showcues()
+
+    # Note: The argument data = data was removed from showcues(),
+    #       as currently no cue accuracy statistics exist in x.
 
   }
 
+  # +++ here now +++: Use else...
+
+  # All other cases: ----
   if (what != "cues") {
 
     # Determine layout: ----
@@ -651,7 +656,7 @@ plot.FFTrees <- function(x = NULL,
           )
         }
 
-        # add upper text:
+        # Add upper text:
         text(mean(x.lim), y.lim[2] + upper.text.adj,
              label = upper.text, cex = upper.text.cex
         )
@@ -2086,5 +2091,12 @@ plot.FFTrees <- function(x = NULL,
   }
 
 } # plot.FFTrees().
+
+
+# ToDo: ------
+
+# - Remove ROC curve parts to a separate function, and
+#   handle what == "roc" as a special case (like what = "cues").
+# - Offer options for adding/changing color information.
 
 # eof.
