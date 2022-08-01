@@ -4,18 +4,27 @@
 \alias{showcues}
 \title{Visualize cue accuracies (as points in ROC space)}
 \usage{
-showcues(x = NULL, data = "train", cue.accuracies = NULL, main = NULL, top = 5)
+showcues(
+  x = NULL,
+  cue.accuracies = NULL,
+  alt.goal = NULL,
+  main = NULL,
+  top = 5,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object created by the \code{\link{FFTrees}} function.}
 
-\item{data}{A string indicating whether to show cue accuracies in training (\code{"train"}) or testing (\code{"test"}).}
+\item{cue.accuracies}{An optional data frame specifying cue accuracies directly (without specifying \code{FFTrees} object \code{x}).}
 
-\item{cue.accuracies}{An optional data frame specifying cue accuracies directly (without specifying an \code{FFTrees} object x).}
+\item{alt.goal}{An optional alternative goal to sort the current cue accuracies (without using the goal of \code{FFTrees} object \code{x}).}
 
-\item{main}{Main plot title (as character string).}
+\item{main}{A main plot title (as character string).}
 
 \item{top}{How many of the top cues should be highlighted (as an integer)?}
+
+\item{quiet}{logical. Should user feedback messages be printed? Default is \code{quiet = FALSE} (i.e., show messages).}
 }
 \value{
 A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC space).
@@ -23,6 +32,10 @@ A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC sp
 \description{
 \code{showcues} plots the cue accuracies of an \code{FFTrees} object
 created by the \code{\link{FFTrees}} function (as points in ROC space).
+
+If the optional arguments \code{cue.accuracies} and \code{alt.goal} are specified,
+their values take precedence over the corresponding settings of an \code{FFTrees} object \code{x}
+(but do not change \code{x}).
 
 \code{showcues} is called when the main \code{\link{plot.FFTrees}} function is set to \code{what = "cues"}.
 }
@@ -37,7 +50,7 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,
 
 # Show cue accuracies (in ROC space):
 showcues(heart.fft,
-         main = "Cue accuracies for predicting heart disease")
+         main = "Predicting heart disease")
 
 }
 \seealso{
