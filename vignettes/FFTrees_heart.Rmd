@@ -76,7 +76,8 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) pr
                      data = heart.train,                # Training data
                      data.test = heart.test,            # Testing data
                      main = "Heart Disease",            # General label
-                     decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
+                     decision.labels = c("Low-Risk", "High-Risk")  # Decision labels (False/True)
+                     )
 ```
 
 The resulting trees, decisions, and accuracy statistics are now stored in an `FFTrees` object called `heart.fft`.
