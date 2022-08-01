@@ -180,6 +180,9 @@ fftrees_create <- function(data = NULL,
 
   # goal.threshold: ----
 
+  # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
+  # ToDo: Why not set to goal.chase when goal.chase was user-specified?
+
   testthat::expect_true(!is.null(goal.threshold),
                         info = "goal.threshold is NULL"
   )
