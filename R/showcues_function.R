@@ -3,13 +3,18 @@
 #' @description \code{showcues} plots the cue accuracies of an \code{FFTrees} object
 #' created by the \code{\link{FFTrees}} function (as points in ROC space).
 #'
+#' If the optional arguments \code{cue.accuracies} and \code{alt.goal} are specified,
+#' their values take precedence over the corresponding settings of an \code{FFTrees} object \code{x}
+#' (but do not change \code{x}).
+#'
 #' \code{showcues} is called when the main \code{\link{plot.FFTrees}} function is set to \code{what = "cues"}.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
-#' @param data A string indicating whether to show cue accuracies in training (\code{"train"}) or testing (\code{"test"}).
-#' @param cue.accuracies An optional data frame specifying cue accuracies directly (without specifying an \code{FFTrees} object x).
-#' @param main Main plot title (as character string).
+#' @param cue.accuracies An optional data frame specifying cue accuracies directly (without specifying \code{FFTrees} object \code{x}).
+#' @param alt.goal An optional alternative goal to sort the current cue accuracies (without using the goal of \code{FFTrees} object \code{x}).
+#' @param main A main plot title (as character string).
 #' @param top How many of the top cues should be highlighted (as an integer)?
+#' @param quiet logical. Should user feedback messages be printed? Default is \code{quiet = FALSE} (i.e., show messages).
 #'
 #' @return A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC space).
 #'
@@ -24,7 +29,7 @@
 #'
 #' # Show cue accuracies (in ROC space):
 #' showcues(heart.fft,
-#'          main = "Cue accuracies for predicting heart disease")
+#'          main = "Predicting heart disease")
 #'
 #' @family plot functions
 #'
@@ -38,75 +43,129 @@
 #' @export
 
 showcues <- function(x = NULL,
-                     data = "train",
+                     # data = "train", #' @param data A string indicating whether to show cue accuracies in training (\code{"train"}) or testing (\code{"test"}).
+                     # Note: Removed argument (data = "train" vs. "test"), as cue accuracies are currently only computed for training data (see GitHub issue #63).
                      cue.accuracies = NULL,
+                     alt.goal = NULL,  # alternative goal (takes local priority over x$params$goal)
                      main = NULL,
-                     top = 5) {
+                     top = 5,
+                     quiet = FALSE) {
 
   # 0. Parameters: ------
 
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 
-  palette <- rep(gray(.5, .5), length.out = top)  # colors
+  # Set color palette:
+  palette <- rep(gray(.5, .5), length.out = top)
   # palette <- c("deepskyblue", "deeppink", "forestgreen", "darkorange", "gold",
   #              "firebrick", "grey50", "black")[1:top]
 
+  # 1. Read user input (to set cue.df and goal): ------
 
-  # 1. Read inputs (into cue.df): ------
+  # cue.df: ----
 
-  if (is.null(x) == FALSE) {
-
-    goal <- x$params$goal
-
-    if (data == "train") {
-
-      if (is.null(x$cues$stats$train)) {
-
-        stop("There are no training statistics in this object.")
-
-      }
-
-      cue.df <- x$cues$stats$train
-
-    }
-
-    if (data == "test") {
-
-      if (is.null(x$cues$stats$test)) {
-
-        stop("There are no test statistics in this object.")
-
-      }
-
-      if (is.null(x$cues$stats$test) == FALSE) {
-
-        cue.df <- x$cues$stats$test
-
-      }
-    }
-  } # if (is.null(x).
-
-  if (is.null(x) & is.null(cue.accuracies) == FALSE) {
+  if (is.null(cue.accuracies) == FALSE) { # prioritize user input:
 
     cue.df <- cue.accuracies
 
+    if (quiet == FALSE){
+      message("Using cue.accuracies provided:")  # user feedback
+    }
+
+  } else if (is.null(x) == FALSE) { # use object x info:
+
+    # if (data == "train") {
+    #
+    #   if (is.null(x$cues$stats$train)) {
+    #     stop("There are no cue training statistics in this object.")
+    #   }
+    #
+    #   cue.df <- x$cues$stats$train
+    #
+    # } else if (data == "test") {
+    #
+    #   if (is.null(x$cues$stats$test)) {
+    #     stop("There are no cue test statistics in this object.")
+    #   }
+    #
+    #   cue.df <- x$cues$stats$test
+    #
+    # } else { # other data values:
+    #
+    #   stop("The data argument must be set to either 'train' or 'test'.")
+    #
+    # }
+
+    # Use cue training statistics:
+    if (is.null(x$cues$stats$train)) {
+
+      stop("There are no cue training statistics for this object.")
+
+    } else {
+
+      cue.df <- x$cues$stats$train
+
+      if (quiet == FALSE){
+        message("Using cue training statistics of object x:")  # user feedback
+      }
+
+    }
+
+  } else { # cue.df not set:
+
+    stop("No data frame of cue accuracies was found.")
+
   }
 
-  if (nrow(cue.df) < top) {
 
-    top <- nrow(cue.df)
+  # goal: ----
+
+  if (!is.null(alt.goal)){ # prioritize user input:
+
+    goal <- alt.goal
+
+  } else if (is.null(x) == FALSE) { # # use object info:
+
+    goal <- x$params$goal
+
+  } else { # set default:
+
+    goal <- "wacc"
 
   }
 
-  cue.df$rank <- rank(-cue.df$wacc, ties.method = "first")
 
-  # Order by goal.threshold and change column order:
+  # Verify values: ----
+
+  if (goal %in% names(cue.df) == FALSE){
+    stop(paste0("The goal == '", goal, "' does not correspond to a variable in cue.df"))
+  }
+
+  if (nrow(cue.df) < top) { top <- nrow(cue.df) }
+
+
+  # Sort cue.df by current goal: ------
+
+  # # Bug: Always rank cue.df by goal == "wacc":
+  # cue.df$rank <- rank(-cue.df$wacc, ties.method = "first")
+
+  # Fix: Rank cue.df by current goal:
+  goal_ix <- which(names(cue.df) == goal)
+  goal_vc <- cue.df[[goal_ix]]  # values corresponding to current goal (as vector)
+  cue.df$rank <- rank(-goal_vc, ties.method = "first")
+
+  # Order by rank and change row order:
   ord_new <- order(cue.df$rank)
+  cue.df  <- cue.df[ord_new, ]
+  goal_vc <- cue.df[[goal_ix]]  # update sorted order, to report in table (below)
 
-  cue.df <- cue.df[ord_new, ]
+  if (quiet == FALSE){
+    message(paste0("Cue accuracies ranked by goal == '", goal, "'"))  # user feedback
+  }
 
-  cue.df$col <- rep(palette, length.out = nrow(cue.df)) # colors
+  # Adjust color palette:
+  cue.df$col <- rep(palette, length.out = nrow(cue.df))
 
 
   # 2. Setup main plot: ------
@@ -139,8 +198,11 @@ showcues <- function(x = NULL,
   axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
 
   # Subtitle/margin text:
+  mtext(paste0("Cue accuracies ranked by ", goal, ":"), 3, line = 0.25, adj = 0, cex = .9)
+
   # if (data == "test")  {mtext("Testing",  3, line = .5, adj = 1, cex = .9)}
   # if (data == "train") {mtext("Training", 3, line = .5, adj = 1, cex = .9)}
+
 
   par("xpd" = FALSE)
 
@@ -219,6 +281,16 @@ showcues <- function(x = NULL,
 
   #    a. Column labels: ----
 
+  if (!goal %in% c("sens", "spec", "wacc")){ # report on current goal:
+
+    label_fin <- goal
+
+  } else { # default:
+
+    label_fin <- "wacc"
+
+  }
+
   text(
     x = c(
       location.df[location.df$element == "point.num", ]$x.loc,
@@ -231,7 +303,7 @@ showcues <- function(x = NULL,
       location.df$x.loc[location.df$element == "wacc"]
     ),
     y = header.y,
-    labels = c("rank", "cue + thresh", "sens", "spec", "wacc"),
+    labels = c(c("rank", "cue + thresh", "sens", "spec"), label_fin),
     font = 1, cex = label.cex
   )
 
@@ -286,7 +358,7 @@ showcues <- function(x = NULL,
 
   #    c. Cue accuracy stats: ----
 
-  # sens:
+  # 1. sens:
   text(
     x = rep(location.df[location.df$element == "sens", ]$x.loc, top),
     y = cue.lab.y,
@@ -295,7 +367,7 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # spec:
+  # 2. spec:
   text(
     x = rep(location.df[location.df$element == "spec", ]$x.loc, top),
     y = cue.lab.y,
@@ -304,24 +376,48 @@ showcues <- function(x = NULL,
     cex = label.cex
   )
 
-  # wacc:
+  # 3. wacc OR alt.goal:
+  if (!goal %in% c("sens", "spec", "wacc")){ # report alt.goal values (from above):
+
+    values_fin <- round(goal_vc[cue.df$rank <= top], 2)  # use goal_vc values
+
+  } else { # default:
+
+    values_fin <- round(cue.df$wacc[cue.df$rank <= top], 2)  # use "wacc" values
+
+  }
+
   text(
     x = rep(location.df[location.df$element == "wacc", ]$x.loc, top),
     y = cue.lab.y,
-    labels = round(cue.df$wacc[cue.df$rank <= top], 2),
+    labels = values_fin,
     adj = location.df[location.df$element == "wacc", ]$adj,
     cex = label.cex
   )
 
-  # Currently NO output!
+
+
+  # Currently NO output! ----
 
 } # showcues().
 
 
+# Done: ------
+
+# Bug fixes:
+# - Fixed bug: Use current goal for ranking/sorting cue.df
+#   (and report as final column in summary table, iff different from current columns).
+# - Fixed bug: There currently exist no cue statistics for "test" data in FFTrees object.
+#   Hence, removed data argument and using x$cues$stats$train whenever x is provided.
+
+# Extensions:
+# - Added alt.goal option (to set an optional alternative goal for sorting cue accuracies);
+# - Added quiet argument (to to provide option for hiding feedback messages);
+# - Added margin text (to signal ranking criterion in plot).
+
+
 # ToDo: ------
 
-# - allow using color palette again (for top cues).
-#
-# - fix bug: Currently no cue statistics for "test" data in FFTrees object.
+# - Allow setting and using color palette again (for top cues)?
 
 # eof.
