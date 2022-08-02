@@ -16,8 +16,9 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
     - Added subtitle (to signal current cue accuracy ranking criterion).
 
 * Improved printing of FFTs with `print.FFTrees()`:
-    - Added `data` argument to optionally print an FFT's training performance, rather than reporting predictions on test data whenever available. 
-    - Improved readability of 2x2 confusion table (right-justifying digits). 
+    - Added `data` argument to print an FFT's training performance (by default) or prediction performance (when test data is available). 
+    - Improved readability of 2x2 confusion table (by right-justifying digits). 
+    - Reporting `wacc` rather than `bacc` in _Accuracy_ section (and `sens.w`, if it differs from .50). 
     - Moved expected cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
     
 * Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
@@ -207,6 +208,6 @@ You can also control whether the results from competing algorithms are displayed
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-01.] 
+[File `NEWS.md` last updated on 2022-08-02.] 
 
 <!-- eof. -->
