@@ -1,15 +1,15 @@
 #' Print summary information of fast-and-frugal trees (FFTs)
 #'
-#' @description \code{print.FFTrees} provides summary information on FFTs from an \code{FFTrees} object.
+#' @description \code{print.FFTrees} prints summary information on FFTs for an \code{FFTrees} object \code{x}.
 #'
-#' By default, \code{print.FFTrees} prints the performance characteristics for prediction (i.e., for predicting test data, rather than for fitting training data).
-#' When no statistics for prediction performance (on test data) are available or when explicitly asking for fitting performance, use \code{data = "train"}.
+#' As \code{x} may not contain test data, \code{print.FFTrees} by default prints the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+#' When test data is available, specify \code{data = "test"} to print prediction performance.
 #'
 #' @param x An \code{FFTrees} object created by \code{\link{FFTrees}}.
 #' @param tree The tree to explore (as integer).
-#' @param data The type of data to print (as character string).
-#' Must be either \code{'train'} (fitting performance) or \code{'test'} (prediction performance).
-#' By default, \code{data = "train"} (as \code{x} may not contain test data).
+#' @param data The data in \code{x} to be printed (as a string);
+#' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
+#' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
 #' @param ... additional arguments passed to \code{print}.
 #'

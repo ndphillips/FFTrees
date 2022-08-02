@@ -5,12 +5,17 @@
 #' \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
 #' called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.
 #'
-#' \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and metrics of classification performance.
+#' \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and various aspects of classification performance.
+#'
+#' As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+#' When test data is available, specify \code{data = "test"} to plot prediction performance.
 #'
 #' Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
-#' @param data The data to be plotted (as a string), either \code{"train"} or \code{"test"}. The corresponding dataset in object \code{x} will be used.
+#' @param data The data in \code{x} to be plotted (as a string);
+#' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
+#' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
 #' @param what What should be plotted (as a string)?
 #' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
