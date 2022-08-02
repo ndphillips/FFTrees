@@ -4,15 +4,16 @@
 \alias{print.FFTrees}
 \title{Print summary information of fast-and-frugal trees (FFTs)}
 \usage{
-\method{print}{FFTrees}(x = NULL, tree = 1, data = "test", ...)
+\method{print}{FFTrees}(x = NULL, tree = 1, data = "train", ...)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object created by \code{\link{FFTrees}}.}
 
 \item{tree}{The tree to explore (as integer).}
 
-\item{data}{character. Must be either \code{'test'} (i.e., report prediction performance by default) or \code{'train'} (fitting performance).
-When no statistics for prediction performance (on test data) is available in \code{x}, performance for fitting training data is reported.}
+\item{data}{The data in \code{x} to be printed (as a string);
+must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
+By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
 \item{...}{additional arguments passed to \code{print}.}
 }
@@ -20,10 +21,10 @@ When no statistics for prediction performance (on test data) is available in \co
 Prints summary information about an FFT to the console.
 }
 \description{
-\code{print.FFTrees} provides summary information on FFTs from an \code{FFTrees} object.
+\code{print.FFTrees} prints summary information on FFTs for an \code{FFTrees} object \code{x}.
 
-By default, \code{print.FFTrees} prints the performance characteristics for prediction (i.e., for predicting test data, rather than for fitting training data).
-When no statistics for prediction performance (on test data) are available or when explicitly asking for fitting performance, use \code{data = "train"}.
+As \code{x} may not contain test data, \code{print.FFTrees} by default prints the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+When test data is available, specify \code{data = "test"} to print prediction performance.
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;
