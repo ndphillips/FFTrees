@@ -5,12 +5,17 @@
 #' \code{plot.FFTrees} is the main plotting function of the \strong{FFTrees} package and
 #' called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} object.
 #'
-#' \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and metrics of classification performance.
+#' \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and various aspects of classification performance.
+#'
+#' As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+#' When test data is available, specify \code{data = "test"} to plot prediction performance.
 #'
 #' Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
-#' @param data The data to be plotted (as a string), either \code{"train"} or \code{"test"}. The corresponding dataset in object \code{x} will be used.
+#' @param data The data in \code{x} to be plotted (as a string);
+#' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
+#' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
 #' @param what What should be plotted (as a string)?
 #' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
@@ -134,13 +139,6 @@ plot.FFTrees <- function(x = NULL,
     par0 <- par(no.readonly = TRUE)
     on.exit(par(par0), add = TRUE)
 
-    # what:
-    what <- tolower(what)
-
-    if (what %in% c("cues", "tree", "roc") == FALSE) {
-      stop("plot.FFTrees: what must be either 'cues', 'tree', or 'roc'.")
-    }
-
     if (is.null(decision.names) == FALSE) {
 
       warning("plot.FFTrees: decision.names is deprecated, use decision.labels instead.")
@@ -149,13 +147,25 @@ plot.FFTrees <- function(x = NULL,
     }
   }
 
-  # If what == cues, then send inputs to showcues():
-  if (what == "cues") {
+  # Handle what:
+  what <- tolower(what)
 
-    showcues(x = x, data = data, main = main)
+  if (what %in% c("cues", "tree", "roc") == FALSE) {
+    stop("plot.FFTrees: what must be either 'cues', 'tree', or 'roc'.")
+  }
+
+  if (what == "cues") { # Handle special case:
+
+    showcues(x = x, main = main)  # pass inputs to showcues()
+
+    # Note: The argument data = data was removed from showcues(),
+    #       as currently no cue accuracy statistics exist in x.
 
   }
 
+  # +++ here now +++: Use else...
+
+  # All other cases: ----
   if (what != "cues") {
 
     # Determine layout: ----
@@ -285,6 +295,9 @@ plot.FFTrees <- function(x = NULL,
     # Setup data: ------
 
     {
+      # Increase robustness:
+      data <- tolower(data)
+
       # Extract important parameters from x
       goal <- x$params$goal
 
@@ -307,7 +320,9 @@ plot.FFTrees <- function(x = NULL,
           } else {
             main <- x$params$main
           }
+
         } else {
+
           if (inherits(data, "character")) {
             if (data == "train") {
               main <- "Data (Training)"
@@ -651,7 +666,7 @@ plot.FFTrees <- function(x = NULL,
           )
         }
 
-        # add upper text:
+        # Add upper text:
         text(mean(x.lim), y.lim[2] + upper.text.adj,
              label = upper.text, cex = upper.text.cex
         )
@@ -2086,5 +2101,12 @@ plot.FFTrees <- function(x = NULL,
   }
 
 } # plot.FFTrees().
+
+
+# ToDo: ------
+
+# - Remove ROC curve parts to a separate function, and
+#   handle what == "roc" as a special case (like what = "cues").
+# - Offer options for adding/changing color information.
 
 # eof.

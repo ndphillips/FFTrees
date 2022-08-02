@@ -7,5 +7,5 @@ test_that("show_cues() works", {
     data = heartdisease,
     train.p = .5
   )
-  expect_silent(showcues(x))
+  expect_silent(showcues(x, quiet = TRUE))
 })

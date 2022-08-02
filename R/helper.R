@@ -958,12 +958,15 @@ num_space <- function(x) {
 
 # console_confusionmatrix: ------
 
-console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
+console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # hi <- 6534  # 4debugging
   # mi <-    5
   # fa <-  765
   # cr <-   54
+
+  # sens.w <- .70
+
   # cost <-  0
 
   sum_lbl <- "Totals:"  # "Sums:"
@@ -1069,20 +1072,41 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  cost) {
 
   # Accuracy info: ----
 
-  cat("acc  =", scales::percent((hi + cr) / N, accuracy = .1), sep = " ")
+  # Compute statistics:
 
-  cat("   ppv  =", scales::percent(hi / (hi + fa), accuracy = .1), sep = " ")
-  cat("   npv  =", scales::percent(cr / (cr + mi), accuracy = .1), sep = " ")
+  acc <- (hi + cr) / N
+
+  ppv <- hi / (hi + fa)
+  npv <- cr / (cr + mi)
+
+  sens <- hi / (hi + mi)
+  spec <- cr / (cr + fa)
+
+  bacc <- (sens + spec)/2
+  wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+
+
+  # Print labels and values:
+
+  cat("acc  =", scales::percent(acc, accuracy = .1), sep = " ")
+
+  cat("   ppv  =", scales::percent(ppv, accuracy = .1), sep = " ")
+  cat("   npv  =", scales::percent(npv, accuracy = .1), sep = " ")
 
   cat("\n")
 
-  cat("bacc =", scales::percent(((hi / (hi + mi)) + (cr / (cr + fa))) / 2, accuracy = .1), sep = " ")
+  # cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
+  cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
 
-  cat("   sens =", scales::percent(hi / (hi + mi), accuracy = .1), sep = " ")
-  cat("   spec =", scales::percent(cr / (cr + fa), accuracy = .1), sep = " ")
+  cat("   sens =", scales::percent(sens, accuracy = .1), sep = " ")
+  cat("   spec =", scales::percent(spec, accuracy = .1), sep = " ")
 
   cat("\n")
 
+  if (abs(sens.w - .50) > 10^-4){  # print sens.w:
+      cat("sens.w = ", round(sens.w, 3), sep = "")
+      cat("\n")
+  }
 
   # Baseline info: Rate of positive criterion values / "True +" cases: ----
   # cat("br   =", scales::percent((hi + mi) / N, accuracy = .1), sep = " ")

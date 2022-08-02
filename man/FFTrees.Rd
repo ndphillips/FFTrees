@@ -71,11 +71,12 @@ Cues not present in \code{cost.cues} are assumed to have no costs (i.e., a value
 For stopping.rule \code{"levels"}, this is the number of levels.
 For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.}
 
-\item{goal}{character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy.}
+\item{goal}{character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.}
 
-\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy, \code{"cost"} = cue costs.}
+\item{goal.chase}{character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy, \code{"cost"} = cue costs.}
 
-\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy.}
+\item{goal.threshold}{character. A string indicating the statistic to maximize when calculating cue thresholds: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
+Default: \code{goal.threshold = "bacc"}.}
 
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 

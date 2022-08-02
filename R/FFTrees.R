@@ -30,9 +30,12 @@
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule.
 #' For stopping.rule \code{"levels"}, this is the number of levels.
 #' For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
-#' @param goal character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy.
-#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy, \code{"cost"} = cue costs.
-#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: \code{"acc"} = overall accuracy, \code{"wacc"} = weighted accuracy, \code{"bacc"} = balanced accuracy.
+#'
+#' @param goal character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
+#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy, \code{"cost"} = cue costs.
+#' @param goal.threshold character. A string indicating the statistic to maximize when calculating cue thresholds: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
+#' Default: \code{goal.threshold = "bacc"}.
+#'
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param numthresh.n integer. Number of numeric thresholds to try.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
@@ -127,9 +130,9 @@ FFTrees <- function(formula = NULL,
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
-                    goal = NULL,
-                    goal.chase = NULL,
-                    goal.threshold = "bacc",
+                    goal = NULL,  # (default set in fftrees_create.R)
+                    goal.chase = NULL,  # (default set in fftrees_create.R)
+                    goal.threshold = "bacc",  # default
                     numthresh.method = "o",
                     numthresh.n = 10,
                     decision.labels = c("False", "True"), # in 0:left/1:right order!
@@ -221,9 +224,9 @@ FFTrees <- function(formula = NULL,
   x <- fftrees_create(
     data = data,
     formula = formula,
-    goal = goal,
     data.test = data.test,
     algorithm = algorithm,
+    goal = goal,
     goal.chase = goal.chase,
     goal.threshold = goal.threshold,
     sens.w = sens.w,

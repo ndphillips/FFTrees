@@ -109,21 +109,33 @@ fftrees_create <- function(data = NULL,
 
   # goal: ----
 
-  goal_valid <- c("bacc", "wacc", "dprime", "cost", "acc")
+  goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
 
   if (is.null(goal)) {
+
     if (!is.null(cost.outcomes) | !is.null(cost.cues)) {
+
       goal <- "cost"
 
       if (quiet == FALSE) {
         message("Setting goal = 'cost'")
       }
+
     } else {
-      goal <- "wacc"
+
+      goal <- "wacc"  # default
+
       if (quiet == FALSE) {
         message("Setting goal = 'wacc'")
       }
     }
+
+  } else { # feedback user setting:
+
+    if (quiet == FALSE) {
+      message(paste0("User set goal = '", goal, "'"))
+    }
+
   }
 
   testthat::expect_true(!is.null(goal),
@@ -136,17 +148,27 @@ fftrees_create <- function(data = NULL,
   # goal.chase: ----
 
   if (goal == "cost" & is.null(goal.chase)) {
+
     goal.chase <- "cost"
 
     if (quiet == FALSE) {
       message("Setting goal.chase = 'cost'")
     }
+
   } else if (is.null(goal.chase)) {
-    goal.chase <- "wacc"
+
+    goal.chase <- "wacc"  # default
 
     if (quiet == FALSE) {
       message("Setting goal.chase = 'wacc'")
     }
+
+  } else { # feedback user setting:
+
+    if (quiet == FALSE) {
+      message(paste0("User set goal.chase = '", goal.chase, "'"))
+    }
+
   }
 
   testthat::expect_true(!is.null(goal.chase),
@@ -155,7 +177,11 @@ fftrees_create <- function(data = NULL,
 
   testthat::expect_true(goal.chase %in% goal_valid)
 
+
   # goal.threshold: ----
+
+  # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
+  # ToDo: Why not set to goal.chase when goal.chase was user-specified?
 
   testthat::expect_true(!is.null(goal.threshold),
                         info = "goal.threshold is NULL"
@@ -174,6 +200,7 @@ fftrees_create <- function(data = NULL,
                           paste(numthresh.method_valid, collapse = ", ")
                         )
   )
+
 
   # numthresh.n: ----
 
@@ -487,6 +514,7 @@ fftrees_create <- function(data = NULL,
   )
 
   class(x) <- "FFTrees"
+
 
   # Output: ------
 
