@@ -7,8 +7,9 @@
 #'
 #' @param x An \code{FFTrees} object created by \code{\link{FFTrees}}.
 #' @param tree The tree to explore (as integer).
-#' @param data character. Must be either \code{'test'} (i.e., report prediction performance by default) or \code{'train'} (fitting performance).
-#' When no statistics for prediction performance (on test data) is available in \code{x}, performance for fitting training data is reported.
+#' @param data The type of data to print (as character string).
+#' Must be either \code{'train'} (fitting performance) or \code{'test'} (prediction performance).
+#' By default, \code{data = "train"} (as \code{x} may not contain test data).
 #'
 #' @param ... additional arguments passed to \code{print}.
 #'
@@ -23,7 +24,7 @@
 
 print.FFTrees <- function(x = NULL,
                           tree = 1,
-                          data = "test",  # "test" or "train"
+                          data = "train",
                           ...) {
 
   # Prepare: ------
@@ -125,6 +126,8 @@ print.FFTrees <- function(x = NULL,
 
   # Get parameter values: ------
 
+  sens.w <- x$params$sens.w  # for computing wacc
+
   if (data == "train") { # (a) use stats of training data:
 
     task   <- "Training"
@@ -152,6 +155,7 @@ print.FFTrees <- function(x = NULL,
     cost <- x$trees$stats$test$cost[tree]
 
   }
+
 
 
   # Accuracy information: ------
@@ -185,6 +189,8 @@ print.FFTrees <- function(x = NULL,
     mi = mi,
     fa = fa,
     cr = cr,
+
+    sens.w = sens.w,
 
     cost = cost
 
