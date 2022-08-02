@@ -295,6 +295,9 @@ plot.FFTrees <- function(x = NULL,
     # Setup data: ------
 
     {
+      # Increase robustness:
+      data <- tolower(data)
+
       # Extract important parameters from x
       goal <- x$params$goal
 
@@ -317,7 +320,9 @@ plot.FFTrees <- function(x = NULL,
           } else {
             main <- x$params$main
           }
+
         } else {
+
           if (inherits(data, "character")) {
             if (data == "train") {
               main <- "Data (Training)"
