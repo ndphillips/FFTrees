@@ -122,27 +122,48 @@ Inspecting these elements provides a wealth of information on the range of FFTs 
 We can view basic information about the `FFTrees` object by printing its name. 
 As the default tree construction algorithm\ `ifan` creates multiple trees with different exit structures, an `FFTrees` object typically contains many FFTs. 
 
-When printing an `FFTrees` object, we automatically get the performance on the `test` data (i.e., for _prediction_, rather than _fitting_) and obtain the information about the tree with the highest value of the `goal` statistic. 
-By default, the `goal` is set to weighed accuracy\ `wacc`:
+When printing an `FFTrees` object, we automatically see the performance on the _training_ data (i.e., for _fitting_, rather than _prediction_) and obtain the information about the tree with the highest value of the `goal` statistic. 
+By default, the `goal` is set to weighed accuracy\ `wacc`: 
 
-```{r print-fftrees-object-default}
-# Performance of the best tree, given the current goal:
-heart.fft
+```{r print-fftrees-object-data-train}
+# Training performance of the best tree (on "train" data, given current goal):
+heart.fft  # same as: print(heart.fft, data = "train")
 ```
 
-Here is a description of the statistics provided by default: 
+Before interpreting any model output, we need to carefully distinguish between an FFT's "Training" (for fitting training data) and "Prediction" performance (for new test data). 
+Unless we explicitly ask for `print(heart.fft, data = "test")`, the output of printing `heart.fft` will report on the fitting phase (i.e., `data = "train"` by default). To see the corresponding prediction performance, we could alternatively ask for:
+
+```{r print-fftrees-object-data-test, eval = FALSE}
+# Prediction performance of the best training tree (on "test" data): 
+print(heart.fft, data = "test")
+```
+
+When evaluating an FFT for either training or test data, we obtain a wide range of measures. 
+
+After some general information on the `FFTrees` object, we see a verbal **Definition** of the best FFT (FFT\ #1). 
+Key information for evaluating an FFT's performance is contained in the **Accuracy** panel (for either training or prediction). 
+Here is a description of the frequency counts and corresponding statistics provided: 
 
 | Statistic | Long name | Definition |
 |:----- |:--------- |:----------------------------------|
-| `N`   | Number of cases | The total number of cases considered. |
+| _Frequencies_: |   |   | 
+| `hi`   |  Number of hits   | $N(\text{Decision} = 1 \land \text{Truth} = 1)$ |
+| `mi`   |  Number of misses | $N(\text{Decision} = 0 \land \text{Truth} = 1)$ |
+| `fa`   |  Number of false-alarms | $N(\text{Decision} = 1 \land \text{Truth} = 0)$ |
+| `cr`   |  Number of correct rejections | $N(\text{Decision} = 0 \land \text{Truth} = 0)$ |
+| `N`   | Number of cases | The total number of cases considered. | 
+| _Probabilities_: |   |   | 
+| `acc` | Accuracy    | The percentage of cases that were correctly classified. |
+| `ppv`  | Positive predictive value  | The percentage (or conditional probability) of positive decisions being correct (i.e., True\ + cases). |
+| `npv`  | Negative predictive value  | The percentage (or conditional probability) of negative decisions being correct (i.e., True\ - cases). |
+| `wacc`| Weighted accuracy | The weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, `sens.w = .5`). |
+| `sens`| Sensitivity | The percentage (or conditional probability) of true positive cases being correctly classified. |
+| `spec`| Specificity | The percentage (or conditional probability) of true negative cases being correctly classified. |
+| _Frugality_: |   |   | 
 | `mcu` | Mean cues used | On average, how many cues were needed to classify cases? In other words, what percent of the available information was used on average? |
 | `pci` | Percent cues ignored | The percent of data that was _ignored_ when classifying cases with a given tree. This is identical to `mcu / cues.n`, where `cues.n` is the total number of cues in the data. |
-| `sens`| Sensitivity | The percentage (or conditional probability) of true positive cases correctly classified. |
-| `spec`| Specificity | The percentage (or conditional probability) of true negative cases correctly classified. |
-| `acc` | Accuracy    | The percentage of cases that were correctly classified. |
-| `wacc`| Weighted accuracy | The weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, `sens.w = .5`). |
 
-**Table 1**: Description of FFTs' basic accuracy and speed/frugality statistics. 
+**Table 1**: Description of FFTs' basic frequencies and corresponding accuracy and speed/frugality statistics. 
 
 
 See the [Accuracy statistics](FFTrees_accuracy_statistics.html) vignette for details on the accuracy statistics used throughout the **FFTrees** package. 
@@ -155,7 +176,7 @@ For instance, the following expression would provide the basic performance chara
 
 ```{r print-fftrees-object-else, eval = FALSE}
 # Performance of alternative FFTs (Tree 3) in an FFTrees object: 
-print(heart.fft, tree = 3)
+print(heart.fft, tree = 3, data = "test")
 ```
 
 Alternatively, we could visualize the same tree and its performance by calling `plot(heart.fft, tree = 3, data = "test")`. 

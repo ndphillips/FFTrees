@@ -52,17 +52,23 @@ The **FFTrees** package makes it easy to produce, display, and evaluate FFTs [@p
 The package's main function is `FFTrees()` which takes formula\ `formula` and dataset\ `data` arguments and returns several FFTs that attempt to classify training cases into criterion classes. 
 The FFTs created can then be used to predict new data to cross-validate their performance. 
 
-Here is an example of fitting `FFTrees()` to `heart.train` data and applying a resulting FFT to `heart.test` data: 
+Here is an example of using the main `FFTrees()` function to fit FFTs to `heart.train` data: 
 
-```{r fig-1, fig.width = 7, fig.height = 6.5, echo = TRUE, fig.align='center', echo = TRUE, message = FALSE, fig.cap="A fast-and-frugal tree (FFT) to predict heart disease status."}
+```{r fft-example, message = FALSE}
 # Create a fast-and-frugal tree (FFT) predicting heart disease:
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test,
                      main = "Heart Disease",
                      decision.labels = c("Healthy", "Diseased"))
+```
 
-# Visualize the best training tree applied to test data:
+The resulting `FFTrees` object `heart.fft` contains 7\ FFTs that were fitted to the `heart.test` data. 
+To evaluate a tree's predictive performance, we compare its predictions for the un-trained `heart.test` data with their true criterion values. 
+Here is how we can apply the best training FFT to the `heart.test` data: 
+
+```{r fig-1, fig.width = 7, fig.height = 6.5, fig.align = 'center', fig.cap = "A fast-and-frugal tree (FFT) to predict heart disease status."}
+# Visualize predictive performance:
 plot(heart.fft, data = "test")
 ```
 
@@ -113,7 +119,7 @@ As a comprehensive, but understandable introduction to FFTs, we recommend readin
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
 _Judgment and Decision Making_, _12_ (4), 344–368. 
 
-If you use **FFTrees** in your work, please cite the article and spread the word so we can continue developing the package. 
+If you use **FFTrees** in your work, please cite the article and spread the word, so that we can continue developing the package. 
 
 **BibTeX Citation**: 
 
