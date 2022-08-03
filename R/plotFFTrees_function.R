@@ -295,10 +295,14 @@ plot.FFTrees <- function(x = NULL,
     # Setup data: ------
 
     {
-      # Increase robustness:
-      data <- tolower(data)
+      # Note: data can be either a string "train"/"test"
+      #       OR an entire data frame (of new test data)!
 
-      # Extract important parameters from x
+      if (inherits(data, "character")) {
+        data <- tolower(data)  # increase robustness
+      }
+
+      # Extract important parameters from x:
       goal <- x$params$goal
 
       if (is.null(decision.labels)) {
@@ -310,6 +314,7 @@ plot.FFTrees <- function(x = NULL,
       }
 
       if (is.null(main)) {
+
         if (("main" %in% names(x$params))) {
           if (is.null(x$params$main)) {
             if (show.header) {
@@ -2104,6 +2109,11 @@ plot.FFTrees <- function(x = NULL,
 
 
 # ToDo: ------
+
+# - Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
+#   suggests that data could be df, to which FFT is then applied.
+#   Applying and plotting in one step would be great, of course, (and should also be adopted for printing)
+#   but it presently does not seem to work.
 
 # - Remove ROC curve parts to a separate function, and
 #   handle what == "roc" as a special case (like what = "cues").

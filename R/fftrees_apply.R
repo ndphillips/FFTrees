@@ -4,14 +4,15 @@
 #' to a dataset and generates corresponding accuracy statistics.
 #'
 #' \code{fftrees_apply} is called internally by the main \code{\link{FFTrees}} function
-#' (with \code{mydata = "train"} and --- if test data exists --- \code{mydata = "test"}).
+#' (with \code{mydata = "train"} and --- if test data exists --- \code{mydata = "test"})
+#' and when predicting outcomes for new data by \code{\link{predict.FFTrees}}.
 #'
 #' @param x An FFT to apply (as an \code{FFTrees} object).
 #' @param mydata character. Data type to which FFT should be applied (either \code{"train"} or \code{"test"}).
 #' @param newdata dataframe. New data to which FFT should be applied.
 #' @param allNA.pred logical. What should be predicted if all cue values in tree are NA? Default is \code{FALSE}.
 #'
-#' @return A list of length 4 containing FFTs.
+#' @return A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).
 #'
 #' @keywords internal
 #'
@@ -29,15 +30,23 @@ fftrees_apply <- function(x,
 
   # Prepare: ------
 
+  # Get data (corresponding to mydata and newdata):
+
   testthat::expect_true(mydata %in% c("train", "test"))
 
   if (mydata == "train") {
+
     data <- x$data$train
+
   } else if (mydata == "test") {
+
     if (is.null(newdata)) {
+
       testthat::expect_true(!is.null(x$data$test))
-    } else {
-      x$data$test <- newdata
+
+      } else {
+
+        x$data$test <- newdata  # replaces existing test data in x by newdata!
     }
 
     data <- x$data$test
@@ -49,8 +58,8 @@ fftrees_apply <- function(x,
 
   # Setup outputs: ------
 
-  #  [decisions_ls]
-  #    A list containing dataframes with one row per case, and one column per tree
+  #  1. [decisions_ls]: ----
+  #     A list containing dataframes with one row per case, and one column per tree:
 
   decisions_ls <- lapply(1:x$trees$n, FUN = function(i) {
     tibble::tibble(
@@ -66,10 +75,11 @@ fftrees_apply <- function(x,
 
   names(decisions_ls) <- paste0("tree_", 1:x$trees$n)
 
-  # [level_stats_ls]
-  #   A list with one element per tree, each containing cumulative level statistics
+  # 2. [level_stats_ls]: ----
+  #    A list with one element per tree, each containing cumulative level statistics:
 
   level_stats_ls <- vector("list", length = x$trees$n)
+
 
   # LOOPs: ------
 
@@ -229,8 +239,8 @@ fftrees_apply <- function(x,
     # Combine all levelstats into one dataframe
     level_stats <- do.call("rbind", args = level_stats_ls)
 
-    # [tree_stats]
-    #  One row per tree definitions and statistics
+    # 3. [tree_stats]: ----
+    #  One row per tree definitions and statistics:
     # CUMULATIVE TREE STATS
 
     helper <- paste(level_stats$tree, level_stats$level, sep = ".")
@@ -252,11 +262,12 @@ fftrees_apply <- function(x,
   }
 
 
-  # Add results to x: ------
+  # Add results to trees in x: ------
 
   x$trees$stats[[mydata]] <- tree_stats
   x$trees$level_stats[[mydata]] <- level_stats
   x$trees$decisions[[mydata]] <- decisions_ls
+
 
   # Output: ------
 
