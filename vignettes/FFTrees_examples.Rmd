@@ -108,7 +108,7 @@ mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                               decision.labels = c("Safe", "Poison"))
 ```
 
-Here is the best training tree, when applied to the test dataset:
+Here is the best training tree, when applied to predicting the cases in the test dataset:
 
 ```{r fft-mushrooms-2-plot}
 # Plotting the best training FFT for test data: 
@@ -118,7 +118,7 @@ plot(mushrooms.ring.fft,
 
 <!-- Conclusion: -->
 
-As we can see, this tree has both a sensitivity and a specificity of around\ $80$%, but does not perform as well as our earlier one. 
+As we can see, this tree (in `mushrooms.ring.fft`) has both a sensitivity and a specificity of around\ $80$%, but does not perform as well as our earlier one (in `mushrooms.fft`). 
 This suggests that we should discard the expert's advice and primarily rely on the\ `odor` and\ `sporepc` cues. 
 
 
@@ -130,7 +130,7 @@ knitr::include_graphics("../inst/virginica.jpg")
 
 The `iris.v` dataset contains data about 150\ flowers (see `?iris.v`). 
 Our goal is to predict which flowers are of the class _Virginica_. 
-In this example, we'll create trees using the entire dataset (without an explicit test dataset): 
+In this example, we'll create trees using the entire dataset (without splitting the available data into explicit training vs. test subsets): 
 
 ```{r iris-fft, message = FALSE, results = 'hide'}
 # Create FFTrees object for iris data:
@@ -146,18 +146,18 @@ For summary information, we could print the `FTrees` object:
 iris.fft
 ```
 
-However, let's take a look at the individual cue accuracies during training instead... 
+However, let's take a look at the individual training cue accuracies instead... 
 
 #### Visualizing cue accuracies
 
-We can plot the cue accuracies during training by specifying `what = "cues"`:
+We can plot the training cue accuracies during training by specifying `what = "cues"`:
 
 ```{r iris-plot-cues}
 # Plot cue values: 
 plot(iris.fft, what = "cues")
 ```
 
-It looks like the two cues\ `pet.wid` and\ `pet.len` are the best predictors. 
+It looks like the two cues\ `pet.wid` and\ `pet.len` are the best predictors for this dataset. 
 Based on this, we should expect the final trees will likely use one or both of these cues.
 
 #### Visualizing FFT performance 

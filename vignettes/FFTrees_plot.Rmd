@@ -38,27 +38,37 @@ In the following, we illustrate both ways by creating FFTs based on the `titanic
 knitr::include_graphics("../inst/titanic.jpg")
 ```
 
-The `titanic` dataset contains survival statistics of passengers on the _Titanic_. 
-For each passenger, we know what passenger class (s)he was, his/her age, his/her sex, and whether or not (s)he survived. 
-
-Here is how the first few rows of the dataframe look:
+The `titanic` dataset contains basic survival statistics of _Titanic_ passengers. 
+For each passenger, we know in which class s/he travelled, as well as binary categories specifying age, sex, and survival information. 
+To get a first impression, we inspect a random sample of cases: 
 
 ```{r titanic-data-head}
-# Inspect titanic data: 
-head(titanic)
+set.seed(12)  # reproducible randomness
+rcases <- sort(sample(1:nrow(titanic), 10))
+
+# Sample of data:
+knitr::kable(titanic[rcases, ], caption = "A sample of 10 observations in the `titanic` data.")
 ```
 
-Our goal is to build FFTrees that predict whether or not a passenger will survive based on these cues.
+Our current goal is to fit FFTs to this dataset. 
+This essentially asks: 
+
+- Can we use the information in the cues `class`, `age` and `sex` to decide whether a passenger `survived`?
 
 First, let's create an `FFTrees` object (called `titanic.fft`) from the `titanic` dataset: 
 
 ```{r titanic-fft, message = FALSE, results = 'hide'}
 # Create FFTs for the titanic data:
 titanic.fft <- FFTrees(formula = survived ~.,
-                       data = titanic,
+                       data = titanic, 
                        main = "Titanic",
                        decision.labels = c("Died", "Survived"))       
 ```
+
+<!-- Goal: Fitting, rather than prediction -->
+
+Note that we used the entire `titanic` data (i.e., all `r nrow(titanic)`\ cases) to train `titanic.fft`, rather than specifying `train.p` to set aside some proportion of it or specifying a dedicated `data.test` set for predictive purposes. 
+This implies that our present goal is _to fit_ FFTs to the historic data, rather than on create and use FFTs _to predict_ new cases. 
 
 ### Visualising cue accuracies
 
@@ -98,40 +108,45 @@ Its population size\ (N) and the baseline frequencies of the two categories of t
 2. _FFT and classification performance_: 
 The middle row shows the tree (in the center) as well as how many cases (here: persons) were classified at each level in the tree (on either side). 
 For example, the current tree (Tree\ #1 of\ 4) can be understood as: 
-    - If a person is female, predict that they survived. 
-    - Otherwise, if a person is neither in first nor in second class, predict that they died. 
-    - Finally, if the person is a child, predict they survived,  otherwise predict that they died. 
+    - If a person is female, decide that they survived. 
+    - Otherwise, if a person is neither in first nor in second class, decide that they died. 
+    - Finally, if the person is a child, predict they survived,  otherwise decide that they died. 
 
 3. _Accuracy and performance information_: 
 The bottom row shows general performance statistics of the\ FFT:  
-The current tree was trained on the entire dataset of `r nrow(titanic)`\ cases. 
-If fitting data (i.e., data used to build the tree) are displayed, we'll see a "Fitting" label. 
-If a testing dataset separate from the one used to build the tree is used, we'll see a "Prediction" label. 
+As our models in `titanic.fft` were trained on the entire `titanic` dataset, we fitted FFTs to its `r nrow(titanic)`\ cases, rather than setting aside some data for predictive purposes. 
+The panel label reflects this important distinction:
 
-    - The classification table on the left side shows the relationship between the true criterion states (as columns) and predicted decisions (as rows). The abbreviations _hi_ (hits) and _cr_ (Correct rejections) denote correct decisions; _mi_ (misses) and _fa_ (false-alarms) denote incorrect decisions.
+- If the results of fitting data (i.e., data used to build the tree) are displayed, we'll see a "Training" label. 
+
+- If a testing dataset separate from the one used to build the tree is used, we'll see a "Prediction" label. 
+
+The feedback of the bottom panel is structured into three subpanels: 
+
+    - The classification table (on the left) shows the relationship between the true criterion states (as columns) and predicted decisions (as rows). The abbreviations _hi_ (hits) and _cr_ (Correct rejections) denote correct decisions; _mi_ (misses) and _fa_ (false-alarms) denote incorrect decisions.
     
-    - A range of vertical levels show the tree's cumulative performance in terms of frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balance accuracy (see [Accuracy statistics](FFTrees_accuracy_statistics.html) for details). 
+    - A range of vertical levels (in the middle) show the tree's cumulative performance in terms of two frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balanced accuracy (see [Accuracy statistics](FFTrees_accuracy_statistics.html) for details). 
     
-    - Finally, the plot on the right shows an ROC\ curve comparing the performance of all trees in the `FFTrees` object. 
+    - Finally, the plot (on the right) shows an ROC\ curve comparing the performance of all trees in the `FFTrees` object. 
     Additionally, the performance of logistic regression (blue) and CART (red) are shown. 
     The tree plotted in the middle panel is highlighted in a solid green color (i.e., Figure\ 2 shows Tree\ #1). 
 
 
 ### Additional arguments
 
-We can specify additional arguments to the `plot()` command that will change what is displayed: 
+Specifying additional arguments of `plot()` changes what is being displayed: 
 
-- `stats`: If you want to visualise a tree without any statistics, include the argument `stats = FALSE`:
+- `stats`: To visualise a bare tree (without performance statistics), we can use `stats = FALSE`:
 
 ```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "75%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
-# Show the best training FFT without statistics:
+# Show only the best training FFT:
 plot(titanic.fft,
      stats = FALSE)
 ```
 
 - `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, `show.iconguide`: 
-These arguments allow us to selectively turn on or turn off specific elements in the overall plot. 
-Here are some examples: 
+These arguments allow to selectively turn on or turn off specific elements of the overall plot. 
+For example: 
 
 ```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 8, out.width = "75%", fig.cap="**Figure 4**: Plotting selected elements."}
 # Hide some elements of the FFT plot: 
@@ -146,10 +161,49 @@ plot(titanic.fft,
 We can either specify an integer value such as `tree = 2`, which will plot the Tree\ #2 in the `FFTrees` object, or `tree = "best.train"` (the default) which will use the best training tree ---\ that is, the tree with the highest training\ `wacc` (weighted accuracy) value. 
 
 - `data`: Which data do we want to apply the tree to? 
-We can specify `data = "train"` or `data = "test"` to use the training or testing datasets, respectively, stored in the `FFTrees` object. 
-Alternatively, you we specify a new dataset (e.g.; `data = test.data`. When specifying a new dataset, the function will automatically apply the tree to the new data and calculate performance statistics (using the `predict.FFTrees()` function). 
+We can specify `data = "train"` or `data = "test"` to distinguish between a training and testing dataset (if available) in the `FFTrees` object. 
 
-For example, we can repeat the previous analysis, but now let's create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50%\ training set, and a distinct 50%\ testing set. (Note: We could also define an explicit test data set with the `data.test` argument.) 
+
+### Plotting performance for new data 
+
+Shifting our emphasis from fitting to prediction, we primarily need to specify a test dataset that was not used to train the `FFTrees` object. 
+<!-- ToDo: Applying an existing FFTrees object to new data (in plot) does not seem to work: -->
+When specifying a new dataset (e.g.; `data = test.data`), the function will automatically apply the tree to the new data and compute corresponding performance statistics (using the `predict.FFTrees()` function). 
+
+```{r titanic-check-plot-new-data, echo = FALSE, eval = FALSE}
+# Check: Apply existing FFTs to new test data (in plot):
+
+# +++ here now +++ 
+
+# (1) Using titanic.fft: ------ 
+test_data <- titanic[sample(1:nrow(titanic), 100), ]
+dim(test_data)
+
+predict(titanic.fft, newdata = test_data, type = "both")
+
+plot(titanic.fft, data = test_data)  # provides a df
+
+# (2) Using heart.fft: ------
+
+# dim(heartdisease)
+set.seed(2)
+ix_train <- sample(1:nrow(heartdisease), 100)
+
+heart_train <- heartdisease[ix_train, ]
+heart_test <- heartdisease[-ix_train, ]
+dim(heart_test)
+
+# Train:
+heart_fft <- FFTrees(diagnosis ~., data = heart_train)
+plot(heart_fft)
+
+# Predict:
+plot(heart_fft, data = heart_test)
+```
+
+<!-- Example: Using test data (for prediction, rather than fitting): -->
+
+For example, we can repeat the previous analysis, but now let's create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50%\ training set, and a distinct 50%\ testing set. (Alternatively, we could specify a dedicated test data set by using the `data.test` argument.) 
 
 ```{r titanic-pred, message = FALSE, results = 'hide'}
 set.seed(100)  # for replicability of the training/test split
@@ -180,6 +234,7 @@ plot(titanic.pred.fft,
      data = "test")
 ```
 
+Note that the label of the bottom panel has now switched from "Accuracy (Training)" to "Accuracy (Testing)". 
 Both the sensitivity and specificity values have decreased somewhat, which is typical when using a model (fitted on training data) for predicting new (test) data. 
 
 Let's visualize Tree\ #2, the most liberal tree (with the highest sensitivity): 
@@ -190,7 +245,12 @@ plot(titanic.pred.fft,
      data = "test")
 ```
 
-This alternative tree has a better sensitivity (of\ 60%), but its overall accuracy decreased to about baseline level (of\ 67%).  
+This alternative tree has a better sensitivity (of\ 63%), but its overall accuracy decreased to about baseline level (of\ 67%). 
+
+<!-- Conclusion: Note 2 types of trade-offs: -->
+
+Whereas comparing training with test performance illustrates the typical trade-offs between mere fitting and predictive modeling, comparing the performance details of various FFTs illustrates the trade-offs that any model for solving binary classification problems engages in. 
+Importantly, both types of these trade-offs become transparent when using **FFTrees**. 
 
 
 ## Vignettes
