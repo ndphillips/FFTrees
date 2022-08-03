@@ -23,13 +23,13 @@ as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 ## What are fast-and-frugal trees (FFTs)?
 
 *Fast-and-frugal trees* (FFTs) are simple and transparent decision
-algorithms for solving binary classification problems.  
-The performance of FFTs when predicting cases for new data competes with
-machine learning techniques such as logistic regression (LR),
-support-vector machines (SVM), and random forests (RF). FFTs can be
-preferable to more complex algorithms because they require very little
-information, are robust against overfitting, and are easy to interpret,
-use, and communicate.
+algorithms for solving binary classification problems. When predicting
+outcomes for new data, the performance of FFTs competes with machine
+learning techniques such as logistic regression (LR), support-vector
+machines (SVM), and random forests (RF). FFTs can be preferable to more
+complex algorithms because they require very little information, are
+robust against overfitting, and are easy to interpret, use, and
+communicate.
 
 <!-- Quote (cited in guide.Rmd):   -->
 <!-- In the words of @burton2020:  -->
@@ -52,7 +52,7 @@ GitHub](https://github.com/ndphillips/FFTrees) with:
     # install.packages("devtools")
     devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
-## Examples
+## Getting started
 
 As an example, let’s create a FFT predicting heart disease status
 (*Healthy* vs. *Diseased*) based on the `heartdisease` dataset included
@@ -121,14 +121,19 @@ first rows and columns of both subsets of the `heartdisease` data:
     #> # … with 143 more rows, and 4 more variables: oldpeak <dbl>, slope <chr>,
     #> #   ca <dbl>, thal <chr>
 
-The criterion variable is `diagnosis`, a logical column (either `TRUE`
-or `FALSE`) which indicate the true state for each patient (i.e.,
-whether or not they suffer from heart disease).
+Most of the variables in our data are potential predictors. The
+criterion variable is `diagnosis` — a logical column indicating the true
+state for each patient (`TRUE` or `FALSE`, i.e., whether or not the
+patient suffers from heart disease).
 
 ### Creating fast-and-frugal trees (FFTs)
 
-Now let’s use `FFTrees()` to create fast-and-frugal trees from the
-`heart.train` data and test their performance on the `heart.test` data:
+Now let’s use `FFTrees()` to create FFTs for the `heart.train` data and
+evaluate their predictive performance on the `heart.test` data:
+
+-   Create an `FFTrees` object from the `heartdisease` data:
+
+<!-- -->
 
     # Create an FFTrees object from the heartdisease data: 
     heart.fft <- FFTrees(formula = diagnosis ~., 
@@ -141,7 +146,12 @@ Now let’s use `FFTrees()` to create fast-and-frugal trees from the
     #> Growing FFTs with ifan:
     #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
 
-    # Printing an FFTrees object shows aggregate statistics: 
+-   Printing an `FFTrees` object shows basic information and summary
+    statistics (on the best training tree, FFT \#1):
+
+<!-- -->
+
+    # Print:
     heart.fft
     #> FFTrees 
     #> - Trees: 7 fast-and-frugal trees predicting diagnosis
@@ -168,15 +178,24 @@ Now let’s use `FFTrees()` to create fast-and-frugal trees from the
     #> FFT #1: Training Speed, Frugality, and Cost
     #> mcu = 1.74,  pci = 0.87,  E(cost) = 0.200
 
+-   To evaluate the predictive performance of an FFT, we plot an
+    `FFTrees` object to visualize a tree and its performance:
+
+<!-- -->
+
     # Plot the best tree applied to the test data: 
     plot(heart.fft,
          data = "test",
          main = "Heart Disease")
 
-<img src="man/figures/README-example-heart-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="man/figures/README-example-heart-plot-1.png" width="75%" style="display: block; margin: auto;" />
 
+-   Additionally, we can compare the predictive performance between
+    different algorithms on a range of metrics:
 
-    # Compare results across algorithms in test data: 
+<!-- -->
+
+    # Compare predictive performance across algorithms: 
     heart.fft$competition$test
     #>   algorithm   n hi fa mi cr      sens   spec    far       ppv       npv
     #> 1   fftrees 153 64 19  9 61 0.8767123 0.7625 0.2375 0.7710843 0.8714286
@@ -230,7 +249,7 @@ These conditions can directly be supplied to the `my.tree` argument of
          data = "test",
          main = "My custom FFT")
 
-<img src="man/figures/README-example-heart-verbal-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="man/figures/README-example-heart-verbal-1.png" width="75%" style="display: block; margin: auto;" />
 
 As we can see, this particular tree is somewhat biased: It has nearly
 perfect *sensitivity* (i.e., good at identifying cases of *Disease*) but
