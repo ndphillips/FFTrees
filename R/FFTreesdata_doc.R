@@ -60,6 +60,10 @@
 
 #' Car acceptability data
 #'
+#' A dataset on car evaluations based on basic features, derived from a simple hierarchical decision model.
+#'
+#' The (yet to be binarized) criterion variable is a car's \code{acceptability} rating.
+#'
 #' @format A data frame containing 1728 cars (rows) and 7 variables (columns).
 #'
 #' \describe{
@@ -76,7 +80,10 @@
 #'
 #' @family datasets
 #'
-#' @source http://archive.ics.uci.edu/ml/datasets/Car+Evaluation
+#' @references
+#' Bohanec, M., Rajkovic, V. (1990): Expert system for decision making. Sistemica 1 (1), pp. 145-157.
+#'
+#' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 #'
 
 "car"
@@ -86,6 +93,13 @@
 #  4. contraceptive: ------
 
 #' Contraceptive use data
+#'
+#' A subset of the 1987 National Indonesia Contraceptive Prevalence Survey.
+#'
+#' The samples describe married women who were either not pregnant or do not know if they were at the time of interview.
+#'
+#' The problem consists in predicting a woman's current contraceptive method choice (here: binarized \code{cont.crit})
+#' based on her demographic and socio-economic characteristics.
 #'
 #' @format A data frame containing 1473 rows and 10 columns.
 #'
@@ -106,7 +120,7 @@
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice}
 #'
 
 "contraceptive"
@@ -121,7 +135,7 @@
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Credit+Approval
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Credit+Approval}
 
 "creditapproval"
 
@@ -131,11 +145,17 @@
 
 #' Fertility data
 #'
+#' This dataset describes a sample of 100 volunteers providing a semen sample that was analyzed according to the WHO 2010 criteria.
+#'
+#' Sperm concentration are related to socio-demographic data, environmental factors, health status, and life habits.
+#'
+#' The binary criterion variable is \code{diagnosis}: Normal (N) vs. altered (O).
+#'
 #' @format A data frame containing 100 rows and 10 columns.
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Fertility
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Fertility}
 #'
 
 "fertility"
@@ -170,7 +190,7 @@
 #'
 #' @family datasets
 #'
-#' @source http://archive.ics.uci.edu/ml/datasets/Forest+Fires
+#' @source \url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
 
 "forestfires"
 
@@ -195,7 +215,7 @@
 #'
 #' @seealso \code{\link{heartdisease}} dataset.
 #'
-#' @source https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/
+#' @source \url{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}
 #'
 
 "heart.cost"
@@ -233,7 +253,7 @@
 #'
 #' @seealso \code{\link{heart.cost}} dataset for cost information.
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Heart+Disease
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
 
 "heartdisease"
 
@@ -253,7 +273,7 @@
 #'
 #' @seealso \code{\link{heartdisease}} dataset.
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Heart+Disease
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
 
 "heart.test"
 
@@ -273,7 +293,7 @@
 #'
 #' @seealso \code{\link{heartdisease}} dataset.
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Heart+Disease
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
 #'
 
 "heart.train"
@@ -290,7 +310,7 @@
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Iris
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Iris}
 #'
 #' @references
 #' Fisher, R.A. (1936): The use of multiple measurements in taxonomic problems.
@@ -304,11 +324,16 @@
 
 #' Mushrooms data
 #'
-#' Data on the features of poisonous vs. non-poisonous mushrooms.
+#' Data describing poisonous vs. non-poisonous mushrooms.
+#'
+#' This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms
+#' in the Agaricus and Lepiota Family. Each species is classified as \code{poisonous} (True or False).
+#' The Guide clearly states that there is no simple rule for determining the edibility of a mushroom;
+#' no rule like ``leaflets three, let it be'' for Poisonous Oak and Ivy.
 #'
 #' @format A data frame containing 8,124 rows and 23 columns.
 #'
-#' See http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names for column descriptions.
+#' See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names} for column descriptions.
 #'
 #' \describe{
 #'  \item{poisonous}{logical criterion variable}
@@ -340,7 +365,11 @@
 #'
 #' @family datasets
 #'
-#' @source http://archive.ics.uci.edu/ml/datasets/Mushroom
+#' @references
+#' Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981).
+#' G.H. Lincoff (Pres.), New York: A.A. Knopf.
+#'
+#' @source \url{http://archive.ics.uci.edu/ml/datasets/Mushroom}
 #'
 
 "mushrooms"
@@ -355,7 +384,7 @@
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)}
 
 "sonar"
 
@@ -366,6 +395,9 @@
 #' Titanic survival data
 #'
 #' Data indicating who survived on the Titanic.
+#'
+#' See \code{\link{Titanic}} of the R \strong{datasets} package for details and
+#' the same data (in a 4-dimensional \code{table}).
 #'
 #' @format A data frame containing 2,201 rows and 4 columns.
 #'
@@ -380,7 +412,11 @@
 #'
 #' @family datasets
 #'
-#' @source https://www.amstat.org/publications/jse/datasets/titanic.dat.txt
+#' @references
+#' Dawson, Robert J. MacG. (1995), The ‘Unusual Episode’ Data Revisited. Journal of Statistics Education, 3.
+#' doi: 10.1080/10691898.1995.11910499.
+#'
+#' @source \url{https://www.encyclopedia-titanica.org}
 
 "titanic"
 
@@ -390,11 +426,24 @@
 
 #' Voting data
 #'
+#' A dataset of votes for each of the U.S. House of Representatives Congressmen on the 16 key votes identified by the CQA.
+#'
+#' The CQA lists nine different types of votes: voted for, paired for, and announced for (these three simplified to yea),
+#' voted against, paired against, and announced against (these three simplified to nay),
+#' voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
+#' (these three simplified to an unknown disposition).
+#'
+#' The binary criterion variable used here is \code{party.crit}.
+#'
 #' @format A data frame containing 435 rows and 16 columns.
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records
+#' @references
+#' Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
+#' Washington, D.C., 1985.
+#'
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records}
 #'
 
 "voting"
@@ -411,7 +460,7 @@
 #'
 #' @family datasets
 #'
-#' @source http://archive.ics.uci.edu/ml/datasets/Wine+Quality
+#' @source \url{http://archive.ics.uci.edu/ml/datasets/Wine+Quality}
 
 "wine"
 
