@@ -664,20 +664,22 @@ factclean <- function(data.train,
 
 #' Add decision statistics to data (containing counts of a 2x2 contingency table)
 #'
-#' \code{add_stats} assumes \code{data} input with 2x2 frequency counts
-#' (named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}) and
-#' computes various decision accuracy and cost measures.
+#' \code{add_stats} assumes the input of essential 2x2 frequency counts
+#' (as a data frame \code{data} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+#' and uses them to compute various decision accuracy measures.
 #'
-#' Providing \code{cost.each} and \code{cost.outcomes} (as a named list) allows computing
-#' cost information for the counts of corresponding classification decisions.
+#' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
+#' allows computing cost information for the counts of corresponding classification decisions.
 #'
-#' @param data A data frame with (integer) values named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}.
+#' @param data A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).
-#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"mi"}, \code{"fa"}, \code{"cr"}, and
-#' specifying the costs of a hit, miss, false alarm, and correct rejection, respectively.
+#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
+#' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
+#'
+#' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
 add_stats <- function(data,
                       sens.w = .5,
@@ -690,10 +692,8 @@ add_stats <- function(data,
     cost.each <- 0
   }
 
-  # Measures: ----
 
-  # Accuracy:
-  data$acc <- with(data, (hi + cr) / (hi + cr + fa + mi))
+  # Compute measures: ----
 
   # Sensitivity:
   data$sens <- with(data, hi / (hi + mi))
@@ -701,36 +701,51 @@ add_stats <- function(data,
   # Specificity:
   data$spec <- with(data, cr / (cr + fa))
 
-  # Negative predictive value (NPV):
-  data$npv <- with(data, cr / (cr + mi))
+  # False alarm rate:
+  data$far <- with(data, 1 - spec)
+
 
   # Positive predictive value (PPV):
   data$ppv <- with(data, hi / (hi + fa))
 
-  # False alarm rate:
-  data$far <- with(data, 1 - spec)
+  # Negative predictive value (NPV):
+  data$npv <- with(data, cr / (cr + mi))
+
+
+  # Accuracy:
+  data$acc <- with(data, (hi + cr) / (hi + cr + fa + mi))
 
   # Balanced accuracy:
-  data$bacc <- with(data, sens * .5 + spec * .5)
+  data$bacc <- with(data, (sens * .50) + (spec * .50))
 
   # Weighted accuracy:
-  data$wacc <- with(data, sens * sens.w + spec * (1 - sens.w))
+  data$wacc <- with(data, (sens * sens.w) + (spec * (1 - sens.w)))
+
 
   # Outcome cost:
-  data$cost_decisions <- with(data, -1 * (hi * cost.outcomes$hi + fa * cost.outcomes$fa + mi * cost.outcomes$mi + cr * cost.outcomes$cr)) / data$n
+  data$cost_decisions <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                                        + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
 
   # Total cost:
   data$cost <- data$cost_decisions - cost.each
 
-  # reorder:
-  data <- data[, c("sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions", "cost")]
-
 
   # Output: ----
+
+  # Drop inputs and order columns (of df):
+  data <- data[, c("sens", "spec",  "far",  "ppv", "npv",
+                   "acc", "bacc", "wacc",   "cost_decisions", "cost")]
 
   return(data)
 
 } # add_stats().
+
+# # Check:
+# (freq <- data.frame(hi = 2, mi = 3, fa = 1, cr = 4))
+# add_stats(freq)
+# add_stats(freq, sens.w = 3/4, cost.each = 1,
+#           cost.outcomes = list(hi = 0, mi = 3, fa = 2, cr = 0))
+# dim(add_stats(freq))  # 1 x 10
 
 
 # classtable: ------
