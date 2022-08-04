@@ -218,10 +218,10 @@ data and performance characteristics.
 
 <!-- FFTs by verbal description: -->
 
-### Building FFTs from verbal description
+### Building FFTs from verbal descriptions
 
-Because fast-and-frugal trees are so simple, we even can create one
-‘from words’ and apply it to data!
+Because fast-and-frugal trees are so simple, we even can create FFTs
+‘from words’ and apply them to data!
 
 For example, let’s create a tree with the following three nodes and
 evaluate its performance on the `heart.test` data:
@@ -258,11 +258,11 @@ description.](man/figures/README-example-heart-verbal-1.png)
 description.
 
 As we can see, this particular tree is somewhat biased: It has nearly
-perfect *sensitivity* (i.e., good at identifying cases of *Disease*) but
-suffers from low *specificity* (i.e., not so good at identifying
+perfect *sensitivity* (i.e., is good at identifying cases of *Disease*)
+but suffers from low *specificity* (i.e., is not so good at identifying
 *Healthy* cases). Overall, the *accuracy* of our custom tree exceeds the
-data’s baseline by a fair amount, but exploring the **FFTrees** package
-further will make it easy to design better FFTs.
+data’s baseline by a fair amount. However, exploring **FFTrees** further
+will quickly enable you to design much better FFTs.
 
 ## References
 
