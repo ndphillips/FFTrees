@@ -41,10 +41,10 @@ Here is how the corresponding data frames look:
 
 ```{r heart-data}
 # Training data: 
-head(heartdisease)
+head(heart.train)
 
 # Testing data:
-head(heartdisease)
+head(heart.test)
 ```
 
 The critical dependent variable (or binary criterion variable) is `diagnosis`. This variable indicates whether a patient has heart disease (`diagnosis = TRUE`) or not (`diagnosis = FALSE`). All other variables in the dataset (e.g., `sex`, `age`, and several biological measurements) can be used as predictors (aka. cues). 
@@ -88,7 +88,7 @@ Inspecting these elements provides a wealth of information on the range of FFTs 
 
 1. `criterion_name`: The name of the (predicted) binary criterion variable. 
 
-2. `cue_names`: The names of all potential cue variables (predictors). 
+2. `cue_names`: The names of all potential cue variables (predictors) in the data. 
 
 3. `formula`: The formula used to create the `FFTrees` object. 
 
