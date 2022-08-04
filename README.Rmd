@@ -9,10 +9,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  fig.width = 8, 
-  fig.height = 7, 
-  out.width = "75%", 
-  fig.align='center'
+  fig.width = 7,
+  fig.height = 6, 
+  out.width = "800", 
+  fig.align='center' # ignored
 )
 
 # URLs:
@@ -41,9 +41,10 @@ The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal dec
 
 ## What are fast-and-frugal trees (FFTs)?
 
-_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems. 
-When predicting outcomes for new data, the performance of FFTs competes with machine learning techniques such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
-FFTs can be preferable to more complex algorithms because they require very little information, are robust against overfitting, and are easy to interpret, use, and communicate.  
+_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems.  
+The key feature making FFTs faster and more frugal than other decision trees is that every node allows for a decision or prediction. 
+When predicting new outcomes, the performance of FFTs competes with more complex algorithms and machine learning techniques, such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
+Apart from being faster and requiring less information, FFTs tend to be robust against overfitting, and easy to interpret, use, and communicate. 
 
 <!-- Quote (cited in guide.Rmd):   --> 
 <!-- In the words of @burton2020:  --> 
@@ -128,12 +129,16 @@ heart.fft
 
 - To evaluate the predictive performance of an FFT, we plot an `FFTrees` object to visualize a tree and its performance:
 
-```{r example-heart-plot}
+```{r example-heart-plot, eval = FALSE}
 # Plot the best tree applied to the test data: 
 plot(heart.fft,
      data = "test",
      main = "Heart Disease")
 ```
+
+![A fast-and-frugal tree (FFT) predicting heart disease with data and performance characteristics.](man/figures/README-example-heart-plot-1.png)
+
+**Figure\ 1**: A fast-and-frugal tree (FFT) predicting heart disease with data and performance characteristics.  
 
 - Additionally, we can compare the predictive performance between different algorithms on a range of metrics: 
 
@@ -157,10 +162,10 @@ otherwise, predict _Disease_.
 
 These conditions can directly be supplied to the `my.tree` argument of `FFTrees()`: 
 
-```{r example-heart-verbal}
-# Create custom FFT 'in words' and apply it to data:
+```{r example-heart-verbal, eval = FALSE}
+# Create custom FFT 'in words' and apply it to test data:
 
-# Create my own FFT (from verbal description):
+# 1. Create my own FFT (from verbal description):
 my.fft <- FFTrees(formula = diagnosis ~., 
                   data = heart.train,
                   data.test = heart.test, 
@@ -170,11 +175,15 @@ my.fft <- FFTrees(formula = diagnosis ~.,
                              If thal = {fd, normal}, predict Healthy,  
                              Otherwise, predict Disease.")
 
-# Plot and evaluate my custom FFT:
+# 2. Plot and evaluate my custom FFT (for test data):
 plot(my.fft,
      data = "test",
      main = "My custom FFT")
 ```
+
+![An FFT predicting heart disease created from a verbal description.](man/figures/README-example-heart-verbal-1.png)
+
+**Figure\ 2**: An FFT predicting heart disease created from a verbal description.  
 
 As we can see, this particular tree is somewhat biased: 
 It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases).  Overall, the _accuracy_ of our custom tree exceeds the data's baseline by a fair amount, but exploring the **FFTrees** package further will make it easy to design better FFTs.
@@ -183,7 +192,7 @@ It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease
 ## References
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
-As a comprehensive, but understandable introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
+As a comprehensive, yet accessible introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
 
 
 **Citation** (in APA format): 
@@ -191,9 +200,10 @@ As a comprehensive, but understandable introduction to FFTs, we recommend readin
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
 _Judgment and Decision Making_, _12_ (4), 344–368. 
+Retrieved from `r url_JDM_pdf`
 
 
-We encourage you to read [the article](`r url_JDM_issue`) to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
+We encourage you to read the article to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
 If you use **FFTrees** in your own work, please cite us and share your experiences (e.g., [on Github](`r url_pkg_issues`)) so we can continue developing the package. 
 
 <!-- Examples uses/publications (with links): -->
