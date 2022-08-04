@@ -701,7 +701,7 @@ add_stats <- function(data,
 
   # Compute measures: ----
 
-  N <- (hi + cr + fa + mi)
+  N <- with(data, (hi + cr + fa + mi))
 
   # Sensitivity:
   data$sens <- with(data, hi / (hi + mi))
