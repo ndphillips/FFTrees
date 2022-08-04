@@ -56,6 +56,7 @@ apply.break <- function(direction,
 } # apply.break().
 
 
+
 # cost.cues.append: ------
 
 # Create cost.cues:
@@ -122,6 +123,7 @@ cost.cues.append <- function(formula,
 } # cost.cues.append().
 
 
+
 # text.outline: ------
 
 # adds text with a white background - taken from Dirk Wulff www.dirkwulff.org
@@ -153,9 +155,10 @@ text.outline <- function(x, y,
 }
 
 
+
 # transparent: ------
 
-#  make text transparent
+# Make text color transparent.
 
 transparent <- function(orig.col = "red",
                         trans.val = .5) {
@@ -168,7 +171,7 @@ transparent <- function(orig.col = "red",
     final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
       3,
       i
-    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
   }
 
   return(final.col)
@@ -176,9 +179,10 @@ transparent <- function(orig.col = "red",
 } # transparent().
 
 
+
 # comp.pred: ------
 
-#' Wrapper for classifcation algorithms
+#' A wrapper for competing classifcation algorithms.
 #'
 #' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
 #' logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
@@ -602,6 +606,7 @@ comp.pred <- function(formula,
 } # comp.pred().
 
 
+
 # factclean: ------
 
 #' Clean factor variables in prediction data
@@ -660,6 +665,7 @@ factclean <- function(data.train,
 } # factclean().
 
 
+
 # add_stats: ------
 
 #' Add decision statistics to data (containing counts of a 2x2 contingency table)
@@ -695,6 +701,8 @@ add_stats <- function(data,
 
   # Compute measures: ----
 
+  N <- (hi + cr + fa + mi)
+
   # Sensitivity:
   data$sens <- with(data, hi / (hi + mi))
 
@@ -713,10 +721,10 @@ add_stats <- function(data,
 
 
   # Accuracy:
-  data$acc <- with(data, (hi + cr) / (hi + cr + fa + mi))
+  data$acc <- with(data, (hi + cr) / N)
 
   # Balanced accuracy:
-  data$bacc <- with(data, (sens * .50) + (spec * .50))
+  data$bacc <- with(data, (sens + spec) / 2)  # = (sens * .50) + (spec * .50)
 
   # Weighted accuracy:
   data$wacc <- with(data, (sens * sens.w) + (spec * (1 - sens.w)))
@@ -724,7 +732,7 @@ add_stats <- function(data,
 
   # Outcome cost:
   data$cost_decisions <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                                        + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
+                                          + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
 
   # Total cost:
   data$cost <- data$cost_decisions - cost.each
@@ -748,9 +756,12 @@ add_stats <- function(data,
 # dim(add_stats(freq))  # 1 x 10
 
 
+
 # classtable: ------
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
+#'
+#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \string{caret} package.
 #'
 #' @param prediction_v logical. A logical vector of predictions
 #' @param criterion_v logical A logical vector of criterion (true) values
@@ -813,62 +824,69 @@ classtable <- function(prediction_v = NULL,
 
   N <- min(length(criterion_v), length(prediction_v))
 
-  if (N > 0) {
+  if (N > 0) { # use vectors: ----
 
-    if (var(prediction_v) > 0 & var(criterion_v) > 0) {
+    if ((var(prediction_v) > 0) & (var(criterion_v) > 0)) { # use caret: ----
 
       if (length(prediction_v) != length(criterion_v)) {
 
-        stop(
-          "length of prediction_v is", length(prediction_v), "and length of criterion_v is ",
-          length(criterion_v)
-        )
+        stop("length of prediction_v is", length(prediction_v),
+             "and length of criterion_v is ", length(criterion_v))
       }
 
+      # Use caret::confusionMatrix:
       cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
-                                   positive = "TRUE"
-      )
+                                   positive = "TRUE")
 
       cm_byClass <- data.frame(as.list(cm$byClass))
       cm_overall <- data.frame(as.list(cm$overall))
 
+      # Get freq counts:
       hi <- cm$table[2, 2]
       mi <- cm$table[1, 2]
       fa <- cm$table[2, 1]
       cr <- cm$table[1, 1]
 
-      # Corrected values:
+      N <- (hi + mi + fa + cr)
+
+      # Corrected freq values:
       hi_c <- hi + correction
       mi_c <- mi + correction
       fa_c <- fa + correction
       cr_c <- cr + correction
 
-      # Statistics:
+      # Get or compute statistics:
       sens <- cm_byClass$Sensitivity
       spec <- cm_byClass$Specificity
-      far <- 1 - spec
-      acc <- cm_overall$Accuracy
-      acc_p <- cm_overall$AccuracyPValue
+      far  <- (1 - spec)
+
       ppv <- cm_byClass$Pos.Pred.Value
       npv <- cm_byClass$Neg.Pred.Value
-      bacc <- cm_byClass$Balanced.Accuracy
-      wacc <- cm_byClass$Sensitivity * sens.w + cm_byClass$Specificity * (1 - sens.w)
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
-      # Cost per case:
-      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      acc <- cm_overall$Accuracy
+      acc_p <- cm_overall$AccuracyPValue
+      bacc <- cm_byClass$Balanced.Accuracy
+      wacc <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
+
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-    } else {
+      # Cost per case:
+      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
+    } else { # Compute stats from freq combinations: ----
+
+      # Compute freqs as sum of T/F combinations:
       hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)
       mi <- sum(prediction_v == FALSE & criterion_v == TRUE)
       fa <- sum(prediction_v == TRUE  & criterion_v == FALSE)
       cr <- sum(prediction_v == FALSE & criterion_v == FALSE)
+
+      N <- (hi + mi + fa + cr)
 
       # Corrected values:
       hi_c <- hi + correction
@@ -879,49 +897,61 @@ classtable <- function(prediction_v = NULL,
       # Compute statistics:
       sens <- hi / (hi + mi)
       spec <- cr / (cr + fa)
-      far <- 1 - spec
-      acc <- (hi + cr) / c(hi + cr + mi + fa)
-      acc_p <- NA
+      far  <- (1 - spec)
+
       ppv <- hi / (hi + fa)
       npv <- cr / (cr + mi)
-      bacc <- sens * .5 + spec * .5
-      wacc <- sens * sens.w + spec * (1 - sens.w)
+
+      acc <- (hi + cr) / c(hi + cr + mi + fa)
+      acc_p <- NA
+      bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+      wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+
+      # AUC:
+      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
+      #                             predictor = as.numeric(prediction_v))$auc)
 
       # Cost per case:
       cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
-      # AUC:
-      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
-      #                             predictor = as.numeric(prediction_v))$auc)
-    }
+    } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
 
-  } else {
+
+  } else { # (N > 0) failed: Assign NAs ----
 
     hi <- NA
     mi <- NA
     fa <- NA
     cr <- NA
 
+    N <- NA
+
     sens <- NA
     spec <- NA
     far <- NA
+
     ppv <- NA
     npv <- NA
-    far <- NA
 
     acc <- NA
     acc_p <- NA
     bacc <- NA
     wacc <- NA
+
     dprime <- NA
+    # auc <- NA
+
     cost_decisions <- NA
     cost <- NA
-    # auc <- NA
 
   }
 
+  # Output: ----
+
+  # Collect result (as df):
   result <- data.frame(
 
     n = N,
@@ -934,32 +964,34 @@ classtable <- function(prediction_v = NULL,
     sens = sens,
     spec = spec,
     far = far,
+
     ppv = ppv,
     npv = npv,
 
     acc = acc,
     acc_p = acc_p,
-    # auc = auc,
     bacc = bacc,
     wacc = wacc,
+
     dprime = dprime,
+    # auc = auc,
 
     cost_decisions = cost_decisions,
     cost = cost
 
   )
 
-  # Output:
-
   return(result)
 
 } # classtable().
 
 
+
 # num_space: ------
 
-# Computes width of representation of x (as number of digits, in base 10)
-# when using scales::comma(x) (as in console_confusionmatrix() below).
+# \code{num_space} computes the width of a representation of \code{x}
+# (as number of digits, in base 10)
+# when using scales::comma(x) (as in \code{console_confusionmatrix} below).
 
 num_space <- function(x) {
 
@@ -969,6 +1001,7 @@ num_space <- function(x) {
   nchar(scales::comma(x))
 
 } # num_space().
+
 
 
 # console_confusionmatrix: ------
@@ -982,9 +1015,13 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # sens.w <- .70
 
-  # cost <-  0
+  # cost <- 0
 
-  sum_lbl <- "Totals:"  # "Sums:"
+
+  # Parameters: ----
+
+  # Labels:
+  sum_lbl <- "Totals:"  # or "Sums:"
 
   # Number of digits in N:
   N <- (hi + mi + fa + cr)
@@ -1087,7 +1124,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # Accuracy info: ----
 
-  # Compute statistics:
+  # Compute statistics (or use add_stats() above):
 
   acc <- (hi + cr) / N
 
@@ -1097,7 +1134,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   sens <- hi / (hi + mi)
   spec <- cr / (cr + fa)
 
-  bacc <- (sens + spec)/2
+  bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
   wacc <- (sens * sens.w) + (spec * (1 - sens.w))
 
 
@@ -1119,8 +1156,8 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   cat("\n")
 
   if (abs(sens.w - .50) > 10^-4){  # print sens.w:
-      cat("sens.w = ", round(sens.w, 3), sep = "")
-      cat("\n")
+    cat("sens.w = ", round(sens.w, 3), sep = "")
+    cat("\n")
   }
 
   # Baseline info: Rate of positive criterion values / "True +" cases: ----
@@ -1163,5 +1200,10 @@ NULL
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines:
 if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new", "tree", "level"))
 
+
+# ToDo: ------
+
+# - Consider re-using add_stats() rather than re-computing stats in classtable(),
+#   or when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
 
 # eof.
