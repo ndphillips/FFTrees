@@ -1,6 +1,6 @@
 # FFTreesdata_doc.R
-# Documenting all datasets in the FFTrees package: ---------
-
+# Documenting all datasets.
+# -------------------------
 
 
 #  1. blood: ------
