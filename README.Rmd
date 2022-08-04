@@ -41,7 +41,7 @@ The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal dec
 
 ## What are fast-and-frugal trees (FFTs)?
 
-_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems.  
+_Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems. 
 The key feature making FFTs faster and more frugal than other decision trees is that every node allows for a decision or prediction. 
 When predicting new outcomes, the performance of FFTs competes with more complex algorithms and machine learning techniques, such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
 Apart from being faster and requiring less information, FFTs tend to be robust against overfitting, and easy to interpret, use, and communicate. 
@@ -149,9 +149,9 @@ heart.fft$competition$test
 
 <!-- FFTs by verbal description: -->
 
-### Building FFTs from verbal description 
+### Building FFTs from verbal descriptions 
 
-Because fast-and-frugal trees are so simple, we even can create one 'from words' and apply it to data!
+Because fast-and-frugal trees are so simple, we even can create FFTs 'from words' and apply them to data!
 
 For example, let's create a tree with the following three nodes and evaluate its performance on the `heart.test` data:
 
@@ -186,7 +186,7 @@ plot(my.fft,
 **Figure\ 2**: An FFT predicting heart disease created from a verbal description.  
 
 As we can see, this particular tree is somewhat biased: 
-It has nearly perfect _sensitivity_ (i.e., good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., not so good at identifying _Healthy_ cases).  Overall, the _accuracy_ of our custom tree exceeds the data's baseline by a fair amount, but exploring the **FFTrees** package further will make it easy to design better FFTs.
+It has nearly perfect _sensitivity_ (i.e., is good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., is not so good at identifying _Healthy_ cases). Overall, the _accuracy_ of our custom tree exceeds the data's baseline by a fair amount. However, exploring **FFTrees** further will quickly enable you to design much better FFTs.
 
 
 ## References

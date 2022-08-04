@@ -23,14 +23,14 @@ as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 ## What are fast-and-frugal trees (FFTs)?
 
 *Fast-and-frugal trees* (FFTs) are simple and transparent decision
-algorithms for solving binary classification problems.  
-The key feature making FFTs faster and more frugal than other decision
-trees is that every node allows for a decision or prediction. When
-predicting new outcomes, the performance of FFTs competes with more
-complex algorithms and machine learning techniques, such as logistic
-regression (LR), support-vector machines (SVM), and random forests (RF).
-Apart from being faster and requiring less information, FFTs tend to be
-robust against overfitting, and easy to interpret, use, and communicate.
+algorithms for solving binary classification problems. The key feature
+making FFTs faster and more frugal than other decision trees is that
+every node allows for a decision or prediction. When predicting new
+outcomes, the performance of FFTs competes with more complex algorithms
+and machine learning techniques, such as logistic regression (LR),
+support-vector machines (SVM), and random forests (RF). Apart from being
+faster and requiring less information, FFTs tend to be robust against
+overfitting, and easy to interpret, use, and communicate.
 
 <!-- Quote (cited in guide.Rmd):   -->
 <!-- In the words of @burton2020:  -->
@@ -218,10 +218,10 @@ data and performance characteristics.
 
 <!-- FFTs by verbal description: -->
 
-### Building FFTs from verbal description
+### Building FFTs from verbal descriptions
 
-Because fast-and-frugal trees are so simple, we even can create one
-‘from words’ and apply it to data!
+Because fast-and-frugal trees are so simple, we even can create FFTs
+‘from words’ and apply them to data!
 
 For example, let’s create a tree with the following three nodes and
 evaluate its performance on the `heart.test` data:
@@ -258,11 +258,11 @@ description.](man/figures/README-example-heart-verbal-1.png)
 description.
 
 As we can see, this particular tree is somewhat biased: It has nearly
-perfect *sensitivity* (i.e., good at identifying cases of *Disease*) but
-suffers from low *specificity* (i.e., not so good at identifying
+perfect *sensitivity* (i.e., is good at identifying cases of *Disease*)
+but suffers from low *specificity* (i.e., is not so good at identifying
 *Healthy* cases). Overall, the *accuracy* of our custom tree exceeds the
-data’s baseline by a fair amount, but exploring the **FFTrees** package
-further will make it easy to design better FFTs.
+data’s baseline by a fair amount. However, exploring **FFTrees** further
+will quickly enable you to design much better FFTs.
 
 ## References
 
