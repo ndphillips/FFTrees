@@ -1,12 +1,12 @@
 ---
-title: "FFTrees package overview"
+title: "Overview: Using FFTs with FFTrees"
 author: "Nathaniel D. Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{FFTrees package overview}
+  %\VignetteIndexEntry{Overview: Using FFTs with FFTrees}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,6 +26,11 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 email_contact <- "Nathaniel.D.Phillips.is@gmail.com"
 url_contact   <- "https://www.linkedin.com/in/nathanieldphillips/"
 ```
+
+<!-- Brief intro: -->
+
+The R package **FFTrees** [@phillips2017FFTrees] makes it easy to create, visualize, and evaluate fast-and-frugal decision trees\ (FFTs) for solving binary classification problems in an efficient, effective, and transparent fashion. 
+
 
 ## Fast-and-Frugal Trees (FFTs) 
 
@@ -76,7 +81,7 @@ plot(heart.fft, data = "test")
 
 To begin using the **FFTrees** package, we recommend studying the [Heart Disease Tutorial](FFTrees_heart.html). 
 This tutorial will take you through all of the basics steps of creating, visualizing, and evaluating fast-and-frugal trees (FFTs). 
-The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees ()
+The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees (in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). The following vignettes provide additional details and examples on specific topics. 
 
 ### Vignettes
 
@@ -95,35 +100,37 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 | 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
 
-## Datasets
+### Datasets
 
-The package contains several datasets taken from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/) that you can use to play around with **FFTrees**: 
+The **FFTrees** package contains several datasets ---\ mostly from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/)\ --- that allow you to address interesting questions when exploring FFTs: 
 
-- `heartdisease` -- Patients suspected of having heart disease [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
-- `breastcancer` -- Patients suspected of having breast cancer [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
-- `titanic` -- Passengers on the Titanic
-- `forestfires` -- Forest fire statistics [source](http://archive.ics.uci.edu/ml/datasets/Forest+Fires)
-- `wine` -- Ratings of wine quality [source](http://archive.ics.uci.edu/ml/datasets/Wine)
-- `income` -- Census data from > 30,000 US residents [source](http://archive.ics.uci.edu/ml/datasets/Adult)
-- `voting` -- 1984 US congressional voting records [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
+- `heartdisease` -- Which patients suffer from heart disease? [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
+- `breastcancer` -- Which patients suffer from breast cancer? [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
+- `fertility` -- Which factors predict a fertile sperm concentration? [source](https://archive.ics.uci.edu/ml/datasets/Fertility)
+- `forestfires` -- Which environmental conditions predict forest fires? [source](http://archive.ics.uci.edu/ml/datasets/Forest+Fires)
+- `mushrooms` -- Which features predict poisonous mushrooms? [source](http://archive.ics.uci.edu/ml/datasets/Mushroom)
+- `titanic` -- Which passengers survived the Titanic? [source](https://www.encyclopedia-titanica.org) 
+- `voting` -- How did U.S. congressmen vote in 1984? [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
+- `wine` -- What determines ratings of wine quality? [source](http://archive.ics.uci.edu/ml/datasets/Wine)
 
 
 ## Citation information
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
-As a comprehensive, but understandable introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
+As a comprehensive, but accessible introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
 
 **Citation** (in APA format): 
 
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
 _Judgment and Decision Making_, _12_ (4), 344–368. 
+Retrieved from `r url_JDM_pdf`
 
-If you use **FFTrees** in your work, please cite the article and spread the word, so that we can continue developing the package. 
+If you use **FFTrees** in your own work, please cite the article and spread the word, so that we can continue developing the package. 
 
 **BibTeX Citation**: 
 
-```{r bibtex-citation, eval = FALSE}
+```{r bibtex-citation, eval = FALSE, highlight = FALSE}
 @article{FFTrees,
  title = {FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees},
  author = {Phillips, Nathaniel D and Neth, Hansjörg and Woike, Jan K and Gaissmaier, Wolfgang},
@@ -131,7 +138,8 @@ If you use **FFTrees** in your work, please cite the article and spread the word
  journal = {Judgment and Decision Making},
  volume = 12,
  number = 4,
- pages = {344--368}
+ pages = {344--368},
+ url = {https://journal.sjdm.org/17/17217/jdm17217.pdf}
 }
 ```
 
