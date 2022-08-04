@@ -2,6 +2,82 @@
 # Collection of various utility functions.
 # ----------------------------------------
 
+
+# valid_train_test_data: ------
+
+# Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)
+#       and provide feedback on any existing differences.
+#
+# Currently, it is only verified that both DFs have some cases and
+# contain the same_names (but the order of variables is not checked or altered).
+# Future versions may want to ensure that "test" occurs all required variables of "train" to create current FFTs.
+#
+# Output: Boolean.
+
+valid_train_test_data <- function(train_data, test_data){
+
+  # Initialize:
+  valid <- FALSE
+
+  train_names <- names(train_data)
+  test_names  <- names(test_data)
+
+  train_names_not_in_test <- setdiff(train_names, test_names)
+  test_names_not_in_train <- setdiff(test_names,  train_names)
+
+  # Conditions:
+  if (nrow(train_data) < 1){
+
+    msg <- paste("The 'train' data contains no cases (rows).")
+    warning(msg)
+
+  } else if (nrow(test_data) < 1){
+
+    msg <- paste("The 'test' data contains no cases (rows).")
+    warning(msg)
+
+  } else if (length(train_names_not_in_test) > 0){
+
+    msg <- paste("Some variables occur in 'train' data, but not in 'test' data:",
+                 paste(train_names_not_in_test, collapse = ", "))
+    warning(msg)
+
+  } else if (length(test_names_not_in_train) > 0){
+
+    msg <- paste("Some variables occur in 'test' data, but not in 'train' data:",
+                 paste(test_names_not_in_train, collapse = ", "))
+    warning(msg)
+
+    same_names <- FALSE
+
+  } else { # all tests passed:
+
+    valid <- TRUE
+
+  }
+
+  # Output:
+  return(valid)
+
+} # valid_train_test_data().
+
+# # Check:
+# (df1 <- data.frame(matrix( 1:9,  nrow = 3)))
+# (df2 <- data.frame(matrix(11:22, ncol = 3)))
+# (df3 <- data.frame(matrix(31:45, nrow = 3)))
+# (df0 <- df1[-(1:3), ])
+#
+# # FALSE cases:
+# valid_train_test_data(df0, df1)
+# valid_train_test_data(df1, df0)
+# valid_train_test_data(df1, df3)
+# valid_train_test_data(df3, df1)
+# # TRUE cases:
+# valid_train_test_data(df1, df2)
+# valid_train_test_data(df1, df2[ , 3:1])
+
+
+
 # apply.break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
@@ -124,65 +200,9 @@ cost.cues.append <- function(formula,
 
 
 
-# text.outline: ------
-
-# adds text with a white background - taken from Dirk Wulff www.dirkwulff.org
-
-text.outline <- function(x, y,
-                         labels = "test",
-                         col = "black",
-                         font = 1,
-                         bg = "white",
-                         r = 0.02,
-                         h = 1,
-                         w = 1,
-                         cex = 1,
-                         adj = .5,
-                         pos = NULL) {
-
-  # Draw background:
-  is <- seq(0, 2 * pi, length = 72)
-
-  for (i in is) {
-    xn <- x + cos(i) * r * w
-    yn <- y + sin(i) * r * h
-    text(xn, yn, labels = labels, col = bg, cex = cex, adj = adj, pos = pos, font = font)
-  }
-
-  # Foreground:
-  text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
-
-}
-
-
-
-# transparent: ------
-
-# Make text color transparent.
-
-transparent <- function(orig.col = "red",
-                        trans.val = .5) {
-
-  n.cols <- length(orig.col)
-  orig.col <- col2rgb(orig.col)
-  final.col <- rep(NA, n.cols)
-
-  for (i in 1:n.cols) {
-    final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
-      3,
-      i
-      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
-  }
-
-  return(final.col)
-
-} # transparent().
-
-
-
 # comp.pred: ------
 
-#' A wrapper for competing classifcation algorithms.
+#' A wrapper for competing classification algorithms.
 #'
 #' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
 #' logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
@@ -194,6 +214,7 @@ transparent <- function(orig.col = "red",
 #' @param model model. An optional existing model applied to test data
 #' @param new.factors string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #'
+#' @importFrom dplyr bind_rows
 #' @importFrom stats model.frame formula glm model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
@@ -229,7 +250,8 @@ comp.pred <- function(formula,
     }
 
     if (is.null(data.test) == FALSE & (is.null(data.train) == FALSE)) {
-      data.all <- rbind(data.train, data.test)
+      # data.all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
+      data.all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
       train.cases <- 1:nrow(data.train)
       test.cases <- (nrow(data.train) + 1):nrow(data.all)
     }
@@ -419,7 +441,7 @@ comp.pred <- function(formula,
 
         if (substr(new.factors, 1, 1) == "e") {
 
-          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by due to new factor values. These cases will be excluded"))
+          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by 'e' due to new factor values. These cases will be excluded"))
 
           data.test <- data.test[cannot.pred.v == FALSE, ]
           cue.test <- cue.test[cannot.pred.v == FALSE, ]
@@ -428,7 +450,7 @@ comp.pred <- function(formula,
 
         if (substr(new.factors, 1, 1) == "b") {
 
-          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by  due to new factor values. They will be predicted to be", mean(train.crit) > .5))
+          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by 'b' due to new factor values. They will be predicted to be", mean(train.crit) > .5))
         }
 
       }
@@ -1182,6 +1204,62 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 } # console_confusionmatrix().
 
 
+# text.outline: ------
+
+# Adds text with a white background (taken from Dirk Wulff www.dirkwulff.org).
+
+text.outline <- function(x, y,
+                         labels = "test",
+                         col = "black",
+                         font = 1,
+                         bg = "white",
+                         r = 0.02,
+                         h = 1,
+                         w = 1,
+                         cex = 1,
+                         adj = .5,
+                         pos = NULL) {
+
+  # Draw background:
+  is <- seq(0, 2 * pi, length = 72)
+
+  for (i in is) {
+    xn <- x + cos(i) * r * w
+    yn <- y + sin(i) * r * h
+    text(xn, yn, labels = labels, col = bg, cex = cex, adj = adj, pos = pos, font = font)
+  }
+
+  # Foreground:
+  text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
+
+} # text.outline ().
+
+
+
+# transparent: ------
+
+# Make text color transparent.
+
+transparent <- function(orig.col = "red",
+                        trans.val = .5) {
+
+  n.cols <- length(orig.col)
+  orig.col <- col2rgb(orig.col)
+  final.col <- rep(NA, n.cols)
+
+  for (i in 1:n.cols) {
+    final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
+      3,
+      i
+    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+  }
+
+  return(final.col)
+
+} # transparent().
+
+
+
 # FFTrees package: ------
 
 #' \code{FFTrees} package.
@@ -1199,6 +1277,7 @@ NULL
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines:
 if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new", "tree", "level"))
+
 
 
 # ToDo: ------
