@@ -9,8 +9,9 @@
 #       and provide feedback on any existing differences.
 #
 # Currently, it is only verified that both DFs have some cases and
-# contain the same_names (but the order of variables is not checked or altered).
-# Future versions may want to ensure that "test" occurs all required variables of "train" to create current FFTs.
+# contain the SAME names (but the content or order of variables is not checked or altered).
+# Future versions may want to verify that 'test' data is valid, given current 'train' data
+# (e.g., "test" contains all required variables of "train" to create the current FFTs).
 #
 # Output: Boolean.
 

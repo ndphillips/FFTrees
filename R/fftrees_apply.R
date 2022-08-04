@@ -49,7 +49,10 @@ fftrees_apply <- function(x,
         x$data$test <- newdata  # replaces existing test data in x by newdata!
     }
 
+    valid_train_test_data(train_data = x$data$train, test_data = x$data$test)  # verify (without consequences)
+
     data <- x$data$test
+
   }
 
   criterion_v <- data[[x$criterion_name]]
