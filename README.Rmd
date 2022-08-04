@@ -76,8 +76,8 @@ devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
 As an example, let's create a FFT predicting heart disease status (_Healthy_ vs. _Diseased_) based on the `heartdisease` dataset included in **FFTrees**: 
 
-```{r load-pkg}
-library(FFTrees)  # load pkg
+```{r load-pkg, message = FALSE}
+library(FFTrees)  # load package
 ```
 
 ### Using data 

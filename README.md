@@ -59,16 +59,7 @@ As an example, let’s create a FFT predicting heart disease status
 (*Healthy* vs. *Diseased*) based on the `heartdisease` dataset included
 in **FFTrees**:
 
-    library(FFTrees)  # load pkg
-    #> 
-    #>    O
-    #>   / \
-    #>  F   O
-    #>     / \
-    #>    F   Trees 1.6.6.9014
-    #> 
-    #> Email: Nathaniel.D.Phillips.is@gmail.com
-    #> FFTrees.guide() opens the main guide.
+    library(FFTrees)  # load package
 
 ### Using data
 
