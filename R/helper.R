@@ -784,7 +784,7 @@ add_stats <- function(data,
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
 #'
-#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \string{caret} package.
+#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
 #'
 #' @param prediction_v logical. A logical vector of predictions
 #' @param criterion_v logical A logical vector of criterion (true) values

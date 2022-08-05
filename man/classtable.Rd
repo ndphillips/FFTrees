@@ -30,5 +30,5 @@ classtable(
 \item{na_prediction_action}{not sure.}
 }
 \description{
-The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \string{caret} package.
+The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
 }
