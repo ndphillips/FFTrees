@@ -170,37 +170,6 @@ Shifting our emphasis from fitting to prediction, we primarily need to specify a
 <!-- ToDo: Applying an existing FFTrees object to new data (in plot) does not seem to work: -->
 When specifying a new dataset (e.g.; `data = test.data`), the function will automatically apply the tree to the new data and compute corresponding performance statistics (using the `predict.FFTrees()` function). 
 
-```{r titanic-check-plot-new-data, echo = FALSE, eval = FALSE}
-# Check: Apply existing FFTs to new test data (in plot):
-
-# +++ here now +++ 
-
-# (1) Using titanic.fft: ------ 
-test_data <- titanic[sample(1:nrow(titanic), 100), ]
-dim(test_data)
-
-predict(titanic.fft, newdata = test_data, type = "both")
-
-plot(titanic.fft, data = test_data)  # provides a df
-
-# (2) Using heart.fft: ------
-
-# dim(heartdisease)
-set.seed(2)
-ix_train <- sample(1:nrow(heartdisease), 100)
-
-heart_train <- heartdisease[ix_train, ]
-heart_test <- heartdisease[-ix_train, ]
-dim(heart_test)
-
-# Train:
-heart_fft <- FFTrees(diagnosis ~., data = heart_train)
-plot(heart_fft)
-
-# Predict:
-plot(heart_fft, data = heart_test)
-```
-
 <!-- Example: Using test data (for prediction, rather than fitting): -->
 
 For example, we can repeat the previous analysis, but now let's create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50%\ training set, and a distinct 50%\ testing set. (Alternatively, we could specify a dedicated test data set by using the `data.test` argument.) 
@@ -209,7 +178,7 @@ For example, we can repeat the previous analysis, but now let's create separate 
 set.seed(100)  # for replicability of the training/test split
 titanic.pred.fft <- FFTrees(formula = survived ~.,
                             data = titanic,
-                            train.p = .5,  # use 50% of the data for training
+                            train.p = .50,  # use 50% to train, 50% to test
                             main = "Titanic", 
                             decision.labels = c("Died", "Survived")
                             )
