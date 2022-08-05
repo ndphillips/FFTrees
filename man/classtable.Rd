@@ -30,5 +30,5 @@ classtable(
 \item{na_prediction_action}{not sure.}
 }
 \description{
-Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
+The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \string{caret} package.
 }

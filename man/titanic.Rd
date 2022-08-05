@@ -17,13 +17,21 @@ A data frame containing 2,201 rows and 4 columns.
 }
 }
 \source{
-https://www.amstat.org/publications/jse/datasets/titanic.dat.txt
+\url{https://www.encyclopedia-titanica.org}
 }
 \usage{
 titanic
 }
 \description{
 Data indicating who survived on the Titanic.
+}
+\details{
+See \code{\link{Titanic}} of the R \strong{datasets} package for details and
+the same data (in a 4-dimensional \code{table}).
+}
+\references{
+Dawson, Robert J. MacG. (1995), The ‘Unusual Episode’ Data Revisited. Journal of Statistics Education, 3.
+doi: 10.1080/10691898.1995.11910499.
 }
 \seealso{
 Other datasets: 

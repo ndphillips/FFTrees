@@ -15,7 +15,7 @@ A data frame containing 153 rows and 14 columns.
 }
 }
 \source{
-https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/
+\url{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}
 }
 \usage{
 heart.cost

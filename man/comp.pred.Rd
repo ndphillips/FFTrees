@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{comp.pred}
 \alias{comp.pred}
-\title{Wrapper for classifcation algorithms}
+\title{A wrapper for competing classification algorithms.}
 \usage{
 comp.pred(
   formula,

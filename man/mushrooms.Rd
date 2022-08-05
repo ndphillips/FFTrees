@@ -7,7 +7,7 @@
 \format{
 A data frame containing 8,124 rows and 23 columns.
 
-See http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names for column descriptions.
+See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names} for column descriptions.
 
 \describe{
  \item{poisonous}{logical criterion variable}
@@ -38,13 +38,23 @@ See http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-l
 }
 }
 \source{
-http://archive.ics.uci.edu/ml/datasets/Mushroom
+\url{http://archive.ics.uci.edu/ml/datasets/Mushroom}
 }
 \usage{
 mushrooms
 }
 \description{
-Data on the features of poisonous vs. non-poisonous mushrooms.
+Data describing poisonous vs. non-poisonous mushrooms.
+}
+\details{
+This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms
+in the Agaricus and Lepiota Family. Each species is classified as \code{poisonous} (True or False).
+The Guide clearly states that there is no simple rule for determining the edibility of a mushroom;
+no rule like ``leaflets three, let it be'' for Poisonous Oak and Ivy.
+}
+\references{
+Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981).
+G.H. Lincoff (Pres.), New York: A.A. Knopf.
 }
 \seealso{
 Other datasets: 
