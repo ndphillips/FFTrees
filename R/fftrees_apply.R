@@ -20,6 +20,7 @@
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom testthat expect_true
+#' @importFrom tibble as_tibble tibble
 #'
 #' @export
 
@@ -30,9 +31,9 @@ fftrees_apply <- function(x,
 
   # Prepare: ------
 
-  # Get data (corresponding to mydata and newdata):
-
   testthat::expect_true(mydata %in% c("train", "test"))
+
+  # Get data (corresponding to mydata and newdata):
 
   if (mydata == "train") {
 
@@ -62,7 +63,7 @@ fftrees_apply <- function(x,
   # Setup outputs: ------
 
   #  1. [decisions_ls]: ----
-  #     A list containing dataframes with one row per case, and one column per tree:
+  #     A list containing tibbles with one row per case, and one column per tree:
 
   decisions_ls <- lapply(1:x$trees$n, FUN = function(i) {
     tibble::tibble(
@@ -223,6 +224,7 @@ fftrees_apply <- function(x,
       # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[, critical_stats_v]
 
+
       # Add cue cost and cost: ----
 
       level_stats_i$cost_cues[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
@@ -239,12 +241,12 @@ fftrees_apply <- function(x,
   # Aggregate results: ----
   {
 
-    # Combine all levelstats into one dataframe
+    # Combine all levelstats into one dataframe:
     level_stats <- do.call("rbind", args = level_stats_ls)
 
     # 3. [tree_stats]: ----
     #  One row per tree definitions and statistics:
-    # CUMULATIVE TREE STATS
+    # CUMULATIVE TREE STATS:
 
     helper <- paste(level_stats$tree, level_stats$level, sep = ".")
     maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
@@ -264,12 +266,11 @@ fftrees_apply <- function(x,
     }
   }
 
-
   # Add results to trees in x: ------
 
-  x$trees$stats[[mydata]] <- tree_stats
-  x$trees$level_stats[[mydata]] <- level_stats
-  x$trees$decisions[[mydata]] <- decisions_ls
+  x$trees$stats[[mydata]]       <- tibble::as_tibble(tree_stats)
+  x$trees$level_stats[[mydata]] <- tibble::as_tibble(level_stats)
+  x$trees$decisions[[mydata]]   <- decisions_ls
 
 
   # Output: ------
