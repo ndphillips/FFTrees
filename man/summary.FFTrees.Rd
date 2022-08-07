@@ -4,18 +4,45 @@
 \alias{summary.FFTrees}
 \title{Summarize an \code{FFTrees} object}
 \usage{
-\method{summary}{FFTrees}(object, tree = 1, ...)
+\method{summary}{FFTrees}(object, tree = NULL, ...)
 }
 \arguments{
 \item{object}{An \code{FFTrees} object.}
 
-\item{tree}{The tree to summarize (as an integer).}
+\item{tree}{The tree to summarize (as an integer, but may be a vector).
+If \code{tree = NULL} (as per default) or exceeding the possible range \code{1:object$trees$n},
+information on all trees in \code{object} is returned.}
 
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-A data frame containing summary information about an FFT.
+An invisible list with elements containing the \code{definitions} and performance \code{stats}
+of the FFT(s) specified by \code{tree}(s).
 }
 \description{
-Summarize an \code{FFTrees} object
+\code{summary.FFTrees} summarizes key contents of an \code{FFTrees} object.
+}
+\details{
+\code{summary.FFTrees} returns an invisible list containing two elements:
+\enumerate{
+  \item \code{definitions} and corresponding performance measures of \code{tree}s;
+  \item \code{stats} on decision frequencies, derived probabilities, and costs (separated by \code{train} and \code{test}).
+}
+
+A header prints descriptive information of the \code{FFTrees} object (to the console):
+Its \code{main} title, number of trees (\code{object$trees$n}), and the name of the criterion variable (\code{object$criterion_name}).
+
+Per default, information on all available trees is shown and returned.
+Specifying \code{tree} filters the output list elements for the corresponding tree(s).
+When only a single \code{tree} is specified, the printed header includes a verbal description of
+the corresponding tree.
+
+While \code{summary.FFTrees} provides key details about the specified \code{tree}(s),
+the individual decisions (stored in \code{object$trees$decisions}) are not shown or returned.
+}
+\seealso{
+\code{\link{print.FFTrees}} for printing FFTs;
+\code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{inwords}} for obtaining a verbal description of FFTs;
+\code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

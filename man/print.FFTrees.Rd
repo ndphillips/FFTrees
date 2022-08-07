@@ -28,6 +28,7 @@ When test data is available, specify \code{data = "test"} to print prediction pe
 }
 \seealso{
 \code{\link{plot.FFTrees}} for plotting FFTs;
+\code{\link{summary.FFTrees}} for summarizing FFTs;
 \code{\link{inwords}} for obtaining a verbal description of FFTs;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 }

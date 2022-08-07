@@ -145,8 +145,9 @@ vignette("FFTrees_plot", package = "FFTrees")
 
 }
 \seealso{
-\code{\link{print.FFTrees}} for printing summary information of FFTs;
 \code{\link{showcues}} for plotting cue accuracies;
+\code{\link{print.FFTrees}} for printing FFTs;
+\code{\link{summary.FFTrees}} for summarizing FFTs;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
 Other plot functions: 
