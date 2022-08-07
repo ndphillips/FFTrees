@@ -8,6 +8,8 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 ## Major
 
+* Fixed bugs and improved functionality of `summary.FFTrees()`. 
+
 * Fixed bugs and improved functionality of `showcues()`: 
     - Removed redundant `data` argument (as `FFTrees` objects only contain cue training data).
     - Using current goal of object `x` as cue ranking criterion (rather than always using "wacc").
@@ -15,23 +17,25 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
     - Added `quiet` argument (to hide feedback messages).
     - Added subtitle (to signal current cue accuracy ranking criterion).
 
-* Improved printing of FFTs with `print.FFTrees()`:
+* Improved functionality of `print.FFTrees()`:
     - Added `data` argument to print an FFT's training performance (by default) or prediction performance (when test data is available). 
     - Improved readability of 2x2 confusion table (by right-justifying digits). 
-    - Reporting `wacc` rather than `bacc` in _Accuracy_ section (and `sens.w`, if it differs from .50). 
+    - Reporting `wacc` rather than `bacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.5). 
     - Moved expected cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
     
 * Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
 
 ## Minor
 
+* Changed tree statistics for test data from data frames to tibbles.
 * Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
 * Fixed bug to show correct point labels in ROC curve panel of `plot.FFTrees()`. 
 * Deprecated `store.data` argument in `FFTrees()`. 
 
 ## Details 
 
-* Revised text, examples and links in vignettes. 
+* Reduced clutter by recycling code and combining files. 
+* Revised text, examples, and links in vignettes. 
 * Cleanup of code and documentation.
 
 ------ 
@@ -208,6 +212,6 @@ You can also control whether the results from competing algorithms are displayed
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-02.] 
+[File `NEWS.md` last updated on 2022-08-06.] 
 
 <!-- eof. -->
