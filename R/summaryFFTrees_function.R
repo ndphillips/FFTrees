@@ -3,8 +3,10 @@
 #' \code{summary.FFTrees} summarizes key contents of an \code{FFTrees} object.
 #'
 #' \code{summary.FFTrees} returns an invisible list containing two elements:
-#' 1. tree \code{definitions} and corresponding performance measures;
-#' 2. \code{stats} on decision frequencies, derived probabilities, and costs (separated by \code{train} and \code{test}).
+#' \enumerate{
+#'   \item \code{definitions} and corresponding performance measures of \code{tree}s;
+#'   \item \code{stats} on decision frequencies, derived probabilities, and costs (separated by \code{train} and \code{test}).
+#' }
 #'
 #' A header prints descriptive information of the \code{FFTrees} object (to the console):
 #' Its \code{main} title, number of trees (\code{object$trees$n}), and the name of the criterion variable (\code{object$criterion_name}).
@@ -14,8 +16,11 @@
 #' When only a single \code{tree} is specified, the printed header includes a verbal description of
 #' the corresponding tree.
 #'
+#' While \code{summary.FFTrees} provides key details about the specified \code{tree}(s),
+#' the individual decisions (stored in \code{object$trees$decisions}) are not shown or returned.
+#'
 #' @return An invisible list with elements containing the \code{definitions} and performance \code{stats}
-#' of the FFTs specified by \code{tree}(s).
+#' of the FFT(s) specified by \code{tree}(s).
 #'
 #' @param object An \code{FFTrees} object.
 #' @param tree The tree to summarize (as an integer, but may be a vector).
@@ -24,7 +29,7 @@
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @seealso
-#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{print.FFTrees}} for printing FFTs;
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
 #' \code{\link{inwords}} for obtaining a verbal description of FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.

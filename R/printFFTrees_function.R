@@ -17,6 +17,7 @@
 #'
 #' @seealso
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{summary.FFTrees}} for summarizing FFTs;
 #' \code{\link{inwords}} for obtaining a verbal description of FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
@@ -43,8 +44,8 @@ print.FFTrees <- function(x = NULL,
 
   data <- tolower(data)  # for robustness
 
-  if (!data %in% c("test", "train")){ # unknown value:
-
+  # testthat::expect_true(data %in% c("train", "test"))
+  if (!data %in% c("test", "train")){
     stop("The data to print must be 'test' or 'train'.")
   }
 

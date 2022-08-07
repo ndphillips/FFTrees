@@ -19,7 +19,9 @@
 #'
 #' @seealso
 #' \code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
-#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{print.FFTrees}} for printing FFTs;
+#' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{summary.FFTrees}} for summarizing FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom stringr str_extract str_detect
