@@ -1,12 +1,12 @@
 ---
-title: "Creating FFTrees with FFTrees()"
+title: "Creating FFTs with FFTrees()"
 author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl 
 vignette: >
-  %\VignetteIndexEntry{Creating FFTrees with FFTrees()}
+  %\VignetteIndexEntry{Creating FFTs with FFTrees()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,29 +22,38 @@ library(FFTrees)
 
 ## Details on the `FFTrees()` function 
 
-This vignette starts by building fast-and-frugal tree (FFTs) from the `heartdisease` data --- also used in the [Heart Disease Tutorial](FFTrees_heart.html) and @phillips2017FFTrees --- but then delves deeper into the details of the `FFTrees()` function. 
+This vignette starts by building a fast-and-frugal tree (FFT) from the `heartdisease` data ---\ also used in the [Heart Disease Tutorial](FFTrees_heart.html) and @phillips2017FFTrees\ --- but then explores additional aspects of the `FFTrees()` function. 
 
-The `FFTrees()` function is at the heart of the **FFTrees** package. 
-It takes a training dataset as an argument, and generates several FFTs which attempt to classify cases into one of two classes (i.e., a criterion variable that can either be True or False) based on cues (aka. features or predictor variables). 
+<!-- Goal and reason for time/complexity: -->
+
+The goal of the `FFTrees()` function is to create FFTs from data and record all details of the problem specification, tree definitions, the classification process, and performance measures in an `FFTrees` object. 
+As `FFTrees()` can handle two sets of data (for training vs. testing) and creates a range of FFTs, each with distinct process and performance characteristics, evaluating the function may take some time (typically a few seconds) and the structure of the resulting `FFTrees` object is quite complex. But as `FFTrees()` is at the heart of the **FFTrees** package, it pays to understand its arguments and the structure of an\ `FFTrees` object. 
 
 
 ### Example: Predicting heart disease
+
+<!-- The problem: In general vs. here -->
+
+An FFT generally addresses binary classification problems: 
+It attempts to classify the outcomes of a _criterion_ variable into one of two classes (i.e., True or False) based on a range of potential _predictor_ variables (aka. cues or features). 
+A corresponding problem from the domain of clinical diagnostics is: 
+
+- Which patient has heart disease, given some data on patients' general health and diagnostic symptoms?
 
 ```{r image, fig.align = "center", out.width="250px", echo = FALSE}
 knitr::include_graphics("../inst/CoronaryArtery.jpg")
 ```
 
-We first create some FFTs for the `heartdisease` diagnosis data. 
-The full dataset is provided as `heartdisease` in the **FFTrees** package. 
-For modeling purposes, we have split the data into a training set (`heart.train`), and test set (`heart.test`). 
-Here is how the corresponding data frames look: 
+To address this problem, the **FFTrees** package includes the `heartdisease` data. 
+But rather than using the full dataset to fit our FFTs, we have split the data into a training set (`heart.train`), and test set (`heart.test`). 
+Here is a peak at the corresponding data frames: 
 
 ```{r heart-data}
 # Training data: 
-head(heartdisease)
+head(heart.train)
 
 # Testing data:
-head(heartdisease)
+head(heart.test)
 ```
 
 The critical dependent variable (or binary criterion variable) is `diagnosis`. This variable indicates whether a patient has heart disease (`diagnosis = TRUE`) or not (`diagnosis = FALSE`). All other variables in the dataset (e.g., `sex`, `age`, and several biological measurements) can be used as predictors (aka. cues). 
@@ -88,7 +97,7 @@ Inspecting these elements provides a wealth of information on the range of FFTs 
 
 1. `criterion_name`: The name of the (predicted) binary criterion variable. 
 
-2. `cue_names`: The names of all potential cue variables (predictors). 
+2. `cue_names`: The names of all potential cue variables (predictors) in the data. 
 
 3. `formula`: The formula used to create the `FFTrees` object. 
 
@@ -166,12 +175,9 @@ Here is a description of the frequency counts and corresponding statistics provi
 **Table 1**: Description of FFTs' basic frequencies and corresponding accuracy and speed/frugality statistics. 
 
 
-See the [Accuracy statistics](FFTrees_accuracy_statistics.html) vignette for details on the accuracy statistics used throughout the **FFTrees** package. 
-
-
 <!-- Print performance of alternative FFTs: -->
 
-To obtain the same information for another FFT of an `FFTrees` object, we can call `print()` with a numeric `tree` parameter. 
+To obtain the same information for _another_ FFT of an\ `FFTrees` object, we can call `print()` with a numeric `tree` parameter. 
 For instance, the following expression would provide the basic performance characteristics of Tree\ 3:
 
 ```{r print-fftrees-object-else, eval = FALSE}
@@ -179,7 +185,11 @@ For instance, the following expression would provide the basic performance chara
 print(heart.fft, tree = 3, data = "test")
 ```
 
-Alternatively, we could visualize the same tree and its performance by calling `plot(heart.fft, tree = 3, data = "test")`. 
+Alternatively, we could visualize the same tree and its performance characteristics by calling `plot(heart.fft, tree = 3, data = "test")`. 
+
+<!-- Hint: Accuracy vignette -->
+
+See the [Accuracy statistics](FFTrees_accuracy_statistics.html) vignette for details on the accuracy statistics used throughout the **FFTrees** package. 
 
 
 ### Cue performance information 
@@ -193,22 +203,24 @@ If the object has test data, we can see the marginal cue accuracies in the test 
 heart.fft$cues$stats$train
 ```
 
-We can also view the cue accuracies in an ROC\ plot with `plot()` combined with the `what = "cues"` argument. 
-This will show the sensitivities and specificities for each cue, with the top five cues highlighted:
+We can also visualize the cue accuracies for the training data (in ROC\ space, i.e., showing each cue's hit rate by its false alarm rate) by calling `plot()` with the `what = "cues"` argument. 
+This will show the sensitivities and specificities for each cue, with the top five cues highlighted and listed:
 
 ```{r fft-plot-cues, fig.width = 6.5, fig.height = 6.5, dpi = 400, out.width = "600px", fig.align='center'}
 # Visualize individual cue accuracies: 
-plot(heart.fft, 
-     main = "Heartdisease cue accuracy",
+plot(heart.fft,
+     main = "Cue accuracy for heartdisease",
      what = "cues")
 ```
+
+<!-- Hint: Plotting vignette -->
 
 See the [Plotting FFTrees objects](FFTrees_plot.html) vignette for more details on visualizing cue accuracies and FFTs. 
 
 
 ### Tree definitions
 
-The `tree.definitions` data frame contains definitions (cues, classes, exits, thresholds, and directions) of all trees in an `FFTrees` object. 
+The `tree.definitions` data frame contains definitions (cues, classes, exits, thresholds, and directions) of all trees in an\ `FFTrees` object. 
 The combination of these five pieces of information (as well as their order), define and describe _how_ a tree makes decisions: 
 
 ```{r fft-definitions}
@@ -276,6 +288,8 @@ The corresponding statistics for the testing are:
 heart.fft$trees$stats$test
 ```
 
+<!-- Hint: Accuracy vignette -->
+
 See the [Accuracy statistics](FFTrees_accuracy_statistics.html) vignette for the definitions of accuracy statistics used throughout the **FFTrees** package. 
 
 
@@ -340,6 +354,8 @@ plot(heart.fft,
      decision.labels = c("Healthy", "Disease"))
 ```
 
+<!-- Hint: Plotting vignette -->
+
 See the [Plotting FFTrees objects](FFTrees_plot.html) vignette for more details on visualizing trees. 
 
 
@@ -369,6 +385,8 @@ plot(myheart.fft,
 ```
 
 As we can see, the performance of this particular tree is pretty terrible ---\ but this should motivate you to build better FFTs yourself! 
+
+<!-- Hint: Defining mytree vignette -->
 
 See the [Specifying FFTs directly](FFTrees_mytree.html) vignette for more details on designing FFTs from their descriptions. 
 

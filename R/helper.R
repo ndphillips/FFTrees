@@ -2,6 +2,83 @@
 # Collection of various utility functions.
 # ----------------------------------------
 
+
+# valid_train_test_data: ------
+
+# Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)
+#       and provide feedback on any existing differences.
+#
+# Currently, it is only verified that both DFs have some cases and
+# contain the SAME names (but the content or order of variables is not checked or altered).
+# Future versions may want to verify that 'test' data is valid, given current 'train' data
+# (e.g., "test" contains all required variables of "train" to create the current FFTs).
+#
+# Output: Boolean.
+
+valid_train_test_data <- function(train_data, test_data){
+
+  # Initialize:
+  valid <- FALSE
+
+  train_names <- names(train_data)
+  test_names  <- names(test_data)
+
+  train_names_not_in_test <- setdiff(train_names, test_names)
+  test_names_not_in_train <- setdiff(test_names,  train_names)
+
+  # Conditions:
+  if (nrow(train_data) < 1){
+
+    msg <- paste("The 'train' data contains no cases (rows).")
+    warning(msg)
+
+  } else if (nrow(test_data) < 1){
+
+    msg <- paste("The 'test' data contains no cases (rows).")
+    warning(msg)
+
+  } else if (length(train_names_not_in_test) > 0){
+
+    msg <- paste("Some variables occur in 'train' data, but not in 'test' data:",
+                 paste(train_names_not_in_test, collapse = ", "))
+    warning(msg)
+
+  } else if (length(test_names_not_in_train) > 0){
+
+    msg <- paste("Some variables occur in 'test' data, but not in 'train' data:",
+                 paste(test_names_not_in_train, collapse = ", "))
+    warning(msg)
+
+    same_names <- FALSE
+
+  } else { # all tests passed:
+
+    valid <- TRUE
+
+  }
+
+  # Output:
+  return(valid)
+
+} # valid_train_test_data().
+
+# # Check:
+# (df1 <- data.frame(matrix( 1:9,  nrow = 3)))
+# (df2 <- data.frame(matrix(11:22, ncol = 3)))
+# (df3 <- data.frame(matrix(31:45, nrow = 3)))
+# (df0 <- df1[-(1:3), ])
+#
+# # FALSE cases:
+# valid_train_test_data(df0, df1)
+# valid_train_test_data(df1, df0)
+# valid_train_test_data(df1, df3)
+# valid_train_test_data(df3, df1)
+# # TRUE cases:
+# valid_train_test_data(df1, df2)
+# valid_train_test_data(df1, df2[ , 3:1])
+
+
+
 # apply.break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
@@ -54,6 +131,7 @@ apply.break <- function(direction,
   return(output)
 
 } # apply.break().
+
 
 
 # cost.cues.append: ------
@@ -122,63 +200,10 @@ cost.cues.append <- function(formula,
 } # cost.cues.append().
 
 
-# text.outline: ------
-
-# adds text with a white background - taken from Dirk Wulff www.dirkwulff.org
-
-text.outline <- function(x, y,
-                         labels = "test",
-                         col = "black",
-                         font = 1,
-                         bg = "white",
-                         r = 0.02,
-                         h = 1,
-                         w = 1,
-                         cex = 1,
-                         adj = .5,
-                         pos = NULL) {
-
-  # Draw background:
-  is <- seq(0, 2 * pi, length = 72)
-
-  for (i in is) {
-    xn <- x + cos(i) * r * w
-    yn <- y + sin(i) * r * h
-    text(xn, yn, labels = labels, col = bg, cex = cex, adj = adj, pos = pos, font = font)
-  }
-
-  # Foreground:
-  text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
-
-}
-
-
-# transparent: ------
-
-#  make text transparent
-
-transparent <- function(orig.col = "red",
-                        trans.val = .5) {
-
-  n.cols <- length(orig.col)
-  orig.col <- col2rgb(orig.col)
-  final.col <- rep(NA, n.cols)
-
-  for (i in 1:n.cols) {
-    final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
-      3,
-      i
-    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
-  }
-
-  return(final.col)
-
-} # transparent().
-
 
 # comp.pred: ------
 
-#' Wrapper for classifcation algorithms
+#' A wrapper for competing classification algorithms.
 #'
 #' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
 #' logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
@@ -190,6 +215,7 @@ transparent <- function(orig.col = "red",
 #' @param model model. An optional existing model applied to test data
 #' @param new.factors string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #'
+#' @importFrom dplyr bind_rows
 #' @importFrom stats model.frame formula glm model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
@@ -225,7 +251,8 @@ comp.pred <- function(formula,
     }
 
     if (is.null(data.test) == FALSE & (is.null(data.train) == FALSE)) {
-      data.all <- rbind(data.train, data.test)
+      # data.all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
+      data.all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
       train.cases <- 1:nrow(data.train)
       test.cases <- (nrow(data.train) + 1):nrow(data.all)
     }
@@ -415,7 +442,7 @@ comp.pred <- function(formula,
 
         if (substr(new.factors, 1, 1) == "e") {
 
-          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by due to new factor values. These cases will be excluded"))
+          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by 'e' due to new factor values. These cases will be excluded"))
 
           data.test <- data.test[cannot.pred.v == FALSE, ]
           cue.test <- cue.test[cannot.pred.v == FALSE, ]
@@ -424,7 +451,7 @@ comp.pred <- function(formula,
 
         if (substr(new.factors, 1, 1) == "b") {
 
-          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by  due to new factor values. They will be predicted to be", mean(train.crit) > .5))
+          warning(paste(sum(cannot.pred.v), "cases in the test data could not be predicted by 'b' due to new factor values. They will be predicted to be", mean(train.crit) > .5))
         }
 
       }
@@ -602,6 +629,7 @@ comp.pred <- function(formula,
 } # comp.pred().
 
 
+
 # factclean: ------
 
 #' Clean factor variables in prediction data
@@ -660,24 +688,27 @@ factclean <- function(data.train,
 } # factclean().
 
 
+
 # add_stats: ------
 
 #' Add decision statistics to data (containing counts of a 2x2 contingency table)
 #'
-#' \code{add_stats} assumes \code{data} input with 2x2 frequency counts
-#' (named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}) and
-#' computes various decision accuracy and cost measures.
+#' \code{add_stats} assumes the input of essential 2x2 frequency counts
+#' (as a data frame \code{data} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+#' and uses them to compute various decision accuracy measures.
 #'
-#' Providing \code{cost.each} and \code{cost.outcomes} (as a named list) allows computing
-#' cost information for the counts of corresponding classification decisions.
+#' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
+#' allows computing cost information for the counts of corresponding classification decisions.
 #'
-#' @param data A data frame with (integer) values named \code{"hi"}, \code{"mi"}, \code{"fa"}, and \code{"cr"}.
+#' @param data A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).
-#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"mi"}, \code{"fa"}, \code{"cr"}, and
-#' specifying the costs of a hit, miss, false alarm, and correct rejection, respectively.
+#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
+#' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
+#'
+#' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
 add_stats <- function(data,
                       sens.w = .5,
@@ -690,10 +721,10 @@ add_stats <- function(data,
     cost.each <- 0
   }
 
-  # Measures: ----
 
-  # Accuracy:
-  data$acc <- with(data, (hi + cr) / (hi + cr + fa + mi))
+  # Compute measures: ----
+
+  N <- with(data, (hi + cr + fa + mi))
 
   # Sensitivity:
   data$sens <- with(data, hi / (hi + mi))
@@ -701,41 +732,59 @@ add_stats <- function(data,
   # Specificity:
   data$spec <- with(data, cr / (cr + fa))
 
-  # Negative predictive value (NPV):
-  data$npv <- with(data, cr / (cr + mi))
+  # False alarm rate:
+  data$far <- with(data, 1 - spec)
+
 
   # Positive predictive value (PPV):
   data$ppv <- with(data, hi / (hi + fa))
 
-  # False alarm rate:
-  data$far <- with(data, 1 - spec)
+  # Negative predictive value (NPV):
+  data$npv <- with(data, cr / (cr + mi))
+
+
+  # Accuracy:
+  data$acc <- with(data, (hi + cr) / N)
 
   # Balanced accuracy:
-  data$bacc <- with(data, sens * .5 + spec * .5)
+  data$bacc <- with(data, (sens + spec) / 2)  # = (sens * .50) + (spec * .50)
 
   # Weighted accuracy:
-  data$wacc <- with(data, sens * sens.w + spec * (1 - sens.w))
+  data$wacc <- with(data, (sens * sens.w) + (spec * (1 - sens.w)))
+
 
   # Outcome cost:
-  data$cost_decisions <- with(data, -1 * (hi * cost.outcomes$hi + fa * cost.outcomes$fa + mi * cost.outcomes$mi + cr * cost.outcomes$cr)) / data$n
+  data$cost_decisions <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                                          + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
 
   # Total cost:
   data$cost <- data$cost_decisions - cost.each
 
-  # reorder:
-  data <- data[, c("sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions", "cost")]
-
 
   # Output: ----
+
+  # Drop inputs and order columns (of df):
+  data <- data[, c("sens", "spec",  "far",  "ppv", "npv",
+                   "acc", "bacc", "wacc",   "cost_decisions", "cost")]
 
   return(data)
 
 } # add_stats().
 
+# # Check:
+# (freq <- data.frame(hi = 2, mi = 3, fa = 1, cr = 4))
+# add_stats(freq)
+# add_stats(freq, sens.w = 3/4, cost.each = 1,
+#           cost.outcomes = list(hi = 0, mi = 3, fa = 2, cr = 0))
+# dim(add_stats(freq))  # 1 x 10
+
+
 
 # classtable: ------
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
+#'
+#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
 #'
 #' @param prediction_v logical. A logical vector of predictions
 #' @param criterion_v logical A logical vector of criterion (true) values
@@ -798,62 +847,69 @@ classtable <- function(prediction_v = NULL,
 
   N <- min(length(criterion_v), length(prediction_v))
 
-  if (N > 0) {
+  if (N > 0) { # use vectors: ----
 
-    if (var(prediction_v) > 0 & var(criterion_v) > 0) {
+    if ((var(prediction_v) > 0) & (var(criterion_v) > 0)) { # use caret: ----
 
       if (length(prediction_v) != length(criterion_v)) {
 
-        stop(
-          "length of prediction_v is", length(prediction_v), "and length of criterion_v is ",
-          length(criterion_v)
-        )
+        stop("length of prediction_v is", length(prediction_v),
+             "and length of criterion_v is ", length(criterion_v))
       }
 
+      # Use caret::confusionMatrix:
       cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
-                                   positive = "TRUE"
-      )
+                                   positive = "TRUE")
 
       cm_byClass <- data.frame(as.list(cm$byClass))
       cm_overall <- data.frame(as.list(cm$overall))
 
+      # Get freq counts:
       hi <- cm$table[2, 2]
       mi <- cm$table[1, 2]
       fa <- cm$table[2, 1]
       cr <- cm$table[1, 1]
 
-      # Corrected values:
+      N <- (hi + mi + fa + cr)
+
+      # Corrected freq values:
       hi_c <- hi + correction
       mi_c <- mi + correction
       fa_c <- fa + correction
       cr_c <- cr + correction
 
-      # Statistics:
+      # Get or compute statistics:
       sens <- cm_byClass$Sensitivity
       spec <- cm_byClass$Specificity
-      far <- 1 - spec
-      acc <- cm_overall$Accuracy
-      acc_p <- cm_overall$AccuracyPValue
+      far  <- (1 - spec)
+
       ppv <- cm_byClass$Pos.Pred.Value
       npv <- cm_byClass$Neg.Pred.Value
-      bacc <- cm_byClass$Balanced.Accuracy
-      wacc <- cm_byClass$Sensitivity * sens.w + cm_byClass$Specificity * (1 - sens.w)
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
-      # Cost per case:
-      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      acc <- cm_overall$Accuracy
+      acc_p <- cm_overall$AccuracyPValue
+      bacc <- cm_byClass$Balanced.Accuracy
+      wacc <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
+
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-    } else {
+      # Cost per case:
+      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
+    } else { # Compute stats from freq combinations: ----
+
+      # Compute freqs as sum of T/F combinations:
       hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)
       mi <- sum(prediction_v == FALSE & criterion_v == TRUE)
       fa <- sum(prediction_v == TRUE  & criterion_v == FALSE)
       cr <- sum(prediction_v == FALSE & criterion_v == FALSE)
+
+      N <- (hi + mi + fa + cr)
 
       # Corrected values:
       hi_c <- hi + correction
@@ -864,49 +920,61 @@ classtable <- function(prediction_v = NULL,
       # Compute statistics:
       sens <- hi / (hi + mi)
       spec <- cr / (cr + fa)
-      far <- 1 - spec
-      acc <- (hi + cr) / c(hi + cr + mi + fa)
-      acc_p <- NA
+      far  <- (1 - spec)
+
       ppv <- hi / (hi + fa)
       npv <- cr / (cr + mi)
-      bacc <- sens * .5 + spec * .5
-      wacc <- sens * sens.w + spec * (1 - sens.w)
+
+      acc <- (hi + cr) / c(hi + cr + mi + fa)
+      acc_p <- NA
+      bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+      wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+
+      # AUC:
+      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
+      #                             predictor = as.numeric(prediction_v))$auc)
 
       # Cost per case:
       cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
-      # AUC:
-      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
-      #                             predictor = as.numeric(prediction_v))$auc)
-    }
+    } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
 
-  } else {
+
+  } else { # (N > 0) failed: Assign NAs ----
 
     hi <- NA
     mi <- NA
     fa <- NA
     cr <- NA
 
+    N <- NA
+
     sens <- NA
     spec <- NA
     far <- NA
+
     ppv <- NA
     npv <- NA
-    far <- NA
 
     acc <- NA
     acc_p <- NA
     bacc <- NA
     wacc <- NA
+
     dprime <- NA
+    # auc <- NA
+
     cost_decisions <- NA
     cost <- NA
-    # auc <- NA
 
   }
 
+  # Output: ----
+
+  # Collect result (as df):
   result <- data.frame(
 
     n = N,
@@ -919,32 +987,34 @@ classtable <- function(prediction_v = NULL,
     sens = sens,
     spec = spec,
     far = far,
+
     ppv = ppv,
     npv = npv,
 
     acc = acc,
     acc_p = acc_p,
-    # auc = auc,
     bacc = bacc,
     wacc = wacc,
+
     dprime = dprime,
+    # auc = auc,
 
     cost_decisions = cost_decisions,
     cost = cost
 
   )
 
-  # Output:
-
   return(result)
 
 } # classtable().
 
 
+
 # num_space: ------
 
-# Computes width of representation of x (as number of digits, in base 10)
-# when using scales::comma(x) (as in console_confusionmatrix() below).
+# \code{num_space} computes the width of a representation of \code{x}
+# (as number of digits, in base 10)
+# when using scales::comma(x) (as in \code{console_confusionmatrix} below).
 
 num_space <- function(x) {
 
@@ -954,6 +1024,7 @@ num_space <- function(x) {
   nchar(scales::comma(x))
 
 } # num_space().
+
 
 
 # console_confusionmatrix: ------
@@ -967,9 +1038,13 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # sens.w <- .70
 
-  # cost <-  0
+  # cost <- 0
 
-  sum_lbl <- "Totals:"  # "Sums:"
+
+  # Parameters: ----
+
+  # Labels:
+  sum_lbl <- "Totals:"  # or "Sums:"
 
   # Number of digits in N:
   N <- (hi + mi + fa + cr)
@@ -1072,7 +1147,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # Accuracy info: ----
 
-  # Compute statistics:
+  # Compute statistics (or use add_stats() above):
 
   acc <- (hi + cr) / N
 
@@ -1082,7 +1157,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   sens <- hi / (hi + mi)
   spec <- cr / (cr + fa)
 
-  bacc <- (sens + spec)/2
+  bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
   wacc <- (sens * sens.w) + (spec * (1 - sens.w))
 
 
@@ -1104,8 +1179,8 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   cat("\n")
 
   if (abs(sens.w - .50) > 10^-4){  # print sens.w:
-      cat("sens.w = ", round(sens.w, 3), sep = "")
-      cat("\n")
+    cat("sens.w = ", round(sens.w, 3), sep = "")
+    cat("\n")
   }
 
   # Baseline info: Rate of positive criterion values / "True +" cases: ----
@@ -1130,6 +1205,62 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 } # console_confusionmatrix().
 
 
+# text.outline: ------
+
+# Adds text with a white background (taken from Dirk Wulff www.dirkwulff.org).
+
+text.outline <- function(x, y,
+                         labels = "test",
+                         col = "black",
+                         font = 1,
+                         bg = "white",
+                         r = 0.02,
+                         h = 1,
+                         w = 1,
+                         cex = 1,
+                         adj = .5,
+                         pos = NULL) {
+
+  # Draw background:
+  is <- seq(0, 2 * pi, length = 72)
+
+  for (i in is) {
+    xn <- x + cos(i) * r * w
+    yn <- y + sin(i) * r * h
+    text(xn, yn, labels = labels, col = bg, cex = cex, adj = adj, pos = pos, font = font)
+  }
+
+  # Foreground:
+  text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
+
+} # text.outline ().
+
+
+
+# transparent: ------
+
+# Make text color transparent.
+
+transparent <- function(orig.col = "red",
+                        trans.val = .5) {
+
+  n.cols <- length(orig.col)
+  orig.col <- col2rgb(orig.col)
+  final.col <- rep(NA, n.cols)
+
+  for (i in 1:n.cols) {
+    final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
+      3,
+      i
+    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+  }
+
+  return(final.col)
+
+} # transparent().
+
+
+
 # FFTrees package: ------
 
 #' \code{FFTrees} package.
@@ -1148,5 +1279,11 @@ NULL
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines:
 if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new", "tree", "level"))
 
+
+
+# ToDo: ------
+
+# - Consider re-using add_stats() rather than re-computing stats in classtable(),
+#   or when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
 
 # eof.

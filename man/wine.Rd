@@ -8,7 +8,7 @@
 A data frame containing 6497 rows and 13 columns.
 }
 \source{
-http://archive.ics.uci.edu/ml/datasets/Wine+Quality
+\url{http://archive.ics.uci.edu/ml/datasets/Wine+Quality}
 }
 \usage{
 wine

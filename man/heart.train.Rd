@@ -8,7 +8,7 @@
 A data frame containing 150 rows and 14 columns (see \code{\link{heartdisease}} for details).
 }
 \source{
-https://archive.ics.uci.edu/ml/datasets/Heart+Disease
+\url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
 }
 \usage{
 heart.train

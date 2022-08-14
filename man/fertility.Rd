@@ -8,13 +8,18 @@
 A data frame containing 100 rows and 10 columns.
 }
 \source{
-https://archive.ics.uci.edu/ml/datasets/Fertility
+\url{https://archive.ics.uci.edu/ml/datasets/Fertility}
 }
 \usage{
 fertility
 }
 \description{
-Fertility data
+This dataset describes a sample of 100 volunteers providing a semen sample that was analyzed according to the WHO 2010 criteria.
+}
+\details{
+Sperm concentration are related to socio-demographic data, environmental factors, health status, and life habits.
+
+The binary criterion variable is \code{diagnosis}: Normal (N) vs. altered (O).
 }
 \seealso{
 Other datasets: 

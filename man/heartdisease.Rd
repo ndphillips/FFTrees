@@ -27,7 +27,7 @@ A data frame containing 303 rows and 14 columns, with the following variables:
 }
 }
 \source{
-https://archive.ics.uci.edu/ml/datasets/Heart+Disease
+\url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
 }
 \usage{
 heartdisease

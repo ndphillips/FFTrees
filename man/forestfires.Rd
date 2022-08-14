@@ -26,7 +26,7 @@ A data frame containing 517 rows and 13 columns.
 }
 }
 \source{
-http://archive.ics.uci.edu/ml/datasets/Forest+Fires
+\url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
 }
 \usage{
 forestfires

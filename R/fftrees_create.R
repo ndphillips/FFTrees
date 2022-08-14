@@ -40,8 +40,9 @@
 #' \code{\link{fftrees_define}} for defining FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
-#' @importFrom magrittr "%>%"
 #' @import testthat
+#' @importFrom magrittr "%>%"
+#' @importFrom tibble as_tibble
 #'
 #' @export
 
@@ -403,7 +404,7 @@ fftrees_create <- function(data = NULL,
 
     data.test <- data.test %>%
       dplyr::mutate_if(is.factor, paste) %>%
-      dplyr::as_tibble()
+      tibble::as_tibble()
   }
 
   # Get cue names: ----

@@ -177,8 +177,9 @@ plot(custom.fft)
 
 }
 \seealso{
+\code{\link{print.FFTrees}} for printing FFTs;
 \code{\link{plot.FFTrees}} for plotting FFTs;
-\code{\link{print.FFTrees}} for printing summary information of FFTs;
+\code{\link{summary.FFTrees}} for summarizing FFTs;
 \code{\link{inwords}} for obtaining a verbal description of FFTs;
 \code{\link{showcues}} for plotting cue accuracies.
 }

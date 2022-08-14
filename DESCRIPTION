@@ -1,8 +1,8 @@
 Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
-Version: 1.6.6.9013
-Date: 2022-08-03
+Version: 1.6.6.9015
+Date: 2022-08-06
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut", "cre"),
                      email = "Nathaniel.D.Phillips.is@gmail.com"),
               person("Hansjoerg", "Neth", role = "aut"),
@@ -16,21 +16,22 @@ LazyData: true
 Encoding: UTF-8
 Depends: R(>= 3.5.0)
 Imports:
+    caret,
     rpart,
-    graphics,
     randomForest,
     e1071,
     crayon,
+    graphics,
     scales,
-    tibble,
-    stringr,
     progress,
-    caret,
     dplyr,
-    testthat,
     magrittr,
+    knitr,
+    stringr,
+    tibble,
+    testthat,
     tidyselect
-Suggests: knitr,
+Suggests: 
     rmarkdown
 License: CC0
 URL: https://CRAN.R-project.org/package=FFTrees 

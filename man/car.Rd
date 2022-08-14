@@ -20,13 +20,19 @@ A data frame containing 1728 cars (rows) and 7 variables (columns).
 }
 }
 \source{
-http://archive.ics.uci.edu/ml/datasets/Car+Evaluation
+\url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 }
 \usage{
 car
 }
 \description{
-Car acceptability data
+A dataset on car evaluations based on basic features, derived from a simple hierarchical decision model.
+}
+\details{
+The (yet to be binarized) criterion variable is a car's \code{acceptability} rating.
+}
+\references{
+Bohanec, M., Rajkovic, V. (1990): Expert system for decision making. Sistemica 1 (1), pp. 145-157.
 }
 \seealso{
 Other datasets: 

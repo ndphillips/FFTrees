@@ -8,13 +8,25 @@
 A data frame containing 435 rows and 16 columns.
 }
 \source{
-https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records
+\url{https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records}
 }
 \usage{
 voting
 }
 \description{
-Voting data
+A dataset of votes for each of the U.S. House of Representatives Congressmen on the 16 key votes identified by the CQA.
+}
+\details{
+The CQA lists nine different types of votes: voted for, paired for, and announced for (these three simplified to yea),
+voted against, paired against, and announced against (these three simplified to nay),
+voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
+(these three simplified to an unknown disposition).
+
+The binary criterion variable used here is \code{party.crit}.
+}
+\references{
+Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
+Washington, D.C., 1985.
 }
 \seealso{
 Other datasets: 

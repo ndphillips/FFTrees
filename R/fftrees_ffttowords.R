@@ -33,7 +33,9 @@
 #' of an FFT into an \code{FFTrees} object;
 #' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
 #' \code{\link{fftrees_grow_fan}} for creating FFTs by applying algorithms to data;
-#' \code{\link{print.FFTrees}} for printing summary information of FFTs;
+#' \code{\link{print.FFTrees}} for printing FFTs;
+#' \code{\link{plot.FFTrees}} for plotting FFTs;
+#' \code{\link{summary.FFTrees}} for summarizing FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export
