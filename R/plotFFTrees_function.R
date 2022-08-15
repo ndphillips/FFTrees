@@ -385,13 +385,16 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    # tree as "best.train"/"best.test":
+    # Determine "best.train"/"best.test" tree:
+
     if (tree == "best.train") {
       tree <- x$trees$best$train  # ToDo: Is NULL (even when train/test data is available)!
+      # Note: Isn't best.train tree always tree = 1?  See fftrees_ranktrees() for code.
     }
 
     if (tree == "best.test") {
       tree <- x$trees$best$test  # ToDo: Is NULL (even when train/test data is available)!
+      # Note: Must be determined from tree corresponding to max(goal) in x$trees$stats$test...
     }
 
 
