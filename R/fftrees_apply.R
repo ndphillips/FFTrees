@@ -272,6 +272,15 @@ fftrees_apply <- function(x,
   x$trees$level_stats[[mydata]] <- tibble::as_tibble(level_stats)
   x$trees$decisions[[mydata]]   <- decisions_ls
 
+  # Best tree:
+  if (mydata == "train"){
+    x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
+  } else if (mydata == "test"){
+    x$trees$best$test <- select_best_tree(x, data = mydata, goal = x$params$goal)
+  } else {
+    stop("mydata is neither 'train' nor 'test'")
+  }
+
 
   # Output: ------
 
