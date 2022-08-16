@@ -263,7 +263,7 @@ fftrees_wordstofftrees <- function(x,
   # Save result in tree.definitions: ------
 
   x$trees$definitions <- data.frame(
-    tree = 1,
+    tree = 1L,  # as integer
     nodes = nodes.n,
     "classes" = paste(classes.v, collapse = ";"),
     "cues" = paste(cues.v, collapse = ";"),
