@@ -40,6 +40,7 @@ fftrees_ranktrees <- function(x,
 
   # 3. Update elements of FFTrees x: ----
 
+  # Tree definitions:
   x$trees$definitions <- x$trees$definitions %>%
     dplyr::left_join(tree_rank_df, by = "tree") %>%
     dplyr::select(-tree) %>%
@@ -48,6 +49,10 @@ fftrees_ranktrees <- function(x,
     dplyr::arrange(tree) %>%
     tibble::as_tibble()
 
+  # For training data: ----
+  if (data == "train"){
+
+  # Training stats:
   x$trees$stats$train <- x$trees$stats$train %>%
     dplyr::left_join(tree_rank_df, by = "tree") %>%
     dplyr::select(-tree) %>%
@@ -56,6 +61,7 @@ fftrees_ranktrees <- function(x,
     dplyr::arrange(tree) %>%
     tibble::as_tibble()
 
+  # Training level_stats:
   x$trees$level_stats$train <- x$trees$level_stats$train %>%
     dplyr::left_join(tree_rank_df, by = "tree") %>%
     dplyr::select(-tree) %>%
@@ -64,8 +70,17 @@ fftrees_ranktrees <- function(x,
     dplyr::arrange(tree, level) %>%
     tibble::as_tibble()
 
+  # Training decisions:
   x$trees$decisions$train <- x$trees$decisions$train[tree_rank_df$tree]
   names(x$trees$decisions$train) <- paste0("tree_", 1:nrow(tree_rank_df))
+
+  # Best training tree:
+  x$trees$best$train <- select_best_tree(x, data = "train", goal = x$params$goal)
+
+  } # if (data == "train").
+
+
+  # Note: The analog (data == "test") case is currently NOT ranked.
 
 
   # Output: ----
