@@ -158,10 +158,33 @@ plot(titanic.fft,
 ```
 
 - `tree`: Which tree do we want to plot? 
-We can either specify an integer value such as `tree = 2`, which will plot the Tree\ #2 in the `FFTrees` object, or `tree = "best.train"` (the default) which will use the best training tree ---\ that is, the tree with the highest training\ `wacc` (weighted accuracy) value. 
+As `FFTrees` objects typically contain multiple FFTs, we need to indicate which tree we want to visualize. 
+We usually specify the tree to show by an integer value, such as `tree = 2`, which will plot the corresponding tree (i.e., Tree\ #2) of the `FFTrees` object. Alternatively, we can specify `tree = "best.train"` or `tree = "best.test"` to visualize the best training or prediction tree, respectively. This selects and shows the tree with the highest goal value (e.g., weighted accuracy\ `wacc`) when fitting or testing data. 
 
 - `data`: Which data do we want to apply the tree to? 
-We can specify `data = "train"` or `data = "test"` to distinguish between a training and testing dataset (if available) in the `FFTrees` object. 
+We can specify `data = "train"` or `data = "test"` to distinguish between a training and testing dataset (if available) in the `FFTrees` object. As not all `FFTrees` objects contain test data, `data` is set to `data = "train"` by default. 
+
+<!-- Note on consistency of data and tree: -->
+
+As the `data` and `tree` arguments can both refer to datasets used for training or fitting (i.e., the "train" or "test" sets), they should be specified consistently. For instance, the following command would visualize the best training tree in `titanic.fft`: 
+
+```{r titanic-data-tree-best-train, eval = FALSE}
+plot(titanic.fft, tree = "best.train")
+```
+
+as `data = "train"` by default. However, the following analog expression would fail: 
+
+```{r titanic-data-tree-best-test, eval = FALSE}
+plot(titanic.fft, tree = "best.test")
+```
+
+for two distinct reasons:
+
+1. When `data` remains unspecified, its default is `data = "train"`. 
+Thus, asking for `tree = "best.test"` would require switching to `data = "test"`. 
+
+2. More crucially, `titanic.fft` was created without any test data. 
+Hence, asking for the best test tree does not make sense --- which is why `plot()` will show the best training tree (with a warning). 
 
 
 ### Plotting performance for new data 
@@ -187,11 +210,11 @@ titanic.pred.fft <- FFTrees(formula = survived ~.,
 Here is the best training tree applied to the _training_ data:
 
 ```{r titanic-train, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 5**: Plotting the best FFT on _training_ data."}
-plot(titanic.pred.fft,
-     tree = 1)
+plot(titanic.pred.fft, tree = 1)
 ```
 
-The best training tree (Tree\ #1) had a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
+Tree\ #1 is the best training tree (and could also be visualized by `plot(titanic.pred.fft, tree = "best.train")`). 
+This tree has a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
 The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
 However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART perfomed even worse than Tree\ #1.
 
@@ -203,10 +226,11 @@ plot(titanic.pred.fft,
      data = "test")
 ```
 
+We could have shown the same tree by asking for `plot(titanic.pred.fft, tree = "best.test", data = "test")`. 
 Note that the label of the bottom panel has now switched from "Accuracy (Training)" to "Accuracy (Testing)". 
 Both the sensitivity and specificity values have decreased somewhat, which is typical when using a model (fitted on training data) for predicting new (test) data. 
 
-Let's visualize Tree\ #2, the most liberal tree (with the highest sensitivity): 
+Let's visualize the prediction performance of Tree\ #2, the most liberal tree (i.e., with the highest sensitivity): 
 
 ```{r titanic-viz-2, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting Tree\ #2."} 
 plot(titanic.pred.fft,
@@ -216,10 +240,10 @@ plot(titanic.pred.fft,
 
 This alternative tree has a better sensitivity (of\ 63%), but its overall accuracy decreased to about baseline level (of\ 67%). 
 
-<!-- Conclusion: Note 2 types of trade-offs: -->
+<!-- Conclusion: Note that 2 types of trade-offs become transparent: -->
 
-Whereas comparing training with test performance illustrates the typical trade-offs between mere fitting and predictive modeling, comparing the performance details of various FFTs illustrates the trade-offs that any model for solving binary classification problems engages in. 
-Importantly, both types of these trade-offs become transparent when using **FFTrees**. 
+Whereas comparing training with test performance illustrates the trade-offs between mere fitting and genuine predictive modeling, comparing the performance details of various FFTs illustrates the typical trade-offs that any model for solving binary classification problems engages in. 
+Importantly, both types of trade-offs are rendered transparent when using **FFTrees**. 
 
 
 ## Vignettes
