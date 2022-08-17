@@ -393,7 +393,7 @@ plot.FFTrees <- function(x = NULL,
       if (data == "test"){
         warning("You asked to plot the best training tree, but data was set to 'test'. I'll use 'train' data instead...")
         data <- "train"
-        main <- "Data (Training)"
+        if (is.null(main)) { main <- "Data (Training)" }
       }
 
       # tree <- x$trees$best$train  # using current x
@@ -405,7 +405,7 @@ plot.FFTrees <- function(x = NULL,
       if (data == "train"){
         warning("You asked to plot the best test tree, but data was set to 'train'. I'll use 'test' data instead...")
         data <- "test"
-        main <- "Data (Testing)"
+        if (is.null(main)) { main <- "Data (Testing)" }
       }
 
       # tree <- x$trees$best$test  # using current x
