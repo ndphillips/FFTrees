@@ -1,12 +1,17 @@
-#' Print summary information of fast-and-frugal trees (FFTs)
+#' Print basic information of fast-and-frugal trees (FFTs)
 #'
-#' @description \code{print.FFTrees} prints summary information on FFTs for an \code{FFTrees} object \code{x}.
+#' @description \code{print.FFTrees} prints basic information on FFTs for an \code{FFTrees} object \code{x}.
 #'
 #' As \code{x} may not contain test data, \code{print.FFTrees} by default prints the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
 #' When test data is available, specify \code{data = "test"} to print prediction performance.
 #'
 #' @param x An \code{FFTrees} object created by \code{\link{FFTrees}}.
-#' @param tree The tree to explore (as integer).
+#'
+#' @param tree The tree to be printed (as an integer, only valid when the corresponding tree argument is non-empty).
+#' Default: \code{tree = 1}.
+#' To print the best training or best test tree with respect to the \code{goal} specified during FFT construction,
+#' use \code{"best.train"} or \code{"best.test"}, respectively.
+#'
 #' @param data The data in \code{x} to be printed (as a string);
 #' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
@@ -40,7 +45,10 @@ print.FFTrees <- function(x = NULL,
 
   n.cues <- x$trees$definitions$nodes[tree]
 
-  # - Validate data argument: ----
+
+  # - Validate arguments: ----
+
+  # data: ----
 
   data <- tolower(data)  # for robustness
 
@@ -54,6 +62,46 @@ print.FFTrees <- function(x = NULL,
     warning("You asked to print 'test' data, but there were no test data. I'll print the best training tree instead...")
 
     data <- "train"
+  }
+
+
+  # tree: ----
+
+  if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
+    stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees."))
+  }
+
+  if (tree == "best.test" & is.null(x$tree$stats$test)) {
+    warning("You asked to print the best test tree, but there were no test data. I'll print the best training tree instead...")
+
+    tree <- "best.train"
+  }
+
+
+  # Determine "best" tree: ------
+
+  if (tree == "best.train") {
+
+    if (data == "test"){
+      warning("You asked to print the best training tree, but data was set to 'test'. I'll use 'train' data instead...")
+      data <- "train"
+      main <- "Data (Training)"
+    }
+
+    # tree <- x$trees$best$train  # using current x
+    tree <- select_best_tree(x, data = "train", goal = x$params$goal)  # using helper
+  }
+
+  if (tree == "best.test") {
+
+    if (data == "train"){
+      warning("You asked to print the best test tree, but data was set to 'train'. I'll use 'test' data instead...")
+      data <- "test"
+      main <- "Data (Testing)"
+    }
+
+    # tree <- x$trees$best$test  # using current x
+    tree <- select_best_tree(x, data = "test", goal = x$params$goal)  # using helper
   }
 
 

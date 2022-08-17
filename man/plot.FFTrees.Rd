@@ -42,13 +42,14 @@ must be either \code{'train'} (for fitting performance) or \code{'test'} (for pr
 By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
 \item{what}{What should be plotted (as a string)?
-\code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
+\code{'tree'} (the default) shows one tree (specified by \code{tree}).
 \code{'cues'} shows the marginal accuracy of cues in ROC space,
 \code{"roc"} shows the performance of tree(s) (and comparison algorithms) in ROC space.}
 
 \item{tree}{The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
-To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
-use \code{"best.train"} or \code{"best.test"}.}
+Default: \code{tree = 1}.
+To plot the best training or best test tree with respect to the \code{goal} specified during FFT construction,
+use \code{"best.train"} or \code{"best.test"}, respectively.}
 
 \item{main}{The main plot label (as character string).}
 

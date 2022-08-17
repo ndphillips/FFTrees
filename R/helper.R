@@ -79,6 +79,109 @@ valid_train_test_data <- function(train_data, test_data){
 
 
 
+# select_best_tree: ------
+
+#' Select the best tree (from the current set)
+#'
+#' \code{select_best_tree} selects (looks up and identifies) the best tree
+#' from the set (or \dQuote{fan}) of FFTs contained in the current \code{FFTrees} object \code{x},
+#' an existing type of \code{data} ('train' or 'test'), and
+#' a \code{goal} for which corresponding statistics are available
+#' in the designated \code{data} type (in \code{x$trees$stats}).
+#'
+#' Importantly, \code{select_best_tree} only identifies and selects from the set of
+#' \emph{existing} trees with known statistics,
+#' rather than creating new trees or computing new cue thresholds.
+#' More specifically, \code{goal} is used for identifying and selecting the best of
+#' an existing set of FFTs, but not for
+#' computing new cue thresholds (see \code{goal.threshold} and \code{fftrees_cuerank()}) or
+#' creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
+#'
+#' @param x An \code{FFTrees} object.
+#'
+#' @param data character. Must be either "train" or "test".
+#'
+#' @param goal character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
+#' (for which values exist in \code{x$trees$stats}).
+#'
+#' @return An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
+#'
+#' @seealso
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+
+select_best_tree <- function(x, data, goal){
+
+  # Verify inputs: ------
+
+  # x: ----
+
+  testthat::expect_true(inherits(x, "FFTrees"),
+                        info = "Argument x is no FFTrees object")
+
+  # data: ----
+
+  testthat::expect_true(data %in% c("train", "test"))
+
+  if (is.null(x$trees$stats$test) & (data == "test")){
+    message("You asked for 'test' data, but x only contains training statistics. I'll use data = 'train' instead...")
+    data <- "train"
+  }
+
+  # goal: ----
+
+  # # (a) narrow goal range:
+  #
+  # goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
+  # testthat::expect_true(goal %in% goal_valid)
+
+  # (b) wide goal range:
+
+  # Goals to maximize (more is better):
+  max_goals <- c("hi", "cr",
+                 "sens", "spec",
+                 "ppv", "npv",
+                 "acc", "bacc", "wacc", "dprime",
+                 "pci")
+
+  # Goals to minimize (less is better):
+  min_goals <- c("mi", "fa",
+                 "cost", "cost_decisions", "cost_cues",
+                 "mcu")
+
+  goal_valid <- c(max_goals, min_goals)
+  testthat::expect_true(goal %in% goal_valid)
+
+
+  # Get tree stats (from x given data): ------
+
+  cur_stats <- x$trees$stats[[data]]
+  cur_names <- names(cur_stats)
+
+  ix_goal <- which(cur_names == goal)
+  cur_goal_vals <- as.vector(cur_stats[[ix_goal]])
+
+  if (goal %in% max_goals){ # more is better:
+
+    cur_ranks <- rank(-cur_goal_vals, ties.method = "first")  # low ranks indicate higher/better values
+
+  } else { # goal %in% min_goals / less is better:
+
+    cur_ranks <- rank(+cur_goal_vals, ties.method = "first")  # low rank indicate lower/better values
+  }
+
+  tree <- cur_stats$tree[cur_ranks == min(cur_ranks)]  # tree with minimum rank
+
+
+  # Output: -----
+
+  testthat::expect_true(is.integer(tree))  # verify output
+
+  return(tree) # as number
+
+} # select_best_tree().
+
+
+
 # apply.break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
@@ -1252,7 +1355,7 @@ transparent <- function(orig.col = "red",
     final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
       3,
       i
-    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
   }
 
   return(final.col)

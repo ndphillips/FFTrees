@@ -18,13 +18,14 @@
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
 #' @param what What should be plotted (as a string)?
-#' \code{'tree'} (the default) shows one tree (specified by \code{'tree'}).
+#' \code{'tree'} (the default) shows one tree (specified by \code{tree}).
 #' \code{'cues'} shows the marginal accuracy of cues in ROC space,
 #' \code{"roc"} shows the performance of tree(s) (and comparison algorithms) in ROC space.
 #'
 #' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
-#' To plot the best training (or test) tree with respect to the \code{goal} specified during FFT construction,
-#' use \code{"best.train"} or \code{"best.test"}.
+#' Default: \code{tree = 1}.
+#' To plot the best training or best test tree with respect to the \code{goal} specified during FFT construction,
+#' use \code{"best.train"} or \code{"best.test"}, respectively.
 #'
 #' @param main The main plot label (as character string).
 #' @param hlines Should horizontal panel separation lines be shown (as logical)?
@@ -369,7 +370,7 @@ plot.FFTrees <- function(x = NULL,
     }
 
     if (tree == "best.test" & is.null(x$tree$stats$test)) {
-      warning("You asked to plot the best test tree, but there were no test data. I'll plot the best training tree instead...")
+      warning("You asked to plot the best 'test' tree, but there were no test data. I'll plot the best training tree instead...")
 
       tree <- "best.train"
     }
@@ -380,20 +381,36 @@ plot.FFTrees <- function(x = NULL,
 
     if (inherits(data, "character")) {
       if (data == "test" & is.null(x$trees$stats$test)) {
-        stop("You asked to plot test data, but there are no test data in the FFTrees object.")
+        stop("You asked to plot 'test' data, but there are no test data in the FFTrees object.")
       }
     }
 
 
-    # tree as "best.train"/"best.test":
+    # Determine "best" tree: ------
+
     if (tree == "best.train") {
-      tree <- x$trees$best$train  # ToDo: Is NULL (even when train/test data is available)!
+
+      if (data == "test"){
+        warning("You asked to plot the best training tree, but data was set to 'test'. I'll use 'train' data instead...")
+        data <- "train"
+        main <- "Data (Training)"
+      }
+
+      # tree <- x$trees$best$train  # using current x
+      tree <- select_best_tree(x, data = "train", goal = x$params$goal)  # using helper
     }
 
     if (tree == "best.test") {
-      tree <- x$trees$best$test  # ToDo: Is NULL (even when train/test data is available)!
-    }
 
+      if (data == "train"){
+        warning("You asked to plot the best test tree, but data was set to 'train'. I'll use 'test' data instead...")
+        data <- "test"
+        main <- "Data (Testing)"
+      }
+
+      # tree <- x$trees$best$test  # using current x
+      tree <- select_best_tree(x, data = "test", goal = x$params$goal)  # using helper
+    }
 
 
     # Define critical objects: ------
