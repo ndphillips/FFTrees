@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9017 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.6.6.9018 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -165,7 +165,7 @@ evaluate their predictive performance on the `heart.test` data:
     #>   Totals:        66       84   N = 150
     #> 
     #> acc  = 80.0%   ppv  = 75.0%   npv  = 84.6%
-    #> wacc = 80.2%   sens = 81.8%   spec = 78.6%
+    #> bacc = 80.2%   sens = 81.8%   spec = 78.6%
     #> 
     #> FFT #1: Training Speed, Frugality, and Cost
     #> mcu = 1.74,  pci = 0.87,  E(cost) = 0.200
@@ -321,6 +321,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-08-17.\]
+\[File `README.Rmd` last updated on 2022-08-18.\]
 
 <!-- eof. -->
