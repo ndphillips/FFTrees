@@ -814,7 +814,7 @@ factclean <- function(data.train,
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
 add_stats <- function(data,
-                      sens.w = .5,
+                      sens.w = .50,
                       cost.each = NULL,
                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
 
@@ -902,7 +902,7 @@ add_stats <- function(data,
 
 classtable <- function(prediction_v = NULL,
                        criterion_v,
-                       sens.w = .5,
+                       sens.w = .50,
                        cost.v = NULL,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
@@ -910,7 +910,7 @@ classtable <- function(prediction_v = NULL,
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   criterion_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
-  #   sens.w = .5
+  #   sens.w = .50
   #   cost.v = NULL
   #   correction = .25
   #   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
@@ -1113,6 +1113,63 @@ classtable <- function(prediction_v = NULL,
 
 
 
+# sens.w_epsion: ------
+
+# A constant: Minimum required difference from default of sens.w = 0.50:
+
+sens.w_epsilon <- 10^-4
+
+
+
+# enable_wacc: ------
+
+# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
+# Output: Boolean value.
+
+enable_wacc <- function(sens.w){
+
+  out <- FALSE
+
+  if (abs(sens.w - .50) > sens.w_epsilon){
+    out <- TRUE
+  }
+
+  return(out)
+
+} # enable_wacc().
+
+
+
+# get_bacc_wacc: ------
+
+# Obtain either bacc or wacc (for displays in print and plot functions).
+# Output: Named vector (with name specifying the current type of measure).
+
+get_bacc_wacc <- function(sens, spec,  sens.w){
+
+  if (enable_wacc(sens.w)){ # wacc:
+
+    value <- (sens * sens.w) + (spec * (1 - sens.w))
+    names(value) <- "wacc"
+
+  } else { # bacc:
+
+    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+    names(value) <- "bacc"
+
+  }
+
+  return(value)
+
+} # get_bacc_wacc().
+
+# # Check:
+# get_bacc_wacc(1, .80, .500)
+# get_bacc_wacc(1, .80, .501)
+# get_bacc_wacc(1, .80, 0)
+
+
+
 # num_space: ------
 
 # \code{num_space} computes the width of a representation of \code{x}
@@ -1273,16 +1330,19 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   cat("\n")
 
-  # cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
-  cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
+  if (enable_wacc(sens.w)){ # print wacc:
+    cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
+  } else { # print bacc:
+    cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
+  }
 
   cat("   sens =", scales::percent(sens, accuracy = .1), sep = " ")
   cat("   spec =", scales::percent(spec, accuracy = .1), sep = " ")
 
   cat("\n")
 
-  if (abs(sens.w - .50) > 10^-4){  # print sens.w:
-    cat("sens.w = ", round(sens.w, 3), sep = "")
+  if (enable_wacc(sens.w)){ # print sens.w (as round percentage value):
+    cat("sens.w = ", scales::percent(sens.w, accuracy = 1), sep = "")
     cat("\n")
   }
 
@@ -1336,7 +1396,7 @@ text.outline <- function(x, y,
   # Foreground:
   text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
 
-} # text.outline ().
+} # text.outline().
 
 
 
