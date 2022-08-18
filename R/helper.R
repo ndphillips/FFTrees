@@ -1307,8 +1307,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # Accuracy info: ----
 
-  # Compute statistics (or use add_stats() above):
-
+  # Compute acc statistics (or use add_stats() above):
   acc <- (hi + cr) / N
 
   ppv <- hi / (hi + fa)
@@ -1317,8 +1316,9 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   sens <- hi / (hi + mi)
   spec <- cr / (cr + fa)
 
-  bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
-  wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+  # bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+  # wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+  bacc_wacc <- get_bacc_wacc(sens, spec, sens.w)
 
 
   # Print labels and values:
@@ -1330,11 +1330,12 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   cat("\n")
 
-  if (enable_wacc(sens.w)){ # print wacc:
-    cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
-  } else { # print bacc:
-    cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
-  }
+  # if (enable_wacc(sens.w)){ # print wacc:
+  #   cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
+  # } else { # print bacc:
+  #   cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
+  # }
+  cat(names(bacc_wacc), "=", scales::percent(bacc_wacc, accuracy = .1), sep = " ")
 
   cat("   sens =", scales::percent(sens, accuracy = .1), sep = " ")
   cat("   spec =", scales::percent(spec, accuracy = .1), sep = " ")
