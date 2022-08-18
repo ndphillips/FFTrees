@@ -1318,6 +1318,8 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
   # wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+
+  # Get either bacc OR wacc (based on sens.w):
   bacc_wacc <- get_bacc_wacc(sens, spec, sens.w)
 
 
