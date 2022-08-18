@@ -7,10 +7,16 @@
 #'
 #' \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and various aspects of classification performance.
 #'
-#' As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
-#' When test data is available, specify \code{data = "test"} to plot prediction performance.
+#' As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics
+#' for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+#' When test data is available, specifying \code{data = "test"} plots prediction performance.
 #'
-#' Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
+#' Whenever the sensitivity weight (\code{sens.w}) is set to its default of \code{sens.w = 0.50},
+#' a level shows \emph{balanced} accuracy (\code{bacc}). If, however, \code{sens.w} deviates from its default,
+#' the level shows the tree's \emph{weighted} accuracy value (\code{wacc}) and the current \code{sens.w} value (below the level).
+#'
+#' Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits)
+#' can be customized by setting corresponding arguments.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #' @param data The data in \code{x} to be plotted (as a string);
@@ -1389,7 +1395,7 @@ plot.FFTrees <- function(x = NULL,
 
     ## 3. Cumulative performance: ------
 
-    if (show.bottom == TRUE) {{ # obtain final statistics:
+    if (show.bottom == TRUE) {{ # obtain tree statistics:
 
       fft.sens.vec <- tree.stats$sens
       fft.spec.vec <- tree.stats$spec
@@ -1413,7 +1419,7 @@ plot.FFTrees <- function(x = NULL,
            yaxt = "n", xaxt = "n"
       )
 
-      par(xpd = T)
+      par(xpd = TRUE)
 
       if (hlines) {
         segments(0, 1.1, 1, 1.1, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
@@ -1432,6 +1438,7 @@ plot.FFTrees <- function(x = NULL,
       text(.5, 1.1, label.performance, cex = panel.title.cex)
       par(xpd = FALSE)
 
+      # Auxiliary function: Print pretty decimal values
       pretty.dec <- function(x) {
         return(paste(round(x, 2) * 100, sep = ""))
       }
@@ -1443,9 +1450,14 @@ plot.FFTrees <- function(x = NULL,
       level.bottom <- level.center.y - level.max.height / 2
       level.top <- level.center.y + level.max.height / 2
 
+      # Get either bacc OR wacc (based on sens.w):
+      sens.w <- x$params$sens.w
+      bacc_wacc <- get_bacc_wacc(sens = final.stats$sens, spec = final.stats$spec, sens.w = sens.w)
+
+      # DF of labels, values, and locations:
       lloc <- data.frame(
-        element = c("classtable", "mcu", "pci", "sens", "spec", "acc", "bacc", "roc"),
-        long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", "bacc", "ROC"),
+        element = c("classtable", "mcu", "pci", "sens", "spec", "acc", names(bacc_wacc), "roc"),
+        long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", names(bacc_wacc), "ROC"),
         center.x = c(.18, seq(.35, .65, length.out = 6), .85),
         center.y = rep(level.center.y, 8),
         width = c(.2, rep(level.width, 6), .2),
@@ -1453,16 +1465,17 @@ plot.FFTrees <- function(x = NULL,
         value = c(
           NA,
           abs(final.stats$mcu - 5) / (abs(1 - 5)),
-          final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), final.stats$bacc, NA
+          final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), bacc_wacc, NA
         ),
         value.name = c(
           NA, round(final.stats$mcu, 1), pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec), pretty.dec(final.stats$acc),
-          pretty.dec(final.stats$bacc), NA
+          pretty.dec(bacc_wacc), NA
         )
       )
 
 
       # Classification table: ----
+
       if (show.confusion) {
         final.classtable.x.loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
         final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
@@ -1568,7 +1581,8 @@ plot.FFTrees <- function(x = NULL,
                pch = signal.ball.pch, bg = error.bg, col = error.border, cex = ball.cex
         )
 
-        # Add labels: ----
+
+        # Add labels:
 
         text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
              final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
@@ -1595,7 +1609,9 @@ plot.FFTrees <- function(x = NULL,
         )
       }
 
+
       # Levels: ----
+
       if (show.levels) {
         if (level.type %in% c("line", "bar")) {
 
@@ -1611,6 +1627,7 @@ plot.FFTrees <- function(x = NULL,
                                     ok.val = .5,
                                     bottom.text = "",
                                     level.type = "line") {
+
             rect.center.x <- lloc$center.x[lloc$element == name]
             rect.center.y <- lloc$center.y[lloc$element == name]
             rect.height <- lloc$height[lloc$element == name]
@@ -1646,6 +1663,7 @@ plot.FFTrees <- function(x = NULL,
 
             value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect.height
 
+
             # Add filling: ----
 
             value.s <- min(value / max.val, 1)
@@ -1678,7 +1696,7 @@ plot.FFTrees <- function(x = NULL,
                 cex = 1.5, r = .008, pos = 3
               )
 
-              # Add level border: ----
+              # Add level border:
 
               # rect(rect.left.x,
               #      rect.bottom.y,
@@ -1690,7 +1708,7 @@ plot.FFTrees <- function(x = NULL,
 
             if (level.type == "line") {
 
-              # Stem
+              # Stem:
               segments(rect.center.x,
                        rect.bottom.y,
                        rect.center.x,
@@ -1755,6 +1773,7 @@ plot.FFTrees <- function(x = NULL,
           #          y1 = level.top,
           #          lty = 3, lwd = .75)
 
+          # mcu level: ----
           add.level.fun("mcu",
                         ok.val = .75,
                         max.val = 1,
@@ -1762,22 +1781,25 @@ plot.FFTrees <- function(x = NULL,
                         level.type = level.type
           ) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
+          # pci level: ----
           add.level.fun("pci", ok.val = .75, level.type = level.type) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
           # text(lloc$center.x[lloc$element == "pci"],
           #      lloc$center.y[lloc$element == "pci"],
           #      labels = paste0("mcu\n", round(mcu, 2)))
 
+          # spec level: ----
           add.level.fun("spec", ok.val = .75, level.type = level.type) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+          # sens level: ----
           add.level.fun("sens", ok.val = .75, level.type = level.type) # , sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
-          # Min acc:
+          # acc level: ----
           min.acc <- max(crit.br, 1 - crit.br)
 
           add.level.fun("acc", min.val = 0, ok.val = .5, level.type = level.type) # , sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
-          # Add baseline to acc level: ----
-
+          # Add baseline to acc level:
           segments(
             x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
             y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min.acc,
@@ -1792,20 +1814,39 @@ plot.FFTrees <- function(x = NULL,
             labels = "BL", pos = 1
           )
 
-          #   paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
+          # paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
 
-          add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
 
-          # baseline
+          # bacc OR wacc level: ----
 
+          if (names(bacc_wacc) == "bacc"){ # show bacc level:
+
+            add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
+
+          } else { # default: show wacc level (with sens.w value):
+
+            sens.w_lbl <- paste0("sens.w = .", pretty.dec(sens.w))
+
+            add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type,
+                          bottom.text = sens.w_lbl)
+
+          } # if (bacc_wacc).
+
+
+          # Add baseline (at bottom?):
+          #
           # segments(x0 = mean(lloc$center.x[2]),
           #          y0 = lloc$center.y[1] - lloc$height[1] / 2,
           #          x1 = mean(lloc$center.x[7]),
           #          y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
           #          lwd = .5,
           #          col = gray(0))
-        }
-      }
+
+
+        } # if (level.type %in% c("line", "bar")).
+
+      } # if (show.levels).
+
 
       # MiniROC curve: -----
 
@@ -2135,13 +2176,16 @@ plot.FFTrees <- function(x = NULL,
 
 # ToDo: ------
 
+# - Cleanup & reduce clutter:
+#   1. Move long auxiliary functions (add.level.fun(), add.balls.fun(), ...) to a separate file (helper_plot.R).
+#   2. Remove ROC curve parts to a separate function, and
+#      handle what == "roc" as a special case (like what = "cues").
+
 # - Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
 #   suggests that data could be df, to which FFT is then applied.
 #   Applying and plotting in one step would be great, of course, (and should also be adopted for printing)
 #   but it presently does not seem to work.
 
-# - Remove ROC curve parts to a separate function, and
-#   handle what == "roc" as a special case (like what = "cues").
 # - Offer options for adding/changing color information.
 
 # eof.
