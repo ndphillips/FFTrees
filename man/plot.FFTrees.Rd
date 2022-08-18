@@ -109,10 +109,16 @@ called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} objec
 
 \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and various aspects of classification performance.
 
-As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
-When test data is available, specify \code{data = "test"} to plot prediction performance.
+As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics
+for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+When test data is available, specifying \code{data = "test"} plots prediction performance.
 
-Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
+Whenever the sensitivity weight (\code{sens.w}) is set to its default of \code{sens.w = 0.50},
+a level shows \emph{balanced} accuracy (\code{bacc}). If, however, \code{sens.w} deviates from its default,
+the level shows the tree's \emph{weighted} accuracy value (\code{wacc}) and the current \code{sens.w} value (below the level).
+
+Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits)
+can be customized by setting corresponding arguments.
 }
 \examples{
 # Create FFTs (for heartdisease data):
