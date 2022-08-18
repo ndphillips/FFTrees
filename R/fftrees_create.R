@@ -108,87 +108,162 @@ fftrees_create <- function(data = NULL,
   testthat::expect_true(algorithm %in% algorithm_valid)
 
 
+  # sens.w: ----
+
+  testthat::expect_true(!is.null(sens.w),
+                        info = "sens.w is NULL"
+  )
+
+  testthat::expect_lte(sens.w, expected = 1)
+  testthat::expect_gte(sens.w, expected = 0)
+
+
   # goal: ----
 
   goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
 
-  if (is.null(goal)) {
+  if (is.null(goal)) { # goal NOT set by user:
 
-    if (!is.null(cost.outcomes) | !is.null(cost.cues)) {
+    if (!is.null(cost.outcomes) | !is.null(cost.cues)) { # use cost goal:
 
       goal <- "cost"
+      if (quiet == FALSE) { message("Setting 'goal = cost'") }
 
-      if (quiet == FALSE) {
-        message("Setting goal = 'cost'")
+    } else { # use accuracy goal:
+
+      if (enable_wacc(sens.w)){ # use wacc:
+
+        goal <- "wacc"
+        if (quiet == FALSE) { message("Setting 'goal = wacc'") }
+
+      } else { # use bacc (as bacc == wacc):
+
+        goal <- "bacc"
+        if (quiet == FALSE) { message("Setting 'goal = bacc'") }
+
       }
 
-    } else {
-
-      goal <- "wacc"  # default
-
-      if (quiet == FALSE) {
-        message("Setting goal = 'wacc'")
-      }
     }
 
   } else { # feedback user setting:
 
-    if (quiet == FALSE) {
-      message(paste0("User set goal = '", goal, "'"))
-    }
+    if (quiet == FALSE) { message(paste0("User set 'goal = ", goal, "'")) }
 
-  }
+  } # if (is.null(goal)) else.
 
+  # Verify goal:
   testthat::expect_true(!is.null(goal),
                         info = "goal is NULL"
   )
 
   testthat::expect_true(goal %in% goal_valid)
 
-
-  # goal.chase: ----
-
-  if (goal == "cost" & is.null(goal.chase)) {
-
-    goal.chase <- "cost"
+  if ((goal == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
     if (quiet == FALSE) {
-      message("Setting goal.chase = 'cost'")
+      message("The goal was set to 'wacc', but 'sens.w = 0.50'. Setting 'goal = bacc'")
     }
+    goal <- "bacc"
 
-  } else if (is.null(goal.chase)) {
+  }
 
-    goal.chase <- "wacc"  # default
-
-    if (quiet == FALSE) {
-      message("Setting goal.chase = 'wacc'")
-    }
-
-  } else { # feedback user setting:
+  if ((goal == "bacc") & (enable_wacc(sens.w))){ # provide feedback:
 
     if (quiet == FALSE) {
-      message(paste0("User set goal.chase = '", goal.chase, "'"))
+      message("The goal was set to 'bacc', but 'sens.w' differs from 0.50. Did you mean to use 'wacc'?")
     }
 
   }
 
+
+  # goal.chase: ----
+
+  if (goal == "cost" & is.null(goal.chase)) { # use cost:
+
+    goal.chase <- "cost"
+
+    if (quiet == FALSE) { message("Setting 'goal.chase = cost'") }
+
+  } else if (is.null(goal.chase)) { # use accuracy:
+
+    if (enable_wacc(sens.w)){ # use wacc:
+
+      goal.chase <- "wacc"
+      if (quiet == FALSE) { message("Setting 'goal.chase = wacc'") }
+
+    } else { # use bacc (as bacc == wacc):
+
+      goal.chase <- "bacc"
+      if (quiet == FALSE) { message("Setting 'goal.chase = bacc'") }
+
+    }
+
+  } else { # feedback user setting:
+
+    if (quiet == FALSE) { message(paste0("User set 'goal.chase = ", goal.chase, "'")) }
+
+  }
+
+  # Verify goal.chase:
   testthat::expect_true(!is.null(goal.chase),
                         info = "goal.chase is NULL"
   )
 
   testthat::expect_true(goal.chase %in% goal_valid)
 
+  if ((goal.chase == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
+
+    if (quiet == FALSE) {
+      message("The goal.chase was set to 'wacc', but 'sens.w = 0.50'. Setting 'goal.chase = bacc'")
+    }
+    goal.chase <- "bacc"
+
+  }
+
+  if ((goal.chase == "bacc") & (enable_wacc(sens.w))){ # provide feedback:
+
+    if (quiet == FALSE) {
+      message("The goal.chase was set to 'bacc', but 'sens.w' differs from 0.50. Did you mean to use 'wacc'?")
+    }
+
+  }
+
 
   # goal.threshold: ----
 
-  # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
-  # ToDo: Why not set to goal.chase when goal.chase was user-specified?
+  # Note: Default is set to goal.threshold = "bacc" (in FFTrees.R).
 
+  # Use argument value from FFTrees(), but provide feedback:
+  if (quiet == FALSE) {
+
+    if (goal.threshold == "bacc"){ # report using bacc (i.e., the default):
+
+      message(paste0("Using default 'goal.threshold = ", goal.threshold, "'"))
+
+    } else { # report user setting:
+
+      message(paste0("User set 'goal.threshold = ", goal.threshold, "'"))
+
+    }
+
+  } # if (quiet == FALSE).
+
+
+  # Verify goal.threshold:
   testthat::expect_true(!is.null(goal.threshold),
                         info = "goal.threshold is NULL"
   )
 
   testthat::expect_true(goal.threshold %in% goal_valid)
+
+  if ((goal.threshold == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
+
+    if (quiet == FALSE) {
+      message("The goal.threshold was set to 'wacc', but 'sens.w = 0.50'. Setting 'goal.threshold = bacc'")
+    }
+    goal.threshold <- "bacc"
+
+  }
 
 
   # numthresh.method: ----
@@ -214,16 +289,6 @@ fftrees_create <- function(data = NULL,
                         )
   )
 
-
-  # sens.w: ----
-
-  testthat::expect_true(!is.null(sens.w),
-                        info = "sens.w is NULL"
-  )
-
-  testthat::expect_lte(sens.w, expected = 1)
-
-  testthat::expect_gte(sens.w, expected = 0)
 
 
   # max.levels: ----
