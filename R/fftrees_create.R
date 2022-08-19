@@ -256,7 +256,7 @@ fftrees_create <- function(data = NULL,
   if ((enable_wacc(sens.w)) & (goal != "wacc") & (goal.chase != "wacc")){ # provide feedback:
 
     if (quiet == FALSE) {
-      message(paste0("You set sens.w = ", sens.w, ". Did you mean to set 'goal' or 'goal.chase' to 'wacc'?"))
+      message(paste0("You set sens.w = ", sens.w, ": Did you mean to set 'goal' or 'goal.chase' to 'wacc'?"))
     }
 
   }
