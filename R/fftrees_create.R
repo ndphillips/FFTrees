@@ -161,17 +161,9 @@ fftrees_create <- function(data = NULL,
   if ((goal == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
     if (quiet == FALSE) {
-      message("The goal was set to 'wacc', but 'sens.w = 0.50'. Setting 'goal = bacc'")
+      message("The goal was set to 'wacc', but 'sens.w = 0.50': Setting 'goal = bacc'")
     }
     goal <- "bacc"
-
-  }
-
-  if ((goal == "bacc") & (enable_wacc(sens.w))){ # provide feedback:
-
-    if (quiet == FALSE) {
-      message("The goal was set to 'bacc', but 'sens.w' differs from 0.50. Did you mean to use 'wacc'?")
-    }
 
   }
 
@@ -214,17 +206,9 @@ fftrees_create <- function(data = NULL,
   if ((goal.chase == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
     if (quiet == FALSE) {
-      message("The goal.chase was set to 'wacc', but 'sens.w = 0.50'. Setting 'goal.chase = bacc'")
+      message("The goal.chase was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'")
     }
     goal.chase <- "bacc"
-
-  }
-
-  if ((goal.chase == "bacc") & (enable_wacc(sens.w))){ # provide feedback:
-
-    if (quiet == FALSE) {
-      message("The goal.chase was set to 'bacc', but 'sens.w' differs from 0.50. Did you mean to use 'wacc'?")
-    }
 
   }
 
@@ -238,7 +222,7 @@ fftrees_create <- function(data = NULL,
 
     if (goal.threshold == "bacc"){ # report using bacc (i.e., the default):
 
-      message(paste0("Using default 'goal.threshold = ", goal.threshold, "'"))
+      message(paste0("Setting 'goal.threshold = ", goal.threshold, "'"))
 
     } else { # report user setting:
 
@@ -259,9 +243,21 @@ fftrees_create <- function(data = NULL,
   if ((goal.threshold == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
     if (quiet == FALSE) {
-      message("The goal.threshold was set to 'wacc', but 'sens.w = 0.50'. Setting 'goal.threshold = bacc'")
+      message("The goal.threshold was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'")
     }
     goal.threshold <- "bacc"
+
+  }
+
+
+  # Verify consistency of sens.w and bacc_wacc choices: ----
+
+  # If a non-default sens.w has been set, but 'wacc' is neither used in 'goal' nor in 'goal.chase':
+  if ((enable_wacc(sens.w)) & (goal != "wacc") & (goal.chase != "wacc")){ # provide feedback:
+
+    if (quiet == FALSE) {
+      message(paste0("You set sens.w = ", sens.w, ". Did you mean to set 'goal' or 'goal.chase' to 'wacc'?"))
+    }
 
   }
 
