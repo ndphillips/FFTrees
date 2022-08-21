@@ -112,9 +112,9 @@
 #' \code{\link{summary.FFTrees}} for summarizing FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
-#' @importFrom stats anova predict formula model.frame
-#' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
-#' @importFrom grDevices gray col2rgb rgb
+#' @importFrom stats anova formula model.frame predict
+#' @importFrom graphics arrows axis abline layout legend mtext par plot points segments text title rect
+#' @importFrom grDevices col2rgb gray rgb
 #'
 #' @export
 
