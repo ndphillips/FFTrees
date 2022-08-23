@@ -247,6 +247,9 @@ plot.FFTrees <- function(x = NULL,
 
     }
 
+
+    # Determine layout: ----
+
     # Top, middle, and bottom:
     if (show.header & show.tree & (show.confusion | show.levels | show.roc)) {
 
@@ -594,7 +597,7 @@ plot.FFTrees <- function(x = NULL,
     # Colors: ----
 
     exit.node.bg <- "white"
-    #
+
     # error.colfun <- circlize::colorRamp2(c(0, 50, 100),
     #                            colors = c("white", "red", "black"))
     #
@@ -878,7 +881,7 @@ plot.FFTrees <- function(x = NULL,
       # p.signal level: ----
 
       text(
-        x = .8, y = p.rect.ylim[2],
+        x = .80, y = p.rect.ylim[2],
         labels = paste("p(", decision.labels[2], ")", sep = ""),
         pos = 3, cex = 1.2
       )
@@ -916,7 +919,7 @@ plot.FFTrees <- function(x = NULL,
       # p.noise level: ----
 
       text(
-        x = .2, y = p.rect.ylim[2],
+        x = .20, y = p.rect.ylim[2],
         labels = paste("p(", decision.labels[1], ")", sep = ""),
         pos = 3, cex = 1.2
       )
@@ -1195,7 +1198,7 @@ plot.FFTrees <- function(x = NULL,
             y = subplot.center[2] - 2,
             labels = substr(decision.labels[1], 1, 1)
           )
-        }
+        } # if (exit node on left).
 
         # New level on left: ----
 
@@ -1235,7 +1238,7 @@ plot.FFTrees <- function(x = NULL,
               font = 3
             )
           }
-        }
+        } # if (new level on left).
 
 
         # Right (Signal) classification / New level: ------
@@ -1337,7 +1340,7 @@ plot.FFTrees <- function(x = NULL,
             y = subplot.center[2] - 2,
             labels = substr(decision.labels[2], 1, 1)
           )
-        }
+        } # if (exit node on right).
 
 
         # New level on right: ----
@@ -1387,7 +1390,7 @@ plot.FFTrees <- function(x = NULL,
               font = 3
             )
           }
-        }
+        } # # if (new level on right).
 
 
         # Update plot center: ------
@@ -2347,7 +2350,7 @@ plot.FFTrees <- function(x = NULL,
 # - Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
 #   suggests that data could be df, to which FFT is then applied.
 #   Applying and plotting in one step would be great, of course, (and should also be adopted for printing)
-#   but it presently does not seem to work.
+#   but it presently does not work. (Suggestion: Use a 'newdata' argument for this purpose, as in predict().)
 
 # - Offer options for adding/changing color information.
 
