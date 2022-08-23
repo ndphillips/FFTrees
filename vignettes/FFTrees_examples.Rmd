@@ -49,11 +49,11 @@ We'll use the `train.p = .5` argument to split the original data into a $50$%\ t
 
 ```{r fft-mushrooms-1, message = FALSE, results = 'hide', warning=FALSE}
 # Create FFTs from the mushrooms data: 
-set.seed(100) # for replicability of the training / test data split
+set.seed(1) # for replicability of the training / test data split
 
 mushrooms.fft <- FFTrees(formula = poisonous ~.,
                          data = mushrooms,
-                         train.p = .5,   # split data into 50:50 training/test subsets
+                         train.p = .50,   # split data into 50:50 training/test subsets
                          main = "Mushrooms",
                          decision.labels = c("Safe", "Poison"))   
 ```
@@ -99,11 +99,16 @@ Now, let's say that we talk to a mushroom expert who says that we are using the 
 According to her, the best predictors for poisonous mushrooms are `ringtype` and `ringnum`. 
 Let's build a set of trees with these cues and see how they perform relative to our initial tree: 
 
+```{r fft-mushrooms-2-seed, include = FALSE}
+set.seed(200)
+```
+
+
 ```{r fft-mushrooms-2, message = FALSE, results = 'hide', warning = FALSE}
 # Create trees using only the ringtype and ringnum cues: 
 mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                               data = mushrooms,
-                              train.p = .5,
+                              train.p = .50,
                               main = "Mushrooms (ring only)",
                               decision.labels = c("Safe", "Poison"))
 ```
