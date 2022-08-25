@@ -308,15 +308,18 @@ cost.cues.append <- function(formula,
 
 #' A wrapper for competing classification algorithms.
 #'
-#' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
-#' logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
+#' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (\code{rpart::rpart}),
+#' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 #'
 #' @param formula a formula
 #' @param data.train dataframe. A training dataset.
 #' @param data.test dataframe. A testing dataset.
-#' @param algorithm string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests
+#' @param algorithm string. An algorithm in the set
+#' "lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularised logistic regression,
+#' "svm" -- support vector machines, "rf" -- random forests
 #' @param model model. An optional existing model applied to test data
-#' @param new.factors string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
+#' @param new.factors string. What should be done if new factor values are discovered in the test set?
+#' "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom stats model.frame formula glm model.matrix
@@ -994,7 +997,12 @@ classtable <- function(prediction_v = NULL,
       bacc <- cm_byClass$Balanced.Accuracy
       wacc <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
 
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+      # dprime (corrected):
+      # hi_rate <- hi_c / (hi_c + mi_c)
+      # fa_rate <- fa_c / (fa_c + cr_c)
+      # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1003,6 +1011,7 @@ classtable <- function(prediction_v = NULL,
       # Cost per case:
       cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+
 
     } else { # Compute stats from freq combinations: ----
 
@@ -1028,12 +1037,14 @@ classtable <- function(prediction_v = NULL,
       ppv <- hi / (hi + fa)
       npv <- cr / (cr + mi)
 
-      acc <- (hi + cr) / c(hi + cr + mi + fa)
+      acc <- (hi + cr) / N
       acc_p <- NA
       bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
       wacc <- (sens * sens.w) + (spec * (1 - sens.w))
 
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+      # dprime (corrected):
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1115,7 +1126,8 @@ classtable <- function(prediction_v = NULL,
 
 # sens.w_epsion: ------
 
-# A constant: Minimum required difference from default of sens.w = 0.50:
+# A constant/threshold: Minimum required difference
+# from the sens.w default value (sens.w = 0.50):
 
 sens.w_epsilon <- 10^-4
 
@@ -1130,7 +1142,7 @@ enable_wacc <- function(sens.w){
 
   out <- FALSE
 
-  if (abs(sens.w - .50) > sens.w_epsilon){
+  if (abs(sens.w - .50) >= sens.w_epsilon){
     out <- TRUE
   }
 
@@ -1448,6 +1460,8 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 
 # ToDo: ------
+
+# - Bring back dprime as goal and goal.chase (and verify its computation).
 
 # - Consider re-using add_stats() rather than re-computing stats in classtable(),
 #   or when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
