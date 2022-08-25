@@ -671,11 +671,11 @@ plot.FFTrees <- function(x = NULL,
 
     # Final stats: ----
 
-    spec.circle.x <- .4
-    dprime.circle.x <- .5
-    sens.circle.x <- .6
+    spec.circle.x   <- .40
+    dprime.circle.x <- .50
+    sens.circle.x   <- .60
 
-    stat.circle.y <- .3
+    stat.circle.y   <- .30
 
     sens.circle.col <- "green"
     spec.circle.col <- "red"
