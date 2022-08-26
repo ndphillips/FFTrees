@@ -14,7 +14,10 @@
 #' @param alt.goal An optional alternative goal to sort the current cue accuracies (without using the goal of \code{FFTrees} object \code{x}).
 #' @param main A main plot title (as character string).
 #' @param top How many of the top cues should be highlighted (as an integer)?
-#' @param quiet logical. Should user feedback messages be printed? Default is \code{quiet = FALSE} (i.e., show messages).
+#' @param quiet Should user feedback messages be printed (as logical)?
+#' Default: \code{quiet = FALSE} (i.e., show messages).
+#'
+#' @param ... Graphical parameters (passed to \code{\link{plot}}).
 #'
 #' @return A plot showing cue accuracies (of an \code{FFTrees} object) (as points in ROC space).
 #'
@@ -50,7 +53,9 @@ showcues <- function(x = NULL,
                      alt.goal = NULL,  # alternative goal (takes local priority over x$params$goal)
                      main = NULL,
                      top = 5,
-                     quiet = FALSE) {
+                     quiet = FALSE,
+                     ...  # graphical parameters, passed to plot()
+) {
 
   # 0. Parameters: ------
 
@@ -174,11 +179,11 @@ showcues <- function(x = NULL,
   # Main title:
   if (is.null(main)) {
 
-    if (is.null(x$params$main)) {
+    if (is.null(x$params$main)) { # default title:
 
       main <- "Individual cue accuracies"
 
-    } else {
+    } else { # use main:
 
       main <- x$params$main
 
@@ -189,29 +194,31 @@ showcues <- function(x = NULL,
   plot(1,
        xlim = c(0, 1), ylim = c(0, 1), type = "n",
        main = main,
-       xlab = expression(1 - Specificity), # was: "1 - Specificity",
+       xlab = expression(1 - Specificity),
        ylab = "Sensitivity",
-       yaxt = "n", xaxt = "n"
+       yaxt = "n", xaxt = "n",
+       ...  # other graphical parameters
   )
 
   # Axes:
-  axis(2, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
-  axis(1, at = seq(0, 1, .1), las = 1, lwd = 0, lwd.ticks = 1)
+  axis(1, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1) # x-axis + lbls
+  axis(2, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1) # y-axis + lbls
 
-  # Subtitle/margin text:
-  mtext(paste0("Cue accuracies ranked by ", goal, ":"), 3, line = 0.25, adj = 0, cex = .9)
+  # Subtitle (as margin text):
+  mtext(paste0("Cue accuracies ranked by ", goal, ":"), side = 3, line = 0.25, adj = 0, cex = .9)
 
   # if (data == "test")  {mtext("Testing",  3, line = .5, adj = 1, cex = .9)}
   # if (data == "train") {mtext("Training", 3, line = .5, adj = 1, cex = .9)}
 
-
   par("xpd" = FALSE)
 
-  # Plot region:
+  # Plot region and grid:
   rect(-100, -100, 100, 100, col = gray(.96))
-  abline(h = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1)) # horizontal grid
-  abline(v = seq(0, 1, .1), lwd = c(1.5, .75), col = gray(1)) # vertical grid
-  abline(a = 0, b = 1, col = gray(.60), lty = 1)  # diagonal
+  abline(h = seq(0, 1, .1), lwd = c(2, rep(1, 4)), col = gray(1)) # horizontal grid
+  abline(v = seq(0, 1, .1), lwd = c(2, rep(1, 4)), col = gray(1)) # vertical grid
+
+  # Diagonal:
+  abline(a = 0, b = 1, col = gray(.60), lty = 1)
 
 
   # 3. Plot cues (as points): ------

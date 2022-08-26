@@ -110,6 +110,13 @@ Let's see how well our manually constructed FFT (`my_fft`) did:
 plot(my_fft)
 ```
 
+<!-- Note absence of ROC curve: -->
+
+When manually constructing a tree, the resulting `FFTrees` object only contains a single FFT. 
+Hence, the ROC plot (in the right bottom panel of **Figure\ 1**) cannot show a range of FFTs, but locates the constructed FFT in ROC space. 
+
+<!-- Performance: -->
+
 As it turns out, the performance of our first FFT created from a verbal description is a mixed affair: 
 The tree has a rather high sensitivity (of\ 91%), but its low specificity (of only\ 10%) allows for many false alarms. 
 Consequently, its accuracy measures are only around baseline level. 
@@ -135,7 +142,7 @@ plot(my_fft_2)
 ```
 
 This alternative FFT is nicely balancing sensitivity and specificity and performs much better overall. 
-Nevertheless, it is still far from perfect --- so check out whether you can create even better ones! 
+Nevertheless, it is still far from perfect ---\ so check out whether you can create even better ones! 
 
 <!-- TESTing: --> 
 

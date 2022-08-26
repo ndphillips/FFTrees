@@ -10,7 +10,6 @@
   what = "tree",
   tree = 1,
   main = NULL,
-  hlines = TRUE,
   cue.labels = NULL,
   decision.labels = NULL,
   cue.cex = NULL,
@@ -25,6 +24,7 @@
   show.roc = NULL,
   show.icons = NULL,
   show.iconguide = NULL,
+  hlines = TRUE,
   label.tree = NULL,
   label.performance = NULL,
   n.per.icon = NULL,
@@ -42,18 +42,16 @@ must be either \code{'train'} (for fitting performance) or \code{'test'} (for pr
 By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
 \item{what}{What should be plotted (as a string)?
-\code{'tree'} (the default) shows one tree (specified by \code{tree}).
-\code{'cues'} shows the marginal accuracy of cues in ROC space,
-\code{"roc"} shows the performance of tree(s) (and comparison algorithms) in ROC space.}
+\code{'tree'} (the default) shows details of one tree (specified by \code{tree});
+\code{'cues'} shows the marginal accuracy of cues in ROC space;
+\code{'roc'} shows the performance of tree(s) (and comparison algorithms) in ROC space.}
 
 \item{tree}{The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 Default: \code{tree = 1}.
 To plot the best training or best test tree with respect to the \code{goal} specified during FFT construction,
 use \code{"best.train"} or \code{"best.test"}, respectively.}
 
-\item{main}{The main plot label (as character string).}
-
-\item{hlines}{Should horizontal panel separation lines be shown (as logical)?}
+\item{main}{The main plot label (as a character string).}
 
 \item{cue.labels}{An optional string of labels for the cues / nodes (as character vector).}
 
@@ -65,10 +63,11 @@ use \code{"best.train"} or \code{"best.test"}, respectively.}
 
 \item{decision.cex}{The size of the decision labels (as numeric).}
 
-\item{comp}{Should the performance of competitive algorithms (e.g.; logistic regression, random forests etc.) be shown in the ROC plot (if available, as logical)?}
+\item{comp}{Should the performance of competitive algorithms (e.g.; logistic regression, random forests, etc.)
+be shown in the ROC plot (if available, as logical)?}
 
 \item{stats}{Should statistical information be plotted (as logical)?
-If \code{FALSE}, only the tree (without any reference to statistics) will be plotted.}
+If \code{FALSE}, only the tree diagram (without any reference to statistics) will be plotted.}
 
 \item{show.header}{Show header with basic data properties (in top panel, as logical)?}
 
@@ -84,6 +83,9 @@ If \code{FALSE}, only the tree (without any reference to statistics) will be plo
 
 \item{show.iconguide}{Show icon guide (in middle panel, as logical)?}
 
+\item{hlines}{Show horizontal panel separation lines (as logical)?
+Default: \code{hlines = TRUE}.}
+
 \item{label.tree}{Label for the FFT (optional, as character string).}
 
 \item{label.performance}{Labels for the performance section (optional, as character string).}
@@ -96,7 +98,9 @@ If \code{FALSE}, only the tree (without any reference to statistics) will be plo
 
 \item{decision.names}{deprecated argument.}
 
-\item{...}{Currently ignored.}
+\item{...}{Graphical parameters (passed either
+to \code{\link{showcues}} when \code{what = 'cues'} or
+to \code{\link{title}} when \code{what = 'roc'}).}
 }
 \value{
 A plot visualizing and describing an FFT.
@@ -109,10 +113,16 @@ called when evaluating the generic \code{\link{plot}} on an \code{FFTrees} objec
 
 \code{plot.FFTrees} visualizes a selected FFT, key data characteristics, and various aspects of classification performance.
 
-As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics for training data (i.e., fitting), rather than for test data (i.e., for prediction).
-When test data is available, specify \code{data = "test"} to plot prediction performance.
+As \code{x} may not contain test data, \code{plot.FFTrees} by default plots the performance characteristics
+for training data (i.e., fitting), rather than for test data (i.e., for prediction).
+When test data is available, specifying \code{data = "test"} plots prediction performance.
 
-Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits) can be customized by setting corresponding arguments.
+Whenever the sensitivity weight (\code{sens.w}) is set to its default of \code{sens.w = 0.50},
+a level shows \emph{balanced} accuracy (\code{bacc}). If, however, \code{sens.w} deviates from its default,
+the level shows the tree's \emph{weighted} accuracy value (\code{wacc}) and the current \code{sens.w} value (below the level).
+
+Many aspects of the plot (e.g., its panels) and the FFT's appearance (e.g., labels of its nodes and exits)
+can be customized by setting corresponding arguments.
 }
 \examples{
 # Create FFTs (for heartdisease data):

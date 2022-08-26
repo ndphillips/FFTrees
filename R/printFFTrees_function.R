@@ -107,15 +107,18 @@ print.FFTrees <- function(x = NULL,
 
   # Introductory text: ------
 
-  if (x$trees$n == 1) {
-    summary.text <- paste(x$params$algorithm, " FFT predicting ", x$criterion_name, " with up to ", n.cues, " nodes", sep = "")
+  if ((abs(x$trees$n) - 1) < .001) { # n = (approx.) 1:
+    # summary_text_1 <- paste(x$trees$n, " FFT predicting ", x$criterion_name, " with up to ", n.cues, " nodes", sep = "")
+    tree_s <- "tree"
   }
 
   if (x$trees$n > 1) {
-    summary.text <- paste(x$trees$n, " FFTs predicting ", x$criterion_name, " (", x$params$decision.labels[1], " v ", x$params$decision.labels[2], ")", sep = "")
+    # summary_text_2 <- paste(x$trees$n, " FFTs predicting ", x$criterion_name, " (", x$params$decision.labels[1], " v ", x$params$decision.labels[2], ")", sep = "")
+    tree_s <- "trees"
   }
 
-  params.text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', x$params$sens.w = ", x$params$x$params$sens.w, ", max.levels = ", x$params$max.levels)
+  # Algorithm, goals, etc. (used only in summary.FFTrees()):
+  # params_text <- paste0("pars: algorithm = '", x$params$algorithm, "', goal = '", x$params$goal, "', goal.chase = '", x$params$goal.chase, "', x$params$sens.w = ", x$params$x$params$sens.w, ", max.levels = ", x$params$max.levels)
 
 
   # General info on FFTrees object x: ------
@@ -123,27 +126,37 @@ print.FFTrees <- function(x = NULL,
   if (is.null(x$params$main) == FALSE) {
 
     cat(x$params$main)  # object title
-
     cat("\n")
   }
 
-  cat(crayon::blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
 
+  # FFTrees: ----
+
+  cat(crayon::blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
   cat("\n")
 
-  cat("- Trees: ", x$trees$n, " fast-and-frugal trees predicting ",
+  # Trees: ----
+
+  cat("- Trees: ", x$trees$n, " fast-and-frugal ", tree_s, " predicting ",
       crayon::underline(x$criterion_name), "\n",
       sep = ""
   )
+
+  # Outcome costs: ----
 
   cat("- Outcome costs: [hi = ", x$params$cost.outcomes$hi, ", mi = ", x$params$cost.outcomes$mi,
       ", fa = ", x$params$cost.outcomes$fa, ", cr = ", x$params$cost.outcomes$cr, "]\n",
       sep = ""
   )
 
-  out <- x$params$cost.cues[unlist(strsplit(train.cues, ","))]
 
+  # Cue costs: ----
+  #
+  # out <- x$params$cost.cues[unlist(strsplit(train.cues, ","))]
   # cat("- Cue costs: [", paste(names(out), "=", out, collapse = ", "), ", ...]\n", sep = "")
+
+
+  # Parameters of best.train tree: ----
   #
   # if(tree == x$trees$best$train) {
   #
@@ -161,7 +174,6 @@ print.FFTrees <- function(x = NULL,
   # FFT description: ------
 
   cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
-
   cat("\n")
 
   for (i in 1:length(x$trees$inwords[[tree]])) { # for each sentence:

@@ -64,6 +64,7 @@ summary.FFTrees <- function(object,
   o_main  <- object$params$main
   o_crit  <- object$criterion_name
   n_trees <- object$trees$n
+  if (n_trees > 1) { tree_s <- "trees" } else { tree_s <- "tree" }
   tree_options <- 1:n_trees
 
   digits <- 2  # N of digits to print in stats table
@@ -80,7 +81,20 @@ summary.FFTrees <- function(object,
   cat(crayon::blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
   cat("\n")
 
-  cat("- Trees: ", n_trees, " fast-and-frugal trees predicting ", crayon::underline(o_crit), "\n", sep = "")
+  cat("- Trees: ", n_trees, " fast-and-frugal ", tree_s, " predicting ", crayon::underline(o_crit), "\n", sep = "")
+
+
+  # Parameter summary: ------
+
+  # Algorithm, goals, etc.:
+  params_txt <- paste0("algorithm = '", object$params$algorithm,
+                       "', goal = '", object$params$goal,
+                       "', goal.chase = '", object$params$goal.chase,
+                       "',")
+  params_num <- paste0("sens.w = ", object$params$sens.w,
+                       ", max.levels = ", object$params$max.levels)
+
+  cat("- Parameters: ", params_txt, "\n", "              ", params_num, "\n", sep = "")
 
 
   # Print a FFT description (iff only 1 tree): ------

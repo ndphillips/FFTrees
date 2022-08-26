@@ -308,15 +308,18 @@ cost.cues.append <- function(formula,
 
 #' A wrapper for competing classification algorithms.
 #'
-#' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (rpart::rpart),
-#' logistic regression (glm), support vector machines (svm::svm), and random forests (randomForest::randomForest).
+#' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (\code{rpart::rpart}),
+#' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 #'
 #' @param formula a formula
 #' @param data.train dataframe. A training dataset.
 #' @param data.test dataframe. A testing dataset.
-#' @param algorithm string. An algorithm in the set "lr" -- logistic regression, cart" -- decision trees, "rlr" -- regularised logistic regression, "svm" -- support vector machines, "rf" -- random forests
+#' @param algorithm string. An algorithm in the set
+#' "lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularised logistic regression,
+#' "svm" -- support vector machines, "rf" -- random forests
 #' @param model model. An optional existing model applied to test data
-#' @param new.factors string. What should be done if new factor values are discovered in the test set? "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
+#' @param new.factors string. What should be done if new factor values are discovered in the test set?
+#' "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom stats model.frame formula glm model.matrix
@@ -814,7 +817,7 @@ factclean <- function(data.train,
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
 add_stats <- function(data,
-                      sens.w = .5,
+                      sens.w = .50,
                       cost.each = NULL,
                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
 
@@ -902,7 +905,7 @@ add_stats <- function(data,
 
 classtable <- function(prediction_v = NULL,
                        criterion_v,
-                       sens.w = .5,
+                       sens.w = .50,
                        cost.v = NULL,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
@@ -910,7 +913,7 @@ classtable <- function(prediction_v = NULL,
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   criterion_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
-  #   sens.w = .5
+  #   sens.w = .50
   #   cost.v = NULL
   #   correction = .25
   #   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
@@ -994,7 +997,12 @@ classtable <- function(prediction_v = NULL,
       bacc <- cm_byClass$Balanced.Accuracy
       wacc <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
 
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+      # dprime (corrected):
+      # hi_rate <- hi_c / (hi_c + mi_c)
+      # fa_rate <- fa_c / (fa_c + cr_c)
+      # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1003,6 +1011,7 @@ classtable <- function(prediction_v = NULL,
       # Cost per case:
       cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+
 
     } else { # Compute stats from freq combinations: ----
 
@@ -1028,12 +1037,14 @@ classtable <- function(prediction_v = NULL,
       ppv <- hi / (hi + fa)
       npv <- cr / (cr + mi)
 
-      acc <- (hi + cr) / c(hi + cr + mi + fa)
+      acc <- (hi + cr) / N
       acc_p <- NA
       bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
       wacc <- (sens * sens.w) + (spec * (1 - sens.w))
 
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(cr_c / (cr_c + fa_c))
+      # dprime (corrected):
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1110,6 +1121,64 @@ classtable <- function(prediction_v = NULL,
   return(result)
 
 } # classtable().
+
+
+
+# sens.w_epsion: ------
+
+# A constant/threshold: Minimum required difference
+# from the sens.w default value (sens.w = 0.50):
+
+sens.w_epsilon <- 10^-4
+
+
+
+# enable_wacc: ------
+
+# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
+# Output: Boolean value.
+
+enable_wacc <- function(sens.w){
+
+  out <- FALSE
+
+  if (abs(sens.w - .50) >= sens.w_epsilon){
+    out <- TRUE
+  }
+
+  return(out)
+
+} # enable_wacc().
+
+
+
+# get_bacc_wacc: ------
+
+# Obtain either bacc or wacc (for displays in print and plot functions).
+# Output: Named vector (with name specifying the current type of measure).
+
+get_bacc_wacc <- function(sens, spec,  sens.w){
+
+  if (enable_wacc(sens.w)){ # wacc:
+
+    value <- (sens * sens.w) + (spec * (1 - sens.w))
+    names(value) <- "wacc"
+
+  } else { # bacc:
+
+    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+    names(value) <- "bacc"
+
+  }
+
+  return(value)
+
+} # get_bacc_wacc().
+
+# # Check:
+# get_bacc_wacc(1, .80, .500)
+# get_bacc_wacc(1, .80, .501)
+# get_bacc_wacc(1, .80, 0)
 
 
 
@@ -1250,8 +1319,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   # Accuracy info: ----
 
-  # Compute statistics (or use add_stats() above):
-
+  # Compute acc statistics (or use add_stats() above):
   acc <- (hi + cr) / N
 
   ppv <- hi / (hi + fa)
@@ -1260,8 +1328,11 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   sens <- hi / (hi + mi)
   spec <- cr / (cr + fa)
 
-  bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
-  wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+  # bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+  # wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+
+  # Get either bacc OR wacc (based on sens.w):
+  bacc_wacc <- get_bacc_wacc(sens, spec, sens.w)
 
 
   # Print labels and values:
@@ -1273,16 +1344,20 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   cat("\n")
 
-  # cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
-  cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
+  # if (enable_wacc(sens.w)){ # print wacc:
+  #   cat("wacc =", scales::percent(wacc, accuracy = .1), sep = " ")
+  # } else { # print bacc:
+  #   cat("bacc =", scales::percent(bacc, accuracy = .1), sep = " ")
+  # }
+  cat(names(bacc_wacc), "=", scales::percent(bacc_wacc, accuracy = .1), sep = " ")
 
   cat("   sens =", scales::percent(sens, accuracy = .1), sep = " ")
   cat("   spec =", scales::percent(spec, accuracy = .1), sep = " ")
 
   cat("\n")
 
-  if (abs(sens.w - .50) > 10^-4){  # print sens.w:
-    cat("sens.w = ", round(sens.w, 3), sep = "")
+  if (enable_wacc(sens.w)){ # print sens.w (as round percentage value):
+    cat("sens.w = ", scales::percent(sens.w, accuracy = 1), sep = "")
     cat("\n")
   }
 
@@ -1336,7 +1411,7 @@ text.outline <- function(x, y,
   # Foreground:
   text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
 
-} # text.outline ().
+} # text.outline().
 
 
 
@@ -1385,6 +1460,8 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 
 # ToDo: ------
+
+# - Bring back dprime as goal and goal.chase (and verify its computation).
 
 # - Consider re-using add_stats() rather than re-computing stats in classtable(),
 #   or when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.

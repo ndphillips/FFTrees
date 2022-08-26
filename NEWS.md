@@ -18,8 +18,9 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 <!-- Blank line. --> 
 
 * Fixed bugs and improved functionality of `plot.FFTrees()`: 
+    - Improved plot for `what = 'ROC'` analogous to `what = 'cues'`. 
+    - Fixed bug to re-enable setting `tree` to `"best.train"` or `"best.test"`.
     - Corrected point labels in ROC curve panel. 
-    - Fixed bug to re-enable setting `tree` to `"best.train"` or `"best.test"`. 
     
 <!-- Blank line. --> 
 
@@ -226,6 +227,6 @@ You can also control whether the results from competing algorithms are displayed
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-16.] 
+[File `NEWS.md` last updated on 2022-08-21.] 
 
 <!-- eof. -->

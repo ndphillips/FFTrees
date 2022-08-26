@@ -61,7 +61,7 @@ Given this structure, an accurate decision algorithm aims to maximize the freque
 | `mi`   |  Number of misses | $N(\text{Decision} = 0 \land \text{Truth} = 1)$ |
 | `fa`   |  Number of false-alarms | $N(\text{Decision} = 1 \land \text{Truth} = 0)$ |
 | `cr`   |  Number of correct rejections | $N(\text{Decision} = 0 \land \text{Truth} = 0)$ |
-| `N`    |  Total number of cases| $N = hi + mi + fa + cr$ |
+| `N`    |  Total number of cases| $N = \text{hi} + \text{mi} + \text{fa} + \text{cr}$ |
 
 **Table 1**: Definitions of the frequency counts in a 2x2\ confusion table. The notation $N()$ means number of cases (or frequency counts). 
 
@@ -96,13 +96,13 @@ Additional accuracy statistics are based on all four cells in the confusion tabl
 
 | Output | Description | Formula | 
 |:------ |:------------------------------|:----------------------|
-| `acc`  | Accuracy | $(hi + cr) / (hi + mi + fa + cr)$ |
-| `bacc` | Balanced accuracy  | $sens \times .5 + spec \times .5$ |
-| `wacc` | Weighted accuracy  | $sens \times w + spec \times w$   |
-| `bpv`  | Balanced predictive value  | $ppv \times .5 + npv \times .5$ |
-| `dprime` | D-prime | $zsens - zfar$ |
+| `acc`  | Accuracy | $(\text{hi} + \text{cr}) / (\text{hi} + \text{mi} + \text{fa} + \text{cr})$ |
+| `bacc` | Balanced accuracy  | $\text{sens} \times .5 + \text{spec} \times .5$ |
+| `wacc` | Weighted accuracy  | $\text{sens} \times w + \text{spec} \times w$   |
+| `bpv`  | Balanced predictive value  | $\text{ppv} \times .5 + \text{npv} \times .5$ |
+| `dprime` | D-prime | $z_{\text{sens}} - z_{\text{far}}$ |
 
-**Table 3**: Aggreagte accuracy statistics based on all four cells of a 2x2\ confusion table.
+**Table 3**: Aggregate accuracy statistics based on all four cells of a 2x2\ confusion table.
 
 Overall _accuracy_ (`acc`) is defined as the overall percentage of correct decisions ignoring the difference between hits and correct rejections. The more specific measures\ $bacc$ and\ $wacc$ are averages of sensitivity and specificity, while\ $bpv$ is an average of predictive values. The $dprime$ measure is the difference in standardized ($z$-score) transformed\ $sens$ and\ $far$ [see @luan2011signal for the relation between FFTs and signal detection theory, SDT]. 
 
@@ -116,7 +116,7 @@ Rather, they depend on how much information FFTs use to make their predictions o
 | Output| Description | Formula | 
 |:------|:-----------------------------------------|:----------------------|
 | `mcu` | Mean cues used: Average number of cue values used in making classifications, averaged across all cases | |
-| `pci` | Percentage of cues ignored: Percentage of cues ignored when classifying cases | $N(\text{cues in data}) - mcu$ |
+| `pci` | Percentage of cues ignored: Percentage of cues ignored when classifying cases | $N(\text{cues in data}) - \text{mcu}$ |
 
 **Table 4**: Measures to quantify the speed and frugality of FFTs. 
 
