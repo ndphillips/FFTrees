@@ -11,16 +11,17 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 * Improved functionality of `print.FFTrees()`:
     - Added `data` argument to print an FFT's training performance (by default) or prediction performance (when test data is available). 
     - Enabled setting `tree` to `"best.train"` or `"best.test"` (as when plotting FFTs).  
+    - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
     - Improved readability of 2x2 confusion table (by right-justifying digits). 
-    - Reporting `wacc` rather than `bacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.5). 
     - Moved expected cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
 
 <!-- Blank line. --> 
 
 * Fixed bugs and improved functionality of `plot.FFTrees()`: 
     - Improved plot for `what = 'ROC'` analogous to `what = 'cues'`. 
+    - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
     - Fixed bug to re-enable setting `tree` to `"best.train"` or `"best.test"`.
-    - Corrected point labels in ROC curve panel. 
+    - Fixed bug to show correct point labels in ROC curve panel. 
     
 <!-- Blank line. --> 
 
@@ -33,9 +34,11 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 <!-- Blank line. --> 
 
-* Fixed bugs and improved functionality of `summary.FFTrees()`.
-    
+* Improved version of `summary.FFTrees()`.
+
 * Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
+
+<!-- Blank line. --> 
 
 ## Minor
 
@@ -227,6 +230,6 @@ You can also control whether the results from competing algorithms are displayed
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-21.] 
+[File `NEWS.md` last updated on 2022-08-27.] 
 
 <!-- eof. -->
