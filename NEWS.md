@@ -61,6 +61,12 @@ Changes since last release:
 
 # FFTrees 1.6
 
+**FFTrees** version 1.6.6 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-07-18].
+
+<!-- Log of changes: --> 
+
+Changes since last release: 
+
 ## 1.6.6
 
 * Fixed bug causing `plot.FFTrees()` to not display plots properly.
@@ -88,6 +94,8 @@ Changes since last release:
 * Deprecation notes in `plot.FFTrees()` are now returned as warnings, not messages. 
 
 
+------ 
+
 # FFTrees 1.5
 
 ## 1.5.7
@@ -103,6 +111,7 @@ Changes since last release:
 - Extensive code cleanup, which should speed things up.
 - New print method includes an ASCII confusion matrix. 
 
+------ 
 
 # FFTrees 1.4
 
@@ -113,6 +122,7 @@ Changes since last release:
 - New cost outputs separate costs from cues, outcomes, and total costs.
 - Changes to input defaults for `goal` and `goal.chase`.
 
+------ 
 
 # FFTrees 1.3
 
@@ -157,6 +167,8 @@ E.g., `my.tree = 'If age > 30, predict True. If sex = {m}, predict False. Otherw
 The algorithms are contained in the file `heuristic_algorithm.R` and can be implemented in `FFTrees()` as arguments to `algorithm`.
 
 
+------ 
+
 # FFTrees 1.2
 
 ## 1.2.3
@@ -193,6 +205,7 @@ You can also control whether the results from competing algorithms are displayed
 - Bug-fixes: 
     - Fixed a bug where levels with no classifications are not plotted correctly.
 
+------ 
 
 ## FFTrees 1.1
 
