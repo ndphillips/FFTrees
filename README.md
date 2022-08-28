@@ -277,7 +277,7 @@ We encourage you to read the article to learn more about the history of
 FFTs and how the **FFTrees** package creates, visualizes, and evaluates
 them. If you use **FFTrees** in your own work, please cite us and share
 your experiences (e.g., [on
-Github](https://github.com/ndphillips/FFTrees/issues)) so we can
+GitHub](https://github.com/ndphillips/FFTrees/issues)) so we can
 continue developing the package.
 
 <!-- Examples uses/publications (with links): -->

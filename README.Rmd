@@ -204,7 +204,7 @@ Retrieved from `r url_JDM_pdf`
 
 
 We encourage you to read the article to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
-If you use **FFTrees** in your own work, please cite us and share your experiences (e.g., [on Github](`r url_pkg_issues`)) so we can continue developing the package. 
+If you use **FFTrees** in your own work, please cite us and share your experiences (e.g., [on GitHub](`r url_pkg_issues`)) so we can continue developing the package. 
 
 <!-- Examples uses/publications (with links): -->
 
