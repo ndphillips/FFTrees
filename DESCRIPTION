@@ -31,7 +31,8 @@ Imports:
     tibble,
     tidyselect
 Suggests: 
-    rmarkdown
+    rmarkdown,
+    spelling
 License: CC0
 URL: https://CRAN.R-project.org/package=FFTrees 
 BugReports: https://github.com/ndphillips/FFTrees/issues
