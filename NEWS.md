@@ -1,10 +1,11 @@
 
-# FFTrees 1.6+
+# FFTrees 1.7
 
-<!-- Note version and date of last release: --> 
+**FFTrees** version 1.7 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
 
-Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees): 
-**FFTrees** version\ 1.6.6 [on 2022-07-18]:  
+<!-- Log of changes: --> 
+
+Changes since last release: 
 
 ## Major
 
@@ -54,11 +55,11 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 * Revised text, examples, and links in vignettes. 
 * Cleanup of code and documentation.
 
-<!-- Blank line. --> 
+<!-- Previous versions --> 
 
 ------ 
 
-# Released versions {-}
+# FFTrees 1.6
 
 ## 1.6.6
 
@@ -230,6 +231,6 @@ You can also control whether the results from competing algorithms are displayed
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-27.] 
+[File `NEWS.md` last updated on 2022-08-28.] 
 
 <!-- eof. -->
