@@ -323,7 +323,7 @@ fftrees_grow_fan <- function(x,
 
         # NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS
 
-        # Get cumulative stats of examplars currently classified
+        # Get cumulative stats of exemplars currently classified
 
         results_cum <- classtable(
           prediction_v = decision_v[cases_remaining == FALSE],

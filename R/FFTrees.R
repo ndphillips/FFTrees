@@ -29,7 +29,7 @@
 #' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule.
 #' For stopping.rule \code{"levels"}, this is the number of levels.
-#' For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
+#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
 #'
 #' @param goal character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy, \code{"cost"} = cue costs.
