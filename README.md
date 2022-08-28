@@ -302,8 +302,8 @@ for the full list):
 -   [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N.,
     Appold, S., Belderbos, J., … & Mantel, F. (2020). Correlating dose
     variables with local tumor control in stereotactic body radiotherapy
-    for early stage non-small cell lung cancer: A modelling study on
-    1500 individual treatments. *International Journal of Radiation
+    for early stage non-small cell lung cancer: A modeling study on 1500
+    individual treatments. *International Journal of Radiation
     Oncology \* Biology \*
     Physics*.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
 

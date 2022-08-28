@@ -215,7 +215,7 @@ _Journal of Neurology_, _267_(2), 469-478.](https://link.springer.com/article/10
 
 - [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. _Acta Orthopaedica_, _91_(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
 
-- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modelling study on 1500 individual treatments. 
+- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modeling study on 1500 individual treatments. 
 _International Journal of Radiation Oncology * Biology * Physics_.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
 
 - [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J. (2019). 

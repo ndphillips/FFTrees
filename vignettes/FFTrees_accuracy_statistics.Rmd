@@ -69,7 +69,7 @@ Given this structure, an accurate decision algorithm aims to maximize the freque
 ### Conditional accuracy statistics
 
 The first set of accuracy statistics are based on subsets of the data. 
-These subsets result from focusing on particular cases of interest and computing conditional probablities based on them. 
+These subsets result from focusing on particular cases of interest and computing conditional probabilities based on them. 
 Given the 2x2 structure of the confusion table, measures can be conditional on either algorithm decisions (positive predictive vs. negative predictive values) or criterion values (sensitivity vs. specificity). In other words, these measures are conditional probabilities that are based on either the rows or columns of the confusion table:
 
 

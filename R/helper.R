@@ -315,7 +315,7 @@ cost.cues.append <- function(formula,
 #' @param data.train dataframe. A training dataset.
 #' @param data.test dataframe. A testing dataset.
 #' @param algorithm string. An algorithm in the set
-#' "lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularised logistic regression,
+#' "lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularized logistic regression,
 #' "svm" -- support vector machines, "rf" -- random forests
 #' @param model model. An optional existing model applied to test data
 #' @param new.factors string. What should be done if new factor values are discovered in the test set?

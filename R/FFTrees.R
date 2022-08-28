@@ -7,7 +7,7 @@
 #' Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
 #' that can then be printed, plotted, and examined further.
 #'
-#' The criterion and preditor variables are specified in \code{\link{formula}} notation.
+#' The criterion and predictor variables are specified in \code{\link{formula}} notation.
 #' Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 #'
 #' @param formula formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).

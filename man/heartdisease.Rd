@@ -21,7 +21,7 @@ A data frame containing 303 rows and 14 columns, with the following variables:
   \item{oldpeak}{ST depression induced by exercise relative to rest }
   \item{slope}{The slope of the peak exercise ST segment. }
   \item{ca}{Number of major vessels (0-3) colored by flourosopy }
-  \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversable defect}
+  \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversible defect}
 
   ...
 }
@@ -38,7 +38,7 @@ A dataset predicting the \code{diagnosis} of 303 patients tested for heart disea
 \seealso{
 \code{\link{heart.cost}} dataset for cost information.
 
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},
