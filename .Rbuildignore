@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^NEWS\.md$
 ^\.travis\.yml$
 ^javascripts
 ^params\.json
@@ -10,3 +9,5 @@
 ^doc$
 ^Meta$
 ^_gitless$
+^cran-comments.md$
+^CRAN-RELEASE$
