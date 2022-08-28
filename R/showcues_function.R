@@ -205,7 +205,7 @@ showcues <- function(x = NULL,
   axis(2, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1) # y-axis + lbls
 
   # Subtitle (as margin text):
-  mtext(paste0("Cue accuracies ranked by ", goal, ":"), side = 3, line = 0.25, adj = 0, cex = .9)
+  mtext(paste0("Cue accuracies ranked by ", goal, ":"), side = 3, line = 0.25, adj = 0, cex = .90)
 
   # if (data == "test")  {mtext("Testing",  3, line = .5, adj = 1, cex = .9)}
   # if (data == "train") {mtext("Training", 3, line = .5, adj = 1, cex = .9)}
@@ -263,28 +263,39 @@ showcues <- function(x = NULL,
 
   location.df <- data.frame(
     element = c("points", "point.num", "cue.name", "cue.thresh", "sens", "spec", "wacc"),
-    x.loc = c(.5, .5, .67, .68, .83, .9, .97),
+    x.loc = c(.50, .50, .67, .68, .83, .90, .97),
     adj = c(.5, 0, 1, 0, .5, .5, .5),
     cex = c(1, 1, 1, 1, 1, 1, 1)
   )
 
-  cue.box.x0 <- .45
+  cue.box.y_max <- .48 - 0.05
+  cue.box.x0    <- .45
   cue.box.x1 <- 1.02
   cue.box.y0 <- 0
-  cue.box.y1 <- .43
+
+  if (top >= 5){
+    cue.box.y1 <- .43 - 0.05
+  } else {
+    cue.box.y1 <- c(.25, .30, .35, .40)[top] - 0.05
+  }
 
   cue.lab.h <- (cue.box.y1 - cue.box.y0) / top
 
-  cue.lab.y <- rev(seq((cue.box.y0 + cue.lab.h / 2), cue.box.y1 - cue.lab.h / 2, length.out = top))
-  cue.sep.y <- seq(cue.box.y0 + cue.lab.h, cue.box.y1 - cue.lab.h, length.out = top - 1)
+  cue.lab.y <- rev(seq((cue.box.y0 + cue.lab.h / 2), (cue.box.y1 - cue.lab.h / 2), length.out = top))
 
-  header.y  <- mean(c(cue.box.y1, .48))
-  label.cex <- .8
+  if (top > 1){
+    cue.sep.y <- seq(cue.box.y0 + cue.lab.h, cue.box.y1 - cue.lab.h, length.out = top - 1)
+  } else {
+    cue.sep.y <- 0
+  }
+
+  header.y  <- mean(c(cue.box.y1, cue.box.y_max))
+  label.cex <- .80
 
   # Background:
-  rect(cue.box.x0, cue.box.y0, cue.box.x1, .48,
-       col = scales::alpha("white", .2),
-       border = gray(.2)
+  rect(cue.box.x0, cue.box.y0, cue.box.x1, cue.box.y_max,
+       col = gray(.98),
+       border = gray(.20)
   )
 
   #    a. Column labels: ----
@@ -311,7 +322,7 @@ showcues <- function(x = NULL,
       location.df$x.loc[location.df$element == "wacc"]
     ),
     y = header.y,
-    labels = c(c("rank", "cue + thresh", "sens", "spec"), label_fin),
+    labels = c(c("Rank", "cue + thresh", "sens", "spec"), label_fin),
     font = 1, cex = label.cex
   )
 
