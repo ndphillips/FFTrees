@@ -1,11 +1,15 @@
 #' Perform a grid search over factor and return accuracy statistics for a given factor cue
 #'
 #' @param thresholds numeric. A vector of factor thresholds to consider.
-#' @param cue_v numeric. Feature values.
-#' @param criterion_v logical. Criterion values.
+#' @param cue_v numeric. Feature/cue values.
+#' @param criterion_v logical. A logical vector of (TRUE) criterion values.
 #' @param directions character. Character vector of threshold directions to consider.
-#' @param sens.w numeric.
-#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
+#' Default: \code{sens.w = .50}.
+#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
+#' the costs of a hit, false alarm, miss, and correct rejection, respectively.
+#' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
+#' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
 #' @param cost.each numeric.
 #' @param goal.threshold character.
 #'
@@ -22,7 +26,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                           cue_v = NULL,
                                           criterion_v = NULL,
                                           directions = "=",
-                                          sens.w = .5,
+                                          sens.w = .50,
                                           cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                                           cost.each = 0,
                                           goal.threshold = "bacc") {

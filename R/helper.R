@@ -892,12 +892,16 @@ add_stats <- function(data,
 #'
 #' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
 #'
-#' @param prediction_v logical. A logical vector of predictions
-#' @param criterion_v logical A logical vector of criterion (true) values
-#' @param sens.w numeric. Weight given to sensitivity, must range from 0 to 1.
+#' @param prediction_v logical. A logical vector of predictions.
+#' @param criterion_v logical. A logical vector of (TRUE) criterion values.
+#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
+#' Default: \code{sens.w = .50}.
 #' @param cost.v list. An optional list of additional costs to be added to each case.
-#' @param correction numeric. Correction added to all counts for calculating dprime
-#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.
+#' @param correction numeric. Correction added to all counts for calculating dprime.
+#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
+#' the costs of a hit, false alarm, miss, and correct rejection, respectively.
+#' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
+#' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
 #' @param na_prediction_action not sure.
 #'
 #' @importFrom stats qnorm

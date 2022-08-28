@@ -39,7 +39,7 @@ knitr::include_graphics("../inst/titanic.jpg")
 ```
 
 The `titanic` dataset contains basic survival statistics of _Titanic_ passengers. 
-For each passenger, we know in which class s/he travelled, as well as binary categories specifying age, sex, and survival information. 
+For each passenger, we know in which class s/he traveled, as well as binary categories specifying age, sex, and survival information. 
 To get a first impression, we inspect a random sample of cases: 
 
 ```{r titanic-data-head}
@@ -136,7 +136,7 @@ The feedback of the bottom panel is structured into three subpanels:
 
 Specifying additional arguments of `plot()` changes what is being displayed: 
 
-- `stats`: To visualise a bare tree (without performance statistics), we can use `stats = FALSE`:
+- `stats`: To visualize a bare tree (without performance statistics), we can use `stats = FALSE`:
 
 ```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "75%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
 # Show only the best training FFT:
@@ -216,7 +216,7 @@ plot(titanic.pred.fft, tree = 1)
 Tree\ #1 is the best training tree (and could also be visualized by `plot(titanic.pred.fft, tree = "best.train")`). 
 This tree has a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
 The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
-However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART perfomed even worse than Tree\ #1.
+However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART performed even worse than Tree\ #1.
 
 Now let's apply the same tree to the _test_ data: 
 
