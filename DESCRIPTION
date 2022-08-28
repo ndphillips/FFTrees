@@ -4,9 +4,9 @@ Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
 Version: 1.7
 Date: 2022-08-28
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut"), email = "Nathaniel.D.Phillips.is@gmail.com"),
-             person("Hansjoerg", "Neth", role = c("aut", "cre"), email = "h.neth@uni.kn"),
-             person("Jan", "Woike", role = "aut"),
-             person("Wolfgang", "Gaissmaier", role = "aut"))
+             person("Hansjoerg", "Neth", role = c("aut", "cre"), email = "h.neth@uni.kn", comment = c(ORCID = "0000-0001-5427-3141")),
+             person("Jan", "Woike", role = "aut", comment = c(ORCID = "0000-0002-6816-121X")),
+             person("Wolfgang", "Gaissmaier", role = "aut", comment = c(ORCID = "0000-0001-6273-178X")))
 Maintainer: Hansjoerg Neth <h.neth@uni.kn>
 Description: Create, visualize, and test fast-and-frugal decision trees (FFTs) using methods described in Phillips, Neth, Woike & Gaissmaier (2017). FFTs are very simple decision trees for
     binary classification problems. FFTs can be preferable to more complex algorithms because they are easy to communicate, 
