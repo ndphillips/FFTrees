@@ -7,7 +7,7 @@
 #' Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
 #' that can then be printed, plotted, and examined further.
 #'
-#' The criterion and preditor variables are specified in \code{\link{formula}} notation.
+#' The criterion and predictor variables are specified in \code{\link{formula}} notation.
 #' Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 #'
 #' @param formula formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).
@@ -29,7 +29,7 @@
 #' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
 #' @param stopping.par numeric. A number indicating the parameter for the stopping rule.
 #' For stopping.rule \code{"levels"}, this is the number of levels.
-#' For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.
+#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
 #'
 #' @param goal character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
 #' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy, \code{"cost"} = cue costs.

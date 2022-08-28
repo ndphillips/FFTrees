@@ -21,7 +21,7 @@ comp.pred(
 \item{data.test}{dataframe. A testing dataset.}
 
 \item{algorithm}{string. An algorithm in the set
-"lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularised logistic regression,
+"lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularized logistic regression,
 "svm" -- support vector machines, "rf" -- random forests}
 
 \item{model}{model. An optional existing model applied to test data}

@@ -69,7 +69,7 @@ Cues not present in \code{cost.cues} are assumed to have no costs (i.e., a value
 
 \item{stopping.par}{numeric. A number indicating the parameter for the stopping rule.
 For stopping.rule \code{"levels"}, this is the number of levels.
-For stopping rule \code{"exemplars"}, this is the smallest percentage of examplars allowed in the last level.}
+For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.}
 
 \item{goal}{character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.}
 
@@ -133,7 +133,7 @@ FFTs are decision algorithms for solving binary classification tasks, i.e., they
 Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
 that can then be printed, plotted, and examined further.
 
-The criterion and preditor variables are specified in \code{\link{formula}} notation.
+The criterion and predictor variables are specified in \code{\link{formula}} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 
 Create fast-and-frugal trees (FFTs).

@@ -1,26 +1,28 @@
 
-# FFTrees 1.6+
+# FFTrees 1.7
 
-<!-- Note version and date of last release: --> 
+**FFTrees** version 1.7 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
 
-Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees): 
-**FFTrees** version\ 1.6.6 [on 2022-07-18]:  
+<!-- Log of changes: --> 
+
+Changes since last release: 
 
 ## Major
 
 * Improved functionality of `print.FFTrees()`:
     - Added `data` argument to print an FFT's training performance (by default) or prediction performance (when test data is available). 
     - Enabled setting `tree` to `"best.train"` or `"best.test"` (as when plotting FFTs).  
+    - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
     - Improved readability of 2x2 confusion table (by right-justifying digits). 
-    - Reporting `wacc` rather than `bacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.5). 
     - Moved expected cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
 
 <!-- Blank line. --> 
 
 * Fixed bugs and improved functionality of `plot.FFTrees()`: 
     - Improved plot for `what = 'ROC'` analogous to `what = 'cues'`. 
+    - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
     - Fixed bug to re-enable setting `tree` to `"best.train"` or `"best.test"`.
-    - Corrected point labels in ROC curve panel. 
+    - Fixed bug to show correct point labels in ROC curve panel. 
     
 <!-- Blank line. --> 
 
@@ -33,9 +35,11 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 
 <!-- Blank line. --> 
 
-* Fixed bugs and improved functionality of `summary.FFTrees()`.
-    
+* Improved version of `summary.FFTrees()`.
+
 * Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
+
+<!-- Blank line. --> 
 
 ## Minor
 
@@ -51,11 +55,17 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 * Revised text, examples, and links in vignettes. 
 * Cleanup of code and documentation.
 
-<!-- Blank line. --> 
+<!-- Previous versions --> 
 
 ------ 
 
-# Released versions {-}
+# FFTrees 1.6
+
+**FFTrees** version 1.6.6 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-07-18].
+
+<!-- Log of changes: --> 
+
+Changes since last release: 
 
 ## 1.6.6
 
@@ -84,6 +94,8 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 * Deprecation notes in `plot.FFTrees()` are now returned as warnings, not messages. 
 
 
+------ 
+
 # FFTrees 1.5
 
 ## 1.5.7
@@ -99,6 +111,7 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 - Extensive code cleanup, which should speed things up.
 - New print method includes an ASCII confusion matrix. 
 
+------ 
 
 # FFTrees 1.4
 
@@ -109,6 +122,7 @@ Changes since last release [on CRAN](https://CRAN.R-project.org/package=FFTrees)
 - New cost outputs separate costs from cues, outcomes, and total costs.
 - Changes to input defaults for `goal` and `goal.chase`.
 
+------ 
 
 # FFTrees 1.3
 
@@ -153,6 +167,8 @@ E.g., `my.tree = 'If age > 30, predict True. If sex = {m}, predict False. Otherw
 The algorithms are contained in the file `heuristic_algorithm.R` and can be implemented in `FFTrees()` as arguments to `algorithm`.
 
 
+------ 
+
 # FFTrees 1.2
 
 ## 1.2.3
@@ -189,6 +205,7 @@ You can also control whether the results from competing algorithms are displayed
 - Bug-fixes: 
     - Fixed a bug where levels with no classifications are not plotted correctly.
 
+------ 
 
 ## FFTrees 1.1
 
@@ -202,12 +219,12 @@ You can also control whether the results from competing algorithms are displayed
 
 ## 1.1.6
 
-- Streamlined code to improve cohesion between functions. This may cause issues with FFTrees objects created with earlier versions of the package. They will need to be re-created.
-- Updated, clearer `print.FFTrees()` method to see important info about an FFTrees object in matrix format.
-- Training and testing statistics are now always in seperate objects (e.g.; `data$train`, `data$test`) to avoid confusion.
+- Streamlined code to improve cohesion between functions. This may cause issues with `FFTrees` objects created with earlier versions of the package. They will need to be re-created.
+- Updated, clearer `print.FFTrees()` method to see important info about an `FFTrees` object in matrix format.
+- Training and testing statistics are now in separate objects (e.g., `data$train` vs. `data$test`) to avoid confusion.
 
 - Bug-fixes:  
-    - `predict.FFTrees()` now works much better by passing a new dataset (`data.test`) as a test dataset for an existing FFTrees object.
+    - `predict.FFTrees()` now works much better by passing a new dataset (`data.test`) as a test dataset for an existing `FFTrees` object.
 
 ## 1.1.5
 
@@ -221,12 +238,13 @@ You can also control whether the results from competing algorithms are displayed
     - Changed `which.tree` argument in `plot.FFTrees()` to `tree` to conform to blog posts.
     - `predict.FFTrees()` now works better with `tibble` inputs.
     
-- Changed the `fft` label to `FFTrees` throughout the package to avoid confusion with fast fourier transform. Thus, the main tree building function is now `FFTrees()` and the new tree object class is `FFTrees`. 
+- Changed the `fft` label to `FFTrees` throughout the package to avoid confusion with fast fourier transform. 
+Thus, the main tree building function is now `FFTrees()` and the new tree object class is `FFTrees`. 
 
 <!-- footer: --> 
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-21.] 
+[File `NEWS.md` last updated on 2022-08-28.] 
 
 <!-- eof. -->

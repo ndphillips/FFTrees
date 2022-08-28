@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.6.6.9020 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -277,7 +277,7 @@ We encourage you to read the article to learn more about the history of
 FFTs and how the **FFTrees** package creates, visualizes, and evaluates
 them. If you use **FFTrees** in your own work, please cite us and share
 your experiences (e.g., [on
-Github](https://github.com/ndphillips/FFTrees/issues)) so we can
+GitHub](https://github.com/ndphillips/FFTrees/issues)) so we can
 continue developing the package.
 
 <!-- Examples uses/publications (with links): -->
@@ -302,8 +302,8 @@ for the full list):
 -   [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N.,
     Appold, S., Belderbos, J., … & Mantel, F. (2020). Correlating dose
     variables with local tumor control in stereotactic body radiotherapy
-    for early stage non-small cell lung cancer: A modelling study on
-    1500 individual treatments. *International Journal of Radiation
+    for early stage non-small cell lung cancer: A modeling study on 1500
+    individual treatments. *International Journal of Radiation
     Oncology \* Biology \*
     Physics*.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
 
@@ -322,6 +322,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-08-22.\]
+\[File `README.Rmd` last updated on 2022-08-28.\]
 
 <!-- eof. -->
