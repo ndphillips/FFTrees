@@ -20,15 +20,19 @@ fftrees_threshold_numeric_grid(
 
 \item{cue_v}{numeric. Feature values.}
 
-\item{criterion_v}{logical. Criterion values.}
+\item{criterion_v}{logical. A logical vector of (TRUE) criterion values.}
 
 \item{directions}{character. Possible directions to consider.}
 
-\item{sens.w}{numeric.}
+\item{sens.w}{numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
+Default: \code{sens.w = .50}.}
 
 \item{cost.each}{numeric. Cost to add to each value (e.g.; cost of  the cue).}
 
-\item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying the costs of a hit, false alarm, miss, and correct rejection rspectively. E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20 respectively while correct decisions have no cost.}
+\item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
+the costs of a hit, false alarm, miss, and correct rejection, respectively.
+For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
+a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.}
 
 \item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy.}
 }
