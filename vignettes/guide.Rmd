@@ -102,16 +102,16 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 
 ### Datasets
 
-The **FFTrees** package contains several datasets ---\ mostly from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/)\ --- that allow you to address interesting questions when exploring FFTs: 
+The **FFTrees** package contains several datasets ---\ mostly from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/)\ --- that allow you to address interesting questions when exploring FFTs: 
 
-- `heartdisease` -- Which patients suffer from heart disease? [source](http://archive.ics.uci.edu/ml/datasets/Heart+Disease)
+- `heartdisease` -- Which patients suffer from heart disease? [source](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)
 - `breastcancer` -- Which patients suffer from breast cancer? [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
 - `fertility` -- Which factors predict a fertile sperm concentration? [source](https://archive.ics.uci.edu/ml/datasets/Fertility)
-- `forestfires` -- Which environmental conditions predict forest fires? [source](http://archive.ics.uci.edu/ml/datasets/Forest+Fires)
-- `mushrooms` -- Which features predict poisonous mushrooms? [source](http://archive.ics.uci.edu/ml/datasets/Mushroom)
+- `forestfires` -- Which environmental conditions predict forest fires? [source](https://archive.ics.uci.edu/ml/datasets/Forest+Fires)
+- `mushrooms` -- Which features predict poisonous mushrooms? [source](https://archive.ics.uci.edu/ml/datasets/Mushroom)
 - `titanic` -- Which passengers survived the Titanic? [source](https://www.encyclopedia-titanica.org) 
 - `voting` -- How did U.S. congressmen vote in 1984? [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
-- `wine` -- What determines ratings of wine quality? [source](http://archive.ics.uci.edu/ml/datasets/Wine)
+- `wine` -- What determines ratings of wine quality? [source](https://archive.ics.uci.edu/ml/datasets/Wine)
 
 
 ## Citation information
