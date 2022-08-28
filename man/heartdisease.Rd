@@ -38,7 +38,7 @@ A dataset predicting the \code{diagnosis} of 303 patients tested for heart disea
 \seealso{
 \code{\link{heart.cost}} dataset for cost information.
 
-Other datasets:
+Other datasets: 
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},
