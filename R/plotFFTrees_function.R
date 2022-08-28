@@ -1951,11 +1951,6 @@ plot.FFTrees <- function(x = NULL,
           # Title:
           title(main = roc_title, ...)  # + graphical parameters
 
-          # Subtitle/note on data:
-          subnote <- paste0("ROC for '", data, "' data:")
-          text(x = (final.roc.x.loc[1] - .015), y = (final.roc.y.loc[2] + .03),
-               labels = subnote, pos = 4, cex = subheader.cex)
-
           # Background:
           rect(final.roc.x.loc[1], final.roc.y.loc[1], final.roc.x.loc[2], final.roc.y.loc[2],
                col = gray(.96))  # as in showcues()
@@ -1977,6 +1972,11 @@ plot.FFTrees <- function(x = NULL,
           # Axis labels:
           text(mean(final.roc.x.loc), final.roc.y.loc[1] - .125, labels = x_lbl, cex = 1) # x-lab
           text(final.roc.x.loc[1] - (3.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, cex = 1, srt = 90) # y-lab
+
+          # Subtitle: Note data used
+          subnote <- paste0("ROC for '", data, "' data:")
+          text(x = (final.roc.x.loc[1] - .015), y = (final.roc.y.loc[2] + .03),
+               labels = subnote, pos = 4, cex = subheader.cex)
 
 
         } else { # ROC as miniature plot:

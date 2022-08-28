@@ -8,9 +8,9 @@ Authors@R: c(person("Nathaniel", "Phillips", role = c("aut"), email = "Nathaniel
              person("Jan", "Woike", role = "aut", comment = c(ORCID = "0000-0002-6816-121X")),
              person("Wolfgang", "Gaissmaier", role = "aut", comment = c(ORCID = "0000-0001-6273-178X")))
 Maintainer: Hansjoerg Neth <h.neth@uni.kn>
-Description: Create, visualize, and test fast-and-frugal decision trees (FFTs) using methods described in Phillips, Neth, Woike & Gaissmaier (2017). FFTs are very simple decision trees for
-    binary classification problems. FFTs can be preferable to more complex algorithms because they are easy to communicate, 
-    require very little information, and are robust against overfitting.
+Description: Create, visualize, and test fast-and-frugal decision trees (FFTs) using the algorithms and methods described in Phillips, Neth, Woike & Gaissmaier (2017). 
+    FFTs are simple and transparent decision trees for solving binary classification problems. 
+    FFTs can be preferable to more complex algorithms because they require very little information, are easy to communicate, and are robust against overfitting.
 LazyData: true
 Encoding: UTF-8
 Depends: R(>= 3.5.0)
