@@ -268,15 +268,15 @@ showcues <- function(x = NULL,
     cex = c(1, 1, 1, 1, 1, 1, 1)
   )
 
-  cue.box.y_max <- .48 - 0.05
+  cue.box.y_max <- .43
   cue.box.x0    <- .45
   cue.box.x1 <- 1.02
   cue.box.y0 <- 0
 
   if (top >= 5){
-    cue.box.y1 <- .43 - 0.05
+    cue.box.y1 <- .38
   } else {
-    cue.box.y1 <- c(.25, .30, .35, .40)[top] - 0.05
+    cue.box.y1 <- c(.18, .23, .28, .33)[top]
   }
 
   cue.lab.h <- (cue.box.y1 - cue.box.y0) / top
