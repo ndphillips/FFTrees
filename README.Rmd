@@ -42,7 +42,7 @@ The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal dec
 ## What are fast-and-frugal trees (FFTs)?
 
 _Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems. 
-The key feature making FFTs faster and more frugal than other decision trees is that every node allows for a decision or prediction. 
+The key feature making FFTs faster and more frugal than other decision trees is that every node allows for a decision. 
 When predicting new outcomes, the performance of FFTs competes with more complex algorithms and machine learning techniques, such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
 Apart from being faster and requiring less information, FFTs tend to be robust against overfitting, and easy to interpret, use, and communicate. 
 
@@ -127,7 +127,7 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 heart.fft
 ```
 
-- To evaluate the predictive performance of an FFT, we plot an `FFTrees` object to visualize a tree and its performance:
+- To evaluate the predictive performance of an FFT, we plot an `FFTrees` object to visualize a tree and its performance (on the `test` data): 
 
 ```{r example-heart-plot, eval = FALSE}
 # Plot the best tree applied to the test data: 
@@ -136,11 +136,11 @@ plot(heart.fft,
      main = "Heart Disease")
 ```
 
-![A fast-and-frugal tree (FFT) predicting heart disease with data and performance characteristics.](man/figures/README-example-heart-plot-1.png)
+![A fast-and-frugal tree (FFT) predicting heart diseases for `test` data and its performance characteristics.](man/figures/README-example-heart-plot-1.png)
 
-**Figure\ 1**: A fast-and-frugal tree (FFT) predicting heart disease with data and performance characteristics.  
+**Figure\ 1**: A fast-and-frugal tree (FFT) predicting heart disease for `test` data and its performance characteristics.  
 
-- Additionally, we can compare the predictive performance between different algorithms on a range of metrics: 
+- Additionally, we can compare the predictive performance between different machine learning algorithms on a range of metrics: 
 
 ```{r example-heart-comp}
 # Compare predictive performance across algorithms: 

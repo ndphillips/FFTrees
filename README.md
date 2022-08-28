@@ -25,12 +25,12 @@ as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 *Fast-and-frugal trees* (FFTs) are simple and transparent decision
 algorithms for solving binary classification problems. The key feature
 making FFTs faster and more frugal than other decision trees is that
-every node allows for a decision or prediction. When predicting new
-outcomes, the performance of FFTs competes with more complex algorithms
-and machine learning techniques, such as logistic regression (LR),
-support-vector machines (SVM), and random forests (RF). Apart from being
-faster and requiring less information, FFTs tend to be robust against
-overfitting, and easy to interpret, use, and communicate.
+every node allows for a decision. When predicting new outcomes, the
+performance of FFTs competes with more complex algorithms and machine
+learning techniques, such as logistic regression (LR), support-vector
+machines (SVM), and random forests (RF). Apart from being faster and
+requiring less information, FFTs tend to be robust against overfitting,
+and easy to interpret, use, and communicate.
 
 <!-- Quote (cited in guide.Rmd):   -->
 <!-- In the words of @burton2020:  -->
@@ -172,7 +172,8 @@ evaluate their predictive performance on the `heart.test` data:
     #> mcu = 1.74,  pci = 0.87,  E(cost) = 0.200
 
 -   To evaluate the predictive performance of an FFT, we plot an
-    `FFTrees` object to visualize a tree and its performance:
+    `FFTrees` object to visualize a tree and its performance (on the
+    `test` data):
 
 <!-- -->
 
@@ -181,15 +182,15 @@ evaluate their predictive performance on the `heart.test` data:
          data = "test",
          main = "Heart Disease")
 
-![A fast-and-frugal tree (FFT) predicting heart disease with data and
-performance
+![A fast-and-frugal tree (FFT) predicting heart diseases for `test` data
+and its performance
 characteristics.](man/figures/README-example-heart-plot-1.png)
 
-**Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease with
-data and performance characteristics.
+**Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
+`test` data and its performance characteristics.
 
 -   Additionally, we can compare the predictive performance between
-    different algorithms on a range of metrics:
+    different machine learning algorithms on a range of metrics:
 
 <!-- -->
 
