@@ -39,7 +39,7 @@ Changes since last release:
 
 * Improved version of `summary.FFTrees()`.
 
-* Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
+* Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`.
 
 <!-- Blank line. --> 
 
@@ -53,8 +53,9 @@ Changes since last release:
 
 ## Details 
 
-* Reduced clutter by recycling code and combining files. 
-* Revised text, examples, and links in vignettes. 
+* Changed primary package maintainer to Hansjörg Neth, but Nathaniel Phillips is still on board.
+* Revised text, examples, and links in vignettes.
+* Reduced clutter by recycling code and combining files.
 * Cleanup of code and documentation.
 
 <!-- Previous versions --> 
