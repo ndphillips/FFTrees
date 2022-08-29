@@ -1,7 +1,9 @@
 
-# FFTrees 1.7
+# FFTrees 1.7.0
 
-**FFTrees** version 1.7 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
+**FFTrees** version 1.7.0 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
+
+This version contains numerous bug fixes and improves or revises existing functionality. 
 
 <!-- Log of changes: --> 
 
