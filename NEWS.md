@@ -20,15 +20,17 @@ Changes since last release:
 
 * Fixed bugs and improved functionality of `plot.FFTrees()`: 
     - Improved plot for `what = 'ROC'` analogous to `what = 'cues'`. 
-    - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
+    - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w` value, if deviating from the default of 0.50). 
     - Fixed bug to re-enable setting `tree` to `"best.train"` or `"best.test"`.
     - Fixed bug to show correct point labels in ROC curve panel. 
     
 <!-- Blank line. --> 
 
 * Fixed bugs and improved functionality of `showcues()`: 
+    - Using current goal of object `x` as cue ranking criterion (rather than always using `wacc`).
+    - Subtitle now shows `sens.w` value when `goal == 'wacc'`.
+    - Cue legend now accommodates 0 < `top` < 10.
     - Removed redundant `data` argument (as `FFTrees` objects only contain cue training data).
-    - Using current goal of object `x` as cue ranking criterion (rather than always using "wacc").
     - Added `alt.goal` argument (to allow ranking cue accuracies by alternative goals).
     - Added `quiet` argument (to hide feedback messages).
     - Added subtitle (to signal current cue accuracy ranking criterion).
@@ -245,6 +247,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-28.] 
+[File `NEWS.md` last updated on 2022-08-29.] 
 
 <!-- eof. -->

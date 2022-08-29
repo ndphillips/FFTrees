@@ -42,7 +42,8 @@
 #' \code{\link{summary.FFTrees}} for summarizing FFTs;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
-#' @importFrom graphics text points abline legend mtext segments rect arrows axis par layout plot
+#' @importFrom graphics abline arrows axis layout legend mtext par points plot rect segments text
+#' @importFrom scales comma
 #'
 #' @export
 
@@ -166,9 +167,16 @@ showcues <- function(x = NULL,
   cue.df  <- cue.df[ord_new, ]
   goal_vc <- cue.df[[goal_ix]]  # update sorted order, to report in table (below)
 
-  if (quiet == FALSE){
-    message(paste0("Cue accuracies ranked by goal == '", goal, "'"))  # user feedback
+  # Feedback note/subtitle:
+  if (goal == "wacc"){
+    sens.w <- x$params$sens.w
+    subnote <- paste0("Cue accuracies ranked by ", goal, " (sens.w = ", round(sens.w, 2), ")")
+  } else {
+    subnote <- paste0("Cue accuracies ranked by ", goal)
   }
+
+  # User feedback:
+  if (quiet == FALSE){ message(subnote) }
 
   # Adjust color palette:
   cue.df$col <- rep(palette, length.out = nrow(cue.df))
@@ -205,7 +213,7 @@ showcues <- function(x = NULL,
   axis(2, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1) # y-axis + lbls
 
   # Subtitle (as margin text):
-  mtext(paste0("Cue accuracies ranked by ", goal, ":"), side = 3, line = 0.25, adj = 0, cex = .90)
+  mtext(paste0(subnote, ":"), side = 3, line = 0.25, adj = 0, cex = .90)
 
   # if (data == "test")  {mtext("Testing",  3, line = .5, adj = 1, cex = .9)}
   # if (data == "train") {mtext("Training", 3, line = .5, adj = 1, cex = .9)}
@@ -268,15 +276,15 @@ showcues <- function(x = NULL,
     cex = c(1, 1, 1, 1, 1, 1, 1)
   )
 
-  cue.box.y_max <- .48 - 0.05
+  cue.box.y_max <- .43
   cue.box.x0    <- .45
   cue.box.x1 <- 1.02
   cue.box.y0 <- 0
 
   if (top >= 5){
-    cue.box.y1 <- .43 - 0.05
+    cue.box.y1 <- .38
   } else {
-    cue.box.y1 <- c(.25, .30, .35, .40)[top] - 0.05
+    cue.box.y1 <- c(.18, .23, .28, .33)[top]
   }
 
   cue.lab.h <- (cue.box.y1 - cue.box.y0) / top
@@ -381,7 +389,7 @@ showcues <- function(x = NULL,
   text(
     x = rep(location.df[location.df$element == "sens", ]$x.loc, top),
     y = cue.lab.y,
-    labels = round(cue.df$sens[cue.df$rank <= top], 2),
+    labels = scales::comma(cue.df$sens[cue.df$rank <= top], accuracy = .01),
     adj = location.df[location.df$element == "sens", ]$adj,
     cex = label.cex
   )
@@ -390,7 +398,7 @@ showcues <- function(x = NULL,
   text(
     x = rep(location.df[location.df$element == "spec", ]$x.loc, top),
     y = cue.lab.y,
-    labels = round(cue.df$spec[cue.df$rank <= top], 2),
+    labels = scales::comma(cue.df$spec[cue.df$rank <= top], accuracy = .01),
     adj = location.df[location.df$element == "spec", ]$adj,
     cex = label.cex
   )
@@ -398,11 +406,11 @@ showcues <- function(x = NULL,
   # 3. wacc OR alt.goal:
   if (!goal %in% c("sens", "spec", "wacc")){ # report alt.goal values (from above):
 
-    values_fin <- round(goal_vc[cue.df$rank <= top], 2)  # use goal_vc values
+    values_fin <- scales::comma(goal_vc[cue.df$rank <= top], accuracy = .01)  # use goal_vc values
 
   } else { # default:
 
-    values_fin <- round(cue.df$wacc[cue.df$rank <= top], 2)  # use "wacc" values
+    values_fin <- scales::comma(cue.df$wacc[cue.df$rank <= top], accuracy = .01)  # use "wacc" values
 
   }
 
