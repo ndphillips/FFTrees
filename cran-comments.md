@@ -11,7 +11,9 @@
 
 There were no ERRORs or WARNINGs.
 
-There was one NOTE, but the "(possibly) invalid URLs" are valid. 
+There was one NOTE: The new maintainer name/contact (Hansjoerg Neth <h.neth@uni.kn>) is correct.
+
+The "(possibly) invalid URLs" are valid.
 
 ## Downstream dependencies
 
