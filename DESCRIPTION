@@ -34,7 +34,7 @@ Suggests:
     rmarkdown,
     spelling
 License: CC0
-URL: https://CRAN.R-project.org/package=FFTrees 
+URL: https://CRAN.R-project.org/package=FFTrees, https://github.com/ndphillips/FFTrees/
 BugReports: https://github.com/ndphillips/FFTrees/issues
 RoxygenNote: 7.2.0
 VignetteBuilder: knitr
