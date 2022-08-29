@@ -76,8 +76,7 @@ We can visualize individual cue accuracies (specifically their sensitivities and
 Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
 
 ```{r titanic-cues, fig.width = 6, fig.height = 6, fig.align = 'center', out.width = "75%", fig.cap="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset."}
-plot(titanic.fft, 
-     what = "cues")
+plot(titanic.fft, what = 'cues')
 ```
 
 Given the axes of this plot, good performing cues should be near the top left corner of the graph (i.e., exhibit both a low false alarm rate and a high hit rate). 
@@ -94,8 +93,7 @@ To visualize the tree from an `FFTrees` object, use `plot()`.
 Let's plot one of the trees (Tree #1, i.e., the best one, given our current goal):
 
 ```{r titanic-plot, fig.width = 7, fig.height = 7, fig.align = 'center', out.width = "75%", fig.cap="**Figure 2**: Plotting the best FFT of an `FFTrees` object."}
-plot(titanic.fft, 
-     tree = 1)
+plot(titanic.fft, tree = 1)
 ```
 
 The resulting figure contains a lot of information in three distinct panels. 
@@ -140,8 +138,7 @@ Specifying additional arguments of `plot()` changes what is being displayed:
 
 ```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "75%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
 # Show only the best training FFT:
-plot(titanic.fft,
-     stats = FALSE)
+plot(titanic.fft, stats = FALSE)
 ```
 
 - `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, `show.iconguide`: 
@@ -218,12 +215,10 @@ This tree has a high specificity of\ 92%, but a much lower sensitivity of just\ 
 The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
 However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART performed even worse than Tree\ #1.
 
-Now let's apply the same tree to the _test_ data: 
+Now let's inspect the performance of the same tree on the _test_ data: 
 
 ```{r titanic-test, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 6**: Plotting the best FFT on _test_ data."}
-plot(titanic.pred.fft,
-     tree = 1,
-     data = "test")
+plot(titanic.pred.fft, data = "test", tree = 1)
 ```
 
 We could have shown the same tree by asking for `plot(titanic.pred.fft, tree = "best.test", data = "test")`. 
@@ -233,9 +228,7 @@ Both the sensitivity and specificity values have decreased somewhat, which is ty
 Let's visualize the prediction performance of Tree\ #2, the most liberal tree (i.e., with the highest sensitivity): 
 
 ```{r titanic-viz-2, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting Tree\ #2."} 
-plot(titanic.pred.fft,
-     tree = 2,
-     data = "test")
+plot(titanic.pred.fft, data = "test", tree = 2)
 ```
 
 This alternative tree has a better sensitivity (of\ 63%), but its overall accuracy decreased to about baseline level (of\ 67%). 

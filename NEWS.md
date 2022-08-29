@@ -1,7 +1,9 @@
 
-# FFTrees 1.7
+# FFTrees 1.7.0
 
-**FFTrees** version 1.7 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
+**FFTrees** version 1.7.0 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
+
+This version contains numerous bug fixes and improves or revises existing functionality. 
 
 <!-- Log of changes: --> 
 
@@ -39,7 +41,7 @@ Changes since last release:
 
 * Improved version of `summary.FFTrees()`.
 
-* Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`. 
+* Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`.
 
 <!-- Blank line. --> 
 
@@ -53,8 +55,9 @@ Changes since last release:
 
 ## Details 
 
-* Reduced clutter by recycling code and combining files. 
-* Revised text, examples, and links in vignettes. 
+* Changed primary package maintainer to Hansjörg Neth, but Nathaniel Phillips is still on board.
+* Revised text, examples, and links in vignettes.
+* Reduced clutter by recycling code and combining files.
 * Cleanup of code and documentation.
 
 <!-- Previous versions --> 
@@ -247,6 +250,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-29.] 
+[File `NEWS.md` last updated on 2022-08-30.] 
 
 <!-- eof. -->
