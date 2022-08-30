@@ -8,7 +8,7 @@ This version contains numerous bug fixes and improves or revises existing functi
 
 Changes since last release: 
 
-## Major {-}
+## Major changes
 
 <!-- print.FFTrees(): --> 
 
@@ -51,7 +51,7 @@ Changes since last release:
 <!-- Blank line. --> 
 
 
-## Minor {-}
+## Minor changes 
 
 - Changed tree statistics for test data from data frames to tibbles.
 - Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
@@ -60,7 +60,7 @@ Changes since last release:
 <!-- Blank line. --> 
 
 
-## Details {-}
+## Details 
 
 - Changed primary package maintainer to Hansjoerg Neth, but Nathaniel Phillips is still on board.
 - Revised text, examples, and links in vignettes.
@@ -87,29 +87,29 @@ Changes since last release:
 
 ## 1.6.6
 
-* Fixed bug causing `plot.FFTrees()` to not display plots properly.
+- Fixed bug causing `plot.FFTrees()` to not display plots properly.
 
 ## 1.6.5
 
-* Cleanup to get package back on CRAN after failed submission on July 17, 2022. 
+- Cleanup to get package back on CRAN after failed submission on July 17, 2022. 
 
 ## 1.6.4
 
-* Cleanup to get package back on CRAN after failed submission on July 16, 2022. 
+- Cleanup to get package back on CRAN after failed submission on July 16, 2022. 
 
 ## 1.6.3
 
-* Additional cleanup to get package back on CRAN after failed submission on July 12, 2022. 
+- Additional cleanup to get package back on CRAN after failed submission on July 12, 2022. 
 
 ## 1.6.2
 
-* Internal cleanup to get package back on CRAN.
+- Internal cleanup to get package back on CRAN.
 
 ## 1.6.1
 
-* `plot.FFTrees()` no longer saves graphic params changed in `par()`. 
-* `plot.FFTRrees()`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`. 
-* Deprecation notes in `plot.FFTrees()` are now returned as warnings, not messages. 
+- `plot.FFTrees()` no longer saves graphic params changed in `par()`. 
+- `plot.FFTRrees()`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`. 
+- Deprecation notes in `plot.FFTrees()` are now returned as warnings, not messages. 
 
 
 ------ 
