@@ -1,34 +1,35 @@
 
 # FFTrees 1.7.0
 
-**FFTrees** version 1.7.0 is scheduled for release [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]: 
-
+**FFTrees** version 1.7.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]. 
 This version contains numerous bug fixes and improves or revises existing functionality. 
 
 <!-- Log of changes: --> 
 
 Changes since last release: 
 
-## Major
+## Major {-}
 
-* Improved functionality of `print.FFTrees()`:
+<!-- print.FFTrees(): --> 
+
+- Improved functionality of `print.FFTrees()`:
     - Added `data` argument to print an FFT's training performance (by default) or prediction performance (when test data is available). 
     - Enabled setting `tree` to `"best.train"` or `"best.test"` (as when plotting FFTs).  
     - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
     - Improved readability of 2x2 confusion table (by right-justifying digits). 
     - Moved expected cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
 
-<!-- Blank line. --> 
+<!-- plot.FFTrees(): --> 
 
-* Fixed bugs and improved functionality of `plot.FFTrees()`: 
+- Fixed bugs and improved functionality of `plot.FFTrees()`: 
     - Improved plot for `what = 'ROC'` analogous to `what = 'cues'`. 
     - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w` value, if deviating from the default of 0.50). 
     - Fixed bug to re-enable setting `tree` to `"best.train"` or `"best.test"`.
     - Fixed bug to show correct point labels in ROC curve panel. 
     
-<!-- Blank line. --> 
+<!-- showcues(): --> 
 
-* Fixed bugs and improved functionality of `showcues()`: 
+- Fixed bugs and improved functionality of `showcues()`: 
     - Using current goal of object `x` as cue ranking criterion (rather than always using `wacc`).
     - Subtitle now shows `sens.w` value when `goal == 'wacc'`.
     - Cue legend now accommodates 0 < `top` < 10.
@@ -37,28 +38,40 @@ Changes since last release:
     - Added `quiet` argument (to hide feedback messages).
     - Added subtitle (to signal current cue accuracy ranking criterion).
 
-<!-- Blank line. --> 
+<!-- summary.FFTrees(): --> 
 
-* Improved version of `summary.FFTrees()`.
+- Improved version of `summary.FFTrees()`:
+    - Print tree performance summary and goal information (on the console). 
+    - Return tree `definitions` and `stats` (as a list). 
 
-* Fixed bug that forced reversals of final exits in the final node with `my.tree` or `fftrees_wordstofftrees()`.
+<!-- fftrees_wordstofftrees(): --> 
 
-<!-- Blank line. --> 
-
-## Minor
-
-* Changed tree statistics for test data from data frames to tibbles.
-* Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
-* Deprecated `store.data` argument in `FFTrees()`. 
+- Fixed a bug that forced reversals of final exits in the final node when manually creating FFTs with `my.tree` or `fftrees_wordstofftrees()`.
 
 <!-- Blank line. --> 
 
-## Details 
 
-* Changed primary package maintainer to Hansjörg Neth, but Nathaniel Phillips is still on board.
-* Revised text, examples, and links in vignettes.
-* Reduced clutter by recycling code and combining files.
-* Cleanup of code and documentation.
+## Minor {-}
+
+- Changed tree statistics for test data from data frames to tibbles.
+- Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
+- Deprecated `store.data` argument in `FFTrees()`. 
+
+<!-- Blank line. --> 
+
+
+## Details {-}
+
+- Changed primary package maintainer to Hansjoerg Neth, but Nathaniel Phillips is still on board.
+- Revised text, examples, and links in vignettes.
+- Reduced clutter by recycling code and combining files.
+- Cleanup of code and documentation.
+
+
+<!-- Development version: --> 
+
+The current development version is available at <https://github.com/ndphillips/FFTrees>. 
+
 
 <!-- Previous versions --> 
 
@@ -212,7 +225,7 @@ You can also control whether the results from competing algorithms are displayed
 
 ------ 
 
-## FFTrees 1.1
+# FFTrees 1.1
 
 ## 1.1.7
 
