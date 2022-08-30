@@ -41,7 +41,7 @@ Changes since last release:
 <!-- summary.FFTrees(): --> 
 
 - Improved version of `summary.FFTrees()`:
-    - Print performance summary and goal information (on the console). 
+    - Print tree performance summary and goal information (on the console). 
     - Return tree `definitions` and `stats` (as a list). 
 
 <!-- fftrees_wordstofftrees(): --> 
@@ -62,14 +62,16 @@ Changes since last release:
 
 ## Details {-}
 
-- Changed primary package maintainer to Hansjörg Neth, but Nathaniel Phillips is still on board.
+- Changed primary package maintainer to Hansjoerg Neth, but Nathaniel Phillips is still on board.
 - Revised text, examples, and links in vignettes.
 - Reduced clutter by recycling code and combining files.
 - Cleanup of code and documentation.
 
+
 <!-- Development version: --> 
 
 The current development version is available at <https://github.com/ndphillips/FFTrees>. 
+
 
 <!-- Previous versions --> 
 
