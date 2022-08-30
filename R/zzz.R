@@ -6,15 +6,15 @@
 
   version_nr <- utils::packageVersion("FFTrees")
 
-  packageStartupMessage("")
-  packageStartupMessage("   O      ")
-  packageStartupMessage("  / \\     ")
-  packageStartupMessage(" F   O  ")
-  packageStartupMessage("    / \\   ")
+  packageStartupMessage("             ")
+  packageStartupMessage("   O         ")
+  packageStartupMessage("  / \\       ")
+  packageStartupMessage(" F   O       ")
+  packageStartupMessage("    / \\     ")
   packageStartupMessage("   F   Trees ")
-  packageStartupMessage("")
-  packageStartupMessage(paste0("Welcome to FFTrees ", version_nr, "!"))
-  packageStartupMessage("FFTrees.guide() opens the main guide.")
+  packageStartupMessage("             ")
+  packageStartupMessage(crayon::silver("Welcome to ", crayon::blue(paste("FFTrees ", version_nr, sep = "")), "!", sep = ""))
+  packageStartupMessage(crayon::silver("FFTrees.guide() opens the main guide."))
 
 } # .onAttach().
 
