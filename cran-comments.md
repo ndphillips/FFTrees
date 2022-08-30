@@ -12,7 +12,9 @@
 
 There were no ERRORs or WARNINGs.
 
-There was one NOTE: The new maintainer name/contact info (Hansjoerg Neth <h.neth@uni.kn>) is correct.
+There was one NOTE: The new maintainer name/contact info (Hansjoerg Neth <h.neth@uni.kn>) is correct, 
+as confirmed in email from  Nathaniel Phillips <nathaniel.d.phillips.is@gmail.com> to CRAN <cran-submissions@r-project.org> on 2022-08-30 30, 18:27 CEST. 
+See also <https://github.com/ndphillips/FFTrees/issues/70>. 
 
 The "(possibly) invalid URLs" are valid.
 
