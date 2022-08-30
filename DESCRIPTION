@@ -36,5 +36,6 @@ Suggests:
 License: CC0
 URL: https://CRAN.R-project.org/package=FFTrees, https://github.com/ndphillips/FFTrees/
 BugReports: https://github.com/ndphillips/FFTrees/issues
-RoxygenNote: 7.2.0
 VignetteBuilder: knitr
+RoxygenNote: 7.1.2
+Language: en-US
