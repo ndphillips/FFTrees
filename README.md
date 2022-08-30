@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit the .Rmd file -->
+<!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
 # FFTrees 1.7.0 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
@@ -323,6 +323,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-08-30.\]
+\[File `README.Rmd` last updated on 2022-08-31.\]
 
 <!-- eof. -->
