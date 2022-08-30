@@ -1,7 +1,7 @@
 
 # FFTrees 1.7.0
 
-**FFTrees** version 1.7.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-30]. 
+**FFTrees** version 1.7.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-31]. 
 This version contains numerous bug fixes and improves or revises existing functionality. 
 
 <!-- Log of changes: --> 
@@ -263,6 +263,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-08-30.] 
+[File `NEWS.md` last updated on 2022-08-31.] 
 
 <!-- eof. -->
