@@ -1,6 +1,6 @@
 ---
 title: "Creating FFTs for heart disease"
-author: "Nathaniel Phillips"
+author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -20,15 +20,15 @@ library(FFTrees)
 ```
 
 
-## Creating FFTs for heart disease
+## Tutorial: Creating FFTs for heart disease
 
-The following example follows the tutorial presented in @phillips2017FFTrees (freely available in [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)):
+This tutorial on using the **FFTrees** package follows the examples presented in @phillips2017FFTrees (freely available in [html](https://journal.sjdm.org/17/17217/jdm17217.html) | [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)):
 
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
 _Judgment and Decision Making_, _12_ (4), 344–368.
 
-This tutorial explains how to use the **FFTrees** package to create, evaluate and visualize FFTs in four simple steps. 
+In the following, we explain how to use **FFTrees** to create, evaluate and visualize FFTs in four simple steps. 
 
 
 ### Step\ 1: Install and load the FFTrees package
@@ -185,9 +185,9 @@ predict(heart.fft,
         data = heartdisease)
 ```
 
-#### Defining an FFT in words
+#### Defining FFTs in words
 
-To define a specific FFT and apply this tree to data, we can define it by providing a verbal description to the `my.tree` argument: 
+To define a specific FFT and apply it to data, we can define a tree by providing its verbal description to the `my.tree` argument: 
 
 ```{r fft-my-tree}
 # Create an FFT manually (from description):
@@ -206,9 +206,9 @@ Here is the resulting tree:
 plot(my.heart.fft)
 ```
 
-It's actually not too bad, although the first node is pretty worthless (as it only classifies 3 cases, all as false alarms). 
-
-See the [Defining an FFT verbally](FFTrees_mytree.html) vignette for details on defining FFTs from verbal descriptions. 
+The resulting tree is actually not too bad, although its first node is pretty worthless (as it only classifies 3\ cases, all as false alarms). 
+Thus, omitting the first node will result in an even simpler FFT that cannot be worse. 
+But see for yourself --- and see the [Defining an FFT verbally](FFTrees_mytree.html) vignette for additional details on defining FFTs from verbal descriptions. 
 
 
 ## Vignettes
@@ -220,7 +220,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
-| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |

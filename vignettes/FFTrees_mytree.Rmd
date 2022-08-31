@@ -263,7 +263,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
-| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
