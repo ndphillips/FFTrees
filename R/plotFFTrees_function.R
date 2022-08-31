@@ -1178,7 +1178,7 @@ plot.FFTrees <- function(x = NULL,
           pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
           neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
 
-          text.outline(
+          text_outline(
             x = subplot.center[1] - 1,
             y = subplot.center[2],
             labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
@@ -1321,7 +1321,7 @@ plot.FFTrees <- function(x = NULL,
           neg.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
 
 
-          text.outline(subplot.center[1] + 1,
+          text_outline(subplot.center[1] + 1,
                        subplot.center[2],
                        labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
                        pos = 4, cex = break.label.cex, r = .1
@@ -1692,7 +1692,7 @@ plot.FFTrees <- function(x = NULL,
               pos = 1, cex = header.cex
             )
 
-            # text.outline(x = rect.center.x,
+            # text_outline(x = rect.center.x,
             #              y = header.y.loc,
             #              labels = long.name,
             #              pos = 1, cex = header.cex, r = .02
@@ -1727,7 +1727,7 @@ plot.FFTrees <- function(x = NULL,
                    border = "black"
               )
 
-              text.outline(
+              text_outline(
                 x = rect.center.x,
                 y = value.height,
                 labels = lloc$value.name[lloc$element == name],
@@ -1765,7 +1765,7 @@ plot.FFTrees <- function(x = NULL,
               )
 
               # Text label:
-              text.outline(
+              text_outline(
                 x = rect.center.x,
                 y = value.height,
                 labels = lloc$value.name[lloc$element == name],

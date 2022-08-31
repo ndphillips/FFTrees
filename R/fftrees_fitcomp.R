@@ -58,7 +58,7 @@ fftrees_fitcomp <- function(x) {
 
   {
     if (do.lr) {
-      lr.acc <- comp.pred(
+      lr.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -90,7 +90,7 @@ fftrees_fitcomp <- function(x) {
 
   {
     if (do.cart) {
-      cart.acc <- comp.pred(
+      cart.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -122,7 +122,7 @@ fftrees_fitcomp <- function(x) {
 
   {
     if (do.rf) {
-      rf.acc <- comp.pred(
+      rf.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -155,7 +155,7 @@ fftrees_fitcomp <- function(x) {
 
   {
     if (do.svm) {
-      svm.acc <- comp.pred(
+      svm.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,

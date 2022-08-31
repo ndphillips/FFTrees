@@ -182,11 +182,11 @@ select_best_tree <- function(x, data, goal){
 
 
 
-# apply.break: ------
+# apply_break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
 
-apply.break <- function(direction,
+apply_break <- function(direction,
                         threshold.val,
                         cue.v,
                         cue.class) {
@@ -233,15 +233,15 @@ apply.break <- function(direction,
 
   return(output)
 
-} # apply.break().
+} # apply_break().
 
 
 
-# cost.cues.append: ------
+# cost_cues_append: ------
 
 # Create cost.cues:
 
-cost.cues.append <- function(formula,
+cost_cues_append <- function(formula,
                              data,
                              cost.cues = NULL) {
 
@@ -300,15 +300,15 @@ cost.cues.append <- function(formula,
 
   return(cost.cues)
 
-} # cost.cues.append().
+} # cost_cues_append().
 
 
 
-# comp.pred: ------
+# comp_pred: ------
 
 #' A wrapper for competing classification algorithms.
 #'
-#' \code{comp.pred} provides a wrapper for many classification algorithms --- such as CART (\code{rpart::rpart}),
+#' \code{comp_pred} provides a wrapper for many classification algorithms --- such as CART (\code{rpart::rpart}),
 #' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 #'
 #' @param formula a formula
@@ -327,7 +327,7 @@ cost.cues.append <- function(formula,
 #' @importFrom rpart rpart
 #' @importFrom randomForest randomForest
 
-comp.pred <- function(formula,
+comp_pred <- function(formula,
                       data.train,
                       data.test = NULL,
                       algorithm = NULL,
@@ -732,11 +732,11 @@ comp.pred <- function(formula,
 
   return(output)
 
-} # comp.pred().
+} # comp_pred().
 
 
 
-# factclean: ------
+# fact_clean: ------
 
 #' Clean factor variables in prediction data
 #'
@@ -744,9 +744,9 @@ comp.pred <- function(formula,
 #' @param data.test A testing dataset
 #' @param show.warning logical
 
-factclean <- function(data.train,
-                      data.test,
-                      show.warning = T) {
+fact_clean <- function(data.train,
+                       data.test,
+                       show.warning = T) {
 
 
   # 1. Look for new factor values in test set that are not in training set: ----
@@ -791,7 +791,7 @@ factclean <- function(data.train,
 
   return(output)
 
-} # factclean().
+} # fact_clean().
 
 
 
@@ -1387,11 +1387,11 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 } # console_confusionmatrix().
 
 
-# text.outline: ------
+# text_outline: ------
 
 # Adds text with a white background (taken from Dirk Wulff www.dirkwulff.org).
 
-text.outline <- function(x, y,
+text_outline <- function(x, y,
                          labels = "test",
                          col = "black",
                          font = 1,
@@ -1415,7 +1415,7 @@ text.outline <- function(x, y,
   # Foreground:
   text(x, y, labels = labels, col = col, cex = cex, adj = adj, pos = pos, font = font)
 
-} # text.outline().
+} # text_outline().
 
 
 
@@ -1423,21 +1423,21 @@ text.outline <- function(x, y,
 
 # Make text color transparent.
 
-transparent <- function(orig.col = "red",
+transparent <- function(col_orig = "red",
                         trans.val = .5) {
 
-  n.cols <- length(orig.col)
-  orig.col <- col2rgb(orig.col)
-  final.col <- rep(NA, n.cols)
+  n_cols <- length(col_orig)
+  col_orig <- col2rgb(col_orig)
+  col_final <- rep(NA, n_cols)
 
-  for (i in 1:n.cols) {
-    final.col[i] <- rgb(orig.col[1, i], orig.col[2, i], orig.col[
+  for (i in 1:n_cols) {
+    col_final[i] <- rgb(col_orig[1, i], col_orig[2, i], col_orig[
       3,
       i
-      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
   }
 
-  return(final.col)
+  return(col_final)
 
 } # transparent().
 

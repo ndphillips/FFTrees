@@ -342,7 +342,7 @@ fftrees_create <- function(data = NULL,
 
 
   # Append cost.cues:
-  cost.cues <- cost.cues.append(formula,
+  cost.cues <- cost_cues_append(formula,
                                 data,
                                 cost.cues = cost.cues
   )
