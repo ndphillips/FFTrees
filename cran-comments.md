@@ -1,4 +1,10 @@
 
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Changed automated references from "http://doi.org/" to "https://doi.org/" (to fix invalid URLs). 
+
 ## Test environments
 
 * local OS X install, R 4.0.5 
