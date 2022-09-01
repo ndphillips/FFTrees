@@ -24,14 +24,14 @@ Default: \code{sens.w = .50}.}
 
 \item{cost.v}{list. An optional list of additional costs to be added to each case.}
 
-\item{correction}{numeric. Correction added to all counts for calculating dprime.}
+\item{correction}{numeric. Correction added to all counts for calculating \code{dprime}.}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 the costs of a hit, false alarm, miss, and correct rejection, respectively.
 For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.}
 
-\item{na_prediction_action}{not sure.}
+\item{na_prediction_action}{What happens when no prediction is possible? (experimental).}
 }
 \description{
 The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
