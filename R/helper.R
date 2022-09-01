@@ -897,12 +897,12 @@ add_stats <- function(data,
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 #' Default: \code{sens.w = .50}.
 #' @param cost.v list. An optional list of additional costs to be added to each case.
-#' @param correction numeric. Correction added to all counts for calculating dprime.
+#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
-#' @param na_prediction_action not sure.
+#' @param na_prediction_action What happens when no prediction is possible? (experimental).
 #'
 #' @importFrom stats qnorm
 #' @importFrom caret confusionMatrix
@@ -940,7 +940,7 @@ classtable <- function(prediction_v = NULL,
 
   # Remove NA criterion values:
   prediction_v <- prediction_v[is.finite(criterion_v)]
-  criterion_v <- criterion_v[is.finite(criterion_v)]
+  criterion_v  <- criterion_v[is.finite(criterion_v)]
 
 
   # Remove NA prediction values:
@@ -996,17 +996,17 @@ classtable <- function(prediction_v = NULL,
       ppv <- cm_byClass$Pos.Pred.Value
       npv <- cm_byClass$Neg.Pred.Value
 
-      acc <- cm_overall$Accuracy
+      acc   <- cm_overall$Accuracy
       acc_p <- cm_overall$AccuracyPValue
-      bacc <- cm_byClass$Balanced.Accuracy
-      wacc <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
+      bacc  <- cm_byClass$Balanced.Accuracy
+      wacc  <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
 
       # dprime (corrected):
       # hi_rate <- hi_c / (hi_c + mi_c)
       # fa_rate <- fa_c / (fa_c + cr_c)
       # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes sense)?
+      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes more sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1048,7 +1048,7 @@ classtable <- function(prediction_v = NULL,
 
       # dprime (corrected):
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes sense)?
+      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes more sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1128,21 +1128,16 @@ classtable <- function(prediction_v = NULL,
 
 
 
-# sens.w_epsion: ------
-
-# A constant/threshold: Minimum required difference
-# from the sens.w default value (sens.w = 0.50):
-
-sens.w_epsilon <- 10^-4
-
-
-
 # enable_wacc: ------
 
 # Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
+
+# The argument sens.w_epsion provides a threshold value:
+# Minimum required difference from the sens.w default value (sens.w = 0.50).
+
 # Output: Boolean value.
 
-enable_wacc <- function(sens.w){
+enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
 
   out <- FALSE
 
@@ -1434,7 +1429,7 @@ transparent <- function(col_orig = "red",
     col_final[i] <- rgb(col_orig[1, i], col_orig[2, i], col_orig[
       3,
       i
-    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
   }
 
   return(col_final)
