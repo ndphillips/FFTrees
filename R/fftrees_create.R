@@ -120,7 +120,7 @@ fftrees_create <- function(data = NULL,
 
   # goal: ----
 
-  goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
+  goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Setting "dprime" does not seem to work!
 
   if (is.null(goal)) { # goal NOT set by user:
 
@@ -342,7 +342,7 @@ fftrees_create <- function(data = NULL,
 
 
   # Append cost.cues:
-  cost.cues <- cost.cues.append(formula,
+  cost.cues <- cost_cues_append(formula,
                                 data,
                                 cost.cues = cost.cues
   )

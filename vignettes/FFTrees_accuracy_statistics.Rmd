@@ -35,7 +35,7 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 plot(heart.fft)
 ```
 
-We notice a 2x2\ table in the bottom-left corner of the plot:  
+We notice a 2x2\ table in the bottom-left corner of the plot: 
 This is a _2\ x\ 2 matrix_ or _confusion table_ (see [Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix) or [Neth et al., 2021](https://doi.org/10.3389/fpsyg.2020.567817) for details). 
 A wide range of accuracy measures can be derived from this seemingly simple matrix. 
 Here is a generic version of a confusion table: 
@@ -57,11 +57,11 @@ Given this structure, an accurate decision algorithm aims to maximize the freque
 
 | Output | Description                   | Formula | 
 |:-------|:------------------------------|:----------------------|
-| `hi`   |  Number of hits   | $N(\text{Decision} = 1 \land \text{Truth} = 1)$ |
-| `mi`   |  Number of misses | $N(\text{Decision} = 0 \land \text{Truth} = 1)$ |
-| `fa`   |  Number of false-alarms | $N(\text{Decision} = 1 \land \text{Truth} = 0)$ |
-| `cr`   |  Number of correct rejections | $N(\text{Decision} = 0 \land \text{Truth} = 0)$ |
-| `N`    |  Total number of cases| $N = \text{hi} + \text{mi} + \text{fa} + \text{cr}$ |
+| `hi` | Number of hits   | $N(\text{Decision} = 1 \land \text{Truth} = 1)$ |
+| `mi` | Number of misses | $N(\text{Decision} = 0 \land \text{Truth} = 1)$ |
+| `fa` | Number of false-alarms | $N(\text{Decision} = 1 \land \text{Truth} = 0)$ |
+| `cr` | Number of correct rejections | $N(\text{Decision} = 0 \land \text{Truth} = 0)$ |
+| `N`  | Total number of cases| $\text{N} = \text{hi} + \text{mi} + \text{fa} + \text{cr}$ |
 
 **Table 1**: Definitions of the frequency counts in a 2x2\ confusion table. The notation $N()$ means number of cases (or frequency counts). 
 
@@ -75,11 +75,11 @@ Given the 2x2 structure of the confusion table, measures can be conditional on e
 
 | Output | Description | Formula | 
 |:------ |:------------------------------|:----------------------|
-| `sens` | Sensitivity  | $p(\text{Decision} = 1 \ \vert\ \text{Truth} = 1) = hi / (hi + mi)$ |
-| `spec` | Specificity  | $p(\text{Decision} = 0 \ \vert\ \text{Truth} = 0) = cr / (cr + fa)$ |
-| `far`  | False alarm rate  | $1 - spec$ |
-| `ppv`  | Positive predictive value  | $p(\text{Truth} = 1 \ \vert\ \text{Decision} = 1) = hi / (hi + fa)$ |
-| `npv`  | Negative predictive value  | $p(\text{Truth} = 0 \ \vert\ \text{Decision} = 0) = cr / (cr + mi)$ |
+| `sens` | Sensitivity  | $p(\text{Decision} = 1 \ \vert\ \text{Truth} = 1) = \text{hi} / (\text{hi} + \text{mi})$ |
+| `spec` | Specificity  | $p(\text{Decision} = 0 \ \vert\ \text{Truth} = 0) = \text{cr} / (\text{cr} + \text{fa})$ |
+| `far`  | False alarm rate  | $1 - \text{Specificity}$ (`spec`) |
+| `ppv`  | Positive predictive value  | $p(\text{Truth} = 1 \ \vert\ \text{Decision} = 1) = \text{hi} / (\text{hi} + \text{fa})$ |
+| `npv`  | Negative predictive value  | $p(\text{Truth} = 0 \ \vert\ \text{Decision} = 0) = \text{cr} / (\text{cr} + \text{mi})$ |
 
 **Table 2**: Conditional accuracy statistics based on either the rows or columns of a 2x2\ confusion table.
 
@@ -98,7 +98,7 @@ Additional accuracy statistics are based on all four cells in the confusion tabl
 |:------ |:------------------------------|:----------------------|
 | `acc`  | Accuracy | $(\text{hi} + \text{cr}) / (\text{hi} + \text{mi} + \text{fa} + \text{cr})$ |
 | `bacc` | Balanced accuracy  | $\text{sens} \times .5 + \text{spec} \times .5$ |
-| `wacc` | Weighted accuracy  | $\text{sens} \times w + \text{spec} \times w$   |
+| `wacc` | Weighted accuracy  | $\text{sens} \times w + \text{spec} \times (1 - w)$   |
 | `bpv`  | Balanced predictive value  | $\text{ppv} \times .5 + \text{npv} \times .5$ |
 | `dprime` | D-prime | $z_{\text{sens}} - z_{\text{far}}$ |
 
@@ -172,7 +172,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
-| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |

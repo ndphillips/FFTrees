@@ -236,7 +236,7 @@ fftrees_grow_fan <- function(x,
       {
 
         # Get decisions for current cue:
-        cue.decisions <- apply.break(
+        cue.decisions <- apply_break(
           direction = cue_direction_new,
           threshold.val = cue_threshold_new,
           cue.v = x$data$train[[cues_name_new]],
@@ -400,7 +400,7 @@ fftrees_grow_fan <- function(x,
 
         # Step 2) Determine accuracy of negative and positive classification: ----
 
-        current.decisions <- apply.break(
+        current.decisions <- apply_break(
           direction = last_cue_stats$direction,
           threshold.val = last_cue_stats$threshold,
           cue.v = x$data$train[[last.cue]],

@@ -1,5 +1,37 @@
 
-# FFTrees 1.7.0
+# FFTrees 1.7 
+
+## 1.7.0.9000
+
+<!-- Development version: --> 
+
+The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
+
+<!-- Log of changes: --> 
+
+Changes since last release: 
+
+
+### Major changes
+
+- none yet.
+
+
+### Minor changes 
+
+- none yet.
+
+
+### Details 
+
+- Renamed internal functions and variables.
+
+
+<!-- Released versions: --> 
+
+------ 
+
+## 1.7.0
 
 **FFTrees** version 1.7.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-08-31]. 
 This version contains numerous bug fixes and improves or revises existing functionality. 
@@ -8,7 +40,7 @@ This version contains numerous bug fixes and improves or revises existing functi
 
 Changes since last release: 
 
-## Major changes
+### Major changes
 
 <!-- print.FFTrees(): --> 
 
@@ -51,7 +83,7 @@ Changes since last release:
 <!-- Blank line. --> 
 
 
-## Minor changes 
+### Minor changes 
 
 - Changed tree statistics for test data from data frames to tibbles.
 - Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
@@ -60,7 +92,7 @@ Changes since last release:
 <!-- Blank line. --> 
 
 
-## Details 
+### Details 
 
 - Changed primary package maintainer to Hansjoerg Neth, but Nathaniel Phillips is still on board.
 - Revised text, examples, and links in vignettes.
@@ -68,12 +100,8 @@ Changes since last release:
 - Cleanup of code and documentation.
 
 
-<!-- Development version: --> 
 
-The current development version is available at <https://github.com/ndphillips/FFTrees>. 
-
-
-<!-- Previous versions --> 
+<!-- Previous versions: --> 
 
 ------ 
 
@@ -144,21 +172,21 @@ Changes since last release:
 
 # FFTrees 1.3
 
-### 1.3.6
+## 1.3.6
 
 - Bug fixes.
 
-### 1.3.5
+## 1.3.5
 
 - Bug fixes.
 
-### 1.3.4
+## 1.3.4
 
 - Added class probability predictions with `predict.FFTrees(type = "prob")`. 
 
 - Updated `print.FFTrees()` to display FFT #1 'in words' (from the `inwords(x)` function). 
 
-### 1.3.3
+## 1.3.3
 
 - Added `show.X` arguments to `plot.FFTrees()` that allow you to selectively turn on or turn off elements when plotting an `FFTrees` object.
 
@@ -168,7 +196,7 @@ Changes since last release:
     - Issues when passing an existing `FFTrees` object to a new call to `FFTrees()`.
 
 
-### 1.3.0
+## 1.3.0
 
 - Many additional vignettes (e.g.; _Accuracy Statistics and Heart Disease Tutorial_) and updates to existing vignettes.
 
@@ -203,7 +231,7 @@ The algorithms are contained in the file `heuristic_algorithm.R` and can be impl
 
 - Added `stats` argument to `plot.FFTrees()`. When `stats = FALSE`, only the tree will be plotted without reference to any statistical output.
 
-- Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp.pred()` wrapper function.
+- Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp_pred()` wrapper function.
 
 - Added `FFForest()`, a function for creating forests of FFTs, and `plot.FFForest()`, for visualizing forests of FFTs. 
 This function is very much still in development.

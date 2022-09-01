@@ -1,6 +1,6 @@
 ---
 title: "Overview: Using FFTs with FFTrees"
-author: "Nathaniel D. Phillips"
+author: "Nathaniel D. Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -79,7 +79,7 @@ plot(heart.fft, data = "test")
 
 ## Getting started 
 
-To begin using the **FFTrees** package, we recommend studying the [Heart Disease Tutorial](FFTrees_heart.html). 
+To begin using the **FFTrees** package, we recommend studying the [Tutorial: Creating FFTs for heart disease](FFTrees_heart.html). 
 This tutorial will take you through all of the basics steps of creating, visualizing, and evaluating fast-and-frugal trees (FFTs). 
 The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees (in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). The following vignettes provide additional details and examples on specific topics. 
 
@@ -92,7 +92,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
 |   | [Main guide](guide.html) | An overview of the **FFTrees** package |
-| 1 | [Heart Disease Tutorial](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
+| 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |

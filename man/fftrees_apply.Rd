@@ -9,11 +9,12 @@ fftrees_apply(x, mydata = NULL, newdata = NULL, allNA.pred = FALSE)
 \arguments{
 \item{x}{An FFT to apply (as an \code{FFTrees} object).}
 
-\item{mydata}{character. Data type to which FFT should be applied (either \code{"train"} or \code{"test"}).}
+\item{mydata}{The type of data to which the FFT should be applied (as character, either \code{"train"} or \code{"test"}).}
 
-\item{newdata}{dataframe. New data to which FFT should be applied.}
+\item{newdata}{New data to which an FFT should be applied (as a data frame).}
 
-\item{allNA.pred}{logical. What should be predicted if all cue values in tree are NA? Default is \code{FALSE}.}
+\item{allNA.pred}{What should be predicted if all cue values in tree are NA (as logical)?
+Default: \code{allNA.pred = FALSE}.}
 }
 \value{
 A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).
