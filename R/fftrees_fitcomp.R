@@ -14,6 +14,7 @@
 fftrees_fitcomp <- function(x) {
 
   # Parameters: ------
+
   do.lr <- x$params$do.lr
   do.svm <- x$params$do.svm
   do.cart <- x$params$do.cart
@@ -32,7 +33,7 @@ fftrees_fitcomp <- function(x) {
   )
 
 
-  # FFTrees: ----
+  # A. FFTrees: ----
 
   x$competition$train <- x$trees$stats$train %>%
     dplyr::filter(tree == 1) %>%
@@ -47,17 +48,19 @@ fftrees_fitcomp <- function(x) {
   }
 
 
+  # B. Competition: ------
+
   if (do.lr | do.cart | do.rf | do.svm) {
     if (!x$params$quiet) {
       message("Fitting other algorithms for comparison (disable with do.comp = FALSE) ...")
     }
   }
 
-
-  # LR: ----
+  # - LR: ----
 
   {
     if (do.lr) {
+
       lr.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
@@ -86,10 +89,11 @@ fftrees_fitcomp <- function(x) {
   }
 
 
-  # CART: ----
+  # - CART: ----
 
   {
     if (do.cart) {
+
       cart.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
@@ -118,10 +122,11 @@ fftrees_fitcomp <- function(x) {
   }
 
 
-  # RF: ----
+  # - RF: ----
 
   {
     if (do.rf) {
+
       rf.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
@@ -151,10 +156,11 @@ fftrees_fitcomp <- function(x) {
   }
 
 
-  # SVM: ----
+  # - SVM: ----
 
   {
     if (do.svm) {
+
       svm.acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
