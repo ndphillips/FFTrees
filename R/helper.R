@@ -961,7 +961,7 @@ add_stats <- function(data,
 #' @param prediction_v logical. A logical vector of predictions.
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = 0.50} (but actual value to be passed by the calling function).
+#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
 #' @param cost.v list. An optional list of additional costs to be added to each case.
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
@@ -974,8 +974,8 @@ add_stats <- function(data,
 #' @importFrom caret confusionMatrix
 
 classtable <- function(prediction_v = NULL,
-                       criterion_v,
-                       sens.w = NULL,  # to be passed by calling function
+                       criterion_v  = NULL,
+                       sens.w = NULL,  # to be passed by calling function!
                        cost.v = NULL,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
