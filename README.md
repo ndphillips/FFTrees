@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.7.0.9001 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7.0.9002 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -182,9 +182,8 @@ evaluate their predictive performance on the `heart.test` data:
          data = "test",
          main = "Heart Disease")
 
-![A fast-and-frugal tree (FFT) predicting heart diseases for `test` data
-and its performance
-characteristics.](man/figures/README-example-heart-plot-1.png)
+![An FFT predicting heart disease for `test`
+data.](man/figures/README-example-heart-plot-1.png)
 
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
@@ -196,7 +195,7 @@ characteristics.](man/figures/README-example-heart-plot-1.png)
 
     # Compare predictive performance across algorithms: 
     heart.fft$competition$test
-    #> # A tibble: 5 × 16
+    #> # A tibble: 5 × 17
     #>   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
     #>   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
     #> 1 fftrees     153    64    19     9    61 0.877 0.762 0.238  0.771 0.871 0.817
@@ -204,8 +203,8 @@ characteristics.](man/figures/README-example-heart-plot-1.png)
     #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
     #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
     #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    #> # … with 4 more variables: bacc <dbl>, cost <dbl>, cost_decisions <dbl>,
-    #> #   cost_cues <dbl>
+    #> # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>,
+    #> #   cost_decisions <dbl>, cost_cues <dbl>
 
 <!-- FFTs by verbal description: -->
 
@@ -242,7 +241,7 @@ These conditions can directly be supplied to the `my.tree` argument of
          data = "test",
          main = "My custom FFT")
 
-![An FFT predicting heart disease created from a verbal
+![An FFT created from a verbal
 description.](man/figures/README-example-heart-verbal-1.png)
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
@@ -276,7 +275,7 @@ decision trees* (available in
 
 We encourage you to read the article to learn more about the history of
 FFTs and how the **FFTrees** package creates, visualizes, and evaluates
-them. If you use **FFTrees** in your own work, please cite us and share
+them. When using **FFTrees** in your own work, please cite us and share
 your experiences (e.g., [on
 GitHub](https://github.com/ndphillips/FFTrees/issues)) so we can
 continue developing the package.
@@ -323,6 +322,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-09-01.\]
+\[File `README.Rmd` last updated on 2022-09-02.\]
 
 <!-- eof. -->

@@ -10,26 +10,32 @@ comp_pred(
   data.test = NULL,
   algorithm = NULL,
   model = NULL,
+  sens.w = NULL,
   new.factors = "exclude"
 )
 }
 \arguments{
-\item{formula}{a formula}
+\item{formula}{A formula (ususally \code{x$formula}, for an \code{FFTrees} object \code{x}).}
 
-\item{data.train}{dataframe. A training dataset.}
+\item{data.train}{A training dataset (as data frame).}
 
-\item{data.test}{dataframe. A testing dataset.}
+\item{data.test}{A testing dataset (as data frame).}
 
-\item{algorithm}{string. An algorithm in the set
-"lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularized logistic regression,
-"svm" -- support vector machines, "rf" -- random forests}
+\item{algorithm}{character string. An algorithm in the set:
+"lr" -- logistic regression;
+"rlr" -- regularized logistic regression;
+"cart" -- decision trees;
+"svm" -- support vector machines;
+"rf" -- random forests.}
 
-\item{model}{model. An optional existing model applied to test data}
+\item{model}{model. An optional existing model, applied to the test data.}
+
+\item{sens.w}{Sensitivity weight parameter (from 0 to 1, required to compute \code{wacc}).}
 
 \item{new.factors}{string. What should be done if new factor values are discovered in the test set?
 "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.}
 }
 \description{
-\code{comp_pred} provides a wrapper for many classification algorithms --- such as CART (\code{rpart::rpart}),
+\code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),
 logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 }
