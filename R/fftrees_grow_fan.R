@@ -166,7 +166,7 @@ fftrees_grow_fan <- function(x,
       exit_current  <- exits_i[level_current]
       cases_remaining <- is.na(decision_v)
 
-      # Step 1: Determine cue for current level: ----
+      # Step 1: Determine cue for current level: ------
       {
         # ifan x$params$algorithm
         if (x$params$algorithm == "ifan") {
@@ -232,7 +232,7 @@ fftrees_grow_fan <- function(x,
         level_stats_i$exit[level_current] <- exit_current
       }
 
-      # Step 2: Determine how classifications would look if all remaining exemplars were classified: ----
+      # Step 2: Determine how classifications would look if all remaining exemplars were classified: ------
       {
 
         # Get decisions for current cue:
@@ -257,7 +257,8 @@ fftrees_grow_fan <- function(x,
         # Calculate asif_cm:
         asif_results <- classtable(
           prediction_v = asif.decision_v,
-          criterion_v = criterion_v
+          criterion_v  = criterion_v,
+          sens.w = x$params$sens.w
         )
 
 
@@ -268,10 +269,14 @@ fftrees_grow_fan <- function(x,
         # If ASIF classification is perfect, then stop:
         if (x$params$goal.chase != "cost") {
           if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 1)) {
+
             grow.tree <- FALSE
           }
+
         } else {
+
           if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 0)) {
+
             grow.tree <- FALSE
           }
         }
@@ -289,7 +294,7 @@ fftrees_grow_fan <- function(x,
         }
       }
 
-      # Step 3: Classify exemplars in current level: ----
+      # Step 3: Classify exemplars in current level: ------
       {
         if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .5)) {
           decide.1.index <- cases_remaining & cue.decisions == TRUE
@@ -317,7 +322,7 @@ fftrees_grow_fan <- function(x,
         outcomecost_v[cr_v == TRUE] <- x$params$cost.outcomes$cr
       }
 
-      # Step 4: Update results: ----
+      # Step 4: Update results: ------
       {
         cases_remaining <- is.na(decision_v)
 
@@ -345,7 +350,7 @@ fftrees_grow_fan <- function(x,
         level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")] <- results_cum[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")]
       }
 
-      # Step 5: Continue growing tree? ----
+      # Step 5: Continue growing tree? ------
       {
         cases_remaining_n <- sum(cases_remaining)
 
