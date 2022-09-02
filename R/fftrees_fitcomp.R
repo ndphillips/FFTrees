@@ -15,21 +15,27 @@ fftrees_fitcomp <- function(x) {
 
   # Parameters: ------
 
-  do.lr <- x$params$do.lr
-  do.svm <- x$params$do.svm
+  do.lr   <- x$params$do.lr
+  do.svm  <- x$params$do.svm
   do.cart <- x$params$do.cart
-  do.rf <- x$params$do.rf
+  do.rf   <- x$params$do.rf
 
   if (x$params$do.comp == FALSE) {
-    do.lr <- FALSE
+    do.lr   <- FALSE
     do.cart <- FALSE
-    do.svm <- FALSE
-    do.rf <- FALSE
+    do.svm  <- FALSE
+    do.rf   <- FALSE
   }
 
-  my_cols <- c(
-    "algorithm", "n", "hi", "fa", "mi", "cr", "sens", "spec", "far",
-    "ppv", "npv", "acc", "bacc", "cost", "cost_decisions", "cost_cues"
+  sens.w <- x$params$sens.w  # required for wacc
+
+
+  # Set the measures/columns to select from stats (computed by classtable() helper): ----
+  my_cols <- c("algorithm",
+               "n", "hi", "fa", "mi", "cr",
+               "sens", "spec", "far", "ppv", "npv",
+               "acc", "bacc", "wacc",  # ToDo: Add dprime?
+               "cost", "cost_decisions", "cost_cues"
   )
 
 
@@ -56,6 +62,7 @@ fftrees_fitcomp <- function(x) {
     }
   }
 
+
   # - LR: ----
 
   {
@@ -66,7 +73,8 @@ fftrees_fitcomp <- function(x) {
         data.train = x$data$train,
         data.test = x$data$test,
         algorithm = "lr",
-        model = NULL
+        model = NULL,
+        sens.w = sens.w
       )
 
       lr.stats <- lr.acc$accuracy
@@ -99,7 +107,8 @@ fftrees_fitcomp <- function(x) {
         data.train = x$data$train,
         data.test = x$data$test,
         algorithm = "cart",
-        model = NULL
+        model = NULL,
+        sens.w = sens.w
       )
 
       cart.stats <- cart.acc$accuracy
@@ -132,7 +141,8 @@ fftrees_fitcomp <- function(x) {
         data.train = x$data$train,
         data.test = x$data$test,
         algorithm = "rf",
-        model = NULL
+        model = NULL,
+        sens.w = sens.w
       )
 
 
@@ -166,7 +176,8 @@ fftrees_fitcomp <- function(x) {
         data.train = x$data$train,
         data.test = x$data$test,
         algorithm = "svm",
-        model = NULL
+        model = NULL,
+        sens.w = sens.w
       )
 
       svm.stats <- svm.acc$accuracy
