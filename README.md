@@ -182,9 +182,8 @@ evaluate their predictive performance on the `heart.test` data:
          data = "test",
          main = "Heart Disease")
 
-![A fast-and-frugal tree (FFT) predicting heart diseases for `test` data
-and its performance
-characteristics.](man/figures/README-example-heart-plot-1.png)
+![An FFT predicting heart disease for `test`
+data.](man/figures/README-example-heart-plot-1.png)
 
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
@@ -242,7 +241,7 @@ These conditions can directly be supplied to the `my.tree` argument of
          data = "test",
          main = "My custom FFT")
 
-![An FFT predicting heart disease created from a verbal
+![An FFT created from a verbal
 description.](man/figures/README-example-heart-verbal-1.png)
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
@@ -276,7 +275,7 @@ decision trees* (available in
 
 We encourage you to read the article to learn more about the history of
 FFTs and how the **FFTrees** package creates, visualizes, and evaluates
-them. If you use **FFTrees** in your own work, please cite us and share
+them. When using **FFTrees** in your own work, please cite us and share
 your experiences (e.g., [on
 GitHub](https://github.com/ndphillips/FFTrees/issues)) so we can
 continue developing the package.
@@ -323,6 +322,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-09-01.\]
+\[File `README.Rmd` last updated on 2022-09-02.\]
 
 <!-- eof. -->
