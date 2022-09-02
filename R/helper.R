@@ -308,16 +308,22 @@ cost_cues_append <- function(formula,
 
 #' A wrapper for competing classification algorithms.
 #'
-#' \code{comp_pred} provides a wrapper for many classification algorithms --- such as CART (\code{rpart::rpart}),
+#' \code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),
 #' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 #'
-#' @param formula a formula
-#' @param data.train dataframe. A training dataset.
-#' @param data.test dataframe. A testing dataset.
-#' @param algorithm string. An algorithm in the set
-#' "lr" -- logistic regression, "cart" -- decision trees, "rlr" -- regularized logistic regression,
-#' "svm" -- support vector machines, "rf" -- random forests
-#' @param model model. An optional existing model applied to test data
+#' @param formula A formula (ususally \code{x$formula}, for an \code{FFTrees} object \code{x}).
+#' @param data.train A training dataset (as data frame).
+#' @param data.test A testing dataset (as data frame).
+#'
+#' @param algorithm character string. An algorithm in the set:
+#' "lr" -- logistic regression;
+#' "rlr" -- regularized logistic regression;
+#' "cart" -- decision trees;
+#' "svm" -- support vector machines;
+#' "rf" -- random forests.
+#'
+#' @param model model. An optional existing model, applied to the test data.
+#' @param sens.w Sensitivity weight parameter (from 0 to 1, required to compute \code{wacc}).
 #' @param new.factors string. What should be done if new factor values are discovered in the test set?
 #' "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #'
@@ -332,6 +338,7 @@ comp_pred <- function(formula,
                       data.test = NULL,
                       algorithm = NULL,
                       model = NULL,
+                      sens.w = NULL,
                       new.factors = "exclude") {
 
   #   formula = x$formula
@@ -346,6 +353,7 @@ comp_pred <- function(formula,
 
   if (is.null(algorithm)) {
     stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")
+    # ToDo: 'rlr' does currently not seem to be implemented.
   }
 
   # SETUP: ----
@@ -407,74 +415,105 @@ comp_pred <- function(formula,
   # Get data, cue, crit objects: ----
 
   if (is.null(train.cases) == FALSE) {
-    data.train <- data.all[train.cases, ]
-    cue.train <- data.all[train.cases, -1]
-    crit.train <- data.all[train.cases, 1]
+
+    data.train <- data.all[train.cases,   ]
+    cue.train  <- data.all[train.cases, -1]
+    crit.train <- data.all[train.cases,  1]
+
   } else {
+
     data.train <- NULL
-    cue.train <- NULL
+    cue.train  <- NULL
     crit.train <- NULL
   }
 
 
-  # Build models and get training data: ----
+  # Build models and get training data: ------
 
+  # LR: ----
   if (algorithm == "lr") {
+
     if (is.null(model)) {
+
+      # Create new LR model:
       train.mod <- suppressWarnings(glm(formula, data.train, family = "binomial"))
+
     } else {
+
       train.mod <- model
     }
 
     if (is.null(data.train) == FALSE) {
+
       pred.train <- suppressWarnings(round(1 / (1 + exp(-predict(train.mod, data.train))), 0))
+
     } else {
+
       pred.train <- NULL
     }
   }
 
+  # RLR: ToDo ----
+
+  # SVM: ----
   if (algorithm == "svm") {
+
     if (is.null(model)) {
+
+      # Create new SVM model:
       train.mod <- e1071::svm(formula,
                               data = data.train, type = "C"
       )
     } else {
+
       train.mod <- model
     }
 
     if (is.null(data.train) == FALSE) {
+
       pred.train <- predict(train.mod,
                             data = data.train
       )
     } else {
+
       pred.train <- NULL
     }
   }
 
+  # CART: ----
   if (algorithm == "cart") {
+
     if (is.null(model)) {
-      # Create new CART model
+
+      # Create new CART model:
       train.mod <- rpart::rpart(formula,
                                 data = data.train,
                                 method = "class"
       )
+
     } else {
+
       train.mod <- model
     }
 
     if (is.null(data.train) == FALSE) {
+
       pred.train <- predict(train.mod,
                             data.train,
                             type = "class"
       )
     } else {
+
       pred.train <- NULL
     }
   }
 
+  # RF: ----
   if (algorithm == "rf") {
 
     if (is.null(model)) {
+
+      # Create new RF model:
       data.train[, 1] <- factor(data.train[, 1])
 
       train.mod <- randomForest::randomForest(formula,
@@ -488,7 +527,8 @@ comp_pred <- function(formula,
     }
 
     if (is.null(data.train) == FALSE) {
-      # Get training decisions
+
+      # Get training decisions:
       pred.train <- predict(
         train.mod,
         data.train
@@ -500,10 +540,13 @@ comp_pred <- function(formula,
     }
   }
 
-  # Get testing data: ----
+
+  # Get testing data: ------
+
   pred.test <- NULL
 
   if (is.null(data.test) == FALSE) {
+
     data.test <- data.all[test.cases, ]
     cue.test <- data.all[test.cases, -1]
     crit.test <- data.all[test.cases, 1]
@@ -563,9 +606,10 @@ comp_pred <- function(formula,
       }
     }
 
-    # Get pred.test from each model: ----
 
-    # LR:
+    # Get predictions (pred.test) from each model: ------
+
+    # LR: ----
     if (algorithm == "lr") {
       if (is.null(data.test) == FALSE) {
 
@@ -583,7 +627,9 @@ comp_pred <- function(formula,
       }
     }
 
-    # SVM:
+    # RLR: ToDo ----
+
+    # SVM: ----
     if (algorithm == "svm") {
       if (is.null(data.test) == FALSE) {
 
@@ -604,7 +650,7 @@ comp_pred <- function(formula,
       }
     }
 
-    # CART:
+    # CART: ----
     if (algorithm == "cart") {
       if (is.null(data.test) == FALSE) {
         if (any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
@@ -620,7 +666,7 @@ comp_pred <- function(formula,
       }
     }
 
-    # RF:
+    # RF: ----
     if (algorithm == "rf") {
       if (is.null(data.test) == FALSE) {
 
@@ -676,16 +722,23 @@ comp_pred <- function(formula,
       pred.train <- as.logical(as.numeric(paste(pred.train)))
     }
 
-    # Calculate training accuracy stats:
+
+    # Calculate training accuracy stats: ----
 
     acc.train <- classtable(
       prediction_v = as.logical(pred.train),
-      criterion_v = as.logical(crit.train)
+      criterion_v = as.logical(crit.train),
+      sens.w = sens.w
     )
   }
 
   if (is.null(pred.train)) {
-    acc.train <- classtable(c(TRUE, TRUE, FALSE), c(FALSE, FALSE, TRUE))
+
+    acc.train <- classtable(
+      prediction_v = c(TRUE, TRUE, FALSE),
+      criterion_v =  c(FALSE, FALSE, TRUE),
+      sens.w = sens.w
+    )
     acc.train[1, ] <- NA
   }
 
@@ -701,26 +754,37 @@ comp_pred <- function(formula,
 
     acc.test <- classtable(
       prediction_v = as.logical(pred.test),
-      criterion_v = as.logical(crit.test)
+      criterion_v = as.logical(crit.test),
+      sens.w = sens.w
     )
 
   } else {
 
     acc.test <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
-      criterion_v = c(TRUE, TRUE, FALSE)
+      criterion_v = c(TRUE, TRUE, FALSE),
+      sens.w = sens.w
     )
     acc.test[1, ] <- NA
   }
 
   if (do.test == FALSE) {
 
-    acc.train <- classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.train <- classtable(
+      prediction_v = c(TRUE, FALSE, TRUE),
+      criterion_v = c(FALSE, TRUE, TRUE),
+      sens.w = sens.w
+    )
     acc.train[1, ] <- NA
 
-    acc.test <- classtable(c(TRUE, FALSE, TRUE), c(FALSE, TRUE, TRUE))
+    acc.test <- classtable(
+      prediction_v = c(TRUE, FALSE, TRUE),
+      criterion_v = c(FALSE, TRUE, TRUE),
+      sens.w = sens.w
+    )
     acc.test[1, ] <- NA
   }
+
 
   # ORGANIZE output: ----
 
@@ -890,12 +954,14 @@ add_stats <- function(data,
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
 #'
+#' The main input are 2 logical vectors of prediction and criterion values.
+#'
 #' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
 #'
 #' @param prediction_v logical. A logical vector of predictions.
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = .50}.
+#' Default: \code{sens.w = 0.50} (but actual value to be passed by the calling function).
 #' @param cost.v list. An optional list of additional costs to be added to each case.
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
@@ -909,7 +975,7 @@ add_stats <- function(data,
 
 classtable <- function(prediction_v = NULL,
                        criterion_v,
-                       sens.w = .50,
+                       sens.w = NULL,  # to be passed by calling function
                        cost.v = NULL,
                        correction = .25,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
