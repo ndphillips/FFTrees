@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9002
+## 1.7.0.9003
 
 <!-- Development version: --> 
 
@@ -19,7 +19,7 @@ Changes since last release:
 
 ### Minor changes 
 
-- Added `wacc` to measures computed for competing algorithms (using current `sens.w` value). 
+- Added `wacc` to measures computed for competing algorithms. 
 
 
 ### Details 
@@ -291,6 +291,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-02.] 
+[File `NEWS.md` last updated on 2022-09-05.] 
 
 <!-- eof. -->

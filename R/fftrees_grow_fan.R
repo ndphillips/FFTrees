@@ -16,6 +16,7 @@
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom stats anova predict glm as.formula var
+#' @importFrom dplyr near
 
 fftrees_grow_fan <- function(x,
                              repeat.cues = TRUE) {
@@ -26,7 +27,7 @@ fftrees_grow_fan <- function(x,
     message(paste0("Growing FFTs with ", x$params$algorithm, ":"))
   }
 
-  # Some global variables which could be changed later:
+  # Global variables which can be changed later:
   exit.method <- "fixed"
   correction  <- .25
 
@@ -140,7 +141,7 @@ fftrees_grow_fan <- function(x,
     level_stats_i[level_stat_names] <- NA
 
     # asif.stats shows cumulative classification statistics as if all exemplars were
-    #      classified at the current level (i.e; if the tree stopped here)
+    #            classified at the current level (i.e., if the tree stopped here).
 
     asif.stats <- data.frame(
       "level" = 1:level_n,
@@ -192,17 +193,17 @@ fftrees_grow_fan <- function(x,
             break
           }
 
-          # Create new dynamic cue range:
+          # Create a new "dynamic" cue range:
           x <- fftrees_cuerank(x,
                                newdata = data_current,
                                data = "dynamic"
           )
 
-          # Calculate cue accuracies with remaining exemplars
+          # Calculate cue accuracies with remaining exemplars:
           cue_best_df_current <- x$cues$stats$dynamic
         }
 
-        # Get next cue based on maximizing goal:
+        # Get next cue based on maximizing goal (goal.chase):
         performance_max <- max(cue_best_df_current[[x$params$goal.chase]], na.rm = TRUE)
         cue_best_i <- which(dplyr::near(cue_best_df_current[[x$params$goal.chase]], performance_max))
 
@@ -230,7 +231,7 @@ fftrees_grow_fan <- function(x,
         level_stats_i$threshold[level_current] <- cue_threshold_new
         level_stats_i$direction[level_current] <- cue_direction_new
         level_stats_i$exit[level_current] <- exit_current
-      }
+      } # Step 1.
 
       # Step 2: Determine how classifications would look if all remaining exemplars were classified: ------
       {
@@ -292,7 +293,7 @@ fftrees_grow_fan <- function(x,
             asif.stats$goal.change[level_current] <- goal.change
           }
         }
-      }
+      } # Step 2.
 
       # Step 3: Classify exemplars in current level: ------
       {
@@ -320,7 +321,7 @@ fftrees_grow_fan <- function(x,
         outcomecost_v[mi_v == TRUE] <- x$params$cost.outcomes$mi
         outcomecost_v[fa_v == TRUE] <- x$params$cost.outcomes$fa
         outcomecost_v[cr_v == TRUE] <- x$params$cost.outcomes$cr
-      }
+      } # Step 3.
 
       # Step 4: Update results: ------
       {
@@ -348,7 +349,7 @@ fftrees_grow_fan <- function(x,
         level_stats_i$exit[level_current] <- exit_current
 
         level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")] <- results_cum[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")]
-      }
+      } # Step 4.
 
       # Step 5: Continue growing tree? ------
       {
@@ -383,11 +384,12 @@ fftrees_grow_fan <- function(x,
 
         # Set up next level stats
         level_stats_i[level_current + 1, ] <- NA
-      }
+      } # Step 5.
 
     } # STOP while(grow.tree) loop.
 
-    # Step 6: No more growth. Make sure last level is bidirectional: ----
+
+    # Step 6: No more growth. Make sure that last level is bidirectional: ----
     {
       last.level <- max(level_stats_i$level)
       last.cue <- level_stats_i$cue[last.level]
@@ -436,7 +438,7 @@ fftrees_grow_fan <- function(x,
 
         level_stats_i[last.level, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last.classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
       }
-    }
+    } # Step 6.
 
     # Tree is finished! ----
 
@@ -451,8 +453,8 @@ fftrees_grow_fan <- function(x,
   }
 
 
-  # Summarize tree definitions and statistics: ----
-  #   tree.definitions:
+  # Summarize tree definitions and statistics: ------
+  # tree.definitions:
 
   {
 

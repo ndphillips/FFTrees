@@ -1,14 +1,24 @@
 #' Calculate thresholds that optimize some statistic (goal) for cues in data
 #'
+#' \code{fftrees_cuerank} takes an \code{FFTrees} object \code{x} and
+#' optimizes its \code{goal.threshold} (from \code{x$params}) for all cues in \code{data}.
+#'
+#' \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
+#' that is added to \code{x$cues$stats}.
+#'
+#' \code{fftrees_cuerank} is called (twice) by the \code{fftrees_grow_fan} algorithm
+#' to grow fast-and-frugal trees (FFTs).
+#'
 #' @param x An \code{FFTrees} object.
 #' @param newdata dataframe.
 #' @param data dataframe.
 #' @param rounding integer.
 #'
-#' @return A data frame containing thresholds and marginal classification statistics for each cue
+#' @return A modified \code{FFTrees} object (with cue rank information for current \code{data} in \code{x$cues$stats}).
 #'
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
+#' @importFrom dplyr pull
 #'
 #' @export
 
@@ -23,12 +33,14 @@ fftrees_cuerank <- function(x = NULL,
   testthat::expect_true(!is.null(x))
   testthat::expect_true(data %in% c("train", "test", "dynamic"))
 
+
   # Define criterion (vector) and cues (dataframe): ----
 
   cue_df <- newdata[names(newdata) != x$criterion_name]
   criterion_v <- newdata %>% dplyr::pull(x$criterion_name)
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
+
 
   # Validity checks: ----
 
@@ -40,10 +52,12 @@ fftrees_cuerank <- function(x = NULL,
     pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)
   }
 
+
   # Loop over cues: ----
+
   for (cue_i in 1:cue_n) {
 
-    # Progress update
+    # Progress update:
     if (!x$params$quiet) {
       pb$tick()
       Sys.sleep(1 / cue_n)
@@ -56,17 +70,16 @@ fftrees_cuerank <- function(x = NULL,
     cue_i_v <- unlist(cue_df[, cue_i])
     cue_i_cost <- x$params$cost.cues[[cue_i_name]]
 
-    # If there are some non-missing values:
 
-    if (all(is.na(cue_i_v)) == FALSE) {
+    if (all(is.na(cue_i_v)) == FALSE) { # (A) Some non-missing values:
 
-      # Step 0: Determine possible cue levels [cue_i_levels] ----
+      # Step 1: Determine possible cue levels [cue_i_levels] ----
       {
 
-        # A. Numeric and integer cues:
+        # A. Numeric and integer cues: ----
         if (substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
-          # "optimize" method:
+          # 1. "optimize" method: ----
           if (x$params$numthresh.method == "o") {
 
             # Get all possible (sorted) cue values:
@@ -79,7 +92,7 @@ fftrees_cuerank <- function(x = NULL,
             }
           }
 
-          # "median" method:
+          # 2. "median" method: ----
           if (x$params$numthresh.method == "m") {
             if (isTRUE(all.equal(length(unique(unlist(cue_i_v))), 2))) {
               cue_i_levels <- unique(unlist(cue_i_v))
@@ -99,14 +112,14 @@ fftrees_cuerank <- function(x = NULL,
           cue_i_levels <- cue_i_levels[duplicated(cue_i_levels) == FALSE]
         }
 
-        # b. Non-numeric and integer cues:
+        # B. Non-numeric and integer cues: ----
         if (substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
           # Use all unique cue values:
           cue_i_levels <- sort(unique(unlist(cue_i_v)))
 
           # If there are > 50% unique cue.levels, send a warning:
-          if (length(cue_i_levels) > .5 * nrow(newdata)) {
+          if (length(cue_i_levels) > .50 * nrow(newdata)) {
 
             warning(paste0("The cue ", names(cue_df)[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))
 
@@ -114,7 +127,6 @@ fftrees_cuerank <- function(x = NULL,
         }
 
         # Check for cue levels containing protected characters (;):
-
         if (any(sapply(cue_i_levels, FUN = function(x) {
 
           grepl(";", x = x)
@@ -123,9 +135,11 @@ fftrees_cuerank <- function(x = NULL,
 
           stop(paste0("The cue ", names(cue_df)[cue_i], " contains the character ';' which is not allowed. Please replace this value in the data and try again."))
         }
-      }
 
-      # Step 1: Determine possible cue directions [directions]: ----
+      } # Step 1.
+
+
+      # Step 2: Determine possible cue directions [directions]: ----
       {
         if (substr(cue_i_class, 1, 1) %in% c("n", "i")) {
           directions <- c(">", "<=")
@@ -134,15 +148,17 @@ fftrees_cuerank <- function(x = NULL,
         if (substr(cue_i_class, 1, 1) %in% c("c", "f", "l")) {
           directions <- c("=", "!=")
         }
-      }
 
-      # Step 2: Determine best direction and threshold for cue [cue_i_best]: ----
+      } # Step 2.
+
+
+      # Step 3: Determine best direction and threshold for cue [cue_i_best]: ----
       {
-        cost.outcomes <- x$param$cost.outcomes
+        cost.outcomes  <- x$param$cost.outcomes
         goal.threshold <- x$params$goal.threshold
         sens.w <- x$params$sens.w
 
-        # a. Numeric, integer cues:
+        # a. Numeric, integer cues: ----
         if (substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
           cue_i_stats <- fftrees_threshold_numeric_grid(
@@ -155,9 +171,9 @@ fftrees_cuerank <- function(x = NULL,
             cost.outcomes = cost.outcomes,
             goal.threshold = goal.threshold
           )
-        }
+        } # a. numeric/integer cues.
 
-        # b. factor, character, and logical cues:
+        # b. factor, character, and logical cues: ----
         if (substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
           cue_i_stats <- fftrees_threshold_factor_grid(
@@ -170,7 +186,7 @@ fftrees_cuerank <- function(x = NULL,
             cost.outcomes = cost.outcomes,
             goal.threshold = goal.threshold
           )
-        }
+        } # b. factor/character/logical cues.
 
 
         # Save results: ----
@@ -180,8 +196,8 @@ fftrees_cuerank <- function(x = NULL,
         # Get thresholds that maximizes goal.threshold:
         best.result.index <- which(cue_i_stats[x$params$goal.threshold] == max(cue_i_stats[x$params$goal.threshold], na.rm = TRUE))
 
-        # If there are two best indices, take the first
-        #   Not sure if this is the best way to do it...
+        # If there are two best indices, take the first:
+        #   ToDo: Not sure if this is the best way to do it...
 
         if (length(best.result.index) > 1) {
           best.result.index <- best.result.index[1]
@@ -192,27 +208,31 @@ fftrees_cuerank <- function(x = NULL,
         }
 
         cue_i_best <- cue_i_stats[best.result.index, ]
-      }
+
+      } # Step 3.
 
 
-    } else {
+    } else { # (B) All cue values are NA:
 
-      # If all cue values are NA, then return empty results:
+      # Step 3: Set best cue direction and threshold to NULL [cue_i_best]: ----
+      {
+        cue_i_best <- fftrees_threshold_factor_grid(
+          thresholds = NULL,
+          cue_v = NULL,
+          criterion_v = NULL,
+          sens.w = sens.w,
+          cost.outcomes = cost.outcomes,
+          goal.threshold = goal.threshold
+        )
+      } # Step 3.
 
-      cue_i_best <- fftrees_threshold_factor_grid(
-        thresholds = NULL,
-        cue_v = NULL,
-        criterion_v = NULL,
-        sens.w = sens.w,
-        cost.outcomes = cost.outcomes,
-        goal.threshold = goal.threshold
-      )
+    } # if (all(is.na(cue_i_v)).
 
-    } # if.
-
-    cue_i_best$cue <- cue_i_name
+    # Add name and class:
+    cue_i_best$cue   <- cue_i_name
     cue_i_best$class <- cue_i_class
 
+    # Sort into cuerank_df:
     if (cue_i == 1) {
       cuerank_df <- cue_i_best
     }
@@ -225,11 +245,9 @@ fftrees_cuerank <- function(x = NULL,
 
 
   # Set rownames: ----
-
   rownames(cuerank_df) <- 1:nrow(cuerank_df)
 
   # Add cue costs: ----
-
   cuerank_df$cost_cues <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
 
 
@@ -237,7 +255,7 @@ fftrees_cuerank <- function(x = NULL,
 
   cuerank_df <- cuerank_df[, c("cue", "class", setdiff(names(cuerank_df), c("cue", "class")))]  # re-order
 
-  x$cues$stats[[data]] <- cuerank_df
+  x$cues$stats[[data]] <- cuerank_df  # add to x
 
   return(x)
 

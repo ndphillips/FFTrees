@@ -16,8 +16,16 @@ fftrees_cuerank(x = NULL, newdata = NULL, data = "train", rounding = NULL)
 \item{rounding}{integer.}
 }
 \value{
-A data frame containing thresholds and marginal classification statistics for each cue
+A modified \code{FFTrees} object (with cue rank information for current \code{data} in \code{x$cues$stats}).
 }
 \description{
-Calculate thresholds that optimize some statistic (goal) for cues in data
+\code{fftrees_cuerank} takes an \code{FFTrees} object \code{x} and
+optimizes its \code{goal.threshold} (from \code{x$params}) for all cues in \code{data}.
+}
+\details{
+\code{fftrees_cuerank} creates a data frame \code{cuerank_df}
+that is added to \code{x$cues$stats}.
+
+\code{fftrees_cuerank} is called (twice) by the \code{fftrees_grow_fan} algorithm
+to grow fast-and-frugal trees (FFTs).
 }
