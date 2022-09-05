@@ -6,6 +6,9 @@
 #' \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
 #' that is added to \code{x$cues$stats}.
 #'
+#' \code{fftrees_cuerank} is called (twice) by the \code{fftrees_grow_fan} algorithm
+#' to grow fast-and-frugal trees (FFTs).
+#'
 #' @param x An \code{FFTrees} object.
 #' @param newdata dataframe.
 #' @param data dataframe.
