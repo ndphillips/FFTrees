@@ -29,16 +29,19 @@ We visualize an `FFTrees` object\ `x` by plotting it (i.e., evaluating `plot(x)`
 
 Two key arguments for plotting are `what` and `tree`: 
 Whereas the `tree` argument allows selecting between different trees in\ `x` (using `tree = 1` by default), 
-the `what` argument distinguishes between four main types of plots: 
+the `what` argument distinguishes between five main types of plots: 
 
 1. `plot(x, what = 'all')` visualizes a tree and corresponding performance statistics. 
 This is also the default when evaluating `plot(x)`. 
 
 2. `plot(x, what = 'tree')` visualizes only the tree diagram of the selected tree (without performance statistics). 
 
-3. `plot(x, what = 'cues')` visualizes the current cue accuracies in ROC\ space (by calling the `showcues()` function).
+3. `plot(x, what = 'icontree')` visualizes the tree diagram of the selected tree with icon arrays on exit nodes 
+(with additional options for `show.iconguide` and `n.per.icon`. 
 
-4. `plot(x, what = 'roc')` visualizes a performance comparison of FFTs and competing algorithms in ROC\ space. 
+4. `plot(x, what = 'cues')` visualizes the current cue accuracies in ROC\ space (by calling the `showcues()` function).
+
+5. `plot(x, what = 'roc')` visualizes a performance comparison of FFTs and competing algorithms in ROC\ space. 
 
 
 The other arguments of the `plot.FFTrees()` function allow further customization of the plot 
@@ -159,24 +162,31 @@ Specifying additional arguments of `plot()` changes what and how various element
     Using one of the other `what` options narrows the range of what is being shown: 
 
     - To only visualize a bare tree diagram (without performance statistics), we specify `what = "tree"` (formerly `stats = FALSE`).
+    
+    - To visualize the tree diagram with icon arrays on exit nodes, we specify `what = "icontree"` (with additional options for `show.iconguide` and `n.per.icon`). 
 
-    - To only visualize the performance comparison (for different FFTs and competing algorithms) in ROC\ space, we specify `what = "roc"`.
+    - To visualize the performance comparison (for different FFTs and competing algorithms) in ROC\ space, we specify `what = "roc"`.
+
+<!-- Examples: -->
+
+The following examples illustrate the wide range of corresponding plots: 
+
+<!-- Example what = 'icontree': -->
     
-<!-- Example what = 'tree': -->
-    
-```{r titanic-what-tree, fig.align = 'center', fig.height = 5, fig.width = 8, out.width = "75%", fig.cap="**Figure 3**: A plain FFT diagram (without statistics)."}
-# Show only the tree diagram:
-plot(titanic.fft, what = "tree")
+```{r titanic-what-tree, fig.align = 'center', fig.height = 7, fig.width = 10, out.width = "75%", fig.cap="**Figure 3**: An FFT diagram with icon arrays on exit nodes."}
+# Plot tree diagram with icon arrays:
+plot(titanic.fft, what = "icontree", 
+     n.per.icon = 50, show.iconguide = TRUE)
 ```
 
 <!-- Example what = 'roc': -->
 
 ```{r titanic-what-roc, fig.align = 'center', fig.height = 6, fig.width = 7, out.width = "75%", fig.cap="**Figure 4**: Performance comparison of FFTs in ROC space."}
-# Show only the performance comparison in ROC space:
+# Plot only the performance comparison in ROC space:
 plot(titanic.fft, what = "roc")
 ```
 
-- When the main options for `what` do not suffice, the various `show.` arguments (i.e., `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, and `show.iconguide`) allow to selectively turn on or turn off specific elements of the overall plot. For example: 
+- When the main options for `what` do not suffice, various `show.` arguments (i.e., `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, and `show.iconguide`) allow to selectively turn on or turn off specific elements of the overall plot. For example: 
 
 ```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 9, out.width = "75%", fig.cap="**Figure 5**: Plotting selected elements."}
 # Hide some elements of the FFT plot: 
