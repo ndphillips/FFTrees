@@ -1075,52 +1075,93 @@ plot.FFTrees <- function(x = NULL,
       par(xpd = FALSE)
 
 
-      # Create signal and noise panels: ------
+      # Icon guide: ------
 
       if (show.iconguide) {
 
+        if (what == "ico") {
+
+          f_x <- 1.2  # factor (to stretch in x-dim)
+          f_y <- 0.8  # factor (to shift up)
+
+        } else { # default factors:
+
+          f_x <- 1
+          f_y <- 1
+
+        }
+
+        par(xpd = TRUE)
+
+        # (a) Noise panel (on left): ----
+
+        # Heading:
+        text(-plot.width  * .60 * f_x,
+             -plot.height * .05 * f_y,
+             paste("Decide ", decision.labels[1], sep = ""),
+             cex = 1.2, font = 3
+        )
+
         # Noise balls:
-        points(c(-plot.width * .70, -plot.width * .50),
-               c(-plot.height * .125, -plot.height * .125),
+        points(c(-plot.width * .70, -plot.width * .50) * f_x,
+               c(-plot.height * .130, -plot.height * .130) * f_y,
                pch = c(noise.ball.pch, signal.ball.pch),
                bg = c(correct.bg, error.bg),
                col = c(correct.border, error.border),
                cex = ball.cex * 1.5
         )
 
-        text(c(-plot.width * .70, -plot.width * .50),
-             c(-plot.height * .125, -plot.height * .125),
+        # Labels:
+        text(c(-plot.width * .70, -plot.width * .50) * f_x,
+             c(-plot.height * .130, -plot.height * .130) * f_y,
              labels = c("Correct\nRejection", "Miss"),
              pos = c(2, 4), offset = 1
         )
 
 
-        # Noise panel:
-        text(-plot.width * .60, -plot.height * .05,
-             paste("Decide ", decision.labels[1], sep = ""),
-             cex = 1.2, font = 3
+
+        # (b) Signal panel (on right): ----
+
+        # Heading:
+        text( plot.width *  .60 * f_x,
+              -plot.height * .05 * f_y,
+              paste("Decide ", decision.labels[2], sep = ""),
+              cex = 1.2, font = 3
         )
 
-        # Signal panel:
-        text(plot.width * .60, -plot.height * .05,
-             paste("Decide ", decision.labels[2], sep = ""),
-             cex = 1.2, font = 3
-        )
-
-        points(c(plot.width * .50, plot.width * .70),
-               c(-plot.height * .125, -plot.height * .125),
+        # Signal balls:
+        points(c(plot.width * .50, plot.width * .70 ) * f_x,
+               c(-plot.height * .130, -plot.height * .130) * f_y,
                pch = c(noise.ball.pch, signal.ball.pch),
                bg = c(error.bg, correct.bg),
                col = c(error.border, correct.border),
                cex = ball.cex * 1.5
         )
 
-        text(c(plot.width * .50, plot.width * .70),
-             c(-plot.height * .125, -plot.height * .125),
+        # Labels:
+        text(c(plot.width * .50, plot.width * .70) * f_x,
+             c(-plot.height * .130, -plot.height * .130) * f_y,
              labels = c("False\nAlarm", "Hit"),
              pos = c(2, 4), offset = 1
         )
-      }
+
+
+        # (c) Additional lines (below icon guide): ----
+
+        if (what == "ico" & hlines) {
+
+          x_hline <-  plot.width  * .95 * f_x
+          y_hline <- -plot.height * .20 * f_y
+
+          segments(-x_hline, y_hline, x_hline, y_hline, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+          rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
+        }
+
+        par(xpd = FALSE)
+
+      } # if (show.iconguide).
+
+
 
       # Set initial subplot center:
       subplot.center <- c(0, -4)
@@ -1268,6 +1309,7 @@ plot.FFTrees <- function(x = NULL,
             labels = substr(decision.labels[1], 1, 1)
           )
         } # if (exit node on left).
+
 
         # New level on left: ----
 
