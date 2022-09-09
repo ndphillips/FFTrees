@@ -25,17 +25,18 @@
 #'
 #' @param what What should be plotted (as a string)? Valid options are:
 #' \describe{
-#'   \item{'all'}{Plot all elements (i.e., tree diagram with all guides and performance statistics)}
-#'   \item{'tree'}{Tree diagram}
-#'   \item{'cues'}{Marginal accuracy of cues in ROC space}
-#'   \item{'roc'}{Performance of tree(s) (and comparison algorithms) in ROC space}
+#'   \item{'all'}{Plot the tree diagram with all corresponding guides and performance statistics, but excluding cue accuracies.}
+#'   \item{'tree'}{Plot only the tree diagram.}
+#'   \item{'cues'}{Plot only the marginal accuracy of cues in ROC space.
+#'   Note that cue accuracies are \emph{not} shown when calling \code{what = 'all'} and use the \code{\link{showcues}} function.}
+#'   \item{'roc'}{Plot only the performance of tree(s) (and comparison algorithms) in ROC space.}
 #' }
 #' Default: \code{what = 'all'}.
 #'
 #' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 #' Default: \code{tree = 1}.
 #' To plot the best training or best test tree with respect to the \code{goal} specified during FFT construction,
-#' use \code{"best.train"} or \code{"best.test"}, respectively.
+#' use \code{'best.train'} or \code{'best.test'}, respectively.
 #'
 #' @param main The main plot label (as a character string).
 #'
@@ -88,14 +89,22 @@
 #'                      data = heartdisease
 #'                      )
 #'
-#' # Visualize the default FFT (Tree #1):
-#' plot(heart.fft,
-#'      main = "Heart Disease Diagnosis",
-#'      decision.labels = c("Absent", "Present")
-#'      )
+#' # Visualize the default FFT (Tree #1, what = 'all'):
+#' plot(heart.fft, main = "Heart disease",
+#'      decision.labels = c("Absent", "Present"))
+#'
+#' # Visualize only cue accuracies (in ROC space):
+#' plot(heart.fft, what = "cues",  main = "Cue accuracies for heart disease data")
+#'
+#' # Visualize only the tree diagram:
+#' plot(heart.fft, what = "tree",  main = "Diagnosing heart disease")
+#'
+#' # Visualize only performance comparison in ROC space:
+#' plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 #'
 #' # Visualize FFT #2 (with customized labels):
 #' plot(heart.fft,
+#'      what = "all",
 #'      tree = 2,
 #'      main = "An FFT for heart disease diagnosis",
 #'      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
@@ -105,9 +114,6 @@
 #'      show.levels = FALSE,
 #'      show.roc = FALSE
 #'      )
-#'
-#' # Visualize cue accuracies:
-#' plot(heart.fft, what = "cues")
 #'
 #' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
