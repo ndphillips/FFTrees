@@ -194,10 +194,12 @@ plot.FFTrees <- function(x = NULL,
 
   # Verify what: ----
 
-  valid_what <- c("all", "cues", "tree", "roc")
-  what <- tolower(what)  # robustness
+  valid_what <- c("all", "default",
+                  "cues", "tree", "icontree", "roc")
 
-  if (what %in% valid_what == FALSE) {
+  what <- tolower(substr(what, 1, 3))  # robustness
+
+  if (what %in% substr(valid_what, 1, 3) == FALSE) {
 
     valid_string <- paste(valid_what, collapse = ", ")
     valid_string_q <- sapply(strsplit(valid_string, ', '), function(x) toString(sQuote(x)))
@@ -208,7 +210,7 @@ plot.FFTrees <- function(x = NULL,
 
   # Handle what: ----
 
-  if (what == "cues") { # handle special case:
+  if (what == "cue") { # handle special case:
 
     showcues(x = x, main = main, ...)  # pass key inputs + graphical parameters
 
@@ -218,11 +220,11 @@ plot.FFTrees <- function(x = NULL,
   }
 
 
-  if (what != "cues") { # ALL else in function: what in c("all", "tree", "roc")
+  if (what != "cue") { # ALL else in function: what in c("all", "tree", "roc")
 
     # Set show.parts parameters: ----
 
-    if (what == "all") {
+    if (what == "all" | what == "def") { # default:
 
       if (is.null(show.header)) {
         show.header <- TRUE
@@ -246,10 +248,10 @@ plot.FFTrees <- function(x = NULL,
         show.iconguide <- TRUE
       }
 
-    } # if (what == "all").
+    } # if (what == "all" | "def").
 
 
-    if (what == "tree") {
+    if (what == "tre") { # tree:
 
       if (is.null(show.header)) {
         show.header <- FALSE
@@ -273,10 +275,10 @@ plot.FFTrees <- function(x = NULL,
         show.iconguide <- FALSE
       }
 
-    } # if (what == "tree").
+    } # if (what == "tre").
 
 
-    if (what == "roc") {
+    if (what == "roc") { # roc:
 
       show.header <- FALSE
       show.tree <- FALSE
