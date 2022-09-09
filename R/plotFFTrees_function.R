@@ -23,10 +23,14 @@
 #' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
-#' @param what What should be plotted (as a string)?
-#' \code{'tree'} (the default) shows details of one tree (specified by \code{tree});
-#' \code{'cues'} shows the marginal accuracy of cues in ROC space;
-#' \code{'roc'} shows the performance of tree(s) (and comparison algorithms) in ROC space.
+#' @param what What should be plotted (as a string)? Valid options are:
+#' \describe{
+#'   \item{'all'}{Plot all elements (i.e., tree diagram with all guides and performance statistics)}
+#'   \item{'tree'}{Tree diagram}
+#'   \item{'cues'}{Marginal accuracy of cues in ROC space}
+#'   \item{'roc'}{Performance of tree(s) (and comparison algorithms) in ROC space}
+#' }
+#' Default: \code{what = 'all'}.
 #'
 #' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 #' Default: \code{tree = 1}.
@@ -43,8 +47,7 @@
 #'
 #' @param comp Should the performance of competitive algorithms (e.g.; logistic regression, random forests, etc.)
 #' be shown in the ROC plot (if available, as logical)?
-#' @param stats Should statistical information be plotted (as logical)?
-#' If \code{FALSE}, only the tree diagram (without any reference to statistics) will be plotted.
+#'
 #'
 #' @param show.header Show header with basic data properties (in top panel, as logical)?
 #'
@@ -65,8 +68,13 @@
 #' @param n.per.icon Number of cases per icon (as numeric).
 #' @param level.type How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.
 #'
-#' @param which.tree deprecated argument, included for backwards compatibility, use \code{"tree"} instead.
-#' @param decision.names deprecated argument.
+#' @param which.tree Deprecated argument. Use \code{tree} instead.
+#'
+#' @param decision.names Deprecated argument. Use \code{decision.labels} instead.
+#'
+#' @param stats Deprecated argument. Should statistical information be plotted (as logical)?
+#' Use \code{what = "all"} to include performance statistics
+#' and \code{what = "tree"} to plot only a tree diagram.
 #'
 #' @param ... Graphical parameters (passed either
 #' to \code{\link{showcues}} when \code{what = 'cues'} or
@@ -120,7 +128,7 @@
 
 plot.FFTrees <- function(x = NULL,
                          data = "train",
-                         what = "tree",
+                         what = "all",     # valid_what <- c("all", "cues", "tree", "roc")
                          tree = 1,
                          main = NULL,
                          cue.labels = NULL,
@@ -129,7 +137,6 @@ plot.FFTrees <- function(x = NULL,
                          threshold.cex = NULL,
                          decision.cex = 1,
                          comp = TRUE,
-                         stats = TRUE,
                          show.header = NULL,
                          show.tree = NULL,
                          show.confusion = NULL,
@@ -141,9 +148,12 @@ plot.FFTrees <- function(x = NULL,
                          label.tree = NULL,
                          label.performance = NULL,
                          n.per.icon = NULL,
-                         which.tree = NULL,
                          level.type = "bar",
-                         decision.names = NULL,
+                         # deprecated arguments:
+                         which.tree = NULL,      # deprecated: Use tree instead.
+                         decision.names = NULL,  # deprecated: Use decision.labels instead.
+                         stats = NULL,           # deprecated: Use what = "all" or what = "tree" instead.
+                         # graphical parameters:
                          ...) {
 
   # Prepare and validate inputs: ------
@@ -154,22 +164,45 @@ plot.FFTrees <- function(x = NULL,
 
   # Handle deprecated arguments: ----
 
+  if (is.null(which.tree) == FALSE) {
+
+    warning("plot.FFTrees: 'which.tree' is deprecated. Use 'tree' instead.")
+
+    tree <- which.tree
+  }
+
   if (is.null(decision.names) == FALSE) {
 
-    warning("plot.FFTrees: decision.names is deprecated, use decision.labels instead.")
+    warning("plot.FFTrees: 'decision.names' is deprecated, use 'decision.labels' instead.")
 
     decision.labels <- decision.names
   }
 
-  # Handle what: ----
+  if (is.null(stats) == FALSE){
 
-  what <- tolower(what)  # robustness
+    warning("plot.FFTrees: 'stats' is deprecated, use either what = 'all' or what = 'tree' instead.")
 
-  if (what %in% c("cues", "tree", "roc") == FALSE) {
-    stop("plot.FFTrees: what must be either 'cues', 'roc', or 'tree'.")
+    if (stats) { what <- "all" } else { what <- "tree" }
   }
 
-  if (what == "cues") { # special case:
+
+  # Verify what: ----
+
+  valid_what <- c("all", "cues", "tree", "roc")
+  what <- tolower(what)  # robustness
+
+  if (what %in% valid_what == FALSE) {
+
+    valid_string <- paste(valid_what, collapse = ", ")
+    valid_string_q <- sapply(strsplit(valid_string, ', '), function(x) toString(sQuote(x)))
+
+    stop(paste0("what must be a string in c(", valid_string_q, ").", sep = ""))
+  }
+
+
+  # Handle what: ----
+
+  if (what == "cues") { # handle special case:
 
     showcues(x = x, main = main, ...)  # pass key inputs + graphical parameters
 
@@ -178,60 +211,64 @@ plot.FFTrees <- function(x = NULL,
 
   }
 
-  if (what != "cues") { # ALL else ('roc' or 'tree'):
 
-    # Determine layout: ----
+  if (what != "cues") { # ALL else in function: what in c("all", "tree", "roc")
 
-    if (what == "tree") {
-      if (stats == TRUE) {
-        if (is.null(show.header)) {
-          show.header <- TRUE
-        }
-        if (is.null(show.tree)) {
-          show.tree <- TRUE
-        }
-        if (is.null(show.confusion)) {
-          show.confusion <- TRUE
-        }
-        if (is.null(show.levels)) {
-          show.levels <- TRUE
-        }
-        if (is.null(show.roc)) {
-          show.roc <- TRUE
-        }
-        if (is.null(show.icons)) {
-          show.icons <- TRUE
-        }
-        if (is.null(show.iconguide)) {
-          show.iconguide <- TRUE
-        }
+    # Set show.parts parameters: ----
+
+    if (what == "all") {
+
+      if (is.null(show.header)) {
+        show.header <- TRUE
+      }
+      if (is.null(show.tree)) {
+        show.tree <- TRUE
+      }
+      if (is.null(show.confusion)) {
+        show.confusion <- TRUE
+      }
+      if (is.null(show.levels)) {
+        show.levels <- TRUE
+      }
+      if (is.null(show.roc)) {
+        show.roc <- TRUE
+      }
+      if (is.null(show.icons)) {
+        show.icons <- TRUE
+      }
+      if (is.null(show.iconguide)) {
+        show.iconguide <- TRUE
       }
 
-      if (stats == FALSE) {
+    } # if (what == "all").
 
-        if (is.null(show.header)) {
-          show.header <- FALSE
-        }
-        if (is.null(show.tree)) {
-          show.tree <- TRUE
-        }
-        if (is.null(show.confusion)) {
-          show.confusion <- FALSE
-        }
-        if (is.null(show.levels)) {
-          show.levels <- FALSE
-        }
-        if (is.null(show.roc)) {
-          show.roc <- FALSE
-        }
-        if (is.null(show.icons)) {
-          show.icons <- FALSE
-        }
-        if (is.null(show.iconguide)) {
-          show.iconguide <- FALSE
-        }
-      } # if (stats == FALSE).
-    }
+
+    if (what == "tree") {
+
+      if (is.null(show.header)) {
+        show.header <- FALSE
+      }
+      if (is.null(show.tree)) {
+        show.tree <- TRUE
+      }
+      if (is.null(show.confusion)) {
+        show.confusion <- FALSE
+      }
+      if (is.null(show.levels)) {
+        show.levels <- FALSE
+      }
+      if (is.null(show.roc)) {
+        show.roc <- FALSE
+      }
+      if (is.null(show.icons)) {
+        show.icons <- FALSE
+      }
+      if (is.null(show.iconguide)) {
+        show.iconguide <- FALSE
+      }
+
+    } # if (what == "tree").
+
 
     if (what == "roc") {
 
@@ -245,7 +282,7 @@ plot.FFTrees <- function(x = NULL,
 
       hlines <- FALSE
 
-    }
+    } # if (what == "roc").
 
 
     # Determine layout: ----
@@ -253,7 +290,7 @@ plot.FFTrees <- function(x = NULL,
     # Top, middle, and bottom:
     if (show.header & show.tree & (show.confusion | show.levels | show.roc)) {
 
-      show.top <- TRUE
+      show.top    <- TRUE
       show.middle <- TRUE
       show.bottom <- TRUE
 
@@ -317,12 +354,13 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    # Get data: ----
+    # data: ----
 
     # Note: data can be either a string "train"/"test"
     #       OR an entire data frame (of new test data)!
 
     if (inherits(data, "character")) {
+
       data <- tolower(data)  # increase robustness
 
       # testthat::expect_true(data %in% c("train", "test"))
@@ -382,13 +420,7 @@ plot.FFTrees <- function(x = NULL,
 
     # tree: ----
 
-    # Check for problems and deprecated arguments:
-
-    if (is.null(which.tree) == FALSE) {
-      warning("The 'which.tree' argument is deprecated and replaced by 'tree'.")
-
-      tree <- which.tree
-    }
+    # Check for problems:
 
     if (!inherits(x, "FFTrees")) {
       stop("You did not include a valid FFTrees class object or specify the tree directly with 'level.names', 'level.classes' (etc.).\nEither create a valid FFTrees object with FFTrees() or specify the tree directly.")
