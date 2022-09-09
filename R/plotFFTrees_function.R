@@ -26,9 +26,11 @@
 #' @param what What should be plotted (as a string)? Valid options are:
 #' \describe{
 #'   \item{'all'}{Plot the tree diagram with all corresponding guides and performance statistics, but excluding cue accuracies.}
-#'   \item{'tree'}{Plot only the tree diagram.}
 #'   \item{'cues'}{Plot only the marginal accuracy of cues in ROC space.
 #'   Note that cue accuracies are \emph{not} shown when calling \code{what = 'all'} and use the \code{\link{showcues}} function.}
+#'   \item{'icontree'}{Plot tree diagram with icon arrays on exit nodes.
+#'   Consider also setting \code{n.per.icon} and \code{show.iconguide}.}
+#'   \item{'tree'}{Plot only the tree diagram.}
 #'   \item{'roc'}{Plot only the performance of tree(s) (and comparison algorithms) in ROC space.}
 #' }
 #' Default: \code{what = 'all'}.
@@ -93,13 +95,14 @@
 #' plot(heart.fft, main = "Heart disease",
 #'      decision.labels = c("Absent", "Present"))
 #'
-#' # Visualize only cue accuracies (in ROC space):
+#' # Visualize cue accuracies (in ROC space):
 #' plot(heart.fft, what = "cues",  main = "Cue accuracies for heart disease data")
 #'
-#' # Visualize only the tree diagram:
-#' plot(heart.fft, what = "tree",  main = "Diagnosing heart disease")
+#' # Visualize tree diagram with icon arrays on exit nodes:
+#' plot(heart.fft, what = "icontree", n.per.icon = 2,
+#'      main = "Diagnosing heart disease")
 #'
-#' # Visualize only performance comparison in ROC space:
+#' # Visualize performance comparison in ROC space:
 #' plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 #'
 #' # Visualize FFT #2 (with customized labels):
@@ -193,7 +196,6 @@ plot.FFTrees <- function(x = NULL,
 
 
   # Verify what: ----
-
   valid_what <- c("all", "default",
                   "cues", "tree", "icontree", "roc")
 
@@ -251,7 +253,7 @@ plot.FFTrees <- function(x = NULL,
     } # if (what == "all" | "def").
 
 
-    if (what == "tre") { # tree:
+    if (what == "tre") { # tree diagram only:
 
       if (is.null(show.header)) {
         show.header <- FALSE
@@ -278,7 +280,34 @@ plot.FFTrees <- function(x = NULL,
     } # if (what == "tre").
 
 
-    if (what == "roc") { # roc:
+    if (what == "ico") { # icontree / tree with icons:
+
+      if (is.null(show.header)) {
+        show.header <- FALSE
+      }
+      if (is.null(show.tree)) {
+        show.tree <- TRUE
+      }
+      if (is.null(show.confusion)) {
+        show.confusion <- FALSE
+      }
+      if (is.null(show.levels)) {
+        show.levels <- FALSE
+      }
+      if (is.null(show.roc)) {
+        show.roc <- FALSE
+      }
+      if (is.null(show.icons)) {
+        show.icons <- TRUE
+      }
+      if (is.null(show.iconguide)) {
+        show.iconguide <- FALSE
+      }
+
+    } # if (what == "ico").
+
+
+    if (what == "roc") { # roc only:
 
       show.header <- FALSE
       show.tree <- FALSE
