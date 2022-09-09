@@ -7,7 +7,7 @@
 \method{plot}{FFTrees}(
   x = NULL,
   data = "train",
-  what = "tree",
+  what = "all",
   tree = 1,
   main = NULL,
   cue.labels = NULL,
@@ -16,7 +16,6 @@
   threshold.cex = NULL,
   decision.cex = 1,
   comp = TRUE,
-  stats = TRUE,
   show.header = NULL,
   show.tree = NULL,
   show.confusion = NULL,
@@ -28,9 +27,10 @@
   label.tree = NULL,
   label.performance = NULL,
   n.per.icon = NULL,
-  which.tree = NULL,
   level.type = "bar",
+  which.tree = NULL,
   decision.names = NULL,
+  stats = NULL,
   ...
 )
 }
@@ -41,15 +41,22 @@
 must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
 By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
-\item{what}{What should be plotted (as a string)?
-\code{'tree'} (the default) shows details of one tree (specified by \code{tree});
-\code{'cues'} shows the marginal accuracy of cues in ROC space;
-\code{'roc'} shows the performance of tree(s) (and comparison algorithms) in ROC space.}
+\item{what}{What should be plotted (as a string)? Valid options are:
+\describe{
+  \item{'all'}{Plot the tree diagram with all corresponding guides and performance statistics, but excluding cue accuracies.}
+  \item{'cues'}{Plot only the marginal accuracy of cues in ROC space.
+  Note that cue accuracies are \emph{not} shown when calling \code{what = 'all'} and use the \code{\link{showcues}} function.}
+  \item{'icontree'}{Plot tree diagram with icon arrays on exit nodes.
+  Consider also setting \code{n.per.icon} and \code{show.iconguide}.}
+  \item{'tree'}{Plot only the tree diagram.}
+  \item{'roc'}{Plot only the performance of tree(s) (and comparison algorithms) in ROC space.}
+}
+Default: \code{what = 'all'}.}
 
 \item{tree}{The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 Default: \code{tree = 1}.
 To plot the best training or best test tree with respect to the \code{goal} specified during FFT construction,
-use \code{"best.train"} or \code{"best.test"}, respectively.}
+use \code{'best.train'} or \code{'best.test'}, respectively.}
 
 \item{main}{The main plot label (as a character string).}
 
@@ -65,9 +72,6 @@ use \code{"best.train"} or \code{"best.test"}, respectively.}
 
 \item{comp}{Should the performance of competitive algorithms (e.g.; logistic regression, random forests, etc.)
 be shown in the ROC plot (if available, as logical)?}
-
-\item{stats}{Should statistical information be plotted (as logical)?
-If \code{FALSE}, only the tree diagram (without any reference to statistics) will be plotted.}
 
 \item{show.header}{Show header with basic data properties (in top panel, as logical)?}
 
@@ -92,11 +96,15 @@ Default: \code{hlines = TRUE}.}
 
 \item{n.per.icon}{Number of cases per icon (as numeric).}
 
-\item{which.tree}{deprecated argument, included for backwards compatibility, use \code{"tree"} instead.}
-
 \item{level.type}{How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.}
 
-\item{decision.names}{deprecated argument.}
+\item{which.tree}{Deprecated argument. Use \code{tree} instead.}
+
+\item{decision.names}{Deprecated argument. Use \code{decision.labels} instead.}
+
+\item{stats}{Deprecated argument. Should statistical information be plotted (as logical)?
+Use \code{what = "all"} to include performance statistics
+and \code{what = "tree"} to plot only a tree diagram.}
 
 \item{...}{Graphical parameters (passed either
 to \code{\link{showcues}} when \code{what = 'cues'} or
@@ -130,14 +138,23 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,
                      data = heartdisease
                      )
 
-# Visualize the default FFT (Tree #1):
-plot(heart.fft,
-     main = "Heart Disease Diagnosis",
-     decision.labels = c("Absent", "Present")
-     )
+# Visualize the default FFT (Tree #1, what = 'all'):
+plot(heart.fft, main = "Heart disease",
+     decision.labels = c("Absent", "Present"))
+
+# Visualize cue accuracies (in ROC space):
+plot(heart.fft, what = "cues",  main = "Cue accuracies for heart disease data")
+
+# Visualize tree diagram with icon arrays on exit nodes:
+plot(heart.fft, what = "icontree", n.per.icon = 2,
+     main = "Diagnosing heart disease")
+
+# Visualize performance comparison in ROC space:
+plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 
 # Visualize FFT #2 (with customized labels):
 plot(heart.fft,
+     what = "all",
      tree = 2,
      main = "An FFT for heart disease diagnosis",
      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
@@ -147,9 +164,6 @@ plot(heart.fft,
      show.levels = FALSE,
      show.roc = FALSE
      )
-
-# Visualize cue accuracies:
-plot(heart.fft, what = "cues")
 
 # For more details, see
 vignette("FFTrees_plot", package = "FFTrees")

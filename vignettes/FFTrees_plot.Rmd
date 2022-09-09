@@ -22,12 +22,30 @@ library(FFTrees)
 
 ## Visualizing FFTrees 
 
+The **FFTrees** package makes it very easy to visualize fast-and-frugal trees (FFTs) and evaluate their performance. 
+
 The main function `FFTrees()` creates fast-and-frugal trees (FFTs) as R objects of the type `FFTrees`. 
-We can visualize an `FFTrees` object\ `x` in two main ways: 
+We visualize an `FFTrees` object\ `x` by plotting it (i.e., evaluating `plot(x)`). 
 
-1. by visualizing cue accuracies with `plot(x, what = 'cues')`. 
+Two key arguments for plotting are `what` and `tree`: 
+Whereas the `tree` argument allows selecting between different trees in\ `x` (using `tree = 1` by default), 
+the `what` argument distinguishes between five main types of plots: 
 
-2. by visualizing individual trees and performance statistics with `plot(x)`.
+1. `plot(x, what = 'all')` visualizes a tree and corresponding performance statistics. 
+This is also the default when evaluating `plot(x)`. 
+
+2. `plot(x, what = 'tree')` visualizes only the tree diagram of the selected tree (without performance statistics). 
+
+3. `plot(x, what = 'icontree')` visualizes the tree diagram of the selected tree with icon arrays on exit nodes 
+(with additional options for `show.iconguide` and `n.per.icon`. 
+
+4. `plot(x, what = 'cues')` visualizes the current cue accuracies in ROC\ space (by calling the `showcues()` function).
+
+5. `plot(x, what = 'roc')` visualizes a performance comparison of FFTs and competing algorithms in ROC\ space. 
+
+
+The other arguments of the `plot.FFTrees()` function allow further customization of the plot 
+(e.g., by defining labels and parameters, or selectively hiding or showing elements). 
 
 In the following, we illustrate both ways by creating FFTs based on the `titanic` data (included in the **FFTrees** package). 
 
@@ -47,7 +65,7 @@ set.seed(12)  # reproducible randomness
 rcases <- sort(sample(1:nrow(titanic), 10))
 
 # Sample of data:
-knitr::kable(titanic[rcases, ], caption = "A sample of 10 observations in the `titanic` data.")
+knitr::kable(titanic[rcases, ], caption = "A sample of 10 observations from the `titanic` data.")
 ```
 
 Our current goal is to fit FFTs to this dataset. 
@@ -70,10 +88,13 @@ titanic.fft <- FFTrees(formula = survived ~.,
 Note that we used the entire `titanic` data (i.e., all `r nrow(titanic)`\ cases) to train `titanic.fft`, rather than specifying `train.p` to set aside some proportion of it or specifying a dedicated `data.test` set for predictive purposes. 
 This implies that our present goal is _to fit_ FFTs to the historic data, rather than on create and use FFTs _to predict_ new cases. 
 
+
 ### Visualising cue accuracies
 
 We can visualize individual cue accuracies (specifically their sensitivities and specificities) by including the `what = 'cues'` argument within the `plot()` function. 
 Let's apply the function to the `titanic.fft` object to see how accurate each of the cues were on their own in predicting survival:
+
+<!-- Example what = 'cues': -->
 
 ```{r titanic-cues, fig.width = 6, fig.height = 6, fig.align = 'center', out.width = "75%", fig.cap="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset."}
 plot(titanic.fft, what = 'cues')
@@ -119,35 +140,57 @@ The panel label reflects this important distinction:
 
 - If a testing dataset separate from the one used to build the tree is used, we'll see a "Prediction" label. 
 
-The feedback of the bottom panel is structured into three subpanels: 
+The bottom panel provides performance information and is structured into three subpanels: 
 
-    - The classification table (on the left) shows the relationship between the true criterion states (as columns) and predicted decisions (as rows). The abbreviations _hi_ (hits) and _cr_ (Correct rejections) denote correct decisions; _mi_ (misses) and _fa_ (false-alarms) denote incorrect decisions.
+a. The classification table (on the left) shows the relationship between the true criterion states (as columns) and predicted decisions (as rows). 
+The abbreviations _hi_ (hits) and _cr_ (Correct rejections) denote correct decisions; _mi_ (misses) and _fa_ (false-alarms) denote incorrect decisions.
+
+b. A range of vertical levels (in the middle) show the tree's cumulative performance in terms of two frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balanced accuracy (see [Accuracy statistics](FFTrees_accuracy_statistics.html) for details). 
     
-    - A range of vertical levels (in the middle) show the tree's cumulative performance in terms of two frugality measures (`mcu` and `pci`) and various accuracy measures (sensitivity, specificity, accuracy, and balanced accuracy (see [Accuracy statistics](FFTrees_accuracy_statistics.html) for details). 
-    
-    - Finally, the plot (on the right) shows an ROC\ curve comparing the performance of all trees in the `FFTrees` object. 
-    Additionally, the performance of logistic regression (blue) and CART (red) are shown. 
-    The tree plotted in the middle panel is highlighted in a solid green color (i.e., Figure\ 2 shows Tree\ #1). 
+c. Finally, the plot (on the right) shows an ROC\ curve comparing the performance of all trees in the `FFTrees` object. 
+Additionally, the performance of logistic regression (blue) and CART (red) are shown. 
+The tree plotted in the middle panel is highlighted in a solid green color (i.e., Figure\ 2 shows Tree\ #1). 
 
 
 ### Additional arguments
 
-Specifying additional arguments of `plot()` changes what is being displayed: 
+Specifying additional arguments of `plot()` changes what and how various elements are being displayed. 
 
-- `stats`: To visualize a bare tree (without performance statistics), we can use `stats = FALSE`:
+- `what` should be visualized? The `what` argument selects contents to be plotted: 
 
-```{r titanic-stats, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "75%", fig.cap="**Figure 3**: A plain FFT plot (without statistics)."}
-# Show only the best training FFT:
-plot(titanic.fft, stats = FALSE)
+    - When `what = 'all'` (as by default), the plot shows both a tree diagram and a range of corresponding performance statistics. 
+    Using one of the other `what` options narrows the range of what is being shown: 
+
+    - To only visualize a bare tree diagram (without performance statistics), we specify `what = "tree"` (formerly `stats = FALSE`).
+    
+    - To visualize the tree diagram with icon arrays on exit nodes, we specify `what = "icontree"` (with additional options for `show.iconguide` and `n.per.icon`). 
+
+    - To visualize the performance comparison (for different FFTs and competing algorithms) in ROC\ space, we specify `what = "roc"`.
+
+<!-- Examples: -->
+
+The following examples illustrate the wide range of corresponding plots: 
+
+<!-- Example what = 'icontree': -->
+    
+```{r titanic-what-tree, fig.align = 'center', fig.height = 7, fig.width = 10, out.width = "75%", fig.cap="**Figure 3**: An FFT diagram with icon arrays on exit nodes."}
+# Plot tree diagram with icon arrays:
+plot(titanic.fft, what = "icontree", 
+     n.per.icon = 50, show.iconguide = TRUE)
 ```
 
-- `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, `show.iconguide`: 
-These arguments allow to selectively turn on or turn off specific elements of the overall plot. 
-For example: 
+<!-- Example what = 'roc': -->
 
-```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 8, out.width = "75%", fig.cap="**Figure 4**: Plotting selected elements."}
+```{r titanic-what-roc, fig.align = 'center', fig.height = 6, fig.width = 7, out.width = "75%", fig.cap="**Figure 4**: Performance comparison of FFTs in ROC space."}
+# Plot only the performance comparison in ROC space:
+plot(titanic.fft, what = "roc")
+```
+
+- When the main options for `what` do not suffice, various `show.` arguments (i.e., `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, and `show.iconguide`) allow to selectively turn on or turn off specific elements of the overall plot. For example: 
+
+```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 9, out.width = "75%", fig.cap="**Figure 5**: Plotting selected elements."}
 # Hide some elements of the FFT plot: 
-plot(titanic.fft,
+plot(titanic.fft, 
      show.icons = FALSE,     # hide icons
      show.iconguide = FALSE, # hide icon guide
      show.header = FALSE     # hide header
@@ -206,7 +249,7 @@ titanic.pred.fft <- FFTrees(formula = survived ~.,
 
 Here is the best training tree applied to the _training_ data:
 
-```{r titanic-train, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 5**: Plotting the best FFT on _training_ data."}
+```{r titanic-train, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 6**: Plotting the best FFT on _training_ data."}
 plot(titanic.pred.fft, tree = 1)
 ```
 
@@ -217,7 +260,7 @@ However, as we can see in the ROC\ table, a logistic regression\ (LR) would not 
 
 Now let's inspect the performance of the same tree on the _test_ data: 
 
-```{r titanic-test, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 6**: Plotting the best FFT on _test_ data."}
+```{r titanic-test, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting the best FFT on _test_ data."}
 plot(titanic.pred.fft, data = "test", tree = 1)
 ```
 
@@ -227,7 +270,7 @@ Both the sensitivity and specificity values have decreased somewhat, which is ty
 
 Let's visualize the prediction performance of Tree\ #2, the most liberal tree (i.e., with the highest sensitivity): 
 
-```{r titanic-viz-2, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting Tree\ #2."} 
+```{r titanic-viz-2, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 8**: Plotting Tree\ #2."} 
 plot(titanic.pred.fft, data = "test", tree = 2)
 ```
 

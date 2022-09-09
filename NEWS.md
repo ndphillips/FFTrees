@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9003
+## 1.7.0.9004
 
 <!-- Development version: --> 
 
@@ -14,17 +14,19 @@ Changes since last release:
 
 ### Major changes
 
-- none yet.
+- Added new plotting options to `plot.FFTrees()` (e.g., `what = 'all'` vs. `what = 'tree'` and `what = 'icontree'`). 
 
 
 ### Minor changes 
 
 - Added `wacc` to measures computed for competing algorithms. 
+- Deprecated `stats` argument of `plot.FFTrees()`.
 
 
 ### Details 
 
 - Renamed internal functions and variables.
+- Revised documentation and vignettes. 
 
 
 <!-- Released versions: --> 
@@ -87,7 +89,7 @@ Changes since last release:
 
 - Changed tree statistics for test data from data frames to tibbles.
 - Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
-- Deprecated `store.data` argument in `FFTrees()`. 
+- Deprecated `store.data` argument of `FFTrees()`. 
 
 <!-- Blank line. --> 
 
@@ -137,7 +139,7 @@ Changes since last release:
 
 - `plot.FFTrees()` no longer saves graphic params changed in `par()`. 
 - `plot.FFTRrees()`: When `test = 'best.test'` and no test data are provided, the information text is no returned with `message()` rather than `print()`. 
-- Deprecation notes in `plot.FFTrees()` are now returned as warnings, not messages. 
+- Deprecation notes of `plot.FFTrees()` are now returned as warnings, not messages. 
 
 
 ------ 
@@ -291,6 +293,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-05.] 
+[File `NEWS.md` last updated on 2022-09-09.] 
 
 <!-- eof. -->

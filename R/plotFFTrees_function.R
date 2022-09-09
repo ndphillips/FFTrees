@@ -23,15 +23,22 @@
 #' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
-#' @param what What should be plotted (as a string)?
-#' \code{'tree'} (the default) shows details of one tree (specified by \code{tree});
-#' \code{'cues'} shows the marginal accuracy of cues in ROC space;
-#' \code{'roc'} shows the performance of tree(s) (and comparison algorithms) in ROC space.
+#' @param what What should be plotted (as a string)? Valid options are:
+#' \describe{
+#'   \item{'all'}{Plot the tree diagram with all corresponding guides and performance statistics, but excluding cue accuracies.}
+#'   \item{'cues'}{Plot only the marginal accuracy of cues in ROC space.
+#'   Note that cue accuracies are \emph{not} shown when calling \code{what = 'all'} and use the \code{\link{showcues}} function.}
+#'   \item{'icontree'}{Plot tree diagram with icon arrays on exit nodes.
+#'   Consider also setting \code{n.per.icon} and \code{show.iconguide}.}
+#'   \item{'tree'}{Plot only the tree diagram.}
+#'   \item{'roc'}{Plot only the performance of tree(s) (and comparison algorithms) in ROC space.}
+#' }
+#' Default: \code{what = 'all'}.
 #'
 #' @param tree The tree to be plotted (as an integer, only valid when the corresponding tree argument is non-empty).
 #' Default: \code{tree = 1}.
 #' To plot the best training or best test tree with respect to the \code{goal} specified during FFT construction,
-#' use \code{"best.train"} or \code{"best.test"}, respectively.
+#' use \code{'best.train'} or \code{'best.test'}, respectively.
 #'
 #' @param main The main plot label (as a character string).
 #'
@@ -43,8 +50,7 @@
 #'
 #' @param comp Should the performance of competitive algorithms (e.g.; logistic regression, random forests, etc.)
 #' be shown in the ROC plot (if available, as logical)?
-#' @param stats Should statistical information be plotted (as logical)?
-#' If \code{FALSE}, only the tree diagram (without any reference to statistics) will be plotted.
+#'
 #'
 #' @param show.header Show header with basic data properties (in top panel, as logical)?
 #'
@@ -65,8 +71,13 @@
 #' @param n.per.icon Number of cases per icon (as numeric).
 #' @param level.type How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.
 #'
-#' @param which.tree deprecated argument, included for backwards compatibility, use \code{"tree"} instead.
-#' @param decision.names deprecated argument.
+#' @param which.tree Deprecated argument. Use \code{tree} instead.
+#'
+#' @param decision.names Deprecated argument. Use \code{decision.labels} instead.
+#'
+#' @param stats Deprecated argument. Should statistical information be plotted (as logical)?
+#' Use \code{what = "all"} to include performance statistics
+#' and \code{what = "tree"} to plot only a tree diagram.
 #'
 #' @param ... Graphical parameters (passed either
 #' to \code{\link{showcues}} when \code{what = 'cues'} or
@@ -80,14 +91,23 @@
 #'                      data = heartdisease
 #'                      )
 #'
-#' # Visualize the default FFT (Tree #1):
-#' plot(heart.fft,
-#'      main = "Heart Disease Diagnosis",
-#'      decision.labels = c("Absent", "Present")
-#'      )
+#' # Visualize the default FFT (Tree #1, what = 'all'):
+#' plot(heart.fft, main = "Heart disease",
+#'      decision.labels = c("Absent", "Present"))
+#'
+#' # Visualize cue accuracies (in ROC space):
+#' plot(heart.fft, what = "cues",  main = "Cue accuracies for heart disease data")
+#'
+#' # Visualize tree diagram with icon arrays on exit nodes:
+#' plot(heart.fft, what = "icontree", n.per.icon = 2,
+#'      main = "Diagnosing heart disease")
+#'
+#' # Visualize performance comparison in ROC space:
+#' plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 #'
 #' # Visualize FFT #2 (with customized labels):
 #' plot(heart.fft,
+#'      what = "all",
 #'      tree = 2,
 #'      main = "An FFT for heart disease diagnosis",
 #'      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
@@ -97,9 +117,6 @@
 #'      show.levels = FALSE,
 #'      show.roc = FALSE
 #'      )
-#'
-#' # Visualize cue accuracies:
-#' plot(heart.fft, what = "cues")
 #'
 #' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
@@ -120,7 +137,7 @@
 
 plot.FFTrees <- function(x = NULL,
                          data = "train",
-                         what = "tree",
+                         what = "all",     # valid_what <- c("all", "cues", "tree", "roc")
                          tree = 1,
                          main = NULL,
                          cue.labels = NULL,
@@ -129,7 +146,6 @@ plot.FFTrees <- function(x = NULL,
                          threshold.cex = NULL,
                          decision.cex = 1,
                          comp = TRUE,
-                         stats = TRUE,
                          show.header = NULL,
                          show.tree = NULL,
                          show.confusion = NULL,
@@ -141,9 +157,12 @@ plot.FFTrees <- function(x = NULL,
                          label.tree = NULL,
                          label.performance = NULL,
                          n.per.icon = NULL,
-                         which.tree = NULL,
                          level.type = "bar",
-                         decision.names = NULL,
+                         # deprecated arguments:
+                         which.tree = NULL,      # deprecated: Use tree instead.
+                         decision.names = NULL,  # deprecated: Use decision.labels instead.
+                         stats = NULL,           # deprecated: Use what = "all" or what = "tree" instead.
+                         # graphical parameters:
                          ...) {
 
   # Prepare and validate inputs: ------
@@ -154,22 +173,46 @@ plot.FFTrees <- function(x = NULL,
 
   # Handle deprecated arguments: ----
 
+  if (is.null(which.tree) == FALSE) {
+
+    warning("plot.FFTrees: 'which.tree' is deprecated. Use 'tree' instead.")
+
+    tree <- which.tree
+  }
+
   if (is.null(decision.names) == FALSE) {
 
-    warning("plot.FFTrees: decision.names is deprecated, use decision.labels instead.")
+    warning("plot.FFTrees: 'decision.names' is deprecated, use 'decision.labels' instead.")
 
     decision.labels <- decision.names
   }
 
-  # Handle what: ----
+  if (is.null(stats) == FALSE){
 
-  what <- tolower(what)  # robustness
+    warning("plot.FFTrees: 'stats' is deprecated, use either what = 'all' or what = 'tree' instead.")
 
-  if (what %in% c("cues", "tree", "roc") == FALSE) {
-    stop("plot.FFTrees: what must be either 'cues', 'roc', or 'tree'.")
+    if (stats) { what <- "all" } else { what <- "tree" }
   }
 
-  if (what == "cues") { # special case:
+
+  # Verify what: ----
+  valid_what <- c("all", "default",
+                  "cues", "tree", "icontree", "roc")
+
+  what <- tolower(substr(what, 1, 3))  # robustness
+
+  if (what %in% substr(valid_what, 1, 3) == FALSE) {
+
+    valid_string <- paste(valid_what, collapse = ", ")
+    valid_string_q <- sapply(strsplit(valid_string, ', '), function(x) toString(sQuote(x)))
+
+    stop(paste0("what must be a string in c(", valid_string_q, ").", sep = ""))
+  }
+
+
+  # Handle what: ----
+
+  if (what == "cue") { # handle special case:
 
     showcues(x = x, main = main, ...)  # pass key inputs + graphical parameters
 
@@ -178,62 +221,93 @@ plot.FFTrees <- function(x = NULL,
 
   }
 
-  if (what != "cues") { # ALL else ('roc' or 'tree'):
 
-    # Determine layout: ----
+  if (what != "cue") { # ALL else in function: what in c("all", "tree", "roc")
 
-    if (what == "tree") {
-      if (stats == TRUE) {
-        if (is.null(show.header)) {
-          show.header <- TRUE
-        }
-        if (is.null(show.tree)) {
-          show.tree <- TRUE
-        }
-        if (is.null(show.confusion)) {
-          show.confusion <- TRUE
-        }
-        if (is.null(show.levels)) {
-          show.levels <- TRUE
-        }
-        if (is.null(show.roc)) {
-          show.roc <- TRUE
-        }
-        if (is.null(show.icons)) {
-          show.icons <- TRUE
-        }
-        if (is.null(show.iconguide)) {
-          show.iconguide <- TRUE
-        }
+    # Set show.parts parameters: ----
+
+    if (what == "all" | what == "def") { # default:
+
+      if (is.null(show.header)) {
+        show.header <- TRUE
+      }
+      if (is.null(show.tree)) {
+        show.tree <- TRUE
+      }
+      if (is.null(show.confusion)) {
+        show.confusion <- TRUE
+      }
+      if (is.null(show.levels)) {
+        show.levels <- TRUE
+      }
+      if (is.null(show.roc)) {
+        show.roc <- TRUE
+      }
+      if (is.null(show.icons)) {
+        show.icons <- TRUE
+      }
+      if (is.null(show.iconguide)) {
+        show.iconguide <- TRUE
       }
 
-      if (stats == FALSE) {
+    } # if (what == "all" | "def").
 
-        if (is.null(show.header)) {
-          show.header <- FALSE
-        }
-        if (is.null(show.tree)) {
-          show.tree <- TRUE
-        }
-        if (is.null(show.confusion)) {
-          show.confusion <- FALSE
-        }
-        if (is.null(show.levels)) {
-          show.levels <- FALSE
-        }
-        if (is.null(show.roc)) {
-          show.roc <- FALSE
-        }
-        if (is.null(show.icons)) {
-          show.icons <- FALSE
-        }
-        if (is.null(show.iconguide)) {
-          show.iconguide <- FALSE
-        }
-      } # if (stats == FALSE).
-    }
 
-    if (what == "roc") {
+    if (what == "tre") { # tree diagram only:
+
+      if (is.null(show.header)) {
+        show.header <- FALSE
+      }
+      if (is.null(show.tree)) {
+        show.tree <- TRUE
+      }
+      if (is.null(show.confusion)) {
+        show.confusion <- FALSE
+      }
+      if (is.null(show.levels)) {
+        show.levels <- FALSE
+      }
+      if (is.null(show.roc)) {
+        show.roc <- FALSE
+      }
+      if (is.null(show.icons)) {
+        show.icons <- FALSE
+      }
+      if (is.null(show.iconguide)) {
+        show.iconguide <- FALSE
+      }
+
+    } # if (what == "tre").
+
+
+    if (what == "ico") { # icontree / tree with icons:
+
+      if (is.null(show.header)) {
+        show.header <- FALSE
+      }
+      if (is.null(show.tree)) {
+        show.tree <- TRUE
+      }
+      if (is.null(show.confusion)) {
+        show.confusion <- FALSE
+      }
+      if (is.null(show.levels)) {
+        show.levels <- FALSE
+      }
+      if (is.null(show.roc)) {
+        show.roc <- FALSE
+      }
+      if (is.null(show.icons)) {
+        show.icons <- TRUE
+      }
+      if (is.null(show.iconguide)) {
+        show.iconguide <- FALSE
+      }
+
+    } # if (what == "ico").
+
+
+    if (what == "roc") { # roc only:
 
       show.header <- FALSE
       show.tree <- FALSE
@@ -245,7 +319,7 @@ plot.FFTrees <- function(x = NULL,
 
       hlines <- FALSE
 
-    }
+    } # if (what == "roc").
 
 
     # Determine layout: ----
@@ -253,7 +327,7 @@ plot.FFTrees <- function(x = NULL,
     # Top, middle, and bottom:
     if (show.header & show.tree & (show.confusion | show.levels | show.roc)) {
 
-      show.top <- TRUE
+      show.top    <- TRUE
       show.middle <- TRUE
       show.bottom <- TRUE
 
@@ -317,12 +391,13 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    # Get data: ----
+    # data: ----
 
     # Note: data can be either a string "train"/"test"
     #       OR an entire data frame (of new test data)!
 
     if (inherits(data, "character")) {
+
       data <- tolower(data)  # increase robustness
 
       # testthat::expect_true(data %in% c("train", "test"))
@@ -382,13 +457,7 @@ plot.FFTrees <- function(x = NULL,
 
     # tree: ----
 
-    # Check for problems and deprecated arguments:
-
-    if (is.null(which.tree) == FALSE) {
-      warning("The 'which.tree' argument is deprecated and replaced by 'tree'.")
-
-      tree <- which.tree
-    }
+    # Check for problems:
 
     if (!inherits(x, "FFTrees")) {
       stop("You did not include a valid FFTrees class object or specify the tree directly with 'level.names', 'level.classes' (etc.).\nEither create a valid FFTrees object with FFTrees() or specify the tree directly.")
@@ -1006,52 +1075,93 @@ plot.FFTrees <- function(x = NULL,
       par(xpd = FALSE)
 
 
-      # Create signal and noise panels: ------
+      # Icon guide: ------
 
       if (show.iconguide) {
 
+        if (what == "ico") {
+
+          f_x <- 1.2  # factor (to stretch in x-dim)
+          f_y <- 0.8  # factor (to shift up)
+
+        } else { # default factors:
+
+          f_x <- 1
+          f_y <- 1
+
+        }
+
+        par(xpd = TRUE)
+
+        # (a) Noise panel (on left): ----
+
+        # Heading:
+        text(-plot.width  * .60 * f_x,
+             -plot.height * .05 * f_y,
+             paste("Decide ", decision.labels[1], sep = ""),
+             cex = 1.2, font = 3
+        )
+
         # Noise balls:
-        points(c(-plot.width * .70, -plot.width * .50),
-               c(-plot.height * .125, -plot.height * .125),
+        points(c(-plot.width * .70, -plot.width * .50) * f_x,
+               c(-plot.height * .130, -plot.height * .130) * f_y,
                pch = c(noise.ball.pch, signal.ball.pch),
                bg = c(correct.bg, error.bg),
                col = c(correct.border, error.border),
                cex = ball.cex * 1.5
         )
 
-        text(c(-plot.width * .70, -plot.width * .50),
-             c(-plot.height * .125, -plot.height * .125),
+        # Labels:
+        text(c(-plot.width * .70, -plot.width * .50) * f_x,
+             c(-plot.height * .130, -plot.height * .130) * f_y,
              labels = c("Correct\nRejection", "Miss"),
              pos = c(2, 4), offset = 1
         )
 
 
-        # Noise panel:
-        text(-plot.width * .60, -plot.height * .05,
-             paste("Decide ", decision.labels[1], sep = ""),
-             cex = 1.2, font = 3
+
+        # (b) Signal panel (on right): ----
+
+        # Heading:
+        text( plot.width *  .60 * f_x,
+              -plot.height * .05 * f_y,
+              paste("Decide ", decision.labels[2], sep = ""),
+              cex = 1.2, font = 3
         )
 
-        # Signal panel:
-        text(plot.width * .60, -plot.height * .05,
-             paste("Decide ", decision.labels[2], sep = ""),
-             cex = 1.2, font = 3
-        )
-
-        points(c(plot.width * .50, plot.width * .70),
-               c(-plot.height * .125, -plot.height * .125),
+        # Signal balls:
+        points(c(plot.width * .50, plot.width * .70 ) * f_x,
+               c(-plot.height * .130, -plot.height * .130) * f_y,
                pch = c(noise.ball.pch, signal.ball.pch),
                bg = c(error.bg, correct.bg),
                col = c(error.border, correct.border),
                cex = ball.cex * 1.5
         )
 
-        text(c(plot.width * .50, plot.width * .70),
-             c(-plot.height * .125, -plot.height * .125),
+        # Labels:
+        text(c(plot.width * .50, plot.width * .70) * f_x,
+             c(-plot.height * .130, -plot.height * .130) * f_y,
              labels = c("False\nAlarm", "Hit"),
              pos = c(2, 4), offset = 1
         )
-      }
+
+
+        # (c) Additional lines (below icon guide): ----
+
+        if (what == "ico" & hlines) {
+
+          x_hline <-  plot.width  * .95 * f_x
+          y_hline <- -plot.height * .20 * f_y
+
+          segments(-x_hline, y_hline, x_hline, y_hline, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+          rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
+        }
+
+        par(xpd = FALSE)
+
+      } # if (show.iconguide).
+
+
 
       # Set initial subplot center:
       subplot.center <- c(0, -4)
@@ -1199,6 +1309,7 @@ plot.FFTrees <- function(x = NULL,
             labels = substr(decision.labels[1], 1, 1)
           )
         } # if (exit node on left).
+
 
         # New level on left: ----
 
