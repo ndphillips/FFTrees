@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9006
+## 1.7.0.9007
 
 <!-- Development version: --> 
 
@@ -14,6 +14,7 @@ Changes since last release:
 
 ### Major changes
 
+- Return an invisible `FFTrees` object `x` when plotting or printing FFTs (to allow re-assigning to global `x` when using new test data).
 - Enabled applying a tree to new data when providing a data frame to `plot.FFTrees()` and `print.FFTrees()`. 
 - Added new plotting options to `plot.FFTrees()` (e.g., `what = 'all'` vs. `what = 'tree'` and `what = 'icontree'`). 
 
