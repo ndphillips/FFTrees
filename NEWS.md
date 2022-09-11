@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9004
+## 1.7.0.9006
 
 <!-- Development version: --> 
 
@@ -14,6 +14,7 @@ Changes since last release:
 
 ### Major changes
 
+- Enabled applying a tree to new data when providing a data frame to `plot.FFTrees()` and `print.FFTrees()`. 
 - Added new plotting options to `plot.FFTrees()` (e.g., `what = 'all'` vs. `what = 'tree'` and `what = 'icontree'`). 
 
 
@@ -293,6 +294,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-09.] 
+[File `NEWS.md` last updated on 2022-09-11.] 
 
 <!-- eof. -->

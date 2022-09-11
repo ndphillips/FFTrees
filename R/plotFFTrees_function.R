@@ -19,8 +19,13 @@
 #' can be customized by setting corresponding arguments.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
-#' @param data The data in \code{x} to be plotted (as a string);
-#' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
+#'
+#' @param data The data type in \code{x} to be plotted (as a string) or a test dataset (as a data frame).
+#' \itemize{
+#'   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
+#'   \item{For a valid data frame, the specified tree is evaluated and plotted for this data (as 'test' data),
+#'   but the global \code{FFTrees} object \code{x} remains unchanged.}
+#'  }
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
 #' @param what What should be plotted (as a string)? Valid options are:
@@ -137,7 +142,7 @@
 
 plot.FFTrees <- function(x = NULL,
                          data = "train",
-                         what = "all",     # valid_what <- c("all", "cues", "tree", "roc")
+                         what = "all",  # valid_what <- c("all", "default",  "cues",  "tree", "icontree",  "roc")
                          tree = 1,
                          main = NULL,
                          cue.labels = NULL,
@@ -394,7 +399,7 @@ plot.FFTrees <- function(x = NULL,
     # data: ----
 
     # Note: data can be either a string "train"/"test"
-    #       OR an entire data frame (of new test data)!
+    #       OR an entire data frame (of new test data):
 
     if (inherits(data, "character")) {
 
@@ -404,6 +409,33 @@ plot.FFTrees <- function(x = NULL,
       if (!data %in% c("test", "train")){
         stop("The data to plot must be 'test' or 'train'.")
       }
+    }
+
+    if (inherits(data, "data.frame")) {
+
+      message("Applying FFTrees object x to new test data")
+
+      bang <- FALSE
+
+      if (bang){
+
+        x <- fftrees_apply(x, mydata = "test", newdata = data)
+
+        x <<- x  # to change global x?
+        # Problem: Assigns a global object "x", rather than the current FFTrees object.
+
+        message("Success, and assigned x to a global FFTrees object 'x'!")
+
+      } else {
+
+        x <- fftrees_apply(x, mydata = "test", newdata = data)
+
+        message("Success, but re-assign 'x <- fftrees_apply(x, newdata = data)' to change x globally!")
+
+      }
+
+      data <- "test" # in rest of this function
+
     }
 
 
@@ -464,18 +496,18 @@ plot.FFTrees <- function(x = NULL,
     }
 
     if (tree == "best.test" & is.null(x$tree$stats$test)) {
-      warning("You asked to plot the best 'test' tree, but there were no test data. I'll plot the best training tree instead...")
+      warning("You asked to plot the best 'test' tree, but there were no test data. Plotted the best tree for 'train' data instead...")
 
       tree <- "best.train"
     }
 
     if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
-      stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees."))
+      stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees.", sep = " "))
     }
 
     if (inherits(data, "character")) {
       if (data == "test" & is.null(x$trees$stats$test)) {
-        stop("You asked to plot 'test' data, but there are no test data in the FFTrees object.")
+        stop("You asked to plot 'test' data, but there are no test data. Consider using data = 'train' instead...")
       }
     }
 
@@ -485,7 +517,7 @@ plot.FFTrees <- function(x = NULL,
     if (tree == "best.train") {
 
       if (data == "test"){
-        warning("You asked to plot the best training tree, but data was set to 'test'. I'll use 'train' data instead...")
+        warning("You asked to plot the 'best.train' tree, but data was set to 'test'. Plotted the best tree for 'train' data instead...")
         data <- "train"
         if (is.null(main)) { main <- "Data (Training)" }
       }
@@ -497,7 +529,7 @@ plot.FFTrees <- function(x = NULL,
     if (tree == "best.test") {
 
       if (data == "train"){
-        warning("You asked to plot the best test tree, but data was set to 'train'. I'll use 'test' data instead...")
+        warning("You asked to plot the 'best.test' tree, but data was set to 'train'. Plotted the best tree for 'test' data instead...")
         data <- "test"
         if (is.null(main)) { main <- "Data (Testing)" }
       }
@@ -2458,7 +2490,8 @@ plot.FFTrees <- function(x = NULL,
 #   2. Remove ROC curve parts to a separate function, and
 #      handle what == "roc" as a special case (like what = "cues").
 
-# - Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
+# - Issue #91:
+#   Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
 #   suggests that data could be df, to which FFT is then applied.
 #   Applying and plotting in one step would be great, of course, (and should also be adopted for printing)
 #   but it presently does not work. (Suggestion: Use a 'newdata' argument for this purpose, as in predict().)
