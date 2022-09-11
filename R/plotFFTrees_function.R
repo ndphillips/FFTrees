@@ -20,8 +20,12 @@
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
 #'
-#' @param data The data in \code{x} to be plotted (as a string);
-#' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
+#' @param data The data type in \code{x} to be plotted (as a string) or a test dataset (as a data frame).
+#' \itemize{
+#'   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
+#'   \item{For a valid data frame, the specified tree is evaluated and plotted for this data (as 'test' data),
+#'   but the global \code{FFTrees} object \code{x} remains unchanged.}
+#'  }
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
 #' @param what What should be plotted (as a string)? Valid options are:
