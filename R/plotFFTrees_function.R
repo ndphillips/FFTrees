@@ -491,18 +491,18 @@ plot.FFTrees <- function(x = NULL,
     }
 
     if (tree == "best.test" & is.null(x$tree$stats$test)) {
-      warning("You asked to plot the best 'test' tree, but there were no test data. I'll plot the best training tree instead...")
+      warning("You asked to plot the best 'test' tree, but there were no test data. Plotted the best tree for 'train' data instead...")
 
       tree <- "best.train"
     }
 
     if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
-      stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees."))
+      stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees.", sep = " "))
     }
 
     if (inherits(data, "character")) {
       if (data == "test" & is.null(x$trees$stats$test)) {
-        stop("You asked to plot 'test' data, but there are no test data in the FFTrees object.")
+        stop("You asked to plot 'test' data, but there are no test data. Consider using data = 'train' instead...")
       }
     }
 
@@ -512,7 +512,7 @@ plot.FFTrees <- function(x = NULL,
     if (tree == "best.train") {
 
       if (data == "test"){
-        warning("You asked to plot the best training tree, but data was set to 'test'. I'll use 'train' data instead...")
+        warning("You asked to plot the 'best.train' tree, but data was set to 'test'. Plotted the best tree for 'train' data instead...")
         data <- "train"
         if (is.null(main)) { main <- "Data (Training)" }
       }
@@ -524,7 +524,7 @@ plot.FFTrees <- function(x = NULL,
     if (tree == "best.test") {
 
       if (data == "train"){
-        warning("You asked to plot the best test tree, but data was set to 'train'. I'll use 'test' data instead...")
+        warning("You asked to plot the 'best.test' tree, but data was set to 'train'. Plotted the best tree for 'test' data instead...")
         data <- "test"
         if (is.null(main)) { main <- "Data (Testing)" }
       }

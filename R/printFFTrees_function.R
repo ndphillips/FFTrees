@@ -59,7 +59,7 @@ print.FFTrees <- function(x = NULL,
 
   if (data == "test" & is.null(x$trees$stats$test)){ # use "train" data:
 
-    warning("You asked to print 'test' data, but there were no test data. I'll print the best training tree instead...")
+    warning("You asked to print 'test' data, but there were no test data. Printed 'train' data instead...")
 
     data <- "train"
   }
@@ -72,7 +72,7 @@ print.FFTrees <- function(x = NULL,
   }
 
   if (tree == "best.test" & is.null(x$tree$stats$test)) {
-    warning("You asked to print the best test tree, but there were no test data. I'll print the best training tree instead...")
+    warning("You asked to print the 'best.test' tree, but there were no test data. Printed the best tree for 'train' data instead...")
 
     tree <- "best.train"
   }
@@ -83,7 +83,7 @@ print.FFTrees <- function(x = NULL,
   if (tree == "best.train") {
 
     if (data == "test"){
-      warning("You asked to print the best training tree, but data was set to 'test'. I'll use 'train' data instead...")
+      warning("You asked to print the 'best.train' tree, but data was set to 'test'. Printed the best tree for 'train' data instead...")
       data <- "train"
       main <- "Data (Training)"
     }
