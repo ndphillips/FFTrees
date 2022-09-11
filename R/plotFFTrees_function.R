@@ -24,7 +24,7 @@
 #' \itemize{
 #'   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
 #'   \item{For a valid data frame, the specified tree is evaluated and plotted for this data (as 'test' data),
-#'   but the global \code{FFTrees} object \code{x} remains unchanged.}
+#'   but the global \code{FFTrees} object \code{x} remains unchanged unless it is re-assigned.}
 #'  }
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
 #'
@@ -88,7 +88,9 @@
 #' to \code{\link{showcues}} when \code{what = 'cues'} or
 #' to \code{\link{title}} when \code{what = 'roc'}).
 #'
-#' @return A plot visualizing and describing an FFT.
+#' @return An (invisible) \code{FFTrees} object \code{x}
+#' and a plot visualizing and describing an FFT (as side effect).
+#'
 #'
 #' @examples
 #' # Create FFTs (for heartdisease data):
@@ -411,28 +413,14 @@ plot.FFTrees <- function(x = NULL,
       }
     }
 
+
     if (inherits(data, "data.frame")) {
 
-      message("Applying FFTrees object x to new test data")
+      message("Applying FFTrees object x to new test data...")
 
-      bang <- FALSE
+      x <- fftrees_apply(x, mydata = "test", newdata = data)
 
-      if (bang){
-
-        x <- fftrees_apply(x, mydata = "test", newdata = data)
-
-        x <<- x  # to change global x?
-        # Problem: Assigns a global object "x", rather than the current FFTrees object.
-
-        message("Success, and assigned x to a global FFTrees object 'x'!")
-
-      } else {
-
-        x <- fftrees_apply(x, mydata = "test", newdata = data)
-
-        message("Success, but re-assign 'x <- fftrees_apply(x, newdata = data)' to change x globally!")
-
-      }
+      message("Success, but re-assign output to x or use fftrees_apply() to globally change x")
 
       data <- "test" # in rest of this function
 
@@ -2479,6 +2467,12 @@ plot.FFTrees <- function(x = NULL,
 
 
   } # if (what != "cues").
+
+
+  # Output: ------
+
+  # Output x may differ from input x when applying new 'test' data (as df):
+  return(invisible(x))
 
 } # plot.FFTrees().
 
