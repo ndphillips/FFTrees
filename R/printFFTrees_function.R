@@ -50,12 +50,47 @@ print.FFTrees <- function(x = NULL,
 
   # data: ----
 
-  data <- tolower(data)  # for robustness
+  # Note: data can be either a string "train"/"test"
+  #       OR an entire data frame (of new test data):
 
-  # testthat::expect_true(data %in% c("train", "test"))
-  if (!data %in% c("test", "train")){
-    stop("The data to print must be 'test' or 'train'.")
+  if (inherits(data, "character")) {
+
+    data <- tolower(data)  # increase robustness
+
+    # testthat::expect_true(data %in% c("train", "test"))
+    if (!data %in% c("test", "train")){
+      stop("The data to print must be 'test' or 'train'.")
+    }
   }
+
+
+  if (inherits(data, "data.frame")) {
+
+    message("Applying FFTrees object x to new test data")
+
+    bang <- FALSE
+
+    if (bang){
+
+      x <- fftrees_apply(x, mydata = "test", newdata = data)
+
+      x <<- x  # to change global x?
+      # Problem: Assigns a global object "x", rather than the current FFTrees object.
+
+      message("Success, and assigned x to a global FFTrees object 'x'!")
+
+    } else {
+
+      x <- fftrees_apply(x, mydata = "test", newdata = data)
+
+      message("Success, but re-assign 'x <- fftrees_apply(x, newdata = data)' to change x globally!")
+
+    }
+
+    data <- "test" # in rest of this function
+
+  }
+
 
   if (data == "test" & is.null(x$trees$stats$test)){ # use "train" data:
 
