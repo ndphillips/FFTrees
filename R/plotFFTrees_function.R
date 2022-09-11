@@ -19,6 +19,7 @@
 #' can be customized by setting corresponding arguments.
 #'
 #' @param x An \code{FFTrees} object created by the \code{\link{FFTrees}} function.
+#'
 #' @param data The data in \code{x} to be plotted (as a string);
 #' must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).
 #' By default, \code{data = 'train'} (as \code{x} may not contain test data).
