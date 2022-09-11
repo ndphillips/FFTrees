@@ -137,7 +137,7 @@
 
 plot.FFTrees <- function(x = NULL,
                          data = "train",
-                         what = "all",     # valid_what <- c("all", "cues", "tree", "roc")
+                         what = "all",  # valid_what <- c("all", "default",  "cues",  "tree", "icontree",  "roc")
                          tree = 1,
                          main = NULL,
                          cue.labels = NULL,
@@ -394,7 +394,7 @@ plot.FFTrees <- function(x = NULL,
     # data: ----
 
     # Note: data can be either a string "train"/"test"
-    #       OR an entire data frame (of new test data)!
+    #       OR an entire data frame (of new test data):
 
     if (inherits(data, "character")) {
 
@@ -404,6 +404,33 @@ plot.FFTrees <- function(x = NULL,
       if (!data %in% c("test", "train")){
         stop("The data to plot must be 'test' or 'train'.")
       }
+    }
+
+    if (inherits(data, "data.frame")) {
+
+      message("Applying FFTrees object x to new test data")
+
+      bang <- FALSE
+
+      if (bang){
+
+        x <- fftrees_apply(x, mydata = "test", newdata = data)
+
+        x <<- x  # to change global x?
+        # Problem: Assigns a global object "x", rather than the current FFTrees object.
+
+        message("Success, and assigned x to a global FFTrees object 'x'")
+
+      } else {
+
+        x <- fftrees_apply(x, mydata = "test", newdata = data)
+
+        message("Success, but re-assign 'x <- fftrees_apply(x, newdata = data)' to change global x")
+
+      }
+
+      data <- "test" # in rest of this function
+
     }
 
 
@@ -2458,7 +2485,8 @@ plot.FFTrees <- function(x = NULL,
 #   2. Remove ROC curve parts to a separate function, and
 #      handle what == "roc" as a special case (like what = "cues").
 
-# - Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
+# - Issue #91:
+#   Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
 #   suggests that data could be df, to which FFT is then applied.
 #   Applying and plotting in one step would be great, of course, (and should also be adopted for printing)
 #   but it presently does not work. (Suggestion: Use a 'newdata' argument for this purpose, as in predict().)
