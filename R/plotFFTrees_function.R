@@ -419,13 +419,13 @@ plot.FFTrees <- function(x = NULL,
         x <<- x  # to change global x?
         # Problem: Assigns a global object "x", rather than the current FFTrees object.
 
-        message("Success, and assigned x to a global FFTrees object 'x'")
+        message("Success, and assigned x to a global FFTrees object 'x'!")
 
       } else {
 
         x <- fftrees_apply(x, mydata = "test", newdata = data)
 
-        message("Success, but re-assign 'x <- fftrees_apply(x, newdata = data)' to change global x")
+        message("Success, but re-assign 'x <- fftrees_apply(x, newdata = data)' to change x globally!")
 
       }
 
