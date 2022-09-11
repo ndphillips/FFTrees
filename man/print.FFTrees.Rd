@@ -18,14 +18,15 @@ use \code{"best.train"} or \code{"best.test"}, respectively.}
 \itemize{
   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
   \item{For a valid data frame, the specified tree is evaluated and printed for this data (as 'test' data),
-  but the global \code{FFTrees} object \code{x} remains unchanged.}
+  but the global \code{FFTrees} object \code{x} remains unchanged unless it is re-assigned.}
  }
 By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
 \item{...}{additional arguments passed to \code{print}.}
 }
 \value{
-Prints summary information about an FFT to the console.
+An invisible \code{FFTrees} object \code{x}
+and summary information on an FFT printed to the console (as side effect).
 }
 \description{
 \code{print.FFTrees} prints basic information on FFTs for an \code{FFTrees} object \code{x}.

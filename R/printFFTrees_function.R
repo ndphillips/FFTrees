@@ -22,7 +22,7 @@
 #'
 #' @param ... additional arguments passed to \code{print}.
 #'
-#' @return An (invisible) \code{FFTrees} object \code{x}
+#' @return An invisible \code{FFTrees} object \code{x}
 #' and summary information on an FFT printed to the console (as side effect).
 #'
 #' @seealso

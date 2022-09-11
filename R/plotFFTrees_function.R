@@ -56,7 +56,6 @@
 #' @param comp Should the performance of competitive algorithms (e.g.; logistic regression, random forests, etc.)
 #' be shown in the ROC plot (if available, as logical)?
 #'
-#'
 #' @param show.header Show header with basic data properties (in top panel, as logical)?
 #'
 #' @param show.iconguide Show icon guide (in middle panel, as logical)?
@@ -88,7 +87,7 @@
 #' to \code{\link{showcues}} when \code{what = 'cues'} or
 #' to \code{\link{title}} when \code{what = 'roc'}).
 #'
-#' @return An (invisible) \code{FFTrees} object \code{x}
+#' @return An invisible \code{FFTrees} object \code{x}
 #' and a plot visualizing and describing an FFT (as side effect).
 #'
 #'

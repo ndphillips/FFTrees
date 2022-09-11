@@ -41,7 +41,7 @@
 \itemize{
   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
   \item{For a valid data frame, the specified tree is evaluated and plotted for this data (as 'test' data),
-  but the global \code{FFTrees} object \code{x} remains unchanged.}
+  but the global \code{FFTrees} object \code{x} remains unchanged unless it is re-assigned.}
  }
 By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
@@ -115,7 +115,8 @@ to \code{\link{showcues}} when \code{what = 'cues'} or
 to \code{\link{title}} when \code{what = 'roc'}).}
 }
 \value{
-A plot visualizing and describing an FFT.
+An invisible \code{FFTrees} object \code{x}
+and a plot visualizing and describing an FFT (as side effect).
 }
 \description{
 \code{plot.FFTrees} visualizes an \code{FFTrees} object created by the \code{\link{FFTrees}} function.
