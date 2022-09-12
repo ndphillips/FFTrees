@@ -12,7 +12,7 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7, dpi = 100, out.width = "600px", fig.align = 'center', message = FALSE)
 ```
 
 ```{r load-pkg-1, echo = FALSE, message = FALSE, results = 'hide'}
@@ -153,7 +153,7 @@ plot(heart.fft,
 
 - `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
 
-```{r fft-cues}
+```{r fft-cues, fig.width = 6, fig.height = 6}
 # Plot cue accuracies for training data (in ROC space):
 plot(heart.fft,
      data = "train", 

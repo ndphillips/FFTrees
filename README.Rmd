@@ -90,13 +90,13 @@ Here are the first rows and columns of both subsets of the `heartdisease` data:
 - `heart.train` (the training / fitting dataset) contains the data from `r nrow(heart.train)` patients: 
 
 ```{r data-train}
-heart.train
+head(heart.train)
 ```
 
 - `heart.test` (the testing / prediction dataset) contains data from a new set of `r nrow(heart.test)` patients:
 
 ```{r data-test}
-heart.test
+head(heart.test)
 ```
 
 Most of the variables in our data are potential predictors. 

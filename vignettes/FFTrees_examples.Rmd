@@ -13,7 +13,7 @@ vignette: >
 
 ```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 6, fig.height = 6, dpi = 100, out.width = "600px", fig.align = 'center', message = FALSE)
 ```
 
 
@@ -45,7 +45,7 @@ Table: **Table 1**: Binary criterion variable\ `poisonous` and 10\ potential pre
 #### Creating FFTs 
 
 Let's create some trees using `FFTrees()`! 
-We'll use the `train.p = .5` argument to split the original data into a $50$%\ training set and a $50$%\ testing set: 
+We'll use the `train.p = .50` argument to split the original data into a $50$%\ training set and a $50$%\ testing set: 
 
 ```{r fft-mushrooms-1, message = FALSE, results = 'hide', warning=FALSE}
 # Create FFTs from the mushrooms data: 
@@ -61,7 +61,7 @@ mushrooms.fft <- FFTrees(formula = poisonous ~.,
 Here's basic information about the best performing FFT (Tree\ #1): 
 
 ```{r fft-mushrooms-1-print}
-# Print information about the best performing tree:
+# Print information about the best tree during training:
 mushrooms.fft
 ```
 
@@ -86,8 +86,7 @@ Now let's plot the performance of the best training tree when applied to the tes
 
 ```{r fft-mushrooms-1-plot}
 # Plot the best FFT for the mushrooms test data: 
-plot(mushrooms.fft, 
-     data = "test")
+plot(mushrooms.fft, data = "test")
 ```
 
 Indeed, it looks like the best tree only uses the\ `odor` and\ `sporepc` cues. 
@@ -117,8 +116,7 @@ Here is the best training tree, when applied to predicting the cases in the test
 
 ```{r fft-mushrooms-2-plot}
 # Plotting the best training FFT for test data: 
-plot(mushrooms.ring.fft,
-     data = "test")
+plot(mushrooms.ring.fft, data = "test")
 ```
 
 <!-- Conclusion: -->
@@ -129,7 +127,7 @@ This suggests that we should discard the expert's advice and primarily rely on t
 
 ### Iris.v data 
 
-```{r iris-image, fig.align = "center", out.width="225px", echo = FALSE}
+```{r iris-image, fig.align = "center", out.width = "225px", echo = FALSE}
 knitr::include_graphics("../inst/virginica.jpg")
 ```
 
@@ -170,7 +168,7 @@ Based on this, we should expect the final trees will likely use one or both of t
 Now let's examine the best tree:
 
 ```{r iris-plot-fft}
-# Plot best FFT: 
+# Plot best FFT (in training): 
 plot(iris.fft)
 ```
 
