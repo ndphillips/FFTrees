@@ -928,16 +928,17 @@ plot.FFTrees <- function(x = NULL,
         segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
       }
 
-      rect(.33, .80, .67, 1.20, col = "white", border = NA)
+      # Main title:
+      rect(.33, .80, .67, 1.20, col = "white", border = NA)  # title background
+      text(x = .50, y = .95, main, cex = panel.title.cex)    # title 1 (top)
 
-      text(x = .50, y = .95, main, cex = panel.title.cex)
-      text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25)
+      text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
 
       n.trueneg <- with(final.stats, cr + fa)
       n.truepos <- with(final.stats, hi + mi)
 
-      text(.50, .65, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
-      text(.50, .65, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
+      text(.50, .65, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
+      text(.50, .65, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
 
       # points(.9, .8, pch = 1, cex = 1.2)
       # text(.9, .8, labels = paste(" = ", n.per.icon, " cases", sep = ""), pos = 4)
@@ -1101,6 +1102,7 @@ plot.FFTrees <- function(x = NULL,
 
       if (show.iconguide) {
 
+        # Parameters:
         if (what == "ico") {
 
           f_x <- 1.2  # factor (to stretch in x-dim)
@@ -1113,6 +1115,8 @@ plot.FFTrees <- function(x = NULL,
 
         }
 
+        exit_word <- if (data == "test"){ "Predict" } else { "Decide" }
+
         par(xpd = TRUE)
 
         # (a) Noise panel (on left): ----
@@ -1120,7 +1124,7 @@ plot.FFTrees <- function(x = NULL,
         # Heading:
         text(-plot.width  * .60 * f_x,
              -plot.height * .05 * f_y,
-             paste("Decide ", decision.labels[1], sep = ""),
+             paste(exit_word, decision.labels[1], sep = " "),
              cex = 1.2, font = 3
         )
 
@@ -1147,7 +1151,7 @@ plot.FFTrees <- function(x = NULL,
         # Heading:
         text( plot.width *  .60 * f_x,
               -plot.height * .05 * f_y,
-              paste("Decide ", decision.labels[2], sep = ""),
+              paste(exit_word, decision.labels[2], sep = " "),
               cex = 1.2, font = 3
         )
 
@@ -1173,7 +1177,7 @@ plot.FFTrees <- function(x = NULL,
         if (what == "ico" & hlines) {
 
           x_hline <-  plot.width  * .95 * f_x
-          y_hline <- -plot.height * .20 * f_y
+          y_hline <- -plot.height * .19 * f_y
 
           segments(-x_hline, y_hline, x_hline, y_hline, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
           rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
