@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9007
+## 1.7.0.9008
 
 <!-- Development version: --> 
 
@@ -11,18 +11,22 @@ The current development version of **FFTrees** is available at <https://github.c
 
 Changes since last release: 
 
-
 ### Major changes
 
-- Return an invisible `FFTrees` object `x` when plotting or printing FFTs (to allow re-assigning to global `x` when using new test data).
-- Enabled applying a tree to new data when providing a data frame to `plot.FFTrees()` and `print.FFTrees()`. 
-- Added new plotting options to `plot.FFTrees()` (e.g., `what = 'all'` vs. `what = 'tree'` and `what = 'icontree'`). 
+- Improved plotting and printing FFTs (with `plot.FFTrees()` and `print.FFTrees()`): 
 
+    - Added new plotting options (e.g., `what = 'all'` vs. `what = 'tree'` and `what = 'icontree'`). 
+    - Added distinction in header of icon guide between FFTs that "decide" (for training data) vs. "predict" (for test data). 
+    - Enabled applying a tree to new test data when providing a data frame as `data`. 
+    - Enabled passing some graphical parameters (e.g., `col`, `font`, `adj`) to text of panel titles. 
+    - Return an invisible `FFTrees` object `x` (to allow re-assigning to global `x` when using new test data). 
+    
+<!-- Blank line. --> 
 
 ### Minor changes 
 
 - Added `wacc` to measures computed for competing algorithms. 
-- Deprecated `stats` argument of `plot.FFTrees()`.
+- Deprecated `stats` argument of `plot.FFTrees()`. 
 
 
 ### Details 
@@ -295,6 +299,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-11.] 
+[File `NEWS.md` last updated on 2022-09-12.] 
 
 <!-- eof. -->

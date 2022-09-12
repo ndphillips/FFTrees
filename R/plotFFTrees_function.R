@@ -83,8 +83,8 @@
 #' Use \code{what = "all"} to include performance statistics
 #' and \code{what = "tree"} to plot only a tree diagram.
 #'
-#' @param ... Graphical parameters (passed either
-#' to \code{\link{showcues}} when \code{what = 'cues'} or
+#' @param ... Graphical parameters (passed to text of panel titles,
+#' to \code{\link{showcues}} when \code{what = 'cues'}, or
 #' to \code{\link{title}} when \code{what = 'roc'}).
 #'
 #' @return An invisible \code{FFTrees} object \code{x}
@@ -171,13 +171,13 @@ plot.FFTrees <- function(x = NULL,
                          # graphical parameters:
                          ...) {
 
-  # Prepare and validate inputs: ------
+  # Prepare: ------
 
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 
 
-  # Handle deprecated arguments: ----
+  # Deprecated arguments: ----
 
   if (is.null(which.tree) == FALSE) {
 
@@ -202,6 +202,7 @@ plot.FFTrees <- function(x = NULL,
 
 
   # Verify what: ----
+
   valid_what <- c("all", "default",
                   "cues", "tree", "icontree", "roc")
 
@@ -571,12 +572,43 @@ plot.FFTrees <- function(x = NULL,
 
     # Set plotting parameters: ----
 
-    # Panels:
+    # Label sizes:
+
+    # print(paste0("par('cex') = ", par("cex")))  # Note: Value varies from .66 to 1
+
+    # Sizes not set by user:
+    f_cex <- 1  # cex scaling factor
+
+    decision.node.cex <- 4 * f_cex
+    exit.node.cex     <- 4 * f_cex
+    panel.title.cex   <- 2 * f_cex
+
+    # Set by user:
+
+    # Cue label size:
+    if (is.null(cue.cex)) {
+      cue.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
+    } else {
+      if (length(cue.cex) < 6) {
+        cue.cex <- rep(cue.cex, length.out = 6)
+      }
+    }
+
+    # Break label size:
+    if (is.null(threshold.cex)) {
+      threshold.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
+    } else {
+      if (length(threshold.cex) < 6) {
+        threshold.cex <- rep(threshold.cex, length.out = 6)
+      }
+    }
+
+    # Panel parameters:
     panel.line.lwd <- 1
     panel.line.col <- gray(0)
     panel.line.lty <- 1
 
-    # General parameters:
+    # Ball parameters:
     ball.col <- c(gray(0), gray(0))
     ball.bg <- c(gray(1), gray(1))
     ball.pch <- c(21, 24)
@@ -600,7 +632,7 @@ plot.FFTrees <- function(x = NULL,
     # Trim labels:
     cue.labels <- strtrim(cue.labels, max.label.length)
 
-    # Node segments:
+    # Lines/node segments:
     segment.lty <- 1
     segment.lwd <- 1
 
@@ -610,30 +642,8 @@ plot.FFTrees <- function(x = NULL,
     exit.segment.lwd <- 1
     exit.segment.lty <- 1
 
-    decision.node.cex <- 4
-    exit.node.cex <- 4
-    panel.title.cex <- 2
 
-
-    # Cue label size:
-    if (is.null(cue.cex)) {
-      cue.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
-    } else {
-      if (length(cue.cex) < 6) {
-        cue.cex <- rep(cue.cex, length.out = 6)
-      }
-    }
-
-    # Break label size:
-    if (is.null(threshold.cex)) {
-      threshold.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
-    } else {
-      if (length(threshold.cex) < 6) {
-        threshold.cex <- rep(threshold.cex, length.out = 6)
-      }
-    }
-
-    # Set plotting.parameters.df:
+    # Define plotting.parameters.df:
     if (show.top & show.middle & show.bottom) {
 
       plotting.parameters.df <- data.frame(
@@ -765,21 +775,21 @@ plot.FFTrees <- function(x = NULL,
 
     stat.circle.y   <- .30
 
-    sens.circle.col <- "green"
-    spec.circle.col <- "red"
+    sens.circle.col   <- "green"
+    spec.circle.col   <- "red"
     dprime.circle.col <- "blue"
-    stat.outer.circle.col <- gray(.5)
+    stat.outer.circle.col <- gray(.50)
 
 
     # add.balls.fun() adds balls to the plot
     add.balls.fun <- function(x.lim = c(-10, 0),
-                              y.lim = c(-2, 0),
+                              y.lim = c( -2, 0),
                               n.vec = c(20, 10),
                               pch.vec = c(21, 21),
                               ball.cex = 1,
                               bg.vec = ball.bg,
                               col.vec = ball.col,
-                              ball.lwd = .7,
+                              ball.lwd = .70,
                               freq.text = TRUE,
                               freq.text.cex = 1.2,
                               upper.text = "",
@@ -900,16 +910,18 @@ plot.FFTrees <- function(x = NULL,
           lwd = ball.lwd
         )
       })
-    }
+    } # add.balls.fun().
 
     label.cex.fun <- function(i, label.box.text.cex = 2) {
+
       i <- nchar(i)
 
       label.box.text.cex * i^-.25
-    }
+
+    } # label.cex.fun().
 
 
-    ## 1: Initial Frequencies ------
+    ## 1: Initial Frequencies: ------
 
     # Parameters:
 
@@ -925,16 +937,17 @@ plot.FFTrees <- function(x = NULL,
         segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
       }
 
-      rect(.33, .80, .67, 1.20, col = "white", border = NA)
+      # Main title:
+      rect(.33, .80, .67, 1.20, col = "white", border = NA)     # title background
+      text(x = .50, y = .95, main, cex = panel.title.cex, ...)  # title 1 (top): main
 
-      text(x = .50, y = .95, main, cex = panel.title.cex)
-      text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25)
+      text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
 
       n.trueneg <- with(final.stats, cr + fa)
       n.truepos <- with(final.stats, hi + mi)
 
-      text(.50, .65, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)
-      text(.50, .65, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)
+      text(.50, .65, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
+      text(.50, .65, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
 
       # points(.9, .8, pch = 1, cex = 1.2)
       # text(.9, .8, labels = paste(" = ", n.per.icon, " cases", sep = ""), pos = 4)
@@ -1041,7 +1054,7 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    ## 2. Main TREE ------
+    ## 2. Main TREE: ------
 
     if (show.middle) {
       if (show.top == FALSE & show.bottom == FALSE) {
@@ -1075,11 +1088,8 @@ plot.FFTrees <- function(x = NULL,
           label.tree <- paste("FFT #", tree, " (of ", x$trees$n, ")", sep = "")
         }
 
-        text(
-          x = 0, y = 0,
-          label.tree,
-          cex = panel.title.cex
-        )
+        text(x = 0, y = 0, label.tree, cex = panel.title.cex, ...)  # title 2 (middle): (a) tree label
+
       }
 
       if (show.top == FALSE & show.bottom == FALSE) {
@@ -1088,7 +1098,7 @@ plot.FFTrees <- function(x = NULL,
           main <- ""
         }
 
-        mtext(text = main, side = 3, cex = 2)
+        mtext(text = main, side = 3, cex = panel.title.cex, ...)  # title 2 (middle): (b) main label
       }
 
       par(xpd = FALSE)
@@ -1098,17 +1108,20 @@ plot.FFTrees <- function(x = NULL,
 
       if (show.iconguide) {
 
+        # Parameters:
         if (what == "ico") {
 
-          f_x <- 1.2  # factor (to stretch in x-dim)
-          f_y <- 0.8  # factor (to shift up)
+          f_x <- 1.2  # scaling factor (to stretch in x-dim)
+          f_y <- 0.8  # scaling factor (to shift up)
 
-        } else { # default factors:
+        } else { # default scaling factors:
 
           f_x <- 1
           f_y <- 1
 
         }
+
+        exit_word <- if (data == "test"){ "Predict" } else { "Decide" }
 
         par(xpd = TRUE)
 
@@ -1117,7 +1130,7 @@ plot.FFTrees <- function(x = NULL,
         # Heading:
         text(-plot.width  * .60 * f_x,
              -plot.height * .05 * f_y,
-             paste("Decide ", decision.labels[1], sep = ""),
+             paste(exit_word, decision.labels[1], sep = " "),
              cex = 1.2, font = 3
         )
 
@@ -1144,7 +1157,7 @@ plot.FFTrees <- function(x = NULL,
         # Heading:
         text( plot.width *  .60 * f_x,
               -plot.height * .05 * f_y,
-              paste("Decide ", decision.labels[2], sep = ""),
+              paste(exit_word, decision.labels[2], sep = " "),
               cex = 1.2, font = 3
         )
 
@@ -1170,7 +1183,7 @@ plot.FFTrees <- function(x = NULL,
         if (what == "ico" & hlines) {
 
           x_hline <-  plot.width  * .95 * f_x
-          y_hline <- -plot.height * .20 * f_y
+          y_hline <- -plot.height * .19 * f_y
 
           segments(-x_hline, y_hline, x_hline, y_hline, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
           rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
@@ -1590,7 +1603,7 @@ plot.FFTrees <- function(x = NULL,
           }
         }
 
-        text(.5, 1.1, label.performance, cex = panel.title.cex)
+        text(.50, 1.1, label.performance, cex = panel.title.cex, ...)  # title 3 (bottom): Performance
 
         par(xpd = FALSE)
 
