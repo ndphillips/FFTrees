@@ -130,9 +130,9 @@ For definitions of all accuracy statistics, see the [accuracy statistics](FFTree
 Use `plot()` to visualize an FFT (an `FFTrees` object):
 
 ```{r fft-plot, fig.width = 6.5, fig.height = 6}
-# Plot the best FFT when applied to test data:
-plot(heart.fft,      # an FFTrees object
-     data = "test")  # data to plot ("train" or "test")?
+# Plot predictions of the best FFT when applied to test data:
+plot(heart.fft,      # An FFTrees object
+     data = "test")  # data to use (i.e., either "train" or "test")?
 ```
 
 #### Other arguments
@@ -145,8 +145,8 @@ plot(heart.fft,      # an FFTrees object
 
 ```{r fft-no-stats, fig.width = 8, fig.height = 5, fig.align='center'}
 # Plot only the tree, without accuracy statistics:
-plot(heart.fft, 
-     stats = FALSE)
+plot(heart.fft, what = "tree")
+# plot(heart.fft, stats = FALSE)  #  The 'stats' argument has been deprecated.
 ```
 
 - `comp`: Should statistics from competitive algorithms be shown in the ROC curve? To remove the performance statistics of competitive algorithms (e.g.; regression, random forests), include the argument `comp = FALSE`. 
@@ -154,10 +154,8 @@ plot(heart.fft,
 - `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
 
 ```{r fft-cues, fig.width = 6, fig.height = 6}
-# Plot cue accuracies for training data (in ROC space):
-plot(heart.fft,
-     data = "train", 
-     what = "cues")
+# Plot cue accuracies (for training data) in ROC space:
+plot(heart.fft, what = "cues")
 ```
 
 See the [Plotting FFTrees](FFTrees_plot.html) vignette for details on plotting FFTs. 
@@ -182,7 +180,7 @@ For example, here's how to predict the classifications for data in the `heartdis
 ```{r fft-predict, eval = FALSE}
 # Predict classifications for a new dataset:
 predict(heart.fft, 
-        data = heartdisease)
+        newdata = heartdisease)
 ```
 
 #### Defining FFTs in words
