@@ -171,13 +171,13 @@ plot.FFTrees <- function(x = NULL,
                          # graphical parameters:
                          ...) {
 
-  # Prepare and validate inputs: ------
+  # Prepare: ------
 
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 
 
-  # Handle deprecated arguments: ----
+  # Deprecated arguments: ----
 
   if (is.null(which.tree) == FALSE) {
 
@@ -202,6 +202,7 @@ plot.FFTrees <- function(x = NULL,
 
 
   # Verify what: ----
+
   valid_what <- c("all", "default",
                   "cues", "tree", "icontree", "roc")
 
@@ -765,21 +766,21 @@ plot.FFTrees <- function(x = NULL,
 
     stat.circle.y   <- .30
 
-    sens.circle.col <- "green"
-    spec.circle.col <- "red"
+    sens.circle.col   <- "green"
+    spec.circle.col   <- "red"
     dprime.circle.col <- "blue"
-    stat.outer.circle.col <- gray(.5)
+    stat.outer.circle.col <- gray(.50)
 
 
     # add.balls.fun() adds balls to the plot
     add.balls.fun <- function(x.lim = c(-10, 0),
-                              y.lim = c(-2, 0),
+                              y.lim = c( -2, 0),
                               n.vec = c(20, 10),
                               pch.vec = c(21, 21),
                               ball.cex = 1,
                               bg.vec = ball.bg,
                               col.vec = ball.col,
-                              ball.lwd = .7,
+                              ball.lwd = .70,
                               freq.text = TRUE,
                               freq.text.cex = 1.2,
                               upper.text = "",
@@ -900,16 +901,18 @@ plot.FFTrees <- function(x = NULL,
           lwd = ball.lwd
         )
       })
-    }
+    } # add.balls.fun().
 
     label.cex.fun <- function(i, label.box.text.cex = 2) {
+
       i <- nchar(i)
 
       label.box.text.cex * i^-.25
-    }
+
+    } # label.cex.fun().
 
 
-    ## 1: Initial Frequencies ------
+    ## 1: Initial Frequencies: ------
 
     # Parameters:
 
@@ -1041,7 +1044,7 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    ## 2. Main TREE ------
+    ## 2. Main TREE: ------
 
     if (show.middle) {
       if (show.top == FALSE & show.bottom == FALSE) {

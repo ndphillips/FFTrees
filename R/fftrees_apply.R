@@ -80,7 +80,7 @@ fftrees_apply <- function(x,
 
   names(decisions_ls) <- paste0("tree_", 1:x$trees$n)
 
-  # 2. [level_stats_ls]: ----
+  #  2. [level_stats_ls]: ----
   #    A list with one element per tree, each containing cumulative level statistics:
 
   level_stats_ls <- vector("list", length = x$trees$n)
