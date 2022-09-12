@@ -83,8 +83,8 @@
 #' Use \code{what = "all"} to include performance statistics
 #' and \code{what = "tree"} to plot only a tree diagram.
 #'
-#' @param ... Graphical parameters (passed either
-#' to \code{\link{showcues}} when \code{what = 'cues'} or
+#' @param ... Graphical parameters (passed to text of panel titles,
+#' to \code{\link{showcues}} when \code{what = 'cues'}, or
 #' to \code{\link{title}} when \code{what = 'roc'}).
 #'
 #' @return An invisible \code{FFTrees} object \code{x}
@@ -572,12 +572,43 @@ plot.FFTrees <- function(x = NULL,
 
     # Set plotting parameters: ----
 
-    # Panels:
+    # Label sizes:
+
+    # print(paste0("par('cex') = ", par("cex")))  # Note: Value varies from .66 to 1
+
+    # Sizes not set by user:
+    f_cex <- 1  # cex scaling factor
+
+    decision.node.cex <- 4 * f_cex
+    exit.node.cex     <- 4 * f_cex
+    panel.title.cex   <- 2 * f_cex
+
+    # Set by user:
+
+    # Cue label size:
+    if (is.null(cue.cex)) {
+      cue.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
+    } else {
+      if (length(cue.cex) < 6) {
+        cue.cex <- rep(cue.cex, length.out = 6)
+      }
+    }
+
+    # Break label size:
+    if (is.null(threshold.cex)) {
+      threshold.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
+    } else {
+      if (length(threshold.cex) < 6) {
+        threshold.cex <- rep(threshold.cex, length.out = 6)
+      }
+    }
+
+    # Panel parameters:
     panel.line.lwd <- 1
     panel.line.col <- gray(0)
     panel.line.lty <- 1
 
-    # General parameters:
+    # Ball parameters:
     ball.col <- c(gray(0), gray(0))
     ball.bg <- c(gray(1), gray(1))
     ball.pch <- c(21, 24)
@@ -601,7 +632,7 @@ plot.FFTrees <- function(x = NULL,
     # Trim labels:
     cue.labels <- strtrim(cue.labels, max.label.length)
 
-    # Node segments:
+    # Lines/node segments:
     segment.lty <- 1
     segment.lwd <- 1
 
@@ -611,30 +642,8 @@ plot.FFTrees <- function(x = NULL,
     exit.segment.lwd <- 1
     exit.segment.lty <- 1
 
-    decision.node.cex <- 4
-    exit.node.cex <- 4
-    panel.title.cex <- 2
 
-
-    # Cue label size:
-    if (is.null(cue.cex)) {
-      cue.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
-    } else {
-      if (length(cue.cex) < 6) {
-        cue.cex <- rep(cue.cex, length.out = 6)
-      }
-    }
-
-    # Break label size:
-    if (is.null(threshold.cex)) {
-      threshold.cex <- c(1.5, 1.5, 1.25, 1, 1, 1)
-    } else {
-      if (length(threshold.cex) < 6) {
-        threshold.cex <- rep(threshold.cex, length.out = 6)
-      }
-    }
-
-    # Set plotting.parameters.df:
+    # Define plotting.parameters.df:
     if (show.top & show.middle & show.bottom) {
 
       plotting.parameters.df <- data.frame(
@@ -929,8 +938,8 @@ plot.FFTrees <- function(x = NULL,
       }
 
       # Main title:
-      rect(.33, .80, .67, 1.20, col = "white", border = NA)  # title background
-      text(x = .50, y = .95, main, cex = panel.title.cex)    # title 1 (top)
+      rect(.33, .80, .67, 1.20, col = "white", border = NA)     # title background
+      text(x = .50, y = .95, main, cex = panel.title.cex, ...)  # title 1 (top): main
 
       text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
 
@@ -1079,11 +1088,8 @@ plot.FFTrees <- function(x = NULL,
           label.tree <- paste("FFT #", tree, " (of ", x$trees$n, ")", sep = "")
         }
 
-        text(
-          x = 0, y = 0,
-          label.tree,
-          cex = panel.title.cex
-        )
+        text(x = 0, y = 0, label.tree, cex = panel.title.cex, ...)  # title 2 (middle): (a) tree label
+
       }
 
       if (show.top == FALSE & show.bottom == FALSE) {
@@ -1092,7 +1098,7 @@ plot.FFTrees <- function(x = NULL,
           main <- ""
         }
 
-        mtext(text = main, side = 3, cex = 2)
+        mtext(text = main, side = 3, cex = panel.title.cex, ...)  # title 2 (middle): (b) main label
       }
 
       par(xpd = FALSE)
@@ -1105,10 +1111,10 @@ plot.FFTrees <- function(x = NULL,
         # Parameters:
         if (what == "ico") {
 
-          f_x <- 1.2  # factor (to stretch in x-dim)
-          f_y <- 0.8  # factor (to shift up)
+          f_x <- 1.2  # scaling factor (to stretch in x-dim)
+          f_y <- 0.8  # scaling factor (to shift up)
 
-        } else { # default factors:
+        } else { # default scaling factors:
 
           f_x <- 1
           f_y <- 1
@@ -1597,7 +1603,7 @@ plot.FFTrees <- function(x = NULL,
           }
         }
 
-        text(.5, 1.1, label.performance, cex = panel.title.cex)
+        text(.50, 1.1, label.performance, cex = panel.title.cex, ...)  # title 3 (bottom): Performance
 
         par(xpd = FALSE)
 
