@@ -15,7 +15,7 @@ Default: \code{data = NULL} will only look up \code{x$trees$inwords}.}
 \item{tree}{The tree to display (as an integer).}
 }
 \value{
-A verbal description of an FFT (as a string).
+A verbal description of an FFT (as a character string).
 }
 \description{
 \code{inwords} generates and provides a verbal description
