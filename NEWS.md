@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9008
+## 1.7.0.9009
 
 <!-- Development version: --> 
 
@@ -12,6 +12,8 @@ The current development version of **FFTrees** is available at <https://github.c
 Changes since last release: 
 
 ### Major changes
+
+- Added distinctions between FFTs that "decide" vs. "predict" by using corresponding labels in plots and verbal descriptions. 
 
 - Improved plotting and printing FFTs (with `plot.FFTrees()` and `print.FFTrees()`): 
 
@@ -299,6 +301,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-12.] 
+[File `NEWS.md` last updated on 2022-09-13.] 
 
 <!-- eof. -->
