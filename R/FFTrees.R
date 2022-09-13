@@ -278,6 +278,7 @@ FFTrees <- function(formula = NULL,
 
   x <- fftrees_ffttowords(
     x = x,
+    mydata = "train",  # either 'train':'decide' or 'test':'predict'
     digits = 2
   )
 
