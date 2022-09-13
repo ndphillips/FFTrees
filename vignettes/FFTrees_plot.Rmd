@@ -229,13 +229,17 @@ Hence, asking for the best test tree does not make sense --- which is why `plot(
 
 ### Plotting performance for new data 
 
-Shifting our emphasis from fitting to prediction, we primarily need to specify a test dataset that was not used to train the `FFTrees` object. 
+Shifting our emphasis from fitting to prediction, we primarily need to specify some test data that was not used to train the `FFTrees` object. 
 <!-- ToDo: Applying an existing FFTrees object to new data (in plot) does not seem to work: -->
-When specifying a new dataset (e.g.; `data = test.data`), the function will automatically apply the tree to the new data and compute corresponding performance statistics (using the `predict.FFTrees()` function). 
+When predicting performance for a new dataset (e.g.; `data = test.data`), the plotting and printing functions will automatically apply an existing `FFTrees` object to the new data and compute corresponding performance statistics (using the `fftrees_apply()` function). 
+However, when applying existing FFTs to new data, the changes to the `FFTrees` object are not stored in the input object, unless the (invisible) output of `plot.FFTrees()` or `print.FFTrees()` is re-assigned to that object. 
+The best way to fit FFTs to training data and evaluate them to test data is to explicitly include both datasets in the original `FFTrees()` command by either using its  `data.test` or its `train.p` argument. 
 
 <!-- Example: Using test data (for prediction, rather than fitting): -->
 
-For example, we can repeat the previous analysis, but now let's create separate training and test datasets by including the `train.p = .5` argument. This will split the dataset into a 50%\ training set, and a distinct 50%\ testing set. (Alternatively, we could specify a dedicated test data set by using the `data.test` argument.) 
+For example, we can repeat the previous analysis, but now let's create separate training and test datasets by including the `train.p = .50` argument. 
+This will split the dataset into a 50%\ training set, and a distinct 50%\ testing set. 
+(Alternatively, we could specify a dedicated test data set by using the `data.test` argument.) 
 
 ```{r titanic-pred, message = FALSE, results = 'hide'}
 set.seed(100)  # for replicability of the training/test split
@@ -249,7 +253,8 @@ titanic.pred.fft <- FFTrees(formula = survived ~.,
 
 Here is the best training tree applied to the _training_ data:
 
-```{r titanic-train, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 6**: Plotting the best FFT on _training_ data."}
+```{r titanic-train, fig.width = 6, fig.height = 6, fig.align='center', out.width = "75%", fig.cap="**Figure 6**: Plotting the best FFT on _training_ data."}
+# print(titanic.pred.fft, tree = 1)
 plot(titanic.pred.fft, tree = 1)
 ```
 
@@ -260,17 +265,18 @@ However, as we can see in the ROC\ table, a logistic regression\ (LR) would not 
 
 Now let's inspect the performance of the same tree on the _test_ data: 
 
-```{r titanic-test, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting the best FFT on _test_ data."}
+```{r titanic-test, fig.width = 6, fig.height = 6, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting the best FFT on _test_ data."}
+# print(titanic.pred.fft, data = "test", tree = 1)
 plot(titanic.pred.fft, data = "test", tree = 1)
 ```
 
-We could have shown the same tree by asking for `plot(titanic.pred.fft, tree = "best.test", data = "test")`. 
+We could have visualized the same tree by asking for `plot(titanic.pred.fft, data = "test", tree = "best.test")`. 
 Note that the label of the bottom panel has now switched from "Accuracy (Training)" to "Accuracy (Testing)". 
 Both the sensitivity and specificity values have decreased somewhat, which is typical when using a model (fitted on training data) for predicting new (test) data. 
 
 Let's visualize the prediction performance of Tree\ #2, the most liberal tree (i.e., with the highest sensitivity): 
 
-```{r titanic-viz-2, fig.width = 7, fig.height = 7, fig.align='center', out.width = "75%", fig.cap="**Figure 8**: Plotting Tree\ #2."} 
+```{r titanic-viz-2, fig.width = 6, fig.height = 6, fig.align='center', out.width = "75%", fig.cap="**Figure 8**: Plotting Tree\ #2."} 
 plot(titanic.pred.fft, data = "test", tree = 2)
 ```
 

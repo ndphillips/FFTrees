@@ -37,7 +37,7 @@
 \arguments{
 \item{x}{An \code{FFTrees} object created by the \code{\link{FFTrees}} function.}
 
-\item{data}{The data type in \code{x} to be plotted (as a string) or a test dataset (as a data frame).
+\item{data}{The type of data in \code{x} to be plotted (as a string) or a test dataset (as a data frame).
 \itemize{
   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
   \item{For a valid data frame, the specified tree is evaluated and plotted for this data (as 'test' data),
@@ -140,7 +140,7 @@ can be customized by setting corresponding arguments.
 \examples{
 # Create FFTs (for heartdisease data):
 heart.fft <- FFTrees(formula = diagnosis ~ .,
-                     data = heartdisease
+                     data = heart.train
                      )
 
 # Visualize the default FFT (Tree #1, what = 'all'):
@@ -157,17 +157,21 @@ plot(heart.fft, what = "icontree", n.per.icon = 2,
 # Visualize performance comparison in ROC space:
 plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 
-# Visualize FFT #2 (with customized labels):
+# Visualize predictions of FFT #2 (for new test data) with custom options:
 plot(heart.fft,
-     what = "all",
      tree = 2,
-     main = "An FFT for heart disease diagnosis",
+     data = heart.test,
+     main = "Predicting heart disease",
      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
      decision.labels = c("ok", "sick"),
-     show.header = FALSE,
+     n.per.icon = 2,
+     show.header = TRUE,
      show.confusion = FALSE,
      show.levels = FALSE,
-     show.roc = FALSE
+     show.roc = FALSE,
+     hlines = FALSE,
+     font = 3,
+     col = "steelblue"
      )
 
 # For more details, see

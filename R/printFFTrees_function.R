@@ -12,7 +12,7 @@
 #' To print the best training or best test tree with respect to the \code{goal} specified during FFT construction,
 #' use \code{"best.train"} or \code{"best.test"}, respectively.
 #'
-#' @param data The data type in \code{x} to be printed (as a string) or a test dataset (as a data frame).
+#' @param data The type of data in \code{x} to be printed (as a string) or a test dataset (as a data frame).
 #' \itemize{
 #'   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
 #'   \item{For a valid data frame, the specified tree is evaluated and printed for this data (as 'test' data),
@@ -201,9 +201,13 @@ print.FFTrees <- function(x = NULL,
   cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
   cat("\n")
 
-  for (i in 1:length(x$trees$inwords[[tree]])) { # for each sentence:
+  # FFT in words:
 
-    cat(paste0("[", i, "] ", x$trees$inwords[[tree]][i], "\n"))
+  tree_in_words <- inwords(x, data = data, tree = tree)
+
+  for (i in 1:length(tree_in_words)) { # for each sentence:
+
+    cat(paste0("[", i, "] ", tree_in_words[i], "\n"))
 
   }
 
@@ -241,7 +245,6 @@ print.FFTrees <- function(x = NULL,
     cost <- x$trees$stats$test$cost[tree]
 
   }
-
 
 
   # Accuracy information: ------

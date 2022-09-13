@@ -1,7 +1,8 @@
 # helper.R:
-# Collection of various utility functions.
-# ----------------------------------------
+# Various utility functions.
+# --------------------------
 
+# (1) Basic calculations and checks: ------
 
 # valid_train_test_data: ------
 
@@ -1246,6 +1247,15 @@ get_bacc_wacc <- function(sens, spec,  sens.w){
 # get_bacc_wacc(1, .80, 0)
 
 
+# exit_word: ------
+
+exit_word <- function(data){
+  if (data == "test"){ "Predict" } else { "Decide" }
+}
+
+
+
+# (2) Graphical functions: ------
 
 # num_space: ------
 
@@ -1504,11 +1514,13 @@ transparent <- function(col_orig = "red",
 
 
 
-# FFTrees package: ------
+
+
+# (3) FFTrees package: ------
 
 #' \code{FFTrees} package.
 #'
-#' Create fast-and-frugal trees (FFTs).
+#' Create and evaluate fast-and-frugal trees (FFTs).
 #'
 #' @docType package
 #' @name FFTrees

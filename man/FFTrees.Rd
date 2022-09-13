@@ -136,11 +136,11 @@ that can then be printed, plotted, and examined further.
 The criterion and predictor variables are specified in \code{\link{formula}} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 
-Create fast-and-frugal trees (FFTs).
+Create and evaluate fast-and-frugal trees (FFTs).
 }
 \examples{
 
-# Create fast-and-frugal trees (FFTs) for heart disease:
+# 1. Create fast-and-frugal trees (FFTs) for heart disease:
 heart.fft <- FFTrees(formula = diagnosis ~ .,
                      data = heart.train,
                      data.test = heart.test,
@@ -148,22 +148,23 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,
                      decision.labels = c("Healthy", "Diseased")
                      )
 
-# Print a summary of the result:
-heart.fft
+# 2. Print a summary of the result:
+heart.fft  # same as:
+# print(heart.fft, data = "train", tree = "best.train")
 
-# Plot an FFT applied to training data:
-plot(heart.fft, stats = FALSE)
-plot(heart.fft)
+# 3. Plot an FFT applied to training data:
+plot(heart.fft)  # same as:
+# plot(heart.fft, what = "all", data = "train", tree = "best.train")
 
-# Apply FFT to (new) testing data:
-plot(heart.fft, data = "test")
-plot(heart.fft, data = "test", tree = 2)  # Plot Tree #2
+# 4. Apply FFT to (new) testing data:
+plot(heart.fft, data = "test")            # predictions for Tree 1
+plot(heart.fft, data = "test", tree = 2)  # predictions for Tree 2
 
-# Predict classes and probabilities for new data:
+# 5. Predict classes and probabilities for new data:
 predict(heart.fft, newdata = heartdisease)
 predict(heart.fft, newdata = heartdisease, type = "prob")
 
-# Create custom trees with my.tree:
+# 6. Create custom trees (from verbal description) with my.tree:
 custom.fft <- FFTrees(
   formula = diagnosis ~ .,
   data = heartdisease,

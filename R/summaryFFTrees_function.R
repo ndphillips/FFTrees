@@ -104,11 +104,19 @@ summary.FFTrees <- function(object,
     cat("\n")
     cat(crayon::blue("FFT #", tree, ": Definition", "\n", sep = ""), sep = "")
 
-    for (i in 1:length(object$trees$inwords[[tree]])) { # for each sentence:
+    # FFT in words:
 
-      cat(paste0("[", i, "] ", object$trees$inwords[[tree]][i], "\n"))
+    if (is.null(object$trees$stats$test) == FALSE){
+      tree_in_words <- inwords(object, data = "test", tree = tree)  # re-generate tree descriptions for "test" data
+    } else {
+      tree_in_words <- object$trees$inwords[[tree]]  # look up tree description
+    }
 
-    } # for i.
+    for (i in 1:length(tree_in_words)) { # for each sentence:
+
+      cat(paste0("[", i, "] ", tree_in_words[i], "\n"))
+
+    }
 
   } # if only 1 tree.
 

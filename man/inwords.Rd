@@ -4,21 +4,29 @@
 \alias{inwords}
 \title{Provide a verbal description of an FFT}
 \usage{
-inwords(x, tree = 1)
+inwords(x, data = NULL, tree = 1)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object.}
 
-\item{tree}{The tree to display (as numeric).}
+\item{data}{The type of data to which a tree is being applied (as character string "train" or "test").
+Default: \code{data = NULL} will only look up \code{x$trees$inwords}.}
+
+\item{tree}{The tree to display (as an integer).}
 }
 \value{
-A verbal description of an FFT (as a string).
+A verbal description of an FFT (as a character string).
 }
 \description{
 \code{inwords} generates and provides a verbal description
 of a fast-and-frugal tree (FFT) from an \code{FFTrees} object.
+
+When \code{data} remains unspecified, \code{inwords} will only look up \code{x$trees$inwords}.
+When \code{data} is set to either "train" or "test", \code{inwords} first employs
+\code{\link{fftrees_ffttowords}} to re-generate the verbal descriptions of FFTs in \code{x}.
 }
 \seealso{
+\code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
 \code{\link{print.FFTrees}} for printing FFTs;
 \code{\link{plot.FFTrees}} for plotting FFTs;
 \code{\link{summary.FFTrees}} for summarizing FFTs;

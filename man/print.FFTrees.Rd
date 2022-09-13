@@ -14,7 +14,7 @@ Default: \code{tree = 1}.
 To print the best training or best test tree with respect to the \code{goal} specified during FFT construction,
 use \code{"best.train"} or \code{"best.test"}, respectively.}
 
-\item{data}{The data type in \code{x} to be printed (as a string) or a test dataset (as a data frame).
+\item{data}{The type of data in \code{x} to be printed (as a string) or a test dataset (as a data frame).
 \itemize{
   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
   \item{For a valid data frame, the specified tree is evaluated and printed for this data (as 'test' data),
