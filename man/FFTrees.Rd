@@ -136,7 +136,7 @@ that can then be printed, plotted, and examined further.
 The criterion and predictor variables are specified in \code{\link{formula}} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 
-Create fast-and-frugal trees (FFTs).
+Create and evaluate fast-and-frugal trees (FFTs).
 }
 \examples{
 

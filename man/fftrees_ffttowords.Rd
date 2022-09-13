@@ -4,15 +4,19 @@
 \alias{fftrees_ffttowords}
 \title{Describe a fast-and-frugal tree (FFT) in words}
 \usage{
-fftrees_ffttowords(x = NULL, digits = 2)
+fftrees_ffttowords(x = NULL, mydata = "train", digits = 2)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object created with \code{\link{FFTrees}}.}
 
+\item{mydata}{The type of data to which a tree is being applied (as character string "train" or "test").
+Default: \code{mydata = "train"}.}
+
 \item{digits}{How many digits to round numeric values (as integer)?}
 }
 \value{
-A list of string vectors.
+A modified \code{FFTrees} object \code{x} with
+\code{x$trees$inwords} containing a list of string vectors.
 }
 \description{
 \code{fftrees_ffttowords} provides a verbal description

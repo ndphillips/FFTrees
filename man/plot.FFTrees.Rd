@@ -37,7 +37,7 @@
 \arguments{
 \item{x}{An \code{FFTrees} object created by the \code{\link{FFTrees}} function.}
 
-\item{data}{The data type in \code{x} to be plotted (as a string) or a test dataset (as a data frame).
+\item{data}{The type of data in \code{x} to be plotted (as a string) or a test dataset (as a data frame).
 \itemize{
   \item{A valid data string must be either \code{'train'} (for fitting performance) or \code{'test'} (for prediction performance).}
   \item{For a valid data frame, the specified tree is evaluated and plotted for this data (as 'test' data),
