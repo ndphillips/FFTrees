@@ -12,7 +12,7 @@
 #' Default: \code{data = NULL} will only look up \code{x$trees$inwords}.
 #' @param tree The tree to display (as an integer).
 #'
-#' @return A verbal description of an FFT (as a string).
+#' @return A verbal description of an FFT (as a character string).
 #'
 #' @seealso
 #' \code{\link{fftrees_ffttowords}} for converting FFTs into verbal descriptions;
@@ -30,6 +30,18 @@ inwords <- function(x, data = NULL, tree = 1) {
   testthat::expect_is(x, class = "FFTrees")
 
   testthat::expect_true(dplyr::near(tree %% 1, 0))  # tree is an integer
+
+  if (is.null(data) == FALSE) {
+
+    data <- tolower(data)  # increase robustness
+
+    testthat::expect_true(data %in% c("train", "test"))
+    # if (!data %in% c("test", "train")){
+    #  stop("The data to print must be 'test' or 'train'.")
+    # }
+
+  }
+
 
   tree_in_words <- NA  # initialize
 
