@@ -1125,7 +1125,7 @@ plot.FFTrees <- function(x = NULL,
 
         }
 
-        exit_word <- if (data == "test"){ "Predict" } else { "Decide" }
+        exit_word <- exit_word(data)  # label for exit node (in icon guide header)
 
         par(xpd = TRUE)
 
