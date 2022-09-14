@@ -1487,24 +1487,24 @@ plot.FFTrees <- function(x = NULL,
       # Get either bacc OR wacc (based on sens.w):
       sens.w <- x$params$sens.w
       bacc_wacc <- get_bacc_wacc(sens = final.stats$sens, spec = final.stats$spec, sens.w = sens.w)
+      bacc_wacc_name <- names(bacc_wacc)
 
       # Set labels, values, and locations (as df):
       lloc <- data.frame(
-        element = c("classtable", "mcu", "pci", "sens", "spec", "acc", names(bacc_wacc), "roc"),
-        long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", names(bacc_wacc), "ROC"),
+        element = c("classtable", "mcu", "pci", "sens", "spec", "acc", bacc_wacc_name, "roc"),
+        long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", bacc_wacc_name, "ROC"),
         center.x = c(.18, seq(.35, .65, length.out = 6), .85),
         center.y = rep(level.center.y, 8),
         width = c(.2, rep(level.width, 6), .20),
         height = c(.65, rep(level.max.height, 6), .65),
-        value = c(
-          NA,
-          abs(final.stats$mcu - 5) / (abs(1 - 5)),
-          final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), bacc_wacc, NA
-        ),
-        value.name = c(
-          NA, round(final.stats$mcu, 1), pretty_dec(final.stats$pci), pretty_dec(final.stats$sens), pretty_dec(final.stats$spec), pretty_dec(final.stats$acc),
-          pretty_dec(bacc_wacc), NA
-        )
+        value = c(NA,
+                  abs(final.stats$mcu - 5) / (abs(1 - 5)), final.stats$pci,
+                  final.stats$sens, final.stats$spec,
+                  with(final.stats, (cr + hi) / n), bacc_wacc, NA),
+        value.name = c(NA,
+                       round(final.stats$mcu, 1), pretty_dec(final.stats$pci),
+                       pretty_dec(final.stats$sens), pretty_dec(final.stats$spec),
+                       pretty_dec(final.stats$acc), pretty_dec(bacc_wacc), NA)
       )
 
 
@@ -1677,14 +1677,14 @@ plot.FFTrees <- function(x = NULL,
           # mcu level: ----
 
           add_level("mcu", ok.val = .75, min.val = 0, max.val = 1,
-                    level.type = level.type, df_lloc = lloc,
+                    level.type = level.type, lloc_row = lloc[lloc$element == "mcu", ],
                     header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
 
           # pci level: ----
 
           add_level("pci", ok.val = .75, min.val = 0, max.val = 1,
-                    level.type = level.type, df_lloc = lloc,
+                    level.type = level.type, lloc_row = lloc[lloc$element == "pci", ],
                     header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
           # text(lloc$center.x[lloc$element == "pci"],
@@ -1695,14 +1695,14 @@ plot.FFTrees <- function(x = NULL,
           # spec level: ----
 
           add_level("spec", ok.val = .75, min.val = 0, max.val = 1,
-                    level.type = level.type, df_lloc = lloc,
+                    level.type = level.type, lloc_row = lloc[lloc$element == "spec", ],
                     header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
 
           # sens level: ----
 
           add_level("sens", ok.val = .75, min.val = 0, max.val = 1,
-                    level.type = level.type, df_lloc = lloc,
+                    level.type = level.type, lloc_row = lloc[lloc$element == "sens", ],
                     header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
 
 
@@ -1711,7 +1711,7 @@ plot.FFTrees <- function(x = NULL,
           min.acc <- max(crit.br, 1 - crit.br)
 
           add_level("acc", ok.val = .50, min.val = 0, max.val = 1,
-                    level.type = level.type, df_lloc = lloc,
+                    level.type = level.type, lloc_row = lloc[lloc$element == "acc", ],
                     header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
           # Add baseline to acc level:
@@ -1737,15 +1737,15 @@ plot.FFTrees <- function(x = NULL,
           if (names(bacc_wacc) == "bacc"){ # show bacc level:
 
             add_level("bacc", ok.val = .50, min.val = 0, max.val = 1,
-                      level.type = level.type, df_lloc = lloc,
+                      level.type = level.type, lloc_row = lloc[lloc$element == "bacc", ],
                       header_y = header.y.loc, header_cex = header.cex)
 
-          } else { # default: show wacc level (with sens.w value):
+          } else { # show wacc level (and sens.w value):
 
             sens.w_lbl <- paste0("sens.w = .", pretty_dec(sens.w))
 
             add_level("wacc", ok.val = .50, min.val = 0, max.val = 1,
-                      level.type = level.type, df_lloc = lloc,
+                      level.type = level.type, lloc_row = lloc[lloc$element == "wacc", ],
                       header_y = header.y.loc,
                       bottom.text = sens.w_lbl, header_cex = header.cex)
 
