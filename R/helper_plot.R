@@ -2,13 +2,18 @@
 # Utility functions for plots.
 # ---------------------------
 
-# (+) Plotting helper functions: ------
 
-# 1. General plotting functions: ------
-
+# (1) General plotting helpers: ------
 
 
-# 2. plot.FFTrees() helper functions: ------
+
+
+
+
+
+
+# (2) Specific functions for plot.FFTrees(): ------
+
 
 
 # add_balls: Add balls to the plot ----
@@ -18,8 +23,8 @@ add_balls <- function(x.lim = c(-10, 0),
                       n.vec = c(20, 10),
                       pch.vec = c(21, 21),
                       ball.cex = 1,
-                      bg.vec = ball.bg,
-                      col.vec = ball.col,
+                      bg.vec  = "white",
+                      col.vec = "black",
                       ball.lwd = .70,
                       freq.text = TRUE,
                       freq.text.cex = 1.2,
@@ -166,7 +171,6 @@ get_x_dev <- function(string, csf = .80){
   }
 
 } # get_x_dev().
-
 
 
 # get_label_cex: Adjust label cex to width of string i ----
