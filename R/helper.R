@@ -1247,11 +1247,24 @@ get_bacc_wacc <- function(sens, spec,  sens.w){
 # get_bacc_wacc(1, .80, 0)
 
 
+
 # exit_word: ------
 
 exit_word <- function(data){
+
   if (data == "test"){ "Predict" } else { "Decide" }
-}
+
+} # exit_word().
+
+
+
+# add_quotes: ------
+
+add_quotes <- function(x) {
+
+  toString(sQuote(x))
+
+} # add_quotes().
 
 
 
