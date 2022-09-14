@@ -6,8 +6,6 @@
 # (1) General plotting helpers: ------
 
 
-
-
 # num_space: ------
 
 # \code{num_space} computes the width of a representation of \code{x}
@@ -256,7 +254,7 @@ transparent <- function(col_orig = "red",
     col_final[i] <- rgb(col_orig[1, i], col_orig[2, i], col_orig[
       3,
       i
-      ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
+    ], alpha = (1 - trans.val) * 255, maxColorValue = 255)
   }
 
   return(col_final)
@@ -286,7 +284,7 @@ add_balls <- function(x.lim = c(-10, 0),
                       upper.text = "",
                       upper.text.cex = 1,
                       upper.text.adj = 0,
-                      rev.order = F,
+                      rev.order = FALSE,
                       box.col = NULL,
                       box.bg = NULL,
                       n.per.icon = NULL) {
@@ -442,7 +440,7 @@ get_label_cex <- function(i, label.box.text.cex = 2) {
 
 # add_level: Add level display to a plot ----
 
-# df_lloc: Data frame with labels, values, and locations.
+# lloc_row: Data frame with labels, values, and locations.
 
 add_level <- function(name,
                       sub = "",
@@ -452,15 +450,15 @@ add_level <- function(name,
                       bottom.text = "",
                       level.type = "line",
                       # needed from plot:
-                      df_lloc    = NULL,
+                      lloc_row   = NULL,  # element == name row (of df)
                       header_y   = NULL,
                       header_cex = NULL) {
 
   # Parameters:
-  rect.center.x <- df_lloc$center.x[df_lloc$element == name]
-  rect.center.y <- df_lloc$center.y[df_lloc$element == name]
-  rect.height <- df_lloc$height[df_lloc$element == name]
-  rect.width <- df_lloc$width[df_lloc$element == name]
+  rect.center.x <- lloc_row$center.x
+  rect.center.y <- lloc_row$center.y
+  rect.height <- lloc_row$height
+  rect.width <- lloc_row$width
 
   rect.bottom.y <- rect.center.y - rect.height / 2
   rect.top.y    <- rect.center.y + rect.height / 2
@@ -468,9 +466,9 @@ add_level <- function(name,
   rect.left.x  <- rect.center.x - rect.width / 2
   rect.right.x <- rect.center.x + rect.width / 2
 
-  long.name <- df_lloc$long.name[df_lloc$element == name]
-  value <- df_lloc$value[df_lloc$element == name]
-  value.name <- df_lloc$value.name[df_lloc$element == name]
+  long.name <- lloc_row$long.name
+  value <- lloc_row$value
+  value.name <- lloc_row$value.name
 
   #
   # level.col.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
@@ -479,7 +477,7 @@ add_level <- function(name,
 
 
   text(x = rect.center.x, y = header_y,
-    labels = long.name, pos = 1, cex = header_cex
+       labels = long.name, pos = 1, cex = header_cex
   )
 
   # text_outline(x = rect.center.x,
@@ -513,14 +511,14 @@ add_level <- function(name,
          value.height,
          # col = level.col.fun(value.s),
          col = value.col,
-         # col = spec.level.fun(df_lloc$value[df_lloc$element == name]),
+         # col = spec.level.fun(lloc_row$value),
          border = "black"
     )
 
     text_outline(
       x = rect.center.x,
       y = value.height,
-      labels = df_lloc$value.name[df_lloc$element == name],
+      labels = lloc_row$value.name,
       cex = 1.5, r = .008, pos = 3
     )
 
@@ -558,7 +556,7 @@ add_level <- function(name,
     text_outline(
       x = rect.center.x,
       y = value.height,
-      labels = df_lloc$value.name[df_lloc$element == name],
+      labels = lloc_row$value.name,
       cex = 1.5, r = 0, pos = 3
     )
 
