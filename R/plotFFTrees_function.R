@@ -937,12 +937,33 @@ plot.FFTrees <- function(x = NULL,
            xlab = "", ylab = "", yaxt = "n", xaxt = "n"
       )
 
-      if (hlines) {
-        segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+      # Main title:
+
+      get_x_dev <- function(string, csf = .78){ # adjust rectangle width (to left and right from mid-point):
+
+        # csf: constant scaling factor
+
+        n_char <- nchar(string)
+
+        if (n_char > 15){ # widen rectangle:
+
+          (n_char/100 * csf)
+
+        } else { # default/minimum value:
+
+          .15
+        }
       }
 
-      # Main title:
-      rect(.33, .80, .67, 1.20, col = "white", border = NA)     # title background
+      if (hlines) {
+
+        segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty) # top hline
+
+        x_dev <- get_x_dev(main)
+        rect((.50 - x_dev), .80, (.50 + x_dev), 1.20, col = "white", border = NA) # title background
+
+      }
+
       text(x = .50, y = .95, main, cex = panel.title.cex, ...)  # title 1 (top): main
 
       text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
@@ -1084,8 +1105,9 @@ plot.FFTrees <- function(x = NULL,
       if (show.top | show.bottom) {
 
         if (hlines) {
-          segments(-plot.width, 0, -plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
-          segments( plot.width, 0,  plot.width * .3, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+          x_dev <- .28  # scaling factor, rather than difference
+          segments(-plot.width, 0, -plot.width * x_dev, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+          segments( plot.width, 0,  plot.width * x_dev, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
         }
 
         if (is.null(label.tree)) {
@@ -1593,8 +1615,11 @@ plot.FFTrees <- function(x = NULL,
         par(xpd = TRUE)
 
         if (hlines) {
+
           segments(0, 1.1, 1, 1.1, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
-          rect(.25, 1, .75, 1.2, col = "white", border = NA)
+
+          x_dev <- .20
+          rect((.50 - x_dev), 1, (.50 + x_dev), 1.2, col = "white", border = NA) # label background
         }
 
         # Bottom label:
