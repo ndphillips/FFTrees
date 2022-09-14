@@ -112,21 +112,12 @@
 #' plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 #'
 #' # Visualize predictions of FFT #2 (for new test data) with custom options:
-#' plot(heart.fft,
-#'      tree = 2,
-#'      data = heart.test,
+#' plot(heart.fft, tree = 2, data = heart.test,
 #'      main = "Predicting heart disease",
 #'      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-#'      decision.labels = c("ok", "sick"),
-#'      n.per.icon = 2,
-#'      show.header = TRUE,
-#'      show.confusion = FALSE,
-#'      show.levels = FALSE,
-#'      show.roc = FALSE,
-#'      hlines = FALSE,
-#'      font = 3,
-#'      col = "steelblue"
-#'      )
+#'      decision.labels = c("ok", "sick"), n.per.icon = 2,
+#'      show.header = TRUE, show.confusion = FALSE, show.levels = FALSE, show.roc = FALSE,
+#'      hlines = FALSE, font = 3, col = "steelblue")
 #'
 #' # For more details, see
 #' vignette("FFTrees_plot", package = "FFTrees")
@@ -215,7 +206,7 @@ plot.FFTrees <- function(x = NULL,
   if (what %in% substr(valid_what, 1, 3) == FALSE) {
 
     valid_string <- paste(valid_what, collapse = ", ")
-    valid_string_q <- sapply(strsplit(valid_string, ', '), function(x) toString(sQuote(x)))
+    valid_string_q <- sapply(strsplit(valid_string, ', '), FUN = add_quotes)
 
     stop(paste0("what must be a string in c(", valid_string_q, ").", sep = ""))
   }
@@ -785,147 +776,7 @@ plot.FFTrees <- function(x = NULL,
     stat.outer.circle.col <- gray(.50)
 
 
-    # add.balls.fun() adds balls to the plot
-    add.balls.fun <- function(x.lim = c(-10, 0),
-                              y.lim = c( -2, 0),
-                              n.vec = c(20, 10),
-                              pch.vec = c(21, 21),
-                              ball.cex = 1,
-                              bg.vec = ball.bg,
-                              col.vec = ball.col,
-                              ball.lwd = .70,
-                              freq.text = TRUE,
-                              freq.text.cex = 1.2,
-                              upper.text = "",
-                              upper.text.cex = 1,
-                              upper.text.adj = 0,
-                              rev.order = F,
-                              box.col = NULL,
-                              box.bg = NULL,
-                              n.per.icon = NULL) {
-
-
-      # Add box:
-      if (is.null(box.col) == FALSE | is.null(box.bg) == FALSE) {
-        rect(x.lim[1],
-             y.lim[1],
-             x.lim[2],
-             y.lim[2],
-             col = box.bg,
-             border = box.col
-        )
-      }
-
-      # Add upper text:
-      text(mean(x.lim), y.lim[2] + upper.text.adj,
-           label = upper.text, cex = upper.text.cex
-      )
-
-      a.n <- n.vec[1]
-      b.n <- n.vec[2]
-
-      a.p <- n.vec[1] / sum(n.vec)
-
-      box.x.center <- sum(x.lim) / 2
-      box.y.center <- sum(y.lim) / 2
-
-      box.x.width <- x.lim[2] - x.lim[1]
-
-      # Determine cases per ball:
-      if (is.null(n.per.icon)) {
-        max.n.side <- max(c(a.n, b.n))
-
-        i <- max.n.side / c(1, 5, 10, 50, 100, 1000, 10000)
-        i[i > 50] <- 0
-
-        n.per.icon <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
-      }
-
-      # Determine general ball locations:
-
-      a.balls <- ceiling(a.n / n.per.icon)
-      b.balls <- ceiling(b.n / n.per.icon)
-      n.balls <- a.balls + b.balls
-
-      a.ball.x.loc <- 0
-      a.ball.y.loc <- 0
-      b.ball.x.loc <- 0
-      b.ball.y.loc <- 0
-
-      if (a.balls > 0) {
-        a.ball.x.loc <- rep(-1:-10, each = 5, length.out = 50)[1:a.balls]
-        a.ball.y.loc <- rep(1:5, times = 10, length.out = 50)[1:a.balls]
-        a.ball.x.loc <- a.ball.x.loc * (x.lim[2] - box.x.center) / 10 + box.x.center
-        a.ball.y.loc <- a.ball.y.loc * (y.lim[2] - y.lim[1]) / 5 + y.lim[1]
-      }
-
-      if (b.balls > 0) {
-        b.ball.x.loc <- rep(1:10, each = 5, length.out = 50)[1:b.balls]
-        b.ball.y.loc <- rep(1:5, times = 10, length.out = 50)[1:b.balls]
-        b.ball.x.loc <- b.ball.x.loc * (x.lim[2] - box.x.center) / 10 + box.x.center
-        b.ball.y.loc <- b.ball.y.loc * (y.lim[2] - y.lim[1]) / 5 + y.lim[1]
-      }
-
-      # if(rev.order) {
-      #
-      #   x <- b.ball.x.loc
-      #   y <- b.ball.y.loc
-      #
-      #   b.ball.x.loc <- a.x.loc
-      #   b.ball.y.loc <- a.y.loc
-      #
-      #   a.ball.x.loc <- x
-      #   a.ball.y.loc <- y
-      #
-      # }
-
-
-      # Add frequency text: ----
-
-      if (freq.text) {
-        text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, prettyNum(b.n, big.mark = ","), pos = 4, cex = freq.text.cex)
-        text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, prettyNum(a.n, big.mark = ","), pos = 2, cex = freq.text.cex)
-      }
-
-      # Draw balls: ----
-
-      # Noise:
-      suppressWarnings(if (a.balls > 0) {
-        points(
-          x = a.ball.x.loc,
-          y = a.ball.y.loc,
-          pch = pch.vec[1],
-          bg = bg.vec[1],
-          col = col.vec[1],
-          cex = ball.cex,
-          lwd = ball.lwd
-        )
-      })
-
-      # Signal:
-      suppressWarnings(if (b.balls > 0) {
-        points(
-          x = b.ball.x.loc,
-          y = b.ball.y.loc,
-          pch = pch.vec[2],
-          bg = bg.vec[2],
-          col = col.vec[2],
-          cex = ball.cex,
-          lwd = ball.lwd
-        )
-      })
-    } # add.balls.fun().
-
-    label.cex.fun <- function(i, label.box.text.cex = 2) {
-
-      i <- nchar(i)
-
-      label.box.text.cex * i^-.25
-
-    } # label.cex.fun().
-
-
-    ## 1: Initial Frequencies: ------
+    # 1: Initial Frequencies: ------
 
     # Parameters:
 
@@ -939,27 +790,12 @@ plot.FFTrees <- function(x = NULL,
 
       # Main title:
 
-      get_x_dev <- function(string, csf = .78){ # adjust rectangle width (to left and right from mid-point):
-
-        # csf: constant scaling factor
-
-        n_char <- nchar(string)
-
-        if (n_char > 15){ # widen rectangle:
-
-          (n_char/100 * csf)
-
-        } else { # default/minimum value:
-
-          .15
-        }
-      }
-
       if (hlines) {
 
         segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty) # top hline
 
         x_dev <- get_x_dev(main)
+
         rect((.50 - x_dev), .80, (.50 + x_dev), 1.20, col = "white", border = NA) # title background
 
       }
@@ -982,7 +818,7 @@ plot.FFTrees <- function(x = NULL,
 
       par(xpd = TRUE)
 
-      add.balls.fun(
+      add_balls(
         x.lim = c(.35, .65),
         y.lim = c(.1, .5),
         n.vec = c(final.stats$fa + final.stats$cr, final.stats$hi + final.stats$mi),
@@ -1079,7 +915,7 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    ## 2. Main TREE: ------
+    # 2. Main TREE: ------
 
     if (show.middle) {
       if (show.top == FALSE & show.bottom == FALSE) {
@@ -1260,7 +1096,7 @@ plot.FFTrees <- function(x = NULL,
             x = subplot.center[1],
             y = subplot.center[2] + 2,
             labels = current.cue,
-            cex = label.box.text.cex # label.cex.fun(current.cue, label.box.text.cex = label.box.text.cex)
+            cex = label.box.text.cex  # get_label_cex(current.cue, label.box.text.cex = label.box.text.cex)
           )
         } # if (level.i == 1).
 
@@ -1328,7 +1164,7 @@ plot.FFTrees <- function(x = NULL,
 
           if (max(c(cr.i, mi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
 
-            add.balls.fun(
+            add_balls(
               x.lim = ball.x.lim,
               y.lim = ball.y.lim,
               n.vec = c(cr.i, mi.i),
@@ -1469,7 +1305,7 @@ plot.FFTrees <- function(x = NULL,
           }
 
           if (max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
-            add.balls.fun(
+            add_balls(
               x.lim = ball.x.lim,
               y.lim = ball.y.lim,
               n.vec = c(fa.i, hi.i),
@@ -1584,7 +1420,7 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    ## 3. Cumulative performance: ------
+    # 3. Cumulative performance: ------
 
     if (show.bottom == TRUE) { # obtain tree statistics:
 
@@ -1639,11 +1475,6 @@ plot.FFTrees <- function(x = NULL,
       } # if (what != "roc").
 
 
-      # Auxiliary function: Print pretty decimal values
-      pretty.dec <- function(x) {
-        return(paste(round(x, 2) * 100, sep = ""))
-      }
-
       # Level parameters:
       level.max.height <- .65
       level.width <- .05
@@ -1670,8 +1501,8 @@ plot.FFTrees <- function(x = NULL,
           final.stats$pci, final.stats$sens, final.stats$spec, with(final.stats, (cr + hi) / n), bacc_wacc, NA
         ),
         value.name = c(
-          NA, round(final.stats$mcu, 1), pretty.dec(final.stats$pci), pretty.dec(final.stats$sens), pretty.dec(final.stats$spec), pretty.dec(final.stats$acc),
-          pretty.dec(bacc_wacc), NA
+          NA, round(final.stats$mcu, 1), pretty_dec(final.stats$pci), pretty_dec(final.stats$sens), pretty_dec(final.stats$spec), pretty_dec(final.stats$acc),
+          pretty_dec(bacc_wacc), NA
         )
       )
 
@@ -1716,6 +1547,7 @@ plot.FFTrees <- function(x = NULL,
           decision.labels[1]
         )
 
+
         # Row titles: ----
 
         text(
@@ -1739,6 +1571,7 @@ plot.FFTrees <- function(x = NULL,
         # text(x = final.classtable.x.loc[1] - .05,
         #      y = mean(final.classtable.y.loc), cex = header.cex,
         #      "Decision", srt = 90, pos = 3)
+
 
         # Add final frequencies: ----
 
@@ -1789,7 +1622,7 @@ plot.FFTrees <- function(x = NULL,
         )
 
 
-        # Add labels:
+        # Add labels: ----
 
         text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
              final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
@@ -1829,150 +1662,6 @@ plot.FFTrees <- function(x = NULL,
           #                                 c("red", "yellow", "green"),
           #                                 transparency = .5)
 
-          add.level.fun <- function(name,
-                                    sub = "",
-                                    max.val = 1,
-                                    min.val = 0,
-                                    ok.val = .5,
-                                    bottom.text = "",
-                                    level.type = "line") {
-
-            rect.center.x <- lloc$center.x[lloc$element == name]
-            rect.center.y <- lloc$center.y[lloc$element == name]
-            rect.height <- lloc$height[lloc$element == name]
-            rect.width <- lloc$width[lloc$element == name]
-
-            rect.bottom.y <- rect.center.y - rect.height / 2
-            rect.top.y <- rect.center.y + rect.height / 2
-
-            rect.left.x <- rect.center.x - rect.width / 2
-            rect.right.x <- rect.center.x + rect.width / 2
-
-            long.name <- lloc$long.name[lloc$element == name]
-            value <- lloc$value[lloc$element == name]
-            value.name <- lloc$value.name[lloc$element == name]
-
-            #
-            # level.col.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
-            #                                        colors = c("firebrick2", "yellow", "green4"),
-            #                                        transparency = .1)
-
-            text(
-              x = rect.center.x,
-              y = header.y.loc,
-              labels = long.name,
-              pos = 1, cex = header.cex
-            )
-
-            # text_outline(x = rect.center.x,
-            #              y = header.y.loc,
-            #              labels = long.name,
-            #              pos = 1, cex = header.cex, r = .02
-            # )
-
-            value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect.height
-
-
-            # Add filling: ----
-
-            value.s <- min(value / max.val, 1)
-
-            delta <- 1
-            gamma <- .5
-
-            value.col.scale <- delta * value.s^gamma / (delta * value.s^gamma + (1 - value.s)^gamma)
-            # value.col <- gray(1 - value.col.scale * .5)
-
-            value.col <- gray(1, .25)
-
-            # plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
-
-            if (level.type == "bar") {
-
-              rect(rect.left.x,
-                   rect.bottom.y,
-                   rect.right.x,
-                   value.height,
-                   # col = level.col.fun(value.s),
-                   col = value.col,
-                   # col = spec.level.fun(lloc$value[lloc$element == name]),
-                   border = "black"
-              )
-
-              text_outline(
-                x = rect.center.x,
-                y = value.height,
-                labels = lloc$value.name[lloc$element == name],
-                cex = 1.5, r = .008, pos = 3
-              )
-
-              # Add level border:
-
-              # rect(rect.left.x,
-              #      rect.bottom.y,
-              #      rect.right.x,
-              #      rect.top.y,
-              #      border = gray(.5, .5))
-            }
-
-
-            if (level.type == "line") {
-
-              # Stem:
-              segments(rect.center.x,
-                       rect.bottom.y,
-                       rect.center.x,
-                       value.height,
-                       lty = 3
-              )
-
-              # Horizontal platform:
-              platform.width <- .02
-
-              segments(
-                rect.center.x - platform.width,
-                value.height,
-                rect.center.x + platform.width,
-                value.height
-              )
-
-              # Text label:
-              text_outline(
-                x = rect.center.x,
-                y = value.height,
-                labels = lloc$value.name[lloc$element == name],
-                cex = 1.5, r = 0, pos = 3
-              )
-
-              # points(rect.center.x,
-              #        value.height,
-              #        cex = 5.5,
-              #        pch = 21,
-              #        bg = "white",
-              #        col = "black", lwd = .5)
-            }
-
-            # Add subtext: ----
-
-            text(
-              x = rect.center.x,
-              y = rect.center.y - .05,
-              labels = sub,
-              cex = .8,
-              font = 1,
-              pos = 1
-            )
-
-            # Add bottom text: ----
-
-            text(
-              x = rect.center.x,
-              y = rect.bottom.y,
-              labels = bottom.text,
-              pos = 1
-            )
-          }
-
           paste(final.stats$cr, "/", 1, collapse = "")
 
           # Add 100% reference line: ----
@@ -1983,31 +1672,46 @@ plot.FFTrees <- function(x = NULL,
           #          y1 = level.top,
           #          lty = 3, lwd = .75)
 
+
           # mcu level: ----
-          add.level.fun("mcu",
-                        ok.val = .75,
-                        max.val = 1,
-                        min.val = 0,
-                        level.type = level.type
-          ) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+          add_level("mcu", ok.val = .75, min.val = 0, max.val = 1,
+                    level.type = level.type, df_lloc = lloc,
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
 
           # pci level: ----
-          add.level.fun("pci", ok.val = .75, level.type = level.type) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+          add_level("pci", ok.val = .75, min.val = 0, max.val = 1,
+                    level.type = level.type, df_lloc = lloc,
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
 
           # text(lloc$center.x[lloc$element == "pci"],
           #      lloc$center.y[lloc$element == "pci"],
           #      labels = paste0("mcu\n", round(mcu, 2)))
 
+
           # spec level: ----
-          add.level.fun("spec", ok.val = .75, level.type = level.type) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
+          add_level("spec", ok.val = .75, min.val = 0, max.val = 1,
+                    level.type = level.type, df_lloc = lloc,
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+
 
           # sens level: ----
-          add.level.fun("sens", ok.val = .75, level.type = level.type) # , sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+
+          add_level("sens", ok.val = .75, min.val = 0, max.val = 1,
+                    level.type = level.type, df_lloc = lloc,
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+
 
           # acc level: ----
+
           min.acc <- max(crit.br, 1 - crit.br)
 
-          add.level.fun("acc", min.val = 0, ok.val = .5, level.type = level.type) # , sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+          add_level("acc", ok.val = .50, min.val = 0, max.val = 1,
+                    level.type = level.type, df_lloc = lloc,
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
 
           # Add baseline to acc level:
           segments(
@@ -2024,21 +1728,25 @@ plot.FFTrees <- function(x = NULL,
             labels = "BL", pos = 1
           )
 
-          # paste("BL = ", pretty.dec(min.acc), sep = ""), pos = 1)
+          # paste("BL = ", pretty_dec(min.acc), sep = ""), pos = 1)
 
 
           # bacc OR wacc level: ----
 
           if (names(bacc_wacc) == "bacc"){ # show bacc level:
 
-            add.level.fun("bacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type)
+            add_level("bacc", ok.val = .50, min.val = 0, max.val = 1,
+                      level.type = level.type, df_lloc = lloc,
+                      header_y = header.y.loc, header_cex = header.cex)
 
           } else { # default: show wacc level (with sens.w value):
 
-            sens.w_lbl <- paste0("sens.w = .", pretty.dec(sens.w))
+            sens.w_lbl <- paste0("sens.w = .", pretty_dec(sens.w))
 
-            add.level.fun("wacc", min.val = 0, max.val = 1, ok.val = .5, level.type = level.type,
-                          bottom.text = sens.w_lbl)
+            add_level("wacc", ok.val = .50, min.val = 0, max.val = 1,
+                      level.type = level.type, df_lloc = lloc,
+                      header_y = header.y.loc,
+                      bottom.text = sens.w_lbl, header_cex = header.cex)
 
           } # if (bacc_wacc).
 
@@ -2520,16 +2228,12 @@ plot.FFTrees <- function(x = NULL,
 
 # ToDo: ------
 
-# - Cleanup & reduce clutter:
-#   1. Move long auxiliary functions (add.level.fun(), add.balls.fun(), ...) to a separate file (helper_plot.R).
-#   2. Remove ROC curve parts to a separate function, and
-#      handle what == "roc" as a special case (like what = "cues").
+# - Further cleanup & clutter reduction:
+#   - Remove ROC curve parts to a separate function, and
+#     handle what == "roc" as a special case (like what = "cues").
 
-# - Issue #91:
-#   Vignette FFTrees_plot.Rmd and some code checking for 'inherits(data, "data.frame")'
-#   suggests that data could be df, to which FFT is then applied.
-#   Applying and plotting in one step would be great, of course, (and should also be adopted for printing)
-#   but it presently does not work. (Suggestion: Use a 'newdata' argument for this purpose, as in predict().)
+# - Issue #91: Allow data to accept new test data (as df).
+#   Suggestion: Use a 'newdata' argument for this purpose, as in predict().)
 
 # - Offer options for adding/changing color information.
 
