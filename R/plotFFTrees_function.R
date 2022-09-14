@@ -600,12 +600,12 @@ plot.FFTrees <- function(x = NULL,
 
     # Panel parameters:
     panel.line.lwd <- 1
-    panel.line.col <- gray(0)
+    panel.line.col <- gray(0) # = black
     panel.line.lty <- 1
 
     # Ball parameters:
-    ball.col <- c(gray(0), gray(0))
-    ball.bg <- c(gray(1), gray(1))
+    ball.col <- c(gray(0), gray(0))  # = black
+    ball.bg  <- c(gray(1), gray(1))  # = white
     ball.pch <- c(21, 24)
     ball.cex <- c(1, 1)
 
@@ -615,9 +615,9 @@ plot.FFTrees <- function(x = NULL,
     max.label.length <- 100
     def.par <- par(no.readonly = TRUE)
 
-    ball.box.width <- 10
-    label.box.height <- 2
-    label.box.width <- 5
+    ball.box.width   <- 10
+    label.box.height <-  2
+    label.box.width  <-  5
 
     # Cue labels:
     if (is.null(cue.labels)) {
@@ -727,11 +727,11 @@ plot.FFTrees <- function(x = NULL,
       ball.box.width <- 18
     }
 
-    ball.box.height <- 2.5
+    ball.box.height      <-  2.5
     ball.box.horiz.shift <- 10
-    ball.box.vert.shift <- -1
-    ball.box.max.shift.p <- .9
-    ball.box.min.shift.p <- .4
+    ball.box.vert.shift  <- -1
+    ball.box.max.shift.p <-  .9
+    ball.box.min.shift.p <-  .4
 
     ball.box.fixed.x.shift <- c(ball.box.min.shift.p * plot.width, ball.box.max.shift.p * plot.width)
 
@@ -745,21 +745,21 @@ plot.FFTrees <- function(x = NULL,
       n.per.icon <- c(1, 5, 10^(1:10))[which(i == max(i))]
     }
 
-    noise.ball.pch <- ball.pch[1]
+    noise.ball.pch  <- ball.pch[1]
     signal.ball.pch <- ball.pch[2]
-    noise.ball.col <- ball.col[1]
+    noise.ball.col  <- ball.col[1]
     signal.ball.col <- ball.col[2]
-    noise.ball.bg <- ball.bg[1]
-    signal.ball.bg <- ball.bg[2]
+    noise.ball.bg   <- ball.bg[1]
+    signal.ball.bg  <- ball.bg[2]
 
 
     # Arrows: ----
 
     arrow.lty <- 1
     arrow.lwd <- 1
-    arrow.length <- 2.5
-    arrow.head.length <- .08
-    arrow.col <- gray(0)
+    arrow.length      <- 2.50
+    arrow.head.length <-  .08
+    arrow.col <- gray(0) # = black
 
 
     # Final stats: ----
@@ -820,7 +820,7 @@ plot.FFTrees <- function(x = NULL,
 
       add_balls(
         x.lim = c(.35, .65),
-        y.lim = c(.1, .5),
+        y.lim = c(.10, .50),
         n.vec = c(final.stats$fa + final.stats$cr, final.stats$hi + final.stats$mi),
         pch.vec = c(noise.ball.pch, signal.ball.pch),
         bg.vec = c(noise.ball.bg, signal.ball.bg),
@@ -1169,7 +1169,7 @@ plot.FFTrees <- function(x = NULL,
               y.lim = ball.y.lim,
               n.vec = c(cr.i, mi.i),
               pch.vec = c(noise.ball.pch, signal.ball.pch),
-              #  bg.vec = c(noise.ball.bg, signal.ball.bg),
+              # bg.vec = c(noise.ball.bg, signal.ball.bg),
               bg.vec = c(correct.bg, error.bg),
               col.vec = c(correct.border, error.border),
               freq.text = TRUE,
@@ -1305,12 +1305,13 @@ plot.FFTrees <- function(x = NULL,
           }
 
           if (max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
+
             add_balls(
               x.lim = ball.x.lim,
               y.lim = ball.y.lim,
               n.vec = c(fa.i, hi.i),
               pch.vec = c(noise.ball.pch, signal.ball.pch),
-              #      bg.vec = c(noise.ball.bg, signal.ball.bg),
+              # bg.vec = c(noise.ball.bg, signal.ball.bg),
               bg.vec = c(error.bg, correct.bg),
               col.vec = c(error.border, correct.border),
               freq.text = TRUE,
