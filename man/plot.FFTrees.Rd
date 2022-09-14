@@ -158,21 +158,12 @@ plot(heart.fft, what = "icontree", n.per.icon = 2,
 plot(heart.fft, what = "roc", main = "Performance comparison for heart disease data")
 
 # Visualize predictions of FFT #2 (for new test data) with custom options:
-plot(heart.fft,
-     tree = 2,
-     data = heart.test,
+plot(heart.fft, tree = 2, data = heart.test,
      main = "Predicting heart disease",
      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-     decision.labels = c("ok", "sick"),
-     n.per.icon = 2,
-     show.header = TRUE,
-     show.confusion = FALSE,
-     show.levels = FALSE,
-     show.roc = FALSE,
-     hlines = FALSE,
-     font = 3,
-     col = "steelblue"
-     )
+     decision.labels = c("ok", "sick"), n.per.icon = 2,
+     show.header = TRUE, show.confusion = FALSE, show.levels = FALSE, show.roc = FALSE,
+     hlines = FALSE, font = 3, col = "steelblue")
 
 # For more details, see
 vignette("FFTrees_plot", package = "FFTrees")
