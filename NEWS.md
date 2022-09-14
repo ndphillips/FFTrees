@@ -1,7 +1,7 @@
 
 # FFTrees 1.7 
 
-## 1.7.0.9009
+## 1.7.0.9010
 
 <!-- Development version: --> 
 
@@ -28,13 +28,17 @@ Changes since last release:
 ### Minor changes 
 
 - Added `wacc` to measures computed for competing algorithms. 
-- Deprecated `stats` argument of `plot.FFTrees()`. 
 
+- Plotting with `plot.FFTrees()`: 
+    - Adjusted space for title to width of `main` argument.
+    - Deprecated `stats` argument. 
+    - Moved utility functions to `helper_plot.R`. 
 
 ### Details 
 
+- Revised documentation and vignettes.
 - Renamed internal functions and variables.
-- Revised documentation and vignettes. 
+
 
 
 <!-- Released versions: --> 
@@ -301,6 +305,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-13.] 
+[File `NEWS.md` last updated on 2022-09-14.] 
 
 <!-- eof. -->
