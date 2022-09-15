@@ -312,7 +312,7 @@ cost_cues_append <- function(formula,
 #' \code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),
 #' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 #'
-#' @param formula A formula (ususally \code{x$formula}, for an \code{FFTrees} object \code{x}).
+#' @param formula A formula (usually \code{x$formula}, for an \code{FFTrees} object \code{x}).
 #' @param data.train A training dataset (as data frame).
 #' @param data.test A testing dataset (as data frame).
 #'
