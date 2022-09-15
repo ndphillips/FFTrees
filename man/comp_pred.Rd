@@ -15,7 +15,7 @@ comp_pred(
 )
 }
 \arguments{
-\item{formula}{A formula (ususally \code{x$formula}, for an \code{FFTrees} object \code{x}).}
+\item{formula}{A formula (usually \code{x$formula}, for an \code{FFTrees} object \code{x}).}
 
 \item{data.train}{A training dataset (as data frame).}
 
