@@ -82,7 +82,7 @@ First, let's create an `FFTrees` object (called `titanic.fft`) from the `titanic
 # Create FFTs for the titanic data:
 titanic.fft <- FFTrees(formula = survived ~.,
                        data = titanic, 
-                       main = "Titanic",
+                       main = "Surviving the Titanic",
                        decision.labels = c("Died", "Survived"))       
 ```
 
@@ -100,7 +100,7 @@ Let's apply the function to the `titanic.fft` object to see how accurate each of
 <!-- Example what = 'cues': -->
 
 ```{r titanic-cues, fig.width = 6, fig.height = 6, fig.align = 'center', out.width = "75%", fig.cap="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset."}
-plot(titanic.fft, what = 'cues')
+plot(titanic.fft, what = 'cues', main = "Cues predicting Titanic survival")
 ```
 
 Given the axes of this plot, good performing cues should be near the top left corner of the graph (i.e., exhibit both a low false alarm rate and a high hit rate). 
@@ -114,14 +114,16 @@ While they provide lower bounds on the performance of trees (as combining cues i
 ### Visualizing FFTs and their performance 
 
 To visualize the tree from an `FFTrees` object, use `plot()`. 
-Let's plot one of the trees (Tree #1, i.e., the best one, given our current goal):
+Let's plot one of the trees (Tree\ #1, i.e., the best one, given our current goal):
 
 ```{r titanic-plot, fig.width = 7, fig.height = 7, fig.align = 'center', out.width = "75%", fig.cap="**Figure 2**: Plotting the best FFT of an `FFTrees` object."}
 plot(titanic.fft, tree = 1)
 ```
 
-The resulting figure contains a lot of information in three distinct panels. 
-Here is a summary of their contents: 
+The resulting plot visualizes one out of `r `titanic.fft$trees$n`\ possible trees in the `titanic.fft` object. 
+As `tree = 1` corresponds to the best tree given our current `goal` for selecting FFTs, we could have plotted the same tree by specifying `tree = 'best.train'`. 
+
+As **Figure\ 2** contains a lot of information in three distinct panels, let's briefly consider their contents: 
 
 1. _Basic dataset information_: 
 The top row of the plot shows basic information on the current dataset: 
