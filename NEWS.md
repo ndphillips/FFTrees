@@ -20,14 +20,14 @@ Changes since last release:
 
 ### Minor changes 
 
-- none yet.  
+- Bug fix: Removed clipping of titles in `plot.FFTrees()`.
 
 <!-- Blank line. --> 
 
 
 ### Details 
 
-- none yet.  
+- none yet.
 
 <!-- Blank line. --> 
 
