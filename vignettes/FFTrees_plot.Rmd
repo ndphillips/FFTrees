@@ -22,12 +22,15 @@ library(FFTrees)
 
 ## Visualizing FFTrees 
 
-The **FFTrees** package makes it very easy to visualize fast-and-frugal trees (FFTs) and evaluate their performance. 
+The **FFTrees** package makes it very easy to visualize and evaluate fast-and-frugal trees (FFTs): 
 
-The main function `FFTrees()` creates fast-and-frugal trees (FFTs) as R objects of the type `FFTrees`. 
-We visualize an `FFTrees` object\ `x` by plotting it (i.e., evaluating `plot(x)`). 
+- Use the main `FFTrees()` function to create a set of FFTs (e.g., as an R object\ `x` of type `FFTrees`). 
 
-Two key arguments for plotting are `what` and `tree`: 
+- Visualize a tree in\ `x` by evaluating `plot(x)`. 
+
+<!-- Blank line. -->
+
+The two key arguments for plotting are `what` and `tree`: 
 Whereas the `tree` argument allows selecting between different trees in\ `x` (using `tree = 1` by default), 
 the `what` argument distinguishes between five main types of plots: 
 
