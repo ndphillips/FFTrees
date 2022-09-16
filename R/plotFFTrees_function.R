@@ -781,26 +781,31 @@ plot.FFTrees <- function(x = NULL,
     # Parameters:
 
     if (show.top) {
+
       par(mar = c(0, 0, 1, 0))
 
+      # Prepare plot:
       plot(1,
            xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n",
            xlab = "", ylab = "", yaxt = "n", xaxt = "n"
       )
 
-      # Main title:
+      # Main title: ----
+
+      par(xpd = TRUE)
 
       if (hlines) {
 
         segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty) # top hline
 
         x_dev <- get_x_dev(main)
+        y_dev <- .20
 
-        rect((.50 - x_dev), .80, (.50 + x_dev), 1.20, col = "white", border = NA) # title background
+        rect((.50 - x_dev), (1 - y_dev), (.50 + x_dev), (1 + y_dev), col = "white", border = NA) # title background
 
       }
 
-      text(x = .50, y = .95, main, cex = panel.title.cex, ...)  # title 1 (top): main
+      text(x = .50, y = .96, main, cex = panel.title.cex, ...)  # title 1 (top): main
 
       text(x = .50, y = .80, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
 
@@ -813,10 +818,10 @@ plot.FFTrees <- function(x = NULL,
       # points(.9, .8, pch = 1, cex = 1.2)
       # text(.9, .8, labels = paste(" = ", n.per.icon, " cases", sep = ""), pos = 4)
 
+      par(xpd = FALSE)
+
 
       # Show ball examples: ----
-
-      par(xpd = TRUE)
 
       add_balls(
         x.lim = c(.35, .65),
@@ -829,8 +834,6 @@ plot.FFTrees <- function(x = NULL,
         upper.text.adj = 2,
         n.per.icon = n.per.icon
       )
-
-      par(xpd = FALSE)
 
 
       # Add p.signal and p.noise levels: -----
@@ -912,20 +915,23 @@ plot.FFTrees <- function(x = NULL,
            labels = noise.p.text,
            pos = 2, cex = 1.2
       )
-    }
+
+    } # if (show.top).
 
 
     # 2. Main TREE: ------
 
     if (show.middle) {
+
       if (show.top == FALSE & show.bottom == FALSE) {
         par(mar = c(3, 3, 3, 3) + .1)
       } else {
         par(mar = c(0, 0, 0, 0))
       }
 
-      # Setup plotting space: ----
+      par(xpd = TRUE)
 
+      # Prepare plot:
       plot(1,
            xlim = c(-plot.width, plot.width),
            ylim = c(-plot.height, 0),
@@ -934,9 +940,8 @@ plot.FFTrees <- function(x = NULL,
            ylab = "", xlab = ""
       )
 
-      # Add frame: ----
 
-      par(xpd = TRUE)
+      # Middle title: ----
 
       if (show.top | show.bottom) {
 
@@ -952,7 +957,7 @@ plot.FFTrees <- function(x = NULL,
 
         text(x = 0, y = 0, label.tree, cex = panel.title.cex, ...)  # title 2 (middle): (a) tree label
 
-      }
+      } # if (show.top | show.bottom).
 
       if (show.top == FALSE & show.bottom == FALSE) {
 
@@ -961,9 +966,8 @@ plot.FFTrees <- function(x = NULL,
         }
 
         mtext(text = main, side = 3, cex = panel.title.cex, ...)  # title 2 (middle): (b) main label
-      }
 
-      par(xpd = FALSE)
+      } # if (show.top == FALSE & show.bottom == FALSE).
 
 
       # Icon guide: ------
@@ -985,7 +989,6 @@ plot.FFTrees <- function(x = NULL,
 
         exit_word <- exit_word(data)  # either 'train':'decide' or 'test':'predict'
 
-        par(xpd = TRUE)
 
         # (a) Noise panel (on left): ----
 
@@ -1051,11 +1054,12 @@ plot.FFTrees <- function(x = NULL,
           rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
         }
 
-        par(xpd = FALSE)
-
       } # if (show.iconguide).
 
+      par(xpd = FALSE)
 
+
+      # Plot main TREE: ------
 
       # Set initial subplot center:
       subplot.center <- c(0, -4)
@@ -1098,11 +1102,11 @@ plot.FFTrees <- function(x = NULL,
             labels = current.cue,
             cex = label.box.text.cex  # get_label_cex(current.cue, label.box.text.cex = label.box.text.cex)
           )
+
         } # if (level.i == 1).
 
 
-
-        # Left (Noise) classification / New level: ------
+        # Left (Noise) classification / New level: ----
 
         # Exit node on left: ----
 
@@ -1246,7 +1250,7 @@ plot.FFTrees <- function(x = NULL,
         } # if (new level on left).
 
 
-        # Right (Signal) classification / New level: ------
+        # Right (Signal) classification / New level: ----
 
         # Exit node on right: ----
 
@@ -1399,7 +1403,7 @@ plot.FFTrees <- function(x = NULL,
         } # # if (new level on right).
 
 
-        # Update plot center: ------
+        # Update plot center: ----
 
         if (identical(paste(level.stats$exit[level.i]), "0")) {
 
@@ -1418,10 +1422,10 @@ plot.FFTrees <- function(x = NULL,
         }
 
       }
-    }
+    } # if (show.middle).
 
 
-    # 3. Cumulative performance: ------
+    # 3. Cumulative performance: ----
 
     if (show.bottom == TRUE) { # obtain tree statistics:
 
@@ -1449,7 +1453,10 @@ plot.FFTrees <- function(x = NULL,
 
       if (what != "roc"){
 
+        # Set par:
         par(xpd = TRUE)
+
+        # Bottom title: ----
 
         if (hlines) {
 
@@ -2209,7 +2216,7 @@ plot.FFTrees <- function(x = NULL,
 
       } # if (show.roc).
 
-    } # if (show.bottom == TRUE).
+    } # if (show.bottom).
 
     # # Reset plotting space:
     # par(mfrow = c(1, 1))
