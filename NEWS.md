@@ -13,21 +13,25 @@ Changes since last release:
 
 ### Major changes
 
-- none yet.  
+- None yet.  
 
 <!-- Blank line. --> 
 
 
 ### Minor changes 
 
-- Bug fix: Removed clipping of titles and labels in `plot.FFTrees()`.
+- Plotting FFTs with `plot.FFTrees()`:
+    - Show `n.per.icon` legend when `what = 'icontree'`. 
+    - Bug fix: Removed clipping of titles and labels.
+    - Tweaked spacing parameters.
 
 <!-- Blank line. --> 
 
 
 ### Details 
 
-- none yet.
+- Revised vignettes. 
+
 
 <!-- Blank line. --> 
 
