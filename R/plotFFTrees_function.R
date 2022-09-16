@@ -1950,6 +1950,7 @@ plot.FFTrees <- function(x = NULL,
             cart.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "cart"]
             cart.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
 
+            # Plot point:
             points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 1.75,
@@ -1962,9 +1963,10 @@ plot.FFTrees <- function(x = NULL,
                    pch = "C", cex = .7, col = gray(.2), lwd = 1
             )
 
-            par("xpd" = FALSE)
 
-            # label:
+            # Legend label:
+            par("xpd" = TRUE)
+
             points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 2.5,
@@ -1982,7 +1984,7 @@ plot.FFTrees <- function(x = NULL,
                  labels = "  CART", adj = 0, cex = .9
             )
 
-            par("xpd" = TRUE)
+            par("xpd" = FALSE)
 
           } # if ("cart" etc.
 
@@ -1994,6 +1996,7 @@ plot.FFTrees <- function(x = NULL,
             lr.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
             lr.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
 
+            # Plot point:
             points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 1.75,
@@ -2006,7 +2009,8 @@ plot.FFTrees <- function(x = NULL,
                    pch = "L", cex = .7, col = gray(.2)
             )
 
-            par("xpd" = FALSE)
+            # Legend label:
+            par("xpd" = TRUE)
 
             points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
@@ -2025,7 +2029,7 @@ plot.FFTrees <- function(x = NULL,
                  labels = "  LR", adj = 0, cex = .9
             )
 
-            par("xpd" = TRUE)
+            par("xpd" = FALSE)
 
           } # if ("lr" etc.
 
@@ -2044,7 +2048,7 @@ plot.FFTrees <- function(x = NULL,
             #
             # print(final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"])) # y-coordinate
 
-
+            # Plot point:
             points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 1.75,
@@ -2057,9 +2061,9 @@ plot.FFTrees <- function(x = NULL,
                    pch = "R", cex = .7, col = gray(.2), lwd = 1
             )
 
-            par("xpd" = FALSE)
+            # Legend label:
+            par("xpd" = TRUE)
 
-            # label:
             points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 2.5,
@@ -2077,7 +2081,7 @@ plot.FFTrees <- function(x = NULL,
                  labels = "  RF", adj = 0, cex = .9
             )
 
-            par("xpd" = TRUE)
+            par("xpd" = FALSE)
 
           } # if ("rf" etc.
 
@@ -2089,6 +2093,7 @@ plot.FFTrees <- function(x = NULL,
             svm.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
             svm.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
 
+            # Plot point:
             points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
                    final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
                    pch = 21, cex = 1.75,
@@ -2101,9 +2106,10 @@ plot.FFTrees <- function(x = NULL,
                    pch = "S", cex = .7, col = gray(.2), lwd = 1
             )
 
-            par("xpd" = FALSE)
 
-            # label:
+            # Legend label:
+            par("xpd" = TRUE)
+
             points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 2.5,
@@ -2121,7 +2127,7 @@ plot.FFTrees <- function(x = NULL,
                  labels = "  SVM", adj = 0, cex = .9
             )
 
-            par("xpd" = TRUE)
+            par("xpd" = FALSE)
 
           } # if ("svm" etc.
         } # if (comp == TRUE).
@@ -2190,9 +2196,9 @@ plot.FFTrees <- function(x = NULL,
             is.null(x$competition$models$rf)   == FALSE
           )) {
 
-            par("xpd" = FALSE)
+            # Legend label:
+            par("xpd" = TRUE)
 
-            # label:
             points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                    final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 2.5, col = scales::alpha("green", .3),
@@ -2209,7 +2215,7 @@ plot.FFTrees <- function(x = NULL,
                  labels = "  FFT", adj = 0, cex = .9
             )
 
-            par("xpd" = TRUE)
+            par("xpd" = FALSE)
 
           }
         } # FFTs.
