@@ -1,6 +1,39 @@
 
 # FFTrees 1.7
 
+## 1.7.5.9001
+
+<!-- Development version: --> 
+
+The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
+
+<!-- Log of changes: --> 
+
+Changes since last release: 
+
+### Major changes
+
+- none yet.  
+
+<!-- Blank line. --> 
+
+
+### Minor changes 
+
+- Bug fix: Removed clipping of titles and labels in `plot.FFTrees()`.
+
+<!-- Blank line. --> 
+
+
+### Details 
+
+- none yet.
+
+<!-- Blank line. --> 
+
+
+<!-- Released versions: --> 
+
 ## 1.7.5
 
 **FFTrees** version 1.7.5 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2022-09-15]. 
@@ -33,18 +66,15 @@ Changes since last release:
     - Deprecated `stats` argument. 
     - Moved utility functions to `helper_plot.R`. 
 
+<!-- Blank line. --> 
+
 ### Details 
 
 - Revised documentation and vignettes.
 - Renamed internal functions and variables.
 
-<!-- Development version: --> 
 
-The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
-
-
-<!-- Released versions: --> 
-
+<!-- Previous versions: --> 
 
 ## 1.7.0 
 
@@ -306,6 +336,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-15.] 
+[File `NEWS.md` last updated on 2022-09-16.] 
 
 <!-- eof. -->
