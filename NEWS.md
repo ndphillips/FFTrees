@@ -7,27 +7,33 @@
 
 The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
+
 <!-- Log of changes: --> 
 
 Changes since last release: 
 
+
 ### Major changes
 
-- none yet.  
+- None yet.  
 
 <!-- Blank line. --> 
 
 
 ### Minor changes 
 
-- Bug fix: Removed clipping of titles and labels in `plot.FFTrees()`.
+- Plotting FFTs with `plot.FFTrees()`:
+    - Show `n.per.icon` legend when `what = 'icontree'`. 
+    - Bug fix: Removed clipping of titles and labels.
+    - Tweaked spacing parameters.
 
 <!-- Blank line. --> 
 
 
 ### Details 
 
-- none yet.
+- Revised vignettes. 
+
 
 <!-- Blank line. --> 
 
@@ -336,6 +342,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-16.] 
+[File `NEWS.md` last updated on 2022-09-19.] 
 
 <!-- eof. -->
