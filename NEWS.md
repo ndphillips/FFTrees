@@ -7,9 +7,11 @@
 
 The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
+
 <!-- Log of changes: --> 
 
 Changes since last release: 
+
 
 ### Major changes
 
@@ -340,6 +342,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-16.] 
+[File `NEWS.md` last updated on 2022-09-19.] 
 
 <!-- eof. -->
