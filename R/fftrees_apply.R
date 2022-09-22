@@ -131,11 +131,18 @@ fftrees_apply <- function(x,
       stringsAsFactors = FALSE
     )
 
-    # Define critical stats:
-    critical_stats_v <- c("n", "hi", "fa", "mi", "cr",
-                          "sens", "spec", "far", "ppv", "npv",
-                          "acc", "bacc", "wacc",
-                          "cost_decisions")
+    # Define critical stats:  +++ here now +++
+    critical_stats_v <- c(
+      # frequencies:
+      "n", "hi", "fa", "mi", "cr",
+      # conditional probabilities:
+      "sens", "spec", "far",  "ppv", "npv",
+      # derived from probabilities:
+      "dprime",  # enable goal = "dprime" by including in tree stats
+      # accuracy:
+      "acc", "bacc", "wacc",
+      # costs:
+      "cost_decisions")
 
     # Add stat names to level_stats_i:
     level_stats_i[critical_stats_v] <- NA
