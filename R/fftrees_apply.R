@@ -102,19 +102,19 @@ fftrees_apply <- function(x,
 
     decisions_df <- decisions_ls[[tree_i]]
 
-    costc.level <- sapply(cue_v, FUN = function(cue_i) {
+    costc_level <- sapply(cue_v, FUN = function(cue_i) {
       if (cue_i %in% names(x$params$cost.cues)) {
-        cost.cue_i <- x$params$cost.cues[[cue_i]]
+        cost_cue_i <- x$params$cost.cues[[cue_i]]
       } else {
-        cost.cue_i <- 0
+        cost_cue_i <- 0
       }
     })
 
-    costc.level.cum <- cumsum(costc.level)
+    costc_level_cum <- cumsum(costc_level)
 
     cue_cost_cum_level <- data.frame(
       level = 1:level_n,
-      cue_cost_cum = costc.level.cum
+      cue_cost_cum = costc_level_cum
     )
 
     # level_stats_i contains cumulative level statistics:
@@ -129,7 +129,11 @@ fftrees_apply <- function(x,
       stringsAsFactors = FALSE
     )
 
-    critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions")
+    # Define critical stats:
+    critical_stats_v <- c("n", "hi", "fa", "mi", "cr",
+                          "sens", "spec", "far", "ppv", "npv",
+                          "acc", "bacc", "wacc",
+                          "cost_decisions")
 
     # Add stat names to level_stats_i:
     level_stats_i[critical_stats_v] <- NA
@@ -203,7 +207,7 @@ fftrees_apply <- function(x,
 
       decisions_df$decision[classify.now] <- decisions_df$current_decision[classify.now]
       decisions_df$levelout[classify.now] <- level_i
-      decisions_df$cost_cue[classify.now] <- costc.level.cum[level_i]
+      decisions_df$cost_cue[classify.now] <- costc_level_cum[level_i]
 
       decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == TRUE] <- x$params$cost.outcomes$hi
       decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
@@ -273,7 +277,7 @@ fftrees_apply <- function(x,
   x$trees$level_stats[[mydata]] <- tibble::as_tibble(level_stats)
   x$trees$decisions[[mydata]]   <- decisions_ls
 
-  # Best tree:
+  # Set best tree values:
   if (mydata == "train"){
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
