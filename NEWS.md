@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9001
+## 1.7.5.9002
 
 <!-- Development version: --> 
 
@@ -15,7 +15,8 @@ Changes since last release:
 
 ### Major changes
 
-- None yet.  
+- Enabled setting `goal = 'dprime'` to select FFTs in `FFTrees()`. 
+
 
 <!-- Blank line. --> 
 
@@ -342,6 +343,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-19.] 
+[File `NEWS.md` last updated on 2022-09-22.] 
 
 <!-- eof. -->
