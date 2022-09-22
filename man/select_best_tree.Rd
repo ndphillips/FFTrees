@@ -9,7 +9,7 @@ select_best_tree(x, data, goal)
 \arguments{
 \item{x}{An \code{FFTrees} object.}
 
-\item{data}{character. Must be either "train" or "test".}
+\item{data}{The type of data to consider (as character: either 'train' or 'test').}
 
 \item{goal}{character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
 (for which values exist in \code{x$trees$stats}).}
