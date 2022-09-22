@@ -100,7 +100,7 @@ valid_train_test_data <- function(train_data, test_data){
 #'
 #' @param x An \code{FFTrees} object.
 #'
-#' @param data character. Must be either "train" or "test".
+#' @param data The type of data to consider (as character: either 'train' or 'test').
 #'
 #' @param goal character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
 #' (for which values exist in \code{x$trees$stats}).
@@ -170,14 +170,14 @@ select_best_tree <- function(x, data, goal){
     cur_ranks <- rank(+cur_goal_vals, ties.method = "first")  # low rank indicate lower/better values
   }
 
-  tree <- cur_stats$tree[cur_ranks == min(cur_ranks)]  # tree with minimum rank
+  tree <- cur_stats$tree[cur_ranks == min(cur_ranks)]  # get tree with minimum rank
 
 
   # Output: -----
 
   testthat::expect_true(is.integer(tree))  # verify output
 
-  return(tree) # as number
+  return(tree) # as integer
 
 } # select_best_tree().
 
