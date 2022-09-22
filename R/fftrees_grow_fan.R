@@ -1,4 +1,4 @@
-#' Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithm
+#' Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithms
 #'
 #' @description \code{fftrees_grow_fan} is called by \code{\link{fftrees_define}}
 #' to create new FFTs by applying the \code{fan} algorithms
@@ -86,6 +86,7 @@ fftrees_grow_fan <- function(x,
     tree_table_names <- c("decision", "levelout")
 
     tree_stats_ls <- lapply(1:length(tree_table_names), FUN = function(x) {
+
       output <- as.data.frame(matrix(NA, nrow = cases_n, ncol = tree_n))
 
       names(output) <- paste("tree", 1:tree_n, sep = ".")

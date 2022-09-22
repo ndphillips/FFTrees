@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftrees_grow_fan.R
 \name{fftrees_grow_fan}
 \alias{fftrees_grow_fan}
-\title{Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithm}
+\title{Grow fast-and-frugal trees (FFTs) using the \code{fan} algorithms}
 \usage{
 fftrees_grow_fan(x, repeat.cues = TRUE)
 }

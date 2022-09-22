@@ -46,9 +46,9 @@ fftrees_apply <- function(x,
 
       testthat::expect_true(!is.null(x$data$test))
 
-      } else {
+    } else {
 
-        x$data$test <- newdata  # replaces existing test data in x by newdata!
+      x$data$test <- newdata  # replaces existing test data in x by newdata!
     }
 
     valid_train_test_data(train_data = x$data$train, test_data = x$data$test)  # verify (without consequences)
@@ -64,9 +64,10 @@ fftrees_apply <- function(x,
   # Setup outputs: ------
 
   #  1. [decisions_ls]: ----
-  #     A list containing tibbles with one row per case, and one column per tree:
+  #     A list containing tibbles, with 1 row per case, and 1 column per tree:
 
   decisions_ls <- lapply(1:x$trees$n, FUN = function(i) {
+
     tibble::tibble(
       criterion = criterion_v,
       decision = rep(NA, criterion_n),
@@ -76,12 +77,13 @@ fftrees_apply <- function(x,
       cost = rep(NA, criterion_n),
       current_decision = rep(NA, criterion_n)
     )
+
   })
 
   names(decisions_ls) <- paste0("tree_", 1:x$trees$n)
 
   #  2. [level_stats_ls]: ----
-  #    A list with one element per tree, each containing cumulative level statistics:
+  #     A list with 1 element per tree, each containing cumulative level statistics:
 
   level_stats_ls <- vector("list", length = x$trees$n)
 
@@ -102,19 +104,19 @@ fftrees_apply <- function(x,
 
     decisions_df <- decisions_ls[[tree_i]]
 
-    costc.level <- sapply(cue_v, FUN = function(cue_i) {
+    cost_cue_level <- sapply(cue_v, FUN = function(cue_i) {
       if (cue_i %in% names(x$params$cost.cues)) {
-        cost.cue_i <- x$params$cost.cues[[cue_i]]
+        cost_cue_i <- x$params$cost.cues[[cue_i]]
       } else {
-        cost.cue_i <- 0
+        cost_cue_i <- 0
       }
     })
 
-    costc.level.cum <- cumsum(costc.level)
+    cost_cue_level_cum <- cumsum(cost_cue_level)
 
     cue_cost_cum_level <- data.frame(
       level = 1:level_n,
-      cue_cost_cum = costc.level.cum
+      cue_cost_cum = cost_cue_level_cum
     )
 
     # level_stats_i contains cumulative level statistics:
@@ -129,7 +131,18 @@ fftrees_apply <- function(x,
       stringsAsFactors = FALSE
     )
 
-    critical_stats_v <- c("n", "hi", "fa", "mi", "cr", "sens", "spec", "far", "ppv", "npv", "acc", "bacc", "wacc", "cost_decisions")
+    # Define critical stats:  +++ here now +++
+    critical_stats_v <- c(
+      # frequencies:
+      "n", "hi", "fa", "mi", "cr",
+      # conditional probabilities:
+      "sens", "spec", "far",  "ppv", "npv",
+      # derived from probabilities:
+      "dprime",  # enable goal = "dprime" by including in tree stats
+      # accuracy:
+      "acc", "bacc", "wacc",
+      # costs:
+      "cost_decisions")
 
     # Add stat names to level_stats_i:
     level_stats_i[critical_stats_v] <- NA
@@ -177,20 +190,20 @@ fftrees_apply <- function(x,
       }
 
       if (isTRUE(all.equal(exit_i, 0))) {
-        classify.now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
+        classify_now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
       }
       if (isTRUE(all.equal(exit_i,  1))) {
-        classify.now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)
+        classify_now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)
       }
       if (isTRUE(all.equal(exit_i, .5))) {
-        classify.now <- is.na(decisions_df$decision)
+        classify_now <- is.na(decisions_df$decision)
       }
 
       # Convert NAs: ----
 
       # If it is not the final node, then don't classify NA cases:
       if (exit_i %in% c(0, 1)) {
-        classify.now[is.na(classify.now)] <- FALSE
+        classify_now[is.na(classify_now)] <- FALSE
       }
 
       # If it is the final node, then classify NA cases according to most common class:
@@ -201,13 +214,13 @@ fftrees_apply <- function(x,
 
       # Define critical values for current decisions: ----
 
-      decisions_df$decision[classify.now] <- decisions_df$current_decision[classify.now]
-      decisions_df$levelout[classify.now] <- level_i
-      decisions_df$cost_cue[classify.now] <- costc.level.cum[level_i]
+      decisions_df$decision[classify_now] <- decisions_df$current_decision[classify_now]
+      decisions_df$levelout[classify_now] <- level_i
+      decisions_df$cost_cue[classify_now] <- cost_cue_level_cum[level_i]
 
-      decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == TRUE] <- x$params$cost.outcomes$hi
-      decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
-      decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == TRUE] <- x$params$cost.outcomes$fa
+      decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == TRUE]   <- x$params$cost.outcomes$hi
+      decisions_df$cost_decision[decisions_df$criterion == TRUE & decisions_df$decision == FALSE]  <- x$params$cost.outcomes$mi
+      decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$fa
       decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$cr
 
       decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_decision
@@ -273,7 +286,7 @@ fftrees_apply <- function(x,
   x$trees$level_stats[[mydata]] <- tibble::as_tibble(level_stats)
   x$trees$decisions[[mydata]]   <- decisions_ls
 
-  # Best tree:
+  # Set best tree values:
   if (mydata == "train"){
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
