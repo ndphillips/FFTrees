@@ -1,7 +1,8 @@
 #' Calculate thresholds that optimize some statistic (goal) for cues in data
 #'
 #' \code{fftrees_cuerank} takes an \code{FFTrees} object \code{x} and
-#' optimizes its \code{goal.threshold} (from \code{x$params}) for all cues in \code{data}.
+#' optimizes its \code{goal.threshold} (from \code{x$params}) for all cues in
+#' a dataset \code{newdata} (of some \code{data} type).
 #'
 #' \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
 #' that is added to \code{x$cues$stats}.
@@ -10,11 +11,13 @@
 #' to grow fast-and-frugal trees (FFTs).
 #'
 #' @param x An \code{FFTrees} object.
-#' @param newdata dataframe.
-#' @param data dataframe.
-#' @param rounding integer.
+#' @param newdata The dataset to with cues to be ranked (as data frame).
+#' @param data The type of data with cues to be ranked (as character: \code{'train'}, \code{'test'}, or \code{'dynamic'}).
+#' Default: \code{data = 'train'}.
+#' @param rounding Number of digits used to round (as integer).
+#' Default: \code{rounding = NULL}.
 #'
-#' @return A modified \code{FFTrees} object (with cue rank information for current \code{data} in \code{x$cues$stats}).
+#' @return A modified \code{FFTrees} object (with cue rank information for current \code{data} type in \code{x$cues$stats}).
 #'
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
