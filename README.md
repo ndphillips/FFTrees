@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.7.5.9002 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7.5.9003 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -200,8 +200,8 @@ data.](man/figures/README-example-heart-plot-1.png)
 
 ### Building FFTs from verbal descriptions
 
-Because fast-and-frugal trees are so simple, we even can create FFTs
-‘from words’ and apply them to data!
+FFTs are so simple that we even can create them ‘from words’ and then
+apply them to data!
 
 For example, let’s create a tree with the following three nodes and
 evaluate its performance on the `heart.test` data:
@@ -312,6 +312,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-09-22.\]
+\[File `README.Rmd` last updated on 2022-09-23.\]
 
 <!-- eof. -->

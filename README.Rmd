@@ -151,7 +151,7 @@ heart.fft$competition$test
 
 ### Building FFTs from verbal descriptions 
 
-Because fast-and-frugal trees are so simple, we even can create FFTs 'from words' and apply them to data!
+FFTs are so simple that we even can create them 'from words' and then apply them to data! 
 
 For example, let's create a tree with the following three nodes and evaluate its performance on the `heart.test` data:
 
