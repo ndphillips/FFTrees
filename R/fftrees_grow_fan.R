@@ -6,7 +6,8 @@
 #'
 #' @param x An \code{FFTrees} object.
 #'
-#' @param repeat.cues logical.
+#' @param repeat.cues Can cues be considered/used repeatedly (as logical)?
+#' Default: \code{repeat.cues = TRUE}, but only relevant for \code{dfan} algorithm.
 #'
 #' @seealso
 #' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
@@ -28,7 +29,7 @@ fftrees_grow_fan <- function(x,
   }
 
   # Global variables which can be changed later:
-  exit.method <- "fixed"
+  exit_method <- "fixed"
   correction  <- .25
 
   # Extract key variables:
@@ -54,20 +55,20 @@ fftrees_grow_fan <- function(x,
   # [tree_dm, tree_stats_ls, level_stats_ls]
   {
     if (x$params$max.levels > 1) {
-      expand.ls <- lapply(1:(x$params$max.levels - 1),
+      expand_ls <- lapply(1:(x$params$max.levels - 1),
                           FUN = function(x) {
                             return(c(0, 1))
                           }
       )
 
-      expand.ls[[length(expand.ls) + 1]] <- .5
-      names(expand.ls) <- c(
+      expand_ls[[length(expand_ls) + 1]] <- .5
+      names(expand_ls) <- c(
         paste("exit.", 1:(x$params$max.levels - 1), sep = ""),
         paste("exit.", x$params$max.levels, sep = "")
       )
 
       tree_dm <- expand.grid(
-        expand.ls,
+        expand_ls,
         stringsAsFactors = FALSE
       )
     }
@@ -141,8 +142,8 @@ fftrees_grow_fan <- function(x,
     level_stat_names <- setdiff(names(fftrees_threshold_factor_grid()), c("threshold", "direction"))
     level_stats_i[level_stat_names] <- NA
 
-    # asif_stats shows cumulative classification statistics as if all exemplars were
-    #            classified at the current level (i.e., if the tree stopped here).
+    # asif_stats stores cumulative classification statistics AS IF all exemplars were
+    #            classified at the current level (i.e., if the tree stopped here/at current level):
 
     asif_stats <- data.frame(
       "level" = 1:level_n,
@@ -153,7 +154,7 @@ fftrees_grow_fan <- function(x,
       "wacc" = NA,
       "dprime" = NA,
       "cost" = NA,
-      "goal.change" = NA
+      "goal.change" = NA  # change in goal value
     )
 
     # Starting values:
@@ -239,7 +240,7 @@ fftrees_grow_fan <- function(x,
       } # Step 1.
 
 
-      # Step 2: Determine how classifications would look if all remaining exemplars were classified: ------
+      # Step 2: Determine how classifications would look if all remaining exemplars were classified (asif classification): ------
       {
 
         # Get decisions for current cue:
@@ -255,17 +256,17 @@ fftrees_grow_fan <- function(x,
         # How would classifications look if all remaining exemplars
         #   were classified at the current level?
 
-        asif.decision_v <- decision_v
-        asif.levelout_v <- levelout_v
-        asif.cuecost_v <- cuecost_v
+        asif_decision_v <- decision_v
+        asif_levelout_v <- levelout_v
+        asif_cuecost_v  <- cuecost_v
 
-        asif.decision_v[cases_remaining] <- cue_decisions[cases_remaining]
-        asif.levelout_v[cases_remaining] <- level_current
-        asif.cuecost_v[cases_remaining] <- cue_cost_new
+        asif_decision_v[cases_remaining] <- cue_decisions[cases_remaining]
+        asif_levelout_v[cases_remaining] <- level_current
+        asif_cuecost_v[cases_remaining]  <- cue_cost_new
 
-        # Calculate asif_cm:
+        # Calculate asif classification results:
         asif_results <- classtable(
-          prediction_v = asif.decision_v,
+          prediction_v = asif_decision_v,
           criterion_v  = criterion_v,
           sens.w = x$params$sens.w
         )
@@ -296,17 +297,17 @@ fftrees_grow_fan <- function(x,
           }
 
         }
-        # ToDo: What would be perfect value for x$params$goal.chase != "dprime"?  +++ here now +++
+        # ToDo: What would be a "perfect" value for x$params$goal.chase != "dprime"?  +++ here now +++
 
 
-        # Calculate goal change:
+        # Calculate goal change value:
         {
           if (level_current == 1) {
             asif_stats$goal.change[1] <- asif_stats[[x$params$goal]][1]
           }
 
           if (level_current > 1) {
-            goal.change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]
+            goal.change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
             asif_stats$goal.change[level_current] <- goal.change
           }
         }
@@ -350,7 +351,7 @@ fftrees_grow_fan <- function(x,
       {
         cases_remaining <- is.na(decision_v)
 
-        # NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS
+        # ToDo: NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS.
 
         # Get cumulative stats of exemplars currently classified:
 
@@ -387,7 +388,7 @@ fftrees_grow_fan <- function(x,
       {
         cases_remaining_n <- sum(cases_remaining)
 
-        if (cases_remaining_n > 0 & level_current != cues_n & exit.method == "fixed") {
+        if (cases_remaining_n > 0 & level_current != cues_n & exit_method == "fixed") {
           if (level_current < level_n) {
             grow_tree <- TRUE
           }
@@ -426,29 +427,29 @@ fftrees_grow_fan <- function(x,
     {
       last_level_nr <- max(level_stats_i$level)
       last_cue <- level_stats_i$cue[last_level_nr]
-      # cost.cue <- x$params$cost.cues[[last_cue]]  # never used???
+      # cost_cue <- x$params$cost.cues[[last_cue]]  # never used???
 
-      last.exitdirection <- level_stats_i$exit[level_stats_i$level == last_level_nr]
+      last_exit_direction <- level_stats_i$exit[level_stats_i$level == last_level_nr]
 
-      if (last.exitdirection != .5) {
+      if (last_exit_direction != .5) {
 
         decision_v[levelout_v == last_level_nr] <- NA
 
         last_cue_stats <- cue_best_df_current[cue_best_df_current$cue == last_cue, ]
 
-        decision.index <- is.na(decision_v)
+        decision_index <- is.na(decision_v)
 
         # Step 2) Determine accuracy of negative and positive classification: ----
 
-        current.decisions <- apply_break(
+        current_decisions <- apply_break(
           direction = last_cue_stats$direction,
           threshold.val = last_cue_stats$threshold,
           cue.v = x$data$train[[last_cue]],
           cue.class = last_cue_stats$class
         )
 
-        decide_0_index <- decision.index == TRUE & current.decisions == FALSE
-        decide_1_index <- decision.index == TRUE & current.decisions == TRUE
+        decide_0_index <- decision_index == TRUE & current_decisions == FALSE
+        decide_1_index <- decision_index == TRUE & current_decisions == TRUE
 
         decision_v[decide_0_index] <- FALSE
         decision_v[decide_1_index] <- TRUE
@@ -456,9 +457,8 @@ fftrees_grow_fan <- function(x,
         levelout_v[decide_0_index] <- level_current
         levelout_v[decide_1_index] <- level_current
 
-        # up
-
-        last.classtable <- classtable(
+        # update classification results:
+        last_classtable <- classtable(
           prediction_v = as.logical(decision_v),
           criterion_v = as.logical(criterion_v),
           sens.w = x$params$sens.w,
@@ -466,17 +466,17 @@ fftrees_grow_fan <- function(x,
           cost.outcomes = x$params$cost.outcomes
         )
 
-        level_stats_i$exit[last_level_nr] <- .50
+        level_stats_i$exit[last_level_nr] <- .5
 
 
         # Note: Why not use same stats as in level_stats_v above? (Here: "dprime" and "cost" missing): +++ here now +++
         # level_stats_i[last_level_nr, c("hi", "fa", "mi", "cr",
-        #                                "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last.classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
+        #                                "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last_classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
 
         # NEW (using same level_stats_v as above) on 2022-09-23:
-        level_stats_i[last_level_nr, level_stats_v] <- last.classtable[, level_stats_v]
+        level_stats_i[last_level_nr, level_stats_v] <- last_classtable[, level_stats_v]
 
-      }
+      } # if (last_exit_direction != .5).
 
     } # Step 6.
 
