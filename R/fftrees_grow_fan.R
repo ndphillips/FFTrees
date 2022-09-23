@@ -42,8 +42,8 @@ fftrees_grow_fan <- function(x,
   # Initial training of cue accuracies: ------
 
   x <- fftrees_cuerank(x,
-                       newdata = x$data$train,
-                       data = "train"
+                       newdata = x$data$train,  # data (as df) vs.
+                       data = "train"           # data type
   )
 
 
@@ -168,20 +168,22 @@ fftrees_grow_fan <- function(x,
       exit_current  <- exits_i[level_current]
       cases_remaining <- is.na(decision_v)
 
-      # Step 1: Determine cue for current level: ------
+      # Step 1: Determine the cue for current level: ------
       {
-        # ifan x$params$algorithm
+        # A. ifan x$params$algorithm"
         if (x$params$algorithm == "ifan") {
 
           # Get accuracies of un-used cues:
           cue_best_df_current <- cue_best_df.original[(cue_best_df.original$cue %in% level_stats_i$cue) == FALSE, ]
-        }
 
-        # dfan x$params$algorithm
+        } # if algorithm == "ifan".
+
+        # B. dfan x$params$algorithm:
         if (x$params$algorithm == "dfan") {
+
           data_current <- x$data$train[cases_remaining, ]
 
-          # If cues can NOT be repeated, then remove old cues as well
+          # If cues may NOT be repeated, then remove old cues as well:
           if (repeat.cues == FALSE) {
             remaining.cues.index <- (names(cue_df) %in% level_stats_i$cue) == FALSE
             remaining.cues <- names(cue_df)[remaining.cues.index]
@@ -196,13 +198,14 @@ fftrees_grow_fan <- function(x,
 
           # Create a new "dynamic" cue range:
           x <- fftrees_cuerank(x,
-                               newdata = data_current,
-                               data = "dynamic"
+                               newdata = data_current,  # data (as df) vs.
+                               data = "dynamic"         # data type
           )
 
           # Calculate cue accuracies with remaining exemplars:
           cue_best_df_current <- x$cues$stats$dynamic
-        }
+
+        } # if algorithm == "dfan".
 
         # Get next cue based on maximizing goal (goal.chase):
         performance_max <- max(cue_best_df_current[[x$params$goal.chase]], na.rm = TRUE)
@@ -232,17 +235,21 @@ fftrees_grow_fan <- function(x,
         level_stats_i$threshold[level_current] <- cue_threshold_new
         level_stats_i$direction[level_current] <- cue_direction_new
         level_stats_i$exit[level_current] <- exit_current
+
       } # Step 1.
+
 
       # Step 2: Determine how classifications would look if all remaining exemplars were classified: ------
       {
 
         # Get decisions for current cue:
         cue.decisions <- apply_break(
+
           direction = cue_direction_new,
           threshold.val = cue_threshold_new,
           cue.v = x$data$train[[cues_name_new]],
           cue.class = cue_class_new
+
         )
 
         # How would classifications look if all remaining exemplars
@@ -265,23 +272,31 @@ fftrees_grow_fan <- function(x,
 
 
         # Add key stats to asif.stats:
-        asif.stats[level_current, c("sens", "spec", "acc", "bacc", "wacc", "dprime", "cost")] <- c(asif_results$sens, asif_results$spec, asif_results$acc, asif_results$bacc, asif_results$wacc, asif_results$dprime, asif_results$cost)
+        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
+        asif.stats[level_current, c("sens", "spec", "dprime", "acc", "bacc", "wacc", "cost")] <- c(#
+          asif_results$sens, asif_results$spec,
+          asif_results$dprime,
+          asif_results$acc, asif_results$bacc, asif_results$wacc,
+          asif_results$cost
+        )
 
 
         # If ASIF classification is perfect, then stop:
         if (x$params$goal.chase != "cost") {
-          if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 1)) {
 
+          if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 1)) { # perfect 1:
             grow.tree <- FALSE
           }
 
-        } else {
+        } else { # chasing "cost":
 
-          if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 0)) {
-
+          if (dplyr::near(asif.stats[[x$params$goal.chase]][level_current], 0)) { # perfect 0:
             grow.tree <- FALSE
           }
+
         }
+        # ToDo: What would be perfect value for x$params$goal.chase != "dprime"?  +++ here now +++
+
 
         # Calculate goal change:
         {
@@ -294,18 +309,22 @@ fftrees_grow_fan <- function(x,
             asif.stats$goal.change[level_current] <- goal.change
           }
         }
+
       } # Step 2.
+
 
       # Step 3: Classify exemplars in current level: ------
       {
-        if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .5)) {
+        if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
+
           decide.1.index <- cases_remaining & cue.decisions == TRUE
 
           decision_v[decide.1.index] <- TRUE
           levelout_v[decide.1.index] <- level_current
         }
 
-        if (exit_current == 0 | dplyr::near(exit_current, .5)) {
+        if (exit_current == 0 | dplyr::near(exit_current, .50)) {
+
           decide.0.index <- is.na(decision_v) & cue.decisions == FALSE
 
           decision_v[decide.0.index] <- FALSE
@@ -322,7 +341,9 @@ fftrees_grow_fan <- function(x,
         outcomecost_v[mi_v == TRUE] <- x$params$cost.outcomes$mi
         outcomecost_v[fa_v == TRUE] <- x$params$cost.outcomes$fa
         outcomecost_v[cr_v == TRUE] <- x$params$cost.outcomes$cr
+
       } # Step 3.
+
 
       # Step 4: Update results: ------
       {
@@ -330,7 +351,7 @@ fftrees_grow_fan <- function(x,
 
         # NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS
 
-        # Get cumulative stats of exemplars currently classified
+        # Get cumulative stats of exemplars currently classified:
 
         results_cum <- classtable(
           prediction_v = decision_v[cases_remaining == FALSE],
@@ -349,8 +370,17 @@ fftrees_grow_fan <- function(x,
         level_stats_i$direction[level_current] <- cue_direction_new
         level_stats_i$exit[level_current] <- exit_current
 
-        level_stats_i[level_current, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")] <- results_cum[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions", "cost")]
+        # Current level stats:
+        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
+        level_stats_v <- c("hi", "fa", "mi", "cr",
+                           "sens", "spec",
+                           "dprime",  # NEW here!
+                           "bacc", "acc", "wacc",
+                           "cost_decisions", "cost")
+        level_stats_i[level_current, level_stats_v] <- results_cum[, level_stats_v]
+
       } # Step 4.
+
 
       # Step 5: Continue growing tree? ------
       {
@@ -383,8 +413,9 @@ fftrees_grow_fan <- function(x,
           break
         }
 
-        # Set up next level stats
+        # Set up next level stats:
         level_stats_i[level_current + 1, ] <- NA
+
       } # Step 5.
 
     } # STOP while(grow.tree) loop.
@@ -434,14 +465,19 @@ fftrees_grow_fan <- function(x,
           cost.outcomes = x$params$cost.outcomes
         )
 
-        level_stats_i$exit[last.level] <- .5
+        level_stats_i$exit[last.level] <- .50
 
 
-        level_stats_i[last.level, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last.classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
+        # Note: Why not use same stats as in level_stats_v above? (Here: "dprime" and "cost" missing): +++ here now +++
+        level_stats_i[last.level, c("hi", "fa", "mi", "cr",
+                                    "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last.classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
       }
+
     } # Step 6.
 
+
     # Tree is finished! ----
+
 
     # Set up final output: ----
 
