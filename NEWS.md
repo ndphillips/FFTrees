@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9002
+## 1.7.5.9004
 
 <!-- Development version: --> 
 
@@ -33,6 +33,7 @@ Changes since last release:
 
 ### Details 
 
+- Replaced `expect_is()` by more precise **testthat** inheritance functions. 
 - Revised vignettes. 
 
 
@@ -40,6 +41,7 @@ Changes since last release:
 
 
 <!-- Released versions: --> 
+
 
 ## 1.7.5
 
@@ -343,6 +345,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-09-22.] 
+[File `NEWS.md` last updated on 2022-10-01.]
 
 <!-- eof. -->

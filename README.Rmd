@@ -52,7 +52,7 @@ Apart from being faster and requiring less information, FFTs tend to be robust a
 <!-- [@burton2020. p.\ 229] -->
 
 <!-- Full quote: -->
-<!-- These fast-and-frugal trees (Hafenbrädl et al.,2016; Phillips, Neth, Woike, & Gaissmaier, 2017) are especially relevant to the algorithm aversion discussion not only because they allowthe human decision maker to dictate the external measures upon which an augmented decision will be judged, but also because they are transparent. This in turn suggests that human users could interpret, justify, control, and interact with a fast-and-frugal decision aid, which touches on virtually all the drivers of algorithm aversion covered in this review.  -->
+<!-- These fast-and-frugal trees (Hafenbrädl et al.,2016; Phillips, Neth, Woike, & Gaissmaier, 2017) are especially relevant to the algorithm aversion discussion not only because they allow the human decision maker to dictate the external measures upon which an augmented decision will be judged, but also because they are transparent. This in turn suggests that human users could interpret, justify, control, and interact with a fast-and-frugal decision aid, which touches on virtually all the drivers of algorithm aversion covered in this review.  -->
 <!-- Source: [@burton2020. p.\ 229] -->
 
 
@@ -114,7 +114,7 @@ set.seed(246)  # for reproducible randomness
 
 ```{r example-heart-create}
 # Create an FFTrees object from the heartdisease data: 
-heart.fft <- FFTrees(formula = diagnosis ~., 
+heart_fft <- FFTrees(formula = diagnosis ~., 
                      data = heart.train,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
@@ -124,14 +124,14 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 
 ```{r example-heart-print}
 # Print:
-heart.fft
+heart_fft
 ```
 
 - To evaluate the predictive performance of an FFT, we plot an `FFTrees` object to visualize a tree and its performance (on the `test` data): 
 
 ```{r example-heart-plot, eval = FALSE}
 # Plot the best tree applied to the test data: 
-plot(heart.fft,
+plot(heart_fft,
      data = "test",
      main = "Heart Disease")
 ```
@@ -144,7 +144,7 @@ plot(heart.fft,
 
 ```{r example-heart-comp}
 # Compare predictive performance across algorithms: 
-heart.fft$competition$test
+heart_fft$competition$test
 ```
 
 <!-- FFTs by verbal description: -->
@@ -166,7 +166,7 @@ These conditions can directly be supplied to the `my.tree` argument of `FFTrees(
 # Create custom FFT 'in words' and apply it to test data:
 
 # 1. Create my own FFT (from verbal description):
-my.fft <- FFTrees(formula = diagnosis ~., 
+my_fft <- FFTrees(formula = diagnosis ~., 
                   data = heart.train,
                   data.test = heart.test, 
                   decision.labels = c("Healthy", "Disease"),
@@ -176,7 +176,7 @@ my.fft <- FFTrees(formula = diagnosis ~.,
                              Otherwise, predict Disease.")
 
 # 2. Plot and evaluate my custom FFT (for test data):
-plot(my.fft,
+plot(my_fft,
      data = "test",
      main = "My custom FFT")
 ```

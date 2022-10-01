@@ -91,8 +91,9 @@ fftrees_create <- function(data = NULL,
                         info = "formula is NULL"
   )
 
-  testthat::expect_is(formula, "formula")
-
+  testthat::expect_type(formula,
+                        type = "language"
+  )
 
   criterion_name <- paste(formula)[2]
 
@@ -324,9 +325,9 @@ fftrees_create <- function(data = NULL,
                         info = "cost.outcomes is NULL"
   )
 
-  testthat::expect_is(cost.outcomes,
-                      class = "list",
-                      info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
+  testthat::expect_type(cost.outcomes,
+                        type = "list"
+                        # info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
   )
 
   testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")),
@@ -347,13 +348,10 @@ fftrees_create <- function(data = NULL,
                                 cost.cues = cost.cues
   )
 
-  testthat::expect_true(!is.null(cost.cues),
-                        info = "cost.cues is NULL"
+  testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL"
   )
 
-  testthat::expect_is(cost.cues,
-                      class = "list"
-  )
+  testthat::expect_type(cost.cues, type = "list")
 
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
                         info = "At least one of the values specified in cost.cues is not in data"
@@ -361,9 +359,9 @@ fftrees_create <- function(data = NULL,
 
   # stopping.rule: ----
 
-  stopping.rule_valid <- c("exemplars", "levels")
+  valid_stopping_rules <- c("exemplars", "levels")
 
-  testthat::expect_true(stopping.rule %in% stopping.rule_valid)
+  testthat::expect_true(stopping.rule %in% valid_stopping_rules)
 
 
   # stopping.par: ----
@@ -382,7 +380,7 @@ fftrees_create <- function(data = NULL,
 
 
   # repeat.cues: ----
-  testthat::expect_is(repeat.cues, "logical")
+  testthat::expect_type(repeat.cues, type = "logical")
 
 
 

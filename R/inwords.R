@@ -27,7 +27,7 @@ inwords <- function(x, data = NULL, tree = 1) {
 
   # Verify inputs: ----
 
-  testthat::expect_is(x, class = "FFTrees")
+  testthat::expect_s3_class(x, class = "FFTrees")
 
   testthat::expect_true(dplyr::near(tree %% 1, 0))  # tree is an integer
 
@@ -62,5 +62,6 @@ inwords <- function(x, data = NULL, tree = 1) {
   return(tree_in_words)
 
 } # inwords().
+
 
 # eof.
