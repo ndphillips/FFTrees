@@ -1,5 +1,6 @@
 context("test-mytree")
 
+
 test_that("Can build tree based off of auto-generated tree in words", {
   x <- FFTrees(diagnosis ~ .,
     data = heartdisease,
@@ -14,11 +15,13 @@ test_that("Can build tree based off of auto-generated tree in words", {
     my.tree = best_tree_in_words
   )
 
-  expect_is(object = x, class = "FFTrees")
+  expect_s3_class(object = x, class = "FFTrees")
+
 })
 
 
 test_that("Can build tree based off of custom tree in words (v1)", {
+
   best_tree_in_words <- "If thalach > 170, decide True.
    If slope = {flat}, decide False.
    If ca <= 0, decide False, otherwise, decide True."
@@ -29,7 +32,8 @@ test_that("Can build tree based off of custom tree in words (v1)", {
     my.tree = best_tree_in_words
   )
 
-  expect_is(object = x, class = "FFTrees")
+  expect_s3_class(object = x, class = "FFTrees")
+
   expect_identical(
     object = x$trees$definitions,
     expected = structure(list(
@@ -39,6 +43,7 @@ test_that("Can build tree based off of custom tree in words (v1)", {
     row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame")
     )
   )
+
 })
 
 
@@ -53,7 +58,7 @@ test_that("Can build tree based off of custom tree in words (v2)", {
     my.tree = best_tree_in_words
   )
 
-  expect_is(object = x, class = "FFTrees")
+  expect_s3_class(object = x, class = "FFTrees")
 
   expect_identical(
     object = x$trees$definitions,
@@ -64,6 +69,7 @@ test_that("Can build tree based off of custom tree in words (v2)", {
     row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame")
     )
   )
+
 })
 
 
@@ -93,8 +99,8 @@ test_that("A custom tree in my.tree is built successfully (v3)", {
       "tbl", "data.frame"
     ), row.names = c(NA, -1L))
   )
+
 })
 
 
 # eof.
-
