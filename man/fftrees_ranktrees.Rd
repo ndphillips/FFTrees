@@ -9,14 +9,15 @@ fftrees_ranktrees(x, data = "train")
 \arguments{
 \item{x}{An \code{FFTrees} object.}
 
-\item{data}{character. Default is \code{data = "train"}.}
+\item{data}{The type of data to be used (as character).
+Default: \code{data = "train"}.}
 }
 \description{
 \code{fftrees_ranktrees} ranks trees in an \code{FFTrees} object \code{x}
 based on the current goal (either \code{"cost"} or as specified in \code{x$params$goal}).
 
 \code{fftrees_ranktrees} is called by the main \code{\link{FFTrees}} function
-when creating FFTs from and applying them to data.
+when creating FFTs from and applying them to (training) data.
 }
 \seealso{
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
