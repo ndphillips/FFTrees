@@ -7,7 +7,7 @@
 #' @param x An \code{FFTrees} object.
 #'
 #' @param repeat.cues Can cues be considered/used repeatedly (as logical)?
-#' Default: \code{repeat.cues = TRUE}, but only relevant for \code{dfan} algorithm.
+#' Default: \code{repeat.cues = TRUE}, but only relevant when using the \code{dfan} algorithm.
 #'
 #' @seealso
 #' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
@@ -334,9 +334,9 @@ fftrees_grow_fan <- function(x,
         }
 
         # Update cost vectors:
-        hi_v <- decision_v == TRUE & criterion_v == TRUE
+        hi_v <- decision_v == TRUE  & criterion_v == TRUE
         mi_v <- decision_v == FALSE & criterion_v == TRUE
-        fa_v <- decision_v == TRUE & criterion_v == FALSE
+        fa_v <- decision_v == TRUE  & criterion_v == FALSE
         cr_v <- decision_v == FALSE & criterion_v == FALSE
 
         outcomecost_v[hi_v == TRUE] <- x$params$cost.outcomes$hi
@@ -423,7 +423,7 @@ fftrees_grow_fan <- function(x,
     } # STOP while(grow_tree) loop.
 
 
-    # Step 6: No more growth. Make sure that last level is bi-directional: ----
+    # Step 6: No more growth. Make sure that last level is bi-directional: ------
     {
       last_level_nr <- max(level_stats_i$level)
       last_cue <- level_stats_i$cue[last_level_nr]
@@ -439,7 +439,7 @@ fftrees_grow_fan <- function(x,
 
         decision_index <- is.na(decision_v)
 
-        # Step 2) Determine accuracy of negative and positive classification: ----
+        # Step B: Determine accuracy of negative and positive classification: ----
 
         current_decisions <- apply_break(
           direction = last_cue_stats$direction,
@@ -500,7 +500,7 @@ fftrees_grow_fan <- function(x,
 
   {
 
-    # Summarise tree definitions:
+    # Summarize tree definitions:
     tree_definitions <- as.data.frame(matrix(NA, nrow = tree_n, ncol = 7))
     names(tree_definitions) <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
 
