@@ -569,7 +569,7 @@ plot.FFTrees <- function(x = NULL,
 
     } # for n.levels.
 
-    print(level_stats)  # +++ here now +++
+    # print(level_stats)  # +++ here now +++: Tree with marginal frequency values
 
 
     # Set plotting parameters: ----
