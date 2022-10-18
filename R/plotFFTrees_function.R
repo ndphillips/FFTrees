@@ -527,7 +527,7 @@ plot.FFTrees <- function(x = NULL,
 
     # Define critical objects: ------
 
-    decision_v  <- x$trees$decisions[[data]][[tree]]$decision
+    # decision_v  <- x$trees$decisions[[data]][[tree]]$decision
     tree_stats  <- x$trees$stats[[data]]
     level_stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
 
@@ -569,7 +569,7 @@ plot.FFTrees <- function(x = NULL,
 
     } # for n.levels.
 
-    # print(level_stats)  # +++ here now +++: Tree with marginal frequency values
+    # print(level_stats)  # +++ here now +++: Tree with marginal frequency values (for each level)
 
 
     # Set plotting parameters: ----
