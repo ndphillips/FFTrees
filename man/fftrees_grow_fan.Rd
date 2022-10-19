@@ -10,7 +10,7 @@ fftrees_grow_fan(x, repeat.cues = TRUE)
 \item{x}{An \code{FFTrees} object.}
 
 \item{repeat.cues}{Can cues be considered/used repeatedly (as logical)?
-Default: \code{repeat.cues = TRUE}, but only relevant for \code{dfan} algorithm.}
+Default: \code{repeat.cues = TRUE}, but only relevant when using the \code{dfan} algorithm.}
 }
 \description{
 \code{fftrees_grow_fan} is called by \code{\link{fftrees_define}}

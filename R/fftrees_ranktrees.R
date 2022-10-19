@@ -4,10 +4,11 @@
 #' based on the current goal (either \code{"cost"} or as specified in \code{x$params$goal}).
 #'
 #' \code{fftrees_ranktrees} is called by the main \code{\link{FFTrees}} function
-#' when creating FFTs from and applying them to data.
+#' when creating FFTs from and applying them to (training) data.
 #'
 #' @param x An \code{FFTrees} object.
-#' @param data character. Default is \code{data = "train"}.
+#' @param data The type of data to be used (as character).
+#' Default: \code{data = "train"}.
 #'
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
@@ -20,7 +21,7 @@ fftrees_ranktrees <- function(x,
   tree_stats <- x$trees$stats[[data]]
 
 
-  # 1. Sort trees by goal: ----
+  # 1. Rank trees by current goal: ----
 
   if (x$params$goal == "cost") {  # rank by cost:
     tree_rank <- rank(tree_stats$cost, ties.method = "first")
@@ -29,7 +30,7 @@ fftrees_ranktrees <- function(x,
   }
 
 
-  # 2. Get tree rankings by goal (as df): ----
+  # 2. Sort tree rankings by goal (in df): ----
 
   tree_rank_df <- data.frame(
     tree = 1:nrow(tree_stats),
@@ -49,7 +50,9 @@ fftrees_ranktrees <- function(x,
     dplyr::arrange(tree) %>%
     tibble::as_tibble()
 
+
   # For training data: ----
+
   if (data == "train"){
 
   # Training stats:

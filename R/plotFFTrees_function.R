@@ -527,45 +527,49 @@ plot.FFTrees <- function(x = NULL,
 
     # Define critical objects: ------
 
-    decision.v <- x$trees$decisions[[data]][[tree]]$decision
-    tree.stats <- x$trees$stats[[data]]
-    level.stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
+    # decision_v  <- x$trees$decisions[[data]][[tree]]$decision
+    tree_stats  <- x$trees$stats[[data]]
+    level_stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
 
-    n.exemplars <- nrow(x$data[[data]])
-    n.pos <- sum(x$data[[data]][[x$criterion_name]])
-    n.neg <- sum(x$data[[data]][[x$criterion_name]] == FALSE)
+    n_exemplars <- nrow(x$data[[data]])
+    n_pos_cases <- sum(x$data[[data]][[x$criterion_name]])
+    n_neg_cases <- sum(x$data[[data]][[x$criterion_name]] == FALSE)
     mcu <- x$trees$stats[[data]]$mcu[tree]
-    crit.br <- mean(x$data[[data]][[x$criterion_name]])
+    crit_br <- mean(x$data[[data]][[x$criterion_name]])
 
-    final.stats <- tree.stats[tree, ]
+    final_stats <- tree_stats[tree, ]
 
 
     # Add level statistics: ----
 
-    n.levels <- nrow(level.stats)
+    n.levels <- nrow(level_stats)
 
-    # Add marginal classification statistics to level.stats:
-    level.stats$hi.m <- NA
-    level.stats$mi.m <- NA
-    level.stats$fa.m <- NA
-    level.stats$cr.m <- NA
+    # Add marginal classification statistics to level_stats / Frequencies per level:
+
+    level_stats$hi.m <- NA
+    level_stats$mi.m <- NA
+    level_stats$fa.m <- NA
+    level_stats$cr.m <- NA
 
     for (i in 1:n.levels) {
 
       if (i == 1) {
-        level.stats$hi.m[1] <- level.stats$hi[1]
-        level.stats$mi.m[1] <- level.stats$mi[1]
-        level.stats$fa.m[1] <- level.stats$fa[1]
-        level.stats$cr.m[1] <- level.stats$cr[1]
+        level_stats$hi.m[1] <- level_stats$hi[1]
+        level_stats$mi.m[1] <- level_stats$mi[1]
+        level_stats$fa.m[1] <- level_stats$fa[1]
+        level_stats$cr.m[1] <- level_stats$cr[1]
       }
 
       if (i > 1) {
-        level.stats$hi.m[i] <- level.stats$hi[i] - level.stats$hi[i - 1]
-        level.stats$mi.m[i] <- level.stats$mi[i] - level.stats$mi[i - 1]
-        level.stats$fa.m[i] <- level.stats$fa[i] - level.stats$fa[i - 1]
-        level.stats$cr.m[i] <- level.stats$cr[i] - level.stats$cr[i - 1]
+        level_stats$hi.m[i] <- level_stats$hi[i] - level_stats$hi[i - 1]
+        level_stats$mi.m[i] <- level_stats$mi[i] - level_stats$mi[i - 1]
+        level_stats$fa.m[i] <- level_stats$fa[i] - level_stats$fa[i - 1]
+        level_stats$cr.m[i] <- level_stats$cr[i] - level_stats$cr[i - 1]
       }
-    }
+
+    } # for n.levels.
+
+    # print(level_stats)  # +++ here now +++: Tree with marginal frequency values (for each level)
 
 
     # Set plotting parameters: ----
@@ -577,9 +581,9 @@ plot.FFTrees <- function(x = NULL,
     # Sizes not set by user:
     f_cex <- 1  # cex scaling factor
 
-    decision.node.cex <- 4 * f_cex
-    exit.node.cex     <- 4 * f_cex
-    panel.title.cex   <- 2 * f_cex
+    decision_node_cex <- 4 * f_cex
+    exit_node_cex     <- 4 * f_cex
+    panel_title_cex   <- 2 * f_cex
 
     # Set by user:
 
@@ -624,7 +628,7 @@ plot.FFTrees <- function(x = NULL,
 
     # Cue labels:
     if (is.null(cue.labels)) {
-      cue.labels <- level.stats$cue
+      cue.labels <- level_stats$cue
     }
 
     # Trim labels:
@@ -740,9 +744,9 @@ plot.FFTrees <- function(x = NULL,
 
     # Determine N per ball:
     if (is.null(n.per.icon)) {
-      max.n.side <- max(c(n.pos, n.neg))
+      max_n_side <- max(c(n_pos_cases, n_neg_cases))
 
-      i <- max.n.side / c(1, 5, 10^(1:10))
+      i <- max_n_side / c(1, 5, 10^(1:10))
       i[i > 50] <- 0
 
       n.per.icon <- c(1, 5, 10^(1:10))[which(i == max(i))]
@@ -809,19 +813,19 @@ plot.FFTrees <- function(x = NULL,
       }
 
       # (b) label:
-      text(x = .50, y = .96, main, cex = panel.title.cex, ...)  # title 1 (top): main
+      text(x = .50, y = .96, main, cex = panel_title_cex, ...)  # title 1 (top): main
 
 
       # 2. Data info: ----
 
       # (a) N and labels:
-      text(x = .50, y = .78, paste("N = ", prettyNum(n.exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
+      text(x = .50, y = .78, paste("N = ", prettyNum(n_exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
       text(.50, .63, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
       text(.50, .63, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
 
       # (b) Show balls:
-      n_true_pos <- with(final.stats, hi + mi)
-      n_true_neg <- with(final.stats, fa + cr)
+      n_true_pos <- with(final_stats, hi + mi)
+      n_true_neg <- with(final_stats, fa + cr)
 
       add_balls(
         x.lim = c(.33, .67),
@@ -968,7 +972,7 @@ plot.FFTrees <- function(x = NULL,
           label.tree <- paste("FFT #", tree, " (of ", x$trees$n, ")", sep = "")
         }
 
-        text(x = 0, y = 0, label.tree, cex = panel.title.cex, ...)  # title 2 (middle): (a) tree label
+        text(x = 0, y = 0, label.tree, cex = panel_title_cex, ...)  # title 2 (middle): (a) tree label
 
       } # if (show.top | show.bottom).
 
@@ -978,7 +982,7 @@ plot.FFTrees <- function(x = NULL,
           main <- ""
         }
 
-        mtext(text = main, side = 3, cex = panel.title.cex, ...)  # title 2 (middle): (b) main label
+        mtext(text = main, side = 3, cex = panel_title_cex, ...)  # title 2 (middle): (b) main label
 
       } # if (show.top == FALSE & show.bottom == FALSE).
 
@@ -1109,10 +1113,10 @@ plot.FFTrees <- function(x = NULL,
         current.cue <- cue.labels[level.i]
 
         # Get stats for current level:
-        hi.i <- level.stats$hi.m[level.i]
-        mi.i <- level.stats$mi.m[level.i]
-        fa.i <- level.stats$fa.m[level.i]
-        cr.i <- level.stats$cr.m[level.i]
+        hi.i <- level_stats$hi.m[level.i]
+        mi.i <- level_stats$mi.m[level.i]
+        fa.i <- level_stats$fa.m[level.i]
+        cr.i <- level_stats$cr.m[level.i]
 
 
         # Top: If level.i == 1, draw top textbox: ----
@@ -1130,7 +1134,7 @@ plot.FFTrees <- function(x = NULL,
           points(
             x = subplot.center[1],
             y = subplot.center[2] + 2,
-            cex = decision.node.cex,
+            cex = decision_node_cex,
             pch = decision.node.pch
           )
 
@@ -1148,7 +1152,7 @@ plot.FFTrees <- function(x = NULL,
 
         # Exit node on left: ----
 
-        if (level.stats$exit[level.i] %in% c(0, .5) | paste(level.stats$exit[level.i]) %in% c("0", ".5")) {
+        if (level_stats$exit[level.i] %in% c(0, .5) | paste(level_stats$exit[level.i]) %in% c("0", ".5")) {
 
           segments(subplot.center[1],
                    subplot.center[2] + 1,
@@ -1221,13 +1225,13 @@ plot.FFTrees <- function(x = NULL,
           }
 
           # level break label:
-          pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
-          neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+          pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
+          neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
 
           text_outline(
             x = subplot.center[1] - 1,
             y = subplot.center[2],
-            labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
+            labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
             pos = 2, cex = break.label.cex, r = .1
           )
 
@@ -1235,7 +1239,7 @@ plot.FFTrees <- function(x = NULL,
             x = subplot.center[1] - 2,
             y = subplot.center[2] - 2,
             pch = exit.node.pch,
-            cex = exit.node.cex,
+            cex = exit_node_cex,
             bg = exit.node.bg
           )
 
@@ -1249,7 +1253,7 @@ plot.FFTrees <- function(x = NULL,
 
         # New level on left: ----
 
-        if (level.stats$exit[level.i] %in% c(1) | paste(level.stats$exit[level.i]) %in% c("1")) {
+        if (level_stats$exit[level.i] %in% c(1) | paste(level_stats$exit[level.i]) %in% c("1")) {
 
           segments(subplot.center[1],
                    subplot.center[2] + 1,
@@ -1294,7 +1298,7 @@ plot.FFTrees <- function(x = NULL,
 
         # Exit node on right: ----
 
-        if (level.stats$exit[level.i] %in% c(1, .5) | paste(level.stats$exit[level.i]) %in% c("1", ".5")) {
+        if (level_stats$exit[level.i] %in% c(1, .5) | paste(level_stats$exit[level.i]) %in% c("1", ".5")) {
 
           segments(subplot.center[1],
                    subplot.center[2] + 1,
@@ -1367,13 +1371,13 @@ plot.FFTrees <- function(x = NULL,
           # level break label:
           dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
 
-          pos.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
-          neg.direction.symbol <- dir.symbols[which(level.stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+          pos.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+          neg.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
 
 
           text_outline(subplot.center[1] + 1,
                        subplot.center[2],
-                       labels = paste(pos.direction.symbol, " ", level.stats$threshold[level.i], sep = ""),
+                       labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
                        pos = 4, cex = break.label.cex, r = .1
           )
 
@@ -1381,7 +1385,7 @@ plot.FFTrees <- function(x = NULL,
             x = subplot.center[1] + 2,
             y = subplot.center[2] - 2,
             pch = exit.node.pch,
-            cex = exit.node.cex,
+            cex = exit_node_cex,
             bg = exit.node.bg
           )
 
@@ -1396,7 +1400,7 @@ plot.FFTrees <- function(x = NULL,
 
         # New level on right: ----
 
-        if (level.stats$exit[level.i] %in% 0 | paste(level.stats$exit[level.i]) %in% c("0")) {
+        if (level_stats$exit[level.i] %in% 0 | paste(level_stats$exit[level.i]) %in% c("0")) {
 
           segments(subplot.center[1],
                    subplot.center[2] + 1,
@@ -1447,7 +1451,7 @@ plot.FFTrees <- function(x = NULL,
 
         # Update plot center: ----
 
-        if (identical(paste(level.stats$exit[level.i]), "0")) {
+        if (identical(paste(level_stats$exit[level.i]), "0")) {
 
           subplot.center <- c(
             subplot.center[1] + 2,
@@ -1455,7 +1459,7 @@ plot.FFTrees <- function(x = NULL,
           )
         } # if (identical exit 0 etc.
 
-        if (identical(paste(level.stats$exit[level.i]), "1")) {
+        if (identical(paste(level_stats$exit[level.i]), "1")) {
 
           subplot.center <- c(
             subplot.center[1] - 2,
@@ -1473,8 +1477,8 @@ plot.FFTrees <- function(x = NULL,
 
     if (show.bottom == TRUE) { # obtain tree statistics:
 
-      fft.sens.vec <- tree.stats$sens
-      fft.spec.vec <- tree.stats$spec
+      fft_sens_vec <- tree_stats$sens
+      fft_spec_vec <- tree_stats$spec
 
       # General plotting space: ----
 
@@ -1520,7 +1524,7 @@ plot.FFTrees <- function(x = NULL,
           }
         }
 
-        text(.50, 1.1, label.performance, cex = panel.title.cex, ...)  # title 3 (bottom): Performance
+        text(.50, 1.1, label.performance, cex = panel_title_cex, ...)  # title 3 (bottom): Performance
 
         par(xpd = FALSE)
 
@@ -1537,7 +1541,7 @@ plot.FFTrees <- function(x = NULL,
 
       # Get either bacc OR wacc (based on sens.w):
       sens.w <- x$params$sens.w
-      bacc_wacc <- get_bacc_wacc(sens = final.stats$sens, spec = final.stats$spec, sens.w = sens.w)
+      bacc_wacc <- get_bacc_wacc(sens = final_stats$sens, spec = final_stats$spec, sens.w = sens.w)
       bacc_wacc_name <- names(bacc_wacc)
 
       # Set labels, values, and locations (as df):
@@ -1549,13 +1553,13 @@ plot.FFTrees <- function(x = NULL,
         width = c(.2, rep(level.width, 6), .20),
         height = c(.65, rep(level.max.height, 6), .65),
         value = c(NA,
-                  abs(final.stats$mcu - 5) / (abs(1 - 5)), final.stats$pci,
-                  final.stats$sens, final.stats$spec,
-                  with(final.stats, (cr + hi) / n), bacc_wacc, NA),
+                  abs(final_stats$mcu - 5) / (abs(1 - 5)), final_stats$pci,
+                  final_stats$sens, final_stats$spec,
+                  with(final_stats, (cr + hi) / n), bacc_wacc, NA),
         value.name = c(NA,
-                       round(final.stats$mcu, 1), pretty_dec(final.stats$pci),
-                       pretty_dec(final.stats$sens), pretty_dec(final.stats$spec),
-                       pretty_dec(final.stats$acc), pretty_dec(bacc_wacc), NA)
+                       round(final_stats$mcu, 1), pretty_dec(final_stats$pci),
+                       pretty_dec(final_stats$sens), pretty_dec(final_stats$spec),
+                       pretty_dec(final_stats$acc), pretty_dec(bacc_wacc), NA)
       )
 
 
@@ -1629,25 +1633,25 @@ plot.FFTrees <- function(x = NULL,
 
         text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
              final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-             prettyNum(final.stats$cr, big.mark = ","),
+             prettyNum(final_stats$cr, big.mark = ","),
              cex = 1.5
         )
 
         text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
              final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-             prettyNum(final.stats$mi, big.mark = ","),
+             prettyNum(final_stats$mi, big.mark = ","),
              cex = 1.5
         )
 
         text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
              final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-             prettyNum(final.stats$fa, big.mark = ","),
+             prettyNum(final_stats$fa, big.mark = ","),
              cex = 1.5
         )
 
         text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
              final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-             prettyNum(final.stats$hi, big.mark = ","),
+             prettyNum(final_stats$hi, big.mark = ","),
              cex = 1.5
         )
 
@@ -1714,7 +1718,7 @@ plot.FFTrees <- function(x = NULL,
           #                                 c("red", "yellow", "green"),
           #                                 transparency = .5)
 
-          paste(final.stats$cr, "/", 1, collapse = "")
+          paste(final_stats$cr, "/", 1, collapse = "")
 
           # Add 100% reference line: ----
 
@@ -1729,14 +1733,14 @@ plot.FFTrees <- function(x = NULL,
 
           add_level("mcu", ok.val = .75, min.val = 0, max.val = 1,
                     level.type = level.type, lloc_row = lloc[lloc$element == "mcu", ],
-                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
 
 
           # pci level: ----
 
           add_level("pci", ok.val = .75, min.val = 0, max.val = 1,
                     level.type = level.type, lloc_row = lloc[lloc$element == "pci", ],
-                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
 
           # text(lloc$center.x[lloc$element == "pci"],
           #      lloc$center.y[lloc$element == "pci"],
@@ -1747,40 +1751,40 @@ plot.FFTrees <- function(x = NULL,
 
           add_level("spec", ok.val = .75, min.val = 0, max.val = 1,
                     level.type = level.type, lloc_row = lloc[lloc$element == "spec", ],
-                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$cr, "/", final.stats$cr + final.stats$fa), collapse = ""))
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
 
 
           # sens level: ----
 
           add_level("sens", ok.val = .75, min.val = 0, max.val = 1,
                     level.type = level.type, lloc_row = lloc[lloc$element == "sens", ],
-                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$hi, "/", final.stats$hi + final.stats$mi), collapse = ""))
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$hi, "/", final_stats$hi + final_stats$mi), collapse = ""))
 
 
           # acc level: ----
 
-          min.acc <- max(crit.br, 1 - crit.br)
+          min_acc <- max(crit_br, 1 - crit_br)
 
           add_level("acc", ok.val = .50, min.val = 0, max.val = 1,
                     level.type = level.type, lloc_row = lloc[lloc$element == "acc", ],
-                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final.stats$hi + final.stats$cr, "/", final.stats$n), collapse = ""))
+                    header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$hi + final_stats$cr, "/", final_stats$n), collapse = ""))
 
           # Add baseline to acc level:
           segments(
-            x0 = lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2,
-            y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min.acc,
-            x1 = lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2,
-            y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min.acc,
+            x0 = lloc$center.x[lloc$element  == "acc"] - lloc$width[lloc$element  == "acc"] / 2,
+            y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
+            x1 = lloc$center.x[lloc$element  == "acc"] + lloc$width[lloc$element  == "acc"] / 2,
+            y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
             lty = 3
           )
 
           text(
             x = lloc$center.x[lloc$element == "acc"],
-            y = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min.acc,
+            y = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
             labels = "BL", pos = 1
           )
 
-          # paste("BL = ", pretty_dec(min.acc), sep = ""), pos = 1)
+          # paste("BL = ", pretty_dec(min_acc), sep = ""), pos = 1)
 
 
           # bacc OR wacc level: ----
@@ -2180,54 +2184,54 @@ plot.FFTrees <- function(x = NULL,
         # FFTs: ----
 
         {
-          roc.order <- order(fft.spec.vec, decreasing = TRUE)  # from highest to lowest spec
-          # roc.order <- 1:x$trees$n
+          roc_order <- order(fft_spec_vec, decreasing = TRUE)  # from highest to lowest spec
+          # roc_order <- 1:x$trees$n
 
-          fft.sens.vec.ord <- fft.sens.vec[roc.order]
-          fft.spec.vec.ord <- fft.spec.vec[roc.order]
+          fft_sens_vec_ord <- fft_sens_vec[roc_order]
+          fft_spec_vec_ord <- fft_spec_vec[roc_order]
 
           # Add segments and points for all trees but tree:
 
-          if (length(roc.order) > 1) {
+          if (length(roc_order) > 1) {
 
-            segments(final.roc.x.loc[1] + c(0, 1 - fft.spec.vec.ord) * lloc$width[lloc$element == "roc"],
-                     final.roc.y.loc[1] + c(0, fft.sens.vec.ord) * lloc$height[lloc$element == "roc"],
-                     final.roc.x.loc[1] + c(1 - fft.spec.vec.ord, 1) * lloc$width[lloc$element == "roc"],
-                     final.roc.y.loc[1] + c(fft.sens.vec.ord, 1) * lloc$height[lloc$element == "roc"],
+            segments(final.roc.x.loc[1] + c(0, 1 - fft_spec_vec_ord) * lloc$width[lloc$element == "roc"],
+                     final.roc.y.loc[1] + c(0, fft_sens_vec_ord) * lloc$height[lloc$element == "roc"],
+                     final.roc.x.loc[1] + c(1 - fft_spec_vec_ord, 1) * lloc$width[lloc$element == "roc"],
+                     final.roc.y.loc[1] + c(fft_sens_vec_ord, 1) * lloc$height[lloc$element == "roc"],
                      lwd = roc_curve_lwd,
                      col = roc_curve_col
             )
 
-            points(final.roc.x.loc[1] + ((1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"]),
-                   final.roc.y.loc[1] + (fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"]),
+            points(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
+                   final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
                    pch = 21, cex = 2.5, col = scales::alpha("green", .60),
                    bg = scales::alpha("white", .90)
             )
 
-            text(final.roc.x.loc[1] + ((1 - fft.spec.vec.ord[-(which(roc.order == tree))]) * lloc$width[lloc$element == "roc"]),
-                 final.roc.y.loc[1] + (fft.sens.vec.ord[-(which(roc.order == tree))] * lloc$height[lloc$element == "roc"]),
-                 labels = roc.order[which(roc.order != tree)], cex = 1, col = gray(.20)
+            text(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
+                 final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
+                 labels = roc_order[which(roc_order != tree)], cex = 1, col = gray(.20)
             )
           }
 
           # Add larger point for plotted tree:
 
           # white point (to hide point from above):
-          points(final.roc.x.loc[1] + ((1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"]),
-                 final.roc.y.loc[1] + (fft.sens.vec[tree] * lloc$height[lloc$element == "roc"]),
+          points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                 final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
                  pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
                  bg = scales::alpha("white", 1), lwd = 1
           )
 
           # green point:
-          points(final.roc.x.loc[1] + ((1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"]),
-                 final.roc.y.loc[1] + (fft.sens.vec[tree] * lloc$height[lloc$element == "roc"]),
+          points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                 final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
                  pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
                  bg = scales::alpha("green", .30), lwd = 1
           )
 
-          text(final.roc.x.loc[1] + ((1 - fft.spec.vec[tree]) * lloc$width[lloc$element == "roc"]),
-               final.roc.y.loc[1] + (fft.sens.vec[tree] * lloc$height[lloc$element == "roc"]),
+          text(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+               final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
                labels = tree, cex = 1.25, col = gray(.20), font = 2
           )
 
