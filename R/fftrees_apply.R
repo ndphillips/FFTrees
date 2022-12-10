@@ -97,7 +97,7 @@ fftrees_apply <- function(x,
 
   for (tree_i in 1:x$trees$n) {
 
-    # Extract definitions for current tree:
+    # Extract definition of current tree:
     cue_v   <- trimws(unlist(strsplit(x$trees$definitions$cues[tree_i], ";")))  # +++ here now +++: Added trimws()
     class_v <- trimws(unlist(strsplit(x$trees$definitions$classes[tree_i], ";")))
     exit_v  <- trimws(unlist(strsplit(x$trees$definitions$exits[tree_i], ";")))
