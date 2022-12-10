@@ -257,34 +257,32 @@ fftrees_apply <- function(x,
   }
 
   # Aggregate results: ----
-  {
 
-    # Combine all levelstats into one dataframe:
-    level_stats <- do.call("rbind", args = level_stats_ls)
+  # Combine all levelstats into one dataframe:
+  level_stats <- do.call("rbind", args = level_stats_ls)
 
-    # 3. [tree_stats]: ----
-    #  One row per tree definitions and statistics:
-    # CUMULATIVE TREE STATS:
+  # 3. [tree_stats]: ----
+  #  One row per tree definitions and statistics:
+  # CUMULATIVE TREE STATS:
 
-    helper <- paste(level_stats$tree, level_stats$level, sep = ".")
-    maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-    tree_stats <- cbind(x$trees$definitions[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cues", "cost")])
-    names(tree_stats)[1] <- "tree"
-    rownames(tree_stats) <- 1:nrow(tree_stats)
+  helper <- paste(level_stats$tree, level_stats$level, sep = ".")
+  maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
+  tree_stats <- cbind(x$trees$definitions[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cues", "cost")])
+  names(tree_stats)[1] <- "tree"
+  rownames(tree_stats) <- 1:nrow(tree_stats)
 
+  # Calculate pci and mcu: ----
 
-    # Calculate pci and mcu: ----
+  for (tree_i in 1:x$trees$n) {
+    max.lookups <- nrow(data) * length(x$cue_names)
+    n.lookups <- sum(decisions_ls[[tree_i]]$levelout)
 
-    for (tree_i in 1:x$trees$n) {
-      max.lookups <- nrow(data) * length(x$cue_names)
-      n.lookups <- sum(decisions_ls[[tree_i]]$levelout)
+    tree_stats$pci[tree_i] <- 1 - n.lookups / max.lookups
+    tree_stats$mcu[tree_i] <- mean(decisions_ls[[tree_i]]$levelout)
 
-      tree_stats$pci[tree_i] <- 1 - n.lookups / max.lookups
-      tree_stats$mcu[tree_i] <- mean(decisions_ls[[tree_i]]$levelout)
-    }
   }
 
-  # Add results to trees in x: ------
+  # Add results to trees in x: ----
 
   x$trees$stats[[mydata]]       <- tibble::as_tibble(tree_stats)
   x$trees$level_stats[[mydata]] <- tibble::as_tibble(level_stats)
@@ -295,8 +293,6 @@ fftrees_apply <- function(x,
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
     x$trees$best$test <- select_best_tree(x, data = mydata, goal = x$params$goal)
-  } else {
-    stop("mydata is neither 'train' nor 'test'")
   }
 
 
