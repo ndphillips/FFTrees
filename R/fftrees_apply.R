@@ -26,7 +26,7 @@
 #' @export
 
 fftrees_apply <- function(x,
-                          mydata = NULL,
+                          mydata = NULL,   # either "train" or "test"
                           newdata = NULL,
                           allNA.pred = FALSE) {
 
@@ -48,7 +48,10 @@ fftrees_apply <- function(x,
 
     } else {
 
-      x$data$test <- newdata  # replaces existing test data in x by newdata!
+      # Replace existing test data in x by newdata:
+
+      x$data$test <- newdata
+
     }
 
     valid_train_test_data(train_data = x$data$train, test_data = x$data$test)  # verify (without consequences)
@@ -94,12 +97,13 @@ fftrees_apply <- function(x,
 
   for (tree_i in 1:x$trees$n) {
 
-    # Extract defintions for current tree
-    cue_v <- unlist(strsplit(x$trees$definitions$cues[tree_i], ";"))
-    class_v <- unlist(strsplit(x$trees$definitions$classes[tree_i], ";"))
-    exit_v <- unlist(strsplit(x$trees$definitions$exits[tree_i], ";"))
-    threshold_v <- unlist(strsplit(x$trees$definitions$thresholds[tree_i], ";"))
-    direction_v <- unlist(strsplit(x$trees$definitions$directions[tree_i], ";"))
+    # Extract definitions for current tree:
+    cue_v   <- trimws(unlist(strsplit(x$trees$definitions$cues[tree_i], ";")))  # +++ here now +++: Added trimws()
+    class_v <- trimws(unlist(strsplit(x$trees$definitions$classes[tree_i], ";")))
+    exit_v  <- trimws(unlist(strsplit(x$trees$definitions$exits[tree_i], ";")))
+    threshold_v <- trimws(unlist(strsplit(x$trees$definitions$thresholds[tree_i], ";")))
+    direction_v <- trimws(unlist(strsplit(x$trees$definitions$directions[tree_i], ";")))
+
     level_n <- x$trees$definitions$nodes[tree_i]
 
     decisions_df <- decisions_ls[[tree_i]]
