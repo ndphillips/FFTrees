@@ -58,11 +58,13 @@ fftrees_ffttowords <- function(x = NULL,
 
   for (tree in 1:x$trees$n) {
 
-    classes.v    <- unlist(strsplit(x$trees$definitions$classes[tree], ";"))
-    cues.v       <- unlist(strsplit(x$trees$definitions$cues[tree], ";"))
-    directions.v <- unlist(strsplit(x$trees$definitions$directions[tree], ";"))
-    thresholds.v <- unlist(strsplit(x$trees$definitions$thresholds[tree], ";"))
-    exits.v      <- unlist(strsplit(x$trees$definitions$exits[tree], ";"))
+    # Extract definition of current tree:
+    classes.v    <- trimws(unlist(strsplit(x$trees$definitions$classes[tree], ";")))
+    cues.v       <- trimws(unlist(strsplit(x$trees$definitions$cues[tree], ";")))
+    directions.v <- trimws(unlist(strsplit(x$trees$definitions$directions[tree], ";")))
+    thresholds.v <- trimws(unlist(strsplit(x$trees$definitions$thresholds[tree], ";")))
+    exits.v      <- trimws(unlist(strsplit(x$trees$definitions$exits[tree], ";")))
+
     decision.labels <- x$params$decision.labels
 
     nodes.n <- length(cues.v)
@@ -75,7 +77,6 @@ fftrees_ffttowords <- function(x = NULL,
     for (i in 1:nodes.n) {
 
       exits.i <- paste(exits.v[i])
-
 
       # 1. Non-final nodes: ----
 
