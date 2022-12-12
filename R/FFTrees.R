@@ -143,7 +143,7 @@ FFTrees <- function(formula = NULL,
                     rounding = NULL,
                     repeat.cues = TRUE,
                     my.tree = NULL,
-                    tree.definitions = NULL,
+                    tree.definitions = NULL,  # seems not used anymore?
                     do.comp = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
@@ -299,5 +299,6 @@ FFTrees <- function(formula = NULL,
 
 # - Update list of elements (to new hiearchical structure of FFTrees object).
 # - Is the store.data argument still being used? If not, remove...
+# - Is the tree.definitions argument used anywhere?  If not, why not?
 
 # eof.
