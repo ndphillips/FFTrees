@@ -73,7 +73,7 @@ fftrees_apply <- function(x,
   # +++ here now
 
 
-  # Simplify (code below): ------
+  # Simplify: ----
 
   # Extract key parts from FFTrees object x:
   n_trees <- x$trees$n
