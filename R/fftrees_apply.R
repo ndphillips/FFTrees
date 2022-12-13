@@ -64,11 +64,11 @@ fftrees_apply <- function(x,
   criterion_n <- length(criterion_v)
 
 
-  # ToDo: Allow swapping x$trees$definitions by tree.definitions: ------
+  # ToDo: Allow swapping object$ or x$trees$definitions by tree.definitions: ------
 
   # - verify that tree.definitions contains valid FFTs and fits to current data
-  # - replace x$trees$definitions by tree.definitions
-  # - update x$trees$n
+  # - replace object$ or x$trees$definitions by tree.definitions
+  # - update object$ or x$trees$n
 
   # +++ here now
 
@@ -77,13 +77,13 @@ fftrees_apply <- function(x,
 
   # Extract key parts from FFTrees object x:
   n_trees <- x$trees$n
-  tree_df <- x$trees$definitions  # (definitions are df)
-
+  tree_df <- x$trees$definition  # (as df)
+  # print(tree_df)  # 4debugging
 
   # Setup outputs: ------
 
   #  1. [decisions_ls]: ----
-  #     A list containing tibbles, with 1 row per case, and 1 column per tree:
+  #     A list containing tibbles, with 1 column per tree and 1 row per case:
 
   decisions_ls <- lapply(1:n_trees, FUN = function(i) {
 
@@ -113,6 +113,8 @@ fftrees_apply <- function(x,
 
   for (tree_i in 1:n_trees) {
 
+    # print(paste0("tree ", tree_i, ":"))  # 4debugging
+
     # Extract definition of current tree:
     cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))  # +++ here now +++: Added trimws()
     class_v <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
@@ -120,7 +122,8 @@ fftrees_apply <- function(x,
     threshold_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
     direction_v <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
 
-    level_n <- tree_df$nodes[tree_i]
+    level_n <- as.integer(tree_df$nodes[tree_i])
+    # print(paste0("- level_n = ", level_n))  # 4debugging
 
     decisions_df <- decisions_ls[[tree_i]]
 
@@ -133,6 +136,7 @@ fftrees_apply <- function(x,
     })
 
     cost_cue_level_cum <- cumsum(cost_cue_level)
+    # print(paste0("- cost_cue_level_cum = ", cost_cue_level_cum))  # 4debugging
 
     cue_cost_cum_level <- data.frame(
       level = 1:level_n,
@@ -173,11 +177,11 @@ fftrees_apply <- function(x,
 
     for (level_i in 1:level_n) {
 
-      # Get tree definition at current level:
-      cue_i <- cue_v[level_i]
-      class_i <- class_v[level_i]
+      # Get tree definitions at current level:
+      cue_i       <- cue_v[level_i]
+      class_i     <- class_v[level_i]
       direction_i <- direction_v[level_i]
-      exit_i <- as.numeric(exit_v[level_i])
+      exit_i      <- as.numeric(exit_v[level_i])
       threshold_i <- threshold_v[level_i]
 
       cue_values <- data[[cue_i]]
@@ -221,17 +225,25 @@ fftrees_apply <- function(x,
         classify_now <- is.na(decisions_df$decision)
       }
 
-      # Convert NAs: ----
+      # Handle NAs: ----
 
-      # If it is not the final node, then don't classify NA cases:
+      # If this is NOT the final node, then don't classify NA cases:
       if (exit_i %in% c(0, 1)) {
         classify_now[is.na(classify_now)] <- FALSE
       }
 
-      # If it is the final node, then classify NA cases according to most common class:
+      # [was:] If this IS the final node, then classify NA cases into the most common class [?: seems not done here]
+
+      # If this IS the final node, then classify NA cases according to allNA.pred value:
       if (exit_i %in% .5) {
         decisions_df$current_decision[is.na(decisions_df$current_decision)] <- allNA.pred
       }
+
+      # ToDo: Examine alternative policies for indecision / doxastic abstention:
+      # - predict either TRUE or FALSE (according to allNA.pred)
+      # - predict the most common category (overall baseline or baseline at this level)
+      # - predict a 3rd category (tertium datur: abstention / "don't know" / NA decision)
+      # Results will depend on costs of errors.
 
 
       # Define critical values for current decisions: ----
@@ -310,7 +322,7 @@ fftrees_apply <- function(x,
   x$trees$decisions[[mydata]]   <- decisions_ls
 
 
-  # Set best tree values:
+  # Update best tree values:
   if (mydata == "train"){
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){

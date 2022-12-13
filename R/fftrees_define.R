@@ -1,15 +1,19 @@
 #' Create FFT definitions
 #'
-#' @description \code{fftrees_define} creates definitions of fast-and-frugal trees
-#' (FFTs, as an \code{FFTrees} object).
+#' @description \code{fftrees_define} creates fast-and-frugal trees
+#' (FFTs) from provided definitions or by applying algorithms (when no definitions are provided),
+#' and returns an \code{FFTrees} object.
 #'
 #' \code{fftrees_define} usually passes passes \code{x} either
 #' to \code{\link{fftrees_grow_fan}} (to create new FFTs by applying algorithms to data) or
 #' to \code{\link{fftrees_wordstofftrees}} (if \code{my.tree} is specified).
-#' If \code{object} is provided, \code{fftrees_define} uses the trees from this \code{FFTrees} object.
 #'
-#' @param x An \code{FFTrees} object.
-#' @param object An \code{FFTrees} object.
+#' If an existing \code{FFTrees} object \code{object} is provided,
+#' \code{fftrees_define} uses the trees from this \code{FFTrees} object.
+#'
+#' @param x The current \code{FFTrees} object (to be changed and returned).
+#'
+#' @param object An existing \code{FFTrees} object (with tree definitions).
 #'
 #' @return An \code{FFTrees} object with tree definitions.
 #'
@@ -27,15 +31,17 @@
 
 fftrees_define <- function(x, object = NULL) {
 
-  if (is.null(object) == FALSE) {
+  if (is.null(object) == FALSE) { # an FFTrees object is provided:
 
+    # Verify: x and object
     testthat::expect_s3_class(x, class = "FFTrees")
-
     testthat::expect_true(!is.null(object$trees$definitions))
 
-    # 0. Use trees in object:
+    # 0. Update object x by the trees in object:
     x$trees$definitions <- object$trees$definitions
-    x$trees$n <- nrow(object$trees$definitions)
+    x$trees$n <- as.integer(nrow(object$trees$definitions))
+
+    # message("Updated trees in 'x' by tree definitions of 'object'")
 
   } else if (!is.null(x$params$my.tree)) {
 
