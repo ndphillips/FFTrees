@@ -221,7 +221,7 @@ FFTrees <- function(formula = NULL,
   }
 
 
-  # 1. Create an FFTrees object: ------
+  # 1. Create an FFTrees object x: ------
 
   x <- fftrees_create(
     data = data,
@@ -253,6 +253,8 @@ FFTrees <- function(formula = NULL,
 
 
   # 2. Get FFTrees definitions: ------
+
+  # ToDo: If tree.definitions are provided, add them to object?
 
   x <- fftrees_define(x, object = object)
 

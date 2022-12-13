@@ -175,7 +175,10 @@ select_best_tree <- function(x, data, goal){
 
   # Output: -----
 
-  testthat::expect_true(is.integer(tree))  # verify output
+  # print(paste0("Select best tree = ", tree))  # 4debugging
+
+  tree <- as.integer(tree)  # aim to convert to integer
+  testthat::expect_true(is.integer(tree))  # verify integer
 
   return(tree) # as integer
 
