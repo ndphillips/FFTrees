@@ -226,29 +226,74 @@ plot(fft_4)
 <!--       2. as a data frame using the `tree.definitions` argument  -->
 
 ```{r design-fft-df, echo = FALSE, eval = FALSE}
-# Modify an existing FFT:
-heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
-                     data = heart.train,                # Training data
-                     data.test = heart.test,            # Testing data
-                     main = "Heart Disease",            # General label
-                     decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
+# Modify and use an existing FFT:
+
+# Create FFTs:
+fft_0 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 main = "Heart Disease",            # General label
+                 decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
+
+
+# Copy object:
+fft_1 <- fft_0  
+
+plot(fft_1, tree = 1)
 
 # Current FFTs:
-heart.fft$trees$definition
+fft_1$trees$definitions
+
+# (1) Modify an existing FFT:
 
 # Start from an existing FFT: 
-my.fft <- heart.fft$trees$definitions[1, ]  
+my_fft <- fft_1$trees$definitions[1, ]  # take a row of df
+my_fft
 
-# Make some changes:
-my.fft["tree"]  <- 8 
-my.fft["exits"] <- c("1;1;0.5")
+# Make some changes: 
+# Swap nodes 1 and 2 of Tree 1
+my_fft$cues <- "cp;thal;ca"
+my_fft$thresholds <- "a;rd,fd;0"  # swap according to cues
+my_fft$exits <- "0;1;0.5"         # swap according to cues
 
-# Add to existing FFTs (as a new / 8th row):
-heart.fft$trees$definition[8, ] <- my.fft
-heart.fft$trees$n <- 8
+my_fft$tree <- 8  # signal new tree (with new number)
 
-# Use new FFT to predict same / new data:
-predict(heart.fft, newdata = heartdisease, tree = 8)  # yields an ERROR...
+# Add my_fft to FFTrees object:
+
+# Add definitions of 8th tree:
+# fft_1$trees$definitions[8, ] <- my_fft
+
+# # OR (combine tree definitions as rows of data frames):
+old_new_fft_df <- rbind(fft_1$trees$definitions, my_fft)
+old_new_fft_df
+
+# Replace definitions in FFTrees object fft_1:
+fft_1$trees$definitions <- old_new_fft_df
+fft_1$trees$n <- as.integer(nrow(old_new_fft_df))
+
+# HAS fft_1 been changed?
+fft_1$trees$n
+fft_1$trees$definitions  # APPEARS to have been swapped (8 trees)
+fft_1$trees$definitions[8, ]
+
+
+# Apply definition:
+fft_2 <- fftrees_apply(fft_1, mydata = "test", newdata = heart.test)  # WORKS with new/8-th tree...
+
+fft_2$trees$definitions  # 8 tree definitions, but:
+fft_2$trees$stats$train  # "train" parts still only contain 7 trees, 
+fft_2$trees$stats$test   # but "test" parts contain stats for 8 trees
+
+# Note: Curious fact:
+fft_2$trees$best$test  # NEW tree has the best bacc value (for "test" data)!
+
+plot(fft_2, data = "test", tree = 8)
+
+# +++ here now +++
+
+# Use changed or new FFT object to predict same / new data:
+predict(fft_1, newdata = heartdisease, tree = 8)  # yields an ERROR in applying new/8-th tree...
+predict(fft_2, newdata = heartdisease, tree = 8)  # yields an ERROR in applying new/8-th tree...
 ```
 
 For details on understanding and changing tree definitions, see the section on **Tree definitions** in the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette. 
