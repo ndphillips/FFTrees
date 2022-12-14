@@ -71,10 +71,9 @@
 #' \code{svm} = support vector machines with \strong{e1071}.
 #' Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.
 #'
-#' @param force logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.
 #' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).
 #'
-#' @param comp,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
+#' @param comp,force,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
 #' @return An \code{FFTrees} object with the following elements:
 #' \describe{
@@ -83,8 +82,8 @@
 #'   \item{formula}{The \code{\link{formula}} specified when creating the FFTs.}
 #'   \item{trees}{A list of FFTs created, with further details contained in \code{n}, \code{best}, \code{definitions}, \code{inwords}, \code{stats}, \code{level_stats}, and \code{decisions}.}
 #'   \item{data}{The original training and test data (if available).}
-#'   \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}).}
-#'   \item{competition}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
+#'   \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}, \code{sens.w}, as well as various thresholds, stopping rule, and cost parameters).}
+#'   \item{competition}{Models and classification statistics for competitive classification algorithms: Logistic regression, CART, random forests RF, and SVM.}
 #'   \item{cues}{A list of cue information, with further details contained in \code{thresholds} and \code{stats}.}
 #' }
 #'
@@ -155,7 +154,7 @@ FFTrees <- function(formula = NULL,
                     numthresh.method = "o",
                     numthresh.n = 10,
                     #
-                    decision.labels = c("False", "True"), # in 0:left/1:right order!
+                    decision.labels = c("False", "True"),  # in 0:left/1:right order!
                     main = NULL,
                     train.p = 1,
                     rounding = NULL,
@@ -163,7 +162,7 @@ FFTrees <- function(formula = NULL,
                     #
                     my.tree = NULL,
                     object = NULL,
-                    tree.definitions = NULL,  # Seems not used anymore? ToDo: Use to modify object$trees$definitions.
+                    tree.definitions = NULL,
                     #
                     do.comp = TRUE,
                     do.cart = TRUE,
@@ -171,10 +170,10 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     #
-                    force = FALSE,  # Seems not used anymore? ToDo: deprecate.
                     quiet = FALSE,
                     # Deprecated args:   Use instead:
                     comp = NULL,         # do.comp
+                    force = NULL,        # (none)
                     rank.method = NULL,  # algorithm
                     store.data = NULL,   # (none)
                     verbose = NULL       # progress
@@ -185,43 +184,46 @@ FFTrees <- function(formula = NULL,
   # A. Handle deprecated arguments and options: ----
 
   if (!is.null(comp)) {
-    warning("The argument comp is deprecated. Use do.comp instead.")
+    warning("The argument 'comp' is deprecated. Use 'do.comp' instead.")
 
     do.comp <- comp
   }
 
+  if (!is.null(force)){
+    warning("The argument 'force' is deprecated and ignored.")
+  }
+
   if (!is.null(rank.method)) {
-    warning("The argument rank.method is deprecated. Use algorithm instead.")
+    warning("The argument 'rank.method' is deprecated. Use 'algorithm' instead.")
 
     algorithm <- rank.method
   }
 
   if (!is.null(store.data)) {
-    warning("The argument store.data is deprecated and ignored.")
+    warning("The argument 'store.data' is deprecated and ignored.")
   }
 
   if (!is.null(verbose)) {
-    warning("The argument verbose is deprecated. Use progress instead.")
+    warning("The argument 'verbose' is deprecated. Use 'progress' instead.")
 
     progress <- verbose
   }
-
-  # Deprecated options:
 
   if (any(c("max", "zigzag") %in% algorithm)) {
     stop("The 'max' and 'zigzag' algorithms are no longer supported.")
   }
 
 
-  # Convert factor NA to new missing factor level:
+  # # In data: Convert factor NA to new missing factor level:
+  #
   # data <- data %>%
   #   dplyr::mutate_if(is.factor, addNA)   %>%
   #   dplyr::mutate_if(is.character, addNA)
 
 
-  # B. Training / Test split: ----
+  # B. Split training / test data: ----
 
-  if (train.p < 1 && is.null(data.test)) {
+  if ((train.p < 1) && is.null(data.test)) {
 
     # Save original data:
     data_o <- data
@@ -263,39 +265,6 @@ FFTrees <- function(formula = NULL,
     # 2. tree.definitions fit to provided data
 
   }
-
-
-  # The following in NOW included in use cases 1 vs. 2 of fftrees_define():  +++ here now +++
-  #
-  # D: Replace tree.definitions in object: ----
-  #
-  # if (!is.null(tree.definitions)){
-  #
-  #   # Verify:
-  #   testthat::expect_true(is.data.frame(tree.definitions), info = "Provided tree.definitions are not a data.frame")
-  #   # testthat::expect_true(!is.null(object), info = "Providing tree.definitions requires an FFTrees object")
-  #
-  #   # ToDo: Verify that
-  #   # 1. tree.definitions contains valid tree definitions (in appropriate format)
-  #   # 2. tree.definitions fit to provided data
-  #
-  #   if (!is.null(object)){ # An object has been provided:
-  #
-  #     # Change tree definitions of object by using tree.definitions:
-  #     object$trees$definitions <- tree.definitions
-  #     object$trees$n <- as.integer(nrow(tree.definitions))
-  #
-  #     if (!quiet) {
-  #       message("Updated FFTs in 'object' by 'tree.definitions'")
-  #     }
-  #
-  #   } else { # object has NOT been provided:
-  #
-  #     message("Provided 'tree.definitions' but no 'object'")
-  #
-  #   } # if (is.null(object) etc.
-  #
-  # } # if (is.null(tree.definitions) etc.
 
 
   # Main: ------
@@ -375,9 +344,6 @@ FFTrees <- function(formula = NULL,
 
 # ToDo: ------
 
-# - Update list of elements (to new hiearchical structure of FFTrees object).
-# - Is the store.data argument still being used? If not, remove...
-# - Is the tree.definitions argument used anywhere?  If not, why not?
-# - Deprecate unused force argument.
+# - all done.
 
 # eof.
