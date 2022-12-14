@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9007
+## 1.7.5.9009
 
 <!-- Development version: --> 
 
@@ -27,6 +27,8 @@ Changes since last release:
     - Show `n.per.icon` legend when `what = 'icontree'`. 
     - Bug fix: Removed clipping of titles and labels.
     - Tweaked spacing parameters.
+
+- Added user feedback when `quiet = FALSE`. 
 
 <!-- Blank line. --> 
 
@@ -346,6 +348,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-12-10.]
+[File `NEWS.md` last updated on 2022-12-14.]
 
 <!-- eof. -->
