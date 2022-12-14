@@ -166,38 +166,38 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL       # progress
 ) {
 
-  # Preparation: ------
+  # 0. Preparation: ------
 
-  # a. Handle deprecated arguments and options: ----
-  {
-    if (is.null(comp) == FALSE) {
-      warning("The argument comp is deprecated. Use do.comp instead.")
+  # A. Handle deprecated arguments and options: ----
 
-      do.comp <- comp
-    }
+  if (is.null(comp) == FALSE) {
+    warning("The argument comp is deprecated. Use do.comp instead.")
 
-    if (is.null(rank.method) == FALSE) {
-      warning("The argument rank.method is deprecated. Use algorithm instead.")
-
-      algorithm <- rank.method
-    }
-
-    if (is.null(store.data) == FALSE) {
-      warning("The argument store.data is deprecated and ignored.")
-    }
-
-    if (is.null(verbose) == FALSE) {
-      warning("The argument verbose is deprecated. Use progress instead.")
-
-      progress <- verbose
-    }
-
-    # Deprecated options:
-
-    if (any(c("max", "zigzag") %in% algorithm)) {
-      stop("The 'max' and 'zigzag' algorithms are no longer supported.")
-    }
+    do.comp <- comp
   }
+
+  if (is.null(rank.method) == FALSE) {
+    warning("The argument rank.method is deprecated. Use algorithm instead.")
+
+    algorithm <- rank.method
+  }
+
+  if (is.null(store.data) == FALSE) {
+    warning("The argument store.data is deprecated and ignored.")
+  }
+
+  if (is.null(verbose) == FALSE) {
+    warning("The argument verbose is deprecated. Use progress instead.")
+
+    progress <- verbose
+  }
+
+  # Deprecated options:
+
+  if (any(c("max", "zigzag") %in% algorithm)) {
+    stop("The 'max' and 'zigzag' algorithms are no longer supported.")
+  }
+
 
   # Convert factor NA to new missing factor level:
   # data <- data %>%
@@ -205,7 +205,7 @@ FFTrees <- function(formula = NULL,
   #   dplyr::mutate_if(is.character, addNA)
 
 
-  # b. Training / Test split: ----
+  # B. Training / Test split: ----
 
   if (train.p < 1 && is.null(data.test)) {
 
@@ -225,6 +225,27 @@ FFTrees <- function(formula = NULL,
         scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set."
       )
     }
+  }
+
+
+  # C: Replace tree.definitions in object: ----
+
+  if (is.null(tree.definitions) == FALSE){
+
+    # Verify:
+    testthat::expect_true(is.data.frame(data), info = "Provided tree.definitions are not a data.frame")
+    testthat::expect_true(!is.null(object), info = "Providing tree.definitions requires an FFTrees object")
+
+    # ToDo: Verify that
+    # 1. tree.definitions contains valid tree definitions (in appropriate format)
+    # 2. tree.definitions fit to provided data
+
+    # Change tree definitions of object by using tree.definitions:
+    object$trees$definitions <- tree.definitions
+    object$trees$n <- as.integer(nrow(tree.definitions))
+
+    message("Updated trees in 'object' by tree.definitions")  # 4debugging
+
   }
 
 
@@ -259,38 +280,17 @@ FFTrees <- function(formula = NULL,
   )
 
 
-  # 2. Get FFTrees definitions: ------
-
-  # If tree.definitions are provided, add them to object:
-
-  if (is.null(tree.definitions) == FALSE){
-
-    # Verify:
-    testthat::expect_true(is.data.frame(data), info = "Provided tree.definitions are not a data.frame")
-    testthat::expect_true(!is.null(object), info = "Providing tree.definitions requires an FFTrees object")
-
-    # ToDo: Verify that
-    # 1. tree.definitions contains valid tree definitions (in appropriate format)
-    # 2. tree.definitions fit to provided data
-
-    # Change tree definitions of object by using tree.definitions:
-    object$trees$definitions <- tree.definitions
-    object$trees$n <- as.integer(nrow(tree.definitions))
-
-    message("Updated trees in 'object' by tree.definitions")  # 4debugging
-
-  }
-
+  # 2. Get FFTrees definitions for x: ------
 
   x <- fftrees_define(x, object = object)
 
 
   # 3. Apply x to training data:  ------
 
-  x <- fftrees_apply(x, mydata = "train")
+  x <- fftrees_apply(x, mydata = "train")  # apply and re-assign!
 
 
-  # 4. Rank trees by goal: ------
+  # 4. Rank trees in x by goal: ------
 
   x <- fftrees_ranktrees(x)
 
@@ -298,20 +298,20 @@ FFTrees <- function(formula = NULL,
   # 5. Apply x to test data: ------
 
   if (!is.null(x$data$test)) {
-    x <- fftrees_apply(x, mydata = "test")
+    x <- fftrees_apply(x, mydata = "test")  # apply and re-assign!
   }
 
 
-  # 6. Define trees in words: ------
+  # 6. Express trees in x in words: ------
 
   x <- fftrees_ffttowords(x,
-    mydata = "train",  # either 'train':'decide' or 'test':'predict'
-    digits = 2)
+                          mydata = "train",  # data type: 'train'->'decide' or 'test'->'predict'
+                          digits = 2)
 
 
   # 7. Fit competitive algorithms: ------
 
-  x <- fftrees_fitcomp(x = x)
+  x <- fftrees_fitcomp(x)
 
 
   # Output: ------
