@@ -109,7 +109,7 @@ Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.}
 
 \item{force}{logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.}
 
-\item{quiet}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly. Default is \code{quiet = FALSE} (i.e., show progress).}
+\item{quiet}{logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).}
 
 \item{comp, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
 }

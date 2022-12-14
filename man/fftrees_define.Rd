@@ -4,12 +4,14 @@
 \alias{fftrees_define}
 \title{Create FFT definitions}
 \usage{
-fftrees_define(x, object = NULL)
+fftrees_define(x, object = NULL, quiet = FALSE)
 }
 \arguments{
 \item{x}{The current \code{FFTrees} object (to be changed and returned).}
 
 \item{object}{An existing \code{FFTrees} object (with tree definitions).}
+
+\item{quiet}{logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).}
 }
 \value{
 An \code{FFTrees} object with tree definitions.
