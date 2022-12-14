@@ -245,7 +245,7 @@ FFTrees <- function(formula = NULL,
     object$trees$n <- as.integer(nrow(tree.definitions))
 
     if (quiet == FALSE) {
-      message("Updated trees in 'object' by 'tree.definitions'")
+      message("Updated FFTs in 'object' by 'tree.definitions'")
     }
 
   }

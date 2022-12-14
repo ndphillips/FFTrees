@@ -12,9 +12,7 @@
 #' \code{fftrees_define} uses the trees from this \code{FFTrees} object.
 #'
 #' @param x The current \code{FFTrees} object (to be changed and returned).
-#'
 #' @param object An existing \code{FFTrees} object (with tree definitions).
-#'
 #'
 #' @return An \code{FFTrees} object with tree definitions.
 #'
@@ -45,16 +43,12 @@ fftrees_define <- function(x, object = NULL) {
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
     if (!x$params$quiet) {
-      message("Using trees defined in 'object'")
+      message("Using FFTs defined in 'object'")
     }
 
   } else if (!is.null(x$params$my.tree)) {
 
     # 2. Create new FFT from verbal description: ----
-
-    if (!x$params$quiet) {
-      message("Using trees specified in 'my.tree'") # # in fftrees_grow_fan()
-    }
 
     x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
 
@@ -63,12 +57,7 @@ fftrees_define <- function(x, object = NULL) {
 
     # 3. Create new FFT by applying algorithm to data: ----
 
-    # if (!x$params$quiet) {
-    #   message("Using algorithm to grow new trees")  # in fftrees_grow_fan()
-    # }
-
     x <- fftrees_grow_fan(x)
-
 
 
   } else {
