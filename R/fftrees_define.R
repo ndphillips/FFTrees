@@ -15,8 +15,6 @@
 #'
 #' @param object An existing \code{FFTrees} object (with tree definitions).
 #'
-#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).
-#'
 #'
 #' @return An \code{FFTrees} object with tree definitions.
 #'
@@ -32,7 +30,7 @@
 #'
 #' @export
 
-fftrees_define <- function(x, object = NULL, quiet = FALSE) {
+fftrees_define <- function(x, object = NULL) {
 
   if (is.null(object) == FALSE) {
 
@@ -46,7 +44,7 @@ fftrees_define <- function(x, object = NULL, quiet = FALSE) {
     x$trees$definitions <- object$trees$definitions
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
-    if (quiet == FALSE) {
+    if (!x$params$quiet) {
       message("Using trees defined in 'object'")
     }
 
@@ -54,22 +52,24 @@ fftrees_define <- function(x, object = NULL, quiet = FALSE) {
 
     # 2. Create new FFT from verbal description: ----
 
-    x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
-
-    if (quiet == FALSE) {
-      message("Using trees specified in 'my.tree'")
+    if (!x$params$quiet) {
+      message("Using trees specified in 'my.tree'") # # in fftrees_grow_fan()
     }
+
+    x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
 
 
   } else if (x$params$algorithm %in% c("ifan", "dfan")) {
 
     # 3. Create new FFT by applying algorithm to data: ----
 
+    # if (!x$params$quiet) {
+    #   message("Using algorithm to grow new trees")  # in fftrees_grow_fan()
+    # }
+
     x <- fftrees_grow_fan(x)
 
-    if (quiet == FALSE) {
-      message("Using algorithm to grow new trees")
-    }
+
 
   } else {
 

@@ -32,9 +32,19 @@ fftrees_apply <- function(x,
 
   # Prepare: ------
 
+  # Verify inputs: ----
+
   testthat::expect_true(mydata %in% c("train", "test"))
 
-  # Get data (corresponding to mydata and newdata):
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message(paste0("Aiming to apply trees to ", mydata, " data."))
+  }
+
+
+
+  # Get data (corresponding to mydata and newdata): ----
 
   if (mydata == "train") {
 
@@ -62,16 +72,6 @@ fftrees_apply <- function(x,
 
   criterion_v <- data[[x$criterion_name]]
   criterion_n <- length(criterion_v)
-
-
-  # ToDo: Allow swapping object$ or x$trees$definitions by tree.definitions: ------
-
-  # - verify that tree.definitions contains valid FFTs and fits to current data
-  # - replace object$ or x$trees$definitions by tree.definitions
-  # - update object$ or x$trees$n
-
-  # +++ here now
-
 
   # Simplify: ----
 
@@ -327,6 +327,12 @@ fftrees_apply <- function(x,
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
     x$trees$best$test <- select_best_tree(x, data = mydata, goal = x$params$goal)
+  }
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message(paste0("Successfully applied trees to ", mydata, " data."))
   }
 
 

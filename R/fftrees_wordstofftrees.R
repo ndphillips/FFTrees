@@ -31,6 +31,12 @@
 fftrees_wordstofftrees <- function(x,
                                    my.tree) {
 
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message("Aiming to create a tree from 'my.tree'")
+  }
+
   # Parameters / options: ------
 
   directions.df <- data.frame(
@@ -255,12 +261,12 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # Set final exit to .5: ------
+  # Set final exit to .5: ----
 
   exits.v[nodes.n] <- ".5"
 
 
-  # Save result in tree.definitions: ------
+  # Save result in tree.definitions: ----
 
   x$trees$definitions <- data.frame(
     tree = 1L,  # as integer
@@ -274,6 +280,12 @@ fftrees_wordstofftrees <- function(x,
 
   x$trees$n <- 1
 
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message("Successfully created a tree from 'my.tree'")
+  }
 
   # Output: ------
 
