@@ -11,14 +11,16 @@
 #
 # Currently, it is only verified that both DFs have some cases and
 # contain the SAME names (but the content or order of variables is not checked or altered).
-# Future versions may want to verify that 'test' data is valid, given current 'train' data
-# (e.g., "test" contains all required variables of "train" to create the current FFTs).
+# Future versions may want to verify that 'test' data is valid, given current FFTs:
+# data fits to FFTs in FFTrees object (i.e., object$trees$definitions) or tree.definitions
+# (e.g., data contains all required variables to create the current FFTs).
 #
 # Output: Boolean.
 
 valid_train_test_data <- function(train_data, test_data){
 
-  # Initialize:
+  # Initialize: ----
+
   valid <- FALSE
 
   train_names <- names(train_data)
@@ -27,7 +29,9 @@ valid_train_test_data <- function(train_data, test_data){
   train_names_not_in_test <- setdiff(train_names, test_names)
   test_names_not_in_train <- setdiff(test_names,  train_names)
 
-  # Conditions:
+
+  # Conditions: ----
+
   if (nrow(train_data) < 1){
 
     msg <- paste("The 'train' data contains no cases (rows).")
@@ -58,7 +62,9 @@ valid_train_test_data <- function(train_data, test_data){
 
   }
 
-  # Output:
+
+  # Output: ----
+
   return(valid)
 
 } # valid_train_test_data().
