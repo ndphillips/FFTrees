@@ -1,18 +1,32 @@
 #' Create FFT definitions
 #'
-#' @description \code{fftrees_define} creates fast-and-frugal trees
-#' (FFTs) from provided definitions or by applying algorithms (when no definitions are provided),
-#' and returns an \code{FFTrees} object.
+#' @description \code{fftrees_define} defines fast-and-frugal trees (FFTs)
+#' either from the definitions provided or by applying algorithms (when no definitions are provided),
+#' and returns a modified \code{FFTrees} object that contains those definitions.
 #'
-#' \code{fftrees_define} usually passes passes \code{x} either
+#' In most use cases, \code{fftrees_define} passes a new \code{FFTrees} object \code{x} either
 #' to \code{\link{fftrees_grow_fan}} (to create new FFTs by applying algorithms to data) or
 #' to \code{\link{fftrees_wordstofftrees}} (if \code{my.tree} is specified).
 #'
-#' If an existing \code{FFTrees} object \code{object} is provided,
-#' \code{fftrees_define} uses the trees from this \code{FFTrees} object.
+#' If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
+#' no new FFTs are created.
+#' When both arguments are provided, \code{tree.definitions} take priority over the FFTs in an existing \code{object}.
+#' Specifically,
+#'
+#' \itemize{
+#'
+#'   \item{If \code{tree.definitions} are provided, these are assigned to the FFTs of \code{x}.}
+#'
+#'   \item{If no \code{tree.definitions} are provided, but an existing \code{FFTrees} object \code{object} is provided,
+#'   the trees from \code{object} are assigned to the FFTs of \code{x}.}
+#'
+#' }
 #'
 #' @param x The current \code{FFTrees} object (to be changed and returned).
 #' @param object An existing \code{FFTrees} object (with tree definitions).
+#' @param tree.definitions A \code{data.frame}. An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
+#' If specified, no new FFTs are created, but the tree definitions in \code{object} or \code{x} are replaced by the tree definitions provided
+#' and the current object is re-evaluated.
 #'
 #' @return An \code{FFTrees} object with tree definitions.
 #'
@@ -28,34 +42,49 @@
 #'
 #' @export
 
-fftrees_define <- function(x, object = NULL) {
+fftrees_define <- function(x,
+                           object = NULL,
+                           tree.definitions = NULL
+) {
 
-  if (is.null(object) == FALSE) {
+  # Verify inputs: ------
 
-    # 1. An existing FFTrees object is provided: ----
+  testthat::expect_s3_class(x, class = "FFTrees")
 
-    # Verify x and object:
-    testthat::expect_s3_class(x, class = "FFTrees")
+
+  # Main: Distinguish 4 use cases ------
+
+  if (!is.null(tree.definitions)) { # 1. Use tree.definitions in x: ----
+
+    # Change x by using the tree.definitions:
+    x$trees$definitions <- tree.definitions
+    x$trees$n <- as.integer(nrow(tree.definitions))
+
+    if (!x$params$quiet) {
+      message("Set FFTs in 'x' to 'tree.definitions'")
+    }
+
+
+  } else if (!is.null(object)) { # 2. Use FFTs provided in object: ----
+
+    # Verify object$trees$definitions:
     testthat::expect_true(!is.null(object$trees$definitions))
 
-    # Change object x by using the tree definitions of object:
+    # Change x by using the tree definitions of object:
     x$trees$definitions <- object$trees$definitions
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
     if (!x$params$quiet) {
-      message("Using FFTs defined in 'object'")
+      message("Set FFTs in 'x' to trees of 'object'")
     }
 
-  } else if (!is.null(x$params$my.tree)) {
 
-    # 2. Create new FFT from verbal description: ----
+  } else if (!is.null(x$params$my.tree)) { # 3. Create 1 new FFT from verbal description: ----
 
     x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
 
 
-  } else if (x$params$algorithm %in% c("ifan", "dfan")) {
-
-    # 3. Create new FFT by applying algorithm to data: ----
+  } else if (x$params$algorithm %in% c("ifan", "dfan")) { # 4. Create new FFTs by applying algorithm to data: ----
 
     x <- fftrees_grow_fan(x)
 
@@ -65,6 +94,7 @@ fftrees_define <- function(x, object = NULL) {
     stop("I don't know how to define your trees...")
 
   }
+
 
   return(x)
 

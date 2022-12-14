@@ -10,6 +10,20 @@
 #' The criterion and predictor variables are specified in \code{\link{formula}} notation.
 #' Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
 #'
+#' If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
+#' no new FFTs are created.
+#' When both arguments are provided, \code{tree.definitions} take priority over the FFTs in an existing \code{object}.
+#' Specifically,
+#'
+#' \itemize{
+#'
+#'   \item{If \code{tree.definitions} are provided, these are assigned to the FFTs of \code{x}.}
+#'
+#'   \item{If no \code{tree.definitions} are provided, but an existing \code{FFTrees} object \code{object} is provided,
+#'   the trees from \code{object} are assigned to the FFTs of \code{x}.}
+#'
+#' }
+#'
 #' @param formula formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).
 #' @param data dataframe. A training dataset.
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
@@ -46,9 +60,9 @@
 #'
 #' @param my.tree string. A string representing a verbal description of an FFT, i.e., an FFT in words.
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
-#' @param object An optional existing \code{FFTrees} object. When specified, no new trees are fitted, but existing trees are applied to \code{data} and \code{data.test}.
-#' @param tree.definitions dataframe. An optional hard-coded definition of FFTs (in the same format as in \code{object}).
-#' If specified, no new trees are created, but the tree definitions in \code{object} are replaced by the tree definitions provided and \code{object} is re-evaluated.
+#' @param object An optional existing \code{FFTrees} object. When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
+#' @param tree.definitions A \code{data.frame}. An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
+#' If specified, no new FFTs are fitted, but the tree definitions provided are used to re-evaluate the current \code{FFTrees} object.
 #'
 #' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? All TRUE by default. Options are:
 #' \code{cart} = regular (non-frugal) trees with \strong{rpart};
@@ -166,27 +180,27 @@ FFTrees <- function(formula = NULL,
                     verbose = NULL       # progress
 ) {
 
-  # 0. Preparation: ------
+  # Prepare: ------
 
   # A. Handle deprecated arguments and options: ----
 
-  if (is.null(comp) == FALSE) {
+  if (!is.null(comp)) {
     warning("The argument comp is deprecated. Use do.comp instead.")
 
     do.comp <- comp
   }
 
-  if (is.null(rank.method) == FALSE) {
+  if (!is.null(rank.method)) {
     warning("The argument rank.method is deprecated. Use algorithm instead.")
 
     algorithm <- rank.method
   }
 
-  if (is.null(store.data) == FALSE) {
+  if (!is.null(store.data)) {
     warning("The argument store.data is deprecated and ignored.")
   }
 
-  if (is.null(verbose) == FALSE) {
+  if (!is.null(verbose)) {
     warning("The argument verbose is deprecated. Use progress instead.")
 
     progress <- verbose
@@ -219,39 +233,74 @@ FFTrees <- function(formula = NULL,
     data <- data_o[train_cases, ]
     data.test <- data_o[-train_cases, ]
 
-    if (quiet == FALSE) {
+
+    # Provide user feedback: ----
+
+    if (!quiet) {
       message(
         "Splitting data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
         scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set."
       )
     }
+
   }
 
 
-  # C: Replace tree.definitions in object: ----
+  # C: Verify inputs: ----
 
-  if (is.null(tree.definitions) == FALSE){
+  if (!is.null(object)) {
 
-    # Verify:
-    testthat::expect_true(is.data.frame(data), info = "Provided tree.definitions are not a data.frame")
-    testthat::expect_true(!is.null(object), info = "Providing tree.definitions requires an FFTrees object")
+    testthat::expect_s3_class(object, class = "FFTrees")
 
-    # ToDo: Verify that
+  }
+
+  if (!is.null(tree.definitions)){
+
+    testthat::expect_true(is.data.frame(tree.definitions), info = "Provided tree.definitions are not a data.frame")
+
+    # ToDo: Verify integrity of tree definitions:
     # 1. tree.definitions contains valid tree definitions (in appropriate format)
     # 2. tree.definitions fit to provided data
 
-    # Change tree definitions of object by using tree.definitions:
-    object$trees$definitions <- tree.definitions
-    object$trees$n <- as.integer(nrow(tree.definitions))
-
-    if (quiet == FALSE) {
-      message("Updated FFTs in 'object' by 'tree.definitions'")
-    }
-
   }
 
 
-  # 1. Create a new FFTrees object x: ------
+  # The following in NOW included in use cases 1 vs. 2 of fftrees_define():  +++ here now +++
+  #
+  # D: Replace tree.definitions in object: ----
+  #
+  # if (!is.null(tree.definitions)){
+  #
+  #   # Verify:
+  #   testthat::expect_true(is.data.frame(tree.definitions), info = "Provided tree.definitions are not a data.frame")
+  #   # testthat::expect_true(!is.null(object), info = "Providing tree.definitions requires an FFTrees object")
+  #
+  #   # ToDo: Verify that
+  #   # 1. tree.definitions contains valid tree definitions (in appropriate format)
+  #   # 2. tree.definitions fit to provided data
+  #
+  #   if (!is.null(object)){ # An object has been provided:
+  #
+  #     # Change tree definitions of object by using tree.definitions:
+  #     object$trees$definitions <- tree.definitions
+  #     object$trees$n <- as.integer(nrow(tree.definitions))
+  #
+  #     if (!quiet) {
+  #       message("Updated FFTs in 'object' by 'tree.definitions'")
+  #     }
+  #
+  #   } else { # object has NOT been provided:
+  #
+  #     message("Provided 'tree.definitions' but no 'object'")
+  #
+  #   } # if (is.null(object) etc.
+  #
+  # } # if (is.null(tree.definitions) etc.
+
+
+  # Main: ------
+
+  # 1. Create a new FFTrees object x: ----
 
   x <- fftrees_create(data = data,
                       formula = formula,
@@ -281,36 +330,38 @@ FFTrees <- function(formula = NULL,
   )
 
 
-  # 2. Get FFTrees definitions for x: ------
+  # 2. Create FFT definitions for x: ----
 
-  x <- fftrees_define(x, object = object)
+  x <- fftrees_define(x,
+                      object = object,
+                      tree.definitions = tree.definitions)
 
 
-  # 3. Apply x to training data:  ------
+  # 3. Apply x to training data: ----
 
   x <- fftrees_apply(x, mydata = "train")  # apply and re-assign!
 
 
-  # 4. Rank trees in x by goal: ------
+  # 4. Rank trees in x by goal: ----
 
   x <- fftrees_ranktrees(x)
 
 
-  # 5. Apply x to test data: ------
+  # 5. Apply x to test data: ----
 
   if (!is.null(x$data$test)) {
     x <- fftrees_apply(x, mydata = "test")  # apply and re-assign!
   }
 
 
-  # 6. Express trees in x in words: ------
+  # 6. Express trees in x in words: ----
 
   x <- fftrees_ffttowords(x,
                           mydata = "train",  # data type: 'train'->'decide' or 'test'->'predict'
                           digits = 2)
 
 
-  # 7. Fit competitive algorithms: ------
+  # 7. Fit competitive algorithms: ----
 
   x <- fftrees_fitcomp(x)
 
