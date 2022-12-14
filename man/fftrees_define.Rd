@@ -4,27 +4,42 @@
 \alias{fftrees_define}
 \title{Create FFT definitions}
 \usage{
-fftrees_define(x, object = NULL)
+fftrees_define(x, object = NULL, tree.definitions = NULL)
 }
 \arguments{
 \item{x}{The current \code{FFTrees} object (to be changed and returned).}
 
 \item{object}{An existing \code{FFTrees} object (with tree definitions).}
+
+\item{tree.definitions}{A \code{data.frame}. An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
+If specified, no new FFTs are created, but the tree definitions in \code{object} or \code{x} are replaced by the tree definitions provided
+and the current object is re-evaluated.}
 }
 \value{
 An \code{FFTrees} object with tree definitions.
 }
 \description{
-\code{fftrees_define} creates fast-and-frugal trees
-(FFTs) from provided definitions or by applying algorithms (when no definitions are provided),
-and returns an \code{FFTrees} object.
+\code{fftrees_define} defines fast-and-frugal trees (FFTs)
+either from the definitions provided or by applying algorithms (when no definitions are provided),
+and returns a modified \code{FFTrees} object that contains those definitions.
 
-\code{fftrees_define} usually passes passes \code{x} either
+In most use cases, \code{fftrees_define} passes a new \code{FFTrees} object \code{x} either
 to \code{\link{fftrees_grow_fan}} (to create new FFTs by applying algorithms to data) or
 to \code{\link{fftrees_wordstofftrees}} (if \code{my.tree} is specified).
 
-If an existing \code{FFTrees} object \code{object} is provided,
-\code{fftrees_define} uses the trees from this \code{FFTrees} object.
+If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
+no new FFTs are created.
+When both arguments are provided, \code{tree.definitions} take priority over the FFTs in an existing \code{object}.
+Specifically,
+
+\itemize{
+
+  \item{If \code{tree.definitions} are provided, these are assigned to the FFTs of \code{x}.}
+
+  \item{If no \code{tree.definitions} are provided, but an existing \code{FFTrees} object \code{object} is provided,
+  the trees from \code{object} are assigned to the FFTs of \code{x}.}
+
+}
 }
 \seealso{
 \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
