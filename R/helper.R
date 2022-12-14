@@ -875,7 +875,7 @@ fact_clean <- function(data.train,
 #' allows computing cost information for the counts of corresponding classification decisions.
 #'
 #' @param data A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.
-#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
+#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
