@@ -43,7 +43,7 @@ fftrees_define <- function(x, object = NULL) {
     x$trees$definitions <- object$trees$definitions
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
-    message("Updated trees in 'x' by definitions of 'object'")  # 4debugging
+    message("Updated trees in 'x' by trees of 'object'")  # 4debugging
 
   } else if (!is.null(x$params$my.tree)) {
 
