@@ -33,6 +33,7 @@ Changes since last release:
 
 ### Details 
 
+- Removed `anova` from **stats** imports.  
 - Replaced `expect_is()` by more precise **testthat** inheritance functions. 
 - Revised vignettes. 
 
