@@ -119,7 +119,7 @@
 #' \code{\link{inwords}} for obtaining a verbal description of FFTs;
 #' \code{\link{showcues}} for plotting cue accuracies.
 #'
-#' @importFrom stats anova predict glm as.formula formula sd
+#' @importFrom stats as.formula formula glm predict sd
 #'
 #' @export
 

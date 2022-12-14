@@ -16,7 +16,7 @@
 #' \code{\link{fftrees_wordstofftrees}} for creating FFTs from verbal descriptions;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
-#' @importFrom stats anova predict glm as.formula var
+#' @importFrom stats as.formula glm predict var
 #' @importFrom dplyr near
 
 fftrees_grow_fan <- function(x,
