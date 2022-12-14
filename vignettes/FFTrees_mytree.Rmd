@@ -228,16 +228,17 @@ plot(fft_4)
 ```{r design-fft-df, echo = FALSE, eval = FALSE}
 # Modify and use an existing FFT:
 
-# Create FFTs:
+# Create original FFTs:
 fft_0 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
                  data = heart.train,                # Training data
                  data.test = heart.test,            # Testing data
-                 main = "Heart Disease",            # General label
-                 decision.labels = c("Low-Risk", "High-Risk"))  # Labels for decisions
-
+                 main = "Heart Disease (org)",      # General label
+                 decision.labels = c("LOW Risk", "HIGH Rrisk"), # Labels for decisions
+                 quiet = FALSE  # enable/suppress user feedback
+                 )
 
 # Copy object:
-fft_1 <- fft_0  
+fft_1 <- fft_0  # to keep original safe
 
 plot(fft_1, tree = 1)
 
@@ -251,10 +252,10 @@ my_fft <- fft_1$trees$definitions[1, ]  # take a row of df
 my_fft
 
 # Make some changes: 
-# Swap nodes 1 and 2 of Tree 1
-my_fft$cues <- "cp;thal;ca"
-my_fft$thresholds <- "a;rd,fd;0"  # swap according to cues
-my_fft$exits <- "0;1;0.5"         # swap according to cues
+# Swap nodes 1 and 2 of Tree 1 (and add leading/trailing spaces):
+my_fft$cues <- " cp ; thal ; ca "
+my_fft$thresholds <- " a; rd,fd ; 0 "  # swap according to cues
+my_fft$exits <- "0 ; 1 ; 0.5 "         # swap according to cues
 
 my_fft$tree <- 8  # signal new tree (with new number)
 
@@ -267,6 +268,8 @@ my_fft$tree <- 8  # signal new tree (with new number)
 old_new_fft_df <- rbind(fft_1$trees$definitions, my_fft)
 old_new_fft_df
 
+# (2) Manual replacement: ---- 
+
 # Replace definitions in FFTrees object fft_1:
 fft_1$trees$definitions <- old_new_fft_df
 fft_1$trees$n <- as.integer(nrow(old_new_fft_df))
@@ -276,8 +279,7 @@ fft_1$trees$n
 fft_1$trees$definitions  # APPEARS to have been swapped (8 trees)
 fft_1$trees$definitions[8, ]
 
-
-# Apply definition:
+# Apply changed object fft_1 to data:
 fft_2 <- fftrees_apply(fft_1, mydata = "test", newdata = heart.test)  # WORKS with new/8-th tree...
 
 fft_2$trees$definitions  # 8 tree definitions, but:
@@ -289,11 +291,40 @@ fft_2$trees$best$test  # NEW tree has the best bacc value (for "test" data)!
 
 plot(fft_2, data = "test", tree = 8)
 
+
+# (3) Automatic replacement (using FFTrees()): ---- 
+
 # +++ here now +++
+
+# Create original FFTs:
+fft_3 <- FFTrees(formula = diagnosis ~ .,           # as before
+                 object = fft_0,                    # original FFTrees object
+                 tree.definitions = old_new_fft_df, # new tree definitions (as df)
+                 data = heart.train,                # training data
+                 data.test = heart.test,            # testing data
+                 main = "Heart Disease (mod)",      # changed label
+                 decision.labels = c("low risk", "high risk")  # changed labels for decisions
+)
+
+
+plot(fft_3)
+
+fft_3$trees$definitions  # 8 trees: New FFT is now #4
+
+fft_3$trees$best
+
+plot(fft_3, data = "train", tree = "best.train")  # FFT #1
+plot(fft_3, data = "test", tree = "best.test")    # FFT #4
+
+print(fft_3, data = "test", tree = "best.test")
 
 # Use changed or new FFT object to predict same / new data:
 predict(fft_1, newdata = heartdisease, tree = 8)  # yields an ERROR in applying new/8-th tree...
 predict(fft_2, newdata = heartdisease, tree = 8)  # yields an ERROR in applying new/8-th tree...
+
+# But:
+predict(fft_3, newdata = heartdisease, tree = 4)  # WORKS, qed. 
+
 ```
 
 For details on understanding and changing tree definitions, see the section on **Tree definitions** in the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette. 
