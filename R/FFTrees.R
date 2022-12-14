@@ -253,38 +253,37 @@ FFTrees <- function(formula = NULL,
 
   # 1. Create a new FFTrees object x: ------
 
-  x <- fftrees_create(
-    data = data,
-    formula = formula,
-    data.test = data.test,
-    algorithm = algorithm,
-    goal = goal,
-    goal.chase = goal.chase,
-    goal.threshold = goal.threshold,
-    sens.w = sens.w,
-    max.levels = max.levels,
-    cost.outcomes = cost.outcomes,
-    cost.cues = cost.cues,
-    stopping.rule = stopping.rule,
-    stopping.par = stopping.par,
-    decision.labels = decision.labels,
-    main = main,
-    my.tree = my.tree,
-    repeat.cues = repeat.cues,
-    numthresh.method = numthresh.method,
-    numthresh.n = numthresh.n,
-    do.lr   = do.lr,
-    do.cart = do.cart,
-    do.svm  = do.svm,
-    do.rf   = do.rf,
-    do.comp = do.comp,
-    quiet = quiet
+  x <- fftrees_create(data = data,
+                      formula = formula,
+                      data.test = data.test,
+                      algorithm = algorithm,
+                      goal = goal,
+                      goal.chase = goal.chase,
+                      goal.threshold = goal.threshold,
+                      sens.w = sens.w,
+                      max.levels = max.levels,
+                      cost.outcomes = cost.outcomes,
+                      cost.cues = cost.cues,
+                      stopping.rule = stopping.rule,
+                      stopping.par = stopping.par,
+                      decision.labels = decision.labels,
+                      main = main,
+                      my.tree = my.tree,
+                      repeat.cues = repeat.cues,
+                      numthresh.method = numthresh.method,
+                      numthresh.n = numthresh.n,
+                      do.lr   = do.lr,
+                      do.cart = do.cart,
+                      do.svm  = do.svm,
+                      do.rf   = do.rf,
+                      do.comp = do.comp,
+                      quiet = quiet  # store in x$params$quiet
   )
 
 
   # 2. Get FFTrees definitions for x: ------
 
-  x <- fftrees_define(x, object = object, quiet = quiet)
+  x <- fftrees_define(x, object = object)
 
 
   # 3. Apply x to training data:  ------
