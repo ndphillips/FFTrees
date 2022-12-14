@@ -165,7 +165,7 @@ Here is a description of the frequency counts and corresponding statistics provi
 | `acc` | Accuracy    | The percentage of cases that were correctly classified. |
 | `ppv`  | Positive predictive value  | The percentage (or conditional probability) of positive decisions being correct (i.e., True\ + cases). |
 | `npv`  | Negative predictive value  | The percentage (or conditional probability) of negative decisions being correct (i.e., True\ - cases). |
-| `wacc`| Weighted accuracy | The weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, `sens.w = .5`). |
+| `wacc`| Weighted accuracy | The weighted average of sensitivity and specificity, where sensitivity is weighted by `sens.w` (by default, `sens.w = .50`). |
 | `sens`| Sensitivity | The percentage (or conditional probability) of true positive cases being correctly classified. |
 | `spec`| Specificity | The percentage (or conditional probability) of true negative cases being correctly classified. |
 | _Frugality_: |   |   | 
@@ -388,7 +388,7 @@ As we can see, the performance of this particular tree is pretty terrible ---\ b
 
 <!-- Hint: Defining mytree vignette -->
 
-See the [Specifying FFTs directly](FFTrees_mytree.html) vignette for more details on designing FFTs from their descriptions. 
+See the [Specifying FFTs directly](FFTrees_mytree.html) vignette for more details on designing FFTs from verbal or abstract descriptions. 
 
 
 ## Vignettes
