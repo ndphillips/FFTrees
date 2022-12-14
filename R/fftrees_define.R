@@ -15,6 +15,9 @@
 #'
 #' @param object An existing \code{FFTrees} object (with tree definitions).
 #'
+#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).
+#'
+#'
 #' @return An \code{FFTrees} object with tree definitions.
 #'
 #' @keywords internal
@@ -29,7 +32,7 @@
 #'
 #' @export
 
-fftrees_define <- function(x, object = NULL) {
+fftrees_define <- function(x, object = NULL, quiet = FALSE) {
 
   if (is.null(object) == FALSE) {
 
@@ -43,7 +46,9 @@ fftrees_define <- function(x, object = NULL) {
     x$trees$definitions <- object$trees$definitions
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
-    message("Updated trees in 'x' by trees of 'object'")  # 4debugging
+    if (quiet == FALSE) {
+      message("Using trees defined in 'object'")
+    }
 
   } else if (!is.null(x$params$my.tree)) {
 
@@ -51,11 +56,20 @@ fftrees_define <- function(x, object = NULL) {
 
     x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
 
+    if (quiet == FALSE) {
+      message("Using trees specified in 'my.tree'")
+    }
+
+
   } else if (x$params$algorithm %in% c("ifan", "dfan")) {
 
     # 3. Create new FFT by applying algorithm to data: ----
 
     x <- fftrees_grow_fan(x)
+
+    if (quiet == FALSE) {
+      message("Using algorithm to grow new trees")
+    }
 
   } else {
 
