@@ -58,7 +58,7 @@
 #' Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.
 #'
 #' @param force logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.
-#' @param quiet logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly. Default is \code{quiet = FALSE} (i.e., show progress).
+#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).
 #'
 #' @param comp,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
@@ -244,7 +244,9 @@ FFTrees <- function(formula = NULL,
     object$trees$definitions <- tree.definitions
     object$trees$n <- as.integer(nrow(tree.definitions))
 
-    message("Updated trees in 'object' by 'tree.definitions'")  # 4debugging
+    if (quiet == FALSE) {
+      message("Updated trees in 'object' by 'tree.definitions'")
+    }
 
   }
 
@@ -282,7 +284,7 @@ FFTrees <- function(formula = NULL,
 
   # 2. Get FFTrees definitions for x: ------
 
-  x <- fftrees_define(x, object = object)
+  x <- fftrees_define(x, object = object, quiet = quiet)
 
 
   # 3. Apply x to training data:  ------
