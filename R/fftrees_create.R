@@ -81,7 +81,7 @@ fftrees_create <- function(data = NULL,
   )
 
   testthat::expect_true(is.data.frame(data),
-                        info = "Object is not a dataframe"
+                        info = "data is not a dataframe"
   )
 
 
