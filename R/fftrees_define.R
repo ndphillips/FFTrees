@@ -31,26 +31,30 @@
 
 fftrees_define <- function(x, object = NULL) {
 
-  if (is.null(object) == FALSE) { # an FFTrees object is provided:
+  if (is.null(object) == FALSE) {
 
-    # Verify: x and object
+    # 1. An existing FFTrees object is provided: ----
+
+    # Verify x and object:
     testthat::expect_s3_class(x, class = "FFTrees")
     testthat::expect_true(!is.null(object$trees$definitions))
 
-    # 0. Update object x by the trees in object:
+    # Change object x by using the tree definitions of object:
     x$trees$definitions <- object$trees$definitions
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
-    # message("Updated trees in 'x' by tree definitions of 'object'")
+    message("Updated trees in 'x' by definitions of 'object'")  # 4debugging
 
   } else if (!is.null(x$params$my.tree)) {
 
-    # 1. Create FFT from verbal description:
+    # 2. Create new FFT from verbal description: ----
+
     x <- fftrees_wordstofftrees(x, my.tree = x$params$my.tree)
 
   } else if (x$params$algorithm %in% c("ifan", "dfan")) {
 
-    # 2. Create FFT by applying algorithm to data:
+    # 3. Create new FFT by applying algorithm to data: ----
+
     x <- fftrees_grow_fan(x)
 
   } else {
