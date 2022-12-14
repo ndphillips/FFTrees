@@ -7,21 +7,24 @@
 fftrees_define(x, object = NULL)
 }
 \arguments{
-\item{x}{An \code{FFTrees} object.}
+\item{x}{The current \code{FFTrees} object (to be changed and returned).}
 
-\item{object}{An \code{FFTrees} object.}
+\item{object}{An existing \code{FFTrees} object (with tree definitions).}
 }
 \value{
 An \code{FFTrees} object with tree definitions.
 }
 \description{
-\code{fftrees_define} creates definitions of fast-and-frugal trees
-(FFTs, as an \code{FFTrees} object).
+\code{fftrees_define} creates fast-and-frugal trees
+(FFTs) from provided definitions or by applying algorithms (when no definitions are provided),
+and returns an \code{FFTrees} object.
 
 \code{fftrees_define} usually passes passes \code{x} either
 to \code{\link{fftrees_grow_fan}} (to create new FFTs by applying algorithms to data) or
 to \code{\link{fftrees_wordstofftrees}} (if \code{my.tree} is specified).
-If \code{object} is provided, \code{fftrees_define} uses the trees from this \code{FFTrees} object.
+
+If an existing \code{FFTrees} object \code{object} is provided,
+\code{fftrees_define} uses the trees from this \code{FFTrees} object.
 }
 \seealso{
 \code{\link{fftrees_create}} for creating \code{FFTrees} objects;

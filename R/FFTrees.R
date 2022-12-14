@@ -15,7 +15,7 @@
 #' @param data.test dataframe. An optional testing dataset with the same structure as data.
 #' @param algorithm character. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
 #' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
-#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}.
+#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.
 #'
 #' @param cost.outcomes A list of length 4 with names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'} specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20, respectively, while correct decisions have no costs.
@@ -46,7 +46,9 @@
 #'
 #' @param my.tree string. A string representing a verbal description of an FFT, i.e., an FFT in words.
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
-#' @param tree.definitions dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.
+#' @param object An optional existing \code{FFTrees} object. When specified, no new trees are fitted, but existing trees are applied to \code{data} and \code{data.test}.
+#' @param tree.definitions dataframe. An optional hard-coded definition of FFTs (in the same format as in \code{object}).
+#' If specified, no new trees are created, but the tree definitions in \code{object} are replaced by the tree definitions provided and \code{object} is re-evaluated.
 #'
 #' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? All TRUE by default. Options are:
 #' \code{cart} = regular (non-frugal) trees with \strong{rpart};
@@ -55,9 +57,8 @@
 #' \code{svm} = support vector machines with \strong{e1071}.
 #' Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.
 #'
-#' @param object FFTrees. An optional existing \code{FFTrees} object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.
 #' @param force logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.
-#' @param quiet logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly. Default is \code{quiet = FALSE} (i.e., show progress).
+#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).
 #'
 #' @param comp,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
@@ -118,79 +119,85 @@
 #' \code{\link{inwords}} for obtaining a verbal description of FFTs;
 #' \code{\link{showcues}} for plotting cue accuracies.
 #'
-#' @importFrom stats anova predict glm as.formula formula sd
+#' @importFrom stats as.formula formula glm predict sd
 #'
 #' @export
 
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
+                    #
                     algorithm = "ifan",
                     max.levels = NULL,
-                    sens.w = .5,
+                    sens.w = .50,
                     cost.outcomes = NULL,
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
+                    #
                     goal = NULL,  # (default set in fftrees_create.R)
                     goal.chase = NULL,  # (default set in fftrees_create.R)
                     goal.threshold = "bacc",  # default
                     numthresh.method = "o",
                     numthresh.n = 10,
+                    #
                     decision.labels = c("False", "True"), # in 0:left/1:right order!
                     main = NULL,
                     train.p = 1,
                     rounding = NULL,
                     repeat.cues = TRUE,
+                    #
                     my.tree = NULL,
-                    tree.definitions = NULL,
+                    object = NULL,
+                    tree.definitions = NULL,  # Seems not used anymore? ToDo: Use to modify object$trees$definitions.
+                    #
                     do.comp = TRUE,
                     do.cart = TRUE,
                     do.lr = TRUE,
                     do.rf = TRUE,
                     do.svm = TRUE,
-                    object = NULL,
-                    force = FALSE,
+                    #
+                    force = FALSE,  # Seems not used anymore? ToDo: deprecate.
                     quiet = FALSE,
-                    # Deprecated args:     Use instead:
+                    # Deprecated args:   Use instead:
                     comp = NULL,         # do.comp
                     rank.method = NULL,  # algorithm
                     store.data = NULL,   # (none)
                     verbose = NULL       # progress
 ) {
 
-  # Preparation: ------
+  # 0. Preparation: ------
 
-  # a. Handle deprecated arguments and options: ----
-  {
-    if (is.null(comp) == FALSE) {
-      warning("The argument comp is deprecated. Use do.comp instead.")
+  # A. Handle deprecated arguments and options: ----
 
-      do.comp <- comp
-    }
+  if (is.null(comp) == FALSE) {
+    warning("The argument comp is deprecated. Use do.comp instead.")
 
-    if (is.null(rank.method) == FALSE) {
-      warning("The argument rank.method is deprecated. Use algorithm instead.")
-
-      algorithm <- rank.method
-    }
-
-    if (is.null(store.data) == FALSE) {
-      warning("The argument store.data is deprecated and ignored.")
-    }
-
-    if (is.null(verbose) == FALSE) {
-      warning("The argument verbose is deprecated. Use progress instead.")
-
-      progress <- verbose
-    }
-
-    # Deprecated options:
-
-    if (any(c("max", "zigzag") %in% algorithm)) {
-      stop("The 'max' and 'zigzag' algorithms are no longer supported.")
-    }
+    do.comp <- comp
   }
+
+  if (is.null(rank.method) == FALSE) {
+    warning("The argument rank.method is deprecated. Use algorithm instead.")
+
+    algorithm <- rank.method
+  }
+
+  if (is.null(store.data) == FALSE) {
+    warning("The argument store.data is deprecated and ignored.")
+  }
+
+  if (is.null(verbose) == FALSE) {
+    warning("The argument verbose is deprecated. Use progress instead.")
+
+    progress <- verbose
+  }
+
+  # Deprecated options:
+
+  if (any(c("max", "zigzag") %in% algorithm)) {
+    stop("The 'max' and 'zigzag' algorithms are no longer supported.")
+  }
+
 
   # Convert factor NA to new missing factor level:
   # data <- data %>%
@@ -198,7 +205,7 @@ FFTrees <- function(formula = NULL,
   #   dplyr::mutate_if(is.character, addNA)
 
 
-  # b. Training / Test split: ----
+  # B. Training / Test split: ----
 
   if (train.p < 1 && is.null(data.test)) {
 
@@ -221,71 +228,91 @@ FFTrees <- function(formula = NULL,
   }
 
 
-  # 1. Create an FFTrees object: ------
+  # C: Replace tree.definitions in object: ----
 
-  x <- fftrees_create(
-    data = data,
-    formula = formula,
-    data.test = data.test,
-    algorithm = algorithm,
-    goal = goal,
-    goal.chase = goal.chase,
-    goal.threshold = goal.threshold,
-    sens.w = sens.w,
-    max.levels = max.levels,
-    cost.outcomes = cost.outcomes,
-    cost.cues = cost.cues,
-    stopping.rule = stopping.rule,
-    stopping.par = stopping.par,
-    decision.labels = decision.labels,
-    main = main,
-    my.tree = my.tree,
-    repeat.cues = repeat.cues,
-    numthresh.method = numthresh.method,
-    numthresh.n = numthresh.n,
-    do.lr   = do.lr,
-    do.cart = do.cart,
-    do.svm  = do.svm,
-    do.rf   = do.rf,
-    do.comp = do.comp,
-    quiet = quiet
+  if (is.null(tree.definitions) == FALSE){
+
+    # Verify:
+    testthat::expect_true(is.data.frame(data), info = "Provided tree.definitions are not a data.frame")
+    testthat::expect_true(!is.null(object), info = "Providing tree.definitions requires an FFTrees object")
+
+    # ToDo: Verify that
+    # 1. tree.definitions contains valid tree definitions (in appropriate format)
+    # 2. tree.definitions fit to provided data
+
+    # Change tree definitions of object by using tree.definitions:
+    object$trees$definitions <- tree.definitions
+    object$trees$n <- as.integer(nrow(tree.definitions))
+
+    if (quiet == FALSE) {
+      message("Updated FFTs in 'object' by 'tree.definitions'")
+    }
+
+  }
+
+
+  # 1. Create a new FFTrees object x: ------
+
+  x <- fftrees_create(data = data,
+                      formula = formula,
+                      data.test = data.test,
+                      algorithm = algorithm,
+                      goal = goal,
+                      goal.chase = goal.chase,
+                      goal.threshold = goal.threshold,
+                      sens.w = sens.w,
+                      max.levels = max.levels,
+                      cost.outcomes = cost.outcomes,
+                      cost.cues = cost.cues,
+                      stopping.rule = stopping.rule,
+                      stopping.par = stopping.par,
+                      decision.labels = decision.labels,
+                      main = main,
+                      my.tree = my.tree,
+                      repeat.cues = repeat.cues,
+                      numthresh.method = numthresh.method,
+                      numthresh.n = numthresh.n,
+                      do.lr   = do.lr,
+                      do.cart = do.cart,
+                      do.svm  = do.svm,
+                      do.rf   = do.rf,
+                      do.comp = do.comp,
+                      quiet = quiet  # store in x$params$quiet
   )
 
 
-  # 2. Get FFTrees definitions: ------
+  # 2. Get FFTrees definitions for x: ------
 
   x <- fftrees_define(x, object = object)
 
 
-  # 3. Apply to training data:  ------
+  # 3. Apply x to training data:  ------
 
-  x <- fftrees_apply(x, mydata = "train")
+  x <- fftrees_apply(x, mydata = "train")  # apply and re-assign!
 
 
-  # 4. Rank trees by goal: ------
+  # 4. Rank trees in x by goal: ------
 
   x <- fftrees_ranktrees(x)
 
 
-  # 5. Apply to test data: ------
+  # 5. Apply x to test data: ------
 
   if (!is.null(x$data$test)) {
-    x <- fftrees_apply(x, mydata = "test")
+    x <- fftrees_apply(x, mydata = "test")  # apply and re-assign!
   }
 
 
-  # 6. Define trees in words: ------
+  # 6. Express trees in x in words: ------
 
-  x <- fftrees_ffttowords(
-    x = x,
-    mydata = "train",  # either 'train':'decide' or 'test':'predict'
-    digits = 2
-  )
+  x <- fftrees_ffttowords(x,
+                          mydata = "train",  # data type: 'train'->'decide' or 'test'->'predict'
+                          digits = 2)
 
 
   # 7. Fit competitive algorithms: ------
 
-  x <- fftrees_fitcomp(x = x)
+  x <- fftrees_fitcomp(x)
 
 
   # Output: ------
@@ -299,5 +326,7 @@ FFTrees <- function(formula = NULL,
 
 # - Update list of elements (to new hiearchical structure of FFTrees object).
 # - Is the store.data argument still being used? If not, remove...
+# - Is the tree.definitions argument used anywhere?  If not, why not?
+# - Deprecate unused force argument.
 
 # eof.

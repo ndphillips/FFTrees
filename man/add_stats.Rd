@@ -14,7 +14,7 @@ add_stats(
 \arguments{
 \item{data}{A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.}
 
-\item{sens.w}{numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).}
+\item{sens.w}{numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.}
 
 \item{cost.each}{numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).}
 

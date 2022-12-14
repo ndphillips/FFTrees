@@ -29,6 +29,7 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 
 # FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
+
 <!-- Status badges: --> 
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)

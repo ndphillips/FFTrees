@@ -27,13 +27,13 @@ FFTrees(
   rounding = NULL,
   repeat.cues = TRUE,
   my.tree = NULL,
+  object = NULL,
   tree.definitions = NULL,
   do.comp = TRUE,
   do.cart = TRUE,
   do.lr = TRUE,
   do.rf = TRUE,
   do.svm = TRUE,
-  object = NULL,
   force = FALSE,
   quiet = FALSE,
   comp = NULL,
@@ -53,7 +53,7 @@ FFTrees(
 
 \item{max.levels}{integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
 
-\item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity. Only relevant when \code{goal = 'wacc'}.}
+\item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.}
 
 \item{cost.outcomes}{A list of length 4 with names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'} specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20, respectively, while correct decisions have no costs.}
@@ -95,7 +95,10 @@ Default: \code{goal.threshold = "bacc"}.}
 \item{my.tree}{string. A string representing a verbal description of an FFT, i.e., an FFT in words.
 For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
 
-\item{tree.definitions}{dataframe. An optional hard-coded definition of trees (see details below). If specified, no new trees are created.}
+\item{object}{An optional existing \code{FFTrees} object. When specified, no new trees are fitted, but existing trees are applied to \code{data} and \code{data.test}.}
+
+\item{tree.definitions}{dataframe. An optional hard-coded definition of FFTs (in the same format as in \code{object}).
+If specified, no new trees are created, but the tree definitions in \code{object} are replaced by the tree definitions provided and \code{object} is re-evaluated.}
 
 \item{do.comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? All TRUE by default. Options are:
 \code{cart} = regular (non-frugal) trees with \strong{rpart};
@@ -104,11 +107,9 @@ For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict F
 \code{svm} = support vector machines with \strong{e1071}.
 Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.}
 
-\item{object}{FFTrees. An optional existing \code{FFTrees} object. When specified, no new trees are fitted and the existing trees are applied to \code{data} and \code{data.test}.}
-
 \item{force}{logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.}
 
-\item{quiet}{logical. Should progress reports be printed? Can be helpful for diagnosis when the function is running slowly. Default is \code{quiet = FALSE} (i.e., show progress).}
+\item{quiet}{logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).}
 
 \item{comp, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
 }
