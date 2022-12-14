@@ -61,7 +61,7 @@ fftrees_define <- function(x,
     x$trees$n <- as.integer(nrow(tree.definitions))
 
     if (!x$params$quiet) {
-      message("Set FFTs in 'x' to 'tree.definitions'")
+      message("Using FFTs of 'tree.definitions' as current trees")
     }
 
 
@@ -75,7 +75,7 @@ fftrees_define <- function(x,
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
     if (!x$params$quiet) {
-      message("Set FFTs in 'x' to trees of 'object'")
+      message("Using FFTs of 'object' as current trees")
     }
 
 
