@@ -379,6 +379,98 @@ print(fft_5, data = "test", tree = "best.test")
 ```
 
 
+<!-- Demo: Create all permutations of cues (i.e., orders of a given tree): -->
+
+```{r manual-tree-defs, echo = FALSE, eval = FALSE}
+# Create FFTs by algorithm:
+fft_0 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 main = "Heart Disease (auto)",      # General label
+                 decision.labels = c("low risk", "high risk"), # Labels for decisions
+                 quiet = FALSE  # enable/suppress user feedback
+                 )
+
+print(fft_0, tree = "best.train", data = "train")
+plot(fft_0, tree = "best.train", data = "train")
+plot(fft_0, tree = "best.test", data = "test")
+
+# Inspect trees:
+fft_0$trees$definitions
+fft_0$trees$best
+
+# FFT #1:
+fft_0$trees$definitions[1, ]
+
+# Re-create FFT #1:
+my_fft_df <- data.frame(tree = c(1),
+                        nodes = c(3),
+                        classes = c("c; c; n"),
+                        cues = c("thal; cp; ca"),
+                        directions = c("=; =; >"),
+                        thresholds = c("rd,fd; a; 0"),
+                        exits = c("1; 0; 0.5"),
+                        stringsAsFactors = FALSE
+)
+
+
+
+# Re-evaluate FFT on same data:
+fft_1 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 tree.definitions = my_fft_df,      # provide definition (as df)
+                 main = "Heart Disease (manual)"   # new label
+                 )
+
+fft_1
+
+print(fft_1, tree = "best.train", data = "train")
+plot(fft_1, tree = "best.train", data = "train")
+plot(fft_1, tree = "best.test", data = "test")
+
+# Inspect trees:
+fft_1$trees$definitions
+fft_1$trees$best
+
+
+# Re-create FFT #1 and permutations of cue orders:
+my_fft_df_2 <- data.frame(tree = c(1, 2, 3),
+                          nodes = c(3, 3, 3), 
+                          classes = c("c; c; n", "c; n; c", "n; c; c"),
+                          cues = c("thal; cp; ca", "thal; ca; cp", "ca; thal; cp"),
+                          directions = c("=; =; >", "=; >; =", ">; =; ="),
+                          thresholds = c("rd,fd; a; 0", "rd,fd; 0; a", "0; rd,fd; a"),
+                          exits = c("1; 0; 0.5", "1; 1; 0.5", "0; 1; 0.5"),
+                          stringsAsFactors = FALSE
+)
+my_fft_df_2
+
+# Re-evaluate FFTs on same data:
+fft_2 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 tree.definitions = my_fft_df_2,    # provide definitions (as df)
+                 main = "Heart Disease (manual)"   # new label
+                 )
+
+fft_2
+
+# Inspect trees:
+fft_2$trees$definitions  # Note: FFTs #2 and #3 swapped positions!
+fft_2$trees$best
+
+fft_2$trees$stats
+
+plot(fft_2, tree = 2, data = "train")
+plot(fft_2, tree = 2, data = "test")
+
+plot(fft_2, tree = 3, data = "train")
+plot(fft_2, tree = 3, data = "test")
+```
+
+
+
 For details on understanding and changing tree definitions, see the section on **Tree definitions** in the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette. 
 
 
