@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9009
+## 1.7.5.9010
 
 <!-- Development version: --> 
 
@@ -15,8 +15,8 @@ Changes since last release:
 
 ### Major changes
 
+- Enabled manually defining FFTs with `tree.definitions` or using FFTs of `object` in `FFTrees()`. 
 - Enabled setting `goal = 'dprime'` to select FFTs in `FFTrees()`. 
-- Trimmed white space from elements in tree definitions (in `fftrees_apply.R`).
 
 <!-- Blank line. --> 
 
@@ -28,6 +28,7 @@ Changes since last release:
     - Bug fix: Removed clipping of titles and labels.
     - Tweaked spacing parameters.
 
+- Trimmed white space from elements in tree definitions (in `fftrees_apply.R`). 
 - Added user feedback when `quiet = FALSE`. 
 
 <!-- Blank line. --> 
@@ -348,6 +349,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-12-14.]
+[File `NEWS.md` last updated on 2022-12-15.]
 
 <!-- eof. -->
