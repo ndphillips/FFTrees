@@ -34,7 +34,7 @@ fftrees_wordstofftrees <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message("Aiming to create an FFT from 'my.tree'")
+    message("Aiming to create an FFT from 'my.tree' description:")
   }
 
   # Parameters / options: ------
@@ -284,7 +284,7 @@ fftrees_wordstofftrees <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message("Successfully created FFT from 'my.tree'")
+    message("Successfully created an FFT from 'my.tree' description.")
   }
 
   # Output: ------

@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.7.5.9009 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7.5.9010 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -126,8 +126,14 @@ evaluate their predictive performance on the `heart.test` data:
     #> Setting 'goal.chase = bacc'
     #> Setting 'goal.threshold = bacc'
     #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
-    #> Growing FFTs with ifan:
-    #> Fitting other algorithms for comparison (disable with do.comp = FALSE) ...
+    #> Aiming to grow FFTs with ifan:
+    #> Successfully created 7 FFTs with ifan.
+    #> Aiming to apply FFTs to train data:
+    #> Successfully applied FFTs to train data.
+    #> Aiming to apply FFTs to test data:
+    #> Successfully applied FFTs to test data.
+    #> Aiming to fit other algorithms for comparison (disable with do.comp = FALSE):
+    #> Successfully fitted other algorithms for comparison.
 
 -   Printing an `FFTrees` object shows basic information and summary
     statistics (on the best training tree, FFT \#1):
@@ -321,6 +327,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-12-13.\]
+\[File `README.Rmd` last updated on 2022-12-15.\]
 
 <!-- eof. -->

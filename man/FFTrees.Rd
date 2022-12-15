@@ -34,9 +34,9 @@ FFTrees(
   do.lr = TRUE,
   do.rf = TRUE,
   do.svm = TRUE,
-  force = FALSE,
   quiet = FALSE,
   comp = NULL,
+  force = NULL,
   rank.method = NULL,
   store.data = NULL,
   verbose = NULL
@@ -95,10 +95,10 @@ Default: \code{goal.threshold = "bacc"}.}
 \item{my.tree}{string. A string representing a verbal description of an FFT, i.e., an FFT in words.
 For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
 
-\item{object}{An optional existing \code{FFTrees} object. When specified, no new trees are fitted, but existing trees are applied to \code{data} and \code{data.test}.}
+\item{object}{An optional existing \code{FFTrees} object. When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.}
 
-\item{tree.definitions}{dataframe. An optional hard-coded definition of FFTs (in the same format as in \code{object}).
-If specified, no new trees are created, but the tree definitions in \code{object} are replaced by the tree definitions provided and \code{object} is re-evaluated.}
+\item{tree.definitions}{A \code{data.frame}. An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
+If specified, no new FFTs are fitted, but the tree definitions provided are used to re-evaluate the current \code{FFTrees} object.}
 
 \item{do.comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be created for comparison? All TRUE by default. Options are:
 \code{cart} = regular (non-frugal) trees with \strong{rpart};
@@ -107,11 +107,9 @@ If specified, no new trees are created, but the tree definitions in \code{object
 \code{svm} = support vector machines with \strong{e1071}.
 Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.}
 
-\item{force}{logical. Setting \code{force = TRUE} forces some parameters (like goal) to be as specified by the user even when the algorithm thinks those specifications don't make sense. Default is \code{force = FALSE}.}
-
 \item{quiet}{logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).}
 
-\item{comp, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
+\item{comp, force, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
 }
 \value{
 An \code{FFTrees} object with the following elements:
@@ -121,8 +119,8 @@ An \code{FFTrees} object with the following elements:
   \item{formula}{The \code{\link{formula}} specified when creating the FFTs.}
   \item{trees}{A list of FFTs created, with further details contained in \code{n}, \code{best}, \code{definitions}, \code{inwords}, \code{stats}, \code{level_stats}, and \code{decisions}.}
   \item{data}{The original training and test data (if available).}
-  \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}).}
-  \item{competition}{Models and classification statistics for competitive classification algorithms: Regularized logistic regression, CART, and random forest.}
+  \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}, \code{sens.w}, as well as various thresholds, stopping rule, and cost parameters).}
+  \item{competition}{Models and classification statistics for competitive classification algorithms: Logistic regression, CART, random forests RF, and SVM.}
   \item{cues}{A list of cue information, with further details contained in \code{thresholds} and \code{stats}.}
 }
 }
@@ -136,6 +134,20 @@ that can then be printed, plotted, and examined further.
 
 The criterion and predictor variables are specified in \code{\link{formula}} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
+
+If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
+no new FFTs are created.
+When both arguments are provided, \code{tree.definitions} take priority over the FFTs in an existing \code{object}.
+Specifically,
+
+\itemize{
+
+  \item{If \code{tree.definitions} are provided, these are assigned to the FFTs of \code{x}.}
+
+  \item{If no \code{tree.definitions} are provided, but an existing \code{FFTrees} object \code{object} is provided,
+  the trees from \code{object} are assigned to the FFTs of \code{x}.}
+
+}
 
 Create and evaluate fast-and-frugal trees (FFTs).
 }

@@ -223,7 +223,9 @@ plot(fft_4)
 
 <!-- ToDo: 2nd way to specify an FFT:  -->
 
-<!--       2. as a data frame using the `tree.definitions` argument  -->
+<!-- 2. as a data frame using the `tree.definitions` argument  -->
+
+<!-- A. tree.definitions and object: -->
 
 ```{r design-fft-df, echo = FALSE, eval = FALSE}
 # Modify and use an existing FFT:
@@ -254,7 +256,7 @@ my_fft
 # Make some changes: 
 # Swap nodes 1 and 2 of Tree 1 (and add leading/trailing spaces):
 my_fft$cues <- " cp ; thal ; ca "
-my_fft$thresholds <- " a; rd,fd ; 0 "  # swap according to cues
+my_fft$thresholds <- " a ; rd,fd ; 0 "  # swap according to cues
 my_fft$exits <- "0 ; 1 ; 0.5 "         # swap according to cues
 
 my_fft$tree <- 8  # signal new tree (with new number)
@@ -265,14 +267,14 @@ my_fft$tree <- 8  # signal new tree (with new number)
 # fft_1$trees$definitions[8, ] <- my_fft
 
 # # OR (combine tree definitions as rows of data frames):
-old_new_fft_df <- rbind(fft_1$trees$definitions, my_fft)
-old_new_fft_df
+my_fft_df <- rbind(fft_1$trees$definitions, my_fft)
+my_fft_df
 
 # (2) Manual replacement: ---- 
 
 # Replace definitions in FFTrees object fft_1:
-fft_1$trees$definitions <- old_new_fft_df
-fft_1$trees$n <- as.integer(nrow(old_new_fft_df))
+fft_1$trees$definitions <- my_fft_df
+fft_1$trees$n <- as.integer(nrow(my_fft_df))
 
 # HAS fft_1 been changed?
 fft_1$trees$n
@@ -296,36 +298,178 @@ plot(fft_2, data = "test", tree = 8)
 
 # +++ here now +++
 
-# Create original FFTs:
-fft_3 <- FFTrees(formula = diagnosis ~ .,           # as before
-                 object = fft_0,                    # original FFTrees object
-                 tree.definitions = old_new_fft_df, # new tree definitions (as df)
-                 data = heart.train,                # training data
-                 data.test = heart.test,            # testing data
-                 main = "Heart Disease (mod)",      # changed label
+# Cover 3 cases: 
+
+# C. Provide both an existing FFTrees object and tree.definitions: 
+fft_3 <- FFTrees(formula = diagnosis ~ .,            # as before
+                 object = fft_1,                     # some valid FFTrees object 
+                 tree.definitions = my_fft_df,       # new tree definitions (as df)
+                 data = heart.train,                 # training data
+                 data.test = heart.test,             # testing data
+                 main = "Heart Disease (manual 1)",  # changed label
                  decision.labels = c("low risk", "high risk")  # changed labels for decisions
 )
 
+# => tree.definitions are being used, object is ignored!
 
 plot(fft_3)
 
 fft_3$trees$definitions  # 8 trees: New FFT is now #4
 
-fft_3$trees$best
+fft_3$trees$best  # FFT #4 is best test tree!
 
 plot(fft_3, data = "train", tree = "best.train")  # FFT #1
 plot(fft_3, data = "test", tree = "best.test")    # FFT #4
 
 print(fft_3, data = "test", tree = "best.test")
 
-# Use changed or new FFT object to predict same / new data:
-predict(fft_1, newdata = heartdisease, tree = 8)  # yields an ERROR in applying new/8-th tree...
-predict(fft_2, newdata = heartdisease, tree = 8)  # yields an ERROR in applying new/8-th tree...
-
-# But:
+# Use new FFT object to predict same / new data:
 predict(fft_3, newdata = heartdisease, tree = 4)  # WORKS, qed. 
+```
+
+<!-- A. Provide tree.definitions but no object: -->
+
+```{r design-fft-df-2, echo = FALSE, eval = FALSE}
+# Provide tree.definitions but no object:
+fft_4 <- FFTrees(formula = diagnosis ~ .,            # as before
+                 object = NULL,                      # NO FFTrees object
+                 tree.definitions = my_fft_df,       # new tree definitions (as df)
+                 data = heart.train,                 # training data
+                 data.test = heart.test,             # testing data
+                 main = "Heart Disease (manual 2)",  # changed label
+                 decision.labels = c("low R", "high R")  # changed labels for decisions
+)
+
+fft_4
+
+fft_4$trees$definitions  # 8 trees: New FFT is #4
+
+fft_4$trees$best  # FFT #4 is best test tree!
+
+plot(fft_4, data = "train", tree = "best.train")  # FFT #1
+plot(fft_4, data = "test", tree = "best.test")    # FFT #4
+
+print(fft_4, data = "test", tree = "best.test")
 
 ```
+
+<!-- B. Provide an object but no tree.definitions: -->
+
+```{r design-fft-df-3, echo = FALSE, eval = FALSE}
+# Provide tree.definitions but no object:
+fft_5 <- FFTrees(formula = diagnosis ~ .,            # as before
+                 object = fft_3,                     # an existing FFTrees object
+                 tree.definitions = NULL,            # NO tree definitions (as df)
+                 data = heart.train,                 # training data
+                 data.test = heart.test,             # testing data
+                 main = "Heart Disease (manual 2)",  # changed label
+                 decision.labels = c("low R", "high R")  # changed labels for decisions
+)
+
+fft_5
+
+fft_5$trees$definitions  # 8 trees: New FFT is #4
+
+fft_5$trees$best  # FFT #4 is best test tree!
+
+plot(fft_5, data = "train", tree = "best.train")  # FFT #1
+plot(fft_5, data = "test", tree = "best.test")    # FFT #4
+
+print(fft_5, data = "test", tree = "best.test")
+```
+
+
+<!-- Demo: Create all permutations of cues (i.e., orders of a given tree): -->
+
+```{r manual-tree-defs, echo = FALSE, eval = FALSE}
+# Create FFTs by algorithm:
+fft_0 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 main = "Heart Disease (auto)",      # General label
+                 decision.labels = c("low risk", "high risk"), # Labels for decisions
+                 quiet = FALSE  # enable/suppress user feedback
+                 )
+
+print(fft_0, tree = "best.train", data = "train")
+plot(fft_0, tree = "best.train", data = "train")
+plot(fft_0, tree = "best.test", data = "test")
+
+# Inspect trees:
+fft_0$trees$definitions
+fft_0$trees$best
+
+# FFT #1:
+fft_0$trees$definitions[1, ]
+
+# Re-create FFT #1:
+my_fft_df <- data.frame(tree = c(1),
+                        nodes = c(3),
+                        classes = c("c; c; n"),
+                        cues = c("thal; cp; ca"),
+                        directions = c("=; =; >"),
+                        thresholds = c("rd,fd; a; 0"),
+                        exits = c("1; 0; 0.5"),
+                        stringsAsFactors = FALSE
+)
+
+
+
+# Re-evaluate FFT on same data:
+fft_1 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 tree.definitions = my_fft_df,      # provide definition (as df)
+                 main = "Heart Disease (manual)"   # new label
+                 )
+
+fft_1
+
+print(fft_1, tree = "best.train", data = "train")
+plot(fft_1, tree = "best.train", data = "train")
+plot(fft_1, tree = "best.test", data = "test")
+
+# Inspect trees:
+fft_1$trees$definitions
+fft_1$trees$best
+
+
+# Re-create FFT #1 and permutations of cue orders:
+my_fft_df_2 <- data.frame(tree = c(1, 2, 3),
+                          nodes = c(3, 3, 3), 
+                          classes = c("c; c; n", "c; n; c", "n; c; c"),
+                          cues = c("thal; cp; ca", "thal; ca; cp", "ca; thal; cp"),
+                          directions = c("=; =; >", "=; >; =", ">; =; ="),
+                          thresholds = c("rd,fd; a; 0", "rd,fd; 0; a", "0; rd,fd; a"),
+                          exits = c("1; 0; 0.5", "1; 1; 0.5", "0; 1; 0.5"),
+                          stringsAsFactors = FALSE
+)
+my_fft_df_2
+
+# Re-evaluate FFTs on same data:
+fft_2 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+                 data = heart.train,                # Training data
+                 data.test = heart.test,            # Testing data
+                 tree.definitions = my_fft_df_2,    # provide definitions (as df)
+                 main = "Heart Disease (manual)"   # new label
+                 )
+
+fft_2
+
+# Inspect trees:
+fft_2$trees$definitions  # Note: FFTs #2 and #3 swapped positions!
+fft_2$trees$best
+
+fft_2$trees$stats
+
+plot(fft_2, tree = 2, data = "train")
+plot(fft_2, tree = 2, data = "test")
+
+plot(fft_2, tree = 3, data = "train")
+plot(fft_2, tree = 3, data = "test")
+```
+
+
 
 For details on understanding and changing tree definitions, see the section on **Tree definitions** in the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette. 
 

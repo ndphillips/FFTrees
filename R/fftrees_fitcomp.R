@@ -56,9 +56,12 @@ fftrees_fitcomp <- function(x) {
 
   # B. Competition: ------
 
+
+  # Provide user feedback: ----
+
   if (do.lr | do.cart | do.rf | do.svm) {
     if (!x$params$quiet) {
-      message("Fitting other algorithms for comparison (disable with do.comp = FALSE) ...")
+      message("Aiming to fit other algorithms for comparison (disable with do.comp = FALSE):")
     }
   }
 
@@ -196,6 +199,15 @@ fftrees_fitcomp <- function(x) {
                            dplyr::mutate(algorithm = "svm") %>%
                            dplyr::mutate(cost_cues = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
+    }
+  }
+
+
+  # Provide user feedback: ----
+
+  if (do.lr | do.cart | do.rf | do.svm) {
+    if (!x$params$quiet) {
+      message("Successfully fitted other algorithms for comparison.")
     }
   }
 

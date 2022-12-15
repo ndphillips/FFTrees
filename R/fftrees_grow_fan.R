@@ -533,7 +533,7 @@ fftrees_grow_fan <- function(x,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    message(paste0("Successfully created FFTs with ", x$params$algorithm, "."))
+    message(paste0("Successfully created ", x$trees$n, " FFTs with ", x$params$algorithm, "."))
   }
 
 
