@@ -61,7 +61,7 @@ fftrees_fitcomp <- function(x) {
 
   if (do.lr | do.cart | do.rf | do.svm) {
     if (!x$params$quiet) {
-      message("Aiming to fit other algorithms for comparison (disable with do.comp = FALSE)")
+      message("Aiming to fit other algorithms for comparison (disable with do.comp = FALSE):")
     }
   }
 
@@ -207,7 +207,7 @@ fftrees_fitcomp <- function(x) {
 
   if (do.lr | do.cart | do.rf | do.svm) {
     if (!x$params$quiet) {
-      message("Successfully fitted other algorithms for comparison")
+      message("Successfully fitted other algorithms for comparison.")
     }
   }
 

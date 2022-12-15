@@ -52,20 +52,20 @@ fftrees_define <- function(x,
   testthat::expect_s3_class(x, class = "FFTrees")
 
 
-  # Main: Distinguish 4 use cases ------
+  # Main: Distinguish between 4 use cases ------
 
-  if (!is.null(tree.definitions)) { # 1. Use tree.definitions in x: ----
+  if (!is.null(tree.definitions)) { # 1. Use FFTs from tree.definitions: ----
 
     # Change x by using the tree.definitions:
     x$trees$definitions <- tree.definitions
     x$trees$n <- as.integer(nrow(tree.definitions))
 
     if (!x$params$quiet) {
-      message("Using FFTs of 'tree.definitions' as current trees")
+      message(paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees."))
     }
 
 
-  } else if (!is.null(object)) { # 2. Use FFTs provided in object: ----
+  } else if (!is.null(object)) { # 2. Use FFTs from object: ----
 
     # Verify object$trees$definitions:
     testthat::expect_true(!is.null(object$trees$definitions))
@@ -75,7 +75,7 @@ fftrees_define <- function(x,
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
     if (!x$params$quiet) {
-      message("Using FFTs of 'object' as current trees")
+      message(paste0("Using ", x$trees$n, " FFTs from 'object' as current trees."))
     }
 
 
