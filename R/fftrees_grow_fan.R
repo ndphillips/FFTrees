@@ -248,9 +248,9 @@ fftrees_grow_fan <- function(x,
         cue_decisions <- apply_break(
 
           direction = cue_direction_new,
-          threshold_val = cue_threshold_new,
-          cue_v = x$data$train[[cues_name_new]],
-          cue_class = cue_class_new
+          threshold.val = cue_threshold_new,
+          cue.v = x$data$train[[cues_name_new]],
+          cue.class = cue_class_new
 
         )
 
@@ -365,13 +365,13 @@ fftrees_grow_fan <- function(x,
         )
 
         # Update level stats:
-        level_stats_i[level_current, ] <- NA
-        level_stats_i$level[level_current] <- level_current
-        level_stats_i$cue[level_current] <- cues_name_new
-        level_stats_i$class[level_current] <- cue_class_new
+        level_stats_i[level_current, ]         <- NA
+        level_stats_i$level[level_current]     <- level_current
+        level_stats_i$cue[level_current]       <- cues_name_new
+        level_stats_i$class[level_current]     <- cue_class_new
         level_stats_i$threshold[level_current] <- cue_threshold_new
         level_stats_i$direction[level_current] <- cue_direction_new
-        level_stats_i$exit[level_current] <- exit_current
+        level_stats_i$exit[level_current]      <- exit_current
 
         # Current level stats:
         # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
@@ -444,9 +444,9 @@ fftrees_grow_fan <- function(x,
 
         current_decisions <- apply_break(
           direction = last_cue_stats$direction,
-          threshold_val = last_cue_stats$threshold,
-          cue_v = x$data$train[[last_cue]],
-          cue_class = last_cue_stats$class
+          threshold.val = last_cue_stats$threshold,
+          cue.v = x$data$train[[last_cue]],
+          cue.class = last_cue_stats$class
         )
 
         decide_0_index <- decision_index == TRUE & current_decisions == FALSE
