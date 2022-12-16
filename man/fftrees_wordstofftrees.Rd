@@ -2,21 +2,21 @@
 % Please edit documentation in R/fftrees_wordstofftrees.R
 \name{fftrees_wordstofftrees}
 \alias{fftrees_wordstofftrees}
-\title{Convert a text description of an FFT into an \code{FFTrees} object}
+\title{Convert a verbal description of an FFT into an \code{FFTrees} object}
 \usage{
 fftrees_wordstofftrees(x, my.tree)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object.}
 
-\item{my.tree}{string. A verbal string defining an FFT.}
+\item{my.tree}{A character string. A verbal description (as a string of text) defining an FFT.}
 }
 \value{
 An \code{FFTrees} object with a new tree definition as described by \code{my.tree}.
 }
 \description{
 \code{fftrees_wordstofftrees} converts a verbal description
-of an FFT (provided as a text string) into a tree definition (of an \code{FFTrees} object).
+of an FFT (provided as a string of text) into a tree definition (of an \code{FFTrees} object).
 
 \code{fftrees_wordstofftrees} is the complement function to
 \code{\link{fftrees_ffttowords}}, which converts a tree definition
