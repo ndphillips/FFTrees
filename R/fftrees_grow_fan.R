@@ -155,7 +155,7 @@ fftrees_grow_fan <- function(x,
       "wacc" = NA,
       "dprime" = NA,
       "cost" = NA,
-      "goal.change" = NA  # change in goal value
+      "goal_change" = NA  # change in goal value
     )
 
     # Starting values:
@@ -248,9 +248,9 @@ fftrees_grow_fan <- function(x,
         cue_decisions <- apply_break(
 
           direction = cue_direction_new,
-          threshold.val = cue_threshold_new,
-          cue.v = x$data$train[[cues_name_new]],
-          cue.class = cue_class_new
+          threshold_val = cue_threshold_new,
+          cue_v = x$data$train[[cues_name_new]],
+          cue_class = cue_class_new
 
         )
 
@@ -304,12 +304,12 @@ fftrees_grow_fan <- function(x,
         # Calculate goal change value:
         {
           if (level_current == 1) {
-            asif_stats$goal.change[1] <- asif_stats[[x$params$goal]][1]
+            asif_stats$goal_change[1] <- asif_stats[[x$params$goal]][1]
           }
 
           if (level_current > 1) {
-            goal.change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
-            asif_stats$goal.change[level_current] <- goal.change
+            goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
+            asif_stats$goal_change[level_current] <- goal_change
           }
         }
 
@@ -444,9 +444,9 @@ fftrees_grow_fan <- function(x,
 
         current_decisions <- apply_break(
           direction = last_cue_stats$direction,
-          threshold.val = last_cue_stats$threshold,
-          cue.v = x$data$train[[last_cue]],
-          cue.class = last_cue_stats$class
+          threshold_val = last_cue_stats$threshold,
+          cue_v = x$data$train[[last_cue]],
+          cue_class = last_cue_stats$class
         )
 
         decide_0_index <- decision_index == TRUE & current_decisions == FALSE
@@ -497,7 +497,7 @@ fftrees_grow_fan <- function(x,
 
 
   # Summarize tree definitions and statistics: ------
-  # (as df of tree_definitions):
+  # (as df of tree_definitions, 1 line per FFT):
 
   {
 
@@ -509,18 +509,22 @@ fftrees_grow_fan <- function(x,
 
       level_stats_i <- level_stats_ls[[tree_i]]
 
-      tree_definitions$tree[tree_i] <- tree_i
-      tree_definitions$cues[tree_i] <- paste(level_stats_i$cue, collapse = ";")
-      tree_definitions$nodes[tree_i] <- length(level_stats_i$cue)
-      tree_definitions$classes[tree_i] <- paste(substr(level_stats_i$class, 1, 1), collapse = ";")
-      tree_definitions$exits[tree_i] <- paste(level_stats_i$exit, collapse = ";")
+      # Store tree definition (each FFT as 1 line of df):
+      tree_definitions$tree[tree_i]       <- tree_i
+      tree_definitions$cues[tree_i]       <- paste(level_stats_i$cue, collapse = ";")
+      tree_definitions$nodes[tree_i]      <- length(level_stats_i$cue)
+      tree_definitions$classes[tree_i]    <- paste(substr(level_stats_i$class, 1, 1), collapse = ";")
+      tree_definitions$exits[tree_i]      <- paste(level_stats_i$exit, collapse = ";")
       tree_definitions$thresholds[tree_i] <- paste(level_stats_i$threshold, collapse = ";")
       tree_definitions$directions[tree_i] <- paste(level_stats_i$direction, collapse = ";")
 
     } # for (tree).
 
-    duplicate.trees <- duplicated(tree_definitions[c("cues", "exits", "thresholds", "directions")])
-    tree_definitions <- tree_definitions[duplicate.trees == FALSE, ]
+    # Remove duplicate trees:
+    duplicate_trees  <- duplicated(tree_definitions[c("cues", "exits", "thresholds", "directions")])
+    tree_definitions <- tree_definitions[duplicate_trees == FALSE, ]
+
+    # Adjust names:
     rownames(tree_definitions) <- 1:nrow(tree_definitions)
     tree_definitions$tree <- 1:nrow(tree_definitions)
     tree_definitions <- tree_definitions[, c(which(names(tree_definitions) == "tree"), which(names(tree_definitions) != "tree"))]
@@ -530,6 +534,7 @@ fftrees_grow_fan <- function(x,
   # Add tree_definitions to x:
   x$trees$definitions <- tree_definitions
   x$trees$n <- nrow(tree_definitions)
+
 
   # Provide user feedback:
   if (!x$params$quiet) {
