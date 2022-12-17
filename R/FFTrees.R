@@ -171,6 +171,7 @@ FFTrees <- function(formula = NULL,
                     do.svm = TRUE,
                     #
                     quiet = FALSE,
+                    #
                     # Deprecated args:   Use instead:
                     comp = NULL,         # do.comp
                     force = NULL,        # (none)
@@ -214,45 +215,19 @@ FFTrees <- function(formula = NULL,
   }
 
 
-  # # In data: Convert factor NA to new missing factor level:
-  #
-  # data <- data %>%
-  #   dplyr::mutate_if(is.factor, addNA)   %>%
-  #   dplyr::mutate_if(is.character, addNA)
+  # B. Verify inputs: ----
 
+  if (!is.null(object)) { # an FFTrees object is provided:
 
-  # B. Split training / test data: ----
-
-  if ((train.p < 1) && is.null(data.test)) {
-
-    # Save original data:
-    data_o <- data
-
-    train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
-                                              p = train.p
-    )[[1]]
-
-    data <- data_o[train_cases, ]
-    data.test <- data_o[-train_cases, ]
-
-
-    # Provide user feedback: ----
-
-    if (!quiet) {
-      message(
-        "Splitting data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
-        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set."
-      )
-    }
-
-  }
-
-
-  # C: Verify inputs: ----
-
-  if (!is.null(object)) {
-
+    # Verify:
     testthat::expect_s3_class(object, class = "FFTrees")
+
+    # Fill in some missing defaults by current object values:
+    if (is.null(formula)){ formula <- object$formula }
+    if (is.null(data)) { data <- object$data$train }
+    if (is.null(data.test) & (!is.null(object$data$test))) { data.test <- object$data$test }
+
+    # Other candidates: goal and threshold parameters.
 
   }
 
@@ -263,6 +238,41 @@ FFTrees <- function(formula = NULL,
     # ToDo: Verify integrity of tree definitions:
     # 1. tree.definitions contains valid tree definitions (in appropriate format)
     # 2. tree.definitions fit to provided data
+
+  }
+
+
+  # C. Handle data: ----
+
+  # # Convert factor NA to new missing factor level:
+  #
+  # data <- data %>%
+  #   dplyr::mutate_if(is.factor, addNA)   %>%
+  #   dplyr::mutate_if(is.character, addNA)
+
+
+  # Split training / test data: ----
+
+  if ((train.p < 1) && is.null(data.test)) {
+
+    # Save original data:
+    data_o <- data
+
+    train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
+                                              p = train.p)[[1]]
+
+    data      <- data_o[train_cases, ]
+    data.test <- data_o[-train_cases, ]
+
+
+    # Provide user feedback: ----
+
+    if (!quiet) {
+      message(
+        "Successfully split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
+        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set."
+      )
+    }
 
   }
 
@@ -344,6 +354,7 @@ FFTrees <- function(formula = NULL,
 
 # ToDo: ------
 
-# - all done.
+# - When providing a valid FFTrees object:
+#   Fill in missing defaults (formula, data, ...) with corresponding object values.
 
 # eof.
