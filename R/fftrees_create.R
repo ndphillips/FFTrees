@@ -78,7 +78,7 @@ fftrees_create <- function(data = NULL,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!quiet) {
     message(paste0("Aiming to create a new FFTrees object:"))
   }
 
