@@ -3,6 +3,9 @@
 #' @description \code{fftrees_create} creates an \code{FFTrees} object.
 #'
 #' \code{fftrees_create} is called internally by the main \code{\link{FFTrees}} function.
+#' Its main purpose is to verify and store various parameters
+#' (e.g., to denote algorithms, goals, thresholds) to be used in maximization processes
+#' and for evaluation purposes (e.g., \code{sens.w} and cost values).
 #'
 #' @param data Training data (as data frame).
 #' @param formula A formula (with a binary criterion variable).
@@ -32,7 +35,8 @@
 #'
 #' @param quiet logical
 #'
-#' @return An \code{FFTrees} object.
+#'
+#' @return A new \code{FFTrees} object.
 #'
 #' @keywords internal
 #'
@@ -71,6 +75,13 @@ fftrees_create <- function(data = NULL,
                            do.rf = TRUE,
                            do.comp = TRUE,
                            quiet = NULL) {
+
+  # Provide user feedback: ----
+
+  if (!quiet) {
+    msg <- "Aiming to create a new FFTrees object:\n"
+    cat(u_f_ini(msg))
+  }
 
   # 1. Validation tests: ------
 
@@ -128,19 +139,19 @@ fftrees_create <- function(data = NULL,
     if (!is.null(cost.outcomes) | !is.null(cost.cues)) { # use cost goal:
 
       goal <- "cost"
-      if (quiet == FALSE) { message("Setting 'goal = cost'") }
+      if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal = cost'\n")) }
 
     } else { # use accuracy goal:
 
       if (enable_wacc(sens.w)){ # use wacc:
 
         goal <- "wacc"
-        if (quiet == FALSE) { message("Setting 'goal = wacc'") }
+        if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal = wacc'\n")) }
 
       } else { # use bacc (as bacc == wacc):
 
         goal <- "bacc"
-        if (quiet == FALSE) { message("Setting 'goal = bacc'") }
+        if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal = bacc'\n")) }
 
       }
 
@@ -148,7 +159,10 @@ fftrees_create <- function(data = NULL,
 
   } else { # feedback user setting:
 
-    if (quiet == FALSE) { message(paste0("User set 'goal = ", goal, "'")) }
+    if (!quiet) {
+      msg <- paste0("\u2014 User set 'goal = ", goal, "'\n")
+      cat(u_f_msg(msg))
+      }
 
   } # if (is.null(goal)) else.
 
@@ -161,8 +175,8 @@ fftrees_create <- function(data = NULL,
 
   if ((goal == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
-    if (quiet == FALSE) {
-      message("The goal was set to 'wacc', but 'sens.w = 0.50': Setting 'goal = bacc'")
+    if (!quiet) {
+      cat(u_f_msg("\u2014 The goal was set to 'wacc', but 'sens.w = 0.50': Setting 'goal = bacc'\n"))
     }
     goal <- "bacc"
 
@@ -175,25 +189,28 @@ fftrees_create <- function(data = NULL,
 
     goal.chase <- "cost"
 
-    if (quiet == FALSE) { message("Setting 'goal.chase = cost'") }
+    if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = cost'\n")) }
 
   } else if (is.null(goal.chase)) { # use accuracy:
 
     if (enable_wacc(sens.w)){ # use wacc:
 
       goal.chase <- "wacc"
-      if (quiet == FALSE) { message("Setting 'goal.chase = wacc'") }
+      if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = wacc'\n")) }
 
     } else { # use bacc (as bacc == wacc):
 
       goal.chase <- "bacc"
-      if (quiet == FALSE) { message("Setting 'goal.chase = bacc'") }
+      if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = bacc'\n")) }
 
     }
 
   } else { # feedback user setting:
 
-    if (quiet == FALSE) { message(paste0("User set 'goal.chase = ", goal.chase, "'")) }
+    if (!quiet) {
+      msg <- paste0("\u2014 User set 'goal.chase = ", goal.chase, "'\n")
+      cat(u_f_msg(msg))
+      }
 
   }
 
@@ -206,8 +223,8 @@ fftrees_create <- function(data = NULL,
 
   if ((goal.chase == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
-    if (quiet == FALSE) {
-      message("The goal.chase was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'")
+    if (!quiet) {
+      cat(u_f_msg("\u2014 The goal.chase was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'\n"))
     }
     goal.chase <- "bacc"
 
@@ -219,19 +236,21 @@ fftrees_create <- function(data = NULL,
   # Note: Default is set to goal.threshold = "bacc" (in FFTrees.R).
 
   # Use argument value from FFTrees(), but provide feedback:
-  if (quiet == FALSE) {
+  if (!quiet) {
 
     if (goal.threshold == "bacc"){ # report using bacc (i.e., the default):
 
-      message(paste0("Setting 'goal.threshold = ", goal.threshold, "'"))
+      msg <- paste0("\u2014 Setting 'goal.threshold = ", goal.threshold, "'\n")
+      cat(u_f_msg(msg))
 
     } else { # report user setting:
 
-      message(paste0("User set 'goal.threshold = ", goal.threshold, "'"))
+      msg <- paste0("\u2014 User set 'goal.threshold = ", goal.threshold, "'\n")
+      cat(u_f_msg(msg))
 
     }
 
-  } # if (quiet == FALSE).
+  } # if (!quiet).
 
 
   # Verify goal.threshold:
@@ -243,8 +262,8 @@ fftrees_create <- function(data = NULL,
 
   if ((goal.threshold == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
 
-    if (quiet == FALSE) {
-      message("The goal.threshold was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'")
+    if (!quiet) {
+      cat(u_f_msg("\u2014 The goal.threshold was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'\n"))
     }
     goal.threshold <- "bacc"
 
@@ -256,8 +275,9 @@ fftrees_create <- function(data = NULL,
   # If a non-default sens.w has been set, but 'wacc' is neither used in 'goal' nor in 'goal.chase':
   if ((enable_wacc(sens.w)) & (goal != "wacc") & (goal.chase != "wacc")){ # provide feedback:
 
-    if (quiet == FALSE) {
-      message(paste0("You set sens.w = ", sens.w, ": Did you mean to set 'goal' or 'goal.chase' to 'wacc'?"))
+    if (!quiet) {
+      msg <- paste0("You set sens.w = ", sens.w, ": Did you mean to set 'goal' or 'goal.chase' to 'wacc'?\n")
+      cat(u_f_msg(msg))
     }
 
   }
@@ -291,10 +311,11 @@ fftrees_create <- function(data = NULL,
   # max.levels: ----
 
   if (is.null(max.levels)) {
+
     max.levels <- 4
 
-    if (quiet == FALSE) {
-      "Setting max.levels = 4"
+    if (!quiet) {
+      cat(u_f_msg("\u2014 Setting 'max.levels = 4'\n"))
     }
   }
 
@@ -310,14 +331,14 @@ fftrees_create <- function(data = NULL,
   # cost.outcomes: ----
 
   if (!is.null(cost.outcomes) & goal != "cost") {
-    message("Note: You specified cost.outcomes but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
+    message("You specified cost.outcomes, but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
   }
 
   if (is.null(cost.outcomes)) {
     cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
 
-    if (quiet == FALSE) {
-      message("Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)")
+    if (!quiet) {
+      cat(u_f_msg("\u2014 Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'\n"))
     }
   }
 
@@ -338,7 +359,7 @@ fftrees_create <- function(data = NULL,
   # cost.cues: ----
 
   if (!is.null(cost.cues) & goal != "cost") {
-    message("Note: You specified cost.cues but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
+    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
   }
 
 
@@ -346,16 +367,14 @@ fftrees_create <- function(data = NULL,
   cost.cues <- cost_cues_append(formula,
                                 data,
                                 cost.cues = cost.cues
-  )
+                                )
 
-  testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL"
-  )
+  testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL")
 
   testthat::expect_type(cost.cues, type = "list")
 
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
-                        info = "At least one of the values specified in cost.cues is not in data"
-  )
+                        info = "At least one of the values specified in cost.cues is not in data")
 
   # stopping.rule: ----
 
@@ -417,9 +436,11 @@ fftrees_create <- function(data = NULL,
     # Convert criterion to logical:
     data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]
 
-    if (quiet == FALSE) {
-      message("Setting target to ", criterion_name, " == ", decision.labels[2])
+    if (!quiet) {
+      msg <- paste0("\u2014 Setting target to ", criterion_name, " == ", decision.labels[2], "\n")
+      cat(u_f_msg(msg))
     }
+
   }
 
 
@@ -574,6 +595,13 @@ fftrees_create <- function(data = NULL,
   )
 
   class(x) <- "FFTrees"
+
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    cat(u_f_fin("Successfully created a new FFTrees object.\n"))
+  }
 
 
   # Output: ------

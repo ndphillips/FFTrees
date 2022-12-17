@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.7.5.9011 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7.5.9012 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -122,18 +122,25 @@ evaluate their predictive performance on the `heart.test` data:
                          data = heart.train,
                          data.test = heart.test, 
                          decision.labels = c("Healthy", "Disease"))
-    #> Setting 'goal = bacc'
-    #> Setting 'goal.chase = bacc'
-    #> Setting 'goal.threshold = bacc'
-    #> Setting cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)
-    #> Aiming to grow FFTs with ifan:
-    #> Successfully created 7 FFTs with ifan.
-    #> Aiming to apply FFTs to train data:
-    #> Successfully applied FFTs to train data.
-    #> Aiming to apply FFTs to test data:
-    #> Successfully applied FFTs to test data.
-    #> Aiming to fit other algorithms for comparison (disable with do.comp = FALSE):
-    #> Successfully fitted other algorithms for comparison.
+    #> Aiming to create a new FFTrees object:
+    #> — Setting 'goal = bacc'
+    #> — Setting 'goal.chase = bacc'
+    #> — Setting 'goal.threshold = bacc'
+    #> — Setting 'max.levels = 4'
+    #> — Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'
+    #> Successfully created a new FFTrees object.
+    #> Aiming to define FFTs:
+    #> Aiming to create new FFTs with 'ifan' algorithm:
+    #> Aiming to rank 13 cues:
+    #> Successfully ranked 13 cues.
+    #> Successfully created 7 new FFTs with 'ifan' algorithm.
+    #> Successfully defined FFTs.
+    #> Aiming to apply FFTs to 'train' data:
+    #> Successfully applied FFTs to 'train' data.
+    #> Aiming to apply FFTs to 'test' data:
+    #> Successfully applied FFTs to 'test' data.
+    #> Aiming to fit comparative algorithms (disable by do.comp = FALSE):
+    #> Successfully fitted comparative algorithms.
 
 -   Printing an `FFTrees` object shows basic information and summary
     statistics (on the best training tree, FFT \#1):
@@ -327,6 +334,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-12-16.\]
+\[File `README.Rmd` last updated on 2022-12-17.\]
 
 <!-- eof. -->

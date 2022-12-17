@@ -34,18 +34,17 @@ fftrees_wordstofftrees <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message("Aiming to create an FFT from 'my.tree' description:")
+    cat(u_f_ini("Aiming to create an FFT from 'my.tree' description:\n"))
   }
 
   # Parameters / options: ------
 
   directions_df <- data.frame(
     directions   = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
-    negations    = c("!=", "<=", "<",  ">=", ">",  "=",  "!=",    "!=",     "!=",       "<=",      ">="),
-    directions_f = c("=",  ">",  ">=", "<",  "<=", "!=", "=",     "=",      "=",        ">",       "<"),
+    negations    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
+    directions_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
     stringsAsFactors = FALSE
   )
-
 
   # ToDo: Delete if not used anywhere: ----
   #
@@ -54,7 +53,6 @@ fftrees_wordstofftrees <- function(x,
   #   exit = c("0", "1"), # 0:left vs. 1:right
   #   stringsAsFactors = FALSE
   # )
-
 
   # Clean up and check my.tree: ------
 
@@ -284,7 +282,7 @@ fftrees_wordstofftrees <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message("Successfully created an FFT from 'my.tree' description.")
+    cat(u_f_fin("Successfully created an FFT from 'my.tree' description.\n"))
   }
 
   # Output: ------

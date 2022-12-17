@@ -30,7 +30,9 @@ fftrees_cuerank <- function(x = NULL,
                             data = "train",
                             rounding = NULL) {
 
-  # Prepare: ----
+  # Prepare: ------
+
+  # Verify: ----
 
   testthat::expect_true(!is.null(newdata))
   testthat::expect_true(!is.null(x))
@@ -44,23 +46,27 @@ fftrees_cuerank <- function(x = NULL,
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
 
-
-  # Validity checks: ----
-
   # Validation: Make sure there is variance in the criterion!
-
   testthat::expect_true(length(unique(criterion_v)) > 1)
 
+  # Provide user feedback:
   if (!x$params$quiet) {
-    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .5)
+    msg <- paste0("Aiming to rank ", cue_n, " cues:\n")
+    cat(u_f_ini(msg))
+  }
+
+  # Define progress bar:
+
+  if (!x$params$quiet) {
+    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .40)
   }
 
 
-  # Loop over cues: ----
+  # Main: Loop over cues: ------
 
   for (cue_i in 1:cue_n) {
 
-    # Progress update:
+    # Progress bar update:
     if (!x$params$quiet) {
       pb$tick()
       Sys.sleep(1 / cue_n)
@@ -248,17 +254,29 @@ fftrees_cuerank <- function(x = NULL,
 
 
   # Set rownames: ----
+
   rownames(cuerank_df) <- 1:nrow(cuerank_df)
 
   # Add cue costs: ----
+
   cuerank_df$cost_cues <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
 
 
-  # Output: ----
+  # Store in x$cues$stats (as df): ----
 
   cuerank_df <- cuerank_df[, c("cue", "class", setdiff(names(cuerank_df), c("cue", "class")))]  # re-order
 
-  x$cues$stats[[data]] <- cuerank_df  # add to x
+  x$cues$stats[[data]] <- cuerank_df
+
+
+  # Provide user feedback:
+  if (!x$params$quiet) {
+    msg <- paste0("Successfully ranked ", cue_n, " cues.\n")
+    cat(u_f_fin(msg))
+  }
+
+
+  # Output: ------
 
   return(x)
 

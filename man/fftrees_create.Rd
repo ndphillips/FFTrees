@@ -84,12 +84,15 @@ fftrees_create(
 \item{quiet}{logical}
 }
 \value{
-An \code{FFTrees} object.
+A new \code{FFTrees} object.
 }
 \description{
 \code{fftrees_create} creates an \code{FFTrees} object.
 
 \code{fftrees_create} is called internally by the main \code{\link{FFTrees}} function.
+Its main purpose is to verify and store various parameters
+(e.g., to denote algorithms, goals, thresholds) to be used in maximization processes
+and for evaluation purposes (e.g., \code{sens.w} and cost values).
 }
 \seealso{
 \code{\link{fftrees_define}} for defining FFTs;
