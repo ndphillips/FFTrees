@@ -26,7 +26,7 @@ fftrees_grow_fan <- function(x,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    msg <- paste0("Aiming to create new FFTs with ", x$params$algorithm, ":\n")
+    msg <- paste0("Aiming to create new FFTs with '", x$params$algorithm, "' algorithm:\n")
     cat(u_f_ini(msg))
   }
 
@@ -539,7 +539,7 @@ fftrees_grow_fan <- function(x,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    msg <- paste0("Successfully created ", x$trees$n, " new FFTs with ", x$params$algorithm, ".\n")
+    msg <- paste0("Successfully created ", x$trees$n, " new FFTs with '", x$params$algorithm, "' algorithm.\n")
     cat(u_f_fin(msg))
   }
 

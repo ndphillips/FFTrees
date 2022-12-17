@@ -50,7 +50,7 @@ fftrees_define <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    msg <- paste0("Aiming to define FFTrees:\n")
+    msg <- paste0("Aiming to define FFTs:\n")
     cat(u_f_ini(msg))
   }
 
@@ -106,7 +106,7 @@ fftrees_define <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    cat(u_f_fin("Successfully defined FFTrees.\n"))
+    cat(u_f_fin("Successfully defined FFTs.\n"))
   }
 
 
