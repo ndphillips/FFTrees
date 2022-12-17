@@ -151,6 +151,7 @@ Nevertheless, it is still far from perfect ---\ so check out whether you can cre
 
 ```{r checking-my-tree, echo = FALSE, eval = FALSE}
 # 1. FFT with 2 cues (final cue is categorical): ------ 
+
 fft_1 <- FFTrees(diagnosis ~.,
                     data = heartdisease, main = "My test 1", 
                     my.tree = "If age < 45, predict False. 
@@ -170,6 +171,7 @@ inwords(fft_1)
 
 
 # 2. Reverse cue order (i.e, final cue is numeric), but set to True (by reversing cue direction): ------ 
+
 fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease, main = "My test 2", 
                     my.tree = "If thal = {fd, normal}, predict true!
@@ -192,6 +194,7 @@ fft_2
 
 
 # 3. Example used by Nathaniel (and skipping "otherwise" part of final node): ------ 
+
 fft_3 <- FFTrees(formula = diagnosis ~., 
                  data = heart.train,
                  data.test = heart.test, main = "My test 3", 
@@ -208,17 +211,22 @@ fft_3
 
 
 # 4. The shortest possible my.tree: ------ 
+
 fft_4 <- FFTrees(formula = survived ~., 
                  data = titanic, main = "My test 4", 
                  my.tree = "If sex = {female} true.") # ignore otherwise/else part
 
 plot(fft_4)
+
 # Note:
 # - Warning that 'False' does not occur in specification, but FFT is valid and constructed.
 # - fft_4 shows good specificity (i.e., few false alarms, relative to high number of correct rejections), 
 #   but poor sensitivity (many misses).
 #   Overall accuracy is 10% above baseline (predicting False for all cases).
 ```
+
+
+<!-- ToDo: Illustrate 4., as case is instructive. -->
 
 
 <!-- ToDo: 2nd way to specify an FFT:  -->
@@ -383,11 +391,11 @@ print(fft_5, data = "test", tree = "best.test")
 
 ```{r manual-tree-defs, echo = FALSE, eval = FALSE}
 # Create FFTs by algorithm:
-fft_0 <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
-                 data = heart.train,                # Training data
-                 data.test = heart.test,            # Testing data
-                 main = "Heart Disease (auto)",      # General label
-                 decision.labels = c("low risk", "high risk"), # Labels for decisions
+fft_0 <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
+                 data = heart.train,                # training data
+                 data.test = heart.test,            # testing data
+                 main = "Heart disease (auto)",     # some label
+                 decision.labels = c("low risk", "high risk"), # labels for decisions
                  quiet = FALSE  # enable/suppress user feedback
                  )
 
@@ -486,7 +494,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 | 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
-| 4 | [Specifying FFTs directly](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
+| 4 | [Manually specifying FFTs](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
 | 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
 | 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
