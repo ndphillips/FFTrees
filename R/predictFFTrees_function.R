@@ -73,7 +73,8 @@ predict.FFTrees <- function(object = NULL,
   # Provide user feedback: ----
 
   if (!object$params$quiet) {
-    message(paste0("Aiming to generate predictions for tree ", tree))
+    msg <- paste0("Aiming to generate predictions for tree ", tree, ":\n")
+    cat(u_f_ini(msg))
   }
 
 
@@ -171,7 +172,8 @@ predict.FFTrees <- function(object = NULL,
   # Provide user feedback: ----
 
   if (!object$params$quiet) {
-    message(paste0("Successfully generated predictions for tree ", tree))
+    msg <- paste0("Successfully generated predictions for tree ", tree, ".\n")
+    cat(u_f_fin(msg))
   }
 
 

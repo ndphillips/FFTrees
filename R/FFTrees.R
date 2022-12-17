@@ -268,10 +268,9 @@ FFTrees <- function(formula = NULL,
     # Provide user feedback: ----
 
     if (!quiet) {
-      message(
-        "Successfully split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
-        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set."
-      )
+      msg <- paste0("Successfully split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
+        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set.\n")
+      cat(u_f_fin(msg))
     }
 
   }

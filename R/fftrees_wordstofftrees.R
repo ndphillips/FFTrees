@@ -284,7 +284,7 @@ fftrees_wordstofftrees <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message("Successfully created an FFT from 'my.tree' description.")
+    cat(u_f_fin("Successfully created an FFT from 'my.tree' description.\n"))
   }
 
   # Output: ------

@@ -60,7 +60,7 @@ fftrees_cuerank <- function(x = NULL,
 
   for (cue_i in 1:cue_n) {
 
-    # Progress update:
+    # Progress bar update:
     if (!x$params$quiet) {
       pb$tick()
       Sys.sleep(1 / cue_n)
