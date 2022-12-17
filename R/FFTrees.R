@@ -54,24 +54,32 @@
 #' @param numthresh.n integer. Number of numeric thresholds to try.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
 #' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
-#' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified? For example, \code{train.p = .5} will randomly split \code{data} into a 50\% training set and a 50\% test set. \code{train.p = 1}, the default, uses all data for training.
-#' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds. The default is NULL which means no rounding. A value of 0 rounds all possible thresholds to the nearest integer, 1 rounds to the nearest .1 (etc.).
-#' @param repeat.cues logical. Can cues occur multiple times within a tree?
+#' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified?
+#' For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
+#' The default of \code{train.p = 1} uses all data for training.
+#' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds.
+#' The default of \code{rounding = NULL} implies no rounding.
+#' A value of \code{0} rounds all possible thresholds to the nearest integer, \code{1} rounds to the nearest decade (.10), etc.
+#' @param repeat.cues logical. May cues occur multiple times within a tree? Default: \code{repeat.cues = TRUE}.
 #'
-#' @param my.tree string. A string representing a verbal description of an FFT, i.e., an FFT in words.
+#' @param my.tree An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
-#' @param object An optional existing \code{FFTrees} object. When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
-#' @param tree.definitions A \code{data.frame}. An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
+#' @param object An optional existing \code{FFTrees} object.
+#' When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
+#' When \code{formula}, \code{data} or \code{data.test} are not specified, the current values of \code{object} are used.
+#' @param tree.definitions An optional \code{data.frame} of hard-coded FFT definitions (in the format of \code{x$trees$definitions} of an \code{FFTrees} object \code{x}).
 #' If specified, no new FFTs are fitted, but the tree definitions provided are used to re-evaluate the current \code{FFTrees} object.
 #'
-#' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be created for comparison? All TRUE by default. Options are:
+#' @param do.comp,do.cart,do.lr,do.rf,do.svm logical. Should alternative algorithms be used for comparison?
+#' All options set to \code{TRUE} by default. Available options are:
 #' \code{cart} = regular (non-frugal) trees with \strong{rpart};
 #' \code{lr} = logistic regression with \strong{glm};
 #' \code{rf} = random forests with \strong{randomForest};
 #' \code{svm} = support vector machines with \strong{e1071}.
-#' Specifying \code{comp = FALSE} sets all these arguments to \code{FALSE}.
+#' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
-#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors. Default: \code{quiet = FALSE} (i.e., show progress).
+#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors.
+#' Default: \code{quiet = FALSE} (i.e., show progress).
 #'
 #' @param comp,force,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
