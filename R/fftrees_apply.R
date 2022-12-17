@@ -39,7 +39,7 @@ fftrees_apply <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message(paste0("Aiming to apply FFTs to ", mydata, " data:"))
+    message(paste0("Aiming to apply FFTs to '", mydata, "' data:"))
   }
 
 
@@ -332,7 +332,7 @@ fftrees_apply <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    message(paste0("Successfully applied FFTs to ", mydata, " data."))
+    message(paste0("Successfully applied FFTs to '", mydata, "' data."))
   }
 
 

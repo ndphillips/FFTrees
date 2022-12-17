@@ -47,6 +47,13 @@ fftrees_define <- function(x,
                            tree.definitions = NULL
 ) {
 
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message(paste0("Aiming to define FFTrees:"))
+  }
+
+
   # Verify inputs: ------
 
   testthat::expect_s3_class(x, class = "FFTrees")
@@ -95,6 +102,14 @@ fftrees_define <- function(x,
 
   }
 
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message(paste0("Successfully defined FFTrees."))
+  }
+
+
+  # Output: ----
 
   return(x)
 

@@ -3,6 +3,9 @@
 #' @description \code{fftrees_create} creates an \code{FFTrees} object.
 #'
 #' \code{fftrees_create} is called internally by the main \code{\link{FFTrees}} function.
+#' Its main purpose is to verify and store various parameters
+#' (e.g., to denote algorithms, goals, thresholds) to be used in maximization processes
+#' and for evaluation purposes (e.g., \code{sens.w} and cost values).
 #'
 #' @param data Training data (as data frame).
 #' @param formula A formula (with a binary criterion variable).
@@ -32,7 +35,8 @@
 #'
 #' @param quiet logical
 #'
-#' @return An \code{FFTrees} object.
+#'
+#' @return A new \code{FFTrees} object.
 #'
 #' @keywords internal
 #'
@@ -71,6 +75,12 @@ fftrees_create <- function(data = NULL,
                            do.rf = TRUE,
                            do.comp = TRUE,
                            quiet = NULL) {
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message(paste0("Aiming to create a new FFTrees object:"))
+  }
 
   # 1. Validation tests: ------
 
@@ -574,6 +584,13 @@ fftrees_create <- function(data = NULL,
   )
 
   class(x) <- "FFTrees"
+
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    message(paste0("Successfully created a new FFTrees object."))
+  }
 
 
   # Output: ------

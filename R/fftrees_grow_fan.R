@@ -26,7 +26,7 @@ fftrees_grow_fan <- function(x,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    message(paste0("Aiming to grow FFTs with ", x$params$algorithm, ":"))
+    message(paste0("Aiming to grow new FFTs with ", x$params$algorithm, ":"))
   }
 
   # Global variables which can be changed later:
@@ -538,7 +538,7 @@ fftrees_grow_fan <- function(x,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    message(paste0("Successfully created ", x$trees$n, " FFTs with ", x$params$algorithm, "."))
+    message(paste0("Successfully created ", x$trees$n, " new FFTs with ", x$params$algorithm, "."))
   }
 
 
