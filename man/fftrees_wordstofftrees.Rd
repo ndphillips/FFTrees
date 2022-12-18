@@ -16,11 +16,15 @@ An \code{FFTrees} object with a new tree definition as described by \code{my.tre
 }
 \description{
 \code{fftrees_wordstofftrees} converts a verbal description
-of an FFT (provided as a string of text) into a tree definition (of an \code{FFTrees} object).
+of an FFT (provided as a string of text) into
+a tree definition (of an \code{FFTrees} object).
+Thus, \code{fftrees_wordstofftrees} provides a simple
+natural language parser for FFTs.
 
 \code{fftrees_wordstofftrees} is the complement function to
-\code{\link{fftrees_ffttowords}}, which converts a tree definition
-(of an \code{FFTrees} object) into a verbal description.
+\code{\link{fftrees_ffttowords}}, which converts an abstract tree definition
+(of an \code{FFTrees} object) into a verbal description
+(i.e., provides natural language output).
 
 To increase robustness, the parsing of \code{fftrees_wordstofftrees}
 allows for lower- or uppercase spellings (but not typographical variants)

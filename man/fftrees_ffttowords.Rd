@@ -20,18 +20,25 @@ A modified \code{FFTrees} object \code{x} with
 }
 \description{
 \code{fftrees_ffttowords} provides a verbal description
-of an FFT (in an \code{FFTrees} object).
+of tree definition (as defined in an \code{FFTrees} object).
+Thus, \code{fftrees_ffttowords} translates an abstract FFT definition
+into natural language output.
 
-\code{fftrees_ffttowords} is the complement to
+\code{fftrees_ffttowords} is the complement function to
 \code{\link{fftrees_wordstofftrees}}, which parses a verbal description
-of an FFT into an \code{FFTrees} object.
+of an FFT into the abstract tree definition of an \code{FFTrees} object.
 
 The final sentence (or tree node) of the FFT's description
-always predicts positive criterion values (i.e., TRUE instances) first,
-before predicting negative criterion values (i.e., FALSE instances).
-Note that this may require a reversal of cue directions (if the
-original tree description predicted FALSE instances
-before predicting TRUE instances).
+always predicts positive criterion values (i.e., \code{TRUE} instances) first,
+before predicting negative criterion values (i.e., \code{FALSE} instances).
+Note that this may require a reversal of exit directions,
+if the final cue predicted \code{FALSE} instances.
+
+Note that the cue directions and thresholds computed by \strong{FFTrees}
+always predict positive criterion values (i.e., \code{TRUE} or signal,
+rather than \code{FALSE} or noise).
+Using these thresholds for negative exits (i.e., for predicting instances of
+\code{FALSE} or noise) usually requires a reversal (e.g., negating cue direction).
 }
 \examples{
 
