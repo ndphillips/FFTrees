@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9010
+## 1.7.5.9012
 
 <!-- Development version: --> 
 
@@ -29,7 +29,8 @@ Changes since last release:
     - Tweaked spacing parameters.
 
 - Trimmed white space from elements in tree definitions (in `fftrees_apply.R`). 
-- Added user feedback when `quiet = FALSE`. 
+
+- Added and improved user feedback (when `quiet = FALSE`). 
 
 <!-- Blank line. --> 
 
@@ -38,7 +39,8 @@ Changes since last release:
 
 - Removed `anova` from **stats** imports.  
 - Replaced `expect_is()` by more precise **testthat** inheritance functions. 
-- Revised vignettes. 
+- Revised documentation and vignettes. 
+- Fixed bugs (e.g., in examples).
 
 
 <!-- Blank line. --> 
@@ -349,6 +351,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-12-15.]
+[File `NEWS.md` last updated on 2022-12-18.]
 
 <!-- eof. -->
