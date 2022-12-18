@@ -69,7 +69,8 @@ fftrees_define <- function(x,
     x$trees$n <- as.integer(nrow(tree.definitions))
 
     if (!x$params$quiet) {
-      message(paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees."))
+      msg <- paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees.\n")
+      cat(u_f_hig(msg))
     }
 
 
@@ -83,7 +84,8 @@ fftrees_define <- function(x,
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
     if (!x$params$quiet) {
-      message(paste0("Using ", x$trees$n, " FFTs from 'object' as current trees."))
+      msg <- paste0("Using ", x$trees$n, " FFTs from 'object' as current trees.\n")
+      cat(u_f_hig(msg))
     }
 
 
@@ -106,7 +108,18 @@ fftrees_define <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    cat(u_f_fin("Successfully defined FFTs.\n"))
+
+    n_trees <- x$trees$n
+
+    if (n_trees == 1){
+      msg <- paste0("Successfully defined ", n_trees, " FFT.\n")
+    } else if (n_trees > 1){
+      msg <- paste0("Successfully defined ", n_trees, " FFTs.\n")
+    } else {
+      msg <- "No FFTs were defined."
+    }
+
+    cat(u_f_fin(msg))
   }
 
 
