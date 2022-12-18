@@ -178,23 +178,23 @@ plot(heart.fft)  # same as:
 # plot(heart.fft, what = "all", data = "train", tree = "best.train")
 
 # 4. Apply FFT to (new) testing data:
-plot(heart.fft, data = "test")            # predictions for Tree 1
-plot(heart.fft, data = "test", tree = 2)  # predictions for Tree 2
+plot(heart.fft, data = "test")            # predict for Tree 1
+plot(heart.fft, data = "test", tree = 2)  # predict for Tree 2
 
 # 5. Predict classes and probabilities for new data:
 predict(heart.fft, newdata = heartdisease)
 predict(heart.fft, newdata = heartdisease, type = "prob")
 
-# 6. Create custom trees (from verbal description) with my.tree:
+# 6. Create a custom tree (from verbal description) with my.tree:
 custom.fft <- FFTrees(
   formula = diagnosis ~ .,
   data = heartdisease,
-  my.tree = "If chol > 300, predict True.
-             If sex = {m}, predict False,
-             If age > 70, predict True, otherwise predict False."
-             )
+  my.tree = "If age < 50, predict False.
+             If sex = 1, predict True.
+             If chol > 300, predict True, otherwise predict False.",
+  main = "My custom FFT")
 
-# Plot the (pretty terrible) custom tree:
+# Plot the (pretty bad) custom tree:
 plot(custom.fft)
 
 }

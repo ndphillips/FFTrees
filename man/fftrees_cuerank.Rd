@@ -18,7 +18,8 @@ Default: \code{data = 'train'}.}
 Default: \code{rounding = NULL}.}
 }
 \value{
-A modified \code{FFTrees} object (with cue rank information for current \code{data} type in \code{x$cues$stats}).
+A modified \code{FFTrees} object (with cue rank information
+for the current \code{data} type in \code{x$cues$stats}).
 }
 \description{
 \code{fftrees_cuerank} takes an \code{FFTrees} object \code{x} and
@@ -28,6 +29,12 @@ a dataset \code{newdata} (of some \code{data} type).
 \details{
 \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
 that is added to \code{x$cues$stats}.
+
+Note that the cue directions and thresholds computed by \strong{FFTrees}
+always predict positive criterion values (i.e., \code{TRUE} or signal,
+rather than \code{FALSE} or noise).
+Using these thresholds for negative exits (i.e., for predicting instances of
+\code{FALSE} or noise) usually requires a reversal (e.g., negating cue direction).
 
 \code{fftrees_cuerank} is called (twice) by the \code{fftrees_grow_fan} algorithm
 to grow fast-and-frugal trees (FFTs).

@@ -192,7 +192,7 @@ To define a specific FFT and apply it to data, we can define a tree by providing
 my.heart.fft <- FFTrees(formula = diagnosis ~.,
                         data = heart.train,
                         data.test = heart.test,
-                        main = "Custom Heart FFT",
+                        main = "My Heart FFT",
                         my.tree = "If chol > 350, predict True. 
                                    If cp != {a}, predict False. 
                                    If age <= 35, predict False, otherwise, predict True.")
@@ -206,7 +206,7 @@ plot(my.heart.fft)
 
 The resulting tree is actually not too bad, although its first node is pretty worthless (as it only classifies 3\ cases, all as false alarms). 
 Thus, omitting the first node will result in an even simpler FFT that cannot be worse. 
-But see for yourself --- and see the [Defining an FFT verbally](FFTrees_mytree.html) vignette for additional details on defining FFTs from verbal descriptions. 
+Feel free to verify this ---\ and see the [Manually specifying FFTs](FFTrees_mytree.html) vignette for additional details on defining FFTs from verbal or abstract descriptions. 
 
 
 ## Vignettes

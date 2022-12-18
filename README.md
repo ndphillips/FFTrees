@@ -130,11 +130,11 @@ evaluate their predictive performance on the `heart.test` data:
     #> — Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'
     #> Successfully created a new FFTrees object.
     #> Aiming to define FFTs:
-    #> Aiming to create new FFTs with 'ifan' algorithm:
+    #> Aiming to create FFTs with 'ifan' algorithm:
     #> Aiming to rank 13 cues:
     #> Successfully ranked 13 cues.
-    #> Successfully created 7 new FFTs with 'ifan' algorithm.
-    #> Successfully defined FFTs.
+    #> Successfully created 7 FFTs with 'ifan' algorithm.
+    #> Successfully defined 7 FFTs.
     #> Aiming to apply FFTs to 'train' data:
     #> Successfully applied FFTs to 'train' data.
     #> Aiming to apply FFTs to 'test' data:
@@ -334,6 +334,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-12-17.\]
+\[File `README.Rmd` last updated on 2022-12-18.\]
 
 <!-- eof. -->

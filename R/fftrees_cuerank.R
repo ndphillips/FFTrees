@@ -7,6 +7,12 @@
 #' \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
 #' that is added to \code{x$cues$stats}.
 #'
+#' Note that the cue directions and thresholds computed by \strong{FFTrees}
+#' always predict positive criterion values (i.e., \code{TRUE} or signal,
+#' rather than \code{FALSE} or noise).
+#' Using these thresholds for negative exits (i.e., for predicting instances of
+#' \code{FALSE} or noise) usually requires a reversal (e.g., negating cue direction).
+#'
 #' \code{fftrees_cuerank} is called (twice) by the \code{fftrees_grow_fan} algorithm
 #' to grow fast-and-frugal trees (FFTs).
 #'
@@ -17,7 +23,8 @@
 #' @param rounding Number of digits used to round (as integer).
 #' Default: \code{rounding = NULL}.
 #'
-#' @return A modified \code{FFTrees} object (with cue rank information for current \code{data} type in \code{x$cues$stats}).
+#' @return A modified \code{FFTrees} object (with cue rank information
+#' for the current \code{data} type in \code{x$cues$stats}).
 #'
 #' @importFrom stats median var
 #' @importFrom progress progress_bar
@@ -58,7 +65,7 @@ fftrees_cuerank <- function(x = NULL,
   # Define progress bar:
 
   if (!x$params$quiet) {
-    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .40)
+    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .500)
   }
 
 
