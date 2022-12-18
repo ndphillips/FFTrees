@@ -58,7 +58,7 @@ fftrees_cuerank <- function(x = NULL,
   # Define progress bar:
 
   if (!x$params$quiet) {
-    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .40)
+    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .500)
   }
 
 
