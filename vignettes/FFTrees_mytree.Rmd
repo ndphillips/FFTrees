@@ -153,40 +153,42 @@ Nevertheless, it is still far from perfect ---\ so check out whether you can cre
 # 1. FFT with 2 cues (final cue is categorical): ------ 
 
 fft_1 <- FFTrees(diagnosis ~.,
-                    data = heartdisease, main = "My test 1", 
-                    my.tree = "If age < 45, predict False. 
+                 data = heartdisease, 
+                 my.tree = "If age < 45, predict False. 
                                If thal = {fd, normal}, predict True.
-                               Otherwise, predict the opposite.")
+                               Otherwise, predict the opposite.", 
+                 main = "My test 1")
 
 # inspect:
 fft_1$trees$definitions
+plot(fft_1)
+fft_1
+inwords(fft_1)
+
 # Note 1: 
 # Corrected an error in the direction definition of the final node: 
 # When 1st part of last sentence predicts TRUE, 
 # the final direction must not be negated.
 
-plot(fft_1)
-fft_1
-inwords(fft_1)
-
 
 # 2. Reverse cue order (i.e, final cue is numeric), but set to True (by reversing cue direction): ------ 
 
 fft_2 <- FFTrees(diagnosis ~.,
-                    data = heartdisease, main = "My test 2", 
-                    my.tree = "If thal = {fd, normal}, predict true!
+                 data = heartdisease, 
+                 my.tree = "If thal = {fd, normal}, predict true!
                                If age >= 45, predict TRUE (again)! 
-                               Otherwise, go crazy (but mention 'FALSE' somewhere)...")
+                               Otherwise, go crazy (but mention 'FALSE' somewhere)...",
+                 main = "My test 2")
 # inspect:
 fft_2$trees$definitions
+plot(fft_2)
+fft_2
+inwords(fft_2)
+
 # Notes:
 # - The final sentence always predicts positive (True) instances first. 
 #   When the description predicted False instances first, the cue direction WAS reversed. 
 # - Note improved robustness against lower/uppercase spellings/typos in cue labels. 
-
-plot(fft_2)
-inwords(fft_2)
-fft_2
 
 # Comparing my_fft_1 and my_fft_2 shows that cue order matters:
 # In my_fft_1, the initial age cue causes few misses, but the 2nd thal cue makes more error than correct cases.
@@ -197,12 +199,13 @@ fft_2
 
 fft_3 <- FFTrees(formula = diagnosis ~., 
                  data = heart.train,
-                 data.test = heart.test, main = "My test 3", 
+                 data.test = heart.test, 
                  decision.labels = c("Healthy", "Disease"),
                  my.tree = "If sex = 1, predict Disease.
                             If age < 45, predict Healthy.
                             If thal = {fd, normal}, predict Disease. 
-                            (etc.)")
+                            (etc.)",
+                 main = "My test 3")
 
 fft_3$trees$definitions
 plot(fft_3)
@@ -213,8 +216,9 @@ fft_3
 # 4. The shortest possible my.tree: ------ 
 
 fft_4 <- FFTrees(formula = survived ~., 
-                 data = titanic, main = "My test 4", 
-                 my.tree = "If sex = {female} true.") # ignore otherwise/else part
+                 data = titanic, 
+                 my.tree = "If sex = {female} true.",  # ignore otherwise/else part
+                 main = "My test 4") 
 
 plot(fft_4)
 
@@ -225,13 +229,15 @@ plot(fft_4)
 #   Overall accuracy is 10% above baseline (predicting False for all cases).
 ```
 
-
 <!-- ToDo: Illustrate 4., as case is instructive. -->
 
-
 <!-- ToDo: 2nd way to specify an FFT:  -->
-
 <!-- 2. as a data frame using the `tree.definitions` argument  -->
+
+<!-- +++ here now +++  -->
+
+<!-- For experienced users: Method for manually or computationally defining sets of FFTs. -->
+<!-- Start from existing definitions of FFTs (in an `FFTrees` object). -->
 
 <!-- A. tree.definitions and object: -->
 
@@ -304,21 +310,23 @@ plot(fft_2, data = "test", tree = 8)
 
 # (3) Automatic replacement (using FFTrees()): ---- 
 
-# +++ here now +++
-
 # Cover 3 cases: 
+# A. Provide tree.definitions without an `FFTrees` object
+# B. Provide an `FFTrees` object, but no tree.definitions
+# C. Provide both an object and tree.definitions
 
 # C. Provide both an existing FFTrees object and tree.definitions: 
-fft_3 <- FFTrees(formula = diagnosis ~ .,            # as before
+fft_3 <- FFTrees(#formula = diagnosis ~ .,            # as before
                  object = fft_1,                     # some valid FFTrees object 
                  tree.definitions = my_fft_df,       # new tree definitions (as df)
-                 data = heart.train,                 # training data
-                 data.test = heart.test,             # testing data
+                 #data = heart.train,                 # training data
+                 #data.test = heart.test,             # testing data
                  main = "Heart Disease (manual 1)",  # changed label
                  decision.labels = c("low risk", "high risk")  # changed labels for decisions
 )
 
-# => tree.definitions are being used, object is ignored!
+# => tree.definitions are being used, tree definitions of object are ignored!
+# BUT: If formula and data is not specified, those of object are being used. 
 
 plot(fft_3)
 
@@ -364,7 +372,7 @@ print(fft_4, data = "test", tree = "best.test")
 <!-- B. Provide an object but no tree.definitions: -->
 
 ```{r design-fft-df-3, echo = FALSE, eval = FALSE}
-# Provide tree.definitions but no object:
+# Provide an object, but no tree.definitions:
 fft_5 <- FFTrees(formula = diagnosis ~ .,            # as before
                  object = fft_3,                     # an existing FFTrees object
                  tree.definitions = NULL,            # NO tree definitions (as df)
@@ -378,7 +386,7 @@ fft_5
 
 fft_5$trees$definitions  # 8 trees: New FFT is #4
 
-fft_5$trees$best  # FFT #4 is best test tree!
+fft_5$trees$best  # FFT #4 is best 'test' tree!
 
 plot(fft_5, data = "train", tree = "best.train")  # FFT #1
 plot(fft_5, data = "test", tree = "best.test")    # FFT #4
@@ -476,7 +484,6 @@ plot(fft_2, tree = 2, data = "test")
 plot(fft_2, tree = 3, data = "train")
 plot(fft_2, tree = 3, data = "test")
 ```
-
 
 
 For details on understanding and changing tree definitions, see the section on **Tree definitions** in the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette. 
