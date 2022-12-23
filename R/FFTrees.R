@@ -241,11 +241,11 @@ FFTrees <- function(formula = NULL,
 
   if (!is.null(tree.definitions)){
 
-    testthat::expect_true(is.data.frame(tree.definitions), info = "Provided tree.definitions are not a data.frame")
+    testthat::expect_true(is.data.frame(tree.definitions), info = "Provided 'tree.definitions' are not a data.frame")
 
     # ToDo: Verify integrity of tree definitions:
     # 1. tree.definitions contains valid tree definitions (in appropriate format)
-    # 2. tree.definitions fit to provided data
+    # 2. tree.definitions fit to provided data (see verify_all_cues_in_data() in helper.R)
 
   }
 
