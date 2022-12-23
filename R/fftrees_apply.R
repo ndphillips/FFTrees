@@ -44,7 +44,6 @@ fftrees_apply <- function(x,
   }
 
 
-
   # Get data (corresponding to mydata and newdata): ----
 
   if (mydata == "train") {
@@ -71,6 +70,7 @@ fftrees_apply <- function(x,
 
   }
 
+  # Current criterion values from data (as df):
   criterion_v <- data[[x$criterion_name]]
   criterion_n <- length(criterion_v)
 
@@ -117,17 +117,21 @@ fftrees_apply <- function(x,
     # print(paste0("tree ", tree_i, ":"))  # 4debugging
 
     # Extract definition of current tree:
-    cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))  # +++ here now +++: Added trimws()
+    cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))  # Added trimws()
     class_v <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
     exit_v  <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
     threshold_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
     direction_v <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
+
+    # Verify current tree definition: +++ here now +++
+    verify_all_cues_in_data(cue_v, data)  # Do all cues occur (as names) in current data?
 
     level_n <- as.integer(tree_df$nodes[tree_i])
     # print(paste0("- level_n = ", level_n))  # 4debugging
 
     decisions_df <- decisions_ls[[tree_i]]
 
+    # costs:
     cost_cue_level <- sapply(cue_v, FUN = function(cue_i) {
       if (cue_i %in% names(x$params$cost.cues)) {
         cost_cue_i <- x$params$cost.cues[[cue_i]]
@@ -143,6 +147,11 @@ fftrees_apply <- function(x,
       level = 1:level_n,
       cue_cost_cum = cost_cue_level_cum
     )
+
+
+
+
+    # Prepare data structures:
 
     # level_stats_i contains cumulative level statistics:
     level_stats_i <- data.frame(
@@ -178,16 +187,20 @@ fftrees_apply <- function(x,
 
     for (level_i in 1:level_n) {
 
-      # Get tree definitions at current level:
+      # Get tree definition at current level:
       cue_i       <- cue_v[level_i]
       class_i     <- class_v[level_i]
       direction_i <- direction_v[level_i]
       exit_i      <- as.numeric(exit_v[level_i])
       threshold_i <- threshold_v[level_i]
 
+      # Current cue values from data (as df):
       cue_values <- data[[cue_i]]
 
       decisions_df$current_cue_values <- cue_values
+
+
+      # threshold_i:
 
       if (is.character(threshold_i)) {
         threshold_i <- unlist(strsplit(threshold_i, ","))
@@ -196,6 +209,9 @@ fftrees_apply <- function(x,
       if (substr(class_i, 1, 1) %in% c("n", "i")) {
         threshold_i <- as.numeric(threshold_i)
       }
+
+
+      # current_decision:
 
       if (direction_i == "!=") {
         decisions_df$current_decision <- (decisions_df$current_cue_values %in% threshold_i) == FALSE
@@ -216,15 +232,19 @@ fftrees_apply <- function(x,
         decisions_df$current_decision <- decisions_df$current_cue_values >= threshold_i
       }
 
+
+      # classify_now:
+
       if (isTRUE(all.equal(exit_i, 0))) {
         classify_now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
       }
-      if (isTRUE(all.equal(exit_i,  1))) {
+      if (isTRUE(all.equal(exit_i, 1))) {
         classify_now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)
       }
       if (isTRUE(all.equal(exit_i, .5))) {
         classify_now <- is.na(decisions_df$decision)
       }
+
 
       # Handle NAs: ----
 
@@ -303,7 +323,7 @@ fftrees_apply <- function(x,
   rownames(tree_stats) <- 1:nrow(tree_stats)
 
 
-  # Calculate pci and mcu: ----
+  # Compute pci and mcu: ----
 
   for (tree_i in 1:n_trees) {
 
@@ -323,12 +343,14 @@ fftrees_apply <- function(x,
   x$trees$decisions[[mydata]]   <- decisions_ls
 
 
-  # Update best tree values:
+  # Update best tree values: ----
+
   if (mydata == "train"){
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
     x$trees$best$test <- select_best_tree(x, data = mydata, goal = x$params$goal)
   }
+
 
   # Provide user feedback: ----
 
