@@ -197,6 +197,14 @@ fftrees_apply <- function(x,
       # Current cue values from data (as df):
       cue_values <- data[[cue_i]]
 
+      cur_class <- substr(class(cue_values), 1, 1)
+
+      # print(paste0("class_i = ", class_i, "; cur_class = ", cur_class)) # 4debugging
+
+      if (cur_class != class_i){
+        warning(paste0("Mismatch: class_i = ", class_i, "; cur_class = ", cur_class))
+      }
+
       decisions_df$current_cue_values <- cue_values
 
 
