@@ -74,14 +74,16 @@ fftrees_ffttowords <- function(x = NULL,
 
   # Loop 1 (over trees): ----
 
-  for (tree in 1:n_trees) {
+  for (tree_i in 1:n_trees) {
+
+    # print(paste0("tree ", tree_i, ":"))  # 4debugging
 
     # Extract definition of current tree:
-    classes_v    <- trimws(unlist(strsplit(tree_df$classes[tree], ";")))
-    cues_v       <- trimws(unlist(strsplit(tree_df$cues[tree], ";")))
-    directions_v <- trimws(unlist(strsplit(tree_df$directions[tree], ";")))
-    thresholds_v <- trimws(unlist(strsplit(tree_df$thresholds[tree], ";")))
-    exits_v      <- trimws(unlist(strsplit(tree_df$exits[tree], ";")))
+    classes_v    <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
+    cues_v       <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
+    directions_v <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
+    thresholds_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
+    exits_v      <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
 
     decision.labels <- x$params$decision.labels  # (Note: keep "." naming, as in list x)
 
@@ -180,7 +182,6 @@ fftrees_ffttowords <- function(x = NULL,
         # )
 
         # REMOVED, as negation is only indicated if left exit == decision.labels[2]!
-        # +++ here now +++
 
         if (classes_v[i] %in% c("c", "l")) {
 
@@ -235,16 +236,16 @@ fftrees_ffttowords <- function(x = NULL,
 
       } # 2. final nodes.
 
-    } # Loop 2: for (i nodes).
+    } # inner Loop 2: for (i nodes).
 
 
     # # Combine sentences:
     # sentences.comb <- paste(sentences_v, collapse = ". ")
 
     # Add to FFTrees object x:
-    x$trees$inwords[[tree]] <- sentences_v
+    x$trees$inwords[[tree_i]] <- sentences_v
 
-  } # Loop 2: for (tree).
+  } # outer Loop 1: for (tree_i).
 
 
   # Output: ----
