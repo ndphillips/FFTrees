@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9012
+## 1.7.5.9013
 
 <!-- Development version: --> 
 
@@ -16,7 +16,11 @@ Changes since last release:
 ### Major changes
 
 - Enabled manually defining FFTs with `tree.definitions` or using FFTs of `object` in `FFTrees()`. 
+
 - Enabled setting `goal = 'dprime'` to select FFTs in `FFTrees()`. 
+
+- Added and improved user feedback (when `quiet = FALSE`). 
+
 
 <!-- Blank line. --> 
 
@@ -30,7 +34,8 @@ Changes since last release:
 
 - Trimmed white space from elements in tree definitions (in `fftrees_apply.R`). 
 
-- Added and improved user feedback (when `quiet = FALSE`). 
+- Added check that cues occur in current data (in `verify_all_cues_in_data()`). 
+
 
 <!-- Blank line. --> 
 
@@ -351,6 +356,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-12-18.]
+[File `NEWS.md` last updated on 2022-12-23.]
 
 <!-- eof. -->
