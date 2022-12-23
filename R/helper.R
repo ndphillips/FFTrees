@@ -86,6 +86,52 @@ valid_train_test_data <- function(train_data, test_data){
 
 
 
+# verify_all_cues_in_data: ------
+
+# Check: Are all current cues (as vector) in current data (as df)?
+
+verify_all_cues_in_data <- function(cues, data){
+
+  # Verify inputs: ----
+
+  testthat::expect_true(length(cues) > 0)
+  testthat::expect_true(is.character(cues), info = "Provided 'cues' are not names (of type 'character')")
+  testthat::expect_true(is.data.frame(data), info = "Provided 'data' are not a data.frame")
+
+  # Initialize: ----
+
+  valid <- FALSE
+  data_names <- names(data)
+
+
+  # Main: ----
+
+  cues_not_in_data <- setdiff(cues, data_names)
+
+  if (length(cues_not_in_data) > 0) {
+
+    msg <- paste("Some cues do not appear in 'data':",
+                 paste(cues_not_in_data, collapse = ", "))
+    warning(msg)
+
+  } else { # all tests passed:
+
+    valid <- TRUE
+
+  }
+
+  # Output: ----
+
+  return(valid)
+
+} # verify_all_cues_in_data().
+
+# Check:
+# verify_all_cues_in_data(NA, titanic)
+# verify_all_cues_in_data(c("age", "chol", "ca", "fbs", "slope"), heart.train)
+# verify_all_cues_in_data(c("fbs", "AGE", " chol ", "XY", "fbs"), heart.train)
+
+
 # select_best_tree: ------
 
 #' Select the best tree (from the current set)
