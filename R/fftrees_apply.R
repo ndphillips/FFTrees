@@ -117,7 +117,7 @@ fftrees_apply <- function(x,
     # print(paste0("tree ", tree_i, ":"))  # 4debugging
 
     # Extract definition of current tree:
-    cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))  # Added trimws()
+    cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
     class_v <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
     exit_v  <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
     threshold_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
