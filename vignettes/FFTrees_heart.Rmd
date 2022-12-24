@@ -80,22 +80,24 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) pr
                      )
 ```
 
-The resulting trees, decisions, and accuracy statistics are now stored in an `FFTrees` object called `heart.fft`.
+Evaluating this expression runs code that examines the data, optimizes thresholds based on our current goals for each cue, and creates and evaluates `r heart.fft$trees$n`\ FFTs. 
+The resulting trees, their decisions and their accuracy statistics, are now stored in an `FFTrees` object called `heart.fft`.
 
 #### Other arguments
 
 - `algorithm`: There are two different algorithms available to build FFTs `"ifan"` [@phillips2017FFTrees] and `"dfan"` [@phillips2017FFTrees]. (`"max"` [@martignon2008categorization], and `"zigzag"` [@martignon2008categorization] are no longer supported). 
 
-- `max.levels`: Changes the maximum number of levels allowed in the tree.
+- `max.levels`: Changes the maximum number of levels that are allowed in the tree.
 
-The following arguments apply to the "ifan" and "dfan" algorithms only:
+The following arguments apply when using the "ifan" or "dfan" algorithms for creating new FFTs:
 
 - `goal.chase`: The `goal.chase` argument changes which statistic is maximized during tree construction (for the `"ifan"` and `"dfan"` algorithms). Possible arguments include `"acc"`, `"bacc"`, `"wacc"`, `"dprime"`, and `"cost"`. The default is `"wacc"` with a sensitivity weight of\ 0.50 (which renders it identical to `"bacc"`). 
 
 - `goal`: The `goal` argument changes which statistic is maximized when _selecting_ trees after construction (for the `"ifan"` and `"dfan"` algorithms). Possible arguments include `"acc"`, `"bacc"`, `"wacc"`, `"dprime"`, and `"cost"`.
 
-- `my.tree`: We can define a tree verbally as a sentence using the `my.tree` argument. 
-See the [Defining an FFT verbally](FFTrees_mytree.html) vignette for details. 
+- `my.tree` or `tree.definitions`: We can define a new tree from a verbal description (as a set of sentences), 
+or manually specify sets of FFTs as a data frame (in appropriate format). 
+See the [Manually specifying FFTs](FFTrees_mytree.html) vignette for details. 
 
 
 ### Step\ 3: Inspect and summarize FFTs

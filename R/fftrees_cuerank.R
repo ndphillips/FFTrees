@@ -93,9 +93,11 @@ fftrees_cuerank <- function(x = NULL,
       {
 
         # A. Numeric and integer cues: ----
+
         if (substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
           # 1. "optimize" method: ----
+
           if (x$params$numthresh.method == "o") {
 
             # Get all possible (sorted) cue values:
@@ -106,29 +108,38 @@ fftrees_cuerank <- function(x = NULL,
               indicies <- round(seq(1, length(cue_i_levels), length.out = x$params$numthresh.n), 0)
               cue_i_levels <- cue_i_levels[indicies]
             }
+
           }
 
           # 2. "median" method: ----
+
           if (x$params$numthresh.method == "m") {
+
             if (isTRUE(all.equal(length(unique(unlist(cue_i_v))), 2))) {
               cue_i_levels <- unique(unlist(cue_i_v))
             } else {
               cue_i_levels <- median(unlist(cue_i_v))
             }
+
           }
 
           # Round cue levels:
           if (!is.null(rounding)) {
+
             cue_i_levels <- round(cue_i_levels,
                                   digits = rounding
             )
+
           }
 
           # Remove potential duplicates:
           cue_i_levels <- cue_i_levels[duplicated(cue_i_levels) == FALSE]
+
         }
 
-        # B. Non-numeric and integer cues: ----
+
+        # B. Factors, character, and logical cues ----
+
         if (substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
           # Use all unique cue values:
@@ -187,9 +198,10 @@ fftrees_cuerank <- function(x = NULL,
             cost.outcomes = cost.outcomes,
             goal.threshold = goal.threshold
           )
+
         } # a. numeric/integer cues.
 
-        # b. factor, character, and logical cues: ----
+        # b. Factors, character, and logical cues: ----
         if (substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
           cue_i_stats <- fftrees_threshold_factor_grid(
@@ -202,6 +214,7 @@ fftrees_cuerank <- function(x = NULL,
             cost.outcomes = cost.outcomes,
             goal.threshold = goal.threshold
           )
+
         } # b. factor/character/logical cues.
 
 
@@ -232,6 +245,7 @@ fftrees_cuerank <- function(x = NULL,
 
       # Step 3: Set best cue direction and threshold to NULL [cue_i_best]: ----
       {
+
         cue_i_best <- fftrees_threshold_factor_grid(
           thresholds = NULL,
           cue_v = NULL,
@@ -240,6 +254,7 @@ fftrees_cuerank <- function(x = NULL,
           cost.outcomes = cost.outcomes,
           goal.threshold = goal.threshold
         )
+
       } # Step 3.
 
     } # if (all(is.na(cue_i_v)).
