@@ -250,11 +250,11 @@ First, we use our default algorithms to create an `FFTrees` object `heart.fft`:
 
 ```{r fft-treedef-01, message = FALSE}
 # Create an FFTrees object x:
-x <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
-             data = heart.train,                # Training data
-             data.test = heart.test,            # Testing data
-             main = "Heart Disease",            # General label
-             decision.labels = c("Low-Risk", "High-Risk")  # Decision labels (False/True)
+x <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
+             data = heart.train,                # training data
+             data.test = heart.test,            # testing data
+             main = "Heart Disease 1",          # initial label
+             decision.labels = c("low risk", "high risk")  # decision labels (False/True)
 )
 ```
 
@@ -264,11 +264,52 @@ For instance, the following alternatives would both show the current definitions
 
 ```{r fft-treedef-02, message = FALSE}
 # Tree definitions of x:
-summary(x)["definitions"]  # from summary()
-# x$trees$definitions      # from FFTrees object x
+summary(x)$definitions   # from summary()
+# x$trees$definitions    # from FFTrees object x
 ```
 
-Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette how to interpret such tree definitions). 
+Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
+As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to examine alternative versions for these trees. 
+
+
+```{r fft-treedef-03, message = FALSE}
+tree_df <- summary(x)$definitions  # get FFT definitions (as df)
+tree_df <- tree_df[c(1, 3, 5), ]   # filter 3 particular FFTs
+
+# Add a tree with 1;1;0.5 exit structure (a "rake" tree with Signal bias):
+tree_df[4, ] <- tree_df[1, ]        # initialize new FFT #4 (as copy of FFT #1)
+tree_df$exits[4] <- c("1;1;0.5")  # modify exits of FFT #4
+
+# Change cue orders:
+tree_df[5:8, ] <- tree_df[1:4, ]  # initialize 4 new FFTs (as copys of existing ones)
+tree_df$cues[5:8] <- "cp;thal;ca"  # modify cue order
+tree_df$thresholds[5:8] <- "a;rd,fd;0"  # modify cue order
+
+
+tree_df$tree <- 1:nrow(tree_df)   # adjust tree numbers
+
+tree_df
+```
+
+Evaluate `FFTrees` object `x` with new `tree.definitions`:
+
+```{r fft-treedef-04, message = TRUE}
+# Create a modified FFTrees object y:
+y <- FFTrees(object = x,                  # use previous FFTrees object x
+             tree.definitions = tree_df,  # but with new tree definitions
+             main = "Heart Disease 2"     # revised label
+)
+
+y$trees$definitions
+
+plot(y, tree = 2)
+```
+
+
+
+
+
+
 
 +++ here now +++ 
 
