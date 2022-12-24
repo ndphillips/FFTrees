@@ -234,6 +234,50 @@ plot(fft_4)
 <!-- ToDo: 2nd way to specify an FFT:  -->
 <!-- 2. as a data frame using the `tree.definitions` argument  -->
 
+
+### Using `tree.definitions`
+
+More experienced users may want to define and evaluate more than one FFTs at a time. 
+To achieve this, the `FFTrees()` function allows providing sets of `tree.definitions` (as a data frame). 
+However, as questions regarding specific trees usually arise late in an exploration of FFTs, the `tree.definitions` argument is mostly used in combination with an existing `FFTrees` object\ `x`. 
+In this case, the parameters (e.g., regarding the `formula`, `data` and goals to be used) from\ `x` are being used, but its tree definitions (stored in `x$trees$definitions`) are replaced by those in `tree.definitions` and the object is re-evaluated for those FFTs.
+
+<!-- Example: -->
+
+We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
+
+First, we use our default algorithms to create an `FFTrees` object `heart.fft`:
+
+```{r fft-treedef-01, message = FALSE}
+# Create an FFTrees object x:
+x <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
+             data = heart.train,                # Training data
+             data.test = heart.test,            # Testing data
+             main = "Heart Disease",            # General label
+             decision.labels = c("Low-Risk", "High-Risk")  # Decision labels (False/True)
+)
+```
+
+As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
+Rather than evaluating them individually (by issuing `print(x)` or `plot(x)` commands to inspect specific trees), we can obtain both their definitions and their performance characteristics on a variety of measures either by running `summary(x)` or by inspecting corresponding parts of the `FFTrees` object. 
+For instance, the following alternatives would both show the current definitions of the generated FFTs: 
+
+```{r fft-treedef-02, message = FALSE}
+# Tree definitions of x:
+summary(x)["definitions"]  # from summary()
+# x$trees$definitions      # from FFTrees object x
+```
+
+Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the [Creating FFTs with FFTrees()](FFTrees_function.html) vignette how to interpret such tree definitions). 
+
++++ here now +++ 
+
+
+
+creating and evaluating FFTs from `tree.definitions` requires the 
+
+
+
 <!-- +++ here now +++  -->
 
 <!-- For experienced users: Method for manually or computationally defining sets of FFTs. -->
