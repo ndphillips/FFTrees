@@ -14,7 +14,7 @@
   packageStartupMessage("   F   Trees ")
   packageStartupMessage("             ")
   packageStartupMessage(in_grey("Welcome to ", in_blue(paste("FFTrees ", version_nr, sep = "")), "!", sep = ""))
-  packageStartupMessage(in_grey("FFTrees.guide() opens the main guide."))
+  packageStartupMessage(in_lightgrey(paste(in_darkgrey("FFTrees.guide()"), "opens the main guide."), sep = ""))
 
 } # .onAttach().
 
