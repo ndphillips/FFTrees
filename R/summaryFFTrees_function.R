@@ -78,10 +78,10 @@ summary.FFTrees <- function(object,
     cat(o_main, "\n\n", sep = "")  # main object title
   }
 
-  cat(crayon::blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
+  cat(in_blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
   cat("\n")
 
-  cat("- Trees: ", n_trees, " fast-and-frugal ", tree_s, " predicting ", crayon::underline(o_crit), "\n", sep = "")
+  cat("- Trees: ", n_trees, " fast-and-frugal ", tree_s, " predicting ", cli::style_underline(o_crit), "\n", sep = "")
 
 
   # Parameter summary: ------
@@ -102,7 +102,7 @@ summary.FFTrees <- function(object,
   if ((is.null(tree) == FALSE) && (length(tree) == 1) && (tree %in% tree_options)){  # only 1 tree:
 
     cat("\n")
-    cat(crayon::blue("FFT #", tree, ": Definition", "\n", sep = ""), sep = "")
+    cat(in_blue("FFT #", tree, ": Definition", "\n", sep = ""), sep = "")
 
     # FFT in words:
 
@@ -150,19 +150,20 @@ summary.FFTrees <- function(object,
       }
 
     } # if (tree > n_trees).
+
   } # if tree not NULL.
 
 
   # Print tables (on console): ----
 
-  cap_def <- crayon::blue(paste("Tree", crayon::underline("definitions")))
+  cap_def <- in_blue(paste("Tree", cli::style_underline("definitions")))
   print(knitr::kable(out$definitions, caption = cap_def))
 
-  cap_train <- crayon::blue(paste("Tree statistics on", crayon::underline("training"), "data"))
+  cap_train <- in_blue(paste("Tree statistics on", cli::style_underline("training"), "data"))
   print(knitr::kable(out$stats$train, caption = cap_train, digits = digits))
 
   if (is.null(out$stats$test) == FALSE){
-    cap_test <- crayon::blue(paste("Tree statistics on", crayon::underline("test"), "data"))
+    cap_test <- in_blue(paste("Tree statistics on", cli::style_underline("test"), "data"))
     print(knitr::kable(out$stats$test, caption = cap_test, digits = digits))
   }
 

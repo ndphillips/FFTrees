@@ -13,8 +13,8 @@
   packageStartupMessage("    / \\     ")
   packageStartupMessage("   F   Trees ")
   packageStartupMessage("             ")
-  packageStartupMessage(crayon::silver("Welcome to ", crayon::blue(paste("FFTrees ", version_nr, sep = "")), "!", sep = ""))
-  packageStartupMessage(crayon::silver("FFTrees.guide() opens the main guide."))
+  packageStartupMessage(in_grey("Welcome to ", in_blue(paste("FFTrees ", version_nr, sep = "")), "!", sep = ""))
+  packageStartupMessage(in_grey("FFTrees.guide() opens the main guide."))
 
 } # .onAttach().
 

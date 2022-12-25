@@ -73,14 +73,14 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   cat("| Decide +",
       " | ",
-      crayon::silver("hi"),
+      in_grey("hi"),
       rep(" ", max(1, col_width - 4 - num_space(hi))),
-      crayon::green(scales::comma(hi)),
+      in_green(scales::comma(hi)),
       # rep(" ", max(0, col_width - num_space(hi) - 4)),
       " | ",
-      crayon::silver("fa"),
+      in_grey("fa"),
       rep(" ", max(1, col_width - 4 - num_space(fa))),
-      crayon::red(scales::comma(fa)),
+      in_red(scales::comma(fa)),
       # rep(" ", max(0, col_width - num_space(fa) - 4)),
       " | ",
       sep = ""
@@ -96,14 +96,14 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
 
   cat("| Decide -",
       " | ",
-      crayon::silver("mi"),
+      in_grey("mi"),
       rep(" ", max(1, col_width - 4 - num_space(mi))),
-      crayon::red(scales::comma(mi)),
+      in_red(scales::comma(mi)),
       # rep(" ", max(0, col_width - num_space(mi) - 4)),
       " | ",
-      crayon::silver("cr"),
+      in_grey("cr"),
       rep(" ", max(1, col_width - 4 - num_space(cr))),
-      crayon::green(scales::comma(cr)),
+      in_green(scales::comma(cr)),
       # rep(" ", max(0, col_width - num_space(cr) - 4)),
       " | ",
       sep = ""
@@ -136,7 +136,7 @@ console_confusionmatrix <- function(hi, mi, fa, cr,  sens.w,  cost) {
   # cat(" | ")  # with |
 
   cat("N = ")
-  cat(crayon::underline(scales::comma(N), sep = ""), sep = "")
+  cat(cli::style_underline(scales::comma(N), sep = ""), sep = "")
 
   cat("\n\n")
 

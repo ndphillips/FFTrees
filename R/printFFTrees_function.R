@@ -157,13 +157,13 @@ print.FFTrees <- function(x = NULL,
 
   # FFTrees: ----
 
-  cat(crayon::blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
+  cat(in_blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
   cat("\n")
 
   # Trees: ----
 
   cat("- Trees: ", x$trees$n, " fast-and-frugal ", tree_s, " predicting ",
-      crayon::underline(x$criterion_name), "\n",
+      cli::style_underline(x$criterion_name), "\n",
       sep = ""
   )
 
@@ -185,8 +185,8 @@ print.FFTrees <- function(x = NULL,
   #
   # if(tree == x$trees$best$train) {
   #
-  #   cat(paste("- FFT ", crayon::underline("#", x$trees$best$train, sep = ""), " optimises ", crayon::underline(x$params$goal), " using ", train.cues.n, " cues: {",
-  #             crayon::underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
+  #   cat(paste("- FFT ", cli::style_underline("#", x$trees$best$train, sep = ""), " optimises ", cli::style_underline(x$params$goal), " using ", train.cues.n, " cues: {",
+  #             cli::style_underline(paste(unlist(strsplit(train.cues, ",")), collapse = ", ")), "}", sep = ""))
   #
   #   cat("\n")
   #
@@ -198,7 +198,7 @@ print.FFTrees <- function(x = NULL,
 
   # FFT description: ------
 
-  cat(crayon::blue("FFT #", tree, ": Definition", sep = ""), sep = "")
+  cat(in_blue("FFT #", tree, ": Definition", sep = ""), sep = "")
   cat("\n")
 
   # FFT in words:
@@ -249,7 +249,7 @@ print.FFTrees <- function(x = NULL,
 
   # Accuracy information: ------
 
-  cat(crayon::blue("FFT #", tree, ": ", crayon::underline(task), " Accuracy\n", sep = ""), sep = "")
+  cat(in_blue("FFT #", tree, ": ", cli::style_underline(task), " Accuracy\n", sep = ""), sep = "")
 
   # - Data info: ----
 
@@ -290,7 +290,7 @@ print.FFTrees <- function(x = NULL,
 
   # Speed, frugality, and cost: ------
 
-  cat(crayon::blue("FFT #", tree, ": ", crayon::underline(task), " Speed, Frugality, and Cost\n", sep = ""), sep = "")
+  cat(in_blue("FFT #", tree, ": ", cli::style_underline(task), " Speed, Frugality, and Cost\n", sep = ""), sep = "")
 
   cat("mcu = ", round(x$trees$stats[[mydata]]$mcu[tree], 2), sep = "")
   cat(",  pci = ", round(x$trees$stats[[mydata]]$pci[tree], 2), sep = "")
