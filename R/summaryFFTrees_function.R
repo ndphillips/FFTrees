@@ -150,6 +150,7 @@ summary.FFTrees <- function(object,
       }
 
     } # if (tree > n_trees).
+
   } # if tree not NULL.
 
 

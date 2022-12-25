@@ -15,7 +15,6 @@
 # grey_75 <- rgb(g_75, g_75, g_75)
 
 
-
 # Define crayon styles: ----
 
 # u_f_ini <- crayon::make_style("black", colors = 256)      # "darkgrey"
@@ -28,11 +27,16 @@
 
 # Define cli styles: ----
 
+# ANSI color styles:
+
 in_grey <- cli::make_ansi_style("grey45", grey = TRUE, colors = 256)
 
-in_red   <- cli::make_ansi_style("red4", colors = 256)
-in_green <- cli::make_ansi_style("green4", colors = 256)
-in_blue  <- cli::make_ansi_style("steelblue4", colors = 256)
+in_red   <- cli::make_ansi_style("darkred", colors = 256)     # "red4" "firebrick4"
+in_green <- cli::make_ansi_style("darkgreen", colors = 256)   # "green4"
+in_blue  <- cli::make_ansi_style("steelblue4", colors = 256)  # "steelblue4" "darkblue"
+
+
+# User feedback messages:
 
 u_f_ini <- cli::make_ansi_style("black", colors = 256)      # "darkgrey"
 u_f_fin <- cli::make_ansi_style("darkgreen", colors = 256)  # "black"
@@ -43,6 +47,6 @@ u_f_hig <- cli::make_ansi_style("darkblue", colors = 256)   # highlighted msg
 
 # ToDo: ------
 
-# - Replace crayon by cli package.
+# - etc.
 
 # eof.
