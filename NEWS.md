@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9013
+## 1.7.5.9015
 
 <!-- Development version: --> 
 
@@ -42,6 +42,7 @@ Changes since last release:
 
 ### Details 
 
+- Replaced **crayon** package by **cli** package. 
 - Removed `anova` from **stats** imports.  
 - Replaced `expect_is()` by more precise **testthat** inheritance functions. 
 - Revised documentation and vignettes. 
