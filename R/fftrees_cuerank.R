@@ -65,7 +65,11 @@ fftrees_cuerank <- function(x = NULL,
   # Define progress bar:
 
   if (!x$params$quiet) {
+
     pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .500)
+
+    # cli::cli_progress_bar("Ranking cues", total = cue_n)
+
   }
 
 
@@ -75,8 +79,13 @@ fftrees_cuerank <- function(x = NULL,
 
     # Progress bar update:
     if (!x$params$quiet) {
+
       pb$tick()
       Sys.sleep(1 / cue_n)
+
+      # Sys.sleep(10/100)
+      # cli::cli_progress_update()
+
     }
 
     # Get main information about current cue:
@@ -273,6 +282,8 @@ fftrees_cuerank <- function(x = NULL,
     }
 
   } # for (cue_i).
+
+  # cli::cli_progress_done()
 
 
   # Set rownames: ----
