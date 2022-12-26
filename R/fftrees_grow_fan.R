@@ -132,9 +132,9 @@ fftrees_grow_fan <- function(x,
     level_stats_i <- data.frame(
       "level" = NA,
       "cue" = NA,
-      "cost_cues" = NA,
-      "cost_cues.cum" = NA,
-      "cost_decisions" = NA,
+      "cost_cue" = NA,
+      "cost_cue_cum" = NA,
+      "cost_dec" = NA,
       "class" = NA,
       "threshold" = NA,
       "direction" = NA,
@@ -232,8 +232,8 @@ fftrees_grow_fan <- function(x,
         # ADD CUE INFO TO LEVEL.STATS:
         level_stats_i$level[level_current] <- level_current
         level_stats_i$cue[level_current] <- cues_name_new
-        level_stats_i$cost_cues[level_current] <- cue_cost_new
-        level_stats_i$cost_cues.cum[level_current] <- sum(level_stats_i$cost_cues[1:level_current])
+        level_stats_i$cost_cue[level_current] <- cue_cost_new
+        level_stats_i$cost_cue_cum[level_current] <- sum(level_stats_i$cost_cue[1:level_current])
         level_stats_i$class[level_current] <- cue_class_new
         level_stats_i$threshold[level_current] <- cue_threshold_new
         level_stats_i$direction[level_current] <- cue_direction_new
@@ -380,7 +380,7 @@ fftrees_grow_fan <- function(x,
                            "sens", "spec",
                            "dprime",                   # ADDED on 2022-09-23
                            "bacc", "acc", "wacc",
-                           "cost_decisions", "cost")
+                           "cost_dec", "cost")
         level_stats_i[level_current, level_stats_v] <- results_cum[, level_stats_v]
 
       } # Step 4.
@@ -473,7 +473,7 @@ fftrees_grow_fan <- function(x,
 
         # Note: Why not use same stats as in level_stats_v above? (Here: "dprime" and "cost" missing): +++ here now +++
         # level_stats_i[last_level_nr, c("hi", "fa", "mi", "cr",
-        #                                "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")] <- last_classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_decisions")]
+        #                                "sens", "spec", "bacc", "acc", "wacc", "cost_dec")] <- last_classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_dec")]
 
         # NEW (using same level_stats_v as above) on 2022-09-23:
         level_stats_i[last_level_nr, level_stats_v] <- last_classtable[, level_stats_v]

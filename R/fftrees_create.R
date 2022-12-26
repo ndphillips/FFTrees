@@ -312,11 +312,19 @@ fftrees_create <- function(data = NULL,
 
   if (is.null(max.levels)) {
 
-    max.levels <- 4
+    max.levels <- 4  # default
 
     if (!quiet) {
       cat(u_f_msg("\u2014 Setting 'max.levels = 4'\n"))
     }
+
+  } else { # user set max.levels:
+
+    if (!quiet) {
+      msg <- paste0("\u2014 User set 'max.levels = ", max.levels, "'\n")
+      cat(u_f_msg(msg))
+    }
+
   }
 
   testthat::expect_true(!is.null(max.levels),
@@ -331,10 +339,11 @@ fftrees_create <- function(data = NULL,
   # cost.outcomes: ----
 
   if (!is.null(cost.outcomes) & goal != "cost") {
-    message("You specified cost.outcomes, but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
+    message("You specified cost.outcomes, but goal = '", goal, "' (not 'cost')\nFFT creation will ignore cost.outcomes, but report them in tree statistics.")
   }
 
-  if (is.null(cost.outcomes)) {
+  if (is.null(cost.outcomes)) { # use defaults:
+
     cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
 
     if (!quiet) {
@@ -359,15 +368,19 @@ fftrees_create <- function(data = NULL,
   # cost.cues: ----
 
   if (!is.null(cost.cues) & goal != "cost") {
-    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
+    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore cost.cues, but report them in tree statistics.")
   }
 
+  if ((!quiet) & (!is.null(cost.cues))) {
+    cat(u_f_msg("\u2014 Setting list of 'cost.cues'\n"))
+  }
 
-  # Append cost.cues:
+  # Append cost.cues (for all cues in data):
   cost.cues <- cost_cues_append(formula,
                                 data,
                                 cost.cues = cost.cues
                                 )
+  # str(cost.cues)  # 4debugging
 
   testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL")
 
@@ -375,6 +388,7 @@ fftrees_create <- function(data = NULL,
 
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
                         info = "At least one of the values specified in cost.cues is not in data")
+
 
   # stopping.rule: ----
 
@@ -399,6 +413,7 @@ fftrees_create <- function(data = NULL,
 
 
   # repeat.cues: ----
+
   testthat::expect_type(repeat.cues, type = "logical")
 
 
@@ -571,7 +586,7 @@ fftrees_create <- function(data = NULL,
         ppv = NA,
         npv = NA,
         acc = NA,
-        bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA
+        bacc = NA, cost = NA, cost_dec = NA, cost_cue = NA
       ),
 
       test = data.frame(
@@ -587,7 +602,7 @@ fftrees_create <- function(data = NULL,
         ppv = NA,
         npv = NA,
         acc = NA,
-        bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA
+        bacc = NA, cost = NA, cost_dec = NA, cost_cue = NA
       ),
 
       models = list(lr = NULL, cart = NULL, rf = NULL, svm = NULL)

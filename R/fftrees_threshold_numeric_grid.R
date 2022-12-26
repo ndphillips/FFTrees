@@ -97,7 +97,7 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   results <- results[ord_new, c(
     "threshold", "direction", "n", "hi", "fa", "mi", "cr",
     "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
-    "cost_decisions", "cost"
+    "cost_dec", "cost"
   )]
 
   # Remove invalid directions:

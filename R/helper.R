@@ -198,7 +198,7 @@ select_best_tree <- function(x, data, goal){
 
   # Goals to minimize (less is better):
   min_goals <- c("mi", "fa",
-                 "cost", "cost_decisions", "cost_cues",
+                 "cost", "cost_dec", "cost_cue",
                  "mcu")
 
   goal_valid <- c(max_goals, min_goals)
@@ -295,11 +295,14 @@ apply_break <- function(direction,
 
 # cost_cues_append: ------
 
-# Create cost.cues:
+# Goal: Get cost.cues for ALL cues in data.
+# ToDo: Distinguish function input from output.
 
 cost_cues_append <- function(formula,
                              data,
                              cost.cues = NULL) {
+
+  # Prepare: ------
 
   criterion_name <- paste(formula)[2]
 
@@ -312,25 +315,35 @@ cost_cues_append <- function(formula,
   cue_name_v <- names(cue_df)
 
 
-  if (is.null(cost.cues) == FALSE) {
+  # Main: ------
+
+  if (is.null(cost.cues)) { # Case 1: No cost.cues provided: ----
+
+    cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
+      0
+    })
+    names(cost.cues) <- names(cue_df)
+
+
+  } else { # if (is.null(cost.cues) == FALSE) { # Case 2: cost.cues provided: ----
 
     # Make sure all named cues in cost.cues are in data:
     {
-      cue.not.in.data <- sapply(names(cost.cues), FUN = function(x) {
+      cue_not_in_data <- sapply(names(cost.cues), FUN = function(x) {
         x %in% cue_name_v == FALSE
       })
 
-      if (any(cue.not.in.data)) {
+      if (any(cue_not_in_data)) {
 
-        missing.cues <- paste(cost.cues[cue.not.in.data, 1], collapse = ",")
+        missing_cues <- paste(cost.cues[cue_not_in_data, 1], collapse = ",")
 
-        warning(paste0("The cue(s) {", missing.cues, "} specified in cost.cues are not present in the data."))
+        warning(paste0("The cue(s) {", missing_cues, "} specified in cost.cues are not present in the data."))
       }
     }
 
     # Add any missing cue costs as 0:
     {
-      cost.cues.o <- cost.cues
+      cost_cues_org <- cost.cues
 
       cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
         0
@@ -338,25 +351,23 @@ cost_cues_append <- function(formula,
       names(cost.cues) <- names(cue_df)
 
       for (i in 1:length(cost.cues)) {
+
         cue_name_i <- names(cost.cues)[i]
 
-        if (names(cost.cues)[i] %in% names(cost.cues.o)) {
-          cost.cues[[i]] <- cost.cues.o[[cue_name_i]]
+        if (names(cost.cues)[i] %in% names(cost_cues_org)) {
+          cost.cues[[i]] <- cost_cues_org[[cue_name_i]]
         }
       }
     }
-  }
+  } # if (is.null(cost.cues) == FALSE).
 
-  if (is.null(cost.cues)) {
-    cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
-      0
-    })
-    names(cost.cues) <- names(cue_df)
-  }
+
+  # Output: ------
 
   return(cost.cues)
 
 } # cost_cues_append().
+
 
 
 
@@ -980,18 +991,18 @@ add_stats <- function(data,
 
 
   # Outcome cost:
-  data$cost_decisions <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                                          + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
+  data$cost_dec <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
 
   # Total cost:
-  data$cost <- data$cost_decisions - cost.each
+  data$cost <- data$cost_dec - cost.each
 
 
   # Output: ----
 
   # Drop inputs and order columns (of df):
   data <- data[, c("sens", "spec",  "far",  "ppv", "npv",
-                   "acc", "bacc", "wacc",   "cost_decisions", "cost")]
+                   "acc", "bacc", "wacc",   "cost_dec", "cost")]
 
   return(data)
 
@@ -1135,7 +1146,7 @@ classtable <- function(prediction_v = NULL,
       #                             predictor = as.numeric(prediction_v))$auc)
 
       # Cost per case:
-      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
 
@@ -1177,7 +1188,7 @@ classtable <- function(prediction_v = NULL,
       #                             predictor = as.numeric(prediction_v))$auc)
 
       # Cost per case:
-      cost_decisions <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
@@ -1207,7 +1218,7 @@ classtable <- function(prediction_v = NULL,
     dprime <- NA
     # auc <- NA
 
-    cost_decisions <- NA
+    cost_dec <- NA
     cost <- NA
 
   }
@@ -1239,7 +1250,7 @@ classtable <- function(prediction_v = NULL,
     dprime = dprime,
     # auc = auc,
 
-    cost_decisions = cost_decisions,
+    cost_dec = cost_dec,
     cost = cost
 
   )

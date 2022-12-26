@@ -144,7 +144,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     results <- results[ord_new, c(
       "threshold", "direction", "n", "hi", "fa", "mi", "cr",
       "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
-      "cost_decisions", "cost"
+      "cost_dec", "cost"
     )]
 
     # Remove invalid directions: ----
@@ -165,7 +165,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
       "bacc" = NA,
       "acc" = NA,
       "wacc" = NA,
-      "cost_decisions" = NA,
+      "cost_dec" = NA,
       "cost" = NA
     )
 

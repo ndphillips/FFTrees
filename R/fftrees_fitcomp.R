@@ -35,7 +35,7 @@ fftrees_fitcomp <- function(x) {
                "n", "hi", "fa", "mi", "cr",
                "sens", "spec", "far", "ppv", "npv",
                "acc", "bacc", "wacc",  # ToDo: Add dprime?
-               "cost", "cost_decisions", "cost_cues"
+               "cost", "cost_dec", "cost_cue"
   )
 
 
@@ -89,13 +89,13 @@ fftrees_fitcomp <- function(x) {
       x$competition$train <- x$competition$train %>%
         dplyr::bind_rows(lr.stats[["train"]] %>%
                            dplyr::mutate(algorithm = "lr") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
         dplyr::bind_rows(lr.stats[["test"]] %>%
                            dplyr::mutate(algorithm = "lr") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
     }
   }
@@ -123,13 +123,13 @@ fftrees_fitcomp <- function(x) {
       x$competition$train <- x$competition$train %>%
         dplyr::bind_rows(cart.stats[["train"]] %>%
                            dplyr::mutate(algorithm = "cart") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
         dplyr::bind_rows(cart.stats[["test"]] %>%
                            dplyr::mutate(algorithm = "cart") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
     }
   }
@@ -158,13 +158,13 @@ fftrees_fitcomp <- function(x) {
       x$competition$train <- x$competition$train %>%
         dplyr::bind_rows(rf.stats[["train"]] %>%
                            dplyr::mutate(algorithm = "rf") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
         dplyr::bind_rows(rf.stats[["test"]] %>%
                            dplyr::mutate(algorithm = "rf") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
     }
   }
@@ -192,13 +192,13 @@ fftrees_fitcomp <- function(x) {
       x$competition$train <- x$competition$train %>%
         dplyr::bind_rows(svm.stats[["train"]] %>%
                            dplyr::mutate(algorithm = "svm") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
         dplyr::bind_rows(svm.stats[["test"]] %>%
                            dplyr::mutate(algorithm = "svm") %>%
-                           dplyr::mutate(cost_cues = NA) %>%
+                           dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
     }
   }
