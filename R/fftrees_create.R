@@ -359,7 +359,7 @@ fftrees_create <- function(data = NULL,
   # cost.cues: ----
 
   if (!is.null(cost.cues) & goal != "cost") {
-    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth.")
+    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'). Trees will ignore these costs during growth")
   }
 
 
@@ -375,6 +375,7 @@ fftrees_create <- function(data = NULL,
 
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
                         info = "At least one of the values specified in cost.cues is not in data")
+
 
   # stopping.rule: ----
 
@@ -399,6 +400,7 @@ fftrees_create <- function(data = NULL,
 
 
   # repeat.cues: ----
+
   testthat::expect_type(repeat.cues, type = "logical")
 
 
@@ -571,7 +573,7 @@ fftrees_create <- function(data = NULL,
         ppv = NA,
         npv = NA,
         acc = NA,
-        bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA
+        bacc = NA, cost = NA, cost_dec = NA, cost_cue = NA
       ),
 
       test = data.frame(
@@ -587,7 +589,7 @@ fftrees_create <- function(data = NULL,
         ppv = NA,
         npv = NA,
         acc = NA,
-        bacc = NA, cost = NA, cost_decisions = NA, cost_cues = NA
+        bacc = NA, cost = NA, cost_dec = NA, cost_cue = NA
       ),
 
       models = list(lr = NULL, cart = NULL, rf = NULL, svm = NULL)

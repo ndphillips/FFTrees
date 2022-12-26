@@ -176,11 +176,11 @@ fftrees_apply <- function(x,
       # accuracy:
       "acc", "bacc", "wacc",
       # costs:
-      "cost_decisions")
+      "cost_dec")
 
     # Add stat names to level_stats_i:
     level_stats_i[critical_stats_v] <- NA
-    level_stats_i$cost_cues <- NA
+    level_stats_i$cost_cue <- NA
 
 
     # Loop 2 (over levels): ----
@@ -298,14 +298,14 @@ fftrees_apply <- function(x,
         cost.outcomes = x$params$cost.outcomes
       )
 
-      # level_stats_i$costc <- sum(cost_cues[,tree_i], na.rm = TRUE)
+      # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[, critical_stats_v]
 
 
       # Add cue cost and cost: ----
 
-      level_stats_i$cost_cues[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
-      level_stats_i$cost[level_i] <- level_stats_i$cost_cues[level_i] + level_stats_i$cost_decisions[level_i]
+      level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
+      level_stats_i$cost[level_i] <- level_stats_i$cost_cue[level_i] + level_stats_i$cost_dec[level_i]
     }
 
     # Add final tree results to level_stats_ls and decisions_ls: ----
@@ -326,7 +326,7 @@ fftrees_apply <- function(x,
 
   helper <- paste(level_stats$tree, level_stats$level, sep = ".")
   maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-  tree_stats <- cbind(tree_df[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cues", "cost")])
+  tree_stats <- cbind(tree_df[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cue", "cost")])
   names(tree_stats)[1] <- "tree"
   rownames(tree_stats) <- 1:nrow(tree_stats)
 

@@ -292,7 +292,7 @@ fftrees_cuerank <- function(x = NULL,
 
   # Add cue costs: ----
 
-  cuerank_df$cost_cues <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
+  cuerank_df$cost_cue <- unlist(x$params$cost.cues[match(cuerank_df$cue, names(x$params$cost.cues))])
 
 
   # Store in x$cues$stats (as df): ----
