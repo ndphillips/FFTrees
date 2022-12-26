@@ -29,6 +29,7 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 
 # FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
+
 <!-- Status badges: --> 
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
@@ -128,7 +129,7 @@ heart_fft <- FFTrees(formula = diagnosis ~.,
 heart_fft
 ```
 
-- To evaluate the predictive performance of an FFT, we plot an `FFTrees` object to visualize a tree and its performance (on the `test` data): 
+- To evaluate the predictive performance of an FFT, we plot an `FFTrees` object (to visualize a tree and its performance) on the `test` data: 
 
 ```{r example-heart-plot, eval = FALSE}
 # Plot the best tree applied to the test data: 

@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.7.5.9015 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7.5.9016 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges: -->
 
@@ -175,8 +175,8 @@ evaluate their predictive performance on the `heart.test` data:
     #> mcu = 1.74,  pci = 0.87,  E(cost) = 0.200
 
 -   To evaluate the predictive performance of an FFT, we plot an
-    `FFTrees` object to visualize a tree and its performance (on the
-    `test` data):
+    `FFTrees` object (to visualize a tree and its performance) on the
+    `test` data:
 
 <!-- -->
 
@@ -206,8 +206,8 @@ data.](man/figures/README-example-heart-plot-1.png)
     #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
     #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
     #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    #> # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>,
-    #> #   cost_decisions <dbl>, cost_cues <dbl>
+    #> # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>, cost_dec <dbl>,
+    #> #   cost_cue <dbl>
 
 <!-- FFTs by verbal description: -->
 
@@ -334,6 +334,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-12-25.\]
+\[File `README.Rmd` last updated on 2022-12-26.\]
 
 <!-- eof. -->
