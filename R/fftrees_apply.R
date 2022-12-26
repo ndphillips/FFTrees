@@ -133,22 +133,25 @@ fftrees_apply <- function(x,
 
     # costs:
     cost_cue_level <- sapply(cue_v, FUN = function(cue_i) {
+
       if (cue_i %in% names(x$params$cost.cues)) {
         cost_cue_i <- x$params$cost.cues[[cue_i]]
       } else {
         cost_cue_i <- 0
       }
-    })
+
+    }
+    )
+    # print(cost_cue_level)  # 4debugging
 
     cost_cue_level_cum <- cumsum(cost_cue_level)
     # print(paste0("- cost_cue_level_cum = ", cost_cue_level_cum))  # 4debugging
 
+    # as df (NOT USED anwywhere???):
     cue_cost_cum_level <- data.frame(
       level = 1:level_n,
       cue_cost_cum = cost_cue_level_cum
     )
-
-
 
 
     # Prepare data structures:
@@ -288,6 +291,7 @@ fftrees_apply <- function(x,
 
       decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_decision
 
+
       # Get cumulative level stats: ----
 
       my_level_stats_i <- classtable(
@@ -302,10 +306,11 @@ fftrees_apply <- function(x,
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[, critical_stats_v]
 
 
-      # Add cue cost and cost: ----
+      # Add cue cost and total cost: ----
 
       level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
-      level_stats_i$cost[level_i] <- level_stats_i$cost_cue[level_i] + level_stats_i$cost_dec[level_i]
+      level_stats_i$cost[level_i]     <- level_stats_i$cost_cue[level_i] + level_stats_i$cost_dec[level_i]
+
     }
 
     # Add final tree results to level_stats_ls and decisions_ls: ----
@@ -313,6 +318,7 @@ fftrees_apply <- function(x,
     level_stats_ls[[tree_i]] <- level_stats_i
 
     decisions_ls[[tree_i]] <- decisions_df[, names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
+
   }
 
   # Aggregate results: ----
