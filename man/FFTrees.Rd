@@ -55,12 +55,14 @@ FFTrees(
 
 \item{sens.w}{numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.}
 
-\item{cost.outcomes}{A list of length 4 with names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'} specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
+\item{cost.outcomes}{A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
+The list elements must have names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
+(for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
 E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20, respectively, while correct decisions have no costs.}
 
-\item{cost.cues}{A list containing costs for each cue.
-Each element should have a name corresponding to a column in \code{data}, and each entry should be a single (positive) number.
-Cues not present in \code{cost.cues} are assumed to have no costs (i.e., a value of 0).}
+\item{cost.cues}{A list containing the cost of each cue (in some unit).
+Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
+Cues not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).}
 
 \item{stopping.rule}{character. A string indicating the method to stop growing trees.
 \code{"levels"} means the tree grows until a certain level;
