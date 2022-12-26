@@ -295,8 +295,8 @@ apply_break <- function(direction,
 
 # cost_cues_append: ------
 
-# Compute cost.cues:
-# ToDo: Distinguish function input from output!
+# Goal: Get cost.cues for ALL cues in data.
+# ToDo: Distinguish function input from output.
 
 cost_cues_append <- function(formula,
                              data,
@@ -323,10 +323,9 @@ cost_cues_append <- function(formula,
       0
     })
     names(cost.cues) <- names(cue_df)
-  }
 
 
-  if (is.null(cost.cues) == FALSE) { # Case 2: cost.cues provided: ----
+  } else { # if (is.null(cost.cues) == FALSE) { # Case 2: cost.cues provided: ----
 
     # Make sure all named cues in cost.cues are in data:
     {
@@ -368,7 +367,6 @@ cost_cues_append <- function(formula,
   return(cost.cues)
 
 } # cost_cues_append().
-
 
 
 
