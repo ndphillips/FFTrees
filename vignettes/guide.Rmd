@@ -91,7 +91,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 
 |   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
-|   | [Main guide](guide.html) | An overview of the **FFTrees** package |
+|   | [Main guide: FFTrees overview](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
@@ -114,7 +114,7 @@ The **FFTrees** package contains several datasets ---\ mostly from the [UCI Mach
 - `wine` -- What determines ratings of wine quality? [source](https://archive.ics.uci.edu/ml/datasets/Wine)
 
 
-## Citation information
+## Citing **FFTrees** 
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
 As a comprehensive, but accessible introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017, volume\ 12, issue\ 4](`r url_JDM_issue`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  

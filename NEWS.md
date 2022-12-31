@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9015
+## 1.7.5.9017
 
 <!-- Development version: --> 
 
@@ -357,6 +357,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-12-23.]
+[File `NEWS.md` last updated on 2022-12-31.]
 
 <!-- eof. -->
