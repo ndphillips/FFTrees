@@ -12,16 +12,20 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
-knitr::opts_chunk$set(echo = TRUE, 
-                      fig.width  = 6.5, 
-                      fig.height = 6.5, 
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options:
                       dpi = 100, 
-                      out.width = "600px", 
-                      fig.align = 'center', 
-                      message = FALSE
-)
+                      fig.align = 'center',
+                      fig.height = 6.0,
+                      fig.width  = 6.5, 
+                      out.width = "600px")
 ```
-
 
 ```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)

@@ -12,7 +12,19 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7, dpi = 100, out.width = "600px", fig.align = 'center', message = FALSE)
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options: 
+                      dpi = 100, 
+                      fig.align = 'center', 
+                      fig.width = 7, 
+                      fig.height = 7, 
+                      out.width = "600px")
 ```
 
 ```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
@@ -27,10 +39,11 @@ Most of these measures are not specific to FFTs and can be used for any classifi
 
 First, let's look at the accuracy statistics from a heart disease FFT: 
 
-```{r fft-example, out.width="80%", fig.align = "center", echo = FALSE, fig.cap = "**Figure 1**: Example FFT for the `heartdisease` data."}
+```{r fft-example, fig.cap = "**Figure 1**: Example FFT for the `heartdisease` data."}
 # Create an FFTrees object predicting heart disease
 heart.fft <- FFTrees(formula = diagnosis ~.,
-                     data = heartdisease)
+                     data = heartdisease, 
+                     quiet = TRUE)
 
 plot(heart.fft)
 ```

@@ -12,8 +12,23 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options: 
+                      dpi = 100, 
+                      fig.align = 'center',
+                      fig.height = 6.0,
+                      fig.width  = 6.5, 
+                      out.width = "550px")
+```
+
+```{r load-pkg-0, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
-knitr::opts_chunk$set(echo = TRUE, fig.width = 6, fig.height = 6, dpi = 100, out.width = "550px", fig.align = 'center', message = FALSE)
 ```
 
 
@@ -24,7 +39,7 @@ This vignette illustrates how to construct fast-and-frugal trees (FFTs) for addi
 
 ### Mushrooms data
 
-```{r image-mushrooms, fig.align = "center", out.width="225px", echo = FALSE}
+```{r image-mushrooms, fig.align = "center", out.width = "225px", echo = FALSE}
 knitr::include_graphics("../inst/mushrooms.jpg")
 ```
 

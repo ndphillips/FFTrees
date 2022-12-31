@@ -72,7 +72,7 @@ The resulting `FFTrees` object `heart.fft` contains 7\ FFTs that were fitted to 
 To evaluate a tree's predictive performance, we compare its predictions for the un-trained `heart.test` data with their true criterion values. 
 Here is how we can apply the best training FFT to the `heart.test` data: 
 
-```{r fig-1, fig.width = 7, fig.height = 6.5, out.width = "600px", fig.align = 'center', fig.cap = "A fast-and-frugal tree (FFT) to predict heart disease status."}
+```{r fig-1, fig.width = 6.5, fig.height = 6.0, out.width = "600px", fig.align = 'center', fig.cap = "A fast-and-frugal tree (FFT) to predict heart disease status."}
 # Visualize predictive performance:
 plot(heart.fft, data = "test")
 ```

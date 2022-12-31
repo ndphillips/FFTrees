@@ -12,15 +12,19 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(collapse = FALSE,
-                      comment  = "##",
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
                       echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options:
+                      dpi = 100,
+                      fig.align = 'center',
+                      fig.height = 6.0, 
                       fig.width  = 6.5, 
-                      fig.height = 6, 
-                      dpi = 100, 
-                      out.width = "550px", 
-                      fig.align = 'center', 
-                      message = FALSE)
+                      out.width = "600px")
 ```
 
 
@@ -259,8 +263,8 @@ x <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
              data = heart.train,                # training data
              data.test = heart.test,            # testing data
              main = "Heart Disease 1",          # initial label
-             decision.labels = c("low risk", "high risk")  # decision labels (False/True)
-)
+             decision.labels = c("low risk", "high risk"),  # exit labels
+             quiet = TRUE)                      # hide user feedback
 ```
 
 As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
