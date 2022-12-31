@@ -27,6 +27,7 @@ knitr::opts_chunk$set(collapse = FALSE,
                       out.width = "600px")
 ```
 
+
 ```{r load-pkg-1, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```

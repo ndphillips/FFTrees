@@ -12,8 +12,6 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
-library(FFTrees)
-
 # URLs:
 url_pkg_CRAN   <- "https://CRAN.R-project.org/package=FFTrees"
 url_pkg_GitHub <- "https://github.com/ndphillips/FFTrees"
@@ -25,6 +23,10 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 
 email_contact <- "Nathaniel.D.Phillips.is@gmail.com"
 url_contact   <- "https://www.linkedin.com/in/nathanieldphillips/"
+```
+
+```{r load-pkg-0, echo = FALSE, message = FALSE, results = 'hide'}
+library(FFTrees)
 ```
 
 <!-- Brief intro: -->
