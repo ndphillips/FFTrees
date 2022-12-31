@@ -29,8 +29,8 @@ library(FFTrees)
 
 ## Manually specifying FFTs 
 
-We typically create fast-and-frugal trees (FFTs) from data by using the `FFTrees()` function (see the [Main guide](guide.html), the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) and for details). 
-However, we sometimes want to design and test some specific FFT (e.g., to check a hypothesis or using some variables based on theoretical considerations). 
+We usually create fast-and-frugal trees (FFTs) from data by using the `FFTrees()` function (see the [Main guide: FFTrees overview](guide.html) and the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for details). 
+However, we occasionally want to design and test a specific FFT (e.g., to check a hypothesis or use some variables based on theoretical considerations). 
 
 There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function: 
 
@@ -38,9 +38,10 @@ There are two ways to define fast-and-frugal trees manually when using the `FFTr
 
 2. as a data frame using the `tree.definitions` argument (the harder way).  
 
-Both of these methods will bypass the tree construction algorithms built into the **FFTrees** package.
+<!-- Role of 'train' vs. 'test' data with manually defined FFTs: -->
 
-
+Both of these methods require some data to evaluate the performance of FFTs, but will bypass the tree construction algorithms built into the **FFTrees** package. 
+As manually created FFTs are no longer optimized, the conceptual distinction between data fitting and predicting data disppears for such FFTs. Although we can still distinguish between two sets of 'train' vs. 'test' data, a manually defined FFT should not be expected to perform systematically better on 'train' data than on 'test' data. 
 ### 1. Using `my.tree`
 
 The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
@@ -600,7 +601,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 
 |   | Vignette | Description |
 |--:|:------------------------------|:-------------------------------------------------|
-|   | [Main guide](guide.html) | An overview of the **FFTrees** package |
+|   | [Main guide: FFTrees overview](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
