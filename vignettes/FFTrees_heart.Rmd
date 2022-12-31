@@ -145,7 +145,7 @@ plot(heart.fft,      # An FFTrees object
 
 - `stats`: Should accuracy statistics be shown with the tree? To show only the tree, without any performance statistics, include the argument `stats = FALSE`. 
 
-```{r fft-no-stats, fig.width = 8, fig.height = 5, fig.align='center'}
+```{r fft-no-stats, fig.width = 8, fig.height = 4, out.width = "500px"}
 # Plot only the tree, without accuracy statistics:
 plot(heart.fft, what = "tree")
 # plot(heart.fft, stats = FALSE)  #  The 'stats' argument has been deprecated.
@@ -155,7 +155,7 @@ plot(heart.fft, what = "tree")
 
 - `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
 
-```{r fft-cues, fig.width = 6, fig.height = 6}
+```{r fft-cues, fig.width = 6, fig.height = 6, out.width = "500px"}
 # Plot cue accuracies (for training data) in ROC space:
 plot(heart.fft, what = "cues")
 ```

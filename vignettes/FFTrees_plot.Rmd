@@ -12,7 +12,14 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7, dpi = 100, out.width = "600px", fig.align = 'center', message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, 
+                      fig.width  = 6.5, 
+                      fig.height = 6.5, 
+                      dpi = 100, 
+                      out.width = "600px", 
+                      fig.align = 'center', 
+                      message = FALSE
+)
 ```
 
 
@@ -99,8 +106,8 @@ Let's apply the function to the `titanic.fft` object to see how accurate each of
 
 <!-- Example what = 'cues': -->
 
-```{r titanic-cues, fig.width = 6, fig.height = 6, fig.align = 'center', out.width = "75%", fig.cap="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset."}
-plot(titanic.fft, what = 'cues', main = "Cues predicting Titanic survival")
+```{r titanic-cues, fig.width = 6, fig.height = 6, out.width = "500px", fig.cap = "**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset."}
+plot(titanic.fft, what = "cues", main = "Cues predicting Titanic survival")
 ```
 
 Given the axes of this plot, good performing cues should be near the top left corner of the graph (i.e., exhibit both a low false alarm rate and a high hit rate). 
@@ -178,7 +185,7 @@ The following examples illustrate the wide range of corresponding plots:
 
 <!-- Example what = 'icontree': -->
     
-```{r titanic-what-tree, fig.align = 'center', fig.height = 7, fig.width = 10, out.width = "75%", fig.cap="**Figure 3**: An FFT diagram with icon arrays on exit nodes."}
+```{r titanic-what-tree, fig.align = 'center', fig.height = 6, fig.width = 9, out.width = "550px", fig.cap = "**Figure 3**: An FFT diagram with icon arrays on exit nodes."}
 # Plot tree diagram with icon arrays:
 plot(titanic.fft, what = "icontree", 
      n.per.icon = 50, show.iconguide = TRUE)
@@ -186,14 +193,14 @@ plot(titanic.fft, what = "icontree",
 
 <!-- Example what = 'roc': -->
 
-```{r titanic-what-roc, fig.align = 'center', fig.height = 6, fig.width = 7, out.width = "75%", fig.cap="**Figure 4**: Performance comparison of FFTs in ROC space."}
+```{r titanic-what-roc, fig.align = 'center', fig.height = 6, fig.width = 7, out.width = "550px", fig.cap = "**Figure 4**: Performance comparison of FFTs in ROC space."}
 # Plot only the performance comparison in ROC space:
 plot(titanic.fft, what = "roc")
 ```
 
 - When the main options for `what` do not suffice, various `show.` arguments (i.e., `show.header`, `show.tree`, `show.confusion`, `show.levels`, `show.roc`, `show.icons`, and `show.iconguide`) allow to selectively turn on or turn off specific elements of the overall plot. For example: 
 
-```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 9, out.width = "75%", fig.cap="**Figure 5**: Plotting selected elements."}
+```{r titanic-args, fig.align = 'center', fig.height = 7, fig.width = 9, out.width = "550px", fig.cap = "**Figure 5**: Plotting selected elements."}
 # Hide some elements of the FFT plot: 
 plot(titanic.fft, 
      show.icons = FALSE,     # hide icons
@@ -258,19 +265,19 @@ titanic.pred.fft <- FFTrees(formula = survived ~.,
 
 Here is the best training tree applied to the _training_ data:
 
-```{r titanic-train, fig.width = 6, fig.height = 6, fig.align='center', out.width = "75%", fig.cap="**Figure 6**: Plotting the best FFT on _training_ data."}
+```{r titanic-train, fig.cap = "**Figure 6**: Plotting the best FFT on _training_ data."}
 # print(titanic.pred.fft, tree = 1)
 plot(titanic.pred.fft, tree = 1)
 ```
 
-Tree\ #1 is the best training tree (and could also be visualized by `plot(titanic.pred.fft, tree = "best.train")`). 
+Tree\ #1 is the best training tree --- and could also be visualized by `plot(titanic.pred.fft, tree = "best.train")`. 
 This tree has a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
 The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
 However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART performed even worse than Tree\ #1.
 
 Now let's inspect the performance of the same tree on the _test_ data: 
 
-```{r titanic-test, fig.width = 6, fig.height = 6, fig.align='center', out.width = "75%", fig.cap="**Figure 7**: Plotting the best FFT on _test_ data."}
+```{r titanic-test, fig.cap = "**Figure 7**: Plotting the best FFT on _test_ data."}
 # print(titanic.pred.fft, data = "test", tree = 1)
 plot(titanic.pred.fft, data = "test", tree = 1)
 ```
@@ -281,7 +288,7 @@ Both the sensitivity and specificity values have decreased somewhat, which is ty
 
 Let's visualize the prediction performance of Tree\ #2, the most liberal tree (i.e., with the highest sensitivity): 
 
-```{r titanic-viz-2, fig.width = 6, fig.height = 6, fig.align='center', out.width = "75%", fig.cap="**Figure 8**: Plotting Tree\ #2."} 
+```{r titanic-viz-2, fig.cap = "**Figure 8**: Plotting Tree\ #2."} 
 plot(titanic.pred.fft, data = "test", tree = 2)
 ```
 

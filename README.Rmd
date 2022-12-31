@@ -5,14 +5,12 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  fig.width = 7,
-  fig.height = 6, 
-  out.width = "800", 
-  fig.align='center' # ignored
+knitr::opts_chunk$set(collapse = TRUE,
+                      fig.path = "man/figures/README-",
+                      fig.width  = 7,
+                      fig.height = 6, 
+                      out.width = "750", 
+                      fig.align = 'center' # ignored
 )
 
 # URLs:
