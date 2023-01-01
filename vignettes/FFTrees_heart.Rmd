@@ -12,10 +12,23 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7, dpi = 100, out.width = "600px", fig.align = 'center', message = FALSE)
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options:
+                      dpi = 100, 
+                      fig.align = 'center', 
+                      fig.height = 6.0, 
+                      fig.width  = 6.5, 
+                      out.width = "600px")
 ```
 
-```{r load-pkg-1, echo = FALSE, message = FALSE, results = 'hide'}
+
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
@@ -70,7 +83,7 @@ To create an `FFTrees` object, we use the function `FFTrees()` with two main arg
 
 Here is how we can construct our first FFTs: 
 
-```{r fft-make, message = FALSE}
+```{r fft-create, message = FALSE}
 # Create an FFTrees object:
 heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
                      data = heart.train,                # Training data
@@ -81,7 +94,7 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) pr
 ```
 
 Evaluating this expression runs code that examines the data, optimizes thresholds based on our current goals for each cue, and creates and evaluates `r heart.fft$trees$n`\ FFTs. 
-The resulting trees, their decisions and their accuracy statistics, are now stored in an `FFTrees` object called `heart.fft`.
+The resulting `FFTrees` object that contains the tree definitions, their decisions, and their performance statistics, are assigned to the `heart.fft`\ object.
 
 #### Other arguments
 
@@ -145,7 +158,7 @@ plot(heart.fft,      # An FFTrees object
 
 - `stats`: Should accuracy statistics be shown with the tree? To show only the tree, without any performance statistics, include the argument `stats = FALSE`. 
 
-```{r fft-no-stats, fig.width = 8, fig.height = 5, fig.align='center'}
+```{r fft-no-stats, fig.width = 8, fig.height = 4, out.width = "500px"}
 # Plot only the tree, without accuracy statistics:
 plot(heart.fft, what = "tree")
 # plot(heart.fft, stats = FALSE)  #  The 'stats' argument has been deprecated.
@@ -155,7 +168,7 @@ plot(heart.fft, what = "tree")
 
 - `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
 
-```{r fft-cues, fig.width = 6, fig.height = 6}
+```{r fft-cues, fig.width = 6, fig.height = 6, out.width = "500px"}
 # Plot cue accuracies (for training data) in ROC space:
 plot(heart.fft, what = "cues")
 ```

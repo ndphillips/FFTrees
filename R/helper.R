@@ -238,6 +238,15 @@ select_best_tree <- function(x, data, goal){
 
 
 
+# add_quotes: ------
+
+add_quotes <- function(x) {
+
+  toString(sQuote(x))
+
+} # add_quotes().
+
+
 # apply_break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
@@ -1324,15 +1333,78 @@ exit_word <- function(data){
 
 
 
-# add_quotes: ------
+# verify_tree: ------
 
-add_quotes <- function(x) {
+# Verify tree argument [to be used in print(x) and plot(x)].
+# Returns a tree number (as numeric) or "best.train"/"best.test" (as character).
 
-  toString(sQuote(x))
+verify_tree <- function(x, data, tree){
 
-} # add_quotes().
+  # Verify inputs: ----
+
+  if (!inherits(x, "FFTrees")) {
+    stop("You did not include a valid 'FFTrees' object or specify the tree directly with 'my.tree' or 'tree.definitions'.\nCreate a valid FFTrees object with FFTrees() or by manually specifying an FFT.")
+  }
+
+  # testthat::expect_true(data %in% c("train", "test"))
+  if (!data %in% c("test", "train")){
+    stop("The data must be 'test' or 'train'.")
+  }
+
+  if (inherits(tree, "character")) {
+    tree <- tolower(tree)  # 4robustness
+  }
+
+  if (tree == "best.test" & is.null(x$tree$stats$test)) {
+    warning("You asked for the 'best.test' tree, but there are no 'test' data. Used the best tree for 'train' data instead...")
+
+    tree <- "best.train"
+  }
+
+  if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
+    stop(paste0("You asked for a tree that does not exist. This object has ", x$trees$n, " trees."))
+  }
+
+  if (inherits(data, "character")) {
+
+    if (data == "test" & is.null(x$trees$stats$test)) {
+      stop("You asked for 'test' data, but there are no 'test' data. Consider using data = 'train' instead...")
+    }
+
+    if (tree == "best"){ # handle abbreviation:
+
+      if (data == "train") {
+
+        if (!x$params$quiet) { # user feedback:
+          msg <- paste0("Assuming you want the 'best.train' tree for 'train' data...\n")
+          cat(u_f_hig(msg))
+        }
+
+        tree <- "best.train"
+
+      } else if (data == "test") {
+
+        if (!x$params$quiet) { # user feedback:
+          msg <- paste0("Assuming you want the 'best.test' tree for 'test' data...\n")
+          cat(u_f_hig(msg))
+        }
+
+        tree <- "best.test"
+
+      } else {
+
+        stop("You asked for a 'best' tree, but have not specified 'train' or 'test' data...")
+      }
+    }
+
+  } # if (inherits(data, "character")).
 
 
+  # Output: ----
+
+  return(tree) # (character or numeric)
+
+} # verify_tree().
 
 
 

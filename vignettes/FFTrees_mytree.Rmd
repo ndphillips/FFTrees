@@ -4,7 +4,7 @@ author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
-csl: apa.csl 
+csl: apa.csl
 vignette: >
   %\VignetteIndexEntry{Manually specifying FFTs}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,17 +12,23 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
-                      fig.width = 6.5, 
-                      fig.height = 6.5, 
-                      dpi = 100, 
-                      out.width = "600px", 
-                      fig.align='center', 
-                      message = FALSE)
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options:
+                      dpi = 100,
+                      fig.align = 'center',
+                      fig.height = 6.0, 
+                      fig.width  = 6.5, 
+                      out.width = "600px")
 ```
 
 
-```{r load-pkg-0, echo = FALSE, message = FALSE, results = 'hide'}
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
@@ -42,6 +48,7 @@ There are two ways to define fast-and-frugal trees manually when using the `FFTr
 
 Both of these methods require some data to evaluate the performance of FFTs, but will bypass the tree construction algorithms built into the **FFTrees** package. 
 As manually created FFTs are no longer optimized, the conceptual distinction between data fitting and predicting data disppears for such FFTs. Although we can still distinguish between two sets of 'train' vs. 'test' data, a manually defined FFT should not be expected to perform systematically better on 'train' data than on 'test' data. 
+
 ### 1. Using `my.tree`
 
 The first method is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
@@ -106,7 +113,7 @@ my_fft <- FFTrees(diagnosis ~.,
 
 Let's see how well our manually constructed FFT (`my_fft`) did:
 
-```{r plot-my-tree, fig.cap="**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show='hold'}
+```{r plot-my-tree, fig.cap = "**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
 # Inspect FFTrees object:
 plot(my_fft)
 ```
@@ -128,7 +135,7 @@ Consequently, its accuracy measures are only around baseline level.
 Let's see if we can come up with a better FFT. 
 The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
-```{r verbal-spec-fft, fig.cap="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show='hold'}
+```{r verbal-spec-fft, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
 # Create 2nd FFTrees from an alternative FFT description (as my.tree): 
 my_fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease, 
@@ -256,8 +263,8 @@ x <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
              data = heart.train,                # training data
              data.test = heart.test,            # testing data
              main = "Heart Disease 1",          # initial label
-             decision.labels = c("low risk", "high risk")  # decision labels (False/True)
-)
+             decision.labels = c("low risk", "high risk"),  # exit labels
+             quiet = TRUE)                      # hide user feedback
 ```
 
 As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
@@ -590,7 +597,6 @@ plot(fft_2, tree = 2, data = "test")
 plot(fft_2, tree = 3, data = "train")
 plot(fft_2, tree = 3, data = "test")
 ```
-
 
 
 ## Vignettes

@@ -2,14 +2,15 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.7.5.9017 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.7.5.9018 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
-<!-- Status badges: -->
+<!-- Status badges start: -->
 
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Build
 Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
+<!-- Status badges end. -->
 
 <!-- Goal: -->
 
@@ -75,6 +76,7 @@ first rows and columns of both subsets of the `heartdisease` data:
 <!-- -->
 
     head(heart.train)
+
     #> # A tibble: 6 × 14
     #>   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
     #>   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
@@ -92,6 +94,7 @@ first rows and columns of both subsets of the `heartdisease` data:
 <!-- -->
 
     head(heart.test)
+
     #> # A tibble: 6 × 14
     #>   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
     #>   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
@@ -122,25 +125,6 @@ evaluate their predictive performance on the `heart.test` data:
                          data = heart.train,
                          data.test = heart.test, 
                          decision.labels = c("Healthy", "Disease"))
-    #> Aiming to create a new FFTrees object:
-    #> — Setting 'goal = bacc'
-    #> — Setting 'goal.chase = bacc'
-    #> — Setting 'goal.threshold = bacc'
-    #> — Setting 'max.levels = 4'
-    #> — Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'
-    #> Successfully created a new FFTrees object.
-    #> Aiming to define FFTs:
-    #> Aiming to create FFTs with 'ifan' algorithm:
-    #> Aiming to rank 13 cues:
-    #> Successfully ranked 13 cues.
-    #> Successfully created 7 FFTs with 'ifan' algorithm.
-    #> Successfully defined 7 FFTs.
-    #> Aiming to apply FFTs to 'train' data:
-    #> Successfully applied FFTs to 'train' data.
-    #> Aiming to apply FFTs to 'test' data:
-    #> Successfully applied FFTs to 'test' data.
-    #> Aiming to fit comparative algorithms (disable by do.comp = FALSE):
-    #> Successfully fitted comparative algorithms.
 
 -   Printing an `FFTrees` object shows basic information and summary
     statistics (on the best training tree, FFT \#1):
@@ -149,6 +133,7 @@ evaluate their predictive performance on the `heart.test` data:
 
     # Print:
     heart_fft
+
     #> FFTrees 
     #> - Trees: 7 fast-and-frugal trees predicting diagnosis
     #> - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
@@ -198,6 +183,7 @@ data.](man/figures/README-example-heart-plot-1.png)
 
     # Compare predictive performance across algorithms: 
     heart_fft$competition$test
+
     #> # A tibble: 5 × 17
     #>   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
     #>   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
@@ -334,6 +320,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2022-12-31.\]
+\[File `README.Rmd` last updated on 2023-01-01.\]
 
 <!-- eof. -->

@@ -60,7 +60,7 @@ print.FFTrees <- function(x = NULL,
 
   if (inherits(data, "character")) {
 
-    data <- tolower(data)  # increase robustness
+    data <- tolower(data)  # 4robustness
 
     # testthat::expect_true(data %in% c("train", "test"))
     if (!data %in% c("test", "train")){
@@ -92,23 +92,17 @@ print.FFTrees <- function(x = NULL,
 
   # tree: ----
 
-  if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
-    stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees."))
-  }
+  # Verify tree input: ----
 
-  if (tree == "best.test" & is.null(x$tree$stats$test)) {
-    warning("You asked to print the 'best.test' tree, but there were no test data. Printed the best tree for 'train' data instead...")
-
-    tree <- "best.train"
-  }
+  tree <- verify_tree(x = x, data = data, tree = tree)  # use helper (for plotting AND printing)
 
 
-  # Determine "best" tree: ------
+  # Get "best" tree: ----
 
   if (tree == "best.train") {
 
     if (data == "test"){
-      warning("You asked to print the 'best.train' tree, but data was set to 'test'. Printed the best tree for 'train' data instead...")
+      warning("You asked for the 'best.train' tree, but data was set to 'test'. Used the best tree for 'train' data instead...")
       data <- "train"
       main <- "Data (Training)"
     }
@@ -120,7 +114,7 @@ print.FFTrees <- function(x = NULL,
   if (tree == "best.test") {
 
     if (data == "train"){
-      warning("You asked to print the best test tree, but data was set to 'train'. I'll use 'test' data instead...")
+      warning("You asked for the 'best.test' tree, but data was set to 'train'. Used 'test' data instead...")
       data <- "test"
       main <- "Data (Testing)"
     }

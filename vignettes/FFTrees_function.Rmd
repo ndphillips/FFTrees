@@ -12,8 +12,21 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7.5, fig.height = 7.5, dpi = 100, out.width = "600px", fig.align='center', message = FALSE)
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options:
+                      dpi = 100,
+                      fig.align = 'center',
+                      fig.height = 6.0,
+                      fig.width  = 6.5, 
+                      out.width = "600px")
 ```
+
 
 ```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
@@ -206,11 +219,10 @@ heart.fft$cues$stats$train
 We can also visualize the cue accuracies for the training data (in ROC\ space, i.e., showing each cue's hit rate by its false alarm rate) by calling `plot()` with the `what = "cues"` argument. 
 This will show the sensitivities and specificities for each cue, with the top five cues highlighted and listed:
 
-```{r fft-plot-cues, fig.width = 6.5, fig.height = 6.5, dpi = 400, out.width = "600px", fig.align='center'}
+```{r fft-plot-cues, fig.width = 6, fig.height = 6, out.width = "500px", fig.align = 'center'}
 # Visualize individual cue accuracies: 
-plot(heart.fft,
-     main = "Cue accuracy for heartdisease",
-     what = "cues")
+plot(heart.fft, what = "cues", 
+     main = "Cue accuracy for heartdisease")
 ```
 
 <!-- Hint: Plotting vignette -->

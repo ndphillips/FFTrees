@@ -11,9 +11,27 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
-library(FFTrees)
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(collapse = FALSE, 
+                      comment = "#>", 
+                      prompt = FALSE,
+                      tidy = FALSE,
+                      echo = TRUE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      # Default figure options:
+                      dpi = 100, 
+                      fig.align = 'center',
+                      fig.height = 6.0,
+                      fig.width  = 6.5, 
+                      out.width = "600px")
+```
 
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
+library(FFTrees)
+```
+
+```{r urls, echo = FALSE, message = FALSE, results = 'hide'}
 # URLs:
 url_pkg_CRAN   <- "https://CRAN.R-project.org/package=FFTrees"
 url_pkg_GitHub <- "https://github.com/ndphillips/FFTrees"
@@ -72,16 +90,16 @@ The resulting `FFTrees` object `heart.fft` contains 7\ FFTs that were fitted to 
 To evaluate a tree's predictive performance, we compare its predictions for the un-trained `heart.test` data with their true criterion values. 
 Here is how we can apply the best training FFT to the `heart.test` data: 
 
-```{r fig-1, fig.width = 7, fig.height = 6.5, fig.align = 'center', fig.cap = "A fast-and-frugal tree (FFT) to predict heart disease status."}
+```{r fig-1, fig.width = 6.5, fig.height = 6.0, out.width = "600px", fig.align = 'center', fig.cap = "A fast-and-frugal tree (FFT) to predict heart disease status."}
 # Visualize predictive performance:
 plot(heart.fft, data = "test")
 ```
 
 ## Getting started 
 
-To begin using the **FFTrees** package, we recommend studying the [Tutorial: Creating FFTs for heart disease](FFTrees_heart.html). 
-This tutorial will take you through all of the basics steps of creating, visualizing, and evaluating fast-and-frugal trees (FFTs). 
-The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees (in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). The following vignettes provide additional details and examples on specific topics. 
+To start using the **FFTrees** package, we recommend studying the [Tutorial: Creating FFTs for heart disease](FFTrees_heart.html). 
+This tutorial illustrates the basics steps of creating, visualizing, and evaluating fast-and-frugal trees (FFTs). The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees (in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
+The following vignettes provide details on additional topics and corresponding examples. 
 
 ### Vignettes
 

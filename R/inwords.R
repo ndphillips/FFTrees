@@ -33,7 +33,7 @@ inwords <- function(x, data = NULL, tree = 1) {
 
   if (is.null(data) == FALSE) {
 
-    data <- tolower(data)  # increase robustness
+    data <- tolower(data)  # 4robustness
 
     testthat::expect_true(data %in% c("train", "test"))
     # if (!data %in% c("test", "train")){
