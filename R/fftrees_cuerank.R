@@ -154,10 +154,10 @@ fftrees_cuerank <- function(x = NULL,
           # Use all unique cue values:
           cue_i_levels <- sort(unique(unlist(cue_i_v)))
 
-          # If there are > 50% unique cue.levels, send a warning:
+          # If there are > 50% unique cue.levels, provide a warning:
           if (length(cue_i_levels) > .50 * nrow(newdata)) {
 
-            warning(paste0("The cue ", names(cue_df)[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting. You should probably exclude this cue or reduce the number of unique values."))
+            warning(paste0("The cue ", names(cue_df)[cue_i], " is nominal and contains mostly unique values. This could lead to dramatic overfitting.\nConsider excluding this cue or reducing the number of unique values."))
 
           }
         }
@@ -169,7 +169,7 @@ fftrees_cuerank <- function(x = NULL,
 
         }))) {
 
-          stop(paste0("The cue ", names(cue_df)[cue_i], " contains the character ';' which is not allowed. Please replace this value in the data and try again."))
+          stop(paste0("The cue ", names(cue_df)[cue_i], " contains the character ';' which is not allowed.\nPlease replace this value in the data and try again."))
         }
 
       } # Step 1.
