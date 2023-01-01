@@ -60,7 +60,7 @@ print.FFTrees <- function(x = NULL,
 
   if (inherits(data, "character")) {
 
-    data <- tolower(data)  # increase robustness
+    data <- tolower(data)  # 4robustness
 
     # testthat::expect_true(data %in% c("train", "test"))
     if (!data %in% c("test", "train")){
