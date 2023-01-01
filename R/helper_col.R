@@ -28,9 +28,9 @@
 
 # ANSI color styles:
 
-in_grey      <- cli::make_ansi_style("grey40", grey = TRUE, colors = 256)
-in_darkgrey  <- cli::make_ansi_style("grey20", grey = TRUE, colors = 256)
-in_lightgrey <- cli::make_ansi_style("grey60", grey = TRUE, colors = 256)
+in_grey      <- cli::make_ansi_style("grey50", grey = TRUE, colors = 256)
+in_darkgrey  <- cli::make_ansi_style("grey33", grey = TRUE, colors = 256)
+in_lightgrey <- cli::make_ansi_style("grey67", grey = TRUE, colors = 256)
 
 in_red   <- cli::make_ansi_style("firebrick3",  colors = 256)  # "red4" "darkred"
 in_green <- cli::make_ansi_style("forestgreen", colors = 256)  # "green4" "darkgreen"
@@ -39,11 +39,11 @@ in_blue  <- cli::make_ansi_style("dodgerblue4", colors = 256)  # "steelblue4" "d
 
 # User feedback messages:
 
-u_f_ini <- cli::make_ansi_style("grey25", grey = TRUE, colors = 256)  # "black"
+u_f_ini <- cli::make_ansi_style("grey33", grey = TRUE, colors = 256)  # "black"
 u_f_fin <- cli::make_ansi_style("darkgreen", colors = 256)  # "black"
 
 u_f_msg <- cli::make_ansi_style("grey50", grey = TRUE, colors = 256)  # normal message
-u_f_hig <- cli::make_ansi_style("darkblue", colors = 256)   # highlighted msg
+u_f_hig <- cli::make_ansi_style("dodgerblue4", colors = 256)   # highlighted msg
 
 
 # ToDo: ------
