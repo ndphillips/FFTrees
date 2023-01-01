@@ -28,7 +28,7 @@ knitr::opts_chunk$set(collapse = FALSE,
 ```
 
 
-```{r load-pkg-0, echo = FALSE, message = FALSE, results = 'hide'}
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 

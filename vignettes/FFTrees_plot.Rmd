@@ -11,7 +11,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, echo = FALSE, message = FALSE, results = 'hide'}
+```{r setup, echo = FALSE}
 knitr::opts_chunk$set(collapse = FALSE, 
                       comment = "#>", 
                       prompt = FALSE,
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(collapse = FALSE,
                       out.width = "600px")
 ```
 
-```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 

@@ -28,7 +28,7 @@ knitr::opts_chunk$set(collapse = FALSE,
 ```
 
 
-```{r load-pkg-1, echo = FALSE, message = FALSE, results = 'hide'}
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
@@ -83,7 +83,7 @@ To create an `FFTrees` object, we use the function `FFTrees()` with two main arg
 
 Here is how we can construct our first FFTs: 
 
-```{r fft-make, message = FALSE}
+```{r fft-create, message = FALSE}
 # Create an FFTrees object:
 heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) predictors
                      data = heart.train,                # Training data
@@ -94,7 +94,7 @@ heart.fft <- FFTrees(formula = diagnosis ~ .,           # Criterion and (all) pr
 ```
 
 Evaluating this expression runs code that examines the data, optimizes thresholds based on our current goals for each cue, and creates and evaluates `r heart.fft$trees$n`\ FFTs. 
-The resulting trees, their decisions and their accuracy statistics, are now stored in an `FFTrees` object called `heart.fft`.
+The resulting `FFTrees` object that contains the tree definitions, their decisions, and their performance statistics, are assigned to the `heart.fft`\ object.
 
 #### Other arguments
 

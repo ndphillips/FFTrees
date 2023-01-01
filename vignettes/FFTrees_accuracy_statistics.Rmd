@@ -28,7 +28,7 @@ knitr::opts_chunk$set(collapse = FALSE,
 ```
 
 
-```{r load-pkg, echo = FALSE, message = FALSE, results = 'hide'}
+```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
 ```
 
@@ -38,16 +38,21 @@ library(FFTrees)
 In this vignette, we cover how accuracy statistics are calculated for FFTs and the **FFTrees** package [as described in @phillips2017FFTrees]. 
 Most of these measures are not specific to FFTs and can be used for any classification algorithm. 
 
-First, let's look at the accuracy statistics from a heart disease FFT: 
+First, let's examine the accuracy statistics from an FFT predicting heart disease: 
 
-```{r fft-example, fig.cap = "**Figure 1**: Example FFT for the `heartdisease` data."}
-# Create an FFTrees object predicting heart disease
+```{r fft-example, results = "hide"}
+# Create an FFTrees object predicting heart disease: 
 heart.fft <- FFTrees(formula = diagnosis ~.,
-                     data = heartdisease, 
-                     quiet = TRUE)
-
-plot(heart.fft)
+                     data = heartdisease)
 ```
+
+Running this `FFTrees()` function call yields a new `FFTrees` object `heart.fft`. 
+Both printing or plotting this object for a particular dataset and tree yields corresponding accuracy and frugality statistics. For now, we simply plot the best training tree: 
+
+```{r fft-plot-1, fig.cap = "**Figure 1**: Example FFT for the `heartdisease` data."}
+plot(heart.fft, tree = "best.train")
+```
+
 
 We notice a 2x2\ table in the bottom-left corner of the plot: 
 This is a _2\ x\ 2 matrix_ or _confusion table_ (see [Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix) or [Neth et al., 2021](https://doi.org/10.3389/fpsyg.2020.567817) for details). 
