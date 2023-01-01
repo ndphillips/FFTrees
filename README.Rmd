@@ -5,13 +5,17 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE,
+# Chunk options: 
+knitr::opts_chunk$set(collapse = FALSE,
+                      comment = "#>", 
+                      message = FALSE,
+                      warning = FALSE, 
+                      # Default figure options: 
+                      fig.align = 'center',  # ignored
                       fig.path = "man/figures/README-",
-                      fig.width  = 7,
-                      fig.height = 6, 
-                      out.width = "750", 
-                      fig.align = 'center' # ignored
-)
+                      fig.width  = 7.0,
+                      fig.height = 6.0, 
+                      out.width = "650")
 
 # URLs:
 url_pkg_CRAN   <- "https://CRAN.R-project.org/package=FFTrees"
@@ -101,6 +105,7 @@ head(heart.test)
 Most of the variables in our data are potential predictors. 
 The criterion variable is `diagnosis` --- a logical column indicating the true state for each patient (`TRUE` or\ `FALSE`, i.e., whether or not the patient suffers from heart disease). 
 
+
 ### Creating fast-and-frugal trees (FFTs) 
 
 Now let's use `FFTrees()` to create FFTs for the `heart.train` data and evaluate their predictive performance on the `heart.test` data: 
@@ -145,6 +150,7 @@ plot(heart_fft,
 # Compare predictive performance across algorithms: 
 heart_fft$competition$test
 ```
+
 
 <!-- FFTs by verbal description: -->
 

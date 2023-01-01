@@ -76,16 +76,17 @@ first rows and columns of both subsets of the `heartdisease` data:
 <!-- -->
 
     head(heart.train)
-    ## # A tibble: 6 × 14
-    ##   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
-    ##   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
-    ## 1 FALSE        44     0 np         108   141     0 normal      175     0     0.6
-    ## 2 FALSE        51     0 np         140   308     0 hypert…     142     0     1.5
-    ## 3 FALSE        52     1 np         138   223     0 normal      169     0     0  
-    ## 4 TRUE         48     1 aa         110   229     0 normal      168     0     1  
-    ## 5 FALSE        59     1 aa         140   221     0 normal      164     1     0  
-    ## 6 FALSE        58     1 np         105   240     0 hypert…     154     1     0.6
-    ## # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
+
+    #> # A tibble: 6 × 14
+    #>   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
+    #>   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
+    #> 1 FALSE        44     0 np         108   141     0 normal      175     0     0.6
+    #> 2 FALSE        51     0 np         140   308     0 hypert…     142     0     1.5
+    #> 3 FALSE        52     1 np         138   223     0 normal      169     0     0  
+    #> 4 TRUE         48     1 aa         110   229     0 normal      168     0     1  
+    #> 5 FALSE        59     1 aa         140   221     0 normal      164     1     0  
+    #> 6 FALSE        58     1 np         105   240     0 hypert…     154     1     0.6
+    #> # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
 
 -   `heart.test` (the testing / prediction dataset) contains data from a
     new set of 153 patients:
@@ -93,16 +94,17 @@ first rows and columns of both subsets of the `heartdisease` data:
 <!-- -->
 
     head(heart.test)
-    ## # A tibble: 6 × 14
-    ##   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
-    ##   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
-    ## 1 FALSE        51     0 np         120   295     0 hypert…     157     0     0.6
-    ## 2 TRUE         45     1 ta         110   264     0 normal      132     0     1.2
-    ## 3 TRUE         53     1 a          123   282     0 normal       95     1     2  
-    ## 4 TRUE         45     1 a          142   309     0 hypert…     147     1     0  
-    ## 5 FALSE        66     1 a          120   302     0 hypert…     151     0     0.4
-    ## 6 TRUE         48     1 a          130   256     1 hypert…     150     1     0  
-    ## # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
+
+    #> # A tibble: 6 × 14
+    #>   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
+    #>   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
+    #> 1 FALSE        51     0 np         120   295     0 hypert…     157     0     0.6
+    #> 2 TRUE         45     1 ta         110   264     0 normal      132     0     1.2
+    #> 3 TRUE         53     1 a          123   282     0 normal       95     1     2  
+    #> 4 TRUE         45     1 a          142   309     0 hypert…     147     1     0  
+    #> 5 FALSE        66     1 a          120   302     0 hypert…     151     0     0.4
+    #> 6 TRUE         48     1 a          130   256     1 hypert…     150     1     0  
+    #> # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
 
 Most of the variables in our data are potential predictors. The
 criterion variable is `diagnosis` — a logical column indicating the true
@@ -131,30 +133,31 @@ evaluate their predictive performance on the `heart.test` data:
 
     # Print:
     heart_fft
-    ## FFTrees 
-    ## - Trees: 7 fast-and-frugal trees predicting diagnosis
-    ## - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
-    ## 
-    ## FFT #1: Definition
-    ## [1] If thal = {rd,fd}, decide Disease.
-    ## [2] If cp != {a}, decide Healthy.
-    ## [3] If ca > 0, decide Disease, otherwise, decide Healthy.
-    ## 
-    ## FFT #1: Training Accuracy
-    ## Training data: N = 150, Pos (+) = 66 (44%) 
-    ## 
-    ## |          | True + | True - | Totals:
-    ## |----------|--------|--------|
-    ## | Decide + | hi  54 | fa  18 |      72
-    ## | Decide - | mi  12 | cr  66 |      78
-    ## |----------|--------|--------|
-    ##   Totals:        66       84   N = 150
-    ## 
-    ## acc  = 80.0%   ppv  = 75.0%   npv  = 84.6%
-    ## bacc = 80.2%   sens = 81.8%   spec = 78.6%
-    ## 
-    ## FFT #1: Training Speed, Frugality, and Cost
-    ## mcu = 1.74,  pci = 0.87,  E(cost) = 0.200
+
+    #> FFTrees 
+    #> - Trees: 7 fast-and-frugal trees predicting diagnosis
+    #> - Outcome costs: [hi = 0, mi = 1, fa = 1, cr = 0]
+    #> 
+    #> FFT #1: Definition
+    #> [1] If thal = {rd,fd}, decide Disease.
+    #> [2] If cp != {a}, decide Healthy.
+    #> [3] If ca > 0, decide Disease, otherwise, decide Healthy.
+    #> 
+    #> FFT #1: Training Accuracy
+    #> Training data: N = 150, Pos (+) = 66 (44%) 
+    #> 
+    #> |          | True + | True - | Totals:
+    #> |----------|--------|--------|
+    #> | Decide + | hi  54 | fa  18 |      72
+    #> | Decide - | mi  12 | cr  66 |      78
+    #> |----------|--------|--------|
+    #>   Totals:        66       84   N = 150
+    #> 
+    #> acc  = 80.0%   ppv  = 75.0%   npv  = 84.6%
+    #> bacc = 80.2%   sens = 81.8%   spec = 78.6%
+    #> 
+    #> FFT #1: Training Speed, Frugality, and Cost
+    #> mcu = 1.74,  pci = 0.87,  E(cost) = 0.200
 
 -   To evaluate the predictive performance of an FFT, we plot an
     `FFTrees` object (to visualize a tree and its performance) on the
@@ -180,16 +183,17 @@ data.](man/figures/README-example-heart-plot-1.png)
 
     # Compare predictive performance across algorithms: 
     heart_fft$competition$test
-    ## # A tibble: 5 × 17
-    ##   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
-    ##   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
-    ## 1 fftrees     153    64    19     9    61 0.877 0.762 0.238  0.771 0.871 0.817
-    ## 2 lr          153    55    13    18    67 0.753 0.838 0.162  0.809 0.788 0.797
-    ## 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
-    ## 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
-    ## 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    ## # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>, cost_dec <dbl>,
-    ## #   cost_cue <dbl>
+
+    #> # A tibble: 5 × 17
+    #>   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
+    #>   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+    #> 1 fftrees     153    64    19     9    61 0.877 0.762 0.238  0.771 0.871 0.817
+    #> 2 lr          153    55    13    18    67 0.753 0.838 0.162  0.809 0.788 0.797
+    #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
+    #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
+    #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
+    #> # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>, cost_dec <dbl>,
+    #> #   cost_cue <dbl>
 
 <!-- FFTs by verbal description: -->
 

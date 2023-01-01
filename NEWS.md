@@ -42,11 +42,11 @@ Changes since last release:
 
 ### Details 
 
-- Replaced **crayon** package by **cli** package. 
 - Removed `anova` from **stats** imports.  
 - Replaced `expect_is()` by more precise **testthat** inheritance functions. 
+- Replaced **crayon** package by **cli** package. 
 - Revised documentation and vignettes. 
-- Fixed bugs and increased robustness. 
+- Fixed bugs and revised code to increase robustness. 
 
 <!-- Blank line. --> 
 
