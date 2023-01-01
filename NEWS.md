@@ -1,7 +1,7 @@
 
 # FFTrees 1.7
 
-## 1.7.5.9017
+## 1.7.5.9018
 
 <!-- Development version: --> 
 
@@ -46,8 +46,7 @@ Changes since last release:
 - Removed `anova` from **stats** imports.  
 - Replaced `expect_is()` by more precise **testthat** inheritance functions. 
 - Revised documentation and vignettes. 
-- Fixed bugs (e.g., in examples).
-
+- Fixed bugs and increased robustness. 
 
 <!-- Blank line. --> 
 
@@ -357,6 +356,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2022-12-31.]
+[File `NEWS.md` last updated on 2023-01-01.]
 
 <!-- eof. -->
