@@ -201,7 +201,7 @@ plot.FFTrees <- function(x = NULL,
   valid_what <- c("all", "default",
                   "cues", "tree", "icontree", "roc")
 
-  what <- tolower(substr(what, 1, 3))  # robustness
+  what <- tolower(substr(what, 1, 3))  # 4robustness
 
   if (what %in% substr(valid_what, 1, 3) == FALSE) {
 
@@ -403,7 +403,7 @@ plot.FFTrees <- function(x = NULL,
 
     if (inherits(data, "character")) {
 
-      data <- tolower(data)  # increase robustness
+      data <- tolower(data)  # 4robustness
 
       # testthat::expect_true(data %in% c("train", "test"))
       if (!data %in% c("test", "train")){
@@ -475,30 +475,62 @@ plot.FFTrees <- function(x = NULL,
 
     # tree: ----
 
-    # Check for problems:
+    # Verify tree input: ----
 
     if (!inherits(x, "FFTrees")) {
       stop("You did not include a valid FFTrees class object or specify the tree directly with 'level.names', 'level.classes' (etc.).\nEither create a valid FFTrees object with FFTrees() or specify the tree directly.")
     }
 
+    if (inherits(tree, "character")) {
+      tree <- tolower(tree)  # 4robustness
+    }
+
     if (tree == "best.test" & is.null(x$tree$stats$test)) {
-      warning("You asked to plot the best 'test' tree, but there were no test data. Plotted the best tree for 'train' data instead...")
+      warning("You asked to plot the 'best.test' tree, but there were no 'test' data. Plotted the best tree for 'train' data instead...")
 
       tree <- "best.train"
     }
 
     if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
-      stop(paste("You asked for a tree that does not exist. This object has", x$trees$n, "trees.", sep = " "))
+      stop(paste0("You asked for a tree that does not exist. This object has ", x$trees$n, " trees."))
     }
 
     if (inherits(data, "character")) {
+
       if (data == "test" & is.null(x$trees$stats$test)) {
-        stop("You asked to plot 'test' data, but there are no test data. Consider using data = 'train' instead...")
+        stop("You asked to plot 'test' data, but there are no 'test' data. Consider using data = 'train' instead...")
       }
-    }
+
+      if (tree == "best"){ # handle abbreviation:
+
+        if (data == "train") {
+
+          if (!x$params$quiet) { # user feedback:
+            msg <- paste0("Assuming you want the 'best.train' tree for the 'train' data...\n")
+            cat(u_f_hig(msg))
+          }
+
+          tree <- "best.train"
+
+        } else if (data == "test") {
+
+          if (!x$params$quiet) { # user feedback:
+            msg <- paste0("Assuming you want the 'best.test' tree for the 'test' data...\n")
+            cat(u_f_hig(msg))
+          }
+
+          tree <- "best.test"
+
+        } else {
+
+          stop("You asked to plot a 'best' tree, but have not specified 'train' or 'test' data...")
+        }
+      }
+
+    } # if (inherits(data, "character")).
 
 
-    # Determine "best" tree: ------
+    # Determine "best" tree: ----
 
     if (tree == "best.train") {
 
