@@ -38,7 +38,7 @@ See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agari
 }
 }
 \source{
-\url{http://archive.ics.uci.edu/ml/datasets/Mushroom}
+\url{https://archive.ics.uci.edu/ml/datasets/Mushroom}
 }
 \usage{
 mushrooms

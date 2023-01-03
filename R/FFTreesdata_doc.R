@@ -369,7 +369,7 @@
 #' Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981).
 #' G.H. Lincoff (Pres.), New York: A.A. Knopf.
 #'
-#' @source \url{http://archive.ics.uci.edu/ml/datasets/Mushroom}
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Mushroom}
 #'
 
 "mushrooms"
