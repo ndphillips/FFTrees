@@ -43,15 +43,17 @@ and easy to interpret, use, and communicate.
 
 ## Installation
 
-To install the latest release of **FFTrees** [from
-CRAN](https://CRAN.R-project.org/package=FFTrees) evaluate:
+The latest release of **FFTrees** is available from
+[CRAN](https://CRAN.R-project.org/) at
+<https://CRAN.R-project.org/package=FFTrees>:
 
 ``` r
 install.packages("FFTrees")
 ```
 
-The current development version of **FFTrees** can be installed [from
-GitHub](https://github.com/ndphillips/FFTrees) with:
+The current development version can be installed from its
+[GitHub](https://github.com) repository at
+<https://github.com/ndphillips/FFTrees>:
 
 ``` r
 # install.packages("devtools")
@@ -112,15 +114,16 @@ head(heart.test)
     #> 6 TRUE         48     1 a          130   256     1 hypert…     150     1     0  
     #> # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
 
-Most of the variables in our data are potential predictors. The
-criterion variable is `diagnosis` — a logical column indicating the true
-state for each patient (`TRUE` or `FALSE`, i.e., whether or not the
-patient suffers from heart disease).
+Most of the variables in our data are potential predictors. The (to-be
+predicted) criterion variable is `diagnosis` — a logical column
+indicating the true state for each patient (`TRUE` or `FALSE`, i.e.,
+whether or not the patient suffers from heart disease).
 
 ### Creating fast-and-frugal trees (FFTs)
 
-Now let’s use `FFTrees()` to create FFTs for the `heart.train` data and
-evaluate their predictive performance on the `heart.test` data:
+We use the main `FFTrees()` function to create FFTs for the
+`heart.train` data and evaluate their predictive performance on the
+`heart.test` data:
 
 - Create an `FFTrees` object from the `heartdisease` data:
 
