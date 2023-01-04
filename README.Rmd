@@ -31,13 +31,15 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 
 # FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
+
 <!-- Status badges start: --> 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Status badges end. --> 
 
-<!-- Goal: -->
+
+<!-- Pkg goal: -->
 
 The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, as\ [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
 
@@ -61,13 +63,13 @@ Apart from being faster and requiring less information, FFTs tend to be robust a
 
 ## Installation
 
-To install the latest release of **FFTrees** [from CRAN](`r url_pkg_CRAN`) evaluate: 
+The latest release of **FFTrees** is available from [CRAN](https://CRAN.R-project.org/) at <`r url_pkg_CRAN`>:
 
 ```{r install-cran, eval = FALSE}
 install.packages("FFTrees")
 ```
 
-The current development version of **FFTrees** can be installed [from GitHub](`r url_pkg_GitHub`) with: 
+The current development version can be installed from its [GitHub](https://github.com) repository at <`r url_pkg_GitHub`>: 
 
 ```{r install-gitub, eval = FALSE}
 # install.packages("devtools")
@@ -103,12 +105,12 @@ head(heart.test)
 ```
 
 Most of the variables in our data are potential predictors. 
-The criterion variable is `diagnosis` --- a logical column indicating the true state for each patient (`TRUE` or\ `FALSE`, i.e., whether or not the patient suffers from heart disease). 
+The (to-be predicted) criterion variable is `diagnosis` --- a logical column indicating the true state for each patient (`TRUE` or\ `FALSE`, i.e., whether or not the patient suffers from heart disease). 
 
 
 ### Creating fast-and-frugal trees (FFTs) 
 
-Now let's use `FFTrees()` to create FFTs for the `heart.train` data and evaluate their predictive performance on the `heart.test` data: 
+We use the main `FFTrees()` function to create FFTs for the `heart.train` data and evaluate their predictive performance on the `heart.test` data: 
 
 ```{r set-seed, echo = FALSE}
 set.seed(246)  # for reproducible randomness
@@ -217,6 +219,7 @@ Retrieved from `r url_JDM_pdf`
 
 We encourage you to read the article to learn more about the history of FFTs and how the **FFTrees** package creates, visualizes, and evaluates them. 
 When using **FFTrees** in your own work, please cite us and share your experiences (e.g., [on GitHub](`r url_pkg_issues`)) so we can continue developing the package. 
+
 
 <!-- Examples uses/publications (with links): -->
 

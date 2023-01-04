@@ -1,12 +1,10 @@
 
-# FFTrees 1.7
+# FFTrees 1.8
 
-## 1.7.5.9018
+## 1.8.0
 
-<!-- Development version: --> 
-
-The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
-
+**FFTrees** version 1.8.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-06]. 
+This version mostly extends and improves existing functionality. 
 
 <!-- Log of changes: --> 
 
@@ -48,11 +46,16 @@ Changes since last release:
 - Revised documentation and vignettes. 
 - Fixed bugs and revised code to increase robustness. 
 
-<!-- Blank line. --> 
+<!-- Development version: --> 
+
+The current development version of **FFTrees** is available at  <https://github.com/ndphillips/FFTrees>. 
 
 
 <!-- Released versions: --> 
 
+------ 
+
+# FFTrees 1.7  
 
 ## 1.7.5
 
@@ -356,6 +359,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-01.]
+[File `NEWS.md` last updated on 2023-01-04.]
 
 <!-- eof. -->

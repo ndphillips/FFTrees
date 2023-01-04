@@ -12,7 +12,7 @@ citEntry(entry = "article",
          number       = "4",
          pages        = "344--368",
          address      = "PDF at <https://journal.sjdm.org/17/17217/jdm17217.pdf>",
-         note         = "R package (version 1.7.5, September 15, 2022)",
+         note         = "R package (version 1.8.0, January 6, 2023)",
          url          = "https://CRAN.R-project.org/package=FFTrees",
 
          textVersion  =
