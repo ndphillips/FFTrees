@@ -3,7 +3,7 @@
 
 ## 1.8.0
 
-**FFTrees** version 1.8.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-06]. 
+**FFTrees** version 1.8.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-06]. 
 This version mostly extends and improves existing functionality. 
 
 <!-- Log of changes: --> 
@@ -359,6 +359,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-05.]
+[File `NEWS.md` last updated on 2023-01-06.]
 
 <!-- eof. -->
