@@ -33,10 +33,12 @@ library(FFTrees)
 ```
 
 
+
 ## Examples of FFTs with **FFTrees** 
 
 This vignette illustrates how to construct fast-and-frugal trees (FFTs) for additional datasets included in the **FFTrees** package. 
 [See @phillips2017FFTrees for a comparison across 10\ real-world datasets.] 
+
 
 ### Mushrooms data
 
@@ -57,6 +59,7 @@ knitr::kable(head(mushrooms_sub))
 ```
 
 Table: **Table 1**: Binary criterion variable\ `poisonous` and 10\ potential predictors in the `mushrooms` data.
+
 
 #### Creating FFTs 
 
@@ -81,7 +84,8 @@ Here's basic information about the best performing FFT (Tree\ #1):
 mushrooms.fft
 ```
 
-[Cool beans.](https://goo.gl/B7YDuC)
+[Cool beans](https://goo.gl/B7YDuC). 
+
 
 #### Visualizing cue accuracies
 
@@ -96,9 +100,10 @@ It looks like the cues `oder` and `sporepc` are the best predictors.
 In fact, the single cue `odor` has a hit rate of\ $97$% and a false alarm rate of nearly\ $0$%! 
 Based on this, we should expect the final trees to use just these cues. 
 
+
 #### Visualizing FFT performance 
 
-Now let's plot the performance of the best training tree when applied to the test dataset: 
+Now let's plot the performance of the best training tree when applied to the test data: 
 
 ```{r fft-mushrooms-1-plot}
 # Plot the best FFT for the mushrooms test data: 
@@ -106,12 +111,15 @@ plot(mushrooms.fft, data = "test")
 ```
 
 Indeed, it looks like the best tree only uses the\ `odor` and\ `sporepc` cues. 
-In our test dataset, the tree had a _false alarm rate_ of\ $0$% ($1 -$\ specificity), and a _sensitivity_ (aka. hit rate) of\ $85$%.
+In our test dataset, the tree had a _false alarm rate_ of\ $0$% ($1 -$\ specificity), and a _sensitivity_ (aka. hit rate) of\ $85$%. 
+When considering the implications of our decisions, the fact that our FFT incurs many misses, but no false alarms, is problematic (as failing to detect poisonous mushrooms typically has more serious consequences than falsely classifying some as poisonous). 
+To change this balance, we could increase the sensitivity weight parameter (e.g., setting `sens.w = .67`) and optimize the tree's weighted accuracy\ `wacc`. 
+
 
 #### An alternative FFT 
 
-Now, let's say that we talk to a mushroom expert who says that we are using the wrong cues. 
-According to her, the best predictors for poisonous mushrooms are `ringtype` and `ringnum`. 
+But let's assume that a mushroom expert insists that we are using the wrong cues. 
+According to her, the best predictors for poisonous mushrooms are\ `ringtype` and\ `ringnum`. 
 Let's build a set of trees with these cues and see how they perform relative to our initial tree: 
 
 ```{r fft-mushrooms-2-seed, include = FALSE}
@@ -141,6 +149,7 @@ As we can see, this tree (in `mushrooms.ring.fft`) has both a sensitivity and a 
 This suggests that we should discard the expert's advice and primarily rely on the\ `odor` and\ `sporepc` cues. 
 
 
+
 ### Iris.v data 
 
 ```{r iris-image, fig.align = "center", out.width = "225px", echo = FALSE}
@@ -167,6 +176,7 @@ iris.fft
 
 However, let's take a look at the individual training cue accuracies instead... 
 
+
 #### Visualizing cue accuracies
 
 We can plot the training cue accuracies during training by specifying `what = "cues"`:
@@ -179,6 +189,7 @@ plot(iris.fft, what = "cues")
 It looks like the two cues\ `pet.wid` and\ `pet.len` are the best predictors for this dataset. 
 Based on this, we should expect the final trees will likely use one or both of these cues.
 
+
 #### Visualizing FFT performance 
 
 Now let's examine the best tree:
@@ -190,6 +201,7 @@ plot(iris.fft)
 
 Indeed, it turns out that the best tree only uses the\ `pet.wid` and\ `pet.len` cues. 
 In our test data, the tree had a sensitivity of\ 100% and a specificity of\ 94%.
+
 
 #### Alternative FFTs
 
