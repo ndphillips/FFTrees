@@ -66,7 +66,9 @@ fftrees_cuerank <- function(x = NULL,
 
   if (!x$params$quiet) {
 
-    pb <- progress::progress_bar$new(total = cue_n, clear = FALSE, show_after = .500)
+    pb <- progress::progress_bar$new(format = u_f_msg("[:bar] :percent"),
+                                     width = 70,
+                                     total = cue_n, clear = FALSE, show_after = .200)
 
     # cli::cli_progress_bar("Ranking cues", total = cue_n)
 
