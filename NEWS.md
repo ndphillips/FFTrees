@@ -1,6 +1,43 @@
 
 # FFTrees 1.8
 
+## 1.8.0.9001
+
+This is the development version of **FFTrees**, which is available at  <https://github.com/ndphillips/FFTrees>. 
+
+<!-- Log of changes: --> 
+
+Changes since last release: 
+
+
+### Major changes
+
+- None yet.
+
+<!-- Blank line. --> 
+
+
+### Minor changes 
+
+- None yet.
+
+<!-- Blank line. --> 
+
+
+### Details 
+
+- None yet.
+
+
+
+<!-- Development version: --> 
+
+The current development version of **FFTrees** is available at  <https://github.com/ndphillips/FFTrees>. 
+
+
+<!-- Released versions: --> 
+
+
 ## 1.8.0
 
 **FFTrees** version 1.8.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-06]. 
@@ -45,10 +82,6 @@ Changes since last release:
 - Replaced **crayon** package by **cli** package. 
 - Revised documentation and vignettes. 
 - Fixed bugs and revised code to increase robustness. 
-
-<!-- Development version: --> 
-
-The current development version of **FFTrees** is available at  <https://github.com/ndphillips/FFTrees>. 
 
 
 <!-- Released versions: --> 
