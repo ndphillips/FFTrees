@@ -1,8 +1,73 @@
-.Rproj.user
+## .gitignore | FFTrees | 2022 01 06:
+
+
+## 1. generic stuff: -----
+
+# self:
+# .gitignore
+
+# Mac OS:
+.DS_Store
+
+
+## 2. R stuff: -----
+
+# History files
 .Rhistory
+.Rapp.history
+
+# Session data files
 .RData
 .Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check:
+/*.Rcheck/
+
+# RStudio files:
+.Rproj.user/
+*.Rproj
+
+# produced vignettes:
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and RMarkdown cache and files directories:
+*/*_cache/
+# */*_files/
+# **/figure-html
+
+# RMarkdown:
+*.utf8.md
+*.knit.md
+.Rproj.user
+
+# CRAN:
+cran-comments.md
+^CRAN-RELEASE$
+
+# CRAN:
+cran-comments.md
+
+
+## 3. Project files: -----
+
+# dirs:
+_gitless
 doc
 Meta
-_gitless
-.DS_Store
+
+# files:
+.PowerFolder
+desktop.ini
+
+
+## eof.

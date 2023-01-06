@@ -2,7 +2,6 @@
 output: github_document
 ---
 
-
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 
 ```{r setup, include = FALSE}
