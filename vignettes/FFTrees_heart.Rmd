@@ -202,7 +202,7 @@ predict(heart.fft,
 
 To define a specific FFT and apply it to data, we can define a tree by providing its verbal description to the `my.tree` argument: 
 
-```{r fft-my-tree}
+```{r fft-my-tree, results = 'hide'}
 # Create an FFT manually (from description):
 my.heart.fft <- FFTrees(formula = diagnosis ~.,
                         data = heart.train,
@@ -213,13 +213,15 @@ my.heart.fft <- FFTrees(formula = diagnosis ~.,
                                    If age <= 35, predict False, otherwise, predict True.")
 ```
 
-Here is the resulting tree: 
+Running this code evaluates `my.tree` for the specified sets of data. 
+A visualization of the resulting tree shows its performance summary 
+(for the training data): 
 
 ```{r plot-my-fft, fig.width = 6.5, fig.height = 6}
-plot(my.heart.fft)
+plot(my.heart.fft, data = "train")
 ```
 
-The resulting tree is actually not too bad, although its first node is pretty worthless (as it only classifies 3\ cases, all as false alarms). 
+The resulting tree is actually not too bad, although its first node is pretty useless (as it only classifies 3\ cases, all as false alarms). 
 Thus, omitting the first node will result in an even simpler FFT that cannot be worse. 
 Feel free to verify this ---\ and see the [Manually specifying FFTs](FFTrees_mytree.html) vignette for additional details on defining FFTs from verbal or abstract descriptions. 
 
@@ -235,8 +237,8 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |   | [Main guide: FFTrees overview](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
-| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
-| 4 | [Manually specifying FFTs](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
+| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main `FFTrees()` function |
+| 4 | [Manually specifying FFTs](FFTrees_mytree.html)   | How to directly create FFTs without using the built-in algorithms |
 | 5 | [Visualizing FFTs](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
 | 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
