@@ -81,7 +81,7 @@ Setting `train.p` will randomly split `train.p`\% of the original data into a tr
 To create a set of FFTs, we use the `FFTrees()` function to create a new `FFTrees` object called `heart.fft`. 
 Here, we specify `diagnosis` as the binary criterion (or dependent variable), and include all other (independent) variables with `formula = diagnosis ~ .`: 
 
-```{r heart-fft, message = FALSE}
+```{r heart-fft, message = FALSE, results = 'hide'}
 # Create an FFTrees object called heart.fft predicting diagnosis: 
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
@@ -385,7 +385,7 @@ For example, we can manually define an FFT by using the sentence:
 
 - `"If chol > 300, predict True. If thal = {fd,rd}, predict False. Otherwise, predict True"`
 
-```{r fft-my-tree-def}
+```{r fft-my-tree-def, results = 'hide'}
 # Manually define a tree using the my.tree argument:
 myheart.fft <- FFTrees(diagnosis ~., 
                        data = heartdisease, 
@@ -419,9 +419,9 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 |   | [Main guide: FFTrees overview](guide.html) | An overview of the **FFTrees** package |
 | 1 | [Tutorial: FFTs for heart disease](FFTrees_heart.html)   | An example of using `FFTrees()` to model heart disease diagnosis |
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
-| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
-| 4 | [Manually specifying FFTs](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
-| 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
+| 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main `FFTrees()` function |
+| 4 | [Manually specifying FFTs](FFTrees_mytree.html)   | How to directly create FFTs without using the built-in algorithms |
+| 5 | [Visualizing FFTs](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
 | 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
 
