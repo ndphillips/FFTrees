@@ -35,10 +35,10 @@ library(FFTrees)
 
 ## Manually specifying FFTs 
 
-We usually create fast-and-frugal trees (FFTs) from data by using the `FFTrees()` function (see the [Main guide: FFTrees overview](guide.html) and the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for details). 
-However, we occasionally want to design and test a specific FFT (e.g., to check a hypothesis or use some variables based on theoretical considerations). 
+We usually create fast-and-frugal trees (FFTs) from data by using the `FFTrees()` function (see the [Main guide: FFTrees overview](guide.html) and the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for instructions). 
+However, we occasionally may want to design and evaluate specific FFTs (e.g., to test a hypothesis or include or exclude some variables based on theoretical considerations). 
 
-There are two ways to define fast-and-frugal trees manually when using the `FFTrees()` function: 
+There are two ways to manually define fast-and-frugal trees with the `FFTrees()` function: 
 
 1. as a sentence using the `my.tree` argument (the easier way), or  
 
@@ -48,6 +48,7 @@ There are two ways to define fast-and-frugal trees manually when using the `FFTr
 
 Both of these methods require some data to evaluate the performance of FFTs, but will bypass the tree construction algorithms built into the **FFTrees** package. 
 As manually created FFTs are no longer optimized, the conceptual distinction between data fitting and predicting data disppears for such FFTs. Although we can still distinguish between two sets of 'train' vs. 'test' data, a manually defined FFT should not be expected to perform systematically better on 'train' data than on 'test' data. 
+
 
 ### 1. Using `my.tree`
 
@@ -103,7 +104,7 @@ The text `Otherwise, predict EXIT` that we have included in the example above is
 Now, let's use our verbal description of an FFT (assigned to `in_words` above) as the `my.tree` argument of the `FFTrees()` function. 
 This creates a corresponding FFT and applies it to the `heartdisease` data:
 
-```{r create-my-tree, message = FALSE}
+```{r create-my-tree, message = FALSE, results = 'hide'}
 # Create FFTrees from a verbal FFT description (as my.tree): 
 my_fft <- FFTrees(diagnosis ~.,
                   data = heartdisease,
@@ -135,7 +136,7 @@ Consequently, its accuracy measures are only around baseline level.
 Let's see if we can come up with a better FFT. 
 The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
-```{r verbal-spec-fft, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
+```{r verbal-spec-fft-1, message = FALSE, results = 'hide'}
 # Create 2nd FFTrees from an alternative FFT description (as my.tree): 
 my_fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease, 
@@ -144,7 +145,11 @@ my_fft_2 <- FFTrees(diagnosis ~.,
                                If cp != {a}, predict False. 
                                If ca > 1, predict True. 
                                Otherwise, predict False.")
+```
 
+Again, let's view the best training tree to inspect its performance:
+
+```{r verbal-spec-fft-2, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
 # Inspect FFTrees object:
 plot(my_fft_2)
 ```
@@ -280,6 +285,7 @@ x$trees$definitions        # from FFTrees object x
 Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
 As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to examine alternative versions for these trees. 
 
+
 #### Modifying tree definitions 
 
 To demonstrate how to create and evaluate manual FFT definitions, we copy the existing tree definitions (as a data frame), select three FFTs (rows), and then create a 4th definition (with a different exit structure):
@@ -313,13 +319,14 @@ tree_df$tree <- 1:nrow(tree_df)           # adjust tree numbers
 The resulting data frame `tree_df` contains the definitions of eight FFTs. 
 The first three are copies of trees in\ `x`, but the other five are new. 
 
+
 #### Evaluating `tree.definitions` 
 
 We can evaluate this set by running the `FFTrees()` function with 
 the previous `FFTrees` object\ `x` (i.e., with its `formula` and `data` settings) and 
 specifying `tree_df` in the `tree.definitions` argument:
 
-```{r fft-treedef-05, message = TRUE}
+```{r fft-treedef-05, message = TRUE, results = 'hide'}
 # Create a modified FFTrees object y:
 y <- FFTrees(object = x,                  # use previous FFTrees object x
              tree.definitions = tree_df,  # but with new tree definitions
@@ -327,7 +334,7 @@ y <- FFTrees(object = x,                  # use previous FFTrees object x
 )
 ```
 
-The resulting `FFTrees` object\ `y` contains the trees and summary statistics of all eight FFTs. 
+The resulting `FFTrees` object\ `y` contains the decisions and summary statistics of all eight FFTs for the data specified in\ `x`. 
 Although it is unlikely that one of the newly created trees beats the automatically created FFTs, we find that reversing the order of the first cues has only minimal effects on training accuracy (as measured by `bacc`):
 
 ```{r fft-treedef-06, message = TRUE}
@@ -612,7 +619,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 | 2 | [Accuracy statistics](FFTrees_accuracy_statistics.html) | Definitions of accuracy statistics used throughout the package |
 | 3 | [Creating FFTs with FFTrees()](FFTrees_function.html) | Details on the main function `FFTrees()` |
 | 4 | [Manually specifying FFTs](FFTrees_mytree.html)   | How to directly create FFTs with `my.tree` without using the built-in algorithms |
-| 5 | [Visualizing FFTs with plot()](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
+| 5 | [Visualizing FFTs](FFTrees_plot.html) | Plotting `FFTrees` objects, from full trees to icon arrays |
 | 6 | [Examples of FFTs](FFTrees_examples.html) | Examples of FFTs from different datasets contained in the package |
 
 
