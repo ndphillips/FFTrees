@@ -66,7 +66,7 @@ Table: **Table 1**: Binary criterion variable\ `poisonous` and 10\ potential pre
 Let's create some trees using `FFTrees()`! 
 We'll use the `train.p = .50` argument to split the original data into a $50$%\ training set and a $50$%\ testing set: 
 
-```{r fft-mushrooms-1, message = FALSE, results = 'hide', warning=FALSE}
+```{r fft-mushrooms-1, message = FALSE, results = 'hide', warning = FALSE}
 # Create FFTs from the mushrooms data: 
 set.seed(1) # for replicability of the training / test data split
 
@@ -74,7 +74,8 @@ mushrooms.fft <- FFTrees(formula = poisonous ~.,
                          data = mushrooms,
                          train.p = .50,   # split data into 50:50 training/test subsets
                          main = "Mushrooms",
-                         decision.labels = c("Safe", "Poison"))   
+                         decision.labels = c("Safe", "Poison"),
+                         do.comp = FALSE)
 ```
 
 Here's basic information about the best performing FFT (Tree\ #1): 
@@ -133,7 +134,8 @@ mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                               data = mushrooms,
                               train.p = .50,
                               main = "Mushrooms (ring only)",
-                              decision.labels = c("Safe", "Poison"))
+                              decision.labels = c("Safe", "Poison"),
+                              do.comp = FALSE)
 ```
 
 Here is the best training tree, when applied to predicting the cases in the test dataset:
