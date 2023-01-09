@@ -2,16 +2,19 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.8.0.9001 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.8.0.9002 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges start: -->
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Build
-Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees)
 [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Status badges end. -->
 
+<!-- ALL badges start: -->
+<!-- [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+<!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
+<!-- [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- ALL badges end. -->
 <!-- Pkg goal: -->
 
 The R package **FFTrees** creates, visualizes and evaluates
@@ -328,6 +331,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-01-06.\]
+\[File `README.Rmd` last updated on 2023-01-09.\]
 
 <!-- eof. -->
