@@ -1,34 +1,18 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9001
+## 1.8.1
 
-This is the development version of **FFTrees**, which is available at  <https://github.com/ndphillips/FFTrees>. 
+**FFTrees** version 1.8.1 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-10]. 
+This version mostly fixes an error in a package vignette. 
 
 <!-- Log of changes: --> 
 
 Changes since last release: 
 
-
-### Major changes
-
-- None yet.
-
-<!-- Blank line. --> 
-
-
-### Minor changes 
-
-- None yet.
-
-<!-- Blank line. --> 
-
-
-### Details 
-
-- Revised vignettes.
-
-
+- Fixed CRAN error (in `mushrooms.fft` of "Examples of FFTrees"). 
+- Replaced Travis badge in `README.Rmd` by GitHub action on R-CMD-check (standard). 
+- Minor revision of vignettes.
 
 <!-- Development version: --> 
 
@@ -394,6 +378,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-07.]
+[File `NEWS.md` last updated on 2023-01-09.]
 
 <!-- eof. -->
