@@ -4,7 +4,7 @@ author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
-csl: apa.csl 
+csl: apa.csl
 vignette: >
   %\VignetteIndexEntry{Creating FFTs with FFTrees()}
   %\VignetteEngine{knitr::rmarkdown}
