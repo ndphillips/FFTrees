@@ -37,7 +37,7 @@ library(FFTrees)
 ## Examples of FFTs with **FFTrees** 
 
 This vignette illustrates how to construct fast-and-frugal trees (FFTs) for additional datasets included in the **FFTrees** package. 
-[See @phillips2017FFTrees for a comparison across 10\ real-world datasets.] 
+[See @phillips2017FFTrees, for a comparison across 10\ real-world datasets.] 
 
 
 ### Mushrooms data
