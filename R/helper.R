@@ -1058,7 +1058,7 @@ classtable <- function(prediction_v = NULL,
                        na_prediction_action = "ignore") {
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
-  #   criterion_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
+  #   criterion_v  <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   sens.w = .50
   #   cost.v = NULL
   #   correction = .25
@@ -1080,10 +1080,9 @@ classtable <- function(prediction_v = NULL,
     stop("prediction_v and criterion_v must be logical")
   }
 
-  # Remove NA criterion values:
+  # Remove NA and infinite values (from prediction AND criterion):
   prediction_v <- prediction_v[is.finite(criterion_v)]
   criterion_v  <- criterion_v[is.finite(criterion_v)]
-
 
   # Remove NA prediction values:
 
@@ -1101,11 +1100,30 @@ classtable <- function(prediction_v = NULL,
 
   if (N > 0) { # use vectors: ----
 
-    if ((var(prediction_v) > 0) & (var(criterion_v) > 0)) { # use caret: ----
+    # Note 2 special cases:
+
+    var_pred_v <- var(prediction_v)
+    var_crit_v <- var(criterion_v)
+
+    if (is.na(var_pred_v)){
+      message("Variance of prediction_v is NA. See print(prediction_v) =")
+      print(prediction_v)
+    }
+
+    if (is.na(var_crit_v)){
+      message("Variance of criterion_v is NA. See print(criterion_v) =")
+      print(criterion_v)
+    }
+
+
+    # Main: Compute statistics:
+
+    if (((!is.na(var_pred_v)) & (!is.na(var_crit_v))) &&  # Pre-condition &
+        ((var_pred_v > 0) & (var_crit_v > 0))) {          # Case 1. Use caret: ----
 
       if (length(prediction_v) != length(criterion_v)) {
 
-        stop("length of prediction_v is", length(prediction_v),
+        stop("Different lengths of prediction_v and criterion_v.\nLength of prediction_v is ", length(prediction_v),
              "and length of criterion_v is ", length(criterion_v))
       }
 
@@ -1116,7 +1134,7 @@ classtable <- function(prediction_v = NULL,
       cm_byClass <- data.frame(as.list(cm$byClass))
       cm_overall <- data.frame(as.list(cm$overall))
 
-      # Get freq counts:
+      # Get 4 freq counts:
       hi <- cm$table[2, 2]
       mi <- cm$table[1, 2]
       fa <- cm$table[2, 1]
@@ -1156,10 +1174,10 @@ classtable <- function(prediction_v = NULL,
 
       # Cost per case:
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
 
 
-    } else { # Compute stats from freq combinations: ----
+    } else { # Case 2. Compute stats from freq combinations: ----
 
       # Compute freqs as sum of T/F combinations:
       hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)
@@ -1214,23 +1232,24 @@ classtable <- function(prediction_v = NULL,
 
     sens <- NA
     spec <- NA
-    far <- NA
+    far  <- NA
 
     ppv <- NA
     npv <- NA
 
-    acc <- NA
+    acc   <- NA
     acc_p <- NA
-    bacc <- NA
-    wacc <- NA
+    bacc  <- NA
+    wacc  <- NA
 
     dprime <- NA
-    # auc <- NA
+    # auc  <- NA
 
     cost_dec <- NA
-    cost <- NA
+    cost     <- NA
 
   }
+
 
   # Output: ----
 
