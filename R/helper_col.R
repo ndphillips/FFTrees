@@ -36,16 +36,16 @@ in_red   <- cli::make_ansi_style("firebrick3",  colors = 256)  # "red4" "darkred
 in_green <- cli::make_ansi_style("forestgreen", colors = 256)  # "green4" "darkgreen"
 in_blue  <- cli::make_ansi_style("dodgerblue4", colors = 256)  # "steelblue4" "darkblue"
 
-in_dpnk <- cli::make_ansi_style("deeppink", colors = 256)
+in_dpnk <- cli::make_ansi_style("deeppink",    colors = 256)
 in_dsbl <- cli::make_ansi_style("deepskyblue", colors = 256)
 
 # User feedback messages:
 
 u_f_ini <- cli::make_ansi_style("grey33", grey = TRUE, colors = 256)  # "black"
-u_f_fin <- cli::make_ansi_style("darkgreen", colors = 256)  # "black"
+u_f_fin <- cli::make_ansi_style("darkgreen",           colors = 256)  # "black"
 
 u_f_msg <- cli::make_ansi_style("grey50", grey = TRUE, colors = 256)  # normal message
-u_f_hig <- cli::make_ansi_style("dodgerblue4", colors = 256)   # highlighted msg
+u_f_hig <- cli::make_ansi_style("dodgerblue4",         colors = 256)  # highlighted msg
 
 
 # ToDo: ------
