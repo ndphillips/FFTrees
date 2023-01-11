@@ -106,7 +106,13 @@ fftrees_create <- function(data = NULL,
                         type = "language"
   )
 
+  # Get criterion:
   criterion_name <- paste(formula)[2]
+
+  if (!criterion_name %in% names(data)){
+    stop(paste0("Criterion variable '", criterion_name, "' was not found in data"))
+  }
+
 
 
   # algorithm: ----

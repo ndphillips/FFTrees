@@ -192,7 +192,7 @@ FFTrees <- function(formula = NULL,
 
   # Prepare: ------
 
-  # A. Handle deprecated arguments and options: ----
+  # A. Handle deprecated arguments and options: ------
 
   if (!is.null(comp)) {
     warning("The argument 'comp' is deprecated. Use 'do.comp' instead.")
@@ -225,7 +225,9 @@ FFTrees <- function(formula = NULL,
   }
 
 
-  # B. Verify inputs: ----
+  # B. Verify inputs: ------
+
+  # object: ----
 
   if (!is.null(object)) { # an FFTrees object is provided:
 
@@ -241,6 +243,9 @@ FFTrees <- function(formula = NULL,
 
   }
 
+
+  # tree.definitions: ----
+
   if (!is.null(tree.definitions)){
 
     testthat::expect_true(is.data.frame(tree.definitions), info = "Provided 'tree.definitions' are not a data.frame")
@@ -252,7 +257,24 @@ FFTrees <- function(formula = NULL,
   }
 
 
-  # C. Handle data: ----
+  # formula: ----
+
+  testthat::expect_true(!is.null(formula),
+                        info = "formula is NULL"
+  )
+
+  testthat::expect_type(formula,
+                        type = "language"
+  )
+
+  criterion_name <- paste(formula)[2]
+
+  if (!criterion_name %in% names(data)){
+    stop(paste0("Criterion variable '", criterion_name, "' was not found in data"))
+  }
+
+
+  # C. Handle data: ------
 
   # # Convert factor NA to new missing factor level:
   #
@@ -268,8 +290,7 @@ FFTrees <- function(formula = NULL,
     # Save original data:
     data_o <- data
 
-    train_cases <- caret::createDataPartition(data_o[[paste(formula)[2]]],
-                                              p = train.p)[[1]]
+    train_cases <- caret::createDataPartition(data_o[[criterion_name]], p = train.p)[[1]]
 
     data      <- data_o[train_cases, ]
     data.test <- data_o[-train_cases, ]
@@ -279,7 +300,7 @@ FFTrees <- function(formula = NULL,
 
     if (!quiet) {
       msg <- paste0("Successfully split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
-        scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set.\n")
+                    scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set.\n")
       cat(u_f_fin(msg))
     }
 
