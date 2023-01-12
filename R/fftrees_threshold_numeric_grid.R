@@ -43,10 +43,10 @@ fftrees_threshold_numeric_grid <- function(thresholds,
     decisions_i <- cue_v > threshold_i
 
     # Calculate decisions:
-    hi_i <- sum(decisions_i == TRUE  & criterion_v == TRUE,  na.rm = TRUE)
-    fa_i <- sum(decisions_i == TRUE  & criterion_v == FALSE, na.rm = TRUE)
-    mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE,  na.rm = TRUE)
-    cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE, na.rm = TRUE)
+    hi_i <- sum((decisions_i == TRUE)  & (criterion_v == TRUE),  na.rm = TRUE)
+    fa_i <- sum((decisions_i == TRUE)  & (criterion_v == FALSE), na.rm = TRUE)
+    mi_i <- sum((decisions_i == FALSE) & (criterion_v == TRUE),  na.rm = TRUE)
+    cr_i <- sum((decisions_i == FALSE) & (criterion_v == FALSE), na.rm = TRUE)
 
     n_i <- hi_i + fa_i + mi_i + cr_i
 
@@ -57,15 +57,18 @@ fftrees_threshold_numeric_grid <- function(thresholds,
 
 
   # Convert to named dataframe: ----
+
   results_gt <- as.data.frame(results_gt)
   names(results_gt) <- c("n", "hi", "fa", "mi", "cr")
   results_gt$direction <- ">"
   results_gt$threshold <- thresholds
 
+
   # Get results if using <= threshold: ----
+
   results_lt <- results_gt[, c(1, 4, 5, 2, 3)]
   names(results_lt) <- c("n", "hi", "fa", "mi", "cr")
-  results_lt <- results_lt[, c("n", "hi", "fa", "mi", "cr")]
+  results_lt        <- results_lt[, c("n", "hi", "fa", "mi", "cr")]
 
   results_lt$direction <- "<="
   results_lt$threshold <- thresholds
@@ -94,16 +97,17 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   # Order by goal.threshold and change column order:
   ord_new <- order(results[, goal.threshold], decreasing = TRUE)
 
-  results <- results[ord_new, c(
-    "threshold", "direction", "n", "hi", "fa", "mi", "cr",
-    "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
-    "cost_dec", "cost"
-  )]
+  results <- results[ord_new, c("threshold", "direction",
+                                "n", "hi", "fa", "mi", "cr",
+                                "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
+                                "cost_dec", "cost")]
 
   # Remove invalid directions:
   results[results$direction %in% directions, ]
 
+
   # Output: ----
+
   return(results)
 
 } # fftrees_threshold_numeric_grid().
