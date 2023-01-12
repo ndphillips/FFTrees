@@ -129,7 +129,8 @@ fftrees_create <- function(data = NULL,
 
   # goal: ----
 
-  goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Setting "dprime" does not seem to work!
+  # Define a (constant) set of valid optimization goals:
+  valid_opt_goal <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Setting "dprime" does not seem to work!
 
   if (is.null(goal)) { # goal NOT set by user:
 
@@ -168,9 +169,9 @@ fftrees_create <- function(data = NULL,
                         info = "goal is NULL"
   )
 
-  testthat::expect_true(goal %in% goal_valid)
+  testthat::expect_true(goal %in% valid_opt_goal)
 
-  if ((goal == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
+  if ((goal == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
     if (!quiet) {
       cat(u_f_msg("\u2014 The goal was set to 'wacc', but 'sens.w = 0.50': Setting 'goal = bacc'\n"))
@@ -216,9 +217,9 @@ fftrees_create <- function(data = NULL,
                         info = "goal.chase is NULL"
   )
 
-  testthat::expect_true(goal.chase %in% goal_valid)
+  testthat::expect_true(goal.chase %in% valid_opt_goal)
 
-  if ((goal.chase == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
+  if ((goal.chase == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
     if (!quiet) {
       cat(u_f_msg("\u2014 The goal.chase was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'\n"))
@@ -255,9 +256,9 @@ fftrees_create <- function(data = NULL,
                         info = "goal.threshold is NULL"
   )
 
-  testthat::expect_true(goal.threshold %in% goal_valid)
+  testthat::expect_true(goal.threshold %in% valid_opt_goal)
 
-  if ((goal.threshold == "wacc") & (enable_wacc(sens.w) == FALSE)){ # correct to bacc:
+  if ((goal.threshold == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
     if (!quiet) {
       cat(u_f_msg("\u2014 The goal.threshold was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'\n"))
