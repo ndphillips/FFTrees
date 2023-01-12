@@ -213,8 +213,8 @@ select_best_tree <- function(x, data, goal){
 
   # # (a) narrow goal range:
   #
-  # goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
-  # testthat::expect_true(goal %in% goal_valid)
+  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
+  # testthat::expect_true(goal %in% valid_tree_select_goal_narrow)
 
   # (b) wide goal range:
 
@@ -230,8 +230,8 @@ select_best_tree <- function(x, data, goal){
                  "cost", "cost_dec", "cost_cue",
                  "mcu")
 
-  goal_valid <- c(max_goals, min_goals)
-  testthat::expect_true(goal %in% goal_valid)
+  valid_tree_select_goal <- c(max_goals, min_goals)
+  testthat::expect_true(goal %in% valid_tree_select_goal)
 
 
   # Get tree stats (from x given data): ------
