@@ -288,21 +288,43 @@ fftrees_grow_fan <- function(x,
                      asif_results$cost
                    )
 
-        # If ASIF classification is perfect, then stop:
-        if (x$params$goal.chase != "cost") { # for all accuracy measures:
 
-          if (dplyr::near(asif_stats[[x$params$goal.chase]][level_current], 1)) { # perfect ideal = 1
+        # Stop growing tree, if ASIF classification is perfect:
+
+        if (x$params$goal.chase %in% c("acc", "bacc", "wacc")) { # A. chasing an accuracy measure:
+
+          if (dplyr::near(asif_stats[[x$params$goal.chase]][level_current], 1)) { # perfect/ideal acc = 1
             grow_tree <- FALSE
           }
 
-        } else { # chasing "cost":
+        } else if (x$params$goal.chase == "cost") { # B. chasing "cost" measure:
 
-          if (dplyr::near(asif_stats[[x$params$goal.chase]][level_current], 0)) { # perfect ideal = 0
+          if (dplyr::near(asif_stats[[x$params$goal.chase]][level_current], 0)) { # perfect/ideal cost = 0  # ToDo: Or is best cost -1?
             grow_tree <- FALSE
           }
 
-        }
-        # ToDo: What would be a "perfect" value for x$params$goal.chase == "dprime"?  +++ here now +++
+        } else if (x$params$goal.chase == "dprime") { # C. chasing "dprime" measure:
+
+          # What would be a "perfect" value for x$params$goal.chase == "dprime"?                 #  +++ here now +++
+
+          # "The highest possible d' (greatest sensitivity) is 6.93, the effective limit (using .99 and .01) 4.65,
+          #  typical values are up to 2.0, and 69% correct for both different and same trials corresponds to a d' of 1.0."
+          #  Source: <http://phonetics.linguistics.ucla.edu/facilities/statistics/dprime.htm>
+
+          max_dprime <- 4.65
+
+          if (asif_stats[[x$params$goal.chase]][level_current] >= max_dprime){
+            grow_tree <- FALSE
+          }
+
+        } else { # note an unknown/invalid goal.chase value:
+
+          valid_opt_goal <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
+          valid_opt_goal_str <- paste(valid_opt_goal, collapse = ", ")
+
+          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_opt_goal_str, "'"))
+
+        } # If stop?
 
 
         # Calculate goal_change value:
