@@ -9,7 +9,7 @@ fftrees_cuerank(x = NULL, newdata = NULL, data = "train", rounding = NULL)
 \arguments{
 \item{x}{An \code{FFTrees} object.}
 
-\item{newdata}{The dataset to with cues to be ranked (as data frame).}
+\item{newdata}{A dataset with cues to be ranked (as data frame).}
 
 \item{data}{The type of data with cues to be ranked (as character: \code{'train'}, \code{'test'}, or \code{'dynamic'}).
 Default: \code{data = 'train'}.}
@@ -24,7 +24,7 @@ for the current \code{data} type in \code{x$cues$stats}).
 \description{
 \code{fftrees_cuerank} takes an \code{FFTrees} object \code{x} and
 optimizes its \code{goal.threshold} (from \code{x$params}) for all cues in
-a dataset \code{newdata} (of some \code{data} type).
+\code{newdata} (of type \code{data}).
 }
 \details{
 \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
