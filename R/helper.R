@@ -4,6 +4,35 @@
 
 # (1) Basic checks and calculations: ------
 
+
+# get_criterion: ------
+
+# Goal: Get criterion variable from formula (and verify formula).
+
+get_criterion <- function(formula){
+
+  # Verify formula:
+
+  testthat::expect_true(!is.null(formula),
+                        info = "formula is NULL"
+  )
+
+  testthat::expect_type(formula,
+                        type = "language"
+  )
+
+  # Main:
+
+  criterion_name <- paste(formula)[2]
+
+
+  # Output:
+
+  return(criterion_name)
+
+} # get_criterion().
+
+
 # valid_train_test_data: ------
 
 # Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)

@@ -259,15 +259,8 @@ FFTrees <- function(formula = NULL,
 
   # formula: ----
 
-  testthat::expect_true(!is.null(formula),
-                        info = "formula is NULL"
-  )
-
-  testthat::expect_type(formula,
-                        type = "language"
-  )
-
-  criterion_name <- paste(formula)[2]
+  # Get criterion:
+  criterion_name <- get_criterion(formula)
 
   if (!criterion_name %in% names(data)){
     stop(paste0("Criterion variable '", criterion_name, "' was not found in data"))

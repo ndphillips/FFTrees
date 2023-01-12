@@ -98,21 +98,12 @@ fftrees_create <- function(data = NULL,
 
   # formula: ----
 
-  testthat::expect_true(!is.null(formula),
-                        info = "formula is NULL"
-  )
-
-  testthat::expect_type(formula,
-                        type = "language"
-  )
-
   # Get criterion:
-  criterion_name <- paste(formula)[2]
+  criterion_name <- get_criterion(formula)
 
   if (!criterion_name %in% names(data)){
     stop(paste0("Criterion variable '", criterion_name, "' was not found in data"))
   }
-
 
 
   # algorithm: ----
