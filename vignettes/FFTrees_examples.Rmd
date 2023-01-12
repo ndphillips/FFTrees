@@ -4,7 +4,7 @@ author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
-csl: apa.csl 
+csl: apa.csl
 vignette: >
   %\VignetteIndexEntry{Examples of FFTrees}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,7 +37,7 @@ library(FFTrees)
 ## Examples of FFTs with **FFTrees** 
 
 This vignette illustrates how to construct fast-and-frugal trees (FFTs) for additional datasets included in the **FFTrees** package. 
-[See @phillips2017FFTrees for a comparison across 10\ real-world datasets.] 
+[See @phillips2017FFTrees, for a comparison across 10\ real-world datasets.] 
 
 
 ### Mushrooms data
@@ -52,6 +52,8 @@ The goal of our model is to predict which mushrooms are `poisonous` based on `r 
 Here are the first few rows and a subset of 10\ potential predictors of the `mushrooms` data:
 
 ```{r data-mushrooms, echo = FALSE}
+# names(mushrooms)
+
 # Select subset:
 mushrooms_sub <- mushrooms[1:6, c(1:6, 18:23)]
 
@@ -70,7 +72,7 @@ We'll use the `train.p = .50` argument to split the original data into a $50$%\ 
 # Create FFTs from the mushrooms data: 
 set.seed(1) # for replicability of the training / test data split
 
-mushrooms.fft <- FFTrees(formula = poisonous ~.,
+mushrooms_fft <- FFTrees(formula = poisonous ~.,
                          data = mushrooms,
                          train.p = .50,   # split data into 50:50 training/test subsets
                          main = "Mushrooms",
@@ -78,11 +80,14 @@ mushrooms.fft <- FFTrees(formula = poisonous ~.,
                          do.comp = FALSE)
 ```
 
+Setting the `do.comp = FALSE` argument prevents the evaluation of alternative algorithms (beyond those needed for FFTs). 
+This can save time, but also avoid error messages stemming from alternative prediction methods (e.g., rank-deficient fits of linear models). 
+
 Here's basic information about the best performing FFT (Tree\ #1): 
 
 ```{r fft-mushrooms-1-print}
-# Print information about the best tree during training:
-mushrooms.fft
+# Print information about the best tree (during training):
+print(mushrooms_fft)
 ```
 
 [Cool beans](https://goo.gl/B7YDuC). 
@@ -92,9 +97,9 @@ mushrooms.fft
 
 Let's look at the individual cue training accuracies with `plot(fft, what = "cues")`: 
 
-```{r fft-mushrooms-1-plot-cues, out.width = "450px"}
+```{r fft-mushrooms-1-plot-cues, fig.width = 6.0, fig.height = 6.0, out.width = "450px"}
 # Plot the cue accuracies of an FFTrees object:
-plot(mushrooms.fft, what = "cues")
+plot(mushrooms_fft, what = "cues")
 ```
 
 It looks like the cues `oder` and `sporepc` are the best predictors. 
@@ -107,47 +112,53 @@ Based on this, we should expect the final trees to use just these cues.
 Now let's plot the performance of the best training tree when applied to the test data: 
 
 ```{r fft-mushrooms-1-plot}
-# Plot the best FFT for the mushrooms test data: 
-plot(mushrooms.fft, data = "test")
+# Plot the best FFT (for test data): 
+plot(mushrooms_fft, data = "test")
 ```
 
 Indeed, it looks like the best tree only uses the\ `odor` and\ `sporepc` cues. 
 In our test dataset, the tree had a _false alarm rate_ of\ $0$% ($1 -$\ specificity), and a _sensitivity_ (aka. hit rate) of\ $85$%. 
-When considering the implications of our decisions, the fact that our FFT incurs many misses, but no false alarms, is problematic (as failing to detect poisonous mushrooms typically has more serious consequences than falsely classifying some as poisonous). 
-To change this balance, we could increase the sensitivity weight parameter (e.g., setting `sens.w = .67`) and optimize the tree's weighted accuracy\ `wacc`. 
+
+
+#### Trading off prediction errors
+
+When considering the implications of our predictions, the fact that our FFT incurs many misses, but no false alarms, is problematic: 
+Given our current task, failing to detect poisonous mushrooms has usually more serious consequences than falsely classifying some as poisonous. 
+To change the balance between both possible errors, we can select another tree from the set of FFTs. 
+In this case, FFT\ #2 would use the same two cues, but alter their exit structure so that our prediction incurs false alarms, but no misses. 
+Alternatively, we could re-generate a new set of FFTs with a higher sensitivity weight value (e.g., increase the default value of\ `sens.w = .50` to\ `sens.w = .67`) and optimize the FFTs' weighted accuracy\ `wacc`. 
 
 
 #### An alternative FFT 
 
-But let's assume that a mushroom expert insists that we are using the wrong cues. 
+Let's assume that a famous mushroom expert insists that our FFT is using the wrong cues. 
 According to her, the best predictors for poisonous mushrooms are\ `ringtype` and\ `ringnum`. 
-Let's build a set of trees with these cues and see how they perform relative to our initial tree: 
+To test this, we build a set of FFTs from only these cues and check how they perform relative to our initial tree: 
 
 ```{r fft-mushrooms-2-seed, include = FALSE}
 set.seed(200)
 ```
 
-
 ```{r fft-mushrooms-2, message = FALSE, results = 'hide', warning = FALSE}
 # Create trees using only the ringtype and ringnum cues: 
-mushrooms.ring.fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
+mushrooms_ring_fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                               data = mushrooms,
                               train.p = .50,
-                              main = "Mushrooms (ring only)",
+                              main = "Mushrooms (ring cues)",
                               decision.labels = c("Safe", "Poison"),
                               do.comp = FALSE)
 ```
 
-Here is the best training tree, when applied to predicting the cases in the test dataset:
+Again, we plot the best training tree, when predicting the cases in the test dataset:
 
 ```{r fft-mushrooms-2-plot}
-# Plotting the best training FFT for test data: 
-plot(mushrooms.ring.fft, data = "test")
+# Plotting the best training FFT (for test data): 
+plot(mushrooms_ring_fft, data = "test")
 ```
 
 <!-- Conclusion: -->
 
-As we can see, this tree (in `mushrooms.ring.fft`) has both a sensitivity and a specificity of around\ $80$%, but does not perform as well as our earlier one (in `mushrooms.fft`). 
+As we can see, this tree (in `mushrooms_ring_fft`) has both sensitivity and specificity values of around\ $80$%, but does not perform as well as our earlier one (in `mushrooms_fft`). 
 This suggests that we should discard the expert's advice and primarily rely on the\ `odor` and\ `sporepc` cues. 
 
 
@@ -160,72 +171,72 @@ knitr::include_graphics("../inst/virginica.jpg")
 
 The `iris.v` dataset contains data about 150\ flowers (see `?iris.v`). 
 Our goal is to predict which flowers are of the class _Virginica_. 
-In this example, we'll create trees using the entire dataset (without splitting the available data into explicit training vs. test subsets): 
+In this example, we'll create trees using the entire dataset (without splitting the available data into explicit training vs. test subsets), so that we are really fitting the data, rather than engaging in genuine prediction: 
 
 ```{r iris-fft, message = FALSE, results = 'hide'}
 # Create FFTrees object for iris data:
-iris.fft <- FFTrees(formula = virginica ~.,
+iris_fft <- FFTrees(formula = virginica ~.,
                     data = iris.v,
                     main = "Iris",
                     decision.labels = c("Not-V", "V"))
 ```
 
-For summary information, we could print the `FTrees` object:
+The **FFTrees** package provides various functions to inspect the `FFTrees` object `iris_fft`. 
+For summary information on the best training tree, we can print the `FTrees` object (by evaluating `iris_fft` or `print(iris_fft)`). 
+Alternatively, we could visualize the tree (via `plot(iris_fft)`) or summarize the `FFTrees` object (via `summary(iris_fft)`): 
 
-```{r iris-fft-print, eval = FALSE, results = 'hide'}
-iris.fft
+```{r iris-fft-print, echo = TRUE, eval = FALSE, results = 'hide'}
+# Inspect resulting FFTs: 
+print(iris_fft)    # summarize best training tree
+plot(iris_fft)     # visualize best training tree
+summary(iris_fft)  # summarize FFTrees object
 ```
 
-However, let's take a look at the individual training cue accuracies instead... 
-
+However, let's first take a look at the individual training cue accuracies... 
 
 #### Visualizing cue accuracies
 
 We can plot the training cue accuracies during training by specifying `what = "cues"`:
 
-```{r iris-plot-cues, out.width = "450px"}
+```{r iris-plot-cues, fig.width = 6.0, fig.height = 6.0, out.width = "450px"}
 # Plot cue values: 
-plot(iris.fft, what = "cues")
+plot(iris_fft, what = "cues")
 ```
 
-It looks like the two cues\ `pet.wid` and\ `pet.len` are the best predictors for this dataset. 
-Based on this, we should expect the final trees will likely use one or both of these cues.
-
+It looks like the two cues\ `pet.len` and\ `pet.wid` are the best predictors for this dataset. 
+Based on this insight, we should expect the final trees will likely use one or both of these cues.
 
 #### Visualizing FFT performance 
 
-Now let's examine the best tree:
+Now let's visualize the best tree:
 
 ```{r iris-plot-fft}
-# Plot best FFT (in training): 
-plot(iris.fft)
+# Plot best FFT: 
+plot(iris_fft)
 ```
 
-Indeed, it turns out that the best tree only uses the\ `pet.wid` and\ `pet.len` cues. 
-In our test data, the tree had a sensitivity of\ 100% and a specificity of\ 94%.
+Indeed, it turns out that the best tree only uses the\ `pet.len` and\ `pet.wid` cues (in that order). 
+For this data, the fitted tree exhibits a performance with a sensitivity of\ 100% and a specificity of\ 94%. 
 
-
-#### Alternative FFTs
+#### Viewing alternative FFTs
 
 Now, this tree did quite well, but what if someone wanted a tree with the lowest possible false alarm rate? 
-If we look at the ROC plot in the bottom left corner of the plot above, we can see that Tree\ #2 has a specificity close to\ 100%. 
-Let's look at that tree: 
+If we inspect the ROC\ plot in the bottom right corner of the figure, we see that Tree\ #2 has a specificity close to\ 100%. 
+Let's plot this tree: 
 
 ```{r iris-plot-fft-2}
-# Plot FFT #2 in iris FFTrees: 
-plot(iris.fft, tree = 2)
+# Plot FFT #2: 
+plot(iris_fft, tree = 2)
 ```
 
-As we can see, this tree does indeed have a higher specificity (of\ 98%). 
-However, this increase comes at a cost of a lower sensitivity (of\ 90%). 
-
-Such trade-offs between measures are typical when fitting and predicting real-world data. 
-Importantly, FFTs (and the **FFTrees** package) help us to render such trade-offs more transparent. 
+As we can see, this tree does indeed have a higher specificity (of\ 98%), but this increase comes at a cost of a lower sensitivity (of\ 90%). 
+Such trade-offs between conflicting measures are inevitable when fitting and predicting real-world data. 
+Importantly, using FFTs and the **FFTrees** package help us to render such trade-offs more transparent. 
 
 
 ### Titanic data
 
-For example FFTs that predict people's survival of the _Titanic_ disaster (using the `titanic` data), see the [Visualizing FFTs](FFTrees_plot.html) vignette. 
+For examples that predict people's survival of the _Titanic_ disaster (by growing FFTs for the `titanic` data), see the [Visualizing FFTs](FFTrees_plot.html) vignette. 
 
 
 ## Vignettes

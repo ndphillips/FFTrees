@@ -2,7 +2,7 @@
 #'
 #' \code{fftrees_cuerank} takes an \code{FFTrees} object \code{x} and
 #' optimizes its \code{goal.threshold} (from \code{x$params}) for all cues in
-#' a dataset \code{newdata} (of some \code{data} type).
+#' \code{newdata} (of type \code{data}).
 #'
 #' \code{fftrees_cuerank} creates a data frame \code{cuerank_df}
 #' that is added to \code{x$cues$stats}.
@@ -17,7 +17,7 @@
 #' to grow fast-and-frugal trees (FFTs).
 #'
 #' @param x An \code{FFTrees} object.
-#' @param newdata The dataset to with cues to be ranked (as data frame).
+#' @param newdata A dataset with cues to be ranked (as data frame).
 #' @param data The type of data with cues to be ranked (as character: \code{'train'}, \code{'test'}, or \code{'dynamic'}).
 #' Default: \code{data = 'train'}.
 #' @param rounding Number of digits used to round (as integer).
@@ -34,31 +34,41 @@
 
 fftrees_cuerank <- function(x = NULL,
                             newdata = NULL,
-                            data = "train",
+                            data = "train",  # type of data
                             rounding = NULL) {
 
   # Prepare: ------
 
-  # Verify: ----
+  # Verify inputs: ----
 
-  testthat::expect_true(!is.null(newdata))
+  # x:
   testthat::expect_true(!is.null(x))
-  testthat::expect_true(data %in% c("train", "test", "dynamic"))
+  testthat::expect_s3_class(x, class = "FFTrees")
+
+  # newdata:
+  testthat::expect_true(!is.null(newdata))
+  testthat::expect_true(is.data.frame(newdata), info = "Provided 'newdata' are not a data.frame")
+
+  # data:
+  testthat::expect_true(data %in% c("train", "test", "dynamic"))  # type of data
 
 
-  # Define criterion (vector) and cues (dataframe): ----
+  # Define criterion (vector) and cues (data.frame): ----
 
   cue_df <- newdata[names(newdata) != x$criterion_name]
   criterion_v <- newdata %>% dplyr::pull(x$criterion_name)
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
 
-  # Validation: Make sure there is variance in the criterion!
+  # Verify: Make sure there is variance in the criterion!
   testthat::expect_true(length(unique(criterion_v)) > 1)
+
+  # Determine current goal.threshold:
+  goal.threshold <- x$params$goal.threshold  # (assign ONCE here and then use below)
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    msg <- paste0("Aiming to rank ", cue_n, " cues:\n")
+    msg <- paste0("Aiming to rank ", cue_n, " cues (optimizing '", goal.threshold, "'):\n")
     cat(u_f_ini(msg))
   }
 
@@ -90,12 +100,12 @@ fftrees_cuerank <- function(x = NULL,
 
     }
 
-    # Get main information about current cue:
+    # Get key information of the current cue:
 
-    cue_i_name <- names(cue_df)[cue_i]
+    cue_i_name  <- names(cue_df)[cue_i]
     cue_i_class <- class(cue_df %>% dplyr::pull(cue_i))
-    cue_i_v <- unlist(cue_df[, cue_i])
-    cue_i_cost <- x$params$cost.cues[[cue_i_name]]
+    cue_i_v     <- unlist(cue_df[, cue_i])
+    cue_i_cost  <- x$params$cost.cues[[cue_i_name]]
 
 
     if (all(is.na(cue_i_v)) == FALSE) { # (A) Some non-missing values:
@@ -193,7 +203,7 @@ fftrees_cuerank <- function(x = NULL,
       # Step 3: Determine best direction and threshold for cue [cue_i_best]: ----
       {
         cost.outcomes  <- x$param$cost.outcomes
-        goal.threshold <- x$params$goal.threshold
+        # goal.threshold <- x$params$goal.threshold  # (assigned above)
         sens.w <- x$params$sens.w
 
         # a. Numeric, integer cues: ----
@@ -228,26 +238,33 @@ fftrees_cuerank <- function(x = NULL,
 
         } # b. factor/character/logical cues.
 
+        # # User feedback (4debugging): +++ here now +++
+        # print(paste0(cue_i, ": cue_i_stats of cue_i_name = ", cue_i_name, ":"))
+        # print(cue_i_stats)
+
 
         # Save results: ----
 
         x$cues$thresholds[[data]][[cue_i_name]] <- cue_i_stats
 
-        # Get thresholds that maximizes goal.threshold:
-        best.result.index <- which(cue_i_stats[x$params$goal.threshold] == max(cue_i_stats[x$params$goal.threshold], na.rm = TRUE))
+        # Get thresholds that maximize current goal.threshold:
+        best_result_index <- which(cue_i_stats[goal.threshold] == max(cue_i_stats[goal.threshold], na.rm = TRUE))
+        # Note that cost_dec and cost are NEGATIVE in cue_i_stats (so that goal.threshold == "cost" is MINimized)!
 
-        # If there are two best indices, take the first:
-        #   ToDo: Not sure if this is the best way to do it...
-
-        if (length(best.result.index) > 1) {
-          best.result.index <- best.result.index[1]
+        # If there are multiple best indices, take the first:
+        if (length(best_result_index) > 1) {
+          best_result_index <- best_result_index[1]  # ToDo: Not sure if this is the best way to do it...
         }
 
-        if (is.na(best.result.index)) {
-          best.result.index <- 1
+        # If there is NO best index, take 1 (and issue a warning):
+        if (is.na(best_result_index)) {
+
+          warning(paste0("For cue ", cue_i_name, ", best_result_index was NA. Used best_result_index = 1..."))
+
+          best_result_index <- 1
         }
 
-        cue_i_best <- cue_i_stats[best.result.index, ]
+        cue_i_best <- cue_i_stats[best_result_index, ]
 
       } # Step 3.
 

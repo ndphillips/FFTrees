@@ -97,8 +97,8 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
       decisions_i <- cue_v %in% threshold_i
 
       # Calculate decisions:
-      hi_i <- sum(decisions_i == TRUE & criterion_v == TRUE)
-      fa_i <- sum(decisions_i == TRUE & criterion_v == FALSE)
+      hi_i <- sum(decisions_i == TRUE  & criterion_v == TRUE)
+      fa_i <- sum(decisions_i == TRUE  & criterion_v == FALSE)
       mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE)
       cr_i <- sum(decisions_i == FALSE & criterion_v == FALSE)
 
@@ -106,7 +106,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
       # Return values to results:
       results_cum[i, 2:6] <- c(n_i, hi_i, fa_i, mi_i, cr_i)
-      results_cum[i, 1] <- paste(threshold_i, collapse = ",")
+      results_cum[i, 1]   <- paste(threshold_i, collapse = ",")
 
     } # for (i in 1:thresholds_n).
 
@@ -141,11 +141,10 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     # Order by goal.threshold and change column order: ----
     ord_new <- order(results[, goal.threshold], decreasing = TRUE)
 
-    results <- results[ord_new, c(
-      "threshold", "direction", "n", "hi", "fa", "mi", "cr",
-      "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
-      "cost_dec", "cost"
-    )]
+    results <- results[ord_new, c("threshold", "direction",
+                                  "n", "hi", "fa", "mi", "cr",
+                                  "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
+                                  "cost_dec", "cost")]
 
     # Remove invalid directions: ----
     results[results$direction %in% directions, ]
@@ -171,7 +170,9 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
   } # if (!is.null(thresholds)).
 
+
   # Output: ----
+
   return(results)
 
 } # fftrees_threshold_factor_grid().
