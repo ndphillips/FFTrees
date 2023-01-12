@@ -239,8 +239,7 @@ fftrees_cuerank <- function(x = NULL,
         } # b. factor/character/logical cues.
 
         # # User feedback (4debugging): +++ here now +++
-        # cue_name_msg <- paste0("cue_i_stats of cue i = ", cue_i_name, ":\n")
-        # print(cue_name_msg)
+        # print(paste0(cue_i, ": cue_i_stats of cue_i_name = ", cue_i_name, ":"))
         # print(cue_i_stats)
 
 
@@ -250,16 +249,18 @@ fftrees_cuerank <- function(x = NULL,
 
         # Get thresholds that maximize current goal.threshold:
         best_result_index <- which(cue_i_stats[goal.threshold] == max(cue_i_stats[goal.threshold], na.rm = TRUE))
-        # ToDo: Does this also work for "cost" (which ought to be MINimized?)
+        # Note that cost_dec and cost are NEGATIVE in cue_i_stats (so that goal.threshold == "cost" is MINimized)!
 
-        # If there are two best indices, take the first:
-        # ToDo: Not sure if this is the best way to do it...
-
+        # If there are multiple best indices, take the first:
         if (length(best_result_index) > 1) {
-          best_result_index <- best_result_index[1]
+          best_result_index <- best_result_index[1]  # ToDo: Not sure if this is the best way to do it...
         }
 
+        # If there is NO best index, take 1 (and issue a warning):
         if (is.na(best_result_index)) {
+
+          warning(paste0("For cue ", cue_i_name, ", best_result_index was NA. Used best_result_index = 1..."))
+
           best_result_index <- 1
         }
 
