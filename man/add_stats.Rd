@@ -8,7 +8,8 @@ add_stats(
   data,
   sens.w = 0.5,
   cost.each = NULL,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+  correction = 0.25
 )
 }
 \arguments{
@@ -16,19 +17,22 @@ add_stats(
 
 \item{sens.w}{numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.}
 
-\item{cost.each}{numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).}
+\item{cost.each}{numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).}
 
 \item{cost.outcomes}{list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.}
+
+\item{correction}{numeric. Correction added to all counts for calculating \code{dprime}.
+Default: \code{correction = .25}.}
 }
 \value{
 A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 }
 \description{
 \code{add_stats} assumes the input of essential 2x2 frequency counts
-(as a data frame \code{data} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+(as a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
 and uses them to compute various decision accuracy measures.
 }
 \details{
