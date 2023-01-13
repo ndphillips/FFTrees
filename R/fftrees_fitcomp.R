@@ -34,8 +34,9 @@ fftrees_fitcomp <- function(x) {
   my_cols <- c("algorithm",
                "n", "hi", "fa", "mi", "cr",
                "sens", "spec", "far", "ppv", "npv",
-               "acc", "bacc", "wacc",  # ToDo: Add dprime?
-               "cost", "cost_dec", "cost_cue"
+               "acc", "bacc", "wacc",
+               "dprime",
+               "cost_dec", "cost_cue", "cost"
   )
 
 
