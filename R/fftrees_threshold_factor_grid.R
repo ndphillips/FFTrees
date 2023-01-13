@@ -127,7 +127,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
     results <- results_cum
 
-    # Add accuracy statistics: ----
+    # Compute accuracy statistics: ----
     new_stats <- add_stats(
       data = results,
       sens.w = sens.w,
@@ -135,10 +135,13 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
       cost.each = cost.each
     )
 
-    # Add accuracy statistics:
+    # Add accuracy statistics (to previous results): ----
     results <- cbind(results, new_stats)
 
-    # Order by goal.threshold and change column order: ----
+
+    # Clean up results: ----
+
+    # Arrange rows by goal.threshold and change column order:
     ord_new <- order(results[, goal.threshold], decreasing = TRUE)
 
     results <- results[ord_new, c("threshold", "direction",
@@ -146,8 +149,12 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                   "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
                                   "cost_dec", "cost")]
 
+    # Re-set rownames:
+    rownames(results) <- 1:nrow(results)
+
     # Remove invalid directions: ----
     results[results$direction %in% directions, ]
+
 
   } else { # no thresholds exist: ----
 
