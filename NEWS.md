@@ -3,8 +3,8 @@
 
 ## 1.8.1
 
-**FFTrees** version 1.8.1 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-12]. 
-This version mostly fixes an error in a package vignette. 
+**FFTrees** version 1.8.1 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-01-??]. 
+This version adds functionality, improves robustness, and fixes some bugs.
 
 <!-- Log of changes: --> 
 
@@ -12,16 +12,17 @@ Changes since last release:
 
 <!-- Blank line. --> 
 
+
 ### Major changes 
 
-- None yet. 
+- Added support optimizing trees for `dprime` values (as `goal`, `goal.chase`, and `goal.threshold`). 
 
 <!-- Blank line. --> 
 
 
 ### Minor changes 
 
-- None yet. 
+- Included `dprime` values in cue level statistics (in `x$cues$thresholds` and `x$cues$stats`). 
 
 <!-- Blank line. --> 
 
@@ -35,7 +36,7 @@ Changes since last release:
 
 <!-- Development version: --> 
 
-The current development version of **FFTrees** is available at  <https://github.com/ndphillips/FFTrees>. 
+The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
 
 <!-- Released versions: --> 
@@ -397,6 +398,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-12.]
+[File `NEWS.md` last updated on 2023-01-13.]
 
 <!-- eof. -->
