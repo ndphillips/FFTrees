@@ -969,7 +969,7 @@ fact_clean <- function(data.train,
 #' Add decision statistics to data (containing counts of a 2x2 contingency table)
 #'
 #' \code{add_stats} assumes the input of essential 2x2 frequency counts
-#' (as a data frame \code{data} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+#' (as a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
 #' and uses them to compute various decision accuracy measures.
 #'
 #' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
