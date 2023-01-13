@@ -15,14 +15,15 @@ Changes since last release:
 
 ### Major changes 
 
-- Added support optimizing trees for `dprime` values (as `goal`, `goal.chase`, and `goal.threshold`). 
+- Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
 
 <!-- Blank line. --> 
 
 
 ### Minor changes 
 
-- Included `dprime` values in cue level statistics (in `x$cues$thresholds` and `x$cues$stats`). 
+- Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
+- Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
 
 <!-- Blank line. --> 
 
