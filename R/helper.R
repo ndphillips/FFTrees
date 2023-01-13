@@ -977,18 +977,22 @@ fact_clean <- function(data.train,
 #'
 #' @param data A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
-#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g.; the cost of the cue).
+#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
+#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
+#' Default: \code{correction = .25}.
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
 add_stats <- function(data,
                       sens.w = .50,
                       cost.each = NULL,
-                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)) {
+                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+                      correction = .25   # used for dprime calculation
+) {
 
   # Prepare: ----
 
@@ -1006,6 +1010,7 @@ add_stats <- function(data,
 
   # Specificity:
   data$spec <- with(data, cr / (cr + fa))
+
 
   # False alarm rate:
   data$far <- with(data, 1 - spec)
@@ -1028,19 +1033,39 @@ add_stats <- function(data,
   data$wacc <- with(data, (sens * sens.w) + (spec * (1 - sens.w)))
 
 
-  # Outcome cost:
+  # dprime:
+
+  # a. Corrected freq values:
+  hi_c <- with(data, (hi)) + correction
+  mi_c <- with(data, (mi)) + correction
+  fa_c <- with(data, (fa)) + correction
+  cr_c <- with(data, (cr)) + correction
+
+  # b. dprime (corrected):
+  data$dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+
+
+  # Cost:
+
+  # Outcome cost (using NEGATIVE costs, to allow maximizing value to minimize cost):
   data$cost_dec <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n
+                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n  # Why data$n, not N?
 
   # Total cost:
-  data$cost <- data$cost_dec - cost.each
+  data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
+
+
+
 
 
   # Output: ----
 
   # Drop inputs and order columns (of df):
-  data <- data[, c("sens", "spec",  "far",  "ppv", "npv",
-                   "acc", "bacc", "wacc",   "cost_dec", "cost")]
+  data <- data[, c("sens", "spec",
+                   "far",  "ppv", "npv",
+                   "acc", "bacc", "wacc",
+                   "dprime",
+                   "cost_dec", "cost")]
 
   return(data)
 
@@ -1051,7 +1076,8 @@ add_stats <- function(data,
 # add_stats(freq)
 # add_stats(freq, sens.w = 3/4, cost.each = 1,
 #           cost.outcomes = list(hi = 0, mi = 3, fa = 2, cr = 0))
-# dim(add_stats(freq))  # 1 x 10
+# dim(add_stats(freq))  # 1 x 11 (with dprime)
+
 
 
 
@@ -1069,6 +1095,7 @@ add_stats <- function(data,
 #' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
 #' @param cost.v list. An optional list of additional costs to be added to each case.
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
+#' Default: \code{correction = .25}.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
@@ -1080,9 +1107,9 @@ add_stats <- function(data,
 
 classtable <- function(prediction_v = NULL,
                        criterion_v  = NULL,
-                       sens.w = NULL,  # to be passed by calling function!
+                       sens.w = NULL,          # to be passed by calling function!
                        cost.v = NULL,
-                       correction = .25,
+                       correction = .25,       # used for dprime calculation
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                        na_prediction_action = "ignore") {
 
@@ -1195,7 +1222,6 @@ classtable <- function(prediction_v = NULL,
       # fa_rate <- fa_c / (fa_c + cr_c)
       # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes more sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
@@ -1237,7 +1263,6 @@ classtable <- function(prediction_v = NULL,
 
       # dprime (corrected):
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-      # ToDo: Use raw values, rather than aggregate counts (so that qnorm() makes more sense)?
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
