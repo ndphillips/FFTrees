@@ -32,17 +32,19 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 # FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges start: --> 
+[![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
-<!-- Status badges end. --> 
+[![Total](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
+<!-- Status badges end. -->
 
 
 <!-- ALL badges start: --> 
-<!-- [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
 <!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
 <!-- [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![Total](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=blue)](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- ALL badges end. --> 
 
 
@@ -55,9 +57,9 @@ The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal dec
 ## What are fast-and-frugal trees (FFTs)?
 
 _Fast-and-frugal trees_\ (FFTs) are simple and transparent decision algorithms for solving binary classification problems. 
-The key feature making FFTs faster and more frugal than other decision trees is that every node allows for a decision. 
-When predicting new outcomes, the performance of FFTs competes with more complex algorithms and machine learning techniques, such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
-Apart from being faster and requiring less information, FFTs tend to be robust against overfitting, and easy to interpret, use, and communicate. 
+The key feature making FFTs faster and more frugal than other decision trees is that every node allows making a decision. 
+When predicting novel cases, the performance of FFTs competes with more complex algorithms and machine learning techniques, such as logistic regression\ (LR), support-vector machines\ (SVM), and random forests\ (RF). 
+Apart from being faster and requiring less information, FFTs tend to be robust against overfitting, and are easy to interpret, use, and communicate. 
 
 <!-- Quote (cited in guide.Rmd):   --> 
 <!-- In the words of @burton2020:  --> 
@@ -97,33 +99,32 @@ library(FFTrees)  # load package
 ### Using data 
 
 The `heartdisease` data provides medical information for 303\ patients that were tested for heart disease. 
-The full data were split into two subsets: 
-A `heart.train` set for fitting decision trees, and `heart.test` set for a testing the resulting trees. 
+The full data contains a binary criterion variable describing the true state of each patient and were split into two subsets: 
+A `heart.train` set for fitting decision trees, and `heart.test` set for a testing these trees. 
 Here are the first rows and columns of both subsets of the `heartdisease` data: 
 
 - `heart.train` (the training / fitting data) describes `r nrow(heart.train)` patients: 
 
 ```{r data-train, echo = FALSE}
 n_train <- nrow(heart.train)
-c_train <- paste0("**Table 1**: First lines of the `heart.train` subset (using data of ", n_train, " patients for fitting/training FFTs).")
+c_train <- paste0("**Table 1**: Beginning of the `heart.train` subset (using the data of ", n_train, " patients for fitting/training FFTs).")
 
 knitr::kable(head(heart.train), caption = c_train)
 ```
 
-- `heart.test` (the testing / prediction data) describes `r nrow(heart.test)` different patients:
+- `heart.test` (the testing / prediction data) describes `r nrow(heart.test)` different patients on the same variables:
 
 ```{r data-test, echo = FALSE}
 n_test <- nrow(heart.test)
-c_test <- paste0("**Table 2**: First lines of the `heart.test` subset (used to predict `diagnosis` for ", n_test, " new patients).")
+c_test <- paste0("**Table 2**: Beginning of the `heart.test` subset (used to predict `diagnosis` for ", n_test, " new patients).")
 
 knitr::kable(head(heart.test), caption = c_test)
 ```
 
-For this task, the (to-be predicted) criterion variable is `diagnosis` ---\ a logical vector (or column) indicating the true state for each patient (`TRUE` or\ `FALSE`, i.e., whether or not the patient suffers from heart disease). 
-Most of the variables in both datasets are potential predictors. 
+The challenge here is to predict each patient's `diagnosis` ---\ a column of logical values indicating the true state of each patient (i.e., `TRUE` or\ `FALSE`, based on the patient suffering or not suffering from heart disease)\ --- from the other variables, which serve as potential predictors. 
 
 
-### The problems addressed by FFTs
+### Questions answered by FFTs
 
 To solve binary classification problems by FFTs, we must answer two key questions:
 
@@ -136,7 +137,7 @@ Once we have created some FFTs, additional questions include:
 - How does its performance compare with alternative machine-learning algorithms?
 - How costly are the predictions of each algorithm?
 
-The **FFTrees** package creates FFTs and provides tentative answers to all these questions. 
+The **FFTrees** package answers these questions by creating FFTs and allowing to evaluate, visualize, and compare them to alternative algorithms.
 
 
 ### Creating fast-and-frugal trees (FFTs) 
@@ -147,7 +148,7 @@ We use the main `FFTrees()` function to create FFTs for the `heart.train` data a
 set.seed(246)  # for reproducible randomness
 ```
 
-- Create an `FFTrees` object from the `heartdisease` data: 
+- The main `FFTrees()` function allows creating an `FFTrees` object for the `heartdisease` data: 
 
 ```{r example-heart-create, collapse = FALSE, results = "hide"}
 # Create an FFTrees object from the heartdisease data: 
@@ -157,14 +158,17 @@ heart_fft <- FFTrees(formula = diagnosis ~.,
                      decision.labels = c("Healthy", "Disease"))
 ```
 
-- Printing an `FFTrees` object shows basic information and summary statistics (on the best training tree, FFT\ #1):
+Evaluating `FFTrees()` analyzes the training data, creates several FFTs, and applies them to the test data. 
+The results are stored in an object `heart_fft`, which can be printed, plotted and summarized (with options for selecting specific data or trees). 
 
-```{r example-heart-print}
+<!-- - Printing an `FFTrees` object shows basic information and summary statistics (on the best training tree, FFT\ #1): -->
+
+```{r example-heart-print, echo = FALSE, eval = FALSE}
 # Print:
 heart_fft
 ```
 
-- To evaluate the predictive performance of an FFT, we plot an `FFTrees` object (to visualize a tree and its performance) on the `test` data: 
+- Let's plot our `FFTrees` object to visualize a tree and its predictive performance (on the `test` data): 
 
 ```{r example-heart-plot, eval = FALSE}
 # Plot the best tree applied to the test data: 
@@ -177,7 +181,7 @@ plot(heart_fft,
 
 **Figure\ 1**: A fast-and-frugal tree (FFT) predicting heart disease for `test` data and its performance characteristics.  
 
-- Additionally, we can compare the predictive performance between different machine learning algorithms on a range of metrics: 
+- Additionally, we can compare the predictive performance of different machine learning algorithms on a range of metrics: 
 
 ```{r example-heart-comp}
 # Compare predictive performance across algorithms: 
@@ -254,7 +258,7 @@ When using **FFTrees** in your own work, please cite us and share your experienc
 
 <!-- Examples uses/publications (with links): -->
 
-By\ 2023, over 100\ scientific publications that have used or cited **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list). 
+By\ 2023, over 100\ scientific publications have used or cited **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list).  
 Examples include: 
 
 - [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. 
