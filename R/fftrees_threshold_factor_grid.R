@@ -141,12 +141,15 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
     # Clean up results: ----
 
+
     # Arrange rows by goal.threshold and change column order:
     ord_new <- order(results[, goal.threshold], decreasing = TRUE)
 
     results <- results[ord_new, c("threshold", "direction",
                                   "n", "hi", "fa", "mi", "cr",
-                                  "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
+                                  "sens", "spec", "ppv", "npv",
+                                  "bacc", "acc", "wacc",
+                                  "dprime",
                                   "cost_dec", "cost")]
 
     # Re-set rownames:
@@ -171,6 +174,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
       "bacc" = NA,
       "acc" = NA,
       "wacc" = NA,
+      "dprime" = NA,
       "cost_dec" = NA,
       "cost" = NA
     )

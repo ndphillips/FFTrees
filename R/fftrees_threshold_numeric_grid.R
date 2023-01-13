@@ -98,12 +98,15 @@ fftrees_threshold_numeric_grid <- function(thresholds,
 
   # Clean up results: ----
 
+
   # Arrange rows by goal.threshold and change column order:
   ord_new <- order(results[, goal.threshold], decreasing = TRUE)
 
   results <- results[ord_new, c("threshold", "direction",
                                 "n", "hi", "fa", "mi", "cr",
-                                "sens", "spec", "ppv", "npv", "bacc", "acc", "wacc",
+                                "sens", "spec", "ppv", "npv",
+                                "bacc", "acc", "wacc",
+                                "dprime",
                                 "cost_dec", "cost")]
 
   # Re-set rownames:
