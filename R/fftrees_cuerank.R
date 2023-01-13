@@ -256,12 +256,6 @@ fftrees_cuerank <- function(x = NULL,
 
         # B. Identify the best threshold (based on goal.threshold): ----
 
-        if (goal.threshold == "dprime"){  # Note error:
-          stop("Using 'dprime' as 'goal.threshold' is currently not supported.")
-          # ToDo: 'dprime' must be included in cue_i_stats:
-          #        Add dprime to fftrees_threshold_numeric_grid() and fftrees_threshold_factor_grid().
-        }
-
         # Get thresholds that maximize current goal.threshold:
         best_result_index <- which(cue_i_stats[goal.threshold] == max(cue_i_stats[goal.threshold], na.rm = TRUE))
         # Note that cost_dec and cost are NEGATIVE in cue_i_stats (so that goal.threshold == "cost" is MINimized)!
