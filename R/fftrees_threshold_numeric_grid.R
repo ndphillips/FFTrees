@@ -110,7 +110,7 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                 "cost_dec", "cost")]
 
   # Re-set rownames:
-  rownames(results) <- 1:nrow(results)
+  # rownames(results) <- 1:nrow(results)  # NOT needed and potentially confusing (when comparing results).
 
   # Remove invalid directions:
   results[results$direction %in% directions, ]

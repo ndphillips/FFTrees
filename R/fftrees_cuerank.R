@@ -242,9 +242,13 @@ fftrees_cuerank <- function(x = NULL,
 
         } # if b. factor/character/logical cue.
 
-        # # User feedback (4debugging):
+        # # Get feedback (4debugging):
         # print(paste0(cue_i, ": cue_i_stats of cue_i_name = ", cue_i_name, ":"))
         # print(cue_i_stats)
+
+        # Re-set rownames:
+        # rownames(cue_i_stats) <- 1:nrow(cue_i_stats)
+        # Note: NOT needed and potentially confusing (when comparing results).
 
         # Store results (i.e., ALL cue thresholds for cue_i): ----
         x$cues$thresholds[[data]][[cue_i_name]] <- cue_i_stats
