@@ -209,7 +209,7 @@ data.](man/figures/README-example-heart-plot-1.png)
 heart_fft$competition$test
 ```
 
-    #> # A tibble: 5 × 17
+    #> # A tibble: 5 × 18
     #>   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
     #>   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
     #> 1 fftrees     153    64    19     9    61 0.877 0.762 0.238  0.771 0.871 0.817
@@ -217,8 +217,8 @@ heart_fft$competition$test
     #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
     #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
     #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    #> # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>, cost_dec <dbl>,
-    #> #   cost_cue <dbl>
+    #> # … with 6 more variables: bacc <dbl>, wacc <dbl>, dprime <dbl>,
+    #> #   cost_dec <dbl>, cost_cue <dbl>, cost <dbl>
 
 <!-- FFTs by verbal description: -->
 
