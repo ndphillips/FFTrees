@@ -79,50 +79,62 @@ library(FFTrees)  # load package
 
 The `heartdisease` data provides medical information for 303 patients
 that were tested for heart disease. The full data were split into two
-subsets: A `heart.train` dataset for fitting decision trees, and
-`heart.test` dataset for a testing the resulting trees. Here are the
-first rows and columns of both subsets of the `heartdisease` data:
+subsets: A `heart.train` set for fitting decision trees, and
+`heart.test` set for a testing the resulting trees. Here are the first
+rows and columns of both subsets of the `heartdisease` data:
 
-- `heart.train` (the training / fitting dataset) contains the data from
-  150 patients:
+- `heart.train` (the training / fitting data) describes 150 patients:
 
-``` r
-head(heart.train)
-```
+| diagnosis | age | sex | cp  | trestbps | chol | fbs | restecg     | thalach | exang | oldpeak | slope |  ca | thal   |
+|:----------|----:|----:|:----|---------:|-----:|----:|:------------|--------:|------:|--------:|:------|----:|:-------|
+| FALSE     |  44 |   0 | np  |      108 |  141 |   0 | normal      |     175 |     0 |     0.6 | flat  |   0 | normal |
+| FALSE     |  51 |   0 | np  |      140 |  308 |   0 | hypertrophy |     142 |     0 |     1.5 | up    |   1 | normal |
+| FALSE     |  52 |   1 | np  |      138 |  223 |   0 | normal      |     169 |     0 |     0.0 | up    |   1 | normal |
+| TRUE      |  48 |   1 | aa  |      110 |  229 |   0 | normal      |     168 |     0 |     1.0 | down  |   0 | rd     |
+| FALSE     |  59 |   1 | aa  |      140 |  221 |   0 | normal      |     164 |     1 |     0.0 | up    |   0 | normal |
+| FALSE     |  58 |   1 | np  |      105 |  240 |   0 | hypertrophy |     154 |     1 |     0.6 | flat  |   0 | rd     |
 
-    #> # A tibble: 6 × 14
-    #>   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
-    #>   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
-    #> 1 FALSE        44     0 np         108   141     0 normal      175     0     0.6
-    #> 2 FALSE        51     0 np         140   308     0 hypert…     142     0     1.5
-    #> 3 FALSE        52     1 np         138   223     0 normal      169     0     0  
-    #> 4 TRUE         48     1 aa         110   229     0 normal      168     0     1  
-    #> 5 FALSE        59     1 aa         140   221     0 normal      164     1     0  
-    #> 6 FALSE        58     1 np         105   240     0 hypert…     154     1     0.6
-    #> # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
+**Table 1**: First lines of the `heart.train` subset (using data of 150
+patients for fitting/training FFTs).
 
-- `heart.test` (the testing / prediction dataset) contains data from a
-  new set of 153 patients:
+- `heart.test` (the testing / prediction data) describes 153 different
+  patients:
 
-``` r
-head(heart.test)
-```
+| diagnosis | age | sex | cp  | trestbps | chol | fbs | restecg     | thalach | exang | oldpeak | slope |  ca | thal   |
+|:----------|----:|----:|:----|---------:|-----:|----:|:------------|--------:|------:|--------:|:------|----:|:-------|
+| FALSE     |  51 |   0 | np  |      120 |  295 |   0 | hypertrophy |     157 |     0 |     0.6 | up    |   0 | normal |
+| TRUE      |  45 |   1 | ta  |      110 |  264 |   0 | normal      |     132 |     0 |     1.2 | flat  |   0 | rd     |
+| TRUE      |  53 |   1 | a   |      123 |  282 |   0 | normal      |      95 |     1 |     2.0 | flat  |   2 | rd     |
+| TRUE      |  45 |   1 | a   |      142 |  309 |   0 | hypertrophy |     147 |     1 |     0.0 | flat  |   3 | rd     |
+| FALSE     |  66 |   1 | a   |      120 |  302 |   0 | hypertrophy |     151 |     0 |     0.4 | flat  |   0 | normal |
+| TRUE      |  48 |   1 | a   |      130 |  256 |   1 | hypertrophy |     150 |     1 |     0.0 | up    |   2 | rd     |
 
-    #> # A tibble: 6 × 14
-    #>   diagnosis   age   sex cp    trestbps  chol   fbs restecg thalach exang oldpeak
-    #>   <lgl>     <dbl> <dbl> <chr>    <dbl> <dbl> <dbl> <chr>     <dbl> <dbl>   <dbl>
-    #> 1 FALSE        51     0 np         120   295     0 hypert…     157     0     0.6
-    #> 2 TRUE         45     1 ta         110   264     0 normal      132     0     1.2
-    #> 3 TRUE         53     1 a          123   282     0 normal       95     1     2  
-    #> 4 TRUE         45     1 a          142   309     0 hypert…     147     1     0  
-    #> 5 FALSE        66     1 a          120   302     0 hypert…     151     0     0.4
-    #> 6 TRUE         48     1 a          130   256     1 hypert…     150     1     0  
-    #> # … with 3 more variables: slope <chr>, ca <dbl>, thal <chr>
+**Table 2**: First lines of the `heart.test` subset (used to predict
+`diagnosis` for 153 new patients).
 
-Most of the variables in our data are potential predictors. The (to-be
-predicted) criterion variable is `diagnosis` — a logical column
-indicating the true state for each patient (`TRUE` or `FALSE`, i.e.,
-whether or not the patient suffers from heart disease).
+For this task, the (to-be predicted) criterion variable is `diagnosis`
+— a logical vector (or column) indicating the true state for each
+patient (`TRUE` or `FALSE`, i.e., whether or not the patient suffers
+from heart disease). Most of the variables in both datasets are
+potential predictors.
+
+### The problems addressed by FFTs
+
+To solve binary classification problems by FFTs, we must answer two key
+questions:
+
+- Which of the variables should we use to predict the criterion?
+- How should we use and combine predictor variables into FFTs?
+
+Once we have created some FFTs, additional questions include:
+
+- How accurate are the predictions of a specific FFT?
+- How does its performance compare with alternative machine-learning
+  algorithms?
+- How costly are the predictions of each algorithm?
+
+The **FFTrees** package creates FFTs and provides tentative answers to
+all these questions.
 
 ### Creating fast-and-frugal trees (FFTs)
 
@@ -197,7 +209,7 @@ data.](man/figures/README-example-heart-plot-1.png)
 heart_fft$competition$test
 ```
 
-    #> # A tibble: 5 × 17
+    #> # A tibble: 5 × 18
     #>   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
     #>   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
     #> 1 fftrees     153    64    19     9    61 0.877 0.762 0.238  0.771 0.871 0.817
@@ -205,8 +217,8 @@ heart_fft$competition$test
     #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
     #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
     #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    #> # … with 5 more variables: bacc <dbl>, wacc <dbl>, cost <dbl>, cost_dec <dbl>,
-    #> #   cost_cue <dbl>
+    #> # … with 6 more variables: bacc <dbl>, wacc <dbl>, dprime <dbl>,
+    #> #   cost_dec <dbl>, cost_cue <dbl>, cost <dbl>
 
 <!-- FFTs by verbal description: -->
 
@@ -294,22 +306,22 @@ continue developing the package.
 
 <!-- Examples uses/publications (with links): -->
 
-Here are some scientific publications that have used **FFTrees** (see
-[Google
+By 2023, over 100 scientific publications that have used or cited
+**FFTrees** (see [Google
 Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)
-for the full list):
+for the full list). Examples include:
 
 - [Lötsch, J., Haehner, A., & Hummel, T. (2020).
   Machine-learning-derived rules set excludes risk of Parkinson’s
   disease in patients with olfactory or gustatory symptoms with high
   accuracy. *Journal of Neurology*, *267*(2),
-  469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
+  469–478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
 
 - [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., &
   Doung, Y. C. (2020). Radiographic parameter-driven decision tree
   reliably predicts aseptic mechanical failure of compressive
   osseointegration fixation. *Acta Orthopaedica*, *91*(2),
-  171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
+  171–176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
 
 - [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold,
   S., Belderbos, J., … & Mantel, F. (2020). Correlating dose variables
@@ -321,7 +333,7 @@ for the full list):
 - [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J.
   (2019). Translating large-scale climate variability into crop
   production forecast in Europe. *Scientific Reports*, *9*(1),
-  1-13.](https://www.nature.com/articles/s41598-018-38091-4)
+  1–13.](https://www.nature.com/articles/s41598-018-38091-4)
 
 - [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E.,
   Derkay, C. S., Seedat, R. Y., … & Mortelliti, A. J. (2019). Age at
@@ -333,6 +345,6 @@ for the full list):
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-01-12.\]
+\[File `README.Rmd` last updated on 2023-01-13.\]
 
 <!-- eof. -->

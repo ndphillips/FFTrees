@@ -161,120 +161,6 @@ verify_all_cues_in_data <- function(cues, data){
 # verify_all_cues_in_data(c("fbs", "AGE", " chol ", "XY", "fbs"), heart.train)
 
 
-# select_best_tree: ------
-
-#' Select the best tree (from the current set)
-#'
-#' \code{select_best_tree} selects (looks up and identifies) the best tree
-#' from the set (or \dQuote{fan}) of FFTs contained in the current \code{FFTrees} object \code{x},
-#' an existing type of \code{data} ('train' or 'test'), and
-#' a \code{goal} for which corresponding statistics are available
-#' in the designated \code{data} type (in \code{x$trees$stats}).
-#'
-#' Importantly, \code{select_best_tree} only identifies and selects from the set of
-#' \emph{existing} trees with known statistics,
-#' rather than creating new trees or computing new cue thresholds.
-#' More specifically, \code{goal} is used for identifying and selecting the best of
-#' an existing set of FFTs, but not for
-#' computing new cue thresholds (see \code{goal.threshold} and \code{fftrees_cuerank()}) or
-#' creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
-#'
-#' @param x An \code{FFTrees} object.
-#'
-#' @param data The type of data to consider (as character: either 'train' or 'test').
-#'
-#' @param goal character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
-#' (for which values exist in \code{x$trees$stats}).
-#'
-#' @return An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
-#'
-#' @seealso
-#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
-
-select_best_tree <- function(x, data, goal){
-
-  # Verify inputs: ------
-
-  # x: ----
-
-  testthat::expect_true(inherits(x, "FFTrees"),
-                        info = "Argument x is no FFTrees object")
-
-  # data: ----
-
-  testthat::expect_true(data %in% c("train", "test"))
-
-  if (is.null(x$trees$stats$test) & (data == "test")){
-    message("You asked for 'test' data, but x only contains training statistics. I'll use data = 'train' instead...")
-    data <- "train"
-  }
-
-  # goal: ----
-
-  # # (a) narrow goal range:
-  #
-  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
-  # testthat::expect_true(goal %in% valid_tree_select_goal_narrow)
-
-  # (b) wide goal range:
-
-  # Goals to maximize (more is better):
-  max_goals <- c("hi", "cr",
-                 "sens", "spec",
-                 "ppv", "npv",
-                 "acc", "bacc", "wacc", "dprime",
-                 "pci")
-
-  # Goals to minimize (less is better):
-  min_goals <- c("mi", "fa",
-                 "cost", "cost_dec", "cost_cue",
-                 "mcu")
-
-  valid_tree_select_goal <- c(max_goals, min_goals)
-  testthat::expect_true(goal %in% valid_tree_select_goal)
-
-
-  # Get tree stats (from x given data): ------
-
-  cur_stats <- x$trees$stats[[data]]
-  cur_names <- names(cur_stats)
-
-  ix_goal <- which(cur_names == goal)
-  cur_goal_vals <- as.vector(cur_stats[[ix_goal]])
-
-  if (goal %in% max_goals){ # more is better:
-
-    cur_ranks <- rank(-cur_goal_vals, ties.method = "first")  # low ranks indicate higher/better values
-
-  } else { # goal %in% min_goals / less is better:
-
-    cur_ranks <- rank(+cur_goal_vals, ties.method = "first")  # low rank indicate lower/better values
-  }
-
-  tree <- cur_stats$tree[cur_ranks == min(cur_ranks)]  # get tree with minimum rank
-
-
-  # Output: -----
-
-  # print(paste0("Select best tree = ", tree))  # 4debugging
-
-  tree <- as.integer(tree)  # aim to convert to integer
-  testthat::expect_true(is.integer(tree))  # verify integer
-
-  return(tree) # as integer
-
-} # select_best_tree().
-
-
-
-# add_quotes: ------
-
-add_quotes <- function(x) {
-
-  toString(sQuote(x))
-
-} # add_quotes().
-
 
 # apply_break: ------
 
@@ -408,10 +294,9 @@ cost_cues_append <- function(formula,
 
 
 
-
 # comp_pred: ------
 
-#' A wrapper for competing classification algorithms.
+#' A wrapper for competing classification algorithms
 #'
 #' \code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),
 #' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
@@ -457,8 +342,12 @@ comp_pred <- function(formula,
   }
 
   if (is.null(algorithm)) {
-    stop("You must specify one of the following models: 'rlr', 'lr', 'cart', 'svm', 'rf'")
-    # ToDo: 'rlr' does currently not seem to be implemented.
+    stop("Please specify one of the following models: 'lr', 'rlr', 'cart', 'svm', 'rf'")
+    # ToDo: 'rlr' does currently not seem to be implemented (see below).
+  }
+
+  if (inherits(algorithm, "character")) {
+    algorithm <- tolower(algorithm)  # 4robustness
   }
 
   # SETUP: ----
@@ -491,17 +380,27 @@ comp_pred <- function(formula,
 
     # Remove columns with no variance in training data:
     if (is.null(data.train) == FALSE) {
+
       if (isTRUE(all.equal(length(unique(data.all[train.cases, 1])), 1))) {
-        do.test <- FALSE
+
+        do_test <- FALSE
+
       } else {
-        do.test <- TRUE
+
+        do_test <- TRUE
+
       }
+
     } else {
-      do.test <- TRUE
+
+      do_test <- TRUE
+
     }
   }
 
-  if (do.test) {
+
+  if (do_test) {
+
     if (is.null(train.cases) == FALSE) {
       ok.cols <- sapply(1:ncol(data.all), FUN = function(x) {
         length(unique(data.all[train.cases, x])) > 1
@@ -515,7 +414,9 @@ comp_pred <- function(formula,
         data.all[, col.i] <- factor(data.all[, col.i])
       }
     }
-  }
+
+  } # if (do_test).
+
 
   # Get data, cue, crit objects: ----
 
@@ -530,12 +431,14 @@ comp_pred <- function(formula,
     data.train <- NULL
     cue.train  <- NULL
     crit.train <- NULL
+
   }
 
 
-  # Build models and get training data: ------
+  # Build models for training data: ------
 
-  # LR: ----
+  # 1. LR: ----
+
   if (algorithm == "lr") {
 
     if (is.null(model)) {
@@ -546,6 +449,7 @@ comp_pred <- function(formula,
     } else {
 
       train.mod <- model
+
     }
 
     if (is.null(data.train) == FALSE) {
@@ -555,12 +459,23 @@ comp_pred <- function(formula,
     } else {
 
       pred.train <- NULL
+
     }
-  }
 
-  # RLR: ToDo ----
+  } # if (algorithm == "lr").
 
-  # SVM: ----
+
+  # 2. RLR: ToDo ----
+
+  if (algorithm == "rlr") {
+
+    stop("The 'rlr' algorithm is currently not supported. Please specify one of the following models: 'lr', 'cart', 'svm', 'rf'")
+
+  } # if (algorithm == "rlr").
+
+
+  # 3. SVM: ----
+
   if (algorithm == "svm") {
 
     if (is.null(model)) {
@@ -569,6 +484,7 @@ comp_pred <- function(formula,
       train.mod <- e1071::svm(formula,
                               data = data.train, type = "C"
       )
+
     } else {
 
       train.mod <- model
@@ -579,13 +495,17 @@ comp_pred <- function(formula,
       pred.train <- predict(train.mod,
                             data = data.train
       )
+
     } else {
 
       pred.train <- NULL
     }
-  }
 
-  # CART: ----
+  } # if (algorithm == "svm").
+
+
+  # 4. CART: ----
+
   if (algorithm == "cart") {
 
     if (is.null(model)) {
@@ -611,9 +531,12 @@ comp_pred <- function(formula,
 
       pred.train <- NULL
     }
-  }
 
-  # RF: ----
+  } # if (algorithm == "cart").
+
+
+  # 5. RF: ----
+
   if (algorithm == "rf") {
 
     if (is.null(model)) {
@@ -642,8 +565,11 @@ comp_pred <- function(formula,
     } else {
 
       pred.train <- NULL
+
     }
-  }
+
+  } # if (algorithm == "rf").
+
 
 
   # Get testing data: ------
@@ -653,7 +579,7 @@ comp_pred <- function(formula,
   if (is.null(data.test) == FALSE) {
 
     data.test <- data.all[test.cases, ]
-    cue.test <- data.all[test.cases, -1]
+    cue.test  <- data.all[test.cases, -1]
     crit.test <- data.all[test.cases, 1]
 
     # Check for new factor values:
@@ -714,8 +640,10 @@ comp_pred <- function(formula,
 
     # Get predictions (pred.test) from each model: ------
 
-    # LR: ----
+    # 1. LR: ----
+
     if (algorithm == "lr") {
+
       if (is.null(data.test) == FALSE) {
 
         pred.test <- rep(0, nrow(data.test))
@@ -730,12 +658,23 @@ comp_pred <- function(formula,
           pred.test[!cannot.pred.v] <- round(1 / (1 + exp(-predict(train.mod, data.test[cannot.pred.v == FALSE, ]))), 0)
         }
       }
-    }
 
-    # RLR: ToDo ----
+    } # if (algorithm == "lr").
 
-    # SVM: ----
+
+    # 2. RLR: ToDo ----
+
+    if (algorithm == "rlr") {
+
+      stop("The 'rlr' algorithm is currently not supported.")
+
+    } # if (algorithm == "rlr").
+
+
+    # 3. SVM: ----
+
     if (algorithm == "svm") {
+
       if (is.null(data.test) == FALSE) {
 
         # See if we can do any predictions
@@ -753,11 +692,16 @@ comp_pred <- function(formula,
           pred.test <- predict(train.mod, data.test)
         }
       }
-    }
 
-    # CART: ----
+    } # if (algorithm == "svm").
+
+
+    # 4. CART: ----
+
     if (algorithm == "cart") {
+
       if (is.null(data.test) == FALSE) {
+
         if (any(cannot.pred.v) & substr(new.factors, 1, 1) == "b") {
 
           pred.test <- rep(0, nrow(data.test))
@@ -769,10 +713,14 @@ comp_pred <- function(formula,
           pred.test <- predict(train.mod, data.test[cannot.pred.v == FALSE, ], type = "class")
         }
       }
-    }
 
-    # RF: ----
+    } # if (algorithm == "cart").
+
+
+    # 5. RF: ----
+
     if (algorithm == "rf") {
+
       if (is.null(data.test) == FALSE) {
 
         crit.test <- as.factor(crit.test)
@@ -812,8 +760,11 @@ comp_pred <- function(formula,
         #
         # }
       }
-    }
-  }
+
+    } # if (algorithm == "rf").
+
+  } # if (is.null(data.test) == FALSE)).
+
 
   # Convert predictions to logical if necessary: ----
 
@@ -844,7 +795,9 @@ comp_pred <- function(formula,
       criterion_v =  c(FALSE, FALSE, TRUE),
       sens.w = sens.w
     )
+
     acc.train[1, ] <- NA
+
   }
 
   if (is.null(pred.test) == FALSE) {
@@ -870,10 +823,13 @@ comp_pred <- function(formula,
       criterion_v = c(TRUE, TRUE, FALSE),
       sens.w = sens.w
     )
+
     acc.test[1, ] <- NA
+
   }
 
-  if (do.test == FALSE) {
+
+  if (do_test == FALSE) {
 
     acc.train <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
@@ -1396,19 +1352,115 @@ get_bacc_wacc <- function(sens, spec,  sens.w){
 
 
 
-# exit_word: ------
+# select_best_tree: ------
 
-exit_word <- function(data){
+#' Select the best tree (from current set of FFTs)
+#'
+#' \code{select_best_tree} selects (looks up and identifies) the best tree
+#' from the set (or \dQuote{fan}) of FFTs contained in the current \code{FFTrees} object \code{x},
+#' an existing type of \code{data} ('train' or 'test'), and
+#' a \code{goal} for which corresponding statistics are available
+#' in the designated \code{data} type (in \code{x$trees$stats}).
+#'
+#' Importantly, \code{select_best_tree} only identifies and selects from the set of
+#' \emph{existing} trees with known statistics,
+#' rather than creating new trees or computing new cue thresholds.
+#' More specifically, \code{goal} is used for identifying and selecting the best of
+#' an existing set of FFTs, but not for
+#' computing new cue thresholds (see \code{goal.threshold} and \code{fftrees_cuerank()}) or
+#' creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
+#'
+#' @param x An \code{FFTrees} object.
+#'
+#' @param data The type of data to consider (as character: either 'train' or 'test').
+#'
+#' @param goal character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
+#' (for which values exist in \code{x$trees$stats}).
+#'
+#' @return An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
+#'
+#' @seealso
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-  if (data == "test"){ "Predict" } else { "Decide" }
+select_best_tree <- function(x, data, goal){
 
-} # exit_word().
+  # Verify inputs: ------
+
+  # x: ----
+
+  testthat::expect_true(inherits(x, "FFTrees"),
+                        info = "Argument x is no FFTrees object")
+
+  # data: ----
+
+  testthat::expect_true(data %in% c("train", "test"))
+
+  if (is.null(x$trees$stats$test) & (data == "test")){
+    message("You asked for 'test' data, but x only contains training statistics. I'll use data = 'train' instead...")
+    data <- "train"
+  }
+
+  # goal: ----
+
+  # # (a) narrow goal range:
+  #
+  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
+  # testthat::expect_true(goal %in% valid_tree_select_goal_narrow)
+
+  # (b) wide goal range:
+
+  # Goals to maximize (more is better):
+  max_goals <- c("hi", "cr",
+                 "sens", "spec",
+                 "ppv", "npv",
+                 "acc", "bacc", "wacc", "dprime",
+                 "pci")
+
+  # Goals to minimize (less is better):
+  min_goals <- c("mi", "fa",
+                 "cost", "cost_dec", "cost_cue",
+                 "mcu")
+
+  valid_tree_select_goal <- c(max_goals, min_goals)
+  testthat::expect_true(goal %in% valid_tree_select_goal)
+
+
+  # Get tree stats (from x given data): ------
+
+  cur_stats <- x$trees$stats[[data]]
+  cur_names <- names(cur_stats)
+
+  ix_goal <- which(cur_names == goal)
+  cur_goal_vals <- as.vector(cur_stats[[ix_goal]])
+
+  if (goal %in% max_goals){ # more is better:
+
+    cur_ranks <- rank(-cur_goal_vals, ties.method = "first")  # low ranks indicate higher/better values
+
+  } else { # goal %in% min_goals / less is better:
+
+    cur_ranks <- rank(+cur_goal_vals, ties.method = "first")  # low rank indicate lower/better values
+  }
+
+  tree <- cur_stats$tree[cur_ranks == min(cur_ranks)]  # get tree with minimum rank
+
+
+  # Output: -----
+
+  # print(paste0("Select best tree = ", tree))  # 4debugging
+
+  tree <- as.integer(tree)  # aim to convert to integer
+  testthat::expect_true(is.integer(tree))  # verify integer
+
+  return(tree) # as integer
+
+} # select_best_tree().
 
 
 
 # verify_tree: ------
 
-# Verify tree argument [to be used in print(x) and plot(x)].
+# Verify a "tree" argument [to be used in print(x) and plot(x)].
 # Returns a tree number (as numeric) or "best.train"/"best.test" (as character).
 
 verify_tree <- function(x, data, tree){
@@ -1478,6 +1530,26 @@ verify_tree <- function(x, data, tree){
   return(tree) # (character or numeric)
 
 } # verify_tree().
+
+
+
+# add_quotes: ------
+
+add_quotes <- function(x) {
+
+  toString(sQuote(x))
+
+} # add_quotes().
+
+
+
+# exit_word: ------
+
+exit_word <- function(data){
+
+  if (data == "test"){ "Predict" } else { "Decide" }
+
+} # exit_word().
 
 
 
