@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{select_best_tree}
 \alias{select_best_tree}
-\title{Select the best tree (from the current set)}
+\title{Select the best tree (from current set of FFTs)}
 \usage{
 select_best_tree(x, data, goal)
 }
