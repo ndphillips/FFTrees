@@ -24,7 +24,8 @@ Default: \code{sens.w = NULL} (to enforce that actual value is being passed by t
 
 \item{cost.v}{list. An optional list of additional costs to be added to each case.}
 
-\item{correction}{numeric. Correction added to all counts for calculating \code{dprime}.}
+\item{correction}{numeric. Correction added to all counts for calculating \code{dprime}.
+Default: \code{correction = .25}.}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 the costs of a hit, false alarm, miss, and correct rejection, respectively.
