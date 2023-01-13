@@ -92,27 +92,50 @@ As an example, let's create a FFT predicting heart disease status (_Healthy_ vs.
 library(FFTrees)  # load package
 ```
 
+
 ### Using data 
 
 The `heartdisease` data provides medical information for 303\ patients that were tested for heart disease. 
 The full data were split into two subsets: 
-A `heart.train` dataset for fitting decision trees, and `heart.test` dataset for a testing the resulting trees. 
+A `heart.train` set for fitting decision trees, and `heart.test` set for a testing the resulting trees. 
 Here are the first rows and columns of both subsets of the `heartdisease` data: 
 
-- `heart.train` (the training / fitting dataset) contains the data from `r nrow(heart.train)` patients: 
+- `heart.train` (the training / fitting data) describes `r nrow(heart.train)` patients: 
 
-```{r data-train}
-head(heart.train)
+```{r data-train, echo = FALSE}
+n_train <- nrow(heart.train)
+c_train <- paste0("**Table 1**: First lines of the `heart.train` subset (using data of ", n_train, " patients for fitting/training FFTs).")
+
+knitr::kable(head(heart.train), caption = c_train)
 ```
 
-- `heart.test` (the testing / prediction dataset) contains data from a new set of `r nrow(heart.test)` patients:
+- `heart.test` (the testing / prediction data) describes `r nrow(heart.test)` different patients:
 
-```{r data-test}
-head(heart.test)
+```{r data-test, echo = FALSE}
+n_test <- nrow(heart.test)
+c_test <- paste0("**Table 2**: First lines of the `heart.test` subset (used to predict `diagnosis` for ", n_test, " new patients).")
+
+knitr::kable(head(heart.test), caption = c_test)
 ```
 
-Most of the variables in our data are potential predictors. 
-The (to-be predicted) criterion variable is `diagnosis` --- a logical column indicating the true state for each patient (`TRUE` or\ `FALSE`, i.e., whether or not the patient suffers from heart disease). 
+For this task, the (to-be predicted) criterion variable is `diagnosis` ---\ a logical vector (or column) indicating the true state for each patient (`TRUE` or\ `FALSE`, i.e., whether or not the patient suffers from heart disease). 
+Most of the variables in both datasets are potential predictors. 
+
+
+### The problems addressed by FFTs
+
+To solve binary classification problems by FFTs, we must answer two key questions:
+
+- Which of the variables should we use to predict the criterion? 
+- How should we use and combine predictor variables into FFTs?
+
+Once we have created some FFTs, additional questions include:
+
+- How accurate are the predictions of a specific FFT?
+- How does its performance compare with alternative machine-learning algorithms?
+- How costly are the predictions of each algorithm?
+
+The **FFTrees** package creates FFTs and provides tentative answers to all these questions. 
 
 
 ### Creating fast-and-frugal trees (FFTs) 
@@ -230,21 +253,27 @@ When using **FFTrees** in your own work, please cite us and share your experienc
 
 <!-- Examples uses/publications (with links): -->
 
-Here are some scientific publications that have used **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list): 
+By\ 2023, over 100\ scientific publications that have used or cited **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list). 
+Examples include: 
 
 - [Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. 
-_Journal of Neurology_, _267_(2), 469-478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
+_Journal of Neurology_, _267_(2), 469--478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
 
-- [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. _Acta Orthopaedica_, _91_(2), 171-176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
+- [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., & Doung, Y. C. (2020). 
+Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. 
+_Acta Orthopaedica_, _91_(2), 171--176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
 
-- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modeling study on 1500 individual treatments. 
+- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold, S., Belderbos, J., ... & Mantel, F. (2020). 
+Correlating dose variables with local tumor control in stereotactic body radiotherapy for early stage non-small cell lung cancer: A modeling study on 1500 individual treatments. 
 _International Journal of Radiation Oncology * Biology * Physics_.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
 
 - [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J. (2019). 
 Translating large-scale climate variability into crop production forecast in Europe. 
-_Scientific Reports_, _9_(1), 1-13.](https://www.nature.com/articles/s41598-018-38091-4)
+_Scientific Reports_, _9_(1), 1--13.](https://www.nature.com/articles/s41598-018-38091-4)
 
-- [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E., Derkay, C. S., Seedat, R. Y., ... & Mortelliti, A. J. (2019). Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. _PloS One_, _14_(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
+- [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E., Derkay, C. S., Seedat, R. Y., ... & Mortelliti, A. J. (2019). 
+Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. 
+_PloS One_, _14_(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
 
 
 <!-- footer: -->
