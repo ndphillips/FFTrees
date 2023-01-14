@@ -2,14 +2,15 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.8.1 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.8.0.9004 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Status badges start: -->
 
+[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
-[![Total](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
+[![Total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=blue)](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Status badges end. -->
 
 <!-- ALL badges start: -->
@@ -17,7 +18,7 @@ status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.or
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
 <!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
 <!-- [![Downloads](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees) -->
-<!-- [![Total](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=blue)](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='b22222')](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- ALL badges end. -->
 <!-- Pkg goal: -->
 
