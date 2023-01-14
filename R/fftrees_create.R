@@ -231,7 +231,7 @@ fftrees_create <- function(data = NULL,
 
   # goal.threshold: ----
 
-  # Note: Default is set to goal.threshold = "bacc" (in FFTrees.R).
+  # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
 
   # Use argument value from FFTrees(), but provide feedback:
   if (!quiet) {
@@ -265,6 +265,12 @@ fftrees_create <- function(data = NULL,
     }
     goal.threshold <- "bacc"
 
+  }
+
+  if (goal.threshold == "cost") { # note that this only makes sense for outcome costs:
+    if (!quiet) {
+      cat(u_f_hig("Optimizing cue thresholds for 'cost' only uses 'cost.outcomes', as 'cost.cues' are constant per cue.\n"))
+    }
   }
 
 
@@ -337,12 +343,13 @@ fftrees_create <- function(data = NULL,
   # cost.outcomes: ----
 
   if (!is.null(cost.outcomes) & goal != "cost") {
-    message("You specified cost.outcomes, but goal = '", goal, "' (not 'cost')\nFFT creation will ignore cost.outcomes, but report them in tree statistics.")
+    msg <- paste0("Specified 'cost.outcomes', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
+    cat(u_f_hig(msg))
   }
 
-  if (is.null(cost.outcomes)) { # use defaults:
+  if (is.null(cost.outcomes)) { # set defaults:
 
-    cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
+    cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
 
     if (!quiet) {
       cat(u_f_msg("\u2014 Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'\n"))
@@ -366,7 +373,8 @@ fftrees_create <- function(data = NULL,
   # cost.cues: ----
 
   if (!is.null(cost.cues) & goal != "cost") {
-    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore cost.cues, but report them in tree statistics.")
+    msg <- paste0("Specified 'cost.cues', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
+    cat(u_f_hig(msg))
   }
 
   if ((!quiet) & (!is.null(cost.cues))) {
