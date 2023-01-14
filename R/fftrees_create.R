@@ -269,7 +269,7 @@ fftrees_create <- function(data = NULL,
 
   if (goal.threshold == "cost") { # note that this only makes sense for outcome costs:
     if (!quiet) {
-      cat(u_f_msg("Setting 'goal.threshold' to optimize cues for 'cost' uses 'cost.outcomes', but 'cost.cues' are constant per cue.\n"))
+      cat(u_f_hig("Optimizing cue thresholds for 'cost' only uses 'cost.outcomes', as 'cost.cues' are constant per cue.\n"))
     }
   }
 
@@ -343,7 +343,8 @@ fftrees_create <- function(data = NULL,
   # cost.outcomes: ----
 
   if (!is.null(cost.outcomes) & goal != "cost") {
-    message("You specified cost.outcomes, but goal = '", goal, "' (not 'cost')\nFFT creation will ignore cost.outcomes, but report them in tree statistics.")
+    msg <- paste0("Specified 'cost.outcomes', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
+    cat(u_f_hig(msg))
   }
 
   if (is.null(cost.outcomes)) { # use defaults:
@@ -372,7 +373,8 @@ fftrees_create <- function(data = NULL,
   # cost.cues: ----
 
   if (!is.null(cost.cues) & goal != "cost") {
-    message("You specified cost.cues, but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore cost.cues, but report them in tree statistics.")
+    msg <- paste0("Specified 'cost.cues', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
+    cat(u_f_hig(msg))
   }
 
   if ((!quiet) & (!is.null(cost.cues))) {
