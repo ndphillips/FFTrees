@@ -231,7 +231,7 @@ fftrees_create <- function(data = NULL,
 
   # goal.threshold: ----
 
-  # Note: Default is set to goal.threshold = "bacc" (in FFTrees.R).
+  # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
 
   # Use argument value from FFTrees(), but provide feedback:
   if (!quiet) {
@@ -265,6 +265,12 @@ fftrees_create <- function(data = NULL,
     }
     goal.threshold <- "bacc"
 
+  }
+
+  if (goal.threshold == "cost") { # note that this only makes sense for outcome costs:
+    if (!quiet) {
+      cat(u_f_msg("Setting 'goal.threshold' to optimize cues for 'cost' uses 'cost.outcomes', but 'cost.cues' are constant per cue.\n"))
+    }
   }
 
 
