@@ -347,9 +347,9 @@ fftrees_create <- function(data = NULL,
     cat(u_f_hig(msg))
   }
 
-  if (is.null(cost.outcomes)) { # use defaults:
+  if (is.null(cost.outcomes)) { # set defaults:
 
-    cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)
+    cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
 
     if (!quiet) {
       cat(u_f_msg("\u2014 Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'\n"))

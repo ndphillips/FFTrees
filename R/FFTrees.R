@@ -160,13 +160,13 @@ FFTrees <- function(formula = NULL,
                     algorithm = "ifan",
                     max.levels = NULL,
                     sens.w = .50,
-                    cost.outcomes = NULL,
+                    cost.outcomes = NULL,     # (default set in fftrees_create.R)
                     cost.cues = NULL,
                     stopping.rule = "exemplars",
                     stopping.par = .1,
                     #
-                    goal = NULL,  # (default set in fftrees_create.R)
-                    goal.chase = NULL,  # (default set in fftrees_create.R)
+                    goal = NULL,              # (default set in fftrees_create.R)
+                    goal.chase = NULL,        # (default set in fftrees_create.R)
                     goal.threshold = "bacc",  # default
                     numthresh.method = "o",
                     numthresh.n = 10,
