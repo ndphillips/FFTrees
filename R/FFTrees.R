@@ -24,32 +24,39 @@
 #'
 #' }
 #'
-#' @param formula formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).
-#' @param data dataframe. A training dataset.
-#' @param data.test dataframe. An optional testing dataset with the same structure as data.
-#' @param algorithm character. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
-#' @param max.levels integer. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
-#' @param sens.w numeric. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.
+#' @param formula A formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).
+#' @param data A data frame. A dataset used for training (fitting) FFTs and alternative algorithms.
+#' \code{data} must contain the binary criterion variable specified in \code{formula} and potential predictors (which can be categorical or numeric variables).
+#' @param data.test A data frame. An optional dataset used for model testing (prediction) with the same structure as data.
+#' @param algorithm A character string. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
+#' @param max.levels An integer value. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
+#' @param sens.w A numeric value. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.
 #'
 #' @param cost.outcomes A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
 #' The list elements must have names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
 #' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
-#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a false alarm and miss cost 10 and 20, respectively, while correct decisions have no costs.
+#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.
 #' @param cost.cues A list containing the cost of each cue (in some unit).
 #' Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
-#' Cues not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).
+#' Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).
 #'
-#' @param stopping.rule character. A string indicating the method to stop growing trees.
+#' @param stopping.rule A character string indicating the method to stop growing trees.
 #' \code{"levels"} means the tree grows until a certain level;
 #' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
 #' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
-#' @param stopping.par numeric. A number indicating the parameter for the stopping rule.
+#' @param stopping.par A numeric value indicating the parameter for the stopping rule.
 #' For stopping.rule \code{"levels"}, this is the number of levels.
 #' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
 #'
-#' @param goal character. A string indicating the statistic to maximize when selecting final trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
-#' @param goal.chase character. A string indicating the statistic to maximize when constructing trees: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy, \code{"cost"} = cue costs.
-#' @param goal.threshold character. A string indicating the statistic to maximize when calculating cue thresholds: \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy.
+#' @param goal A character string indicating the statistic to maximize when \emph{selecting trees}:
+#' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
+#' \code{"dprime"} = discriminability, \code{"cost"} = costs (based on \code{cost.outcomes} and \code{cost.cues}).
+#' @param goal.chase A character string indicating the statistic to maximize when \emph{constructing trees}:
+#' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
+#' \code{"dprime"} = discriminability, \code{"cost"} = costs (based on \code{cost.outcomes} and \code{cost.cues}).
+#' @param goal.threshold A character string indicating the statistic to maximize when \emph{optimizing cue thresholds}:
+#' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
+#' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
 #' Default: \code{goal.threshold = "bacc"}.
 #'
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
