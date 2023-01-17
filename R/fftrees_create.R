@@ -87,13 +87,8 @@ fftrees_create <- function(data = NULL,
 
   # data: ----
 
-  testthat::expect_true(!is.null(data),
-                        info = "data is NULL"
-  )
-
-  testthat::expect_true(is.data.frame(data),
-                        info = "data is not a dataframe"
-  )
+  testthat::expect_true(!is.null(data), info = "data is NULL")
+  testthat::expect_true(is.data.frame(data), info = "data is not a dataframe")
 
 
   # formula: ----
@@ -109,20 +104,13 @@ fftrees_create <- function(data = NULL,
   # algorithm: ----
 
   algorithm_valid <- c("ifan", "dfan")
-
-  testthat::expect_true(!is.null(algorithm),
-                        info = "algorithm is NULL"
-  )
-
+  testthat::expect_true(!is.null(algorithm), info = "algorithm is NULL")
   testthat::expect_true(algorithm %in% algorithm_valid)
 
 
   # sens.w: ----
 
-  testthat::expect_true(!is.null(sens.w),
-                        info = "sens.w is NULL"
-  )
-
+  testthat::expect_true(!is.null(sens.w), info = "sens.w is NULL")
   testthat::expect_lte(sens.w, expected = 1)
   testthat::expect_gte(sens.w, expected = 0)
 
@@ -165,10 +153,7 @@ fftrees_create <- function(data = NULL,
   } # if (is.null(goal)) else.
 
   # Verify goal:
-  testthat::expect_true(!is.null(goal),
-                        info = "goal is NULL"
-  )
-
+  testthat::expect_true(!is.null(goal), info = "goal is NULL")
   testthat::expect_true(goal %in% valid_opt_goal)
 
   if ((goal == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
@@ -213,10 +198,8 @@ fftrees_create <- function(data = NULL,
   }
 
   # Verify goal.chase:
-  testthat::expect_true(!is.null(goal.chase),
-                        info = "goal.chase is NULL"
-  )
 
+  testthat::expect_true(!is.null(goal.chase), info = "goal.chase is NULL")
   testthat::expect_true(goal.chase %in% valid_opt_goal)
 
   if ((goal.chase == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
@@ -252,10 +235,8 @@ fftrees_create <- function(data = NULL,
 
 
   # Verify goal.threshold:
-  testthat::expect_true(!is.null(goal.threshold),
-                        info = "goal.threshold is NULL"
-  )
 
+  testthat::expect_true(!is.null(goal.threshold), info = "goal.threshold is NULL")
   testthat::expect_true(goal.threshold %in% valid_opt_goal)
 
   if ((goal.threshold == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
@@ -264,10 +245,10 @@ fftrees_create <- function(data = NULL,
       cat(u_f_msg("\u2014 The goal.threshold was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'\n"))
     }
     goal.threshold <- "bacc"
-
   }
 
   if (goal.threshold == "cost") { # note that this only makes sense for outcome costs:
+
     if (!quiet) {
       cat(u_f_hig("Optimizing cue thresholds for 'cost' only uses 'cost.outcomes', as 'cost.cues' are constant per cue.\n"))
     }
@@ -331,13 +312,8 @@ fftrees_create <- function(data = NULL,
 
   }
 
-  testthat::expect_true(!is.null(max.levels),
-                        info = "max.levels is NULL"
-  )
-
-  testthat::expect_true(max.levels %in% 1:6,
-                        info = "max.levels must be an integer between 1 and 6"
-  )
+  testthat::expect_true(!is.null(max.levels), info = "max.levels is NULL")
+  testthat::expect_true(max.levels %in% 1:6, info = "max.levels must be an integer between 1 and 6")
 
 
   # cost.outcomes: ----
@@ -349,24 +325,21 @@ fftrees_create <- function(data = NULL,
 
   if (is.null(cost.outcomes)) { # set defaults:
 
-    cost.outcomes <- list(hi = 0, mi = 1, fa = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
+    cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 Setting 'cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0)'\n"))
+      cat(u_f_msg("\u2014 Setting 'cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)'\n"))
     }
   }
 
-  testthat::expect_true(!is.null(cost.outcomes),
-                        info = "cost.outcomes is NULL"
+  testthat::expect_true(!is.null(cost.outcomes), info = "cost.outcomes is NULL")
+
+  testthat::expect_type(cost.outcomes, type = "list"
+                        # info = "cost.outcomes must be a list in the form list(hi = a, mi = x, fa = x, cr = x)"
   )
 
-  testthat::expect_type(cost.outcomes,
-                        type = "list"
-                        # info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
-  )
-
-  testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "mi", "fa", "cr")),
-                        info = "cost.outcomes must be a list in the form list(hi = x, mi = x, fa = x, cr = x)"
+  testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "fa", "mi", "cr")),
+                        info = "cost.outcomes must be a list in the form list(hi = a, fa = b, mi = c, cr = d)"
   )
 
 
@@ -384,14 +357,12 @@ fftrees_create <- function(data = NULL,
   # Append cost.cues (for all cues in data):
   cost.cues <- cost_cues_append(formula,
                                 data,
-                                cost.cues = cost.cues
-                                )
+                                cost.cues = cost.cues)
+
   # str(cost.cues)  # 4debugging
 
   testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL")
-
   testthat::expect_type(cost.cues, type = "list")
-
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
                         info = "At least one of the values specified in cost.cues is not in data")
 
@@ -411,10 +382,7 @@ fftrees_create <- function(data = NULL,
 
   # decision.labels: ----
 
-  testthat::expect_true(!is.null(decision.labels),
-                        info = "decision.labels is NULL"
-  )
-
+  testthat::expect_true(!is.null(decision.labels), info = "decision.labels is NULL")
   testthat::expect_equal(length(decision.labels), 2)
 
 

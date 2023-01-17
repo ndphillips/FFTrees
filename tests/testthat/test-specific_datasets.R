@@ -4,7 +4,7 @@ test_that("Can replicate Phillips et al.2017 heartdisease trees", {
   phillips_trees <- FFTrees(diagnosis ~ .,
     data = heart.train,
     data.test = heart.test,
-    cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0),
+    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
     goal = "bacc"
   )
 

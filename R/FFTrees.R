@@ -33,7 +33,7 @@
 #' @param sens.w A numeric value. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.
 #'
 #' @param cost.outcomes A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
-#' The list elements must have names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
+#' The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
 #' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.
 #' @param cost.cues A list containing the cost of each cue (in some unit).
