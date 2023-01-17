@@ -5,32 +5,23 @@
 # (1) Basic checks and calculations: ------
 
 
-# get_criterion: ------
+# get_lhs_formula: ------
 
 # Goal: Get criterion variable from formula (and verify formula).
 
-get_criterion <- function(formula){
+get_lhs_formula <- function(formula){
 
   # Verify formula:
-
-  testthat::expect_true(!is.null(formula),
-                        info = "formula is NULL"
-  )
-
-  testthat::expect_type(formula,
-                        type = "language"
-  )
+  testthat::expect_true(!is.null(formula), info = "formula is NULL")
+  testthat::expect_type(formula, type = "language")
 
   # Main:
-
-  criterion_name <- paste(formula)[2]
-
+  lhs_name <- paste(formula)[2]
 
   # Output:
+  return(lhs_name)
 
-  return(criterion_name)
-
-} # get_criterion().
+} # get_lhs_formula().
 
 
 # valid_train_test_data: ------

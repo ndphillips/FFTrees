@@ -99,7 +99,7 @@ fftrees_create <- function(data = NULL,
   # formula: ----
 
   # Get criterion:
-  criterion_name <- get_criterion(formula)
+  criterion_name <- get_lhs_formula(formula)
 
   if (!criterion_name %in% names(data)){
     stop(paste0("Criterion variable '", criterion_name, "' was not found in data"))
