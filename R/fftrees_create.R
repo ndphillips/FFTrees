@@ -531,7 +531,7 @@ fftrees_create <- function(formula = NULL,
       test = data.test
     ),
 
-    # Parameters:
+    # Store parameters (as list):
     params = list(
       algorithm = algorithm,
       #
@@ -562,7 +562,7 @@ fftrees_create <- function(formula = NULL,
       do.svm = do.svm,
       do.rf = do.rf,
       #
-      quiet = quiet,
+      quiet = quiet
     ),
 
 
