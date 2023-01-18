@@ -534,9 +534,11 @@ fftrees_create <- function(formula = NULL,
     # Parameters:
     params = list(
       algorithm = algorithm,
+      #
       goal = goal,
       goal.chase = goal.chase,
       goal.threshold = goal.threshold,
+      #
       max.levels = max.levels,
       numthresh.method = numthresh.method,
       numthresh.n = numthresh.n,
