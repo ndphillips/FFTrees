@@ -9,23 +9,29 @@
 #'
 #' @param data Training data (as data frame).
 #' @param formula A formula (with a binary criterion variable).
-#' @param algorithm string.
-#' @param goal string.
-#' @param goal.chase string.
-#' @param goal.threshold string.
+#' @param algorithm Algorithm for growing FFTs (\code{"ifan"} or \code{"dfan"}) (as character string).
+#' @param data.test Data for testing models/prediction (as data frame).
+#'
+#' @param goal Measure used to select FFTs (as character string).
+#' @param goal.chase Measure used to optimize FFT creation (as character string).
+#' @param goal.threshold Measure used to optimize cue thresholds (as character string).
+#'
+#' @param max.levels integer.
 #' @param numthresh.method string.
 #' @param numthresh.n integer.
-#' @param sens.w numeric.
-#' @param max.levels integer.
-#' @param cost.outcomes list.
-#' @param cost.cues list.
+#' @param repeat.cues logical.
 #' @param stopping.rule string.
 #' @param stopping.par numeric.
-#' @param decision.labels string.
+#'
+#' @param sens.w numeric.
+#'
+#' @param cost.outcomes list.
+#' @param cost.cues list.
+#'
 #' @param main string.
+#' @param decision.labels string.
+#'
 #' @param my.tree string.
-#' @param data.test dataframe.
-#' @param repeat.cues logical.
 #'
 #' @param do.lr logical.
 #' @param do.cart logical.
@@ -53,27 +59,35 @@
 fftrees_create <- function(data = NULL,
                            formula = NULL,
                            algorithm = NULL,
+                           data.test = NULL,
+                           #
                            goal = NULL,
                            goal.chase = NULL,
                            goal.threshold = NULL,
+                           #
+                           max.levels = NULL,
                            numthresh.method = NULL,
                            numthresh.n = NULL,
-                           sens.w = NULL,
-                           max.levels = NULL,
-                           cost.outcomes = NULL,
-                           cost.cues = NULL,
+                           repeat.cues = NULL,
                            stopping.rule = NULL,
                            stopping.par = NULL,
-                           decision.labels = NULL,
+                           #
+                           sens.w = NULL,
+                           #
+                           cost.outcomes = NULL,
+                           cost.cues = NULL,
+                           #
                            main = NULL,
+                           decision.labels = NULL,
+                           #
                            my.tree = NULL,
-                           data.test = NULL,
-                           repeat.cues = NULL,
+                           #
                            do.lr = TRUE,
                            do.svm = TRUE,
                            do.cart = TRUE,
                            do.rf = TRUE,
                            do.comp = TRUE,
+                           #
                            quiet = NULL) {
 
   # Provide user feedback: ----
@@ -148,7 +162,7 @@ fftrees_create <- function(data = NULL,
     if (!quiet) {
       msg <- paste0("\u2014 User set 'goal = ", goal, "'\n")
       cat(u_f_msg(msg))
-      }
+    }
 
   } # if (is.null(goal)) else.
 
@@ -193,7 +207,7 @@ fftrees_create <- function(data = NULL,
     if (!quiet) {
       msg <- paste0("\u2014 User set 'goal.chase = ", goal.chase, "'\n")
       cat(u_f_msg(msg))
-      }
+    }
 
   }
 
@@ -523,24 +537,30 @@ fftrees_create <- function(data = NULL,
       goal = goal,
       goal.chase = goal.chase,
       goal.threshold = goal.threshold,
+      max.levels = max.levels,
       numthresh.method = numthresh.method,
       numthresh.n = numthresh.n,
+      repeat.cues = repeat.cues,
       stopping.rule = stopping.rule,
       stopping.par = stopping.par,
+      #
       sens.w = sens.w,
-      max.levels = max.levels,
+      #
       cost.outcomes = cost.outcomes,
       cost.cues = cost.cues,
-      decision.labels = decision.labels,
+      #
       main = main,
-      repeat.cues = repeat.cues,
-      quiet = quiet,
+      decision.labels = decision.labels,
+      #
       my.tree = my.tree,
+      #
       do.lr = do.lr,
       do.cart = do.cart,
       do.svm = do.svm,
       do.rf = do.rf,
-      do.comp = do.comp
+      do.comp = do.comp,
+      #
+      quiet = quiet,
     ),
 
 
@@ -550,33 +570,21 @@ fftrees_create <- function(data = NULL,
       train = data.frame(
         algorithm = NA,
         n = NA,
-        hi = NA,
-        fa = NA,
-        mi = NA,
-        cr = NA,
-        sens = NA,
-        spec = NA,
-        far = NA,
-        ppv = NA,
-        npv = NA,
-        acc = NA,
-        bacc = NA, cost = NA, cost_dec = NA, cost_cue = NA
+        hi = NA, fa = NA, mi = NA, cr = NA,
+        sens = NA, spec = NA, far = NA,
+        ppv = NA, npv = NA,
+        acc = NA, bacc = NA,
+        cost = NA, cost_dec = NA, cost_cue = NA
       ),
 
       test = data.frame(
         algorithm = NA,
         n = NA,
-        hi = NA,
-        fa = NA,
-        mi = NA,
-        cr = NA,
-        sens = NA,
-        spec = NA,
-        far = NA,
-        ppv = NA,
-        npv = NA,
-        acc = NA,
-        bacc = NA, cost = NA, cost_dec = NA, cost_cue = NA
+        hi = NA, fa = NA, mi = NA, cr = NA,
+        sens = NA, spec = NA, far = NA,
+        ppv = NA, npv = NA,
+        acc = NA, bacc = NA,
+        cost = NA, cost_dec = NA, cost_cue = NA
       ),
 
       models = list(lr = NULL, cart = NULL, rf = NULL, svm = NULL)
