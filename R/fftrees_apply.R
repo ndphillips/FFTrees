@@ -285,8 +285,8 @@ fftrees_apply <- function(x,
       decisions_df$cost_cue[classify_now] <- cost_cue_level_cum[level_i]
 
       decisions_df$cost_decision[decisions_df$criterion == TRUE  & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$hi
-      decisions_df$cost_decision[decisions_df$criterion == TRUE  & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
       decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$fa
+      decisions_df$cost_decision[decisions_df$criterion == TRUE  & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
       decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$cr
 
       decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_decision

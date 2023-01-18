@@ -1019,10 +1019,10 @@ add_stats <- function(data,
 } # add_stats().
 
 # # Check:
-# (freq <- data.frame(hi = 2, mi = 3, fa = 1, cr = 4))
+# (freq <- data.frame(hi = 2, fa = 1, mi = 3, cr = 4))
 # add_stats(freq)
 # add_stats(freq, sens.w = 3/4, cost.each = 1,
-#           cost.outcomes = list(hi = 0, mi = 3, fa = 2, cr = 0))
+#           cost.outcomes = list(hi = 0, fa = 2, mi = 3, cr = 0))
 # dim(add_stats(freq))  # 1 x 11 (with dprime)
 
 

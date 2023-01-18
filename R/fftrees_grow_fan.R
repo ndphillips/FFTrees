@@ -361,14 +361,14 @@ fftrees_grow_fan <- function(x,
         }
 
         # Update cost vectors:
-        hi_v <- decision_v == TRUE  & criterion_v == TRUE
-        mi_v <- decision_v == FALSE & criterion_v == TRUE
-        fa_v <- decision_v == TRUE  & criterion_v == FALSE
-        cr_v <- decision_v == FALSE & criterion_v == FALSE
+        hi_v <- (decision_v == TRUE)  & (criterion_v == TRUE)
+        fa_v <- (decision_v == TRUE)  & (criterion_v == FALSE)
+        mi_v <- (decision_v == FALSE) & (criterion_v == TRUE)
+        cr_v <- (decision_v == FALSE) & (criterion_v == FALSE)
 
         outcomecost_v[hi_v == TRUE] <- x$params$cost.outcomes$hi
-        outcomecost_v[mi_v == TRUE] <- x$params$cost.outcomes$mi
         outcomecost_v[fa_v == TRUE] <- x$params$cost.outcomes$fa
+        outcomecost_v[mi_v == TRUE] <- x$params$cost.outcomes$mi
         outcomecost_v[cr_v == TRUE] <- x$params$cost.outcomes$cr
 
       } # Step 3.

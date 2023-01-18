@@ -2,13 +2,13 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.8.0.9005 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.8.0.9006 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees)
+[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
 [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
 <!-- Devel badges end. -->
 
@@ -73,9 +73,9 @@ devtools::install_github("ndphillips/FFTrees", build_vignettes = TRUE)
 
 ## Getting started
 
-As an example, let’s create a FFT predicting heart disease status
-(*Healthy* vs. *Diseased*) based on the `heartdisease` dataset included
-in **FFTrees**:
+As an example, let’s create a FFT predicting patients’ heart disease
+status (*Healthy* vs. *Disease*) based on the `heartdisease` dataset
+included in **FFTrees**:
 
 ``` r
 library(FFTrees)  # load package
@@ -84,7 +84,7 @@ library(FFTrees)  # load package
 ### Using data
 
 The `heartdisease` data provides medical information for 303 patients
-that were tested for heart disease. The full data contains a binary
+that were examined for heart disease. The full data contains a binary
 criterion variable describing the true state of each patient and were
 split into two subsets: A `heart.train` set for fitting decision trees,
 and `heart.test` set for a testing these trees. Here are the first rows
@@ -119,11 +119,10 @@ and columns of both subsets of the `heartdisease` data:
 **Table 2**: Beginning of the `heart.test` subset (used to predict
 `diagnosis` for 153 new patients).
 
-The challenge here is to predict each patient’s `diagnosis` — a column
-of logical values indicating the true state of each patient (i.e.,
-`TRUE` or `FALSE`, based on the patient suffering or not suffering from
-heart disease) — from the other variables, which serve as potential
-predictors.
+Our challenge is to predict each patient’s `diagnosis` — a column of
+logical values indicating the true state of each patient (i.e., `TRUE`
+or `FALSE`, based on the patient suffering or not suffering from heart
+disease) — from the values of potential predictors.
 
 ### Questions answered by FFTs
 
@@ -329,6 +328,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-01-15.\]
+\[File `README.Rmd` last updated on 2023-01-18.\]
 
 <!-- eof. -->

@@ -23,13 +23,13 @@ test_that("Using goal = 'cost' kills a high cost cue", {
 test_that("Changing costs without changing goal does not affect tree", {
   trees_bacc <- FFTrees(diagnosis ~ .,
     data = heartdisease,
-    cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0),
+    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
     goal = "bacc"
   )
 
   trees_cost <- FFTrees(diagnosis ~ .,
     data = heartdisease,
-    cost.outcomes = list(hi = 0, mi = 10, fa = 1, cr = 0),
+    cost.outcomes = list(hi = 0, fa = 1, mi = 10, cr = 0),
     goal = "bacc"
   )
 
@@ -42,13 +42,13 @@ test_that("Changing costs without changing goal does not affect tree", {
 test_that("Changing costs and goal = 'cost' does affect tree", {
   trees_cost1 <- FFTrees(diagnosis ~ .,
     data = heartdisease,
-    cost.outcomes = list(hi = 0, mi = 1, fa = 1, cr = 0),
+    cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
     goal = "cost"
   )
 
   trees_cost2 <- FFTrees(diagnosis ~ .,
     data = heartdisease,
-    cost.outcomes = list(hi = 0, mi = 10, fa = 1, cr = 0),
+    cost.outcomes = list(hi = 0, fa = 1, mi = 10, cr = 0),
     goal = "cost"
   )
 

@@ -10,22 +10,22 @@ FFTrees(
   data = NULL,
   data.test = NULL,
   algorithm = "ifan",
-  max.levels = NULL,
-  sens.w = 0.5,
-  cost.outcomes = NULL,
-  cost.cues = NULL,
-  stopping.rule = "exemplars",
-  stopping.par = 0.1,
+  train.p = 1,
   goal = NULL,
   goal.chase = NULL,
   goal.threshold = "bacc",
+  max.levels = NULL,
   numthresh.method = "o",
   numthresh.n = 10,
-  decision.labels = c("False", "True"),
-  main = NULL,
-  train.p = 1,
-  rounding = NULL,
   repeat.cues = TRUE,
+  rounding = NULL,
+  stopping.par = 0.1,
+  stopping.rule = "exemplars",
+  sens.w = 0.5,
+  cost.outcomes = NULL,
+  cost.cues = NULL,
+  main = NULL,
+  decision.labels = c("False", "True"),
   my.tree = NULL,
   object = NULL,
   tree.definitions = NULL,
@@ -52,27 +52,9 @@ FFTrees(
 
 \item{algorithm}{A character string. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.}
 
-\item{max.levels}{An integer value. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
-
-\item{sens.w}{A numeric value. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.}
-
-\item{cost.outcomes}{A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
-The list elements must have names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
-(for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
-E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.}
-
-\item{cost.cues}{A list containing the cost of each cue (in some unit).
-Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
-Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).}
-
-\item{stopping.rule}{A character string indicating the method to stop growing trees.
-\code{"levels"} means the tree grows until a certain level;
-\code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
-\code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.}
-
-\item{stopping.par}{A numeric value indicating the parameter for the stopping rule.
-For stopping.rule \code{"levels"}, this is the number of levels.
-For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.}
+\item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified?
+For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
+Default: \code{train.p = 1} (i.e., using all data for training).}
 
 \item{goal}{A character string indicating the statistic to maximize when \emph{selecting trees}:
 \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
@@ -87,23 +69,42 @@ For stopping rule \code{"exemplars"}, this is the smallest percentage of exempla
 \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
 Default: \code{goal.threshold = "bacc"}.}
 
+\item{max.levels}{An integer value. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.}
+
 \item{numthresh.method}{character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.}
 
 \item{numthresh.n}{integer. Number of numeric thresholds to try.}
 
-\item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.}
-
-\item{main}{string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.}
-
-\item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified?
-For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
-The default of \code{train.p = 1} uses all data for training.}
+\item{repeat.cues}{logical. May cues occur multiple times within a tree? Default: \code{repeat.cues = TRUE}.}
 
 \item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds.
 The default of \code{rounding = NULL} implies no rounding.
 A value of \code{0} rounds all possible thresholds to the nearest integer, \code{1} rounds to the nearest decade (.10), etc.}
 
-\item{repeat.cues}{logical. May cues occur multiple times within a tree? Default: \code{repeat.cues = TRUE}.}
+\item{stopping.par}{A numeric value indicating the parameter for the stopping rule.
+For stopping.rule \code{"levels"}, this is the number of levels.
+For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
+Default: \code{stopping.par = .10}.}
+
+\item{stopping.rule}{A character string indicating the method to stop growing trees. Available options are:
+\code{"levels"} means the tree grows until a certain level;
+\code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
+\code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.}
+
+\item{sens.w}{A numeric value. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.}
+
+\item{cost.outcomes}{A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
+The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
+(for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
+E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.}
+
+\item{cost.cues}{A list containing the cost of each cue (in some unit).
+Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
+Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).}
+
+\item{main}{string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.}
+
+\item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.}
 
 \item{my.tree}{An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
 For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
@@ -123,7 +124,8 @@ All options set to \code{TRUE} by default. Available options are:
 \code{svm} = support vector machines with \strong{e1071}.
 Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.}
 
-\item{quiet}{logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors.
+\item{quiet}{logical. Should progress reports be suppressed?
+Setting \code{quiet = FALSE} is helpful for diagnosing errors.
 Default: \code{quiet = FALSE} (i.e., show progress).}
 
 \item{comp, force, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}

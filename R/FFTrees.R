@@ -29,24 +29,9 @@
 #' \code{data} must contain the binary criterion variable specified in \code{formula} and potential predictors (which can be categorical or numeric variables).
 #' @param data.test A data frame. An optional dataset used for model testing (prediction) with the same structure as data.
 #' @param algorithm A character string. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
-#' @param max.levels An integer value. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
-#' @param sens.w A numeric value. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.
-#'
-#' @param cost.outcomes A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
-#' The list elements must have names \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
-#' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
-#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.
-#' @param cost.cues A list containing the cost of each cue (in some unit).
-#' Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
-#' Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).
-#'
-#' @param stopping.rule A character string indicating the method to stop growing trees.
-#' \code{"levels"} means the tree grows until a certain level;
-#' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
-#' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
-#' @param stopping.par A numeric value indicating the parameter for the stopping rule.
-#' For stopping.rule \code{"levels"}, this is the number of levels.
-#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
+#' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified?
+#' For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
+#' Default: \code{train.p = 1} (i.e., using all data for training).
 #'
 #' @param goal A character string indicating the statistic to maximize when \emph{selecting trees}:
 #' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
@@ -59,17 +44,34 @@
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
 #' Default: \code{goal.threshold = "bacc"}.
 #'
+#' @param max.levels An integer value. The maximum number of levels considered for the trees. Because all permutations of exit structures are considered, the larger \code{max.levels} is, the more trees will be created.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined? \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
 #' @param numthresh.n integer. Number of numeric thresholds to try.
-#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
-#' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
-#' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified?
-#' For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
-#' The default of \code{train.p = 1} uses all data for training.
+#' @param repeat.cues logical. May cues occur multiple times within a tree? Default: \code{repeat.cues = TRUE}.
 #' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds.
 #' The default of \code{rounding = NULL} implies no rounding.
 #' A value of \code{0} rounds all possible thresholds to the nearest integer, \code{1} rounds to the nearest decade (.10), etc.
-#' @param repeat.cues logical. May cues occur multiple times within a tree? Default: \code{repeat.cues = TRUE}.
+#' @param stopping.par A numeric value indicating the parameter for the stopping rule.
+#' For stopping.rule \code{"levels"}, this is the number of levels.
+#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
+#' Default: \code{stopping.par = .10}.
+#' @param stopping.rule A character string indicating the method to stop growing trees. Available options are:
+#' \code{"levels"} means the tree grows until a certain level;
+#' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
+#' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
+#'
+#' @param sens.w A numeric value. A number from 0 to 1 indicating how to weight sensitivity relative to specificity when \code{goal = 'wacc'}. Default: \code{sens.w = .50}.
+#'
+#' @param cost.outcomes A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
+#' The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
+#' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
+#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.
+#' @param cost.cues A list containing the cost of each cue (in some unit).
+#' Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
+#' Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).
+#'
+#' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
+#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
 #'
 #' @param my.tree An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
@@ -87,7 +89,8 @@
 #' \code{svm} = support vector machines with \strong{e1071}.
 #' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
-#' @param quiet logical. Should progress reports be suppressed? Setting \code{quiet = FALSE} is helpful for diagnosing errors.
+#' @param quiet logical. Should progress reports be suppressed?
+#' Setting \code{quiet = FALSE} is helpful for diagnosing errors.
 #' Default: \code{quiet = FALSE} (i.e., show progress).
 #'
 #' @param comp,force,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
@@ -156,26 +159,28 @@
 FFTrees <- function(formula = NULL,
                     data = NULL,
                     data.test = NULL,
-                    #
                     algorithm = "ifan",
-                    max.levels = NULL,
-                    sens.w = .50,
-                    cost.outcomes = NULL,     # (default set in fftrees_create.R)
-                    cost.cues = NULL,
-                    stopping.rule = "exemplars",
-                    stopping.par = .1,
+                    train.p = 1,
                     #
                     goal = NULL,              # (default set in fftrees_create.R)
                     goal.chase = NULL,        # (default set in fftrees_create.R)
                     goal.threshold = "bacc",  # default
+                    #
+                    max.levels = NULL,
                     numthresh.method = "o",
                     numthresh.n = 10,
-                    #
-                    decision.labels = c("False", "True"),  # in 0:left/1:right order!
-                    main = NULL,
-                    train.p = 1,
-                    rounding = NULL,
                     repeat.cues = TRUE,
+                    rounding = NULL,              # ToDo: Used anywhere?
+                    stopping.par = .10,
+                    stopping.rule = "exemplars",
+                    #
+                    sens.w = .50,
+                    #
+                    cost.outcomes = NULL,     # (default set in fftrees_create.R)
+                    cost.cues = NULL,
+                    #
+                    main = NULL,
+                    decision.labels = c("False", "True"),  # in 0:left/1:right order
                     #
                     my.tree = NULL,
                     object = NULL,
@@ -311,31 +316,39 @@ FFTrees <- function(formula = NULL,
 
   # 1. Create a new FFTrees object x: ----
 
-  x <- fftrees_create(data = data,
-                      formula = formula,
+  x <- fftrees_create(formula = formula,
+                      data = data,
                       data.test = data.test,
                       algorithm = algorithm,
+                      #
                       goal = goal,
                       goal.chase = goal.chase,
                       goal.threshold = goal.threshold,
-                      sens.w = sens.w,
+                      #
                       max.levels = max.levels,
-                      cost.outcomes = cost.outcomes,
-                      cost.cues = cost.cues,
-                      stopping.rule = stopping.rule,
-                      stopping.par = stopping.par,
-                      decision.labels = decision.labels,
-                      main = main,
-                      my.tree = my.tree,
-                      repeat.cues = repeat.cues,
                       numthresh.method = numthresh.method,
                       numthresh.n = numthresh.n,
+                      stopping.rule = stopping.rule,
+                      stopping.par = stopping.par,
+                      repeat.cues = repeat.cues,
+                      #
+                      sens.w = sens.w,
+                      #
+                      cost.outcomes = cost.outcomes,
+                      cost.cues = cost.cues,
+                      #
+                      main = main,
+                      decision.labels = decision.labels,
+                      #
+                      my.tree = my.tree,
+                      #
                       do.lr   = do.lr,
                       do.cart = do.cart,
                       do.svm  = do.svm,
                       do.rf   = do.rf,
                       do.comp = do.comp,
-                      quiet = quiet  # store in x$params$quiet
+                      #
+                      quiet = quiet # stored in x$params$quiet
   )
 
 

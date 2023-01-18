@@ -163,8 +163,8 @@ print.FFTrees <- function(x = NULL,
 
   # Outcome costs: ----
 
-  cat("- Outcome costs: [hi = ", x$params$cost.outcomes$hi, ", mi = ", x$params$cost.outcomes$mi,
-      ", fa = ", x$params$cost.outcomes$fa, ", cr = ", x$params$cost.outcomes$cr, "]\n",
+  cat("- Outcome costs: [hi = ", x$params$cost.outcomes$hi, ", fa = ", x$params$cost.outcomes$fa,
+      ", mi = ", x$params$cost.outcomes$mi, ", cr = ", x$params$cost.outcomes$cr, "]\n",
       sep = ""
   )
 
