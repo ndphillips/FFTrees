@@ -913,16 +913,18 @@ fact_clean <- function(data.train,
 
 # add_stats: ------
 
+# Outcome statistics based on frequency counts (of 4 classification outcomes):
+
 #' Add decision statistics to data (containing counts of a 2x2 contingency table)
 #'
-#' \code{add_stats} assumes the input of essential 2x2 frequency counts
-#' (as a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+#' \code{add_stats} assumes the input of the 4 essential classification outcomes
+#' (as frequency counts in a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
 #' and uses them to compute various decision accuracy measures.
 #'
 #' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
 #' allows computing cost information for the counts of corresponding classification decisions.
 #'
-#' @param data A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.
+#' @param data A data frame with 4 frequency counts (as integer values, named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}).
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
@@ -1002,9 +1004,6 @@ add_stats <- function(data,
   data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
 
 
-
-
-
   # Output: ----
 
   # Drop inputs and order columns (of df):
@@ -1029,6 +1028,8 @@ add_stats <- function(data,
 
 
 # classtable: ------
+
+# Outcome statistics based on 2 binary vectors (of logical values):
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
 #'
@@ -1139,16 +1140,16 @@ classtable <- function(prediction_v = NULL,
 
       # Get 4 freq counts:
       hi <- cm$table[2, 2]
-      mi <- cm$table[1, 2]
       fa <- cm$table[2, 1]
+      mi <- cm$table[1, 2]
       cr <- cm$table[1, 1]
 
       N <- (hi + mi + fa + cr)
 
       # Corrected freq values:
       hi_c <- hi + correction
-      mi_c <- mi + correction
       fa_c <- fa + correction
+      mi_c <- mi + correction
       cr_c <- cr + correction
 
       # Get or compute statistics:
@@ -1183,16 +1184,16 @@ classtable <- function(prediction_v = NULL,
 
       # Compute freqs as sum of T/F combinations:
       hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)
-      mi <- sum(prediction_v == FALSE & criterion_v == TRUE)
       fa <- sum(prediction_v == TRUE  & criterion_v == FALSE)
+      mi <- sum(prediction_v == FALSE & criterion_v == TRUE)
       cr <- sum(prediction_v == FALSE & criterion_v == FALSE)
 
-      N <- (hi + mi + fa + cr)
+      N <- (hi + fa + mi + cr)
 
       # Corrected values:
       hi_c <- hi + correction
-      mi_c <- mi + correction
       fa_c <- fa + correction
+      mi_c <- mi + correction
       cr_c <- cr + correction
 
       # Compute statistics:
@@ -1215,6 +1216,7 @@ classtable <- function(prediction_v = NULL,
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
+
       # Cost per case:
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
@@ -1225,8 +1227,8 @@ classtable <- function(prediction_v = NULL,
   } else { # (N > 0) failed: Assign NAs ----
 
     hi <- NA
-    mi <- NA
     fa <- NA
+    mi <- NA
     cr <- NA
 
     N <- NA
@@ -1260,8 +1262,8 @@ classtable <- function(prediction_v = NULL,
     n = N,
 
     hi = hi,
-    mi = mi,
     fa = fa,
+    mi = mi,
     cr = cr,
 
     sens = sens,
