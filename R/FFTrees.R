@@ -313,29 +313,37 @@ FFTrees <- function(formula = NULL,
 
   x <- fftrees_create(data = data,
                       formula = formula,
-                      data.test = data.test,
                       algorithm = algorithm,
+                      data.test = data.test,
+                      #
                       goal = goal,
                       goal.chase = goal.chase,
                       goal.threshold = goal.threshold,
-                      sens.w = sens.w,
+                      #
                       max.levels = max.levels,
-                      cost.outcomes = cost.outcomes,
-                      cost.cues = cost.cues,
-                      stopping.rule = stopping.rule,
-                      stopping.par = stopping.par,
-                      decision.labels = decision.labels,
-                      main = main,
-                      my.tree = my.tree,
-                      repeat.cues = repeat.cues,
                       numthresh.method = numthresh.method,
                       numthresh.n = numthresh.n,
+                      stopping.rule = stopping.rule,
+                      stopping.par = stopping.par,
+                      repeat.cues = repeat.cues,
+                      #
+                      sens.w = sens.w,
+                      #
+                      cost.outcomes = cost.outcomes,
+                      cost.cues = cost.cues,
+                      #
+                      main = main,
+                      decision.labels = decision.labels,
+                      #
+                      my.tree = my.tree,
+                      #
                       do.lr   = do.lr,
                       do.cart = do.cart,
                       do.svm  = do.svm,
                       do.rf   = do.rf,
                       do.comp = do.comp,
-                      quiet = quiet  # store in x$params$quiet
+                      #
+                      quiet = quiet # stored in x$params$quiet
   )
 
 
