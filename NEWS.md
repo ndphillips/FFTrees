@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9006
+## 1.8.0.9007
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -30,10 +30,11 @@ Changes since last release:
 
 ### Details 
 
-- Added check that criterion variable occurs in data.
-- Re-grouped arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
-- Replaced Travis badge in `README.Rmd` by GitHub action on R-CMD-check (standard). 
-- Minor bug fixes and revisions of vignettes.
+- Added a check that criterion variable occurs in data.
+- Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
+- Revised status badges in `README`. 
+- Re-arranged and cleaned code (e.g., utility functions).
+- Fixed minor bugs and revised vignettes.
 
 <!-- Development version: --> 
 
