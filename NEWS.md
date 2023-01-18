@@ -1,26 +1,24 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9004
+## 1.8.0.9006
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
-**FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [in 2023-01-??]. 
+**FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [in 2023-02]. 
 This version adds functionality, improves robustness, and fixes some bugs.
 
 <!-- Log of changes: --> 
 
 Changes since last release: 
 
-<!-- Blank line. --> 
-
+<!-- Major: --> 
 
 ### Major changes 
 
 - Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
 
-<!-- Blank line. --> 
-
+<!-- Minor: --> 
 
 ### Minor changes 
 
@@ -28,15 +26,14 @@ Changes since last release:
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
 - Improved user feedback on combinations of goal and cost values.
 
-<!-- Blank line. --> 
-
+<!-- Details: --> 
 
 ### Details 
 
 - Added check that criterion variable occurs in data.
-- Fixed CRAN error (in `mushrooms.fft` of "Examples of FFTrees"). 
+- Re-grouped arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
 - Replaced Travis badge in `README.Rmd` by GitHub action on R-CMD-check (standard). 
-- Minor revision of vignettes.
+- Minor bug fixes and revisions of vignettes.
 
 <!-- Development version: --> 
 
@@ -67,8 +64,7 @@ Changes since last release:
 - Added and improved user feedback (when `quiet = FALSE`). 
 
 
-<!-- Blank line. --> 
-
+<!-- Minor: --> 
 
 ### Minor changes 
 
@@ -82,8 +78,7 @@ Changes since last release:
 - Added check that cues occur in current data (in `verify_all_cues_in_data()`). 
 
 
-<!-- Blank line. --> 
-
+<!-- Details: --> 
 
 ### Details 
 
@@ -121,7 +116,7 @@ Changes since last release:
     - Enabled passing some graphical parameters (e.g., `col`, `font`, `adj`) to text of panel titles. 
     - Return an invisible `FFTrees` object `x` (to allow re-assigning to global `x` when using new test data). 
     
-<!-- Blank line. --> 
+<!-- Minor: --> 
 
 ### Minor changes 
 
@@ -132,7 +127,7 @@ Changes since last release:
     - Deprecated `stats` argument. 
     - Moved utility functions to `helper_plot.R`. 
 
-<!-- Blank line. --> 
+<!-- Details: --> 
 
 ### Details 
 
@@ -191,7 +186,7 @@ Changes since last release:
 
 - Fixed a bug that forced reversals of final exits in the final node when manually creating FFTs with `my.tree` or `fftrees_wordstofftrees()`.
 
-<!-- Blank line. --> 
+<!-- Minor: --> 
 
 
 ### Minor changes 
@@ -200,8 +195,7 @@ Changes since last release:
 - Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
 - Deprecated `store.data` argument of `FFTrees()`. 
 
-<!-- Blank line. --> 
-
+<!-- Details: --> 
 
 ### Details 
 
@@ -402,6 +396,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-14.]
+[File `NEWS.md` last updated on 2023-01-18.]
 
 <!-- eof. -->
