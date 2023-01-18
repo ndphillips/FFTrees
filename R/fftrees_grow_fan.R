@@ -319,10 +319,10 @@ fftrees_grow_fan <- function(x,
 
         } else { # note an unknown/invalid goal.chase value:
 
-          valid_opt_goal <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
-          valid_opt_goal_str <- paste(valid_opt_goal, collapse = ", ")
+          valid_goals <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
+          valid_goals_str <- paste(valid_goals, collapse = ", ")
 
-          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_opt_goal_str, "'"))
+          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_goals_str, "'"))
 
         } # If stop?
 

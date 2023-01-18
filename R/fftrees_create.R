@@ -139,8 +139,8 @@ fftrees_create <- function(formula = NULL,
 
   # goal: ----
 
-  # Define a (constant) set of valid optimization goals:
-  valid_opt_goal <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Setting "dprime" does not seem to work!
+  # Define a (constant) set of valid goals (for FFT selection via 'goal'):
+  valid_goals <- c("acc", "bacc", "wacc", "dprime", "cost")
 
   if (is.null(goal)) { # goal NOT set by user:
 
@@ -176,7 +176,7 @@ fftrees_create <- function(formula = NULL,
 
   # Verify goal:
   testthat::expect_true(!is.null(goal), info = "goal is NULL")
-  testthat::expect_true(goal %in% valid_opt_goal)
+  testthat::expect_true(goal %in% valid_goals)
 
   if ((goal == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -190,7 +190,7 @@ fftrees_create <- function(formula = NULL,
 
   # goal.chase: ----
 
-  if (goal == "cost" & is.null(goal.chase)) { # use cost:
+  if (goal == "cost" & is.null(goal.chase)) { # set to 'cost' as well:
 
     goal.chase <- "cost"
 
@@ -198,12 +198,12 @@ fftrees_create <- function(formula = NULL,
 
   } else if (is.null(goal.chase)) { # use accuracy:
 
-    if (enable_wacc(sens.w)){ # use wacc:
+    if (enable_wacc(sens.w)){ # set to 'wacc':
 
       goal.chase <- "wacc"
       if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = wacc'\n")) }
 
-    } else { # use bacc (as bacc == wacc):
+    } else { # set to 'bacc' (as bacc == wacc):
 
       goal.chase <- "bacc"
       if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = bacc'\n")) }
@@ -222,7 +222,7 @@ fftrees_create <- function(formula = NULL,
   # Verify goal.chase:
 
   testthat::expect_true(!is.null(goal.chase), info = "goal.chase is NULL")
-  testthat::expect_true(goal.chase %in% valid_opt_goal)
+  testthat::expect_true(goal.chase %in% valid_goals)
 
   if ((goal.chase == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -259,7 +259,7 @@ fftrees_create <- function(formula = NULL,
   # Verify goal.threshold:
 
   testthat::expect_true(!is.null(goal.threshold), info = "goal.threshold is NULL")
-  testthat::expect_true(goal.threshold %in% valid_opt_goal)
+  testthat::expect_true(goal.threshold %in% valid_goals)
 
   if ((goal.threshold == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
