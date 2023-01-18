@@ -73,11 +73,11 @@
 #' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
 #'
+#' @param my.tree An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
+#' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
 #' @param object An optional existing \code{FFTrees} object.
 #' When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
 #' When \code{formula}, \code{data} or \code{data.test} are not specified, the current values of \code{object} are used.
-#' @param my.tree An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
-#' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
 #' @param tree.definitions An optional \code{data.frame} of hard-coded FFT definitions (in the format of \code{x$trees$definitions} of an \code{FFTrees} object \code{x}).
 #' If specified, no new FFTs are fitted, but the tree definitions provided are used to re-evaluate the current \code{FFTrees} object.
 #'
@@ -182,8 +182,8 @@ FFTrees <- function(formula = NULL,
                     main = NULL,
                     decision.labels = c("False", "True"),  # in 0:left/1:right order
                     #
-                    object = NULL,
                     my.tree = NULL,
+                    object = NULL,
                     tree.definitions = NULL,
                     #
                     do.comp = TRUE,
@@ -316,10 +316,10 @@ FFTrees <- function(formula = NULL,
 
   # 1. Create a new FFTrees object x: ----
 
-  x <- fftrees_create(data = data,
-                      formula = formula,
-                      algorithm = algorithm,
+  x <- fftrees_create(formula = formula,
+                      data = data,
                       data.test = data.test,
+                      algorithm = algorithm,
                       #
                       goal = goal,
                       goal.chase = goal.chase,
