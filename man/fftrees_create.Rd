@@ -73,11 +73,11 @@ fftrees_create(
 
 \item{decision.labels}{string.}
 
-\item{my.goal}{The name of the optimization measure defined by \code{fn.goal} (as character string).
+\item{my.goal}{The name of the optimization measure defined by \code{fn.goal} (as a character string).
 Default: \code{my.goal = "my_acc"}.}
 
-\item{fn.goal}{The definition of an optimization measure, defined in terms of 4 basic frequencies \code{hi, fa, mi, cr}
-(as an R function with arguments \code{hi, fa, mi, cr}).
+\item{fn.goal}{The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+(as an R function of the arguments \code{hi, fa, mi, cr}).
 Default: \code{fn.goal = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).}
 
 \item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as character string).
