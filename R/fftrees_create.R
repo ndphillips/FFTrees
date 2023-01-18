@@ -31,11 +31,11 @@
 #' @param main string.
 #' @param decision.labels string.
 #'
-#' @param my.goal The name of the optimization measure defined by \code{fn.goal} (as a character string).
+#' @param my.goal The name of the optimization measure defined by \code{my.goal.fun} (as a character string).
 #' Default: \code{my.goal = "my_acc"}.
-#' @param fn.goal The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+#' @param my.goal.fun The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
 #' (as an R function of the arguments \code{hi, fa, mi, cr}).
-#' Default: \code{fn.goal = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
+#' Default: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
 #' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
@@ -87,7 +87,7 @@ fftrees_create <- function(formula = NULL,
                            decision.labels = NULL,
                            #
                            my.goal = "my_acc",  # name of my.goal
-                           fn.goal = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
+                           my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
                            #
                            do.comp = TRUE,
@@ -419,13 +419,13 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_true(length(my.goal) == 1,  info = "Provided 'my.goal' is not of length 1")
 
 
-  # fn.goal: ----
+  # my.goal.fun: ----
 
-  testthat::expect_true(is.function(fn.goal),  info = "Provided 'fn.goal' is not of type 'function'")
+  testthat::expect_true(is.function(my.goal.fun),  info = "Provided 'my.goal.fun' is not of type 'function'")
 
-  # fn.goal must only use 4 freq arguments:
+  # my.goal.fun must only use 4 freq arguments:
   valid_args <- c("hi", "fa", "mi", "cr")
-  fn_arg_names <- names(formals(fn.goal))
+  fn_arg_names <- names(formals(my.goal.fun))
   # print(fn_arg_names)  # 4debugging
 
   if (any(fn_arg_names %in% valid_args == FALSE)){
@@ -433,7 +433,7 @@ fftrees_create <- function(formula = NULL,
     invalid_args <- setdiff(fn_arg_names, valid_args)
     invalid_avec <- paste(invalid_args, collapse = ", ")
 
-    stop("fn.goal must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
+    stop("my.goal.fun must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
   }
 
   if (any(valid_args %in% fn_arg_names == FALSE)){
@@ -442,7 +442,7 @@ fftrees_create <- function(formula = NULL,
     missing_avec <- paste(missing_args, collapse = ", ")
     if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
 
-    message("fn.goal usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
+    message("my.goal.fun usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
   }
 
 
@@ -596,7 +596,7 @@ fftrees_create <- function(formula = NULL,
       decision.labels = decision.labels,
       #
       my.goal = my.goal,
-      fn.goal = fn.goal,
+      my.goal.fun = my.goal.fun,
       my.tree = my.tree,
       #
       do.comp = do.comp,
