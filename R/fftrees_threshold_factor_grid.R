@@ -79,9 +79,10 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     ))
 
     # Order by goal.threshold and change column order:
-    ord_new <- order(results[, goal.threshold], decreasing = TRUE)
+    row_order <- order(results[ , goal.threshold], decreasing = TRUE)
 
-    results <- results[ord_new, ]
+    results <- results[row_order, ]
+
 
     # Loop 2 over cumulative thresholds: ------
     # C++
@@ -143,14 +144,16 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
 
     # Arrange rows by goal.threshold and change column order:
-    ord_new <- order(results[, goal.threshold], decreasing = TRUE)
+    row_order <- order(results[, goal.threshold], decreasing = TRUE)
 
-    results <- results[ord_new, c("threshold", "direction",
-                                  "n", "hi", "fa", "mi", "cr",
-                                  "sens", "spec", "ppv", "npv",
-                                  "bacc", "acc", "wacc",
-                                  "dprime",
-                                  "cost_dec", "cost")]
+    col_order <- c("threshold", "direction",
+                   "n", "hi", "fa", "mi", "cr",
+                   "sens", "spec", "ppv", "npv",
+                   "acc", "bacc", "wacc",
+                   "dprime",
+                   "cost_dec", "cost")
+
+    results <- results[row_order, col_order]
 
     # Re-set rownames:
     # rownames(results) <- 1:nrow(results)  # NOT needed and potentially confusing (when comparing results).
@@ -164,17 +167,24 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     results <- data.frame(
       "threshold" = NA,
       "direction" = NA,
+      #
       "n" = NA,
       "hi" = NA,
       "fa" = NA,
       "mi" = NA,
       "cr" = NA,
+      #
       "sens" = NA,
       "spec" = NA,
+      "ppv"  = NA,
+      "npv"  = NA,
+      #
+      "acc"  = NA,
       "bacc" = NA,
-      "acc" = NA,
       "wacc" = NA,
+      #
       "dprime" = NA,
+      #
       "cost_dec" = NA,
       "cost" = NA
     )
