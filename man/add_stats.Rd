@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{add_stats}
 \alias{add_stats}
-\title{Add decision statistics to data (containing counts of a 2x2 contingency table)}
+\title{Add decision statistics to data (based on frequency counts of a 2x2 classification outcomes)}
 \usage{
 add_stats(
   data,
@@ -13,7 +13,7 @@ add_stats(
 )
 }
 \arguments{
-\item{data}{A data frame with (integer) values named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}.}
+\item{data}{A data frame with 4 frequency counts (as integer values, named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}).}
 
 \item{sens.w}{numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.}
 
@@ -31,8 +31,8 @@ Default: \code{correction = .25}.}
 A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 }
 \description{
-\code{add_stats} assumes the input of essential 2x2 frequency counts
-(as a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+\code{add_stats} assumes the input of the 4 essential classification outcomes
+(as frequency counts in a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
 and uses them to compute various decision accuracy measures.
 }
 \details{
