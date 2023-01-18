@@ -153,6 +153,446 @@ verify_all_cues_in_data <- function(cues, data){
 
 
 
+# add_stats: ------
+
+
+# Outcome statistics based on frequency counts (of 4 classification outcomes)
+# [called to get cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
+
+
+#' Add decision statistics to data (based on frequency counts of a 2x2 classification outcomes)
+#'
+#' \code{add_stats} assumes the input of the 4 essential classification outcomes
+#' (as frequency counts in a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+#' and uses them to compute various decision accuracy measures.
+#'
+#' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
+#' allows computing cost information for the counts of corresponding classification decisions.
+#'
+#' @param data A data frame with 4 frequency counts (as integer values, named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}).
+#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
+#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
+#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
+#' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
+#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
+#' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
+#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
+#' Default: \code{correction = .25}.
+#'
+#' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
+
+add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classification outcomes (as integers)
+                      sens.w = .50,
+                      cost.each = NULL,
+                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+                      correction = .25 # used for dprime calculation
+) {
+
+  # Prepare: ----
+
+  if (is.null(cost.each)) {
+    cost.each <- 0
+  }
+
+
+  # Compute measures: ----
+
+  N <- with(data, (hi + cr + fa + mi))
+
+  # Sensitivity:
+  data$sens <- with(data, hi / (hi + mi))
+
+  # Specificity:
+  data$spec <- with(data, cr / (cr + fa))
+
+
+  # False alarm rate:
+  data$far <- with(data, 1 - spec)
+
+
+  # Positive predictive value (PPV):
+  data$ppv <- with(data, hi / (hi + fa))
+
+  # Negative predictive value (NPV):
+  data$npv <- with(data, cr / (cr + mi))
+
+
+  # Accuracy:
+  data$acc <- with(data, (hi + cr) / N)
+
+  # Balanced accuracy:
+  data$bacc <- with(data, (sens + spec) / 2)  # = (sens * .50) + (spec * .50)
+
+  # Weighted accuracy:
+  data$wacc <- with(data, (sens * sens.w) + (spec * (1 - sens.w)))
+
+
+  # dprime:
+
+  # a. Corrected freq values:
+  hi_c <- with(data, (hi)) + correction
+  mi_c <- with(data, (mi)) + correction
+  fa_c <- with(data, (fa)) + correction
+  cr_c <- with(data, (cr)) + correction
+
+  # b. dprime (corrected):
+  data$dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+
+
+  # Cost:
+
+  # Outcome cost (using NEGATIVE costs, to allow maximizing value to minimize cost):
+  data$cost_dec <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n  # Why data$n, not N?
+
+  # Total cost:
+  data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
+
+
+  # Output: ----
+
+  # Drop inputs and order columns (of df):
+  data <- data[, c("sens", "spec",
+                   "far",  "ppv", "npv",
+                   "acc", "bacc", "wacc",
+                   "dprime",
+                   "cost_dec", "cost")]
+
+  return(data)
+
+} # add_stats().
+
+# # Check:
+# (freq <- data.frame(hi = 2, fa = 1, mi = 3, cr = 4))
+# add_stats(freq)
+# add_stats(freq, sens.w = 3/4, cost.each = 1,
+#           cost.outcomes = list(hi = 0, fa = 2, mi = 3, cr = 0))
+# dim(add_stats(freq))  # 1 x 11 (with dprime)
+
+
+
+
+# classtable: ------
+
+
+# Outcome statistics based on 2 binary vectors (of logical values)
+# [called by fftrees_grow_fan(), fftrees_apply(), and comp_pred() below]:
+
+
+#' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
+#'
+#' The main input are 2 logical vectors of prediction and criterion values.
+#'
+#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
+#'
+#' @param prediction_v logical. A logical vector of predictions.
+#' @param criterion_v logical. A logical vector of (TRUE) criterion values.
+#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
+#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
+#' @param cost.v list. An optional list of additional costs to be added to each case.
+#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
+#' Default: \code{correction = .25}.
+#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
+#' the costs of a hit, false alarm, miss, and correct rejection, respectively.
+#' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
+#' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
+#' @param na_prediction_action What happens when no prediction is possible? (experimental).
+#'
+#' @importFrom stats qnorm
+#' @importFrom caret confusionMatrix
+
+classtable <- function(prediction_v = NULL,
+                       criterion_v  = NULL,
+                       sens.w = NULL,          # to be passed by calling function!
+                       cost.v = NULL,
+                       correction = .25,       # used for dprime calculation
+                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+                       na_prediction_action = "ignore") {
+
+  #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
+  #   criterion_v  <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
+  #   sens.w = .50
+  #   cost.v = NULL
+  #   correction = .25
+  #   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+
+  if (is.null(cost.v)) {
+    cost.v <- rep(0, length(prediction_v))
+  }
+
+  if (any(c("FALSE", "TRUE") %in% paste(prediction_v))) {
+    prediction_v <- as.logical(paste(prediction_v))
+  }
+
+  if (any(c("FALSE", "TRUE") %in% paste(criterion_v))) {
+    criterion_v <- as.logical(paste(criterion_v))
+  }
+
+  if (!inherits(prediction_v, "logical") | !inherits(criterion_v, "logical") & !is.null(prediction_v)) {
+    stop("prediction_v and criterion_v must be logical")
+  }
+
+  # Remove NA and infinite values (from prediction AND criterion):
+  prediction_v <- prediction_v[is.finite(criterion_v)]
+  criterion_v  <- criterion_v[is.finite(criterion_v)]
+
+  # Remove NA prediction values:
+
+  # if(na_prediction_action == "ignore") {
+  #
+  #   bad_index <- !is.finite(prediction_v)
+  #
+  #   prediction_v <- prediction_v[-bad_index]
+  #   criterion_v <- criterion_v[-bad_index]
+  #
+  #
+  # }
+
+  N <- min(length(criterion_v), length(prediction_v))
+
+  if (N > 0) { # use vectors: ----
+
+    # Note 2 special cases:
+
+    var_pred_v <- var(prediction_v)
+    var_crit_v <- var(criterion_v)
+
+    if (is.na(var_pred_v)){
+      message("Variance of prediction_v is NA. See print(prediction_v) =")
+      print(prediction_v)
+    }
+
+    if (is.na(var_crit_v)){
+      message("Variance of criterion_v is NA. See print(criterion_v) =")
+      print(criterion_v)
+    }
+
+
+    # Main: Compute statistics:
+
+    if (((!is.na(var_pred_v)) & (!is.na(var_crit_v))) &&  # Pre-condition &
+        ((var_pred_v > 0) & (var_crit_v > 0))) {          # Case 1. Use caret: ----
+
+      if (length(prediction_v) != length(criterion_v)) {
+
+        stop("Different lengths of prediction_v and criterion_v.\nLength of prediction_v is ", length(prediction_v),
+             "and length of criterion_v is ", length(criterion_v))
+      }
+
+      # Use caret::confusionMatrix:
+      cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
+                                   positive = "TRUE")
+
+      cm_byClass <- data.frame(as.list(cm$byClass))
+      cm_overall <- data.frame(as.list(cm$overall))
+
+      # Get 4 freq counts:
+      hi <- cm$table[2, 2]
+      fa <- cm$table[2, 1]
+      mi <- cm$table[1, 2]
+      cr <- cm$table[1, 1]
+
+      N <- (hi + mi + fa + cr)
+
+      # Corrected freq values:
+      hi_c <- hi + correction
+      fa_c <- fa + correction
+      mi_c <- mi + correction
+      cr_c <- cr + correction
+
+      # Get or compute statistics:
+      sens <- cm_byClass$Sensitivity
+      spec <- cm_byClass$Specificity
+      far  <- (1 - spec)
+
+      ppv <- cm_byClass$Pos.Pred.Value
+      npv <- cm_byClass$Neg.Pred.Value
+
+      acc   <- cm_overall$Accuracy
+      acc_p <- cm_overall$AccuracyPValue
+      bacc  <- cm_byClass$Balanced.Accuracy
+      wacc  <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
+
+      # dprime (corrected):
+      # hi_rate <- hi_c / (hi_c + mi_c)
+      # fa_rate <- fa_c / (fa_c + cr_c)
+      # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+
+      # AUC:
+      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
+      #                             predictor = as.numeric(prediction_v))$auc)
+
+      # Cost per case:
+      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+
+
+    } else { # Case 2. Compute stats from freq combinations: ----
+
+      # Compute freqs as sum of T/F combinations:
+      hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)
+      fa <- sum(prediction_v == TRUE  & criterion_v == FALSE)
+      mi <- sum(prediction_v == FALSE & criterion_v == TRUE)
+      cr <- sum(prediction_v == FALSE & criterion_v == FALSE)
+
+      N <- (hi + fa + mi + cr)
+
+      # Corrected values:
+      hi_c <- hi + correction
+      fa_c <- fa + correction
+      mi_c <- mi + correction
+      cr_c <- cr + correction
+
+      # Compute statistics:
+      sens <- hi / (hi + mi)
+      spec <- cr / (cr + fa)
+      far  <- (1 - spec)
+
+      ppv <- hi / (hi + fa)
+      npv <- cr / (cr + mi)
+
+      acc <- (hi + cr) / N
+      acc_p <- NA
+      bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+      wacc <- (sens * sens.w) + (spec * (1 - sens.w))
+
+      # dprime (corrected):
+      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
+
+      # AUC:
+      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
+      #                             predictor = as.numeric(prediction_v))$auc)
+
+
+      # Cost per case:
+      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+
+    } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
+
+
+  } else { # (N > 0) failed: Assign NAs ----
+
+    hi <- NA
+    fa <- NA
+    mi <- NA
+    cr <- NA
+
+    N <- NA
+
+    sens <- NA
+    spec <- NA
+    far  <- NA
+
+    ppv <- NA
+    npv <- NA
+
+    acc   <- NA
+    acc_p <- NA
+    bacc  <- NA
+    wacc  <- NA
+
+    dprime <- NA
+    # auc  <- NA
+
+    cost_dec <- NA
+    cost     <- NA
+
+  }
+
+
+  # Output: ----
+
+  # Collect result (as df):
+  result <- data.frame(
+
+    n = N,
+
+    hi = hi,
+    fa = fa,
+    mi = mi,
+    cr = cr,
+
+    sens = sens,
+    spec = spec,
+    far = far,
+
+    ppv = ppv,
+    npv = npv,
+
+    acc = acc,
+    acc_p = acc_p,
+    bacc = bacc,
+    wacc = wacc,
+
+    dprime = dprime,
+    # auc = auc,
+
+    cost_dec = cost_dec,
+    cost = cost
+
+  )
+
+  return(result)
+
+} # classtable().
+
+
+
+# enable_wacc: ------
+
+# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
+
+# The argument sens.w_epsion provides a threshold value:
+# Minimum required difference from the sens.w default value (sens.w = 0.50).
+
+# Output: Boolean value.
+
+enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
+
+  out <- FALSE
+
+  if (abs(sens.w - .50) >= sens.w_epsilon){
+    out <- TRUE
+  }
+
+  return(out)
+
+} # enable_wacc().
+
+
+
+# get_bacc_wacc: ------
+
+# Obtain either bacc or wacc (for displays in print and plot functions).
+# Output: Named vector (with name specifying the current type of measure).
+
+get_bacc_wacc <- function(sens, spec,  sens.w){
+
+  if (enable_wacc(sens.w)){ # wacc:
+
+    value <- (sens * sens.w) + (spec * (1 - sens.w))
+    names(value) <- "wacc"
+
+  } else { # bacc:
+
+    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+    names(value) <- "bacc"
+
+  }
+
+  return(value)
+
+} # get_bacc_wacc().
+
+# # Check:
+# get_bacc_wacc(1, .80, .500)
+# get_bacc_wacc(1, .80, .501)
+# get_bacc_wacc(1, .80, 0)
+
+
+
 # apply_break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
@@ -911,440 +1351,6 @@ fact_clean <- function(data.train,
 
 
 
-# add_stats: ------
-
-# Outcome statistics based on frequency counts (of 4 classification outcomes):
-
-#' Add decision statistics to data (containing counts of a 2x2 contingency table)
-#'
-#' \code{add_stats} assumes the input of the 4 essential classification outcomes
-#' (as frequency counts in a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
-#' and uses them to compute various decision accuracy measures.
-#'
-#' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
-#' allows computing cost information for the counts of corresponding classification decisions.
-#'
-#' @param data A data frame with 4 frequency counts (as integer values, named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}).
-#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
-#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
-#' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
-#' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
-#' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
-#' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
-#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
-#' Default: \code{correction = .25}.
-#'
-#' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
-
-add_stats <- function(data,
-                      sens.w = .50,
-                      cost.each = NULL,
-                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                      correction = .25   # used for dprime calculation
-) {
-
-  # Prepare: ----
-
-  if (is.null(cost.each)) {
-    cost.each <- 0
-  }
-
-
-  # Compute measures: ----
-
-  N <- with(data, (hi + cr + fa + mi))
-
-  # Sensitivity:
-  data$sens <- with(data, hi / (hi + mi))
-
-  # Specificity:
-  data$spec <- with(data, cr / (cr + fa))
-
-
-  # False alarm rate:
-  data$far <- with(data, 1 - spec)
-
-
-  # Positive predictive value (PPV):
-  data$ppv <- with(data, hi / (hi + fa))
-
-  # Negative predictive value (NPV):
-  data$npv <- with(data, cr / (cr + mi))
-
-
-  # Accuracy:
-  data$acc <- with(data, (hi + cr) / N)
-
-  # Balanced accuracy:
-  data$bacc <- with(data, (sens + spec) / 2)  # = (sens * .50) + (spec * .50)
-
-  # Weighted accuracy:
-  data$wacc <- with(data, (sens * sens.w) + (spec * (1 - sens.w)))
-
-
-  # dprime:
-
-  # a. Corrected freq values:
-  hi_c <- with(data, (hi)) + correction
-  mi_c <- with(data, (mi)) + correction
-  fa_c <- with(data, (fa)) + correction
-  cr_c <- with(data, (cr)) + correction
-
-  # b. dprime (corrected):
-  data$dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-
-
-  # Cost:
-
-  # Outcome cost (using NEGATIVE costs, to allow maximizing value to minimize cost):
-  data$cost_dec <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n  # Why data$n, not N?
-
-  # Total cost:
-  data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
-
-
-  # Output: ----
-
-  # Drop inputs and order columns (of df):
-  data <- data[, c("sens", "spec",
-                   "far",  "ppv", "npv",
-                   "acc", "bacc", "wacc",
-                   "dprime",
-                   "cost_dec", "cost")]
-
-  return(data)
-
-} # add_stats().
-
-# # Check:
-# (freq <- data.frame(hi = 2, fa = 1, mi = 3, cr = 4))
-# add_stats(freq)
-# add_stats(freq, sens.w = 3/4, cost.each = 1,
-#           cost.outcomes = list(hi = 0, fa = 2, mi = 3, cr = 0))
-# dim(add_stats(freq))  # 1 x 11 (with dprime)
-
-
-
-
-# classtable: ------
-
-# Outcome statistics based on 2 binary vectors (of logical values):
-
-#' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
-#'
-#' The main input are 2 logical vectors of prediction and criterion values.
-#'
-#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
-#'
-#' @param prediction_v logical. A logical vector of predictions.
-#' @param criterion_v logical. A logical vector of (TRUE) criterion values.
-#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
-#' @param cost.v list. An optional list of additional costs to be added to each case.
-#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
-#' Default: \code{correction = .25}.
-#' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
-#' the costs of a hit, false alarm, miss, and correct rejection, respectively.
-#' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
-#' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
-#' @param na_prediction_action What happens when no prediction is possible? (experimental).
-#'
-#' @importFrom stats qnorm
-#' @importFrom caret confusionMatrix
-
-classtable <- function(prediction_v = NULL,
-                       criterion_v  = NULL,
-                       sens.w = NULL,          # to be passed by calling function!
-                       cost.v = NULL,
-                       correction = .25,       # used for dprime calculation
-                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                       na_prediction_action = "ignore") {
-
-  #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
-  #   criterion_v  <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
-  #   sens.w = .50
-  #   cost.v = NULL
-  #   correction = .25
-  #   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
-
-  if (is.null(cost.v)) {
-    cost.v <- rep(0, length(prediction_v))
-  }
-
-  if (any(c("FALSE", "TRUE") %in% paste(prediction_v))) {
-    prediction_v <- as.logical(paste(prediction_v))
-  }
-
-  if (any(c("FALSE", "TRUE") %in% paste(criterion_v))) {
-    criterion_v <- as.logical(paste(criterion_v))
-  }
-
-  if (!inherits(prediction_v, "logical") | !inherits(criterion_v, "logical") & !is.null(prediction_v)) {
-    stop("prediction_v and criterion_v must be logical")
-  }
-
-  # Remove NA and infinite values (from prediction AND criterion):
-  prediction_v <- prediction_v[is.finite(criterion_v)]
-  criterion_v  <- criterion_v[is.finite(criterion_v)]
-
-  # Remove NA prediction values:
-
-  # if(na_prediction_action == "ignore") {
-  #
-  #   bad_index <- !is.finite(prediction_v)
-  #
-  #   prediction_v <- prediction_v[-bad_index]
-  #   criterion_v <- criterion_v[-bad_index]
-  #
-  #
-  # }
-
-  N <- min(length(criterion_v), length(prediction_v))
-
-  if (N > 0) { # use vectors: ----
-
-    # Note 2 special cases:
-
-    var_pred_v <- var(prediction_v)
-    var_crit_v <- var(criterion_v)
-
-    if (is.na(var_pred_v)){
-      message("Variance of prediction_v is NA. See print(prediction_v) =")
-      print(prediction_v)
-    }
-
-    if (is.na(var_crit_v)){
-      message("Variance of criterion_v is NA. See print(criterion_v) =")
-      print(criterion_v)
-    }
-
-
-    # Main: Compute statistics:
-
-    if (((!is.na(var_pred_v)) & (!is.na(var_crit_v))) &&  # Pre-condition &
-        ((var_pred_v > 0) & (var_crit_v > 0))) {          # Case 1. Use caret: ----
-
-      if (length(prediction_v) != length(criterion_v)) {
-
-        stop("Different lengths of prediction_v and criterion_v.\nLength of prediction_v is ", length(prediction_v),
-             "and length of criterion_v is ", length(criterion_v))
-      }
-
-      # Use caret::confusionMatrix:
-      cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
-                                   positive = "TRUE")
-
-      cm_byClass <- data.frame(as.list(cm$byClass))
-      cm_overall <- data.frame(as.list(cm$overall))
-
-      # Get 4 freq counts:
-      hi <- cm$table[2, 2]
-      fa <- cm$table[2, 1]
-      mi <- cm$table[1, 2]
-      cr <- cm$table[1, 1]
-
-      N <- (hi + mi + fa + cr)
-
-      # Corrected freq values:
-      hi_c <- hi + correction
-      fa_c <- fa + correction
-      mi_c <- mi + correction
-      cr_c <- cr + correction
-
-      # Get or compute statistics:
-      sens <- cm_byClass$Sensitivity
-      spec <- cm_byClass$Specificity
-      far  <- (1 - spec)
-
-      ppv <- cm_byClass$Pos.Pred.Value
-      npv <- cm_byClass$Neg.Pred.Value
-
-      acc   <- cm_overall$Accuracy
-      acc_p <- cm_overall$AccuracyPValue
-      bacc  <- cm_byClass$Balanced.Accuracy
-      wacc  <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
-
-      # dprime (corrected):
-      # hi_rate <- hi_c / (hi_c + mi_c)
-      # fa_rate <- fa_c / (fa_c + cr_c)
-      # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-
-      # AUC:
-      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
-      #                             predictor = as.numeric(prediction_v))$auc)
-
-      # Cost per case:
-      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
-
-
-    } else { # Case 2. Compute stats from freq combinations: ----
-
-      # Compute freqs as sum of T/F combinations:
-      hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)
-      fa <- sum(prediction_v == TRUE  & criterion_v == FALSE)
-      mi <- sum(prediction_v == FALSE & criterion_v == TRUE)
-      cr <- sum(prediction_v == FALSE & criterion_v == FALSE)
-
-      N <- (hi + fa + mi + cr)
-
-      # Corrected values:
-      hi_c <- hi + correction
-      fa_c <- fa + correction
-      mi_c <- mi + correction
-      cr_c <- cr + correction
-
-      # Compute statistics:
-      sens <- hi / (hi + mi)
-      spec <- cr / (cr + fa)
-      far  <- (1 - spec)
-
-      ppv <- hi / (hi + fa)
-      npv <- cr / (cr + mi)
-
-      acc <- (hi + cr) / N
-      acc_p <- NA
-      bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
-      wacc <- (sens * sens.w) + (spec * (1 - sens.w))
-
-      # dprime (corrected):
-      dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
-
-      # AUC:
-      # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
-      #                             predictor = as.numeric(prediction_v))$auc)
-
-
-      # Cost per case:
-      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
-
-    } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
-
-
-  } else { # (N > 0) failed: Assign NAs ----
-
-    hi <- NA
-    fa <- NA
-    mi <- NA
-    cr <- NA
-
-    N <- NA
-
-    sens <- NA
-    spec <- NA
-    far  <- NA
-
-    ppv <- NA
-    npv <- NA
-
-    acc   <- NA
-    acc_p <- NA
-    bacc  <- NA
-    wacc  <- NA
-
-    dprime <- NA
-    # auc  <- NA
-
-    cost_dec <- NA
-    cost     <- NA
-
-  }
-
-
-  # Output: ----
-
-  # Collect result (as df):
-  result <- data.frame(
-
-    n = N,
-
-    hi = hi,
-    fa = fa,
-    mi = mi,
-    cr = cr,
-
-    sens = sens,
-    spec = spec,
-    far = far,
-
-    ppv = ppv,
-    npv = npv,
-
-    acc = acc,
-    acc_p = acc_p,
-    bacc = bacc,
-    wacc = wacc,
-
-    dprime = dprime,
-    # auc = auc,
-
-    cost_dec = cost_dec,
-    cost = cost
-
-  )
-
-  return(result)
-
-} # classtable().
-
-
-
-# enable_wacc: ------
-
-# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
-
-# The argument sens.w_epsion provides a threshold value:
-# Minimum required difference from the sens.w default value (sens.w = 0.50).
-
-# Output: Boolean value.
-
-enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
-
-  out <- FALSE
-
-  if (abs(sens.w - .50) >= sens.w_epsilon){
-    out <- TRUE
-  }
-
-  return(out)
-
-} # enable_wacc().
-
-
-
-# get_bacc_wacc: ------
-
-# Obtain either bacc or wacc (for displays in print and plot functions).
-# Output: Named vector (with name specifying the current type of measure).
-
-get_bacc_wacc <- function(sens, spec,  sens.w){
-
-  if (enable_wacc(sens.w)){ # wacc:
-
-    value <- (sens * sens.w) + (spec * (1 - sens.w))
-    names(value) <- "wacc"
-
-  } else { # bacc:
-
-    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
-    names(value) <- "bacc"
-
-  }
-
-  return(value)
-
-} # get_bacc_wacc().
-
-# # Check:
-# get_bacc_wacc(1, .80, .500)
-# get_bacc_wacc(1, .80, .501)
-# get_bacc_wacc(1, .80, 0)
-
-
-
 # select_best_tree: ------
 
 #' Select the best tree (from current set of FFTs)
@@ -1567,8 +1573,6 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 
 # ToDo: ------
-
-# - Bring back dprime as goal and goal.chase (and verify its computation).
 
 # - Consider re-using add_stats() rather than re-computing stats in classtable(),
 #   or when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
