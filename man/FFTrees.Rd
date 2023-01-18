@@ -26,8 +26,8 @@ FFTrees(
   cost.cues = NULL,
   main = NULL,
   decision.labels = c("False", "True"),
-  object = NULL,
   my.tree = NULL,
+  object = NULL,
   tree.definitions = NULL,
   do.comp = TRUE,
   do.cart = TRUE,
@@ -106,12 +106,12 @@ Cues in \code{data} that are not present in \code{cost.cues} are assumed to have
 
 \item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.}
 
+\item{my.tree}{An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
+For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
+
 \item{object}{An optional existing \code{FFTrees} object.
 When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
 When \code{formula}, \code{data} or \code{data.test} are not specified, the current values of \code{object} are used.}
-
-\item{my.tree}{An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
-For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
 
 \item{tree.definitions}{An optional \code{data.frame} of hard-coded FFT definitions (in the format of \code{x$trees$definitions} of an \code{FFTrees} object \code{x}).
 If specified, no new FFTs are fitted, but the tree definitions provided are used to re-evaluate the current \code{FFTrees} object.}
