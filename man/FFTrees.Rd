@@ -106,7 +106,7 @@ Cues in \code{data} that are not present in \code{cost.cues} are assumed to have
 
 \item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.}
 
-\item{my.tree}{An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
+\item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as optional character string).
 For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
 
 \item{object}{An optional existing \code{FFTrees} object.

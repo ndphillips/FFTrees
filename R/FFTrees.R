@@ -73,7 +73,7 @@
 #' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
 #' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
 #'
-#' @param my.tree An optional character string. A a verbal description of an FFT, i.e., an FFT in words.
+#' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as optional character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}
 #' @param object An optional existing \code{FFTrees} object.
 #' When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
