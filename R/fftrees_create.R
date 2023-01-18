@@ -7,10 +7,10 @@
 #' (e.g., to denote algorithms, goals, thresholds) to be used in maximization processes
 #' and for evaluation purposes (e.g., \code{sens.w} and cost values).
 #'
-#' @param data Training data (as data frame).
 #' @param formula A formula (with a binary criterion variable).
-#' @param algorithm Algorithm for growing FFTs (\code{"ifan"} or \code{"dfan"}) (as character string).
+#' @param data Training data (as data frame).
 #' @param data.test Data for testing models/prediction (as data frame).
+#' @param algorithm Algorithm for growing FFTs (\code{"ifan"} or \code{"dfan"}) (as character string).
 #'
 #' @param goal Measure used to select FFTs (as character string).
 #' @param goal.chase Measure used to optimize FFT creation (as character string).
@@ -33,11 +33,11 @@
 #'
 #' @param my.tree string.
 #'
+#' @param do.comp logical.
 #' @param do.lr logical.
 #' @param do.cart logical.
 #' @param do.svm logical.
 #' @param do.rf logical.
-#' @param do.comp logical.
 #'
 #' @param quiet logical
 #'
@@ -56,10 +56,10 @@
 #'
 #' @export
 
-fftrees_create <- function(data = NULL,
-                           formula = NULL,
-                           algorithm = NULL,
+fftrees_create <- function(formula = NULL,
+                           data = NULL,
                            data.test = NULL,
+                           algorithm = NULL,
                            #
                            goal = NULL,
                            goal.chase = NULL,
@@ -82,11 +82,11 @@ fftrees_create <- function(data = NULL,
                            #
                            my.tree = NULL,
                            #
+                           do.comp = TRUE,
                            do.lr = TRUE,
                            do.svm = TRUE,
                            do.cart = TRUE,
                            do.rf = TRUE,
-                           do.comp = TRUE,
                            #
                            quiet = NULL) {
 
@@ -554,11 +554,11 @@ fftrees_create <- function(data = NULL,
       #
       my.tree = my.tree,
       #
+      do.comp = do.comp,
       do.lr = do.lr,
       do.cart = do.cart,
       do.svm = do.svm,
       do.rf = do.rf,
-      do.comp = do.comp,
       #
       quiet = quiet,
     ),
