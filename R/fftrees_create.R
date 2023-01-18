@@ -31,7 +31,13 @@
 #' @param main string.
 #' @param decision.labels string.
 #'
-#' @param my.tree string.
+#' @param my.goal The name of the optimization measure defined by \code{fn.goal} (as a character string).
+#' Default: \code{my.goal = "my_acc"}.
+#' @param fn.goal The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+#' (as an R function of the arguments \code{hi, fa, mi, cr}).
+#' Default: \code{fn.goal = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
+#' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
+#' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
 #' @param do.comp logical.
 #' @param do.lr logical.
@@ -80,6 +86,8 @@ fftrees_create <- function(formula = NULL,
                            main = NULL,
                            decision.labels = NULL,
                            #
+                           my.goal = "my_acc",  # name of my.goal
+                           fn.goal = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
                            #
                            do.comp = TRUE,
@@ -405,6 +413,39 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_type(repeat.cues, type = "logical")
 
 
+  # my.goal: ----
+
+  testthat::expect_true(is.character(my.goal), info = "Provided 'my.goal' is not of type 'character'")
+  testthat::expect_true(length(my.goal) == 1,  info = "Provided 'my.goal' is not of length 1")
+
+
+  # fn.goal: ----
+
+  testthat::expect_true(is.function(fn.goal),  info = "Provided 'fn.goal' is not of type 'function'")
+
+  # fn.goal must only use 4 freq arguments:
+  valid_args <- c("hi", "fa", "mi", "cr")
+  fn_arg_names <- names(formals(fn.goal))
+  # print(fn_arg_names)  # 4debugging
+
+  if (any(fn_arg_names %in% valid_args == FALSE)){
+
+    invalid_args <- setdiff(fn_arg_names, valid_args)
+    invalid_avec <- paste(invalid_args, collapse = ", ")
+
+    stop("fn.goal must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
+  }
+
+  if (any(valid_args %in% fn_arg_names == FALSE)){
+
+    missing_args <- setdiff(valid_args, fn_arg_names)
+    missing_avec <- paste(missing_args, collapse = ", ")
+    if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
+
+    message("fn.goal usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
+  }
+
+
 
   # 2. Data quality checks: ------
 
@@ -554,6 +595,8 @@ fftrees_create <- function(formula = NULL,
       main = main,
       decision.labels = decision.labels,
       #
+      my.goal = my.goal,
+      fn.goal = fn.goal,
       my.tree = my.tree,
       #
       do.comp = do.comp,
