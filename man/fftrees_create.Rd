@@ -5,71 +5,73 @@
 \title{Create an object of class \code{FFTrees}}
 \usage{
 fftrees_create(
-  data = NULL,
   formula = NULL,
+  data = NULL,
+  data.test = NULL,
   algorithm = NULL,
   goal = NULL,
   goal.chase = NULL,
   goal.threshold = NULL,
+  max.levels = NULL,
   numthresh.method = NULL,
   numthresh.n = NULL,
-  sens.w = NULL,
-  max.levels = NULL,
-  cost.outcomes = NULL,
-  cost.cues = NULL,
+  repeat.cues = NULL,
   stopping.rule = NULL,
   stopping.par = NULL,
-  decision.labels = NULL,
+  sens.w = NULL,
+  cost.outcomes = NULL,
+  cost.cues = NULL,
   main = NULL,
+  decision.labels = NULL,
   my.tree = NULL,
-  data.test = NULL,
-  repeat.cues = NULL,
+  do.comp = TRUE,
   do.lr = TRUE,
   do.svm = TRUE,
   do.cart = TRUE,
   do.rf = TRUE,
-  do.comp = TRUE,
   quiet = NULL
 )
 }
 \arguments{
-\item{data}{Training data (as data frame).}
-
 \item{formula}{A formula (with a binary criterion variable).}
 
-\item{algorithm}{string.}
+\item{data}{Training data (as data frame).}
 
-\item{goal}{string.}
+\item{data.test}{Data for testing models/prediction (as data frame).}
 
-\item{goal.chase}{string.}
+\item{algorithm}{Algorithm for growing FFTs (\code{"ifan"} or \code{"dfan"}) (as character string).}
 
-\item{goal.threshold}{string.}
+\item{goal}{Measure used to select FFTs (as character string).}
+
+\item{goal.chase}{Measure used to optimize FFT creation (as character string).}
+
+\item{goal.threshold}{Measure used to optimize cue thresholds (as character string).}
+
+\item{max.levels}{integer.}
 
 \item{numthresh.method}{string.}
 
 \item{numthresh.n}{integer.}
 
-\item{sens.w}{numeric.}
-
-\item{max.levels}{integer.}
-
-\item{cost.outcomes}{list.}
-
-\item{cost.cues}{list.}
+\item{repeat.cues}{logical.}
 
 \item{stopping.rule}{string.}
 
 \item{stopping.par}{numeric.}
 
-\item{decision.labels}{string.}
+\item{sens.w}{numeric.}
+
+\item{cost.outcomes}{list.}
+
+\item{cost.cues}{list.}
 
 \item{main}{string.}
 
+\item{decision.labels}{string.}
+
 \item{my.tree}{string.}
 
-\item{data.test}{dataframe.}
-
-\item{repeat.cues}{logical.}
+\item{do.comp}{logical.}
 
 \item{do.lr}{logical.}
 
@@ -78,8 +80,6 @@ fftrees_create(
 \item{do.cart}{logical.}
 
 \item{do.rf}{logical.}
-
-\item{do.comp}{logical.}
 
 \item{quiet}{logical}
 }
