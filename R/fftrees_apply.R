@@ -304,6 +304,12 @@ fftrees_apply <- function(x,
         cost_v = decisions_df$cost_cue[non_na_decision_ix]  # cue cost (per decision at level)
       )
 
+      # Compute my.goal via my.goal.fun:   +++ here now +++
+      xyz <- mapply(FUN = x$params$my.goal.fun,
+                    hi = my_level_stats_i$hi, fa = my_level_stats_i$fa,
+                    mi = my_level_stats_i$mi, cr = my_level_stats_i$cr)
+      print(paste0(x$params$my.goal, " = ", round(xyz, 3)))
+
       # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[ , critical_stats_v]
 
@@ -313,7 +319,7 @@ fftrees_apply <- function(x,
       level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[non_na_decision_ix])
       level_stats_i$cost[level_i]     <- level_stats_i$cost_cue[level_i] + level_stats_i$cost_dec[level_i]
 
-    }
+    } # Loop 2: level_i.
 
     # Add final tree results to level_stats_ls and decisions_ls: ----
 
@@ -321,11 +327,11 @@ fftrees_apply <- function(x,
 
     decisions_ls[[tree_i]] <- decisions_df[, names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
 
-  }
+  } # Loop 1: tree_i.
 
   # Aggregate results: ----
 
-  # Combine all levelstats into one dataframe:
+  # Combine all level_stats into one data.frame:
   level_stats <- do.call("rbind", args = level_stats_ls)
 
   #  3. Cumulative tree stats [tree_stats]: ----
