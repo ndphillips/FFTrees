@@ -294,11 +294,13 @@ fftrees_apply <- function(x,
 
       # Get cumulative level stats: ----
 
+      non_na_decision_ix <- !is.na(decisions_df$decision)
+
       my_level_stats_i <- classtable(
-        prediction_v = decisions_df$decision[!is.na(decisions_df$decision)],
-        criterion_v = decisions_df$criterion[!is.na(decisions_df$decision)],
+        prediction_v = decisions_df$decision[non_na_decision_ix],
+        criterion_v = decisions_df$criterion[non_na_decision_ix],
         sens.w = x$params$sens.w,
-        cost.v = decisions_df$cost_cue[!is.na(decisions_df$decision)],
+        cost.v = decisions_df$cost_cue[non_na_decision_ix],
         cost.outcomes = x$params$cost.outcomes
       )
 
@@ -308,7 +310,7 @@ fftrees_apply <- function(x,
 
       # Add cue cost and total cost: ----
 
-      level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
+      level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[non_na_decision_ix])
       level_stats_i$cost[level_i]     <- level_stats_i$cost_cue[level_i] + level_stats_i$cost_dec[level_i]
 
     }
