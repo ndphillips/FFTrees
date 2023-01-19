@@ -965,10 +965,11 @@ comp_pred <- function(formula,
 
 
 
-
 # ToDo: ------
 
-# - Consider re-using add_stats() rather than re-computing stats in classtable(),
-#   or when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
+# Reduce redundancies:
+# - Avoid repeated computation of stats in add_stats() and classtable().
+# - Consider re-using stats from add_stats() or classtable()
+#   when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
 
 # eof.
