@@ -391,9 +391,9 @@ fftrees_create <- function(formula = NULL,
 
   # stopping.rule: ----
 
-  valid_stopping_rules <- c("exemplars", "levels")
+  stopping_rule_valid <- c("exemplars", "levels")
 
-  testthat::expect_true(stopping.rule %in% valid_stopping_rules)
+  testthat::expect_true(stopping.rule %in% stopping_rule_valid)
 
 
   # stopping.par: ----
@@ -424,21 +424,21 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_true(is.function(my.goal.fun),  info = "Provided 'my.goal.fun' is not of type 'function'")
 
   # my.goal.fun must only use 4 freq arguments:
-  valid_args <- c("hi", "fa", "mi", "cr")
+  my_goal_arg_valid <- c("hi", "fa", "mi", "cr")
   fn_arg_names <- names(formals(my.goal.fun))
   # print(fn_arg_names)  # 4debugging
 
-  if (any(fn_arg_names %in% valid_args == FALSE)){
+  if (any(fn_arg_names %in% my_goal_arg_valid == FALSE)){
 
-    invalid_args <- setdiff(fn_arg_names, valid_args)
+    invalid_args <- setdiff(fn_arg_names, my_goal_arg_valid)
     invalid_avec <- paste(invalid_args, collapse = ", ")
 
     stop("my.goal.fun must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
   }
 
-  if (any(valid_args %in% fn_arg_names == FALSE)){
+  if (any(my_goal_arg_valid %in% fn_arg_names == FALSE)){
 
-    missing_args <- setdiff(valid_args, fn_arg_names)
+    missing_args <- setdiff(my_goal_arg_valid, fn_arg_names)
     missing_avec <- paste(missing_args, collapse = ", ")
     if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
 
