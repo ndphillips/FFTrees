@@ -67,7 +67,7 @@
 #' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of 10 and 20 units, respectively, while correct decisions have no costs.
 #' @param cost.cues A list containing the cost of each cue (in some unit).
-#' Each list element must have a name corresponding to a cue (i.e., a column in \code{data}), and should be a single (positive) number.
+#' Each list element must have a name corresponding to a cue (i.e., a variable in \code{data}), and should be a single (positive numeric) value.
 #' Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of 0).
 #'
 #' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
