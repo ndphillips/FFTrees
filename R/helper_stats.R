@@ -136,16 +136,19 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 #'
 #' @param prediction_v logical. A logical vector of predictions.
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
-#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
-#' @param cost_v vector. An optional vector of additional costs
-#' (e.g., cue cost of every decision, as a constant for the current level) to be added to each decision.
+#'
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
+#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
+#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
+#'
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
+#' @param cost_v numeric. Additional cost value of each decision (as an optional vector of numeric values).
+#' Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).
+#'
 #' @param na_prediction_action What happens when no prediction is possible? (experimental).
 #'
 #' @importFrom stats qnorm
@@ -153,10 +156,13 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 
 classtable <- function(prediction_v = NULL,
                        criterion_v  = NULL,
-                       sens.w = NULL,          # to be passed by calling function!
-                       cost_v = NULL,          # cost of each decision (at current level, as constant)
+                       #
                        correction = .25,       # used for dprime calculation
+                       sens.w = NULL,          # sens.w (to allow passing by calling function)
+                       #
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+                       cost_v = NULL,          # cost value of each decision (at current level, as a constant)
+                       #
                        na_prediction_action = "ignore") {
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)

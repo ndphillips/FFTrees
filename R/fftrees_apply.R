@@ -300,8 +300,8 @@ fftrees_apply <- function(x,
         prediction_v = decisions_df$decision[non_na_decision_ix],
         criterion_v = decisions_df$criterion[non_na_decision_ix],
         sens.w = x$params$sens.w,
-        cost_v = decisions_df$cost_cue[non_na_decision_ix],
-        cost.outcomes = x$params$cost.outcomes
+        cost.outcomes = x$params$cost.outcomes,             # outcome cost (per outcome type)
+        cost_v = decisions_df$cost_cue[non_na_decision_ix]  # cue cost (per decision at level)
       )
 
       # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)
