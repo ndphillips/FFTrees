@@ -1,6 +1,6 @@
 # helper_stats.R:
 # Statistical helper/utility functions.
-# --------------------------
+# -------------------------------------
 
 # Statistical calculations (based on classification outcomes in 2x2 matrix and models): ------
 
@@ -8,7 +8,7 @@
 # add_stats (from frequency of 4 classification outcomes): ------
 
 # Outcome statistics based on frequency counts (of 4 classification outcomes)
-# [called to get cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
+# [used to set cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
 
 
 #' Add decision statistics to data (based on frequency counts of a 2x2 classification outcomes)
@@ -140,7 +140,7 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
+#' Default: \code{sens.w = NULL} (to enforce that the current value is passed by the calling function).
 #'
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
