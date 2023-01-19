@@ -386,7 +386,7 @@ fftrees_grow_fan <- function(x,
           prediction_v = decision_v[cases_remaining == FALSE],
           criterion_v = criterion_v[cases_remaining == FALSE],
           sens.w = x$params$sens.w,
-          cost.v = cuecost_v[cases_remaining == FALSE],
+          cost_v = cuecost_v[cases_remaining == FALSE],
           cost.outcomes = x$params$cost.outcomes
         )
 
@@ -489,7 +489,7 @@ fftrees_grow_fan <- function(x,
           prediction_v = as.logical(decision_v),
           criterion_v = as.logical(criterion_v),
           sens.w = x$params$sens.w,
-          cost.v = cuecost_v,
+          cost_v = cuecost_v,
           cost.outcomes = x$params$cost.outcomes
         )
 

@@ -5,9 +5,7 @@
 # Statistical calculations (based on classification outcomes in 2x2 matrix and models): ------
 
 
-
-# add_stats: ------
-
+# add_stats (from frequency of 4 classification outcomes): ------
 
 # Outcome statistics based on frequency counts (of 4 classification outcomes)
 # [called to get cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
@@ -124,10 +122,7 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 
 
 
-
-
-# classtable: ------
-
+# classtable (from 2 binary vectors of decisions/predictions): ------
 
 # Outcome statistics based on 2 binary vectors (of logical values)
 # [called by fftrees_grow_fan(), fftrees_apply(), and comp_pred() below]:
@@ -143,7 +138,8 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 #' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
-#' @param cost.v list. An optional list of additional costs to be added to each case.
+#' @param cost_v vector. An optional vector of additional costs
+#' (e.g., cue cost of every decision, as a constant for the current level) to be added to each decision.
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
@@ -158,7 +154,7 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 classtable <- function(prediction_v = NULL,
                        criterion_v  = NULL,
                        sens.w = NULL,          # to be passed by calling function!
-                       cost.v = NULL,
+                       cost_v = NULL,          # cost of each decision (at current level, as constant)
                        correction = .25,       # used for dprime calculation
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                        na_prediction_action = "ignore") {
@@ -166,12 +162,12 @@ classtable <- function(prediction_v = NULL,
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   criterion_v  <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   sens.w = .50
-  #   cost.v = NULL
+  #   cost_v = NULL
   #   correction = .25
   #   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 
-  if (is.null(cost.v)) {
-    cost.v <- rep(0, length(prediction_v))
+  if (is.null(cost_v)) {
+    cost_v <- rep(0, length(prediction_v))
   }
 
   if (any(c("FALSE", "TRUE") %in% paste(prediction_v))) {
@@ -277,9 +273,10 @@ classtable <- function(prediction_v = NULL,
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-      # Cost per case:
+      # Costs (per classification outcome):
+      # print(cost_v)  # 4debugging: Cost of each decision (cue cost at current level, as a constant)
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
 
 
     } else { # Case 2. Compute stats from freq combinations: ----
@@ -321,7 +318,7 @@ classtable <- function(prediction_v = NULL,
 
       # Cost per case:
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost.v)) / N
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
 
@@ -391,7 +388,6 @@ classtable <- function(prediction_v = NULL,
   return(result)
 
 } # classtable().
-
 
 
 

@@ -300,7 +300,7 @@ fftrees_apply <- function(x,
         prediction_v = decisions_df$decision[non_na_decision_ix],
         criterion_v = decisions_df$criterion[non_na_decision_ix],
         sens.w = x$params$sens.w,
-        cost.v = decisions_df$cost_cue[non_na_decision_ix],
+        cost_v = decisions_df$cost_cue[non_na_decision_ix],
         cost.outcomes = x$params$cost.outcomes
       )
 
