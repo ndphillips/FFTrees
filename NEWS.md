@@ -19,6 +19,7 @@ Changes since last release:
 - Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
 - Added hypothetical outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
 
+
 <!-- Minor: --> 
 
 ### Minor changes 
@@ -26,6 +27,8 @@ Changes since last release:
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
 - Improved user feedback on combinations of goal and cost values.
+- Improved `summar()`: Include current goal and cost values (if `"cost"` used in goals).
+
 
 <!-- Details: --> 
 
