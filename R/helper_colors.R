@@ -1,4 +1,4 @@
-# helper_col.R:
+# helper_colors.R:
 # Color-related auxiliary/utility functions.
 # ------------------------------------------
 

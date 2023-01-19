@@ -1,9 +1,9 @@
-# helper_plot.R:
+# helper_plots.R:
 # Auxiliary/utility functions for plots.
 # --------------------------------------
 
 
-# (1) General plotting helpers: ------
+# (1) General plotting/visualization helpers: ------
 
 
 # num_space: ------

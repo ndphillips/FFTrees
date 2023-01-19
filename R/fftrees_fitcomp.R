@@ -30,7 +30,7 @@ fftrees_fitcomp <- function(x) {
   sens.w <- x$params$sens.w  # required for wacc
 
 
-  # Set the measures/columns to select from stats (computed by classtable() helper): ----
+  # Set the measures/columns to select from stats (as computed by the classtable() helper): ----
   my_cols <- c("algorithm",
                "n", "hi", "fa", "mi", "cr",
                "sens", "spec", "far", "ppv", "npv",

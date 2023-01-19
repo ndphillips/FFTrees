@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9006
+## 1.8.0.9007
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -17,6 +17,8 @@ Changes since last release:
 ### Major changes 
 
 - Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
+- Added hypothetical outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
+
 
 <!-- Minor: --> 
 
@@ -25,15 +27,18 @@ Changes since last release:
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
 - Improved user feedback on combinations of goal and cost values.
+- Improved `summar()`: Include current goal and cost values (if `"cost"` used in goals).
+
 
 <!-- Details: --> 
 
 ### Details 
 
-- Added check that criterion variable occurs in data.
-- Re-grouped arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
-- Replaced Travis badge in `README.Rmd` by GitHub action on R-CMD-check (standard). 
-- Minor bug fixes and revisions of vignettes.
+- Added a check that criterion variable occurs in data.
+- Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
+- Revised status badges in `README`. 
+- Re-arranged and cleaned code (e.g., utility functions).
+- Fixed minor bugs and revised vignettes.
 
 <!-- Development version: --> 
 
@@ -396,6 +401,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-18.]
+[File `NEWS.md` last updated on 2023-01-19.]
 
 <!-- eof. -->

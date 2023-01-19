@@ -31,7 +31,13 @@
 #' @param main string.
 #' @param decision.labels string.
 #'
-#' @param my.tree string.
+#' @param my.goal The name of the optimization measure defined by \code{my.goal.fun} (as a character string).
+#' Default: \code{my.goal = "my_acc"}.
+#' @param my.goal.fun The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+#' (as an R function of the arguments \code{hi, fa, mi, cr}).
+#' Default: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
+#' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
+#' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
 #' @param do.comp logical.
 #' @param do.lr logical.
@@ -80,6 +86,8 @@ fftrees_create <- function(formula = NULL,
                            main = NULL,
                            decision.labels = NULL,
                            #
+                           my.goal = "my_acc",  # name of my.goal
+                           my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
                            #
                            do.comp = TRUE,
@@ -131,8 +139,8 @@ fftrees_create <- function(formula = NULL,
 
   # goal: ----
 
-  # Define a (constant) set of valid optimization goals:
-  valid_opt_goal <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Setting "dprime" does not seem to work!
+  # Define a (constant) set of valid goals (for FFT selection via 'goal'):
+  valid_goals <- c("acc", "bacc", "wacc", "dprime", "cost")
 
   if (is.null(goal)) { # goal NOT set by user:
 
@@ -168,7 +176,7 @@ fftrees_create <- function(formula = NULL,
 
   # Verify goal:
   testthat::expect_true(!is.null(goal), info = "goal is NULL")
-  testthat::expect_true(goal %in% valid_opt_goal)
+  testthat::expect_true(goal %in% valid_goals)
 
   if ((goal == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -182,7 +190,7 @@ fftrees_create <- function(formula = NULL,
 
   # goal.chase: ----
 
-  if (goal == "cost" & is.null(goal.chase)) { # use cost:
+  if (goal == "cost" & is.null(goal.chase)) { # set to 'cost' as well:
 
     goal.chase <- "cost"
 
@@ -190,12 +198,12 @@ fftrees_create <- function(formula = NULL,
 
   } else if (is.null(goal.chase)) { # use accuracy:
 
-    if (enable_wacc(sens.w)){ # use wacc:
+    if (enable_wacc(sens.w)){ # set to 'wacc':
 
       goal.chase <- "wacc"
       if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = wacc'\n")) }
 
-    } else { # use bacc (as bacc == wacc):
+    } else { # set to 'bacc' (as bacc == wacc):
 
       goal.chase <- "bacc"
       if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = bacc'\n")) }
@@ -214,7 +222,7 @@ fftrees_create <- function(formula = NULL,
   # Verify goal.chase:
 
   testthat::expect_true(!is.null(goal.chase), info = "goal.chase is NULL")
-  testthat::expect_true(goal.chase %in% valid_opt_goal)
+  testthat::expect_true(goal.chase %in% valid_goals)
 
   if ((goal.chase == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -251,7 +259,7 @@ fftrees_create <- function(formula = NULL,
   # Verify goal.threshold:
 
   testthat::expect_true(!is.null(goal.threshold), info = "goal.threshold is NULL")
-  testthat::expect_true(goal.threshold %in% valid_opt_goal)
+  testthat::expect_true(goal.threshold %in% valid_goals)
 
   if ((goal.threshold == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -405,6 +413,39 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_type(repeat.cues, type = "logical")
 
 
+  # my.goal: ----
+
+  testthat::expect_true(is.character(my.goal), info = "Provided 'my.goal' is not of type 'character'")
+  testthat::expect_true(length(my.goal) == 1,  info = "Provided 'my.goal' is not of length 1")
+
+
+  # my.goal.fun: ----
+
+  testthat::expect_true(is.function(my.goal.fun),  info = "Provided 'my.goal.fun' is not of type 'function'")
+
+  # my.goal.fun must only use 4 freq arguments:
+  valid_args <- c("hi", "fa", "mi", "cr")
+  fn_arg_names <- names(formals(my.goal.fun))
+  # print(fn_arg_names)  # 4debugging
+
+  if (any(fn_arg_names %in% valid_args == FALSE)){
+
+    invalid_args <- setdiff(fn_arg_names, valid_args)
+    invalid_avec <- paste(invalid_args, collapse = ", ")
+
+    stop("my.goal.fun must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
+  }
+
+  if (any(valid_args %in% fn_arg_names == FALSE)){
+
+    missing_args <- setdiff(valid_args, fn_arg_names)
+    missing_avec <- paste(missing_args, collapse = ", ")
+    if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
+
+    message("my.goal.fun usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
+  }
+
+
 
   # 2. Data quality checks: ------
 
@@ -554,6 +595,8 @@ fftrees_create <- function(formula = NULL,
       main = main,
       decision.labels = decision.labels,
       #
+      my.goal = my.goal,
+      my.goal.fun = my.goal.fun,
       my.tree = my.tree,
       #
       do.comp = do.comp,

@@ -23,6 +23,10 @@ fftrees_create(
   cost.cues = NULL,
   main = NULL,
   decision.labels = NULL,
+  my.goal = "my_acc",
+  my.goal.fun = function(hi, fa, mi, cr) {
+     (hi + cr)/(hi + fa + mi + cr)
+ },
   my.tree = NULL,
   do.comp = TRUE,
   do.lr = TRUE,
@@ -69,7 +73,15 @@ fftrees_create(
 
 \item{decision.labels}{string.}
 
-\item{my.tree}{string.}
+\item{my.goal}{The name of the optimization measure defined by \code{my.goal.fun} (as a character string).
+Default: \code{my.goal = "my_acc"}.}
+
+\item{my.goal.fun}{The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+(as an R function of the arguments \code{hi, fa, mi, cr}).
+Default: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).}
+
+\item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as character string).
+For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.}
 
 \item{do.comp}{logical.}
 

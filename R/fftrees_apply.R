@@ -84,7 +84,7 @@ fftrees_apply <- function(x,
   # Setup outputs: ------
 
   #  1. [decisions_ls]: ----
-  #     A list containing tibbles, with 1 column per tree and 1 row per case:
+  #     A list containing tibbles, with 1 element per tree and 1 row per case:
 
   decisions_ls <- lapply(1:n_trees, FUN = function(i) {
 
@@ -181,7 +181,7 @@ fftrees_apply <- function(x,
       # costs:
       "cost_dec")
 
-    # Add stat names to level_stats_i:
+    # Add stats names to level_stats_i:
     level_stats_i[critical_stats_v] <- NA
     level_stats_i$cost_cue <- NA
 
@@ -294,21 +294,23 @@ fftrees_apply <- function(x,
 
       # Get cumulative level stats: ----
 
+      non_na_decision_ix <- !is.na(decisions_df$decision)
+
       my_level_stats_i <- classtable(
-        prediction_v = decisions_df$decision[!is.na(decisions_df$decision)],
-        criterion_v = decisions_df$criterion[!is.na(decisions_df$decision)],
+        prediction_v = decisions_df$decision[non_na_decision_ix],
+        criterion_v = decisions_df$criterion[non_na_decision_ix],
         sens.w = x$params$sens.w,
-        cost.v = decisions_df$cost_cue[!is.na(decisions_df$decision)],
-        cost.outcomes = x$params$cost.outcomes
+        cost.outcomes = x$params$cost.outcomes,             # outcome cost (per outcome type)
+        cost_v = decisions_df$cost_cue[non_na_decision_ix]  # cue cost (per decision at level)
       )
 
       # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)
-      level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[, critical_stats_v]
+      level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[ , critical_stats_v]
 
 
       # Add cue cost and total cost: ----
 
-      level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[!is.na(decisions_df$decision)])
+      level_stats_i$cost_cue[level_i] <- mean(decisions_df$cost_cue[non_na_decision_ix])
       level_stats_i$cost[level_i]     <- level_stats_i$cost_cue[level_i] + level_stats_i$cost_dec[level_i]
 
     }
@@ -326,11 +328,10 @@ fftrees_apply <- function(x,
   # Combine all levelstats into one dataframe:
   level_stats <- do.call("rbind", args = level_stats_ls)
 
-  # 3. [tree_stats]: ----
+  #  3. Cumulative tree stats [tree_stats]: ----
   #  One row per tree definitions and statistics:
-  # CUMULATIVE TREE STATS:
 
-  helper <- paste(level_stats$tree, level_stats$level, sep = ".")
+  helper  <- paste(level_stats$tree, level_stats$level, sep = ".")
   maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
   tree_stats <- cbind(tree_df[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cue", "cost")])
   names(tree_stats)[1] <- "tree"
@@ -350,14 +351,14 @@ fftrees_apply <- function(x,
   }
 
 
-  # Add results to trees in x: ----
+  # Add results to x$trees (given mydata type): ----
 
   x$trees$stats[[mydata]]       <- tibble::as_tibble(tree_stats)
   x$trees$level_stats[[mydata]] <- tibble::as_tibble(level_stats)
   x$trees$decisions[[mydata]]   <- decisions_ls
 
 
-  # Update best tree values: ----
+  # Update best tree IDs: ----
 
   if (mydata == "train"){
     x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)

@@ -160,7 +160,7 @@ fftrees_grow_fan <- function(x,
       "wacc" = NA,
       "dprime" = NA,
       "cost" = NA,
-      "goal_change" = NA  # change in goal value
+      "goal_change" = NA
     )
 
     # Starting values:
@@ -173,11 +173,12 @@ fftrees_grow_fan <- function(x,
 
       level_current <- level_current + 1
       exit_current  <- exits_i[level_current]
-      cases_remaining <- is.na(decision_v)
+      case_remaining_ix <- is.na(decision_v)
 
       # Step 1: Determine a cue for the current level: ------
       {
-        # A. ifan algorithm:
+        # A. ifan algorithm: ----
+
         if (x$params$algorithm == "ifan") {
 
           # Get accuracies of un-used cues:
@@ -185,10 +186,12 @@ fftrees_grow_fan <- function(x,
 
         } # if algorithm == "ifan".
 
-        # B. dfan algorithm:
+
+        # B. dfan algorithm: ----
+
         if (x$params$algorithm == "dfan") {
 
-          data_current <- x$data$train[cases_remaining, ]
+          data_current <- x$data$train[case_remaining_ix, ]
 
           # If cues may NOT be repeated, then remove old cues as well:
           if (repeat.cues == FALSE) {
@@ -203,16 +206,17 @@ fftrees_grow_fan <- function(x,
             break
           }
 
-          # Create a new "dynamic" cue range:
+          # Create a new/special "dynamic" cue range:
           x <- fftrees_cuerank(x,
                                newdata = data_current,  # data (as df) vs.
-                               data = "dynamic"         # data type
+                               data = "dynamic"         # special data type
           )
 
           # Calculate cue accuracies with remaining exemplars:
           cue_best_df_current <- x$cues$stats$dynamic  # Note: Must contain current goal.chase parameter!
 
         } # if algorithm == "dfan".
+
 
         # Get next cue based on maximizing goal (goal.chase):
         performance_max <- max(cue_best_df_current[[x$params$goal.chase]], na.rm = TRUE)
@@ -248,8 +252,8 @@ fftrees_grow_fan <- function(x,
 
       # Step 2: Look-ahead (using "ASIF" classification): ------
 
-      # Rationale: Determine how classification decisions would look
-      #            IF all remaining exemplars were classified at the current level?
+      # Rationale: Determine ASIF stats: How classification results and stats would look
+      #            IF all remaining exemplars WERE classified at the current level.
 
       {
 
@@ -267,26 +271,32 @@ fftrees_grow_fan <- function(x,
         asif_levelout_v <- levelout_v
         asif_cuecost_v  <- cuecost_v
 
-        asif_decision_v[cases_remaining] <- cue_decisions[cases_remaining]
-        asif_levelout_v[cases_remaining] <- level_current
-        asif_cuecost_v[cases_remaining]  <- cue_cost_new
+        asif_decision_v[case_remaining_ix] <- cue_decisions[case_remaining_ix]
+        asif_levelout_v[case_remaining_ix] <- level_current
+        asif_cuecost_v[case_remaining_ix]  <- cue_cost_new
 
         # Get results for ASIF classifications:
         asif_results <- classtable(
           prediction_v = asif_decision_v,
           criterion_v  = criterion_v,
-          sens.w = x$params$sens.w
+          #
+          sens.w = x$params$sens.w,
+          #
+          cost.outcomes = x$params$cost.outcomes,  # add outcome cost
+          cost_v = asif_cuecost_v                  # add cue cost
         )
+        # Note: The 2 cost arguments cost.outcomes and cost_v were NOT being used to compute asif_results.
+        # DONE: ADDED asif_cuecost_v to call to classtable() here (on 2023-01-19, +++ here now +++)
 
         # Add key ASIF stats (to asif_stats):
-        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
         asif_stats[level_current,
                    c("sens", "spec", "dprime", "acc", "bacc", "wacc", "cost")] <- c(#
                      asif_results$sens, asif_results$spec,
-                     asif_results$dprime,                                     # ADDED on 2022-09-23
+                     asif_results$dprime,
                      asif_results$acc, asif_results$bacc, asif_results$wacc,
                      asif_results$cost
                    )
+        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in asif_stats.
 
 
         # Stop growing tree, if ASIF classification is perfect:
@@ -305,13 +315,13 @@ fftrees_grow_fan <- function(x,
 
         } else if (x$params$goal.chase == "dprime") { # C. chasing "dprime" measure:
 
-          # What would be a "perfect" value for x$params$goal.chase == "dprime"?                 #  +++ here now +++
-
+          # What would be a "perfect" value for x$params$goal.chase == "dprime"?
+          #
           # "The highest possible d' (greatest sensitivity) is 6.93, the effective limit (using .99 and .01) 4.65,
           #  typical values are up to 2.0, and 69% correct for both different and same trials corresponds to a d' of 1.0."
           #  Source: <http://phonetics.linguistics.ucla.edu/facilities/statistics/dprime.htm>
 
-          max_dprime <- 4.65
+          max_dprime <- 4.65  # effective limit (using .99 and .01)
 
           if (asif_stats[[x$params$goal.chase]][level_current] >= max_dprime){
             grow_tree <- FALSE
@@ -319,10 +329,10 @@ fftrees_grow_fan <- function(x,
 
         } else { # note an unknown/invalid goal.chase value:
 
-          valid_opt_goal <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
-          valid_opt_goal_str <- paste(valid_opt_goal, collapse = ", ")
+          valid_goals <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
+          valid_goals_str <- paste(valid_goals, collapse = ", ")
 
-          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_opt_goal_str, "'"))
+          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_goals_str, "'"))
 
         } # If stop?
 
@@ -337,6 +347,7 @@ fftrees_grow_fan <- function(x,
             goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
             asif_stats$goal_change[level_current] <- goal_change
           }
+
         }
 
       } # Step 2.
@@ -346,7 +357,7 @@ fftrees_grow_fan <- function(x,
       {
         if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
 
-          decide_1_index <- cases_remaining & cue_decisions == TRUE
+          decide_1_index <- case_remaining_ix & cue_decisions == TRUE
 
           decision_v[decide_1_index] <- TRUE
           levelout_v[decide_1_index] <- level_current
@@ -376,18 +387,20 @@ fftrees_grow_fan <- function(x,
 
       # Step 4: Update results: ------
       {
-        cases_remaining <- is.na(decision_v)
+        case_remaining_ix <- is.na(decision_v)
 
         # ToDo: NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS.
 
         # Get cumulative stats of exemplars currently classified:
 
         results_cum <- classtable(
-          prediction_v = decision_v[cases_remaining == FALSE],
-          criterion_v = criterion_v[cases_remaining == FALSE],
+          prediction_v = decision_v[case_remaining_ix == FALSE],
+          criterion_v = criterion_v[case_remaining_ix == FALSE],
+          #
           sens.w = x$params$sens.w,
-          cost.v = cuecost_v[cases_remaining == FALSE],
-          cost.outcomes = x$params$cost.outcomes
+          #
+          cost.outcomes = x$params$cost.outcomes,
+          cost_v = cuecost_v[case_remaining_ix == FALSE]
         )
 
         # Update level stats:
@@ -400,22 +413,22 @@ fftrees_grow_fan <- function(x,
         level_stats_i$exit[level_current]      <- exit_current
 
         # Current level stats:
-        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
         level_stats_v <- c("hi", "fa", "mi", "cr",
                            "sens", "spec",
-                           "dprime",                   # ADDED on 2022-09-23
+                           "dprime",
                            "bacc", "acc", "wacc",
                            "cost_dec", "cost")
         level_stats_i[level_current, level_stats_v] <- results_cum[, level_stats_v]
+        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in level_stats_i.
 
       } # Step 4.
 
 
       # Step 5: Continue growing tree? ------
       {
-        cases_remaining_n <- sum(cases_remaining)
+        n_case_remaining <- sum(case_remaining_ix)
 
-        if (cases_remaining_n > 0 & level_current != cues_n & exit_method == "fixed") {
+        if (n_case_remaining > 0 & level_current != cues_n & exit_method == "fixed") {
           if (level_current < level_n) {
             grow_tree <- TRUE
           }
@@ -426,19 +439,19 @@ fftrees_grow_fan <- function(x,
           }
         }
 
-        if (cases_remaining_n == 0 | level_current == cues_n) {
+        if ((n_case_remaining == 0) | (level_current == cues_n)) {
           break
         }
 
-        if (x$params$stopping.rule == "exemplars" & cases_remaining_n < x$params$stopping.par * nrow(cue_df)) {
+        if ((x$params$stopping.rule == "exemplars") & (n_case_remaining < x$params$stopping.par * nrow(cue_df))) {
           break
         }
 
-        if (x$params$stopping.rule == "levels" & level_current == x$params$stopping.par) {
+        if ((x$params$stopping.rule == "levels") & (level_current == x$params$stopping.par)) {
           break
         }
 
-        if (x$params$algorithm == "dfan" & sd(criterion_v[cases_remaining]) == 0) {
+        if ((x$params$algorithm == "dfan") & sd(criterion_v[case_remaining_ix]) == 0) {
           break
         }
 
@@ -488,9 +501,11 @@ fftrees_grow_fan <- function(x,
         last_classtable <- classtable(
           prediction_v = as.logical(decision_v),
           criterion_v = as.logical(criterion_v),
+          #
           sens.w = x$params$sens.w,
-          cost.v = cuecost_v,
-          cost.outcomes = x$params$cost.outcomes
+          #
+          cost.outcomes = x$params$cost.outcomes,
+          cost_v = cuecost_v
         )
 
         level_stats_i$exit[last_level_nr] <- .5

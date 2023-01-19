@@ -2,6 +2,11 @@
 #'
 #' \code{summary.FFTrees} summarizes key contents of an \code{FFTrees} object.
 #'
+#' Given an \code{FFTrees} object \code{x},
+#' \code{summary.FFTrees} selects key parameters from \code{x$params}
+#' and provides the definitions and performance statistics for \code{tree} from \code{x$trees}.
+#' Inspect and query \code{x} for additional details.
+#'
 #' \code{summary.FFTrees} returns an invisible list containing two elements:
 #' \enumerate{
 #'   \item \code{definitions} and corresponding performance measures of \code{tree}s;
@@ -71,7 +76,7 @@ summary.FFTrees <- function(object,
   out <- vector(mode = "list", length = 0)  # initialize as empty list
 
 
-  # Print general info on FFTrees object (similar to print.FFTrees): ------
+  # User feedback: General info on FFTrees object (similar to print.FFTrees): ------
 
   if (is.null(o_main) == FALSE) {
 
@@ -81,23 +86,72 @@ summary.FFTrees <- function(object,
   cat(in_blue("FFTrees ")) # , rep("-", times = 50 - nchar("FFTrees")), "\n", sep = "")
   cat("\n")
 
-  cat("- Trees: ", n_trees, " fast-and-frugal ", tree_s, " predicting ", cli::style_underline(o_crit), "\n", sep = "")
-
+  cat("- Trees: ", n_trees, " fast-and-frugal ", tree_s, " predicting ", cli::style_underline(o_crit), sep = "")
+  cat("\n")
 
   # Parameter summary: ------
 
-  # Algorithm, goals, etc.:
-  params_txt <- paste0("algorithm = '", object$params$algorithm,
-                       "', goal = '", object$params$goal,
-                       "', goal.chase = '", object$params$goal.chase,
-                       "',")
-  params_num <- paste0("sens.w = ", object$params$sens.w,
-                       ", max.levels = ", object$params$max.levels)
+  # General information: Current algorithm, goals, numerical parameters, etc.:
 
-  cat("- Parameters: ", params_txt, "\n", "              ", params_num, "\n", sep = "")
+  params_txt <- paste0("algorithm = '", object$params$algorithm)
+  params_num <- paste0("max.levels = ", object$params$max.levels)
+
+  params_goal <- paste0("goal = '", object$params$goal,
+                        "', goal.chase = '", object$params$goal.chase,
+                        "', goal.threshold = '", object$params$goal.threshold, "'")
 
 
-  # Print a FFT description (iff only 1 tree): ------
+  # Specific information (based on goals):
+  cur_goals <- c(object$params$goal, object$params$goal.chase, object$params$goal.threshold)
+
+  if ("wacc" %in% cur_goals){ # add sens.w value to params_num:
+
+    params_num <- paste0(params_num,
+                         ", sens.w = ", object$params$sens.w)
+
+  }
+
+  # General user feedback (in all settings): ----
+  cat("- Parameters: ",
+      params_txt, ", ", # "              ",
+      params_num, "\n",   "              ",
+      params_goal, sep = "")
+  cat("\n")
+
+  # Specific user feedback (conditional on current settings): ----
+
+  # Cost information:
+  if ("cost" %in% cur_goals){ # report cost information:
+
+    cost_out_v <- unlist(object$params$cost.outcomes)
+
+    params_cost_out <- paste0("(",
+                              paste(names(cost_out_v), collapse = ", "), ") = (",
+                              paste(cost_out_v, collapse = ", "), ")")
+
+    # User feedback:
+    cat("- Cost of outcomes: ", params_cost_out, "\n", sep = "")
+
+
+    if (!is.null(object$params$cost.cues)){ # cue costs were set:
+
+      cost_cue_v <- unlist(object$params$cost.cues)
+
+      # params_cost_cue <- paste0("(",
+      #                           paste(names(cost_cue_v), collapse = ", "), ") = (",
+      #                           paste(cost_cue_v, collapse = ", "), ")")
+
+      # User feedback:
+      # cat("- Cost of cues: ", params_cost_cue, "\n", sep = "")
+      cat("- Cost of cues: ", "\n", sep = "")
+      print(cost_cue_v)
+
+    }
+
+  } # if "cost" goals.
+
+
+  # Print an FFT description (iff only 1 tree): ------
 
   if ((is.null(tree) == FALSE) && (length(tree) == 1) && (tree %in% tree_options)){  # only 1 tree:
 
@@ -139,6 +193,7 @@ summary.FFTrees <- function(object,
 
       warning(paste0("You asked for tree(s) ", tree_diff, ", but object only contains ", n_trees, " trees. Here are all..."))
 
+
     } else { # filter desired tree info:
 
       out$definitions <- out$definitions[tree, ]
@@ -154,7 +209,7 @@ summary.FFTrees <- function(object,
   } # if tree not NULL.
 
 
-  # Print tables (on console): ----
+  # Print tables (to Console): ----
 
   cap_def <- in_blue(paste("Tree", cli::style_underline("definitions")))
   print(knitr::kable(out$definitions, caption = cap_def))
