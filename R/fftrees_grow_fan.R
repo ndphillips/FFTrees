@@ -160,7 +160,7 @@ fftrees_grow_fan <- function(x,
       "wacc" = NA,
       "dprime" = NA,
       "cost" = NA,
-      "goal_change" = NA  # change in goal value
+      "goal_change" = NA
     )
 
     # Starting values:
@@ -177,7 +177,8 @@ fftrees_grow_fan <- function(x,
 
       # Step 1: Determine a cue for the current level: ------
       {
-        # A. ifan algorithm:
+        # A. ifan algorithm: ----
+
         if (x$params$algorithm == "ifan") {
 
           # Get accuracies of un-used cues:
@@ -185,7 +186,9 @@ fftrees_grow_fan <- function(x,
 
         } # if algorithm == "ifan".
 
-        # B. dfan algorithm:
+
+        # B. dfan algorithm: ----
+
         if (x$params$algorithm == "dfan") {
 
           data_current <- x$data$train[cases_remaining, ]
@@ -203,16 +206,17 @@ fftrees_grow_fan <- function(x,
             break
           }
 
-          # Create a new "dynamic" cue range:
+          # Create a new/special "dynamic" cue range:
           x <- fftrees_cuerank(x,
                                newdata = data_current,  # data (as df) vs.
-                               data = "dynamic"         # data type
+                               data = "dynamic"         # special data type
           )
 
           # Calculate cue accuracies with remaining exemplars:
           cue_best_df_current <- x$cues$stats$dynamic  # Note: Must contain current goal.chase parameter!
 
         } # if algorithm == "dfan".
+
 
         # Get next cue based on maximizing goal (goal.chase):
         performance_max <- max(cue_best_df_current[[x$params$goal.chase]], na.rm = TRUE)
@@ -277,16 +281,17 @@ fftrees_grow_fan <- function(x,
           criterion_v  = criterion_v,
           sens.w = x$params$sens.w
         )
+        # Note: Cost arguments cost.outcomes and cost_v are NOT being used to compute asif_results.
 
         # Add key ASIF stats (to asif_stats):
-        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
         asif_stats[level_current,
                    c("sens", "spec", "dprime", "acc", "bacc", "wacc", "cost")] <- c(#
                      asif_results$sens, asif_results$spec,
-                     asif_results$dprime,                                     # ADDED on 2022-09-23
+                     asif_results$dprime,
                      asif_results$acc, asif_results$bacc, asif_results$wacc,
                      asif_results$cost
                    )
+        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in asif_stats.
 
 
         # Stop growing tree, if ASIF classification is perfect:
@@ -386,8 +391,8 @@ fftrees_grow_fan <- function(x,
           prediction_v = decision_v[cases_remaining == FALSE],
           criterion_v = criterion_v[cases_remaining == FALSE],
           sens.w = x$params$sens.w,
-          cost_v = cuecost_v[cases_remaining == FALSE],
-          cost.outcomes = x$params$cost.outcomes
+          cost.outcomes = x$params$cost.outcomes,
+          cost_v = cuecost_v[cases_remaining == FALSE]
         )
 
         # Update level stats:
@@ -400,13 +405,13 @@ fftrees_grow_fan <- function(x,
         level_stats_i$exit[level_current]      <- exit_current
 
         # Current level stats:
-        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded:  +++ here now +++
         level_stats_v <- c("hi", "fa", "mi", "cr",
                            "sens", "spec",
-                           "dprime",                   # ADDED on 2022-09-23
+                           "dprime",
                            "bacc", "acc", "wacc",
                            "cost_dec", "cost")
         level_stats_i[level_current, level_stats_v] <- results_cum[, level_stats_v]
+        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in level_stats_i.
 
       } # Step 4.
 
@@ -489,8 +494,8 @@ fftrees_grow_fan <- function(x,
           prediction_v = as.logical(decision_v),
           criterion_v = as.logical(criterion_v),
           sens.w = x$params$sens.w,
-          cost_v = cuecost_v,
-          cost.outcomes = x$params$cost.outcomes
+          cost.outcomes = x$params$cost.outcomes,
+          cost_v = cuecost_v
         )
 
         level_stats_i$exit[last_level_nr] <- .5
