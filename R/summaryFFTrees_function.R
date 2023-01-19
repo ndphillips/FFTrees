@@ -2,6 +2,11 @@
 #'
 #' \code{summary.FFTrees} summarizes key contents of an \code{FFTrees} object.
 #'
+#' Given an \code{FFTrees} object \code{x},
+#' \code{summary.FFTrees} selects key parameters from \code{x$params}
+#' and provides the definitions and performance statistics for \code{tree} from \code{x$trees}.
+#' Inspect and query \code{x} for additional details.
+#'
 #' \code{summary.FFTrees} returns an invisible list containing two elements:
 #' \enumerate{
 #'   \item \code{definitions} and corresponding performance measures of \code{tree}s;
