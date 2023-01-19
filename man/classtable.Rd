@@ -8,7 +8,7 @@ classtable(
   prediction_v = NULL,
   criterion_v = NULL,
   sens.w = NULL,
-  cost.v = NULL,
+  cost_v = NULL,
   correction = 0.25,
   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
   na_prediction_action = "ignore"
@@ -22,7 +22,8 @@ classtable(
 \item{sens.w}{numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).}
 
-\item{cost.v}{list. An optional list of additional costs to be added to each case.}
+\item{cost_v}{vector. An optional vector of additional costs
+(e.g., cue cost of every decision, as a constant for the current level) to be added to each decision.}
 
 \item{correction}{numeric. Correction added to all counts for calculating \code{dprime}.
 Default: \code{correction = .25}.}
