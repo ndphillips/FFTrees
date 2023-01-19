@@ -17,6 +17,7 @@ Changes since last release:
 ### Major changes 
 
 - Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
+- Added hypothetical outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
 
 <!-- Minor: --> 
 
@@ -397,6 +398,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-18.]
+[File `NEWS.md` last updated on 2023-01-19.]
 
 <!-- eof. -->
