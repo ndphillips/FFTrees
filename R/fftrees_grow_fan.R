@@ -273,7 +273,7 @@ fftrees_grow_fan <- function(x,
 
         asif_decision_v[case_remaining_ix] <- cue_decisions[case_remaining_ix]
         asif_levelout_v[case_remaining_ix] <- level_current
-        asif_cuecost_v[case_remaining_ix]  <- cue_cost_new  # ToDo: Why not used anywhere?
+        asif_cuecost_v[case_remaining_ix]  <- cue_cost_new
 
         # Get results for ASIF classifications:
         asif_results <- classtable(
@@ -285,7 +285,7 @@ fftrees_grow_fan <- function(x,
           cost.outcomes = x$params$cost.outcomes,  # add outcome cost
           cost_v = asif_cuecost_v                  # add cue cost
         )
-        # Note: Cost arguments cost.outcomes and cost_v were NOT being used to compute asif_results.
+        # Note: The 2 cost arguments cost.outcomes and cost_v were NOT being used to compute asif_results.
         # DONE: ADDED asif_cuecost_v to call to classtable() here (on 2023-01-19, +++ here now +++)
 
         # Add key ASIF stats (to asif_stats):
@@ -315,13 +315,13 @@ fftrees_grow_fan <- function(x,
 
         } else if (x$params$goal.chase == "dprime") { # C. chasing "dprime" measure:
 
-          # What would be a "perfect" value for x$params$goal.chase == "dprime"?                 #  +++ here now +++
-
+          # What would be a "perfect" value for x$params$goal.chase == "dprime"?
+          #
           # "The highest possible d' (greatest sensitivity) is 6.93, the effective limit (using .99 and .01) 4.65,
           #  typical values are up to 2.0, and 69% correct for both different and same trials corresponds to a d' of 1.0."
           #  Source: <http://phonetics.linguistics.ucla.edu/facilities/statistics/dprime.htm>
 
-          max_dprime <- 4.65
+          max_dprime <- 4.65  # effective limit (using .99 and .01)
 
           if (asif_stats[[x$params$goal.chase]][level_current] >= max_dprime){
             grow_tree <- FALSE
@@ -347,6 +347,7 @@ fftrees_grow_fan <- function(x,
             goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
             asif_stats$goal_change[level_current] <- goal_change
           }
+
         }
 
       } # Step 2.
@@ -500,7 +501,9 @@ fftrees_grow_fan <- function(x,
         last_classtable <- classtable(
           prediction_v = as.logical(decision_v),
           criterion_v = as.logical(criterion_v),
+          #
           sens.w = x$params$sens.w,
+          #
           cost.outcomes = x$params$cost.outcomes,
           cost_v = cuecost_v
         )
