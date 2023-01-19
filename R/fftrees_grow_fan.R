@@ -173,7 +173,7 @@ fftrees_grow_fan <- function(x,
 
       level_current <- level_current + 1
       exit_current  <- exits_i[level_current]
-      cases_remaining <- is.na(decision_v)
+      case_remaining_ix <- is.na(decision_v)
 
       # Step 1: Determine a cue for the current level: ------
       {
@@ -191,7 +191,7 @@ fftrees_grow_fan <- function(x,
 
         if (x$params$algorithm == "dfan") {
 
-          data_current <- x$data$train[cases_remaining, ]
+          data_current <- x$data$train[case_remaining_ix, ]
 
           # If cues may NOT be repeated, then remove old cues as well:
           if (repeat.cues == FALSE) {
@@ -252,8 +252,8 @@ fftrees_grow_fan <- function(x,
 
       # Step 2: Look-ahead (using "ASIF" classification): ------
 
-      # Rationale: Determine how classification decisions would look
-      #            IF all remaining exemplars were classified at the current level?
+      # Rationale: Determine ASIF stats: How classification results and stats would look
+      #            IF all remaining exemplars WERE classified at the current level.
 
       {
 
@@ -271,17 +271,22 @@ fftrees_grow_fan <- function(x,
         asif_levelout_v <- levelout_v
         asif_cuecost_v  <- cuecost_v
 
-        asif_decision_v[cases_remaining] <- cue_decisions[cases_remaining]
-        asif_levelout_v[cases_remaining] <- level_current
-        asif_cuecost_v[cases_remaining]  <- cue_cost_new
+        asif_decision_v[case_remaining_ix] <- cue_decisions[case_remaining_ix]
+        asif_levelout_v[case_remaining_ix] <- level_current
+        asif_cuecost_v[case_remaining_ix]  <- cue_cost_new  # ToDo: Why not used anywhere?
 
         # Get results for ASIF classifications:
         asif_results <- classtable(
           prediction_v = asif_decision_v,
           criterion_v  = criterion_v,
-          sens.w = x$params$sens.w
+          #
+          sens.w = x$params$sens.w,
+          #
+          cost.outcomes = x$params$cost.outcomes,  # add outcome cost
+          cost_v = asif_cuecost_v                  # add cue cost
         )
-        # Note: Cost arguments cost.outcomes and cost_v are NOT being used to compute asif_results.
+        # Note: Cost arguments cost.outcomes and cost_v were NOT being used to compute asif_results.
+        # DONE: ADDED asif_cuecost_v to call to classtable() here (on 2023-01-19, +++ here now +++)
 
         # Add key ASIF stats (to asif_stats):
         asif_stats[level_current,
@@ -351,7 +356,7 @@ fftrees_grow_fan <- function(x,
       {
         if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
 
-          decide_1_index <- cases_remaining & cue_decisions == TRUE
+          decide_1_index <- case_remaining_ix & cue_decisions == TRUE
 
           decision_v[decide_1_index] <- TRUE
           levelout_v[decide_1_index] <- level_current
@@ -381,18 +386,20 @@ fftrees_grow_fan <- function(x,
 
       # Step 4: Update results: ------
       {
-        cases_remaining <- is.na(decision_v)
+        case_remaining_ix <- is.na(decision_v)
 
         # ToDo: NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS.
 
         # Get cumulative stats of exemplars currently classified:
 
         results_cum <- classtable(
-          prediction_v = decision_v[cases_remaining == FALSE],
-          criterion_v = criterion_v[cases_remaining == FALSE],
+          prediction_v = decision_v[case_remaining_ix == FALSE],
+          criterion_v = criterion_v[case_remaining_ix == FALSE],
+          #
           sens.w = x$params$sens.w,
+          #
           cost.outcomes = x$params$cost.outcomes,
-          cost_v = cuecost_v[cases_remaining == FALSE]
+          cost_v = cuecost_v[case_remaining_ix == FALSE]
         )
 
         # Update level stats:
@@ -418,9 +425,9 @@ fftrees_grow_fan <- function(x,
 
       # Step 5: Continue growing tree? ------
       {
-        cases_remaining_n <- sum(cases_remaining)
+        n_case_remaining <- sum(case_remaining_ix)
 
-        if (cases_remaining_n > 0 & level_current != cues_n & exit_method == "fixed") {
+        if (n_case_remaining > 0 & level_current != cues_n & exit_method == "fixed") {
           if (level_current < level_n) {
             grow_tree <- TRUE
           }
@@ -431,19 +438,19 @@ fftrees_grow_fan <- function(x,
           }
         }
 
-        if (cases_remaining_n == 0 | level_current == cues_n) {
+        if ((n_case_remaining == 0) | (level_current == cues_n)) {
           break
         }
 
-        if (x$params$stopping.rule == "exemplars" & cases_remaining_n < x$params$stopping.par * nrow(cue_df)) {
+        if ((x$params$stopping.rule == "exemplars") & (n_case_remaining < x$params$stopping.par * nrow(cue_df))) {
           break
         }
 
-        if (x$params$stopping.rule == "levels" & level_current == x$params$stopping.par) {
+        if ((x$params$stopping.rule == "levels") & (level_current == x$params$stopping.par)) {
           break
         }
 
-        if (x$params$algorithm == "dfan" & sd(criterion_v[cases_remaining]) == 0) {
+        if ((x$params$algorithm == "dfan") & sd(criterion_v[case_remaining_ix]) == 0) {
           break
         }
 
