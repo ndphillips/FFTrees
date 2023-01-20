@@ -512,7 +512,9 @@ fact_clean <- function(data.train,
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-select_best_tree <- function(x, data, goal){
+select_best_tree <- function(x, data, goal,
+                             my.goal.max = TRUE  # default for my.goal: maximize (ToDo: currently not set anywhere)
+                             ){
 
   # Verify inputs: ------
 
@@ -534,7 +536,7 @@ select_best_tree <- function(x, data, goal){
 
   # # (a) narrow goal range:
   #
-  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
+  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")
   # testthat::expect_true(goal %in% valid_tree_select_goal_narrow)
 
   # (b) wide goal range:
@@ -543,13 +545,39 @@ select_best_tree <- function(x, data, goal){
   max_goals <- c("hi", "cr",
                  "sens", "spec",
                  "ppv", "npv",
-                 "acc", "bacc", "wacc", "dprime",
+                 "acc", "bacc", "wacc",
+                 "dprime",
                  "pci")
 
   # Goals to minimize (less is better):
   min_goals <- c("mi", "fa",
                  "cost", "cost_dec", "cost_cue",
                  "mcu")
+
+  # Current goal is user-defined my.goal:
+  if (!is.null(x$params$my.goal) & (goal == x$params$my.goal)){
+
+    if (my.goal.max) { # add my.goal to max_goals:
+
+      max_goals <- c(max_goals, x$params$my.goal)
+
+      if (!x$params$quiet) {
+        msg <- paste0("\u2014 Selecting an FFT to maximize your goal = '", x$params$my.goal, "'\n")
+        cat(u_f_hig(msg))
+      }
+
+    } else { # add my.goal to min_goals:
+
+      min_goals <- c(min_goals, x$params$my.goal)
+
+      if (!x$params$quiet) {
+        msg <- paste0("\u2014 Selecting an FFT to minimize your goal = '", x$params$my.goal, "'\n")
+        cat(u_f_hig(msg))
+      }
+
+    }
+
+  }
 
   valid_tree_select_goal <- c(max_goals, min_goals)
   testthat::expect_true(goal %in% valid_tree_select_goal)
