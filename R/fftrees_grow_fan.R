@@ -111,7 +111,54 @@ fftrees_grow_fan <- function(x,
   }
 
 
-  # LOOP over trees: ----
+  # Define key vectors of stats names (only once, before loop): ------
+  # +++ here now +++
+
+  # A. Define the set of ASIF stats [asif_stats_name_v]: ----
+  if (!is.null(my_goal)){ # include my.goal (name and value):
+
+    asif_stats_name_v <- c("sens", "spec",
+                           "dprime",
+                           "acc", "bacc", "wacc",
+                           my_goal,        # my.goal (name)
+                           "cost")
+
+  } else { # default set of ASIF stats:
+
+    asif_stats_name_v <- c("sens", "spec",
+                           "dprime",
+                           "acc", "bacc", "wacc",
+                           # my_goal,      # my.goal (name)
+                           "cost")
+
+  } # if (my.goal).
+  # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in asif_stats.
+
+
+  # B. Define the set of level stats names [level_stats_name_v]: ----
+  if (!is.null(my_goal)){ # include my.goal (name and value):
+
+    level_stats_name_v <- c("hi", "fa", "mi", "cr",
+                            "sens", "spec",
+                            "dprime",
+                            "acc", "bacc", "wacc",
+                            my_goal,        # my.goal (name)
+                            "cost_dec", "cost")
+
+  } else { # default set of level stats:
+
+    level_stats_name_v <- c("hi", "fa", "mi", "cr",
+                            "sens", "spec",
+                            "dprime",
+                            "acc", "bacc", "wacc",
+                            # my_goal,        # my.goal (name)
+                            "cost_dec", "cost")
+
+  } # if (my.goal).
+  # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in level_stats_i.
+
+
+  # LOOP (over trees): ----
 
   for (tree_i in 1:tree_n) {
 
@@ -323,78 +370,88 @@ fftrees_grow_fan <- function(x,
 
         # Define and add the set of key ASIF stats (to asif_stats): ----
 
-        # NASTY and UGLY code start: ------
+        { # HACKY code start: ------
 
-        # +++ here now +++
+          # if (!is.null(my_goal)){ # include my.goal (name and value):
+          #
+          #   asif_stats[level_current,
+          #              c("sens", "spec",
+          #                "acc", "bacc", "wacc",
+          #                "dprime",
+          #                my_goal,        # my.goal (name)
+          #                "cost")] <- c(#
+          #                  asif_results$sens, asif_results$spec,
+          #                  asif_results$acc, asif_results$bacc, asif_results$wacc,
+          #                  asif_results$dprime,
+          #                  asif_results[[my_goal]],  # my.goal (value)
+          #                  asif_results$cost
+          #                )
+          #
+          # } else { # default set of ASIF stats:
+          #
+          #   asif_stats[level_current,
+          #              c("sens", "spec",
+          #                "acc", "bacc", "wacc",
+          #                "dprime",
+          #                # my_goal,        # my.goal (name)
+          #                "cost")] <- c(#
+          #                  asif_results$sens, asif_results$spec,
+          #                  asif_results$acc, asif_results$bacc, asif_results$wacc,
+          #                  asif_results$dprime,
+          #                  # asif_results[[my.goal]],  # my.goal (value)
+          #                  asif_results$cost
+          #                )
+          #
+          # } # if (my.goal).
+          # # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in asif_stats.
+          #
+          # # print(asif_stats)          # 4debugging
+          # asif_stats_m1 <- asif_stats  # 4checking
 
-        if (!is.null(my_goal)){ # include my.goal (name and value):
-
-          asif_stats[level_current,
-                     c("sens", "spec",
-                       "acc", "bacc", "wacc",
-                       "dprime",
-                       my_goal,        # my.goal (name)
-                       "cost")] <- c(#
-                         asif_results$sens, asif_results$spec,
-                         asif_results$acc, asif_results$bacc, asif_results$wacc,
-                         asif_results$dprime,
-                         asif_results[[my_goal]],  # my.goal (value)
-                         asif_results$cost
-                       )
-
-        } else { # default set of ASIF stats:
-
-          asif_stats[level_current,
-                     c("sens", "spec",
-                       "acc", "bacc", "wacc",
-                       "dprime",
-                       # my_goal,        # my.goal (name)
-                       "cost")] <- c(#
-                         asif_results$sens, asif_results$spec,
-                         asif_results$acc, asif_results$bacc, asif_results$wacc,
-                         asif_results$dprime,
-                         # asif_results[[my.goal]],  # my.goal (value)
-                         asif_results$cost
-                       )
-
-        } # if (my.goal).
-        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in asif_stats.
-
-        # print(asif_stats)    # 4debugging
-
-        # NASTY and UGLY code end. ------
+        } # HACKY code end.
 
 
-        # NICER code start: ------
+        # CLEANER code start: ------
 
-        # # Define the set of ASIF stats: ----
+        # # Define the set of ASIF stats [asif_stats_name_v]: ----
         # if (!is.null(my_goal)){ # include my.goal (name and value):
         #
-        #   asif_stats_v <- c("sens", "spec",
-        #                     "acc", "bacc", "wacc",
-        #                     "dprime",
-        #                     my_goal,        # my.goal (name)
-        #                     "cost")
+        #   asif_stats_name_v <- c("sens", "spec",
+        #                          "acc", "bacc", "wacc",
+        #                          "dprime",
+        #                          my_goal,        # my.goal (name)
+        #                          "cost")
         #
         # } else { # default set of ASIF stats:
         #
-        #   asif_stats_v <- c("sens", "spec",
-        #                     "acc", "bacc", "wacc",
-        #                     "dprime",
-        #                     # my_goal,        # my.goal (name)
-        #                     "cost")
+        #   asif_stats_name_v <- c("sens", "spec",
+        #                          "acc", "bacc", "wacc",
+        #                          "dprime",
+        #                          # my_goal,      # my.goal (name)
+        #                          "cost")
         #
         # } # if (my.goal).
         # # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in asif_stats.
-        #
-        #
-        # # Update row and columns of asif_results: ----
-        #
-        # asif_stats[level_current, asif_stats_v] <- asif_results[level_current, asif_stats_v]
-        #
-        # print(asif_stats)    # 4debugging
 
-        # NICER code end. ------
+
+        # Update row and columns of asif_stats (df) with elements of asif_results (vector): ----
+        # # (Assuming asif_stats_name_v (defined above, outside of loop):
+
+        asif_stats[level_current, asif_stats_name_v] <- asif_results[asif_stats_name_v]
+
+        # print(asif_stats)  # 4debugging
+
+        # CLEANER code end. ------
+
+
+        # # Verify that HACKY and CLEANER codes yield same result:
+        # asif_stats_m2 <- asif_stats  # 4checking
+        #
+        # if (all.equal(asif_stats_m1, asif_stats_m2)){
+        #   # print("Ok: Both asif_stats methods yield the same result, qed.")
+        # } else {
+        #   print("Caveat: Both asif_stats methods yield DIFFERENT results.")
+        # }
 
 
         # Stop growing tree, if ASIF classification is perfect: ----
@@ -428,7 +485,12 @@ fftrees_grow_fan <- function(x,
         } else if (x$params$goal.chase == my_goal){
 
           # ToDo: What if goal.chase == my_goal?
-          message(paste0("No known limit for stopping FFT-growth when goal.chase value = '", x$params$goal.chase, "'."))
+
+          if (!x$params$quiet) {
+            msg <- paste0("\u2014 A limit for growing FFTs with goal.chase = '", x$params$goal.chase, "' is unknown.\n")
+            cat(u_f_hig(msg))
+          }
+
 
         } else { # note an unknown/invalid goal.chase value:
 
@@ -519,30 +581,32 @@ fftrees_grow_fan <- function(x,
         level_stats_i$exit[level_current]      <- exit_current
 
 
-        # Define the set of level stats [level_stats_v]: ----
-        if (!is.null(my_goal)){ # include my.goal (name and value):
-
-          level_stats_v <- c("hi", "fa", "mi", "cr",
-                             "sens", "spec",
-                             "dprime",
-                             "bacc", "acc", "wacc",
-                             my_goal,        # my.goal (name)
-                             "cost_dec", "cost")
-
-        } else { # default set of level stats:
-
-          level_stats_v <- c("hi", "fa", "mi", "cr",
-                             "sens", "spec",
-                             "dprime",
-                             "bacc", "acc", "wacc",
-                             # my_goal,        # my.goal (name)
-                             "cost_dec", "cost")
-
-        } # if (my.goal).
-        # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in level_stats_i.
+        # # Define the set of level stats names [level_stats_name_v]: ----
+        # if (!is.null(my_goal)){ # include my.goal (name and value):
+        #
+        #   level_stats_name_v <- c("hi", "fa", "mi", "cr",
+        #                           "sens", "spec",
+        #                           "dprime",
+        #                           "bacc", "acc", "wacc",
+        #                           my_goal,        # my.goal (name)
+        #                           "cost_dec", "cost")
+        #
+        # } else { # default set of level stats:
+        #
+        #   level_stats_name_v <- c("hi", "fa", "mi", "cr",
+        #                           "sens", "spec",
+        #                           "dprime",
+        #                           "bacc", "acc", "wacc",
+        #                           # my_goal,        # my.goal (name)
+        #                           "cost_dec", "cost")
+        #
+        # } # if (my.goal).
+        # # Note: Horizontal/by-row measures (ppv, npv) are currently NOT recorded in level_stats_i.
 
         # Select level stats (variables):
-        level_stats_i[level_current, level_stats_v] <- results_cum[ , level_stats_v]
+        # # (Assuming level_stats_name_v (defined above, outside of loop):
+
+        level_stats_i[level_current, level_stats_name_v] <- results_cum[ , level_stats_name_v]
 
       } # Step 4.
 
@@ -637,12 +701,12 @@ fftrees_grow_fan <- function(x,
         level_stats_i$exit[last_level_nr] <- .5
 
 
-        # Note: Why not use same stats as in level_stats_v above? (Here: "dprime" and "cost" missing): +++ here now +++
+        # Note: Why not use same stats as in level_stats_name_v above? (Here: "dprime" and "cost" missing): +++ here now +++
         # level_stats_i[last_level_nr, c("hi", "fa", "mi", "cr",
         #                                "sens", "spec", "bacc", "acc", "wacc", "cost_dec")] <- last_classtable[, c("hi", "fa", "mi", "cr", "sens", "spec", "bacc", "acc", "wacc", "cost_dec")]
 
-        # NEW (using same level_stats_v as above) on 2022-09-23:
-        level_stats_i[last_level_nr, level_stats_v] <- last_classtable[ , level_stats_v]
+        # NEW (using same level_stats_name_v as above) on 2022-09-23:
+        level_stats_i[last_level_nr, level_stats_name_v] <- last_classtable[ , level_stats_name_v]
 
       } # if (last_exit_direction != .5).
 
