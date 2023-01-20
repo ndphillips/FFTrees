@@ -507,13 +507,18 @@ fact_clean <- function(data.train,
 #' @param goal character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
 #' (for which values exist in \code{x$trees$stats}).
 #'
+#' @param my.goal.max logical. Default direction for user-defined \code{my.goal}: Should \code{my.goal} be maximized?
+#' Default: \code{my.goal.max = TRUE}.
+#'
 #' @return An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
 #'
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-select_best_tree <- function(x, data, goal,
-                             my.goal.max = TRUE  # default for my.goal: maximize (ToDo: currently not set anywhere)
+select_best_tree <- function(x,
+                             data,
+                             goal,
+                             my.goal.max = TRUE  # Default direction for my.goal: maximize (ToDo: currently not set anywhere)
                              ){
 
   # Verify inputs: ------

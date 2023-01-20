@@ -4,7 +4,7 @@
 \alias{select_best_tree}
 \title{Select the best tree (from current set of FFTs)}
 \usage{
-select_best_tree(x, data, goal)
+select_best_tree(x, data, goal, my.goal.max = TRUE)
 }
 \arguments{
 \item{x}{An \code{FFTrees} object.}
@@ -13,6 +13,9 @@ select_best_tree(x, data, goal)
 
 \item{goal}{character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
 (for which values exist in \code{x$trees$stats}).}
+
+\item{my.goal.max}{logical. Default direction for user-defined \code{my.goal}: Should \code{my.goal} be maximized?
+Default: \code{my.goal.max = TRUE}.}
 }
 \value{
 An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
