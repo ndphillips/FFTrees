@@ -72,11 +72,17 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     # Add thresholds and directions:
     results$threshold <- thresholds
 
-    # Add accuracy statistics:
-    results <- cbind(results, add_stats(results,
-                                        sens.w = sens.w,
-                                        cost.outcomes = cost.outcomes
-    ))
+    # Add statistics to results: ----
+    new_stats <- add_stats(data = results,
+                           #
+                           sens.w = sens.w,
+                           #
+                           # cost.each = cost.each,       # ToDo: WHY not used here?
+                           cost.outcomes = cost.outcomes
+    )
+
+    # Add new statistics (to previous results): ----
+    results <- cbind(results, new_stats)
 
     # Order by goal.threshold and change column order:
     row_order <- order(results[ , goal.threshold], decreasing = TRUE)
@@ -128,15 +134,16 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
     results <- results_cum
 
-    # Compute accuracy statistics: ----
-    new_stats <- add_stats(
-      data = results,
-      sens.w = sens.w,
-      cost.outcomes = cost.outcomes,
-      cost.each = cost.each
+    # Add statistics to results: ----
+    new_stats <- add_stats(data = results,
+                           #
+                           sens.w = sens.w,
+                           #
+                           cost.each = cost.each,
+                           cost.outcomes = cost.outcomes
     )
 
-    # Add accuracy statistics (to previous results): ----
+    # Add new statistics (to previous results): ----
     results <- cbind(results, new_stats)
 
 

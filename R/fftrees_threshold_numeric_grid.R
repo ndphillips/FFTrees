@@ -59,16 +59,16 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   # Convert to named dataframe: ----
 
   results_gt <- as.data.frame(results_gt)
-  names(results_gt) <- c("n", "hi", "fa", "mi", "cr")
+  names(results_gt) <- c("n",  "hi", "fa", "mi", "cr")
   results_gt$direction <- ">"
   results_gt$threshold <- thresholds
 
 
   # Get results if using <= threshold: ----
 
-  results_lt <- results_gt[, c(1, 4, 5, 2, 3)]
-  names(results_lt) <- c("n", "hi", "fa", "mi", "cr")
-  results_lt        <- results_lt[, c("n", "hi", "fa", "mi", "cr")]
+  results_lt <- results_gt[ , c(1,  4, 5, 2, 3)]
+  names(results_lt) <- c("n",  "hi", "fa", "mi", "cr")
+  results_lt        <- results_lt[ , c("n",  "hi", "fa", "mi", "cr")]
 
   results_lt$direction <- "<="
   results_lt$threshold <- thresholds
@@ -86,13 +86,16 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   }
 
 
-  new_stats <- add_stats(results,
+  # Add statistics to results: ----
+  new_stats <- add_stats(data = results,
+                         #
                          sens.w = sens.w,
-                         cost.outcomes = cost.outcomes,
-                         cost.each = cost.each
+                         #
+                         cost.each = cost.each,
+                         cost.outcomes = cost.outcomes
   )
 
-  # Add accuracy statistics (to previous results): ----
+  # Add new accuracy statistics (to previous results): ----
   results <- cbind(results, new_stats)
 
 
@@ -103,8 +106,8 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   row_order <- order(results[ , goal.threshold], decreasing = TRUE)
 
   col_order <- c("threshold", "direction",
-                 "n", "hi", "fa", "mi", "cr",
-                 "sens", "spec", "ppv", "npv",
+                 "n",  "hi", "fa", "mi", "cr",
+                 "sens", "spec",  "ppv", "npv",
                  "acc", "bacc", "wacc",
                  "dprime",
                  "cost_dec", "cost")
