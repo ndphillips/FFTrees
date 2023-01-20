@@ -21,22 +21,28 @@
 #' allows computing cost information for the counts of corresponding classification decisions.
 #'
 #' @param data A data frame with 4 frequency counts (as integer values, named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}).
-#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
+#'
+#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
+#' Default: \code{correction = .25}.
+#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
+#' Default: \code{sens.w = .50}.
+#'
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
-#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
-#' Default: \code{correction = .25}.
+
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
 add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classification outcomes (as integers)
-                      sens.w = .50,
+                      #
+                      correction = .25,  # used to compute dprime
+                      sens.w = .50,      # used to compute wacc
+                      #
                       cost.each = NULL,
-                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                      correction = .25 # used for dprime calculation
+                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 ) {
 
   # Prepare: ----
