@@ -32,10 +32,13 @@
 #' @param decision.labels string.
 #'
 #' @param my.goal The name of the optimization measure defined by \code{my.goal.fun} (as a character string).
-#' Default: \code{my.goal = "my_acc"}.
-#' @param my.goal.fun The definition of an outcome measure to optimize, defined in terms of the frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
-#' (as an R function of the arguments \code{hi, fa, mi, cr}).
-#' Default: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
+#' Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
+#' Default: \code{my.goal = NULL}.
+#' @param my.goal.fun The definition of an outcome measure to optimize, defined in terms of the
+#' frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+#' (i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).
+#' Example: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
+#' Default: \code{my.goal.fun = NULL}.
 #' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
@@ -86,7 +89,7 @@ fftrees_create <- function(formula = NULL,
                            main = NULL,
                            decision.labels = NULL,
                            #
-                           my.goal = "my_acc",  # name of my.goal
+                           my.goal = "my_acc",  # name of my.goal (as character)
                            my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
                            #
@@ -277,6 +280,39 @@ fftrees_create <- function(formula = NULL,
   }
 
 
+  # my.goal and my.goal.fun: ----
+
+  if (!is.null(my.goal)){
+
+    testthat::expect_true(is.character(my.goal), info = "Provided 'my.goal' is not of type 'character'")
+    testthat::expect_true(length(my.goal) == 1,  info = "Provided 'my.goal' is not of length 1")
+    testthat::expect_true(is.function(my.goal.fun),  info = "Provided 'my.goal.fun' is not of type 'function'")
+
+    # my.goal.fun must only use 4 freq arguments:
+    my_goal_arg_valid <- c("hi", "fa", "mi", "cr")
+    fn_arg_names <- names(formals(my.goal.fun))
+    # print(fn_arg_names)  # 4debugging
+
+    if (any(fn_arg_names %in% my_goal_arg_valid == FALSE)){
+
+      invalid_args <- setdiff(fn_arg_names, my_goal_arg_valid)
+      invalid_avec <- paste(invalid_args, collapse = ", ")
+
+      stop("my.goal.fun must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
+    }
+
+    if (any(my_goal_arg_valid %in% fn_arg_names == FALSE)){
+
+      missing_args <- setdiff(my_goal_arg_valid, fn_arg_names)
+      missing_avec <- paste(missing_args, collapse = ", ")
+      if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
+
+      message("my.goal.fun usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
+    }
+
+  } # if (my.goal).
+
+
   # Verify consistency of sens.w and bacc_wacc choices: ----
 
   # If a non-default sens.w has been set, but 'wacc' is neither used in 'goal' nor in 'goal.chase':
@@ -411,40 +447,6 @@ fftrees_create <- function(formula = NULL,
   # repeat.cues: ----
 
   testthat::expect_type(repeat.cues, type = "logical")
-
-
-  # my.goal: ----
-
-  testthat::expect_true(is.character(my.goal), info = "Provided 'my.goal' is not of type 'character'")
-  testthat::expect_true(length(my.goal) == 1,  info = "Provided 'my.goal' is not of length 1")
-
-
-  # my.goal.fun: ----
-
-  testthat::expect_true(is.function(my.goal.fun),  info = "Provided 'my.goal.fun' is not of type 'function'")
-
-  # my.goal.fun must only use 4 freq arguments:
-  my_goal_arg_valid <- c("hi", "fa", "mi", "cr")
-  fn_arg_names <- names(formals(my.goal.fun))
-  # print(fn_arg_names)  # 4debugging
-
-  if (any(fn_arg_names %in% my_goal_arg_valid == FALSE)){
-
-    invalid_args <- setdiff(fn_arg_names, my_goal_arg_valid)
-    invalid_avec <- paste(invalid_args, collapse = ", ")
-
-    stop("my.goal.fun must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
-  }
-
-  if (any(my_goal_arg_valid %in% fn_arg_names == FALSE)){
-
-    missing_args <- setdiff(my_goal_arg_valid, fn_arg_names)
-    missing_avec <- paste(missing_args, collapse = ", ")
-    if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
-
-    message("my.goal.fun usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
-  }
-
 
 
   # 2. Data quality checks: ------
