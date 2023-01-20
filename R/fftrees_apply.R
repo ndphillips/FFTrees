@@ -108,6 +108,43 @@ fftrees_apply <- function(x,
   level_stats_ls <- vector("list", length = n_trees)
 
 
+  # 3. Define the set of critical stats (as vector): ----
+
+  if (!is.null(x$params$my.goal)){ # include my.goal:
+
+    critical_stats_v <- c(
+      # freq:
+      "n",  "hi", "fa", "mi", "cr",
+      # cond prob:
+      "sens", "spec",  "far",  "ppv", "npv",
+      # from prob:
+      "dprime",
+      # accuracy:
+      "acc", "bacc", "wacc",
+      # my.goal:
+      x$params$my.goal,       # include my.goal (name and value)
+      # costs:
+      "cost_dec"  # Note: "cost_cue" and "cost" are added below.
+    )
+
+  } else { # set critical stats default:
+
+    critical_stats_v <- c(
+      # freq:
+      "n",  "hi", "fa", "mi", "cr",
+      # cond prob:
+      "sens", "spec",  "far",  "ppv", "npv",
+      # from prob:
+      "dprime",
+      # accuracy:
+      "acc", "bacc", "wacc",
+      # my.goal:                    (NO my.goal here)
+      # costs:
+      "cost_dec"  # Note: "cost_cue" and "cost" are added below.
+    )
+
+  }
+
   # LOOPs: ------
 
   #  Loop 1 (over trees): ----
@@ -167,43 +204,6 @@ fftrees_apply <- function(x,
       exit = exit_v,
       stringsAsFactors = FALSE
     )
-
-    # Define the set of critical stats (as vector): ----
-
-    if (!is.null(x$params$my.goal)){ # include my.goal:
-
-      critical_stats_v <- c(
-        # freq:
-        "n",  "hi", "fa", "mi", "cr",
-        # cond prob:
-        "sens", "spec",  "far",  "ppv", "npv",
-        # from prob:
-        "dprime",
-        # accuracy:
-        "acc", "bacc", "wacc",
-        # my.goal:
-        x$params$my.goal,       # include my.goal (name and value)
-        # costs:
-        "cost_dec"  # Note: "cost_cue" and "cost" are added below.
-      )
-
-    } else { # set default critical stats:
-
-      critical_stats_v <- c(
-        # freq:
-        "n",  "hi", "fa", "mi", "cr",
-        # cond prob:
-        "sens", "spec",  "far",  "ppv", "npv",
-        # from prob:
-        "dprime",
-        # accuracy:
-        "acc", "bacc", "wacc",
-        # my.goal:                    (NO my.goal here)
-        # costs:
-        "cost_dec"  # Note: "cost_cue" and "cost" are added below.
-      )
-
-    }
 
     # Add stats names to level_stats_i: ----
     level_stats_i[critical_stats_v] <- NA
