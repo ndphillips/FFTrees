@@ -4,14 +4,20 @@
 #' @param cue_v numeric. Feature values.
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
 #' @param directions character. Possible directions to consider.
+#'
+#' @param goal.threshold A character string indicating the criterion to maximize when \emph{optimizing cue thresholds}:
+#' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
+#' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
+#' Default: \code{goal.threshold = "bacc"}.
+#'
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 #' Default: \code{sens.w = .50}.
-#' @param cost.each numeric. Cost to add to each value (e.g.; cost of  the cue).
+#'
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
-#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy.
+#' @param cost.each numeric. Cost to add to each value (e.g.; cost of the cue).
 #'
 #' @return A data frame containing accuracy statistics for several numeric thresholds.
 #'
@@ -23,10 +29,14 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                            cue_v,
                                            criterion_v,
                                            directions = c(">", "<="),
-                                           sens.w = .50,
-                                           cost.each = 0,
+                                           #
+                                           goal.threshold = "bacc",
+                                           #
+                                           sens.w = .50,  # ToDo: set to NULL (to enforce that value is passed from calling function)?
+                                           #
                                            cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                                           goal.threshold = "bacc") {
+                                           cost.each = 0
+) {
 
   thresholds_n <- length(thresholds)
 
