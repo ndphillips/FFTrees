@@ -320,7 +320,7 @@ fftrees_create <- function(formula = NULL,
 
     if (!quiet) {
       msg <- paste0("You set sens.w = ", sens.w, ": Did you mean to set 'goal' or 'goal.chase' to 'wacc'?\n")
-      cat(u_f_msg(msg))
+      cat(u_f_hig(msg))
     }
 
   }
