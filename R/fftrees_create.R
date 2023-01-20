@@ -145,6 +145,10 @@ fftrees_create <- function(formula = NULL,
   # Define a (constant) set of valid goals (for FFT selection via 'goal'):
   goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")
 
+  if (!is.null(my.goal)){  # include my.goal (name):
+    goal_valid <- c(goal_valid, my.goal)
+  }
+
   if (is.null(goal)) { # goal NOT set by user:
 
     if (!is.null(cost.outcomes) | !is.null(cost.cues)) { # use cost goal:
