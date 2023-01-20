@@ -45,31 +45,37 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
     cost.each <- 0
   }
 
+  # Get the 4 key freq counts (from data):
+
+  hi <- data$hi
+  fa <- data$fa
+  mi <- data$mi
+  cr <- data$cr
+
 
   # Compute measures: ----
 
-  N <- with(data, (hi + cr + fa + mi))
+  N <- hi + cr + fa + mi
 
   # Sensitivity:
-  data$sens <- with(data, hi / (hi + mi))
+  data$sens <- hi / (hi + mi)
 
   # Specificity:
-  data$spec <- with(data, cr / (cr + fa))
-
+  data$spec <- cr / (cr + fa)
 
   # False alarm rate:
-  data$far <- with(data, 1 - spec)
+  data$far <- 1 - data$spec
 
 
   # Positive predictive value (PPV):
-  data$ppv <- with(data, hi / (hi + fa))
+  data$ppv <- hi / (hi + fa)
 
   # Negative predictive value (NPV):
-  data$npv <- with(data, cr / (cr + mi))
+  data$npv <- cr / (cr + mi)
 
 
   # Accuracy:
-  data$acc <- with(data, (hi + cr) / N)
+  data$acc <- (hi + cr) / N
 
   # Balanced accuracy:
   data$bacc <- with(data, (sens + spec) / 2)  # = (sens * .50) + (spec * .50)
@@ -81,10 +87,10 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
   # dprime:
 
   # a. Corrected freq values:
-  hi_c <- with(data, (hi)) + correction
-  mi_c <- with(data, (mi)) + correction
-  fa_c <- with(data, (fa)) + correction
-  cr_c <- with(data, (cr)) + correction
+  hi_c <- hi + correction
+  fa_c <- fa + correction
+  mi_c <- mi + correction
+  cr_c <- cr + correction
 
   # b. dprime (corrected):
   data$dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
@@ -93,8 +99,8 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
   # Cost:
 
   # Outcome cost (using NEGATIVE costs, to allow maximizing value to minimize cost):
-  data$cost_dec <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n  # Why data$n, not N?
+  data$cost_dec <- -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                         + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr)) / data$n  # Why data$n, not N?
 
   # Total cost:
   data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
@@ -102,12 +108,14 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 
   # Output: ----
 
-  # Drop inputs and order columns (of df):
-  data <- data[, c("sens", "spec",
+  add_stats_v <- c("sens", "spec",
                    "far",  "ppv", "npv",
                    "acc", "bacc", "wacc",
                    "dprime",
-                   "cost_dec", "cost")]
+                   "cost_dec", "cost")
+
+  # Drop inputs and re-arrange columns (of df):
+  data <- data[, add_stats_v]
 
   return(data)
 
