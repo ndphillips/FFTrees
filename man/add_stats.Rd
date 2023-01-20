@@ -7,7 +7,9 @@
 add_stats(
   data,
   correction = 0.25,
-  sens.w = 0.5,
+  sens.w = NULL,
+  my.goal = NULL,
+  my.goal.fun = NULL,
   cost.each = NULL,
   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 )
@@ -19,7 +21,11 @@ add_stats(
 Default: \code{correction = .25}.}
 
 \item{sens.w}{numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
-Default: \code{sens.w = .50}.}
+Default: \code{sens.w = NULL} (to enforce that value is passed from calling function).}
+
+\item{my.goal}{Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.}
+
+\item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.}
 
 \item{cost.each}{numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).}
 
