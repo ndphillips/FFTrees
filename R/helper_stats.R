@@ -25,7 +25,7 @@
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
-#' Default: \code{sens.w = .50}.
+#' Default: \code{sens.w = NULL} (to enforce that value is passed from calling function).
 #'
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
@@ -36,10 +36,10 @@
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
-add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classification outcomes (as integers)
+add_stats <- function(data,  # df with frequency counts of classification outcomes ('hi fa mi cr', as integers)
                       #
                       correction = .25,  # used to compute dprime
-                      sens.w = .50,      # used to compute wacc
+                      sens.w = NULL,     # used to compute wacc
                       #
                       cost.each = NULL,
                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
