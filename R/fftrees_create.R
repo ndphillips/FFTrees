@@ -380,8 +380,10 @@ fftrees_create <- function(formula = NULL,
 
   # cost.outcomes: ----
 
-  if (!is.null(cost.outcomes) & goal != "cost") {
-    msg <- paste0("Specified 'cost.outcomes', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
+  cur_goals <- c(goal, goal.chase, goal.threshold)
+
+  if (!is.null(cost.outcomes) & (!"cost" %in% cur_goals)) {
+    msg <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
     cat(u_f_hig(msg))
   }
 
@@ -407,8 +409,8 @@ fftrees_create <- function(formula = NULL,
 
   # cost.cues: ----
 
-  if (!is.null(cost.cues) & goal != "cost") {
-    msg <- paste0("Specified 'cost.cues', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
+  if (!is.null(cost.cues) & (!"cost" %in% cur_goals)) {
+    msg <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
     cat(u_f_hig(msg))
   }
 
