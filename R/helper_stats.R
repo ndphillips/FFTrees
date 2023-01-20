@@ -149,6 +149,9 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 #' @param cost_v numeric. Additional cost value of each decision (as an optional vector of numeric values).
 #' Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).
 #'
+#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
+#'
 #' @param na_prediction_action What happens when no prediction is possible? (experimental).
 #'
 #' @importFrom stats qnorm
@@ -163,7 +166,11 @@ classtable <- function(prediction_v = NULL,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                        cost_v = NULL,          # cost value of each decision (at current level, as a constant)
                        #
-                       na_prediction_action = "ignore") {
+                       my.goal = NULL,
+                       my.goal.fun = NULL,
+                       #
+                       na_prediction_action = "ignore"
+){
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   criterion_v  <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
@@ -284,6 +291,11 @@ classtable <- function(prediction_v = NULL,
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
 
+      # Compute my.goal value (by my.goal.fun):
+      if (!is.null(my.goal)){
+        my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
+        # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+      }
 
     } else { # Case 2. Compute stats from freq combinations: ----
 
@@ -321,10 +333,15 @@ classtable <- function(prediction_v = NULL,
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-
       # Cost per case:
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
+      # Compute my.goal value (by my.goal.fun):
+      if (!is.null(my.goal)){
+        my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
+        # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+      }
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
 
@@ -351,10 +368,13 @@ classtable <- function(prediction_v = NULL,
     wacc  <- NA
 
     dprime <- NA
+
     # auc  <- NA
 
     cost_dec <- NA
     cost     <- NA
+
+    my_goal_val <- NA
 
   }
 
@@ -390,6 +410,12 @@ classtable <- function(prediction_v = NULL,
     cost = cost
 
   )
+
+  # Add my.goal name and value:
+  if (!is.null(my.goal)){
+    result[[my.goal]] <- my_goal_value
+    # print(result) # 4debugging
+  }
 
   return(result)
 
