@@ -154,9 +154,9 @@ fftrees_apply <- function(x,
     )
 
 
-    # Prepare data structures:
+    # Prepare data structures: ------
 
-    # level_stats_i contains cumulative level statistics:
+    # level_stats_i collect cumulative level statistics: ----
     level_stats_i <- data.frame(
       tree = tree_i,
       level = 1:level_n,
@@ -168,20 +168,44 @@ fftrees_apply <- function(x,
       stringsAsFactors = FALSE
     )
 
-    # Define critical stats:
-    critical_stats_v <- c(
-      # frequencies:
-      "n", "hi", "fa", "mi", "cr",
-      # conditional probabilities:
-      "sens", "spec", "far",  "ppv", "npv",
-      # derived from probabilities:
-      "dprime",  # enable goal = "dprime" by including in tree stats
-      # accuracy:
-      "acc", "bacc", "wacc",
-      # costs:
-      "cost_dec")
+    # Define the set of critical stats (as vector): ----
 
-    # Add stats names to level_stats_i:
+    if (!is.null(x$params$my.goal)){ # include my.goal:
+
+      critical_stats_v <- c(
+        # freq:
+        "n",  "hi", "fa", "mi", "cr",
+        # cond prob:
+        "sens", "spec",  "far",  "ppv", "npv",
+        # from prob:
+        "dprime",
+        # accuracy:
+        "acc", "bacc", "wacc",
+        # my.goal:
+        x$params$my.goal,       # include my.goal (name and value)
+        # costs:
+        "cost_dec"  # Note: "cost_cue" and "cost" are added below.
+      )
+
+    } else { # set default critical stats:
+
+      critical_stats_v <- c(
+        # freq:
+        "n",  "hi", "fa", "mi", "cr",
+        # cond prob:
+        "sens", "spec",  "far",  "ppv", "npv",
+        # from prob:
+        "dprime",
+        # accuracy:
+        "acc", "bacc", "wacc",
+        # my.goal:                    (NO my.goal here)
+        # costs:
+        "cost_dec"  # Note: "cost_cue" and "cost" are added below.
+      )
+
+    }
+
+    # Add stats names to level_stats_i: ----
     level_stats_i[critical_stats_v] <- NA
     level_stats_i$cost_cue <- NA
 
@@ -299,16 +323,15 @@ fftrees_apply <- function(x,
       my_level_stats_i <- classtable(
         prediction_v = decisions_df$decision[non_na_decision_ix],
         criterion_v = decisions_df$criterion[non_na_decision_ix],
+        #
         sens.w = x$params$sens.w,
-        cost.outcomes = x$params$cost.outcomes,             # outcome cost (per outcome type)
-        cost_v = decisions_df$cost_cue[non_na_decision_ix]  # cue cost (per decision at level)
+        #
+        cost.outcomes = x$params$cost.outcomes,              # outcome cost (per outcome type)
+        cost_v = decisions_df$cost_cue[non_na_decision_ix],  # cue cost (per decision at level)
+        #
+        my.goal = x$params$my.goal,
+        my.goal.fun = x$params$my.goal.fun
       )
-
-      # Compute my.goal via my.goal.fun:   +++ here now +++
-      xyz <- mapply(FUN = x$params$my.goal.fun,
-                    hi = my_level_stats_i$hi, fa = my_level_stats_i$fa,
-                    mi = my_level_stats_i$mi, cr = my_level_stats_i$cr)
-      print(paste0(x$params$my.goal, " = ", round(xyz, 3)))
 
       # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)
       level_stats_i[level_i, critical_stats_v] <- my_level_stats_i[ , critical_stats_v]
@@ -321,6 +344,7 @@ fftrees_apply <- function(x,
 
     } # Loop 2: level_i.
 
+
     # Add final tree results to level_stats_ls and decisions_ls: ----
 
     level_stats_ls[[tree_i]] <- level_stats_i
@@ -328,6 +352,7 @@ fftrees_apply <- function(x,
     decisions_ls[[tree_i]] <- decisions_df[, names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
 
   } # Loop 1: tree_i.
+
 
   # Aggregate results: ----
 
