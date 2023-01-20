@@ -11,6 +11,8 @@ classtable(
   sens.w = NULL,
   cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
   cost_v = NULL,
+  my.goal = NULL,
+  my.goal.fun = NULL,
   na_prediction_action = "ignore"
 )
 }
@@ -23,7 +25,7 @@ classtable(
 Default: \code{correction = .25}.}
 
 \item{sens.w}{numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).}
+Default: \code{sens.w = NULL} (to enforce that the current value is passed by the calling function).}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 the costs of a hit, false alarm, miss, and correct rejection, respectively.
@@ -32,6 +34,10 @@ a false alarm and miss cost 10 and 20, respectively, while correct decisions hav
 
 \item{cost_v}{numeric. Additional cost value of each decision (as an optional vector of numeric values).
 Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).}
+
+\item{my.goal}{Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.}
+
+\item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.}
 
 \item{na_prediction_action}{What happens when no prediction is possible? (experimental).}
 }
