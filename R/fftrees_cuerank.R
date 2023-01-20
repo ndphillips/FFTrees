@@ -224,6 +224,9 @@ fftrees_cuerank <- function(x = NULL,
             #
             sens.w = sens.w,
             #
+            my.goal = x$params$my.goal,
+            my.goal.fun = x$params$my.goal.fun,
+            #
             cost.each = cue_i_cost,
             cost.outcomes = cost.outcomes
           )
@@ -241,6 +244,9 @@ fftrees_cuerank <- function(x = NULL,
             directions = directions,
             #
             goal.threshold = goal.threshold,
+            #
+            my.goal = x$params$my.goal,
+            my.goal.fun = x$params$my.goal.fun,
             #
             sens.w = sens.w,
             #
@@ -298,6 +304,9 @@ fftrees_cuerank <- function(x = NULL,
           goal.threshold = goal.threshold,
           #
           sens.w = sens.w,
+          #
+          my.goal = x$params$my.goal,
+          my.goal.fun = x$params$my.goal.fun,
           #
           # Note: NO cost.each.
           cost.outcomes = cost.outcomes

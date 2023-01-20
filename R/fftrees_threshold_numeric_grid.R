@@ -13,6 +13,9 @@
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 #' Default: \code{sens.w = .50}.
 #'
+#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
+#'
 #' @param cost.each numeric. Cost to add to each value (e.g.; cost of the cue).
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
@@ -33,6 +36,9 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                            goal.threshold = "bacc",
                                            #
                                            sens.w = .50,  # ToDo: set to NULL (to enforce that value is passed from calling function)?
+                                           #
+                                           my.goal = NULL,
+                                           my.goal.fun = NULL,
                                            #
                                            cost.each = 0,
                                            cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
@@ -101,6 +107,9 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                          #
                          sens.w = sens.w,
                          #
+                         my.goal     = my.goal,         # (just passing to helper)
+                         my.goal.fun = my.goal.fun,
+                         #
                          cost.each = cost.each,
                          cost.outcomes = cost.outcomes
   )
@@ -111,18 +120,33 @@ fftrees_threshold_numeric_grid <- function(thresholds,
 
   # Clean up results: ----
 
-
   # Arrange rows by goal.threshold and change column order:
   row_order <- order(results[ , goal.threshold], decreasing = TRUE)
 
-  col_order <- c("threshold", "direction",
-                 "n",  "hi", "fa", "mi", "cr",
-                 "sens", "spec",  "ppv", "npv",
-                 "acc", "bacc", "wacc",
-                 "dprime",
-                 "cost_dec", "cost")
+  # Define the set of reported stats [rep_stats_v]: ----
+  if (!is.null(my.goal)){ # include my.goal (name and value):
 
-  results <- results[row_order, col_order]
+    rep_stats_v <- c("threshold", "direction",
+                     "n",  "hi", "fa", "mi", "cr",
+                     "sens", "spec",  "ppv", "npv",
+                     "acc", "bacc", "wacc",
+                     my.goal,  # (+)
+                     "dprime",
+                     "cost_dec", "cost")
+
+  } else { # default set of reported stats:
+
+    rep_stats_v <- c("threshold", "direction",
+                     "n",  "hi", "fa", "mi", "cr",
+                     "sens", "spec",  "ppv", "npv",
+                     "acc", "bacc", "wacc",
+                     "dprime",
+                     "cost_dec", "cost")
+
+  } # if my.goal().
+
+  # Arrange rows and select columns:
+  results <- results[row_order, rep_stats_v]
 
   # Re-set rownames:
   # rownames(results) <- 1:nrow(results)  # NOT needed and potentially confusing (when comparing results).

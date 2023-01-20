@@ -27,6 +27,9 @@
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
 #' Default: \code{sens.w = NULL} (to enforce that value is passed from calling function).
 #'
+#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
+#'
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
@@ -40,6 +43,9 @@ add_stats <- function(data,  # df with frequency counts of classification outcom
                       #
                       correction = .25,  # used to compute dprime
                       sens.w = NULL,     # used to compute wacc
+                      #
+                      my.goal = NULL,
+                      my.goal.fun = NULL,
                       #
                       cost.each = NULL,
                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
@@ -111,15 +117,42 @@ add_stats <- function(data,  # df with frequency counts of classification outcom
   # Total cost:
   data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
 
+  if (!is.null(my.goal)){
+
+    # Compute my.goal value (by my.goal.fun):
+    my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
+    # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+
+    # Add to data (df, by name):
+    data[[my.goal]] <- my_goal_value
+    # print(paste0(my.goal, " = ", round(data[[my.goal]], 3)))  # 4debugging
+
+  }
+
 
   # Output: ----
 
   # Define the set of critical stats [add_stats_v]: ----
-  add_stats_v <- c("sens", "spec",
-                   "far",  "ppv", "npv",
-                   "dprime",
-                   "acc", "bacc", "wacc",
-                   "cost_dec", "cost")
+
+  if (!is.null(my.goal)){ # include my.goal (name and value):
+
+    add_stats_v <- c("sens", "spec",
+                     "far",  "ppv", "npv",
+                     "dprime",
+                     "acc", "bacc", "wacc",
+                     my.goal,  # (+)
+                     "cost_dec", "cost")
+
+
+  } else { # default set of critical stats:
+
+    add_stats_v <- c("sens", "spec",
+                     "far",  "ppv", "npv",
+                     "dprime",
+                     "acc", "bacc", "wacc",
+                     "cost_dec", "cost")
+
+  }
 
   # Drop inputs and re-arrange columns (of df): ----
   data <- data[ , add_stats_v]
@@ -309,8 +342,10 @@ classtable <- function(prediction_v = NULL,
 
       # Compute my.goal value (by my.goal.fun):
       if (!is.null(my.goal)){
+
         my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
         # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+
       }
 
     } else { # Case 2. Compute stats from freq combinations: ----
@@ -355,8 +390,10 @@ classtable <- function(prediction_v = NULL,
 
       # Compute my.goal value (by my.goal.fun):
       if (!is.null(my.goal)){
+
         my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
         # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+
       }
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
@@ -427,10 +464,11 @@ classtable <- function(prediction_v = NULL,
 
   )
 
-  # Add my.goal name and value:
-  if (!is.null(my.goal)){
-    result[[my.goal]] <- my_goal_value
+  if (!is.null(my.goal)){ # include my.goal (name and value):
+
+    result[[my.goal]] <- my_goal_value  # (+)
     # print(result) # 4debugging
+
   }
 
   return(result)
