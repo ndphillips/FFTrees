@@ -108,7 +108,8 @@ fftrees_apply <- function(x,
   level_stats_ls <- vector("list", length = n_trees)
 
 
-  # 3. Define the set of critical stats (as vector): ----
+  # 3. Critical stats [critical_stats_v]: ----
+  #    Define the set of critical stats (as vector):
 
   if (!is.null(x$params$my.goal)){ # include my.goal:
 

@@ -108,14 +108,16 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 
   # Output: ----
 
+  # Define the set of critical stats [add_stats_v]: ----
   add_stats_v <- c("sens", "spec",
                    "far",  "ppv", "npv",
-                   "acc", "bacc", "wacc",
                    "dprime",
+                   "acc", "bacc", "wacc",
                    "cost_dec", "cost")
 
-  # Drop inputs and re-arrange columns (of df):
-  data <- data[, add_stats_v]
+  # Drop inputs and re-arrange columns (of df): ----
+  data <- data[ , add_stats_v]
+
 
   return(data)
 
