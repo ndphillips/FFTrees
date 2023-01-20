@@ -32,7 +32,7 @@
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
-
+#'
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
