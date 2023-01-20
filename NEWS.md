@@ -1,12 +1,12 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9008
+## 1.8.0.9009
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
 **FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [in 2023-02]. 
-This version adds functionality, improves robustness, and fixes some bugs.
+This version adds functionality, improves user feedback and robustness, and fixes minor bugs.
 
 <!-- Log of changes: --> 
 
@@ -16,8 +16,8 @@ Changes since last release:
 
 ### Major changes 
 
-- Added support for user-defined `my.goal` (as DV, as defined by `my.goal.fun`). 
-- Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
+- Enabled user-defined `my.goal` on cue and tree levels (as defined by `my.goal.fun`). 
+- Enabled optimizing `dprime` on cue and tree levels (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
 - Added decision outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
 
 
@@ -27,8 +27,8 @@ Changes since last release:
 
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
-- Improved user feedback on combinations of goal and cost values.
 - Improved `summar()`: Include current goal and cost values (if `"cost"` used in goals).
+- Improved user feedback on combinations of goal and cost values.
 
 
 <!-- Details: --> 
