@@ -213,15 +213,19 @@ fftrees_cuerank <- function(x = NULL,
         # a. Numeric/integer cue: ----
         if (substr(cue_i_class, 1, 1) %in% c("n", "i")) {
 
+          # Compute stats for numeric cue:
           cue_i_stats <- fftrees_threshold_numeric_grid(
             thresholds = cue_i_levels,
             cue_v = cue_i_v,
             criterion_v = criterion_v,
-            sens.w = sens.w,
             directions = directions,
+            #
+            goal.threshold = goal.threshold,
+            #
+            sens.w = sens.w,
+            #
             cost.each = cue_i_cost,
-            cost.outcomes = cost.outcomes,
-            goal.threshold = goal.threshold
+            cost.outcomes = cost.outcomes
           )
 
         } # if a. numeric/integer cue.
@@ -229,15 +233,19 @@ fftrees_cuerank <- function(x = NULL,
         # b. Factor, character, or logical cue: ----
         if (substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
+          # Compute stats for factor cue:
           cue_i_stats <- fftrees_threshold_factor_grid(
             thresholds = cue_i_levels,
             cue_v = cue_i_v,
             criterion_v = criterion_v,
             directions = directions,
+            #
+            goal.threshold = goal.threshold,
+            #
             sens.w = sens.w,
+            #
             cost.each = cue_i_cost,
-            cost.outcomes = cost.outcomes,
-            goal.threshold = goal.threshold
+            cost.outcomes = cost.outcomes
           )
 
         } # if b. factor/character/logical cue.
@@ -277,16 +285,22 @@ fftrees_cuerank <- function(x = NULL,
 
     } else { # (B) All cue values are NA:
 
-      # Step 3: Set best cue direction and threshold to NULL [cue_i_best]: ----
+      # Step 3: Set cue direction and threshold of BEST cue to NULL [cue_i_best]: ----
       {
 
+        # Compute stats for best factor cue:
         cue_i_best <- fftrees_threshold_factor_grid(
           thresholds = NULL,
           cue_v = NULL,
           criterion_v = NULL,
+          # NOTE: NO directions = directions.
+          #
+          goal.threshold = goal.threshold,
+          #
           sens.w = sens.w,
-          cost.outcomes = cost.outcomes,
-          goal.threshold = goal.threshold
+          #
+          # Note: NO cost.each.
+          cost.outcomes = cost.outcomes
         )
 
       } # Step 3.

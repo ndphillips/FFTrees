@@ -13,11 +13,11 @@
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 #' Default: \code{sens.w = .50}.
 #'
+#' @param cost.each numeric. Cost to add to each value (e.g.; cost of the cue).
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
-#' @param cost.each numeric. Cost to add to each value (e.g.; cost of the cue).
 #'
 #' @import testthat
 #' @importFrom  magrittr "%>%"
@@ -37,8 +37,8 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                           #
                                           sens.w = .50,  # ToDo: set to NULL (to enforce that value is passed from calling function)?
                                           #
-                                          cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                                          cost.each = 0
+                                          cost.each = 0,
+                                          cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 ) {
 
   # Assertions:
