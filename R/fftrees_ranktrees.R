@@ -77,7 +77,7 @@ fftrees_ranktrees <- function(x,
   x$trees$decisions$train <- x$trees$decisions$train[tree_rank_df$tree]
   names(x$trees$decisions$train) <- paste0("tree_", 1:nrow(tree_rank_df))
 
-  # Best training tree:
+  # Get and set value of best training tree:
   x$trees$best$train <- select_best_tree(x, data = "train", goal = x$params$goal)
 
   } # if (data == "train").
