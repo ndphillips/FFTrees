@@ -4,14 +4,23 @@
 #' @param cue_v numeric. Feature values.
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
 #' @param directions character. Possible directions to consider.
+#'
+#' @param goal.threshold A character string indicating the criterion to maximize when \emph{optimizing cue thresholds}:
+#' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
+#' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
+#' Default: \code{goal.threshold = "bacc"}.
+#'
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 #' Default: \code{sens.w = .50}.
-#' @param cost.each numeric. Cost to add to each value (e.g.; cost of  the cue).
+#'
+#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
+#'
+#' @param cost.each numeric. Cost to add to each value (e.g.; cost of the cue).
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
-#' @param goal.threshold character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy.
 #'
 #' @return A data frame containing accuracy statistics for several numeric thresholds.
 #'
@@ -23,10 +32,17 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                            cue_v,
                                            criterion_v,
                                            directions = c(">", "<="),
-                                           sens.w = .50,
+                                           #
+                                           goal.threshold = "bacc",
+                                           #
+                                           sens.w = .50,  # ToDo: set to NULL (to enforce that value is passed from calling function)?
+                                           #
+                                           my.goal = NULL,
+                                           my.goal.fun = NULL,
+                                           #
                                            cost.each = 0,
-                                           cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                                           goal.threshold = "bacc") {
+                                           cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+) {
 
   thresholds_n <- length(thresholds)
 
@@ -59,16 +75,16 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   # Convert to named dataframe: ----
 
   results_gt <- as.data.frame(results_gt)
-  names(results_gt) <- c("n", "hi", "fa", "mi", "cr")
+  names(results_gt) <- c("n",  "hi", "fa", "mi", "cr")
   results_gt$direction <- ">"
   results_gt$threshold <- thresholds
 
 
   # Get results if using <= threshold: ----
 
-  results_lt <- results_gt[, c(1, 4, 5, 2, 3)]
-  names(results_lt) <- c("n", "hi", "fa", "mi", "cr")
-  results_lt        <- results_lt[, c("n", "hi", "fa", "mi", "cr")]
+  results_lt <- results_gt[ , c(1,  4, 5, 2, 3)]
+  names(results_lt) <- c("n",  "hi", "fa", "mi", "cr")
+  results_lt        <- results_lt[ , c("n",  "hi", "fa", "mi", "cr")]
 
   results_lt$direction <- "<="
   results_lt$threshold <- thresholds
@@ -86,30 +102,51 @@ fftrees_threshold_numeric_grid <- function(thresholds,
   }
 
 
-  new_stats <- add_stats(results,
+  # Add statistics to results: ----
+  new_stats <- add_stats(data = results,
+                         #
                          sens.w = sens.w,
-                         cost.outcomes = cost.outcomes,
-                         cost.each = cost.each
+                         #
+                         my.goal     = my.goal,         # (just passing to helper)
+                         my.goal.fun = my.goal.fun,
+                         #
+                         cost.each = cost.each,
+                         cost.outcomes = cost.outcomes
   )
 
-  # Add accuracy statistics (to previous results): ----
+  # Add new accuracy statistics (to previous results): ----
   results <- cbind(results, new_stats)
 
 
   # Clean up results: ----
 
-
   # Arrange rows by goal.threshold and change column order:
   row_order <- order(results[ , goal.threshold], decreasing = TRUE)
 
-  col_order <- c("threshold", "direction",
-                 "n", "hi", "fa", "mi", "cr",
-                 "sens", "spec", "ppv", "npv",
-                 "acc", "bacc", "wacc",
-                 "dprime",
-                 "cost_dec", "cost")
+  # Define the set of reported stats [rep_stats_v]: ----
+  if (!is.null(my.goal)){ # include my.goal (name and value):
 
-  results <- results[row_order, col_order]
+    rep_stats_v <- c("threshold", "direction",
+                     "n",  "hi", "fa", "mi", "cr",
+                     "sens", "spec",  "ppv", "npv",
+                     "acc", "bacc", "wacc",
+                     my.goal,  # (+)
+                     "dprime",
+                     "cost_dec", "cost")
+
+  } else { # default set of reported stats:
+
+    rep_stats_v <- c("threshold", "direction",
+                     "n",  "hi", "fa", "mi", "cr",
+                     "sens", "spec",  "ppv", "npv",
+                     "acc", "bacc", "wacc",
+                     "dprime",
+                     "cost_dec", "cost")
+
+  } # if my.goal().
+
+  # Arrange rows and select columns:
+  results <- results[row_order, rep_stats_v]
 
   # Re-set rownames:
   # rownames(results) <- 1:nrow(results)  # NOT needed and potentially confusing (when comparing results).

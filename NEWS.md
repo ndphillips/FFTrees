@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9007
+## 1.8.0.9008
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -16,8 +16,9 @@ Changes since last release:
 
 ### Major changes 
 
+- Added support for user-defined `my.goal` (as DV, as defined by `my.goal.fun`). 
 - Added support for optimizing `dprime` values of cues and trees (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
-- Added hypothetical outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
+- Added decision outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
 
 
 <!-- Minor: --> 
@@ -401,6 +402,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-19.]
+[File `NEWS.md` last updated on 2023-01-20.]
 
 <!-- eof. -->

@@ -9,10 +9,12 @@ fftrees_threshold_numeric_grid(
   cue_v,
   criterion_v,
   directions = c(">", "<="),
+  goal.threshold = "bacc",
   sens.w = 0.5,
+  my.goal = NULL,
+  my.goal.fun = NULL,
   cost.each = 0,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-  goal.threshold = "bacc"
+  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 )
 }
 \arguments{
@@ -24,17 +26,24 @@ fftrees_threshold_numeric_grid(
 
 \item{directions}{character. Possible directions to consider.}
 
+\item{goal.threshold}{A character string indicating the criterion to maximize when \emph{optimizing cue thresholds}:
+\code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
+\code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
+Default: \code{goal.threshold = "bacc"}.}
+
 \item{sens.w}{numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
 Default: \code{sens.w = .50}.}
 
-\item{cost.each}{numeric. Cost to add to each value (e.g.; cost of  the cue).}
+\item{my.goal}{Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.}
+
+\item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.}
+
+\item{cost.each}{numeric. Cost to add to each value (e.g.; cost of the cue).}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 the costs of a hit, false alarm, miss, and correct rejection, respectively.
 For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.}
-
-\item{goal.threshold}{character. A string indicating the statistic to maximize when calculting cue thresholds: "acc" = overall accuracy, "wacc" = weighted accuracy, "bacc" = balanced accuracy.}
 }
 \value{
 A data frame containing accuracy statistics for several numeric thresholds.

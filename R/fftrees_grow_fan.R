@@ -283,7 +283,10 @@ fftrees_grow_fan <- function(x,
           sens.w = x$params$sens.w,
           #
           cost.outcomes = x$params$cost.outcomes,  # add outcome cost
-          cost_v = asif_cuecost_v                  # add cue cost
+          cost_v = asif_cuecost_v,                 # add cue cost
+          #
+          my.goal = x$params$my.goal,
+          my.goal.fun = x$params$my.goal.fun
         )
         # Note: The 2 cost arguments cost.outcomes and cost_v were NOT being used to compute asif_results.
         # DONE: ADDED asif_cuecost_v to call to classtable() here (on 2023-01-19, +++ here now +++)
@@ -329,10 +332,10 @@ fftrees_grow_fan <- function(x,
 
         } else { # note an unknown/invalid goal.chase value:
 
-          valid_goals <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
-          valid_goals_str <- paste(valid_goals, collapse = ", ")
+          goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")  # See fftrees_create()!
+          goal_valid_str <- paste(goal_valid, collapse = ", ")
 
-          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_goals_str, "'"))
+          stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", goal_valid_str, "'"))
 
         } # If stop?
 
@@ -400,7 +403,10 @@ fftrees_grow_fan <- function(x,
           sens.w = x$params$sens.w,
           #
           cost.outcomes = x$params$cost.outcomes,
-          cost_v = cuecost_v[case_remaining_ix == FALSE]
+          cost_v = cuecost_v[case_remaining_ix == FALSE],
+          #
+          my.goal = x$params$my.goal,
+          my.goal.fun = x$params$my.goal.fun
         )
 
         # Update level stats:
@@ -505,7 +511,10 @@ fftrees_grow_fan <- function(x,
           sens.w = x$params$sens.w,
           #
           cost.outcomes = x$params$cost.outcomes,
-          cost_v = cuecost_v
+          cost_v = cuecost_v,
+          #
+          my.goal = x$params$my.goal,
+          my.goal.fun = x$params$my.goal.fun
         )
 
         level_stats_i$exit[last_level_nr] <- .5

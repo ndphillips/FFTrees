@@ -1,6 +1,6 @@
 # helper_stats.R:
 # Statistical helper/utility functions.
-# --------------------------
+# -------------------------------------
 
 # Statistical calculations (based on classification outcomes in 2x2 matrix and models): ------
 
@@ -8,7 +8,7 @@
 # add_stats (from frequency of 4 classification outcomes): ------
 
 # Outcome statistics based on frequency counts (of 4 classification outcomes)
-# [called to get cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
+# [used to set cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
 
 
 #' Add decision statistics to data (based on frequency counts of a 2x2 classification outcomes)
@@ -21,22 +21,34 @@
 #' allows computing cost information for the counts of corresponding classification decisions.
 #'
 #' @param data A data frame with 4 frequency counts (as integer values, named \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"}).
-#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}). Default: \code{sens.w = .50}.
+#'
+#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
+#' Default: \code{correction = .25}.
+#' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
+#' Default: \code{sens.w = NULL} (to enforce that value is passed from calling function).
+#'
+#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
+#'
 #' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
-#' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
-#' Default: \code{correction = .25}.
+#'
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
-add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classification outcomes (as integers)
-                      sens.w = .50,
+add_stats <- function(data,  # df with frequency counts of classification outcomes ('hi fa mi cr', as integers)
+                      #
+                      correction = .25,  # used to compute dprime
+                      sens.w = NULL,     # used to compute wacc
+                      #
+                      my.goal = NULL,
+                      my.goal.fun = NULL,
+                      #
                       cost.each = NULL,
-                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
-                      correction = .25 # used for dprime calculation
+                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
 ) {
 
   # Prepare: ----
@@ -45,31 +57,37 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
     cost.each <- 0
   }
 
+  # Get the 4 key freq counts (from data):
+
+  hi <- data$hi
+  fa <- data$fa
+  mi <- data$mi
+  cr <- data$cr
+
 
   # Compute measures: ----
 
-  N <- with(data, (hi + cr + fa + mi))
+  N <- hi + cr + fa + mi
 
   # Sensitivity:
-  data$sens <- with(data, hi / (hi + mi))
+  data$sens <- hi / (hi + mi)
 
   # Specificity:
-  data$spec <- with(data, cr / (cr + fa))
-
+  data$spec <- cr / (cr + fa)
 
   # False alarm rate:
-  data$far <- with(data, 1 - spec)
+  data$far <- 1 - data$spec
 
 
   # Positive predictive value (PPV):
-  data$ppv <- with(data, hi / (hi + fa))
+  data$ppv <- hi / (hi + fa)
 
   # Negative predictive value (NPV):
-  data$npv <- with(data, cr / (cr + mi))
+  data$npv <- cr / (cr + mi)
 
 
   # Accuracy:
-  data$acc <- with(data, (hi + cr) / N)
+  data$acc <- (hi + cr) / N
 
   # Balanced accuracy:
   data$bacc <- with(data, (sens + spec) / 2)  # = (sens * .50) + (spec * .50)
@@ -81,10 +99,10 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
   # dprime:
 
   # a. Corrected freq values:
-  hi_c <- with(data, (hi)) + correction
-  mi_c <- with(data, (mi)) + correction
-  fa_c <- with(data, (fa)) + correction
-  cr_c <- with(data, (cr)) + correction
+  hi_c <- hi + correction
+  fa_c <- fa + correction
+  mi_c <- mi + correction
+  cr_c <- cr + correction
 
   # b. dprime (corrected):
   data$dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
@@ -93,21 +111,52 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
   # Cost:
 
   # Outcome cost (using NEGATIVE costs, to allow maximizing value to minimize cost):
-  data$cost_dec <- with(data, -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                                    + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr))) / data$n  # Why data$n, not N?
+  data$cost_dec <- -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                         + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr)) / data$n  # Why data$n, not N?
 
   # Total cost:
   data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
 
+  if (!is.null(my.goal)){
+
+    # Compute my.goal value (by my.goal.fun):
+    my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
+    # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+
+    # Add to data (df, by name):
+    data[[my.goal]] <- my_goal_value
+    # print(paste0(my.goal, " = ", round(data[[my.goal]], 3)))  # 4debugging
+
+  }
+
 
   # Output: ----
 
-  # Drop inputs and order columns (of df):
-  data <- data[, c("sens", "spec",
-                   "far",  "ppv", "npv",
-                   "acc", "bacc", "wacc",
-                   "dprime",
-                   "cost_dec", "cost")]
+  # Define the set of critical stats [add_stats_v]: ----
+
+  if (!is.null(my.goal)){ # include my.goal (name and value):
+
+    add_stats_v <- c("sens", "spec",
+                     "far",  "ppv", "npv",
+                     "dprime",
+                     "acc", "bacc", "wacc",
+                     my.goal,  # (+)
+                     "cost_dec", "cost")
+
+
+  } else { # default set of critical stats:
+
+    add_stats_v <- c("sens", "spec",
+                     "far",  "ppv", "npv",
+                     "dprime",
+                     "acc", "bacc", "wacc",
+                     "cost_dec", "cost")
+
+  }
+
+  # Drop inputs and re-arrange columns (of df): ----
+  data <- data[ , add_stats_v]
+
 
   return(data)
 
@@ -140,7 +189,7 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = NULL} (to enforce that actual value is being passed by the calling function).
+#' Default: \code{sens.w = NULL} (to enforce that the current value is passed by the calling function).
 #'
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
@@ -148,6 +197,9 @@ add_stats <- function(data, # df with frequency counts of 'hi fa mi cr' classifi
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
 #' @param cost_v numeric. Additional cost value of each decision (as an optional vector of numeric values).
 #' Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).
+#'
+#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
 #'
 #' @param na_prediction_action What happens when no prediction is possible? (experimental).
 #'
@@ -163,7 +215,11 @@ classtable <- function(prediction_v = NULL,
                        cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
                        cost_v = NULL,          # cost value of each decision (at current level, as a constant)
                        #
-                       na_prediction_action = "ignore") {
+                       my.goal = NULL,
+                       my.goal.fun = NULL,
+                       #
+                       na_prediction_action = "ignore"
+){
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
   #   criterion_v  <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
@@ -284,6 +340,13 @@ classtable <- function(prediction_v = NULL,
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
 
+      # Compute my.goal value (by my.goal.fun):
+      if (!is.null(my.goal)){
+
+        my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
+        # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+
+      }
 
     } else { # Case 2. Compute stats from freq combinations: ----
 
@@ -321,10 +384,17 @@ classtable <- function(prediction_v = NULL,
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-
       # Cost per case:
       cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
       cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
+      # Compute my.goal value (by my.goal.fun):
+      if (!is.null(my.goal)){
+
+        my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
+        # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
+
+      }
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
 
@@ -351,10 +421,13 @@ classtable <- function(prediction_v = NULL,
     wacc  <- NA
 
     dprime <- NA
+
     # auc  <- NA
 
     cost_dec <- NA
     cost     <- NA
+
+    my_goal_val <- NA
 
   }
 
@@ -390,6 +463,13 @@ classtable <- function(prediction_v = NULL,
     cost = cost
 
   )
+
+  if (!is.null(my.goal)){ # include my.goal (name and value):
+
+    result[[my.goal]] <- my_goal_value  # (+)
+    # print(result) # 4debugging
+
+  }
 
   return(result)
 

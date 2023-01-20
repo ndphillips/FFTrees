@@ -39,7 +39,7 @@
 #' @param goal.chase A character string indicating the statistic to maximize when \emph{constructing trees}:
 #' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based on \code{cost.outcomes} and \code{cost.cues}).
-#' @param goal.threshold A character string indicating the statistic to maximize when \emph{optimizing cue thresholds}:
+#' @param goal.threshold A character string indicating the criterion to maximize when \emph{optimizing cue thresholds}:
 #' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
 #' Default: \code{goal.threshold = "bacc"}.
