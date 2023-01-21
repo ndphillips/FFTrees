@@ -64,7 +64,7 @@ fftrees_apply <- function(x,
 
     }
 
-    valid_train_test_data(train_data = x$data$train, test_data = x$data$test)  # verify (without consequences)
+    verify_train_test_data(train_data = x$data$train, test_data = x$data$test)  # verify (without consequences)
 
     data <- x$data$test
 

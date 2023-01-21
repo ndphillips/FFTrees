@@ -2,11 +2,9 @@
 # Miscellaneous auxiliary/utility functions.
 # ------------------------------------------
 
-
 # (1) Validating or verifying stuff: ------
 
-
-# valid_train_test_data: ------
+# verify_train_test_data: ------
 
 # Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)
 #       and provide feedback on any existing differences.
@@ -19,7 +17,7 @@
 #
 # Output: Boolean.
 
-valid_train_test_data <- function(train_data, test_data){
+verify_train_test_data <- function(train_data, test_data){
 
   # Initialize: ----
 
@@ -69,7 +67,7 @@ valid_train_test_data <- function(train_data, test_data){
 
   return(valid)
 
-} # valid_train_test_data().
+} # verify_train_test_data().
 
 # # Check:
 # (df1 <- data.frame(matrix( 1:9,  nrow = 3)))
@@ -78,13 +76,13 @@ valid_train_test_data <- function(train_data, test_data){
 # (df0 <- df1[-(1:3), ])
 #
 # # FALSE cases:
-# valid_train_test_data(df0, df1)
-# valid_train_test_data(df1, df0)
-# valid_train_test_data(df1, df3)
-# valid_train_test_data(df3, df1)
+# verify_train_test_data(df0, df1)
+# verify_train_test_data(df1, df0)
+# verify_train_test_data(df1, df3)
+# verify_train_test_data(df3, df1)
 # # TRUE cases:
-# valid_train_test_data(df1, df2)
-# valid_train_test_data(df1, df2[ , 3:1])
+# verify_train_test_data(df1, df2)
+# verify_train_test_data(df1, df2[ , 3:1])
 
 
 
@@ -135,12 +133,12 @@ verify_all_cues_in_data <- function(cues, data){
 
 
 
-# verify_tree: ------
+# verify_tree_arg: ------
 
-# Verify a "tree" argument [to be used in print(x) and plot(x)].
-# Returns a tree number (as numeric) or "best.train"/"best.test" (as character).
+# Verify AND return a "tree" ARGUMENT from an FFtrees object x, given a data type [to be used in print(x) and plot(x)].
+# Returns either a tree number (as numeric) or "best.train"/"best.test" (as character).
 
-verify_tree <- function(x, data, tree){
+verify_tree_arg <- function(x, data, tree){
 
   # Verify inputs: ----
 
@@ -158,18 +156,21 @@ verify_tree <- function(x, data, tree){
   }
 
   if (tree == "best.test" & is.null(x$tree$stats$test)) {
+
     warning("You asked for the 'best.test' tree, but there are no 'test' data. Used the best tree for 'train' data instead...")
 
     tree <- "best.train"
   }
 
   if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
+
     stop(paste0("You asked for a tree that does not exist. This object has ", x$trees$n, " trees."))
   }
 
   if (inherits(data, "character")) {
 
     if (data == "test" & is.null(x$trees$stats$test)) {
+
       stop("You asked for 'test' data, but there are no 'test' data. Consider using data = 'train' instead...")
     }
 
@@ -204,9 +205,9 @@ verify_tree <- function(x, data, tree){
 
   # Output: ----
 
-  return(tree) # (character or numeric)
+  return(tree) # (as character OR numeric)
 
-} # verify_tree().
+} # verify_tree_arg().
 
 
 

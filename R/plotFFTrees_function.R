@@ -477,7 +477,7 @@ plot.FFTrees <- function(x = NULL,
 
     # Verify tree input: ----
 
-    tree <- verify_tree(x = x, data = data, tree = tree)  # use helper (for plotting AND printing)
+    tree <- verify_tree_arg(x = x, data = data, tree = tree)  # use helper (for plotting AND printing)
 
 
     # Get "best" tree: ----
