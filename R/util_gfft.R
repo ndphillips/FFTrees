@@ -92,7 +92,7 @@ read_fft_df <- function(ffts, tree = 1){
 # Output: FFT definition in 1 line (as df).
 
 # Similar code is currently used
-# - at the and of fftrees_grow_fan()
+# - at the end of fftrees_grow_fan()
 # - at the end of fftrees_wordstofftrees()
 
 write_fft_df <- function(fft, tree = 101){
