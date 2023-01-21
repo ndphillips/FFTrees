@@ -4,6 +4,7 @@
 
 # Functions for validating or verifying stuff: ------
 
+
 # verify_train_test_data: ------
 
 # Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)
@@ -86,9 +87,11 @@ verify_train_test_data <- function(train_data, test_data){
 
 
 
+
 # verify_all_cues_in_data: ------
 
-# Check: Are all current cues (as vector) in current data (as df)?
+# Goal: Are all current cues (as vector) in current data (as df)?
+# Output: Boolean.
 
 verify_all_cues_in_data <- function(cues, data){
 
@@ -133,10 +136,12 @@ verify_all_cues_in_data <- function(cues, data){
 
 
 
+
 # verify_tree_arg: ------
 
-# Verify AND return a "tree" ARGUMENT from an FFtrees object x, given a data type [to be used in print(x) and plot(x)].
-# Returns either a tree number (as numeric) or "best.train"/"best.test" (as character).
+# Goals: Verify AND return a "tree" ARGUMENT from an FFtrees object x, given a data type
+#        [to be used in print(x) and plot(x)].
+# Output: Returns either a tree number (as numeric) or "best.train"/"best.test" (as character).
 
 verify_tree_arg <- function(x, data, tree){
 
@@ -209,6 +214,46 @@ verify_tree_arg <- function(x, data, tree){
 
 } # verify_tree_arg().
 
+
+
+# verify_fft_definition: ------
+
+# Goal: Verify a df of tree definitions (from an FFTrees object).
+# Output: Boolean.
+
+verify_fft_definition <- function(df){
+
+  # verify df:
+  testthat::expect_true(is.data.frame(df), info = "'x$trees$definitions' is not a data.frame")
+
+  # verify nrow(df) > 0:
+  if (nrow(df) < 1){
+
+    message("Input df is empty: nrow(df) = ", nrow(df))
+
+    return(FALSE)
+
+  }
+
+  # verify variable names:
+  provided_vars <- names(df)
+  required_vars <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
+
+  if (all(required_vars %in% provided_vars)){
+
+    return(TRUE)
+
+  } else {
+
+    missing_vars <- setdiff(required_vars, provided_vars)
+
+    message("Input df is missing the variables ", paste(missing_vars, collapse = ", "))
+
+    return(FALSE)
+
+  }
+
+} # verify_fft_definition().
 
 
 
