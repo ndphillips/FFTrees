@@ -145,6 +145,10 @@ fftrees_create <- function(formula = NULL,
   # Define a (constant) set of valid goals (for FFT selection via 'goal'):
   goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")
 
+  if (!is.null(my.goal)){  # include my.goal (name):
+    goal_valid <- c(goal_valid, my.goal)
+  }
+
   if (is.null(goal)) { # goal NOT set by user:
 
     if (!is.null(cost.outcomes) | !is.null(cost.cues)) { # use cost goal:
@@ -184,7 +188,7 @@ fftrees_create <- function(formula = NULL,
   if ((goal == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 The goal was set to 'wacc', but 'sens.w = 0.50': Setting 'goal = bacc'\n"))
+      cat(u_f_hig("\u2014 User set 'goal = wacc', but 'sens.w = 0.50': Setting 'goal = bacc'\n"))
     }
     goal <- "bacc"
 
@@ -230,7 +234,7 @@ fftrees_create <- function(formula = NULL,
   if ((goal.chase == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 The goal.chase was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'\n"))
+      cat(u_f_hig("\u2014 User set 'goal.chase = wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'\n"))
     }
     goal.chase <- "bacc"
 
@@ -267,7 +271,7 @@ fftrees_create <- function(formula = NULL,
   if ((goal.threshold == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 The goal.threshold was set to 'wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'\n"))
+      cat(u_f_hig("\u2014 User set 'goal.threshold = wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'\n"))
     }
     goal.threshold <- "bacc"
   }
@@ -313,16 +317,18 @@ fftrees_create <- function(formula = NULL,
   } # if (my.goal).
 
 
+  cur_goals <- c(goal, goal.chase, goal.threshold)  # IFF all goals are set.
+
+
   # Verify consistency of sens.w and bacc_wacc choices: ----
 
-  # If a non-default sens.w has been set, but 'wacc' is neither used in 'goal' nor in 'goal.chase':
-  if ((enable_wacc(sens.w)) & (goal != "wacc") & (goal.chase != "wacc")){ # provide feedback:
+  # If a non-default sens.w has been set, but 'wacc' is not a goal:
+  if ((enable_wacc(sens.w)) & (!"wacc" %in% cur_goals)) { # provide feedback:
 
     if (!quiet) {
-      msg <- paste0("You set sens.w = ", sens.w, ": Did you mean to set 'goal' or 'goal.chase' to 'wacc'?\n")
+      msg <- paste0("You set 'sens.w = ", sens.w, "': Did you mean to set a goal to 'wacc'?\n")
       cat(u_f_hig(msg))
     }
-
   }
 
 
@@ -376,9 +382,12 @@ fftrees_create <- function(formula = NULL,
 
   # cost.outcomes: ----
 
-  if (!is.null(cost.outcomes) & goal != "cost") {
-    msg <- paste0("Specified 'cost.outcomes', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
-    cat(u_f_hig(msg))
+  if (!is.null(cost.outcomes) & (!"cost" %in% cur_goals)) {
+
+    if (!quiet) {
+      msg <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
+      cat(u_f_hig(msg))
+    }
   }
 
   if (is.null(cost.outcomes)) { # set defaults:
@@ -403,9 +412,12 @@ fftrees_create <- function(formula = NULL,
 
   # cost.cues: ----
 
-  if (!is.null(cost.cues) & goal != "cost") {
-    msg <- paste0("Specified 'cost.cues', but goal = '", goal, "' (not 'cost'):\nFFT creation will ignore costs, but report them in tree statistics.\n")
-    cat(u_f_hig(msg))
+  if (!is.null(cost.cues) & (!"cost" %in% cur_goals)) {
+
+    if (!quiet) {
+      msg <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
+      cat(u_f_hig(msg))
+    }
   }
 
   if ((!quiet) & (!is.null(cost.cues))) {

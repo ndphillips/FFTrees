@@ -2,11 +2,9 @@
 # Miscellaneous auxiliary/utility functions.
 # ------------------------------------------
 
-
 # (1) Validating or verifying stuff: ------
 
-
-# valid_train_test_data: ------
+# verify_train_test_data: ------
 
 # Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)
 #       and provide feedback on any existing differences.
@@ -19,7 +17,7 @@
 #
 # Output: Boolean.
 
-valid_train_test_data <- function(train_data, test_data){
+verify_train_test_data <- function(train_data, test_data){
 
   # Initialize: ----
 
@@ -69,7 +67,7 @@ valid_train_test_data <- function(train_data, test_data){
 
   return(valid)
 
-} # valid_train_test_data().
+} # verify_train_test_data().
 
 # # Check:
 # (df1 <- data.frame(matrix( 1:9,  nrow = 3)))
@@ -78,13 +76,13 @@ valid_train_test_data <- function(train_data, test_data){
 # (df0 <- df1[-(1:3), ])
 #
 # # FALSE cases:
-# valid_train_test_data(df0, df1)
-# valid_train_test_data(df1, df0)
-# valid_train_test_data(df1, df3)
-# valid_train_test_data(df3, df1)
+# verify_train_test_data(df0, df1)
+# verify_train_test_data(df1, df0)
+# verify_train_test_data(df1, df3)
+# verify_train_test_data(df3, df1)
 # # TRUE cases:
-# valid_train_test_data(df1, df2)
-# valid_train_test_data(df1, df2[ , 3:1])
+# verify_train_test_data(df1, df2)
+# verify_train_test_data(df1, df2[ , 3:1])
 
 
 
@@ -135,12 +133,12 @@ verify_all_cues_in_data <- function(cues, data){
 
 
 
-# verify_tree: ------
+# verify_tree_arg: ------
 
-# Verify a "tree" argument [to be used in print(x) and plot(x)].
-# Returns a tree number (as numeric) or "best.train"/"best.test" (as character).
+# Verify AND return a "tree" ARGUMENT from an FFtrees object x, given a data type [to be used in print(x) and plot(x)].
+# Returns either a tree number (as numeric) or "best.train"/"best.test" (as character).
 
-verify_tree <- function(x, data, tree){
+verify_tree_arg <- function(x, data, tree){
 
   # Verify inputs: ----
 
@@ -158,18 +156,21 @@ verify_tree <- function(x, data, tree){
   }
 
   if (tree == "best.test" & is.null(x$tree$stats$test)) {
+
     warning("You asked for the 'best.test' tree, but there are no 'test' data. Used the best tree for 'train' data instead...")
 
     tree <- "best.train"
   }
 
   if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
+
     stop(paste0("You asked for a tree that does not exist. This object has ", x$trees$n, " trees."))
   }
 
   if (inherits(data, "character")) {
 
     if (data == "test" & is.null(x$trees$stats$test)) {
+
       stop("You asked for 'test' data, but there are no 'test' data. Consider using data = 'train' instead...")
     }
 
@@ -204,9 +205,9 @@ verify_tree <- function(x, data, tree){
 
   # Output: ----
 
-  return(tree) # (character or numeric)
+  return(tree) # (as character OR numeric)
 
-} # verify_tree().
+} # verify_tree_arg().
 
 
 
@@ -507,12 +508,19 @@ fact_clean <- function(data.train,
 #' @param goal character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
 #' (for which values exist in \code{x$trees$stats}).
 #'
+#' @param my.goal.max logical. Default direction for user-defined \code{my.goal}: Should \code{my.goal} be maximized?
+#' Default: \code{my.goal.max = TRUE}.
+#'
 #' @return An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
 #'
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-select_best_tree <- function(x, data, goal){
+select_best_tree <- function(x,
+                             data,
+                             goal,
+                             my.goal.max = TRUE  # Default direction for my.goal: maximize (ToDo: currently not set anywhere)
+                             ){
 
   # Verify inputs: ------
 
@@ -534,7 +542,7 @@ select_best_tree <- function(x, data, goal){
 
   # # (a) narrow goal range:
   #
-  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")  # ToDo: Is "dprime" being computed?
+  # valid_tree_select_goal_narrow <- c("acc", "bacc", "wacc", "dprime", "cost")
   # testthat::expect_true(goal %in% valid_tree_select_goal_narrow)
 
   # (b) wide goal range:
@@ -543,13 +551,39 @@ select_best_tree <- function(x, data, goal){
   max_goals <- c("hi", "cr",
                  "sens", "spec",
                  "ppv", "npv",
-                 "acc", "bacc", "wacc", "dprime",
+                 "acc", "bacc", "wacc",
+                 "dprime",
                  "pci")
 
   # Goals to minimize (less is better):
   min_goals <- c("mi", "fa",
                  "cost", "cost_dec", "cost_cue",
                  "mcu")
+
+  # Current goal is user-defined my.goal:
+  if (!is.null(x$params$my.goal) & (goal == x$params$my.goal)){
+
+    if (my.goal.max) { # add my.goal to max_goals:
+
+      max_goals <- c(max_goals, x$params$my.goal)
+
+      if (!x$params$quiet) {
+        msg <- paste0("\u2014 Selecting an FFT to maximize your goal = '", x$params$my.goal, "'\n")
+        cat(u_f_hig(msg))
+      }
+
+    } else { # add my.goal to min_goals:
+
+      min_goals <- c(min_goals, x$params$my.goal)
+
+      if (!x$params$quiet) {
+        msg <- paste0("\u2014 Selecting an FFT to minimize your goal = '", x$params$my.goal, "'\n")
+        cat(u_f_hig(msg))
+      }
+
+    }
+
+  }
 
   valid_tree_select_goal <- c(max_goals, min_goals)
   testthat::expect_true(goal %in% valid_tree_select_goal)

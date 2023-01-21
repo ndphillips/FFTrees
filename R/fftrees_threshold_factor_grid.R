@@ -224,6 +224,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                             "n" = NA,  "hi" = NA, "fa" = NA, "mi" = NA, "cr" = NA,
                             "sens" = NA, "spec" = NA,  "ppv"  = NA, "npv"  = NA,
                             "acc"  = NA, "bacc" = NA, "wacc" = NA,
+                            # my.goal = NA,  # (+)
                             "dprime" = NA,
                             "cost_dec" = NA, "cost" = NA)
 
