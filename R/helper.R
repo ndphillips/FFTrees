@@ -396,6 +396,35 @@ get_best_tree <- function(x,
 
 
 
+
+# get_fft_definitions: ------
+
+# Goal: Extract (and verify) ALL definitions from an FFTrees object (as 1 df).
+# Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
+
+get_fft_definitions <- function(x){
+
+  # verify input:
+  testthat::expect_s3_class(x, class = "FFTrees")
+
+  # main: get definitions from object:
+  x_tree_df <- x$trees$definitions  # definitions (as df/tibble)
+
+  # verify:
+  if (verify_fft_definition(x_tree_df)){
+
+    return(x_tree_df)
+
+  } else {
+
+    return(NA)
+
+  }
+
+} # get_fft_definitions().
+
+
+
 # get_lhs_formula: ------
 
 # Goal: Get criterion variable from formula (and verify formula).
