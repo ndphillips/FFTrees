@@ -4,85 +4,7 @@
 
 # General/miscellaneous helper functions:
 
-# (1) Enabling or getting stuff: ------
-
-
-# enable_wacc: ------
-
-# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
-
-# The argument sens.w_epsion provides a threshold value:
-# Minimum required difference from the sens.w default value (sens.w = 0.50).
-
-# Output: Boolean value.
-
-enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
-
-  out <- FALSE
-
-  if (abs(sens.w - .50) >= sens.w_epsilon){
-    out <- TRUE
-  }
-
-  return(out)
-
-} # enable_wacc().
-
-
-
-# get_bacc_wacc: ------
-
-# Obtain either bacc or wacc (for displays in print and plot functions).
-# Output: Named vector (with name specifying the current type of measure).
-
-get_bacc_wacc <- function(sens, spec,  sens.w){
-
-  if (enable_wacc(sens.w)){ # wacc:
-
-    value <- (sens * sens.w) + (spec * (1 - sens.w))
-    names(value) <- "wacc"
-
-  } else { # bacc:
-
-    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
-    names(value) <- "bacc"
-
-  }
-
-  return(value)
-
-} # get_bacc_wacc().
-
-# # Check:
-# get_bacc_wacc(1, .80, .500)
-# get_bacc_wacc(1, .80, .501)
-# get_bacc_wacc(1, .80, 0)
-
-
-
-# get_lhs_formula: ------
-
-# Goal: Get criterion variable from formula (and verify formula).
-
-get_lhs_formula <- function(formula){
-
-  # Verify formula:
-  testthat::expect_true(!is.null(formula), info = "formula is NULL")
-  testthat::expect_type(formula, type = "language")
-
-  # Main:
-  lhs_name <- paste(formula)[2]
-
-  # Output:
-  return(lhs_name)
-
-} # get_lhs_formula().
-
-
-
-
-
-# (2) Applying or computing stuff: ------
+# (1) Applying or computing stuff: ------
 
 
 # apply_break: ------
@@ -219,7 +141,6 @@ cost_cues_append <- function(formula,
 
 # fact_clean: ------
 
-
 #' Clean factor variables in prediction data
 #'
 #' @param data.train A training dataset
@@ -277,21 +198,80 @@ fact_clean <- function(data.train,
 
 
 
-# select_best_tree: ------
+# (2) Enabling stuff: ------
+
+
+# enable_wacc: ------
+
+# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
+
+# The argument sens.w_epsion provides a threshold value:
+# Minimum required difference from the sens.w default value (sens.w = 0.50).
+
+# Output: Boolean value.
+
+enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
+
+  out <- FALSE
+
+  if (abs(sens.w - .50) >= sens.w_epsilon){
+    out <- TRUE
+  }
+
+  return(out)
+
+} # enable_wacc().
+
+
+
+# (3) Getting stuff: ------
+
+
+# get_bacc_wacc: ------
+
+# Obtain either bacc or wacc (for displays in print and plot functions).
+# Output: Named vector (with name specifying the current type of measure).
+
+get_bacc_wacc <- function(sens, spec,  sens.w){
+
+  if (enable_wacc(sens.w)){ # wacc:
+
+    value <- (sens * sens.w) + (spec * (1 - sens.w))
+    names(value) <- "wacc"
+
+  } else { # bacc:
+
+    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+    names(value) <- "bacc"
+
+  }
+
+  return(value)
+
+} # get_bacc_wacc().
+
+# # Check:
+# get_bacc_wacc(1, .80, .500)
+# get_bacc_wacc(1, .80, .501)
+# get_bacc_wacc(1, .80, 0)
+
+
+
+# get_best_tree: ------
 
 #' Select the best tree (from current set of FFTs)
 #'
-#' \code{select_best_tree} selects (looks up and identifies) the best tree
+#' \code{get_best_tree} selects (looks up and identifies) the best tree (as an integer)
 #' from the set (or \dQuote{fan}) of FFTs contained in the current \code{FFTrees} object \code{x},
 #' an existing type of \code{data} ('train' or 'test'), and
 #' a \code{goal} for which corresponding statistics are available
 #' in the designated \code{data} type (in \code{x$trees$stats}).
 #'
-#' Importantly, \code{select_best_tree} only identifies and selects from the set of
-#' \emph{existing} trees with known statistics,
+#' Importantly, \code{get_best_tree} only identifies and selects the `tree` identifier
+#' (as an integer) from the set of \emph{existing} trees with known statistics,
 #' rather than creating new trees or computing new cue thresholds.
-#' More specifically, \code{goal} is used for identifying and selecting the best of
-#' an existing set of FFTs, but not for
+#' More specifically, \code{goal} is used for identifying and selecting the `tree`
+#' identifier (as an integer) of the best FFT from an existing set of FFTs, but not for
 #' computing new cue thresholds (see \code{goal.threshold} and \code{fftrees_cuerank()}) or
 #' creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
 #'
@@ -310,11 +290,11 @@ fact_clean <- function(data.train,
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-select_best_tree <- function(x,
-                             data,
-                             goal,
-                             my.goal.max = TRUE  # Default direction for my.goal: maximize (ToDo: currently not set anywhere)
-                             ){
+get_best_tree <- function(x,
+                          data,
+                          goal,
+                          my.goal.max = TRUE  # Default direction for my.goal: maximize (ToDo: currently not set anywhere)
+){
 
   # Verify inputs: ------
 
@@ -412,12 +392,31 @@ select_best_tree <- function(x,
 
   return(tree) # as integer
 
-} # select_best_tree().
+} # get_best_tree().
 
 
 
+# get_lhs_formula: ------
 
-# (3) Strings or quotes: ------
+# Goal: Get criterion variable from formula (and verify formula).
+
+get_lhs_formula <- function(formula){
+
+  # Verify formula:
+  testthat::expect_true(!is.null(formula), info = "formula is NULL")
+  testthat::expect_type(formula, type = "language")
+
+  # Main:
+  lhs_name <- paste(formula)[2]
+
+  # Output:
+  return(lhs_name)
+
+} # get_lhs_formula().
+
+
+
+# (4) Strings or quotes: ------
 
 
 # add_quotes: ------
@@ -441,7 +440,8 @@ exit_word <- function(data){
 
 
 
-# (4) FFTrees package: ------
+# (5) FFTrees package: ------
+
 
 #' \code{FFTrees} package.
 #'
@@ -464,6 +464,6 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 # ToDo: ------
 
-# - Arrange and group helper functions into categories.
+# - etc.
 
 # eof.

@@ -55,30 +55,30 @@ fftrees_ranktrees <- function(x,
 
   if (data == "train"){
 
-  # Training stats:
-  x$trees$stats$train <- x$trees$stats$train %>%
-    dplyr::left_join(tree_rank_df, by = "tree") %>%
-    dplyr::select(-tree) %>%
-    dplyr::rename(tree = tree_new) %>%
-    dplyr::select(tree, dplyr::everything()) %>%
-    dplyr::arrange(tree) %>%
-    tibble::as_tibble()
+    # Training stats:
+    x$trees$stats$train <- x$trees$stats$train %>%
+      dplyr::left_join(tree_rank_df, by = "tree") %>%
+      dplyr::select(-tree) %>%
+      dplyr::rename(tree = tree_new) %>%
+      dplyr::select(tree, dplyr::everything()) %>%
+      dplyr::arrange(tree) %>%
+      tibble::as_tibble()
 
-  # Training level_stats:
-  x$trees$level_stats$train <- x$trees$level_stats$train %>%
-    dplyr::left_join(tree_rank_df, by = "tree") %>%
-    dplyr::select(-tree) %>%
-    dplyr::rename(tree = tree_new) %>%
-    dplyr::select(tree, dplyr::everything()) %>%
-    dplyr::arrange(tree, level) %>%
-    tibble::as_tibble()
+    # Training level_stats:
+    x$trees$level_stats$train <- x$trees$level_stats$train %>%
+      dplyr::left_join(tree_rank_df, by = "tree") %>%
+      dplyr::select(-tree) %>%
+      dplyr::rename(tree = tree_new) %>%
+      dplyr::select(tree, dplyr::everything()) %>%
+      dplyr::arrange(tree, level) %>%
+      tibble::as_tibble()
 
-  # Training decisions:
-  x$trees$decisions$train <- x$trees$decisions$train[tree_rank_df$tree]
-  names(x$trees$decisions$train) <- paste0("tree_", 1:nrow(tree_rank_df))
+    # Training decisions:
+    x$trees$decisions$train <- x$trees$decisions$train[tree_rank_df$tree]
+    names(x$trees$decisions$train) <- paste0("tree_", 1:nrow(tree_rank_df))
 
-  # Get and set value of best training tree:
-  x$trees$best$train <- select_best_tree(x, data = "train", goal = x$params$goal)
+    # Get and set value of best training tree:
+    x$trees$best$train <- get_best_tree(x, data = "train", goal = x$params$goal)
 
   } # if (data == "train").
 

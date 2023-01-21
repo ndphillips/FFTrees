@@ -108,7 +108,7 @@ print.FFTrees <- function(x = NULL,
     }
 
     # tree <- x$trees$best$train  # using current x
-    tree <- select_best_tree(x, data = "train", goal = x$params$goal)  # using helper
+    tree <- get_best_tree(x, data = "train", goal = x$params$goal)  # using helper
   }
 
   if (tree == "best.test") {
@@ -120,7 +120,7 @@ print.FFTrees <- function(x = NULL,
     }
 
     # tree <- x$trees$best$test  # using current x
-    tree <- select_best_tree(x, data = "test", goal = x$params$goal)  # using helper
+    tree <- get_best_tree(x, data = "test", goal = x$params$goal)  # using helper
   }
 
 

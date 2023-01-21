@@ -393,9 +393,9 @@ fftrees_apply <- function(x,
   # Update best tree IDs: ----
 
   if (mydata == "train"){
-    x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
+    x$trees$best$train <- get_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
-    x$trees$best$test <- select_best_tree(x, data = mydata, goal = x$params$goal)
+    x$trees$best$test <- get_best_tree(x, data = mydata, goal = x$params$goal)
   }
 
 
