@@ -445,6 +445,7 @@ showcues <- function(x = NULL,
 
 # ToDo: ------
 
+# - Rename showcues() to plot_cues()?
 # - Allow setting and using color palette again (for top cues)?
 
 # eof.
