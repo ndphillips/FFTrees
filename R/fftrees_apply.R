@@ -174,6 +174,8 @@ fftrees_apply <- function(x,
 
     # NEW code end. ----
 
+    # +++ here now +++
+
     # # OLD code start: ----
     #
     # # Extract definition of current tree:
@@ -191,9 +193,6 @@ fftrees_apply <- function(x,
     # if (!all.equal(exit_o, exit_v)) { stop("exit diff") }
     #
     # # OLD code end. ----
-
-    # +++ here now +++
-
 
 
     # Verify current tree definition:
