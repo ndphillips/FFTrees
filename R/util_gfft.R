@@ -21,9 +21,9 @@
 #
 # Output: A definition of 1 FFT with 1 row per node (as df).
 
-# Similar code is currently used to extract individual trees
-# - in fftrees_apply()
-# - in fftrees_ffttowords()
+# Currently used to extract individual trees in
+# - fftrees_apply()
+# - fftrees_ffttowords()
 
 read_fft_df <- function(ffts, tree = 1){
 
@@ -150,6 +150,8 @@ write_fft_df <- function(fft, tree = 101){
 #   print(paste0("\u2014 tree id = ", id, ": ", check))
 #
 # } # loop, qed.
+
+
 
 
 # ToDo: ------
