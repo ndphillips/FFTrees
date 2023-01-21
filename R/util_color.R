@@ -1,4 +1,4 @@
-# helper_colors.R:
+# util_color.R:
 # Color-related auxiliary/utility functions.
 # ------------------------------------------
 

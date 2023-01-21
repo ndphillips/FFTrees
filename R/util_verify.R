@@ -1,4 +1,4 @@
-# helper_verify.R:
+# util_verify.R:
 # Verification helpers/utility functions.
 # ---------------------------------------
 

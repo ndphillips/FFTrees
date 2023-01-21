@@ -1,10 +1,12 @@
-# helper.R:
+# util_abc.R:
 # Miscellaneous auxiliary/utility functions.
 # ------------------------------------------
 
-# General/miscellaneous helper functions:
+# General/miscellaneous helper functions
+# (grouped into loose categories).
 
-# (1) Applying or computing stuff: ------
+
+# (A) Applying or computing stuff: ------
 
 
 # apply_break: ------
@@ -198,7 +200,8 @@ fact_clean <- function(data.train,
 
 
 
-# (2) Enabling stuff: ------
+
+# (B) Enabling stuff: ------
 
 
 # enable_wacc: ------
@@ -224,7 +227,8 @@ enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
 
 
 
-# (3) Getting stuff: ------
+
+# (C) Getting stuff: ------
 
 
 # get_bacc_wacc: ------
@@ -445,7 +449,8 @@ get_lhs_formula <- function(formula){
 
 
 
-# (4) Strings or quotes: ------
+
+# (D) Strings or quotes: ------
 
 
 # add_quotes: ------
@@ -469,7 +474,8 @@ exit_word <- function(data){
 
 
 
-# (5) FFTrees package: ------
+
+# (E) FFTrees package: ------
 
 
 #' \code{FFTrees} package.

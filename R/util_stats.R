@@ -1,4 +1,4 @@
-# helper_stats.R:
+# util_stats.R:
 # Statistical helper/utility functions.
 # -------------------------------------
 
