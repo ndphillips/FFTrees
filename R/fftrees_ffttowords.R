@@ -54,12 +54,22 @@ fftrees_ffttowords <- function(x = NULL,
                                mydata = "train",
                                digits = 2) {
 
-
   # Simplify: ----
 
   # Extract key parts from FFTrees object x:
   n_trees <- x$trees$n
-  tree_df <- x$trees$definitions  # (definitions are df)
+
+  # tree_df <- x$trees$definition  # df (from object x)
+  tree_df <- get_fft_definitions(x = x)  # df (using helper fn)
+  # print(tree_df)  # 4debugging
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    msg <- paste0("Aiming to express FFTs in words:\n")
+    cat(u_f_ini(msg))
+  }
+
 
   # Prepare: ----
 
@@ -78,16 +88,48 @@ fftrees_ffttowords <- function(x = NULL,
 
     # print(paste0("tree ", tree_i, ":"))  # 4debugging
 
-    # Extract definition of current tree:
-    classes_v    <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
-    cues_v       <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
-    directions_v <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
-    thresholds_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
-    exits_v      <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
+    # NEW code start: ----
+
+    # Get ID of tree_df$tree for tree_i value (to consider all trees in turn):
+    tree_i_id <- tree_df$tree[tree_i]
+    print(paste0("\u2014 Current tree_i = ", tree_i, " corresponds to tree_i_id = ", tree_i_id)) # 4debugging
+
+    # Read FFT definition (with 1 row per tree) into df (with 1 row per node):
+    cur_fft_df <- read_fft_df(ffts = tree_df, tree = tree_i_id)
+
+    # Columns of cur_fft_df (as vectors):
+    class_v     <- cur_fft_df$classes
+    cue_v       <- cur_fft_df$cues
+    direction_v <- cur_fft_df$directions
+    threshold_v <- cur_fft_df$thresholds
+    exit_v      <- cur_fft_df$exits
+
+    # NEW code end. ----
+
+    # +++ here now +++
+
+    # # OLD code start: ----
+    #
+    # # Extract definition of current tree:
+    # class_o     <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
+    # cue_o       <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
+    # direction_o <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
+    # threshold_o <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
+    # exit_o      <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
+    #
+    # # Verify equality of OLD and NEW code results:
+    # if (!all.equal(class_o, class_v)) { stop("class diff") }
+    # if (!all.equal(cue_o, cue_v)) { stop("cue diff") }
+    # if (!all.equal(direction_o, direction_v)) { stop("direction diff") }
+    # if (!all.equal(threshold_o, threshold_v)) { stop("threshold diff") }
+    # if (!all.equal(exit_o, exit_v)) { stop("exit diff") }
+    #
+    # # OLD code end. ----
+
 
     decision.labels <- x$params$decision.labels  # (Note: keep "." naming, as in list x)
 
-    n_nodes <- length(cues_v)
+    n_nodes <- length(cue_v)
 
     sentences_v <- c()
 
@@ -96,30 +138,30 @@ fftrees_ffttowords <- function(x = NULL,
 
     for (i in 1:n_nodes) {
 
-      exits_i <- paste(exits_v[i])
+      exit_i <- paste(exit_v[i])
 
       # 1. Non-final nodes: ----
 
-      if (exits_i %in% c("0", "1")) {
+      if (exit_i %in% c("0", "1")) {
 
         # a. Node with positive exit:
-        if (exits_i == "1") {
+        if (exit_i == "1") {
 
-          if (classes_v[i] %in% c("c", "l")) {
+          if (class_v[i] %in% c("c", "l")) {
 
             sentence_i <- paste0(
-              "If ", cues_v[i], " ", directions_v[i], " {", thresholds_v[i],
+              "If ", cue_v[i], " ", direction_v[i], " {", threshold_v[i],
               "}, ", exit_word, " ", decision.labels[2], ".")
 
           }
 
-          if (classes_v[i] %in% c("n", "i")) {
-            threshold_i <- thresholds_v[i]
+          if (class_v[i] %in% c("n", "i")) {
+            threshold_i <- threshold_v[i]
 
-            threshold_i <- round(as.numeric(thresholds_v[i]), 2)
+            threshold_i <- round(as.numeric(threshold_v[i]), 2)
 
             sentence_i <- paste0(
-              "If ", cues_v[i], " ", directions_v[i], " ", threshold_i,
+              "If ", cue_v[i], " ", direction_v[i], " ", threshold_i,
               ", ", exit_word, " ", decision.labels[2], ".")
           }
 
@@ -127,10 +169,10 @@ fftrees_ffttowords <- function(x = NULL,
 
 
         # b. Node with negative exit:
-        if (exits_i == "0") {
+        if (exit_i == "0") {
 
           # Negate the direction:
-          direction_i <- switch(directions_v[i],
+          direction_i <- switch(direction_v[i],
                                 "=" = "!=",
                                 "!=" = "=",
                                 ">" = "<=",
@@ -139,21 +181,21 @@ fftrees_ffttowords <- function(x = NULL,
                                 "<=" = ">"
           )
 
-          if (classes_v[i] %in% c("c", "l")) {
+          if (class_v[i] %in% c("c", "l")) {
 
             sentence_i <- paste0(
-              "If ", cues_v[i], " ", direction_i, " {", thresholds_v[i], "}, ",
+              "If ", cue_v[i], " ", direction_i, " {", threshold_v[i], "}, ",
               exit_word, " ", decision.labels[1], ".")
 
           }
 
-          if (classes_v[i] %in% c("n", "i")) {
+          if (class_v[i] %in% c("n", "i")) {
 
-            threshold_i <- thresholds_v[i]
-            threshold_i <- round(as.numeric(thresholds_v[i]), 2)
+            threshold_i <- threshold_v[i]
+            threshold_i <- round(as.numeric(threshold_v[i]), 2)
 
             sentence_i <- paste0(
-              "If ", cues_v[i], " ", direction_i, " ", threshold_i,
+              "If ", cue_v[i], " ", direction_i, " ", threshold_i,
               ", ", exit_word, " ", decision.labels[1], ".")
 
           }
@@ -167,12 +209,12 @@ fftrees_ffttowords <- function(x = NULL,
 
       # 2. Final nodes: ----
 
-      if (exits_i %in% c(".5", "0.5", "0.50", "0.500")) {
+      if (exit_i %in% c(".5", "0.5", "0.50", "0.500")) {
 
-        direction_pos_i <- directions_v[i]
+        direction_pos_i <- direction_v[i]
 
         # # Negate direction:
-        # direction_neg_i <- switch(directions_v[i],
+        # direction_neg_i <- switch(direction_v[i],
         #                           "=" = "!=",
         #                           "!=" = "=",
         #                           ">" = "<=",
@@ -183,11 +225,11 @@ fftrees_ffttowords <- function(x = NULL,
 
         # REMOVED, as negation is only indicated if left exit == decision.labels[2]!
 
-        if (classes_v[i] %in% c("c", "l")) {
+        if (class_v[i] %in% c("c", "l")) {
 
           # # Negative directions (FALSE cases first):
           # sentence_i_1 <- paste0(
-          #   "If ", cues_v[i], " ", direction_neg_i, " {", thresholds_v[i], "}, decide ",
+          #   "If ", cue_v[i], " ", direction_neg_i, " {", threshold_v[i], "}, decide ",
           #   decision.labels[1], "") # FALSE cases
           #
           # sentence_i_2 <- paste0(
@@ -196,7 +238,7 @@ fftrees_ffttowords <- function(x = NULL,
 
           # Positive directions (TRUE cases first):
           sentence_i_1 <- paste0(
-            "If ", cues_v[i], " ", direction_pos_i, " {", thresholds_v[i], "}, ",
+            "If ", cue_v[i], " ", direction_pos_i, " {", threshold_v[i], "}, ",
             exit_word, " ", decision.labels[2], "") # TRUE cases/right
 
           sentence_i_2 <- paste0(
@@ -205,14 +247,14 @@ fftrees_ffttowords <- function(x = NULL,
 
         }
 
-        if (classes_v[i] %in% c("n", "i")) {
+        if (class_v[i] %in% c("n", "i")) {
 
-          threshold_i <- thresholds_v[i]
-          threshold_i <- round(as.numeric(thresholds_v[i]), digits)
+          threshold_i <- threshold_v[i]
+          threshold_i <- round(as.numeric(threshold_v[i]), digits)
 
           # # Negative directions (FALSE cases first):
           # sentence_i_1 <- paste0(
-          #   "If ", cues_v[i], " ", direction_neg_i, " ", thresholds_v[i],
+          #   "If ", cue_v[i], " ", direction_neg_i, " ", threshold_v[i],
           #   ", decide ", decision.labels[1], "") # FALSE cases
           #
           # sentence_i_2 <- paste0(
@@ -221,7 +263,7 @@ fftrees_ffttowords <- function(x = NULL,
 
           # Positive directions (TRUE cases first):
           sentence_i_1 <- paste0(
-            "If ", cues_v[i], " ", direction_pos_i, " ", thresholds_v[i],
+            "If ", cue_v[i], " ", direction_pos_i, " ", threshold_v[i],
             ", ", exit_word, " ", decision.labels[2], "") # TRUE cases/right
 
           sentence_i_2 <- paste0(
@@ -246,6 +288,14 @@ fftrees_ffttowords <- function(x = NULL,
     x$trees$inwords[[tree_i]] <- sentences_v
 
   } # outer Loop 1: for (tree_i).
+
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    msg <- paste0("Successfully expressed FFTs in words.\n")
+    cat(u_f_fin(msg))
+  }
 
 
   # Output: ----

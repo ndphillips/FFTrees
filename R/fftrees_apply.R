@@ -78,8 +78,10 @@ fftrees_apply <- function(x,
 
   # Extract key parts from FFTrees object x:
   n_trees <- x$trees$n
-  tree_df <- x$trees$definition  # (as df)
+  # tree_df <- x$trees$definition  # df (from object x)
+  tree_df <- get_fft_definitions(x = x)  # df (using helper fn)
   # print(tree_df)  # 4debugging
+
 
   # Setup outputs: ------
 
@@ -154,14 +156,47 @@ fftrees_apply <- function(x,
 
     # print(paste0("tree ", tree_i, ":"))  # 4debugging
 
-    # Extract definition of current tree:
-    cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
-    class_v <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
-    exit_v  <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
-    threshold_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
-    direction_v <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
+    # NEW code start: ----
 
-    # Verify current tree definition: +++ here now +++
+    # Get ID of tree_df$tree for tree_i value (to consider all trees in turn):
+    tree_i_id <- tree_df$tree[tree_i]
+    # print(paste0("\u2014 Current tree_i = ", tree_i, " corresponds to tree_i_id = ", tree_i_id)) # 4debugging
+
+    # Read FFT definition (with 1 row per tree) into df (with 1 row per node):
+    cur_fft_df <- read_fft_df(ffts = tree_df, tree = tree_i_id)
+
+    # Columns of cur_fft_df (as vectors):
+    class_v     <- cur_fft_df$classes
+    cue_v       <- cur_fft_df$cues
+    direction_v <- cur_fft_df$directions
+    threshold_v <- cur_fft_df$thresholds
+    exit_v      <- cur_fft_df$exits
+
+    # NEW code end. ----
+
+    # # OLD code start: ----
+    #
+    # # Extract definition of current tree:
+    # class_o     <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
+    # cue_o       <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
+    # direction_o <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
+    # threshold_o <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
+    # exit_o      <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
+    #
+    # # Verify equality of OLD and NEW code results:
+    # if (!all.equal(class_o, class_v)) { stop("class diff") }
+    # if (!all.equal(cue_o, cue_v)) { stop("cue diff") }
+    # if (!all.equal(direction_o, direction_v)) { stop("direction diff") }
+    # if (!all.equal(threshold_o, threshold_v)) { stop("threshold diff") }
+    # if (!all.equal(exit_o, exit_v)) { stop("exit diff") }
+    #
+    # # OLD code end. ----
+
+    # +++ here now +++
+
+
+
+    # Verify current tree definition:
     verify_all_cues_in_data(cue_v, data)  # Do all cues occur (as names) in current data?
 
     level_n <- as.integer(tree_df$nodes[tree_i])
