@@ -4,10 +4,11 @@
 
 # A grammar of FFTs
 #
-# Functions for translating and manipulating FFTs:
+# Functions for converting/translating and editing/manipulating FFTs:
 #
 # A. Tree translation functions for more modular elements.
 # B. Tree manipulation functions for editing individual FFTs.
+
 
 # (0) Constants: ------
 
@@ -166,7 +167,7 @@ write_fft_df <- function(fft, tree = -99L){
   # Output: ----
 
   # Convert df to tibble:
-  fft_in_1_line <- tibble::as_tibble(fft_in_1_line)
+  # fft_in_1_line <- tibble::as_tibble(fft_in_1_line)
 
   return(fft_in_1_line)
 
