@@ -5,18 +5,21 @@
 # A grammar of FFTs:
 # Functions for editing and manipulating FFTs
 
+
 # (A) Tree conversion functions: ------
 
 # Goals: Two translation functions:
 # - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (with 1 row per node),
 # - write: back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
 
+
 # 1. read_fft_df: ------
 
 # Goal: Extract 1 FFT (as df) from multi-line FFT definitions (as df).
 #
 # Inputs:
-# ffts: A set of FFT definitions (as df, from an FFTrees object).
+# ffts: A set of FFT definitions (as df, usually from an FFTrees object,
+#       with suitable variable names to pass verify_fft_definitions()).
 # tree: A tree ID (corresponding to tree in ffts).
 #
 # Output: A definition of 1 FFT with 1 row per node (as df).
@@ -30,7 +33,8 @@ read_fft_df <- function(ffts, tree = 1){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_definition(ffts))
+  testthat::expect_true(verify_fft_definitions(ffts))
+
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
 
@@ -85,10 +89,14 @@ read_fft_df <- function(ffts, tree = 1){
 # read_fft_df(ffts_df, 8)    # yields error
 
 
+
 # 2. write_fft_df: ------
 
 # Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
-# Input: 1 FFT (as df with 1 row per node).
+# Inputs:
+# - fft: A definition of 1 FFT (as df, with 1 row per node,
+#        and suitable variable names to pass verify_fft_components()).
+# - tree: tree ID (as integer).
 # Output: FFT definition in 1 line (as df).
 
 # Similar code is currently used
@@ -100,7 +108,8 @@ write_fft_df <- function(fft, tree = 101){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(is.data.frame(fft))
+  testthat::expect_true(verify_fft_components(fft))
+
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
 
@@ -109,7 +118,7 @@ write_fft_df <- function(fft, tree = 101){
 
   nodes_n <- nrow(fft)
 
-  line_of_ffts <- data.frame(
+  fft_in_1_line <- data.frame(
     tree       = as.integer(tree),
     nodes      = nodes_n,
     classes    = paste(fft$classes, collapse = ";"),
@@ -122,10 +131,10 @@ write_fft_df <- function(fft, tree = 101){
 
   # Output: ----
 
-  # Convert to tibble:
-  line_of_ffts <- tibble::as_tibble(line_of_ffts)
+  # Convert df to tibble:
+  fft_in_1_line <- tibble::as_tibble(fft_in_1_line)
 
-  return(line_of_ffts)
+  return(fft_in_1_line)
 
 } # write_fft_df().
 
@@ -136,6 +145,7 @@ write_fft_df <- function(fft, tree = 101){
 # write_fft_df(fft_df, tree = 123)
 
 
+# # Check:
 # # Verify that read_fft_df() and write_fft_df() are complementary functions:
 #
 # # Show that:

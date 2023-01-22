@@ -415,7 +415,7 @@ get_fft_definitions <- function(x){
   x_tree_df <- x$trees$definitions  # definitions (as df/tibble)
 
   # verify:
-  if (verify_fft_definition(x_tree_df)){
+  if (verify_fft_definitions(x_tree_df)){
 
     return(x_tree_df)
 
