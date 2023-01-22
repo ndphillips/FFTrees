@@ -149,9 +149,9 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # 3. exits.v: ----
+  # 3. exits_v: ----
   {
-    exits.v <- unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
+    exits_v <- unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
 
       y <- unlist(strsplit(node_sentence, " "))
 
@@ -183,7 +183,7 @@ fftrees_wordstofftrees <- function(x,
 
     }))
 
-    # print(exits.v)  # 4debugging
+    # print(exits_v)  # 4debugging
   }
 
   # 4. thresholds_v: ----
@@ -256,7 +256,7 @@ fftrees_wordstofftrees <- function(x,
     directions_v <- directions_df$directions_f[match(directions_v, table = directions_df$directions)]
 
     # If any directions are 0, flip their direction:
-    flip_direction_log <- (exits.v == 0)
+    flip_direction_log <- (exits_v == 0)
 
     directions_v[flip_direction_log] <- directions_df$negations[match(directions_v[flip_direction_log], table = directions_df$directions)]
 
@@ -264,7 +264,7 @@ fftrees_wordstofftrees <- function(x,
 
   # Set final exit to .5: ----
 
-  exits.v[nodes_n] <- ".5"
+  exits_v[nodes_n] <- ".5"
 
 
   # Save result in x$trees$definitions (1 line, as df): ----
@@ -276,7 +276,7 @@ fftrees_wordstofftrees <- function(x,
     cues       = paste(cues_v, collapse = ";"),
     directions = paste(directions_v, collapse = ";"),
     thresholds = paste(thresholds_v, collapse = ";"),
-    exits      = paste(exits.v, collapse = ";"),
+    exits      = paste(exits_v, collapse = ";"),
     stringsAsFactors = FALSE
   )
 
