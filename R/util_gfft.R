@@ -64,18 +64,22 @@ read_fft_df <- function(ffts, tree = 1){
   thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, ";")))
   exits      <- trimws(unlist(strsplit(cur_fft$exits, ";")))
 
-  # Verify that all element lengths correspond to n_nodes:
+
+  # Verify that the vector lengths (of tree definition parts) correspond to n_nodes:
   v_lengths <- sapply(list(classes, cues, directions, thresholds, exits), FUN = length)
-  if (!all(v_lengths == n_nodes)) {
+
+  if (!all(v_lengths == n_nodes)) { # note error:
 
     # Determine vectors with lengths differing from n_nodes:
     req_tvec_names <- c("classes", "cues", "directions", "thresholds", "exits")  # [mostly plural]
-    req_tvec_na_ix <- (length(classes, cues, directions, thresholds, exits) != n_nodes)
+    req_tvec_na_ix <- v_lengths != n_nodes
     req_tvec_diffs <- paste(req_tvec_names[req_tvec_na_ix], collapse = ", ")
 
-    msg <- paste0("Some FFT definition lengths differ from n_nodes = ", n_nodes, ": ", req_tvec_diffs)
+    msg <- paste0("The lengths of some FFT definition parts differ from n_nodes = ", n_nodes, ": ", req_tvec_diffs)
     stop(msg)
-    }
+
+  }
+
 
   # Create 1 FFT (as df):
   fft <- data.frame(class = classes,
@@ -109,6 +113,7 @@ read_fft_df <- function(ffts, tree = 1){
 
 # 2. write_fft_df: ------
 
+
 # Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
 # Inputs:
 # - fft: A definition of 1 FFT (as df, with 1 row per node,
@@ -116,8 +121,8 @@ read_fft_df <- function(ffts, tree = 1){
 # - tree: tree ID (as integer).
 # Output: FFT definition in 1 line (as df).
 
-# Similar code is currently used
-# - at the end of fftrees_grow_fan()
+# Code is currently used at the end of
+# - fftrees_grow_fan()  +++ here now +++
 # - at the end of fftrees_wordstofftrees()
 
 write_fft_df <- function(fft, tree = 101){
