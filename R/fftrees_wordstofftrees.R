@@ -273,18 +273,18 @@ fftrees_wordstofftrees <- function(x,
 
   # OLD code start: ----
 
-  # my_col_sep <- ";"  # (local constant)
+  # fft_node_sep <- ";"  # (local constant)
 
   my_tree_def_o <- data.frame(
     # Add. variables:
     tree       = 1L,
     nodes      = nodes_n,
     # Key variables of fft (all plural):
-    classes    = paste(classes_v,    collapse = my_col_sep),
-    cues       = paste(cues_v,       collapse = my_col_sep),
-    directions = paste(directions_v, collapse = my_col_sep),
-    thresholds = paste(thresholds_v, collapse = my_col_sep),
-    exits      = paste(exits_v,      collapse = my_col_sep),
+    classes    = paste(classes_v,    collapse = fft_node_sep),
+    cues       = paste(cues_v,       collapse = fft_node_sep),
+    directions = paste(directions_v, collapse = fft_node_sep),
+    thresholds = paste(thresholds_v, collapse = fft_node_sep),
+    exits      = paste(exits_v,      collapse = fft_node_sep),
     #
     stringsAsFactors = FALSE
   )

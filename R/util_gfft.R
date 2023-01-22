@@ -11,7 +11,7 @@
 
 # (0) Constants: ------
 
-my_col_sep <- ";"  # (global constant)
+fft_node_sep <- ";"  # (global constant)
 
 
 # (A) Tree conversion/translation functions: ------
@@ -57,18 +57,18 @@ read_fft_df <- function(ffts, tree = 1){
   # print(cur_fft)  # 4debugging
 
   # Key values:
-  # my_col_sep <- ";"  # (local constant)
+  # fft_node_sep <- ";"  # (local constant)
   n_nodes <- cur_fft$nodes
 
 
   # Main: ----
 
   # Extract elements of definition (as vectors):
-  classes    <- trimws(unlist(strsplit(cur_fft$classes,    my_col_sep)))
-  cues       <- trimws(unlist(strsplit(cur_fft$cues,       my_col_sep)))
-  directions <- trimws(unlist(strsplit(cur_fft$directions, my_col_sep)))
-  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, my_col_sep)))
-  exits      <- trimws(unlist(strsplit(cur_fft$exits,      my_col_sep)))
+  classes    <- trimws(unlist(strsplit(cur_fft$classes,    fft_node_sep)))
+  cues       <- trimws(unlist(strsplit(cur_fft$cues,       fft_node_sep)))
+  directions <- trimws(unlist(strsplit(cur_fft$directions, fft_node_sep)))
+  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, fft_node_sep)))
+  exits      <- trimws(unlist(strsplit(cur_fft$exits,      fft_node_sep)))
 
 
   # Verify that the vector lengths (of tree definition parts) correspond to n_nodes:
@@ -143,7 +143,7 @@ write_fft_df <- function(fft, tree = -99L){
 
 
   # Key values:
-  # my_col_sep <- ";"  # (local constant)
+  # fft_node_sep <- ";"  # (local constant)
   nodes_n <- nrow(fft)
 
 
@@ -154,11 +154,11 @@ write_fft_df <- function(fft, tree = -99L){
     tree       = as.integer(tree),
     nodes      = as.integer(nodes_n),
     # Key variables of fft (all plural):
-    classes    = paste(substr(fft$class, 1, 1), collapse = my_col_sep),
-    cues       = paste(fft$cue,                 collapse = my_col_sep),
-    directions = paste(fft$direction,           collapse = my_col_sep),
-    thresholds = paste(fft$threshold,           collapse = my_col_sep),
-    exits      = paste(fft$exit,                collapse = my_col_sep),
+    classes    = paste(substr(fft$class, 1, 1), collapse = fft_node_sep),
+    cues       = paste(fft$cue,                 collapse = fft_node_sep),
+    directions = paste(fft$direction,           collapse = fft_node_sep),
+    thresholds = paste(fft$threshold,           collapse = fft_node_sep),
+    exits      = paste(fft$exit,                collapse = fft_node_sep),
     #
     stringsAsFactors = FALSE
   )
