@@ -269,18 +269,55 @@ fftrees_wordstofftrees <- function(x,
 
   # Save result in x$trees$definitions (1 line, as df): ----
 
-  x$trees$definitions <- data.frame(
+
+
+  # OLD code start: ----
+
+  my_col_sep <- ";"  # (constant)
+
+  my_tree_def_o <- data.frame(
+    # Add. variables:
     tree       = 1L,
     nodes      = nodes_n,
-    classes    = paste(classes_v, collapse = ";"),
-    cues       = paste(cues_v, collapse = ";"),
-    directions = paste(directions_v, collapse = ";"),
-    thresholds = paste(thresholds_v, collapse = ";"),
-    exits      = paste(exits_v, collapse = ";"),
+    # Key variables of fft (all plural):
+    classes    = paste(classes_v,    collapse = my_col_sep),
+    cues       = paste(cues_v,       collapse = my_col_sep),
+    directions = paste(directions_v, collapse = my_col_sep),
+    thresholds = paste(thresholds_v, collapse = my_col_sep),
+    exits      = paste(exits_v,      collapse = my_col_sep),
+    #
     stringsAsFactors = FALSE
   )
+  # print(my_tree_def_o)  # 4debugging
 
-  x$trees$n <- 1
+  # OLD code end. ----
+
+  # +++ here now +++:
+
+  # NEW code start: ----
+
+  fft_df <- data.frame(class = classes_v,
+                       cue = cues_v,
+                       direction = directions_v,
+                       threshold = thresholds_v,
+                       exit = exits_v,
+                       #
+                       stringsAsFactors = FALSE
+  )
+
+  my_tree_def <- as.data.frame(write_fft_df(fft = fft_df, tree = 1L))
+  # print(my_tree_def)  # 4debugging
+
+  # NEW code end. ----
+
+
+  # Check: Verify equality of OLD and NEW code results:
+  if (!all.equal(my_tree_def, my_tree_def_o)) { stop("OLD vs. NEW: my_tree_def diff") }
+
+
+  # Modify object x:
+  x$trees$definitions <- my_tree_def
+  x$trees$n <- 1L
 
 
   # Provide user feedback: ----
