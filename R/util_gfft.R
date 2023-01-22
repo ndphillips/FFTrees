@@ -48,8 +48,11 @@ read_fft_df <- function(ffts, tree = 1){
 
   # Main: ----
 
+  # print(ffts)  # 4debugging
+
   # Get 1 line by tree ID (ffts may be unsorted):
   cur_fft <- ffts[(ffts$tree == tree), ]
+  # print(cur_fft)  # 4debugging
 
   # Get elements:
   n_nodes <- cur_fft$nodes
@@ -63,7 +66,16 @@ read_fft_df <- function(ffts, tree = 1){
 
   # Verify that all element lengths correspond to n_nodes:
   v_lengths <- sapply(list(classes, cues, directions, thresholds, exits), FUN = length)
-  if (!all(n_nodes == v_lengths)) { stop("Some FFT element length(s) differ from N of nodes") }
+  if (!all(v_lengths == n_nodes)) {
+
+    # Determine vectors with lengths differing from n_nodes:
+    req_tvec_names <- c("classes", "cues", "directions", "thresholds", "exits")  # [mostly plural]
+    req_tvec_na_ix <- (length(classes, cues, directions, thresholds, exits) != n_nodes)
+    req_tvec_diffs <- paste(req_tvec_names[req_tvec_na_ix], collapse = ", ")
+
+    msg <- paste0("Some FFT definition lengths differ from n_nodes = ", n_nodes, ": ", req_tvec_diffs)
+    stop(msg)
+    }
 
   # Create 1 FFT (as df):
   fft <- data.frame(class = classes,
