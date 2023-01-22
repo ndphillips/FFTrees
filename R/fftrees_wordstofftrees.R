@@ -305,7 +305,7 @@ fftrees_wordstofftrees <- function(x,
                        stringsAsFactors = FALSE
   )
 
-  my_tree_def <- as.data.frame(write_fft_df(fft = fft_df, tree = 1L))
+  my_tree_def <- write_fft_df(fft = fft_df, tree = 1L)
   # print(my_tree_def)  # 4debugging
 
   # NEW code end. ----
