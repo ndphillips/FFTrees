@@ -225,7 +225,7 @@ verify_tree_arg <- function(x, data, tree){
 verify_fft_definitions <- function(fft_defs){
 
   # verify fft_defs:
-  testthat::expect_true(is.data.frame(fft_defs), info = "Input fft_defs is not a data.frame")
+  testthat::expect_true(is.data.frame(fft_defs), info = "Input fft_defs are not a data.frame")
 
   # verify nrow(fft_defs) > 0:
   if (nrow(fft_defs) < 1){
