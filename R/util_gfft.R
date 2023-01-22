@@ -33,7 +33,7 @@ read_fft_df <- function(ffts, tree = 1){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_definitions(ffts))
+  testthat::expect_true(verify_fft_definitions(ffts)) # verify structure and content
 
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
@@ -108,7 +108,7 @@ write_fft_df <- function(fft, tree = 101){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_components(fft))
+  testthat::expect_true(verify_fft_components(fft)) # verify structure and content
 
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
@@ -119,13 +119,16 @@ write_fft_df <- function(fft, tree = 101){
   nodes_n <- nrow(fft)
 
   fft_in_1_line <- data.frame(
+    # New variables:
     tree       = as.integer(tree),
     nodes      = nodes_n,
+    # Variables from fft:
     classes    = paste(fft$classes, collapse = ";"),
     cues       = paste(fft$cues, collapse = ";"),
     directions = paste(fft$directions, collapse = ";"),
     thresholds = paste(fft$thresholds, collapse = ";"),
     exits      = paste(fft$exits, collapse = ";"),
+    #
     stringsAsFactors = FALSE
   )
 
@@ -143,6 +146,7 @@ write_fft_df <- function(fft, tree = 101){
 # fft_df
 #
 # write_fft_df(fft_df, tree = 123)
+
 
 
 # # Check:
