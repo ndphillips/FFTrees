@@ -1,4 +1,4 @@
-# helper_plots.R:
+# util_plot.R:
 # Auxiliary/utility functions for plots.
 # --------------------------------------
 

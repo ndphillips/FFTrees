@@ -1,294 +1,12 @@
-# helper.R:
+# util_abc.R:
 # Miscellaneous auxiliary/utility functions.
 # ------------------------------------------
 
-# (1) Validating or verifying stuff: ------
+# General/miscellaneous helper functions
+# (grouped into loose categories).
 
-# verify_train_test_data: ------
 
-# Goal: Ensure that train and test data are sufficiently similar (e.g., contain the same variables)
-#       and provide feedback on any existing differences.
-#
-# Currently, it is only verified that both DFs have some cases and
-# contain the SAME names (but the content or order of variables is not checked or altered).
-# Future versions may want to verify that 'test' data is valid, given current FFTs:
-# data fits to FFTs in FFTrees object (i.e., object$trees$definitions) or tree.definitions
-# (e.g., data contains all required variables to create the current FFTs).
-#
-# Output: Boolean.
-
-verify_train_test_data <- function(train_data, test_data){
-
-  # Initialize: ----
-
-  valid <- FALSE
-
-  train_names <- names(train_data)
-  test_names  <- names(test_data)
-
-  train_names_not_in_test <- setdiff(train_names, test_names)
-  test_names_not_in_train <- setdiff(test_names,  train_names)
-
-
-  # Conditions: ----
-
-  if (nrow(train_data) < 1){
-
-    msg <- paste("The 'train' data contains no cases (rows).")
-    warning(msg)
-
-  } else if (nrow(test_data) < 1){
-
-    msg <- paste("The 'test' data contains no cases (rows).")
-    warning(msg)
-
-  } else if (length(train_names_not_in_test) > 0){
-
-    msg <- paste("Some variables occur in 'train' data, but not in 'test' data:",
-                 paste(train_names_not_in_test, collapse = ", "))
-    warning(msg)
-
-  } else if (length(test_names_not_in_train) > 0){
-
-    msg <- paste("Some variables occur in 'test' data, but not in 'train' data:",
-                 paste(test_names_not_in_train, collapse = ", "))
-    warning(msg)
-
-    same_names <- FALSE
-
-  } else { # all tests passed:
-
-    valid <- TRUE
-
-  }
-
-
-  # Output: ----
-
-  return(valid)
-
-} # verify_train_test_data().
-
-# # Check:
-# (df1 <- data.frame(matrix( 1:9,  nrow = 3)))
-# (df2 <- data.frame(matrix(11:22, ncol = 3)))
-# (df3 <- data.frame(matrix(31:45, nrow = 3)))
-# (df0 <- df1[-(1:3), ])
-#
-# # FALSE cases:
-# verify_train_test_data(df0, df1)
-# verify_train_test_data(df1, df0)
-# verify_train_test_data(df1, df3)
-# verify_train_test_data(df3, df1)
-# # TRUE cases:
-# verify_train_test_data(df1, df2)
-# verify_train_test_data(df1, df2[ , 3:1])
-
-
-
-# verify_all_cues_in_data: ------
-
-# Check: Are all current cues (as vector) in current data (as df)?
-
-verify_all_cues_in_data <- function(cues, data){
-
-  # Verify inputs: ----
-
-  testthat::expect_true(length(cues) > 0)
-  testthat::expect_true(is.character(cues), info = "Provided 'cues' are not names (of type 'character')")
-  testthat::expect_true(is.data.frame(data), info = "Provided 'data' are not a data.frame")
-
-  # Initialize: ----
-
-  valid <- FALSE
-  data_names <- names(data)
-
-
-  # Main: ----
-
-  cues_not_in_data <- setdiff(cues, data_names)
-
-  if (length(cues_not_in_data) > 0) {
-
-    msg <- paste("Some cues do not appear in 'data':",
-                 paste(cues_not_in_data, collapse = ", "))
-    warning(msg)
-
-  } else { # all tests passed:
-
-    valid <- TRUE
-
-  }
-
-  # Output: ----
-
-  return(valid)
-
-} # verify_all_cues_in_data().
-
-# Check:
-# verify_all_cues_in_data(NA, titanic)
-# verify_all_cues_in_data(c("age", "chol", "ca", "fbs", "slope"), heart.train)
-# verify_all_cues_in_data(c("fbs", "AGE", " chol ", "XY", "fbs"), heart.train)
-
-
-
-# verify_tree_arg: ------
-
-# Verify AND return a "tree" ARGUMENT from an FFtrees object x, given a data type [to be used in print(x) and plot(x)].
-# Returns either a tree number (as numeric) or "best.train"/"best.test" (as character).
-
-verify_tree_arg <- function(x, data, tree){
-
-  # Verify inputs: ----
-
-  if (!inherits(x, "FFTrees")) {
-    stop("You did not include a valid 'FFTrees' object or specify the tree directly with 'my.tree' or 'tree.definitions'.\nCreate a valid FFTrees object with FFTrees() or by manually specifying an FFT.")
-  }
-
-  # testthat::expect_true(data %in% c("train", "test"))
-  if (!data %in% c("test", "train")){
-    stop("The data must be 'test' or 'train'.")
-  }
-
-  if (inherits(tree, "character")) {
-    tree <- tolower(tree)  # 4robustness
-  }
-
-  if (tree == "best.test" & is.null(x$tree$stats$test)) {
-
-    warning("You asked for the 'best.test' tree, but there are no 'test' data. Used the best tree for 'train' data instead...")
-
-    tree <- "best.train"
-  }
-
-  if (is.numeric(tree) & (tree %in% 1:x$trees$n) == FALSE) {
-
-    stop(paste0("You asked for a tree that does not exist. This object has ", x$trees$n, " trees."))
-  }
-
-  if (inherits(data, "character")) {
-
-    if (data == "test" & is.null(x$trees$stats$test)) {
-
-      stop("You asked for 'test' data, but there are no 'test' data. Consider using data = 'train' instead...")
-    }
-
-    if (tree == "best"){ # handle abbreviation:
-
-      if (data == "train") {
-
-        if (!x$params$quiet) { # user feedback:
-          msg <- paste0("Assuming you want the 'best.train' tree for 'train' data...\n")
-          cat(u_f_hig(msg))
-        }
-
-        tree <- "best.train"
-
-      } else if (data == "test") {
-
-        if (!x$params$quiet) { # user feedback:
-          msg <- paste0("Assuming you want the 'best.test' tree for 'test' data...\n")
-          cat(u_f_hig(msg))
-        }
-
-        tree <- "best.test"
-
-      } else {
-
-        stop("You asked for a 'best' tree, but have not specified 'train' or 'test' data...")
-      }
-    }
-
-  } # if (inherits(data, "character")).
-
-
-  # Output: ----
-
-  return(tree) # (as character OR numeric)
-
-} # verify_tree_arg().
-
-
-
-# (2) Enabling or getting stuff: ------
-
-
-# enable_wacc: ------
-
-# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
-
-# The argument sens.w_epsion provides a threshold value:
-# Minimum required difference from the sens.w default value (sens.w = 0.50).
-
-# Output: Boolean value.
-
-enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
-
-  out <- FALSE
-
-  if (abs(sens.w - .50) >= sens.w_epsilon){
-    out <- TRUE
-  }
-
-  return(out)
-
-} # enable_wacc().
-
-
-
-# get_bacc_wacc: ------
-
-# Obtain either bacc or wacc (for displays in print and plot functions).
-# Output: Named vector (with name specifying the current type of measure).
-
-get_bacc_wacc <- function(sens, spec,  sens.w){
-
-  if (enable_wacc(sens.w)){ # wacc:
-
-    value <- (sens * sens.w) + (spec * (1 - sens.w))
-    names(value) <- "wacc"
-
-  } else { # bacc:
-
-    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
-    names(value) <- "bacc"
-
-  }
-
-  return(value)
-
-} # get_bacc_wacc().
-
-# # Check:
-# get_bacc_wacc(1, .80, .500)
-# get_bacc_wacc(1, .80, .501)
-# get_bacc_wacc(1, .80, 0)
-
-
-
-# get_lhs_formula: ------
-
-# Goal: Get criterion variable from formula (and verify formula).
-
-get_lhs_formula <- function(formula){
-
-  # Verify formula:
-  testthat::expect_true(!is.null(formula), info = "formula is NULL")
-  testthat::expect_type(formula, type = "language")
-
-  # Main:
-  lhs_name <- paste(formula)[2]
-
-  # Output:
-  return(lhs_name)
-
-} # get_lhs_formula().
-
-
-
-
-# (3) Applying or computing stuff: ------
+# (A) Applying or computing stuff: ------
 
 
 # apply_break: ------
@@ -425,7 +143,6 @@ cost_cues_append <- function(formula,
 
 # fact_clean: ------
 
-
 #' Clean factor variables in prediction data
 #'
 #' @param data.train A training dataset
@@ -483,21 +200,82 @@ fact_clean <- function(data.train,
 
 
 
-# select_best_tree: ------
+
+# (B) Enabling stuff: ------
+
+
+# enable_wacc: ------
+
+# Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
+
+# The argument sens.w_epsion provides a threshold value:
+# Minimum required difference from the sens.w default value (sens.w = 0.50).
+
+# Output: Boolean value.
+
+enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
+
+  out <- FALSE
+
+  if (abs(sens.w - .50) >= sens.w_epsilon){
+    out <- TRUE
+  }
+
+  return(out)
+
+} # enable_wacc().
+
+
+
+
+# (C) Getting stuff: ------
+
+
+# get_bacc_wacc: ------
+
+# Obtain either bacc or wacc (for displays in print and plot functions).
+# Output: Named vector (with name specifying the current type of measure).
+
+get_bacc_wacc <- function(sens, spec,  sens.w){
+
+  if (enable_wacc(sens.w)){ # wacc:
+
+    value <- (sens * sens.w) + (spec * (1 - sens.w))
+    names(value) <- "wacc"
+
+  } else { # bacc:
+
+    value <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
+    names(value) <- "bacc"
+
+  }
+
+  return(value)
+
+} # get_bacc_wacc().
+
+# # Check:
+# get_bacc_wacc(1, .80, .500)
+# get_bacc_wacc(1, .80, .501)
+# get_bacc_wacc(1, .80, 0)
+
+
+
+# get_best_tree: ------
 
 #' Select the best tree (from current set of FFTs)
 #'
-#' \code{select_best_tree} selects (looks up and identifies) the best tree
+#' \code{get_best_tree} selects (looks up and identifies) the best tree (as an integer)
 #' from the set (or \dQuote{fan}) of FFTs contained in the current \code{FFTrees} object \code{x},
 #' an existing type of \code{data} ('train' or 'test'), and
 #' a \code{goal} for which corresponding statistics are available
 #' in the designated \code{data} type (in \code{x$trees$stats}).
 #'
-#' Importantly, \code{select_best_tree} only identifies and selects from the set of
-#' \emph{existing} trees with known statistics,
+#' Importantly, \code{get_best_tree} only identifies and selects the `tree` identifier
+#' (as an integer) from the set of \emph{existing} trees with known statistics,
 #' rather than creating new trees or computing new cue thresholds.
-#' More specifically, \code{goal} is used for identifying and selecting the best of
-#' an existing set of FFTs, but not for
+#' More specifically, \code{goal} is used for identifying and selecting the `tree`
+#' identifier (as an integer) of the best FFT from an existing set of FFTs, but not for
 #' computing new cue thresholds (see \code{goal.threshold} and \code{fftrees_cuerank()}) or
 #' creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
 #'
@@ -516,11 +294,11 @@ fact_clean <- function(data.train,
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-select_best_tree <- function(x,
-                             data,
-                             goal,
-                             my.goal.max = TRUE  # Default direction for my.goal: maximize (ToDo: currently not set anywhere)
-                             ){
+get_best_tree <- function(x,
+                          data,
+                          goal,
+                          my.goal.max = TRUE  # Default direction for my.goal: maximize (ToDo: currently not set anywhere)
+){
 
   # Verify inputs: ------
 
@@ -618,11 +396,61 @@ select_best_tree <- function(x,
 
   return(tree) # as integer
 
-} # select_best_tree().
+} # get_best_tree().
 
 
 
-# (4) Strings or quotes: ------
+
+# get_fft_definitions: ------
+
+# Goal: Extract (and verify) ALL definitions from an FFTrees object (as 1 df).
+# Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
+
+get_fft_definitions <- function(x){
+
+  # verify input:
+  testthat::expect_s3_class(x, class = "FFTrees")
+
+  # main: get definitions from object:
+  x_tree_df <- x$trees$definitions  # definitions (as df/tibble)
+
+  # verify:
+  if (verify_fft_definitions(x_tree_df)){
+
+    return(x_tree_df)
+
+  } else {
+
+    return(NA)
+
+  }
+
+} # get_fft_definitions().
+
+
+
+# get_lhs_formula: ------
+
+# Goal: Get criterion variable from formula (and verify formula).
+
+get_lhs_formula <- function(formula){
+
+  # Verify formula:
+  testthat::expect_true(!is.null(formula), info = "formula is NULL")
+  testthat::expect_type(formula, type = "language")
+
+  # Main:
+  lhs_name <- paste(formula)[2]
+
+  # Output:
+  return(lhs_name)
+
+} # get_lhs_formula().
+
+
+
+
+# (D) Strings or quotes: ------
 
 
 # add_quotes: ------
@@ -645,7 +473,10 @@ exit_word <- function(data){
 
 
 
-# (5) FFTrees package: ------
+
+
+# (E) FFTrees package: ------
+
 
 #' \code{FFTrees} package.
 #'
@@ -665,8 +496,9 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 
 
+
 # ToDo: ------
 
-# - Arrange and group helper functions into categories.
+# - etc.
 
 # eof.

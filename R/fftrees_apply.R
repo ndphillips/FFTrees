@@ -34,7 +34,9 @@ fftrees_apply <- function(x,
 
   # Verify inputs: ----
 
+  testthat::expect_s3_class(x, class = "FFTrees")
   testthat::expect_true(mydata %in% c("train", "test"))
+
 
   # Provide user feedback: ----
 
@@ -78,8 +80,10 @@ fftrees_apply <- function(x,
 
   # Extract key parts from FFTrees object x:
   n_trees <- x$trees$n
-  tree_df <- x$trees$definition  # (as df)
-  # print(tree_df)  # 4debugging
+  # tree_defs <- x$trees$definition  # df (from object x)
+  tree_defs <- get_fft_definitions(x = x)  # df (using helper fn)
+  # print(tree_defs)  # 4debugging
+
 
   # Setup outputs: ------
 
@@ -154,17 +158,50 @@ fftrees_apply <- function(x,
 
     # print(paste0("tree ", tree_i, ":"))  # 4debugging
 
-    # Extract definition of current tree:
-    cue_v   <- trimws(unlist(strsplit(tree_df$cues[tree_i], ";")))
-    class_v <- trimws(unlist(strsplit(tree_df$classes[tree_i], ";")))
-    exit_v  <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
-    threshold_v <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
-    direction_v <- trimws(unlist(strsplit(tree_df$directions[tree_i], ";")))
+    # NEW code start: ----
 
-    # Verify current tree definition: +++ here now +++
+    # Get ID of tree_defs$tree for tree_i value (to consider all trees in turn):
+    tree_i_id <- tree_defs$tree[tree_i]
+    # print(paste0("\u2014 Current tree_i = ", tree_i, " corresponds to tree_i_id = ", tree_i_id)) # 4debugging
+
+    # Read FFT definition (with 1 row per tree) into df (with 1 row per node):
+    cur_fft_df <- read_fft_df(ffts = tree_defs, tree = tree_i_id)
+    # print(cur_fft_df)  # 4debugging
+
+    # Get variables of cur_fft_df (as vectors):
+    class_v     <- cur_fft_df$class
+    cue_v       <- cur_fft_df$cue
+    direction_v <- cur_fft_df$direction
+    threshold_v <- cur_fft_df$threshold
+    exit_v      <- cur_fft_df$exit
+
+    # NEW code end. ----
+
+    # +++ here now +++
+
+    # # OLD code start: ----
+    #
+    # # Extract definition of current tree:
+    # class_o     <- trimws(unlist(strsplit(tree_defs$classes[tree_i], ";")))
+    # cue_o       <- trimws(unlist(strsplit(tree_defs$cues[tree_i], ";")))
+    # direction_o <- trimws(unlist(strsplit(tree_defs$directions[tree_i], ";")))
+    # threshold_o <- trimws(unlist(strsplit(tree_defs$thresholds[tree_i], ";")))
+    # exit_o      <- trimws(unlist(strsplit(tree_defs$exits[tree_i], ";")))
+    #
+    # # Check: Verify equality of OLD and NEW code results:
+    # if (!all.equal(class_o, class_v)) { stop("OLD vs. NEW: class diff") }
+    # if (!all.equal(cue_o, cue_v)) { stop("OLD vs. NEW: cue diff") }
+    # if (!all.equal(direction_o, direction_v)) { stop("OLD vs. NEW: direction diff") }
+    # if (!all.equal(threshold_o, threshold_v)) { stop("OLD vs. NEW: threshold diff") }
+    # if (!all.equal(exit_o, exit_v)) { stop("OLD vs. NEW: exit diff") }
+    #
+    # # OLD code end. ----
+
+
+    # Verify current tree definition:
     verify_all_cues_in_data(cue_v, data)  # Do all cues occur (as names) in current data?
 
-    level_n <- as.integer(tree_df$nodes[tree_i])
+    level_n <- as.integer(tree_defs$nodes[tree_i])
     # print(paste0("- level_n = ", level_n))  # 4debugging
 
     decisions_df <- decisions_ls[[tree_i]]
@@ -196,7 +233,8 @@ fftrees_apply <- function(x,
 
     # level_stats_i collect cumulative level statistics: ----
     level_stats_i <- data.frame(
-      tree = tree_i,
+      tree = tree_i,     # NOTE: Assumes that current tree ID tree_i_id == counter variable tree_i.
+      # tree = tree_i_id,  # NOTE: The current tree ID is tree_i_id, NOT the counter variable tree_i.
       level = 1:level_n,
       cue = cue_v,
       class = class_v,
@@ -365,7 +403,7 @@ fftrees_apply <- function(x,
 
   helper  <- paste(level_stats$tree, level_stats$level, sep = ".")
   maxlevs <- paste(rownames(tapply(level_stats$level, level_stats$tree, FUN = which.max)), tapply(level_stats$level, level_stats$tree, FUN = which.max), sep = ".")
-  tree_stats <- cbind(tree_df[, c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cue", "cost")])
+  tree_stats <- cbind(tree_defs[ , c("tree")], level_stats[helper %in% maxlevs, c(critical_stats_v, "cost_cue", "cost")])
   names(tree_stats)[1] <- "tree"
   rownames(tree_stats) <- 1:nrow(tree_stats)
 
@@ -377,7 +415,7 @@ fftrees_apply <- function(x,
     max_lookups <- nrow(data) * length(x$cue_names)
     n_lookups   <- sum(decisions_ls[[tree_i]]$levelout)
 
-    tree_stats$pci[tree_i] <- 1 - n_lookups / max_lookups
+    tree_stats$pci[tree_i] <- 1 - (n_lookups / max_lookups)
     tree_stats$mcu[tree_i] <- mean(decisions_ls[[tree_i]]$levelout)
 
   }
@@ -393,9 +431,9 @@ fftrees_apply <- function(x,
   # Update best tree IDs: ----
 
   if (mydata == "train"){
-    x$trees$best$train <- select_best_tree(x, data = mydata, goal = x$params$goal)
+    x$trees$best$train <- get_best_tree(x, data = mydata, goal = x$params$goal)
   } else if (mydata == "test"){
-    x$trees$best$test <- select_best_tree(x, data = mydata, goal = x$params$goal)
+    x$trees$best$test <- get_best_tree(x, data = mydata, goal = x$params$goal)
   }
 
 

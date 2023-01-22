@@ -64,9 +64,28 @@ fftrees_define <- function(x,
 
   if (!is.null(tree.definitions)) { # 1. Use FFTs from tree.definitions: ----
 
-    # Change x by using the tree.definitions:
+    n_trees <- as.integer(nrow(tree.definitions))
+
+    # HACK: Ensure that the tree IDs in tree.definitions are sorted (1:n_trees):
+    if (any(tree.definitions$tree != 1:n_trees)){
+
+      # Sort tree ID variable to 1:n_trees:
+      tree.definitions$tree <- 1:n_trees
+
+      # Provide user feedback: ----
+
+      if (!x$params$quiet) {
+        msg <- paste0("Sorted tree IDs in tree.definitions into 1:n_trees (tree = 1:", n_trees, ").\n")
+        cat(u_f_hig(msg))
+      }
+
+      # print(tree.definitions)  # 4debugging
+
+    }
+
+    # Change object x by using tree.definitions:
     x$trees$definitions <- tree.definitions
-    x$trees$n <- as.integer(nrow(tree.definitions))
+    x$trees$n <- n_trees
 
     if (!x$params$quiet) {
       msg <- paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees.\n")

@@ -260,10 +260,12 @@ FFTrees <- function(formula = NULL,
 
   if (!is.null(tree.definitions)){
 
-    testthat::expect_true(is.data.frame(tree.definitions), info = "Provided 'tree.definitions' are not a data.frame")
+    # Verify:
 
     # ToDo: Verify integrity of tree definitions:
-    # 1. tree.definitions contains valid tree definitions (in appropriate format)
+    # 1. tree.definitions contains valid tree definitions (in appropriate format):
+    testthat::expect_true(verify_fft_definitions(tree.definitions))
+
     # 2. tree.definitions fit to provided data (see verify_all_cues_in_data() in helper.R)
 
   }
@@ -399,5 +401,11 @@ FFTrees <- function(formula = NULL,
 
 # - When providing a valid FFTrees object:
 #   Fill in missing defaults (formula, data, ...) with corresponding object values.
+
+# Note source of confusion: The `tree` variable in tree definitions sometimes serves as:
+# 1. a counter (`tree_i` in `fftrees_apply()`), but mostly as
+# 2. an ID variable (i.e., `tree` = 1 is "best" tree after ranking...).
+# ToDo: Assign a separate `tree_id` (which acts as an identifier/name handler for a tree
+#       and is moved with tree definition by ranking.
 
 # eof.

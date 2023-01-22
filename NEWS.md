@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9009
+## 1.8.0.9011
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -35,11 +35,12 @@ Changes since last release:
 
 ### Details 
 
-- Added a check that criterion variable occurs in data.
+- Added verification functions (for checking integrity of objects or validity of inputs).
 - Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
+- Re-arranged and cleaned code (in main and helper functions).
 - Revised status badges in `README`. 
-- Re-arranged and cleaned code (e.g., utility functions).
-- Fixed minor bugs and revised vignettes.
+- Fixed bugs and revised vignettes.
+
 
 <!-- Development version: --> 
 
@@ -402,6 +403,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-20.]
+[File `NEWS.md` last updated on 2023-01-21.]
 
 <!-- eof. -->

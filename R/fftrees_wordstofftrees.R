@@ -149,9 +149,9 @@ fftrees_wordstofftrees <- function(x,
 
   }
 
-  # 3. exits.v: ----
+  # 3. exits_v: ----
   {
-    exits.v <- unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
+    exits_v <- unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
 
       y <- unlist(strsplit(node_sentence, " "))
 
@@ -183,7 +183,7 @@ fftrees_wordstofftrees <- function(x,
 
     }))
 
-    # print(exits.v)  # 4debugging
+    # print(exits_v)  # 4debugging
   }
 
   # 4. thresholds_v: ----
@@ -256,7 +256,7 @@ fftrees_wordstofftrees <- function(x,
     directions_v <- directions_df$directions_f[match(directions_v, table = directions_df$directions)]
 
     # If any directions are 0, flip their direction:
-    flip_direction_log <- (exits.v == 0)
+    flip_direction_log <- (exits_v == 0)
 
     directions_v[flip_direction_log] <- directions_df$negations[match(directions_v[flip_direction_log], table = directions_df$directions)]
 
@@ -264,23 +264,60 @@ fftrees_wordstofftrees <- function(x,
 
   # Set final exit to .5: ----
 
-  exits.v[nodes_n] <- ".5"
+  exits_v[nodes_n] <- ".5"
 
 
   # Save result in x$trees$definitions (1 line, as df): ----
 
-  x$trees$definitions <- data.frame(
+
+
+  # OLD code start: ----
+
+  # fft_node_sep <- ";"  # (local constant)
+
+  my_tree_def_o <- data.frame(
+    # Add. variables:
     tree       = 1L,
     nodes      = nodes_n,
-    classes    = paste(classes_v, collapse = ";"),
-    cues       = paste(cues_v, collapse = ";"),
-    directions = paste(directions_v, collapse = ";"),
-    thresholds = paste(thresholds_v, collapse = ";"),
-    exits      = paste(exits.v, collapse = ";"),
+    # Key variables of fft (all plural):
+    classes    = paste(classes_v,    collapse = fft_node_sep),
+    cues       = paste(cues_v,       collapse = fft_node_sep),
+    directions = paste(directions_v, collapse = fft_node_sep),
+    thresholds = paste(thresholds_v, collapse = fft_node_sep),
+    exits      = paste(exits_v,      collapse = fft_node_sep),
+    #
     stringsAsFactors = FALSE
   )
+  # print(my_tree_def_o)  # 4debugging
 
-  x$trees$n <- 1
+  # OLD code end. ----
+
+  # +++ here now +++:
+
+  # NEW code start: ----
+
+  fft_df <- data.frame(class = classes_v,
+                       cue = cues_v,
+                       direction = directions_v,
+                       threshold = thresholds_v,
+                       exit = exits_v,
+                       #
+                       stringsAsFactors = FALSE
+  )
+
+  my_tree_def <- write_fft_df(fft = fft_df, tree = 1L)
+  # print(my_tree_def)  # 4debugging
+
+  # NEW code end. ----
+
+
+  # Check: Verify equality of OLD and NEW code results:
+  if (!all.equal(my_tree_def, my_tree_def_o)) { stop("OLD vs. NEW: my_tree_def diff") }
+
+
+  # Modify object x:
+  x$trees$definitions <- my_tree_def
+  x$trees$n <- 1L
 
 
   # Provide user feedback: ----

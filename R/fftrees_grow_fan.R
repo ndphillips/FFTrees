@@ -728,37 +728,66 @@ fftrees_grow_fan <- function(x,
 
 
   # Summarize tree definitions and statistics: ------
-  # (as df of tree_definitions, 1 line per FFT):
+  # (as a df of tree_definitions, 1 line per FFT):
 
   {
 
-    # Summarize tree definitions:
+    # Collect and summarize tree definitions:
     tree_definitions <- as.data.frame(matrix(NA, nrow = tree_n, ncol = 7))
-    names(tree_definitions) <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
+    names(tree_definitions) <- c("tree",  "nodes",  "classes", "cues", "directions", "thresholds", "exits")  # (mostly plural)
 
-    for (tree_i in 1:tree_n) {
+    tree_definitions_o <- tree_definitions # (copy 4debugging below)
 
+    for (tree_i in 1:tree_n) { # Loop (over trees):
+
+      # Get level_stats_i (as df):
       level_stats_i <- level_stats_ls[[tree_i]]
+      # print(level_stats_i)  # 4debugging
 
-      # Store tree definition (each FFT as 1 line of df):
-      tree_definitions$tree[tree_i]       <- tree_i
-      tree_definitions$cues[tree_i]       <- paste(level_stats_i$cue, collapse = ";")
-      tree_definitions$nodes[tree_i]      <- length(level_stats_i$cue)
-      tree_definitions$classes[tree_i]    <- paste(substr(level_stats_i$class, 1, 1), collapse = ";")
-      tree_definitions$exits[tree_i]      <- paste(level_stats_i$exit, collapse = ";")
-      tree_definitions$thresholds[tree_i] <- paste(level_stats_i$threshold, collapse = ";")
-      tree_definitions$directions[tree_i] <- paste(level_stats_i$direction, collapse = ";")
+      # OLD code start: ----
 
-    } # for (tree).
+      # Store OLD tree definition ("_o") using level_stats_i (each FFT as 1 line of df):
+      tree_definitions_o$tree[tree_i]       <- tree_i  # counter & ID
+      tree_definitions_o$nodes[tree_i]      <- length(level_stats_i$cue)
+      tree_definitions_o$classes[tree_i]    <- paste(substr(level_stats_i$class, 1, 1), collapse = fft_node_sep)
+      tree_definitions_o$cues[tree_i]       <- paste(level_stats_i$cue,                 collapse = fft_node_sep)
+      tree_definitions_o$directions[tree_i] <- paste(level_stats_i$direction,           collapse = fft_node_sep)
+      tree_definitions_o$thresholds[tree_i] <- paste(level_stats_i$threshold,           collapse = fft_node_sep)
+      tree_definitions_o$exits[tree_i]      <- paste(level_stats_i$exit,                collapse = fft_node_sep)
 
-    # Remove duplicate trees:
+      # print(tree_definitions_o)  # 4debugging
+
+      # OLD code end. ----
+
+      # +++ here now +++
+
+      # NEW code start: ----
+
+      # Select variables of cur_tree_df from level_stats_i:
+      req_tree_vars <- c("class", "cue", "direction", "threshold", "exit")  # [all singular]
+      cur_tree_df <- level_stats_i[ , req_tree_vars]
+      # print(cur_tree_df)  # 4debugging
+
+      tree_definitions[tree_i, ] <- write_fft_df(fft = cur_tree_df, tree = tree_i)
+      # print(tree_definitions[tree_i, ])  # 4debugging
+
+      # NEW code end. ----
+
+    } # loop (over trees).
+
+
+    # Check: Verify equality of OLD and NEW code results:
+    if (!all.equal(tree_definitions, tree_definitions_o)) { stop("OLD vs. NEW: tree_definitions diff") }
+
+
+    # Remove duplicate trees (rows):
     duplicate_trees  <- duplicated(tree_definitions[c("cues", "exits", "thresholds", "directions")])
     tree_definitions <- tree_definitions[duplicate_trees == FALSE, ]
 
-    # Adjust names:
-    rownames(tree_definitions) <- 1:nrow(tree_definitions)
-    tree_definitions$tree <- 1:nrow(tree_definitions)
-    tree_definitions <- tree_definitions[, c(which(names(tree_definitions) == "tree"), which(names(tree_definitions) != "tree"))]
+    # Adjust names (of df):
+    rownames(tree_definitions) <- 1:nrow(tree_definitions)  # assign rownames
+    tree_definitions$tree      <- 1:nrow(tree_definitions)  # re-assign tree IDs
+    tree_definitions <- tree_definitions[ , c(which(names(tree_definitions) == "tree"), which(names(tree_definitions) != "tree"))] # var "tree" first
 
   }
 
