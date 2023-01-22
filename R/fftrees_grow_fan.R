@@ -736,7 +736,7 @@ fftrees_grow_fan <- function(x,
     tree_definitions <- as.data.frame(matrix(NA, nrow = tree_n, ncol = 7))
     names(tree_definitions) <- c("tree", "nodes",  "classes", "cues", "directions", "thresholds", "exits")
 
-    tree_definitions_o <- tree_definitions # (copy 4debugging)
+    tree_definitions_o <- tree_definitions # (copy 4debugging below)
 
     for (tree_i in 1:tree_n) { # Loop (over trees):
 
@@ -747,7 +747,7 @@ fftrees_grow_fan <- function(x,
       # OLD code start: ----
 
       # Store OLD tree definition ("_o") using level_stats_i (each FFT as 1 line of df):
-      tree_definitions_o$tree[tree_i]       <- tree_i  # ID
+      tree_definitions_o$tree[tree_i]       <- tree_i  # counter & ID
       tree_definitions_o$nodes[tree_i]      <- length(level_stats_i$cue)
       tree_definitions_o$classes[tree_i]    <- paste(substr(level_stats_i$class, 1, 1), collapse = ";")
       tree_definitions_o$cues[tree_i]       <- paste(level_stats_i$cue, collapse = ";")
