@@ -9,6 +9,10 @@
 # A. Tree translation functions for more modular elements.
 # B. Tree manipulation functions for editing individual FFTs.
 
+# (0) Constants: ------
+
+my_col_sep <- ";"  # (global constant)
+
 
 # (A) Tree conversion/translation functions: ------
 
@@ -53,7 +57,7 @@ read_fft_df <- function(ffts, tree = 1){
   # print(cur_fft)  # 4debugging
 
   # Key values:
-  my_col_sep <- ";"  # (constant)
+  # my_col_sep <- ";"  # (local constant)
   n_nodes <- cur_fft$nodes
 
 
@@ -139,7 +143,7 @@ write_fft_df <- function(fft, tree = -99L){
 
 
   # Key values:
-  my_col_sep <- ";"  # (constant)
+  # my_col_sep <- ";"  # (local constant)
   nodes_n <- nrow(fft)
 
 

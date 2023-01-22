@@ -273,7 +273,7 @@ fftrees_wordstofftrees <- function(x,
 
   # OLD code start: ----
 
-  my_col_sep <- ";"  # (constant)
+  # my_col_sep <- ";"  # (local constant)
 
   my_tree_def_o <- data.frame(
     # Add. variables:
