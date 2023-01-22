@@ -16,9 +16,26 @@
 fftrees_ranktrees <- function(x,
                               data = "train") {
 
+  # Prepare: ------
+
+  # Verify inputs: ----
+
+  testthat::expect_s3_class(x, class = "FFTrees")
+  testthat::expect_true(data %in% c("train", "test"))
+
+
   # Initialize: ----
 
   tree_stats <- x$trees$stats[[data]]
+
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    msg <- paste0("Aiming to rank FFTs by '", data, "' data:\n")
+    cat(u_f_ini(msg))
+  }
+  # print(x$trees$definitions) # 4debugging
 
 
   # 1. Rank trees by current goal: ----
@@ -81,6 +98,15 @@ fftrees_ranktrees <- function(x,
     x$trees$best$train <- get_best_tree(x, data = "train", goal = x$params$goal)
 
   } # if (data == "train").
+
+
+  # Provide user feedback: ----
+
+  if (!x$params$quiet) {
+    msg <- paste0("Successfully ranked FFTs by '", data, "' data.\n")
+    cat(u_f_fin(msg))
+  }
+  # print(x$trees$definitions) # 4debugging
 
 
   # Note: The analog (data == "test") case is currently NOT ranked.
