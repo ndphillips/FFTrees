@@ -46,23 +46,25 @@ read_fft_df <- function(ffts, tree = 1){
     stop(paste0("No FFT #", tree, " found in ffts"))
   }
 
-  # Main: ----
-
   # print(ffts)  # 4debugging
 
   # Get 1 line by tree ID (ffts may be unsorted):
   cur_fft <- ffts[(ffts$tree == tree), ]
   # print(cur_fft)  # 4debugging
 
-  # Get elements:
+  # Key values:
+  my_col_sep <- ";"  # (constant)
   n_nodes <- cur_fft$nodes
 
+
+  # Main: ----
+
   # Extract elements of definition (as vectors):
-  classes    <- trimws(unlist(strsplit(cur_fft$classes, ";")))
-  cues       <- trimws(unlist(strsplit(cur_fft$cues, ";")))
-  directions <- trimws(unlist(strsplit(cur_fft$directions, ";")))
-  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, ";")))
-  exits      <- trimws(unlist(strsplit(cur_fft$exits, ";")))
+  classes    <- trimws(unlist(strsplit(cur_fft$classes,    my_col_sep)))
+  cues       <- trimws(unlist(strsplit(cur_fft$cues,       my_col_sep)))
+  directions <- trimws(unlist(strsplit(cur_fft$directions, my_col_sep)))
+  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, my_col_sep)))
+  exits      <- trimws(unlist(strsplit(cur_fft$exits,      my_col_sep)))
 
 
   # Verify that the vector lengths (of tree definition parts) correspond to n_nodes:
@@ -136,20 +138,23 @@ write_fft_df <- function(fft, tree = 101){
   testthat::expect_true(length(tree) == 1)
 
 
-  # Main: ----
-
+  # Key values:
+  my_col_sep <- ";"  # (constant)
   nodes_n <- nrow(fft)
 
+
+  # Main: ----
+
   fft_in_1_line <- data.frame(
-    # New variables:
+    # Add. variables:
     tree       = as.integer(tree),
-    nodes      = nodes_n,
-    # Variables from fft:
-    classes    = paste(substr(fft$class, 1, 1), collapse = ";"),
-    cues       = paste(fft$cue, collapse = ";"),
-    directions = paste(fft$direction, collapse = ";"),
-    thresholds = paste(fft$threshold, collapse = ";"),
-    exits      = paste(fft$exit, collapse = ";"),
+    nodes      = as.integer(nodes_n),
+    # Key variables of fft (all plural):
+    classes    = paste(substr(fft$class, 1, 1), collapse = my_col_sep),
+    cues       = paste(fft$cue,                 collapse = my_col_sep),
+    directions = paste(fft$direction,           collapse = my_col_sep),
+    thresholds = paste(fft$threshold,           collapse = my_col_sep),
+    exits      = paste(fft$exit,                collapse = my_col_sep),
     #
     stringsAsFactors = FALSE
   )
