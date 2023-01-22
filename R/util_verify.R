@@ -216,15 +216,16 @@ verify_tree_arg <- function(x, data, tree){
 
 
 
-# verify_fft_definition: ------
+# verify_fft_definitions: ------
 
-# Goal: Verify a df of tree definitions (from an FFTrees object).
+# Goal: Verify a df of an existing tree definitions (from an FFTrees object).
+# Inputs: Tree definitions as df (usually from x$trees$definitions or get_fft_definitions(x)).
 # Output: Boolean.
 
-verify_fft_definition <- function(df){
+verify_fft_definitions <- function(df){
 
   # verify df:
-  testthat::expect_true(is.data.frame(df), info = "'x$trees$definitions' is not a data.frame")
+  testthat::expect_true(is.data.frame(df), info = "df is not a data.frame")
 
   # verify nrow(df) > 0:
   if (nrow(df) < 1){
@@ -235,7 +236,7 @@ verify_fft_definition <- function(df){
 
   }
 
-  # verify variable names:
+  # Main: verify variable names (of EXISTING tree definitions):
   provided_vars <- names(df)
   required_vars <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
 
@@ -253,8 +254,50 @@ verify_fft_definition <- function(df){
 
   }
 
-} # verify_fft_definition().
+} # verify_fft_definitions().
 
+
+
+# verify_fft_components: ------
+
+# Goal: Verify the components (as df) to-be-turned into a tree definition (for an FFTrees object).
+# Inputs: Definition of 1 FFT (as df) with tree elements as separate vectors (e.g., from get_fft_definitions(x)).
+# Output: Boolean.
+
+verify_fft_components <- function(df){
+
+  # verify df:
+  testthat::expect_true(is.data.frame(df), info = "df is not a data.frame")
+
+  # verify nrow(df) > 0:
+  if (nrow(df) < 1){
+
+    message("Input df is empty: nrow(df) = ", nrow(df))
+
+    return(FALSE)
+
+  }
+
+  # Main: verify variable names (of a FUTURE tree definition):
+  provided_vars <- names(df)
+  required_vars <- c("classes", "cues", "directions", "thresholds", "exits")
+  # Note: c("tree", "nodes") are only part of EXISTING tree definitions (i.e., not needed here).
+
+  if (all(required_vars %in% provided_vars)){
+
+    return(TRUE)
+
+  } else {
+
+    missing_vars <- setdiff(required_vars, provided_vars)
+
+    message("Input df is missing the variables ", paste(missing_vars, collapse = ", "))
+
+    return(FALSE)
+
+  }
+
+} # verify_fft_components().
 
 
 # ToDo: ------
