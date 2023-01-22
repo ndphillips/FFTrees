@@ -2,11 +2,15 @@
 # FFT manipulation functions.
 # ---------------------------
 
-# A grammar of FFTs:
-# Functions for editing and manipulating FFTs
+# A grammar of FFTs
+#
+# Functions for translating and manipulating FFTs:
+#
+# A. Tree translation functions for more modular elements.
+# B. Tree manipulation functions for editing individual FFTs.
 
 
-# (A) Tree conversion functions: ------
+# (A) Tree conversion/translation functions: ------
 
 # Goals: Two translation functions:
 # - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (with 1 row per node),
@@ -51,22 +55,22 @@ read_fft_df <- function(ffts, tree = 1){
   n_nodes <- cur_fft$nodes
 
   # Extract elements of definition (as vectors):
-  class_v     <- trimws(unlist(strsplit(cur_fft$classes, ";")))
-  cue_v       <- trimws(unlist(strsplit(cur_fft$cues, ";")))
-  direction_v <- trimws(unlist(strsplit(cur_fft$directions, ";")))
-  threshold_v <- trimws(unlist(strsplit(cur_fft$thresholds, ";")))
-  exit_v      <- trimws(unlist(strsplit(cur_fft$exits, ";")))
+  classes    <- trimws(unlist(strsplit(cur_fft$classes, ";")))
+  cues       <- trimws(unlist(strsplit(cur_fft$cues, ";")))
+  directions <- trimws(unlist(strsplit(cur_fft$directions, ";")))
+  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, ";")))
+  exits      <- trimws(unlist(strsplit(cur_fft$exits, ";")))
 
   # Verify that all element lengths correspond to n_nodes:
-  v_lengths <- sapply(list(class_v, cue_v, direction_v, threshold_v, exit_v), FUN = length)
+  v_lengths <- sapply(list(classes, cues, directions, thresholds, exits), FUN = length)
   if (!all(n_nodes == v_lengths)) { stop("Some FFT element length(s) differ from N of nodes") }
 
   # Create 1 FFT (as df):
-  fft <- data.frame(classes = class_v,
-                    cues = cue_v,
-                    directions = direction_v,
-                    thresholds = threshold_v,
-                    exits = exit_v,
+  fft <- data.frame(class = classes,
+                    cue = cues,
+                    direction = directions,
+                    threshold = thresholds,
+                    exit = exits,
                     stringsAsFactors = FALSE)
 
   # Output: ----
@@ -83,7 +87,8 @@ read_fft_df <- function(ffts, tree = 1){
 #
 # # FFT definitions:
 # ffts_df <- get_fft_definitions(x)  # using the helper function
-#
+# ffts_df
+
 # read_fft_df(ffts_df, 2)
 # read_fft_df(ffts_df, 2:3)  # yields error
 # read_fft_df(ffts_df, 8)    # yields error
@@ -123,11 +128,11 @@ write_fft_df <- function(fft, tree = 101){
     tree       = as.integer(tree),
     nodes      = nodes_n,
     # Variables from fft:
-    classes    = paste(fft$classes, collapse = ";"),
-    cues       = paste(fft$cues, collapse = ";"),
-    directions = paste(fft$directions, collapse = ";"),
-    thresholds = paste(fft$thresholds, collapse = ";"),
-    exits      = paste(fft$exits, collapse = ";"),
+    classes    = paste(substr(fft$class, 1, 1), collapse = ";"),
+    cues       = paste(fft$cue, collapse = ";"),
+    directions = paste(fft$direction, collapse = ";"),
+    thresholds = paste(fft$threshold, collapse = ";"),
+    exits      = paste(fft$exit, collapse = ";"),
     #
     stringsAsFactors = FALSE
   )
@@ -142,7 +147,7 @@ write_fft_df <- function(fft, tree = 101){
 } # write_fft_df().
 
 # # Check:
-# fft_df <- read_fft_df(ffts_df, 3)
+# fft_df <- read_fft_df(ffts_df, 3)  # from above
 # fft_df
 #
 # write_fft_df(fft_df, tree = 123)

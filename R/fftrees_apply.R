@@ -164,13 +164,14 @@ fftrees_apply <- function(x,
 
     # Read FFT definition (with 1 row per tree) into df (with 1 row per node):
     cur_fft_df <- read_fft_df(ffts = tree_df, tree = tree_i_id)
+    # print(cur_fft_df)  # 4debugging
 
-    # Columns of cur_fft_df (as vectors):
-    class_v     <- cur_fft_df$classes
-    cue_v       <- cur_fft_df$cues
-    direction_v <- cur_fft_df$directions
-    threshold_v <- cur_fft_df$thresholds
-    exit_v      <- cur_fft_df$exits
+    # Get variables of cur_fft_df (as vectors):
+    class_v     <- cur_fft_df$class
+    cue_v       <- cur_fft_df$cue
+    direction_v <- cur_fft_df$direction
+    threshold_v <- cur_fft_df$threshold
+    exit_v      <- cur_fft_df$exit
 
     # NEW code end. ----
 
@@ -185,12 +186,12 @@ fftrees_apply <- function(x,
     # threshold_o <- trimws(unlist(strsplit(tree_df$thresholds[tree_i], ";")))
     # exit_o      <- trimws(unlist(strsplit(tree_df$exits[tree_i], ";")))
     #
-    # # Verify equality of OLD and NEW code results:
-    # if (!all.equal(class_o, class_v)) { stop("class diff") }
-    # if (!all.equal(cue_o, cue_v)) { stop("cue diff") }
-    # if (!all.equal(direction_o, direction_v)) { stop("direction diff") }
-    # if (!all.equal(threshold_o, threshold_v)) { stop("threshold diff") }
-    # if (!all.equal(exit_o, exit_v)) { stop("exit diff") }
+    # # Check: Verify equality of OLD and NEW code results:
+    # if (!all.equal(class_o, class_v)) { stop("OLD vs. NEW: class diff") }
+    # if (!all.equal(cue_o, cue_v)) { stop("OLD vs. NEW: cue diff") }
+    # if (!all.equal(direction_o, direction_v)) { stop("OLD vs. NEW: direction diff") }
+    # if (!all.equal(threshold_o, threshold_v)) { stop("OLD vs. NEW: threshold diff") }
+    # if (!all.equal(exit_o, exit_v)) { stop("OLD vs. NEW: exit diff") }
     #
     # # OLD code end. ----
 

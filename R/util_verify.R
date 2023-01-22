@@ -218,37 +218,37 @@ verify_tree_arg <- function(x, data, tree){
 
 # verify_fft_definitions: ------
 
-# Goal: Verify a df of an existing tree definitions (from an FFTrees object).
+# Goal: Verify a set of existing tree definitions (defs as df, from an FFTrees object).
 # Inputs: Tree definitions as df (usually from x$trees$definitions or get_fft_definitions(x)).
 # Output: Boolean.
 
-verify_fft_definitions <- function(df){
+verify_fft_definitions <- function(fft_defs){
 
-  # verify df:
-  testthat::expect_true(is.data.frame(df), info = "df is not a data.frame")
+  # verify fft_defs:
+  testthat::expect_true(is.data.frame(fft_defs), info = "Input fft_defs is not a data.frame")
 
-  # verify nrow(df) > 0:
-  if (nrow(df) < 1){
+  # verify nrow(fft_defs) > 0:
+  if (nrow(fft_defs) < 1){
 
-    message("Input df is empty: nrow(df) = ", nrow(df))
+    message("Input fft_defs is empty: nrow(fft_defs) = ", nrow(fft_defs))
 
     return(FALSE)
 
   }
 
   # Main: verify variable names (of EXISTING tree definitions):
-  provided_vars <- names(df)
-  required_vars <- c("tree", "nodes", "classes", "cues", "directions", "thresholds", "exits")
+  provided_vars <- names(fft_defs)
+  req_tdef_vars <- c("tree", "nodes",  "classes", "cues", "directions", "thresholds", "exits") # [mostly plural]
 
-  if (all(required_vars %in% provided_vars)){
+  if (all(req_tdef_vars %in% provided_vars)){
 
     return(TRUE)
 
   } else {
 
-    missing_vars <- setdiff(required_vars, provided_vars)
+    missing_vars <- setdiff(req_tdef_vars, provided_vars)
 
-    message("Input df is missing the variables ", paste(missing_vars, collapse = ", "))
+    message("Input fft_defs is missing the variables: ", paste(missing_vars, collapse = ", "))
 
     return(FALSE)
 
@@ -261,37 +261,37 @@ verify_fft_definitions <- function(df){
 # verify_fft_components: ------
 
 # Goal: Verify the components (as df) to-be-turned into a tree definition (for an FFTrees object).
-# Inputs: Definition of 1 FFT (as df) with tree elements as separate vectors (e.g., from get_fft_definitions(x)).
+# Inputs: fft_df: Definition of 1 FFT (as df) with tree elements as separate vectors (e.g., from get_fft_definitions(x)).
 # Output: Boolean.
 
-verify_fft_components <- function(df){
+verify_fft_components <- function(fft_df){
 
-  # verify df:
-  testthat::expect_true(is.data.frame(df), info = "df is not a data.frame")
+  # verify fft_df:
+  testthat::expect_true(is.data.frame(fft_df), info = "Input fft_df is not a data.frame")
 
-  # verify nrow(df) > 0:
-  if (nrow(df) < 1){
+  # verify nrow(fft_df) > 0:
+  if (nrow(fft_df) < 1){
 
-    message("Input df is empty: nrow(df) = ", nrow(df))
+    message("Input fft_df is empty: nrow(fft_df) = ", nrow(fft_df))
 
     return(FALSE)
 
   }
 
   # Main: verify variable names (of a FUTURE tree definition):
-  provided_vars <- names(df)
-  required_vars <- c("classes", "cues", "directions", "thresholds", "exits")
+  provided_vars <- names(fft_df)
+  req_tree_vars <- c("class", "cue", "direction", "threshold", "exit")  # [all singular]
   # Note: c("tree", "nodes") are only part of EXISTING tree definitions (i.e., not needed here).
 
-  if (all(required_vars %in% provided_vars)){
+  if (all(req_tree_vars %in% provided_vars)){
 
     return(TRUE)
 
   } else {
 
-    missing_vars <- setdiff(required_vars, provided_vars)
+    missing_vars <- setdiff(req_tree_vars, provided_vars)
 
-    message("Input df is missing the variables ", paste(missing_vars, collapse = ", "))
+    message("Input fft_df is missing the variables: ", paste(missing_vars, collapse = ", "))
 
     return(FALSE)
 
