@@ -93,7 +93,7 @@ summary.FFTrees <- function(object,
 
   # General information: Current algorithm, goals, numerical parameters, etc.:
 
-  params_txt <- paste0("algorithm = '", object$params$algorithm)
+  params_txt <- paste0("algorithm = '", object$params$algorithm, "'")
   params_num <- paste0("max.levels = ", object$params$max.levels)
 
   params_goal <- paste0("goal = '", object$params$goal,
@@ -114,8 +114,9 @@ summary.FFTrees <- function(object,
   # General user feedback (in all settings): ----
   cat("- Parameters: ",
       params_txt, ", ", # "              ",
-      params_num, "\n",   "              ",
-      params_goal, sep = "")
+      params_num, ",\n",   "              ",
+      params_goal, ".",
+      sep = "")
   cat("\n")
 
   # Specific user feedback (conditional on current settings): ----
