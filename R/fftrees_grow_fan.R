@@ -744,6 +744,18 @@ fftrees_grow_fan <- function(x,
       level_stats_i <- level_stats_ls[[tree_i]]
       # print(level_stats_i)  # 4debugging
 
+      # NEW code start: ----
+
+      # Select variables of cur_tree_df from level_stats_i:
+      req_tree_vars <- c("class", "cue", "direction", "threshold", "exit")  # [all singular]
+      cur_tree_df <- level_stats_i[ , req_tree_vars]
+      # print(cur_tree_df)  # 4debugging
+
+      tree_definitions[tree_i, ] <- write_fft_df(fft = cur_tree_df, tree = tree_i)
+      # print(tree_definitions[tree_i, ])  # 4debugging
+
+      # NEW code end. ----
+
       # OLD code start: ----
 
       # # Store OLD tree definition ("_o") using level_stats_i (each FFT as 1 line of df):
@@ -760,19 +772,6 @@ fftrees_grow_fan <- function(x,
       # OLD code end. ----
 
       # +++ here now +++
-
-
-      # NEW code start: ----
-
-      # Select variables of cur_tree_df from level_stats_i:
-      req_tree_vars <- c("class", "cue", "direction", "threshold", "exit")  # [all singular]
-      cur_tree_df <- level_stats_i[ , req_tree_vars]
-      # print(cur_tree_df)  # 4debugging
-
-      tree_definitions[tree_i, ] <- write_fft_df(fft = cur_tree_df, tree = tree_i)
-      # print(tree_definitions[tree_i, ])  # 4debugging
-
-      # NEW code end. ----
 
     } # loop (over trees).
 

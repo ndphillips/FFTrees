@@ -269,6 +269,21 @@ fftrees_wordstofftrees <- function(x,
 
   # Save result in x$trees$definitions (1 line, as df): ----
 
+  # NEW code start: ----
+
+  fft_df <- data.frame(class = classes_v,
+                       cue = cues_v,
+                       direction = directions_v,
+                       threshold = thresholds_v,
+                       exit = exits_v,
+                       #
+                       stringsAsFactors = FALSE
+  )
+
+  my_tree_def <- write_fft_df(fft = fft_df, tree = 1L)
+  # print(my_tree_def)  # 4debugging
+
+  # NEW code end. ----
 
 
   # OLD code start: ----
@@ -293,22 +308,6 @@ fftrees_wordstofftrees <- function(x,
   # OLD code end. ----
 
   # +++ here now +++:
-
-  # NEW code start: ----
-
-  fft_df <- data.frame(class = classes_v,
-                       cue = cues_v,
-                       direction = directions_v,
-                       threshold = thresholds_v,
-                       exit = exits_v,
-                       #
-                       stringsAsFactors = FALSE
-  )
-
-  my_tree_def <- write_fft_df(fft = fft_df, tree = 1L)
-  # print(my_tree_def)  # 4debugging
-
-  # NEW code end. ----
 
   # # Check: Verify equality of OLD and NEW code results:
   # if (!all.equal(my_tree_def, my_tree_def_o)) { stop("OLD vs. NEW: my_tree_def diff") }
