@@ -310,7 +310,6 @@ fftrees_wordstofftrees <- function(x,
 
   # NEW code end. ----
 
-
   # Check: Verify equality of OLD and NEW code results:
   if (!all.equal(my_tree_def, my_tree_def_o)) { stop("OLD vs. NEW: my_tree_def diff") }
 

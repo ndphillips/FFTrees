@@ -775,7 +775,6 @@ fftrees_grow_fan <- function(x,
 
     } # loop (over trees).
 
-
     # Check: Verify equality of OLD and NEW code results:
     if (!all.equal(tree_definitions, tree_definitions_o)) { stop("OLD vs. NEW: tree_definitions diff") }
 
