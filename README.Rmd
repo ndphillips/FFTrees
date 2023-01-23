@@ -53,6 +53,7 @@ url_JDM_pdf   <- "https://journal.sjdm.org/17/17217/jdm17217.pdf"
 <!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='b22222')](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- ALL status badges end. --> 
 
+
 <!-- Pkg goal: -->
 
 The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks following the methods described in Phillips, Neth, Woike & Gaissmaier (2017, as\ [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 

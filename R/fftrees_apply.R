@@ -164,6 +164,8 @@ fftrees_apply <- function(x,
     tree_i_id <- tree_defs$tree[tree_i]
     # print(paste0("\u2014 Current tree_i = ", tree_i, " corresponds to tree_i_id = ", tree_i_id)) # 4debugging
 
+    # print(tree_defs)  # 4debugging
+
     # Read FFT definition (with 1 row per tree) into df (with 1 row per node):
     cur_fft_df <- read_fft_df(ffts = tree_defs, tree = tree_i_id)
     # print(cur_fft_df)  # 4debugging

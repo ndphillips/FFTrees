@@ -65,12 +65,11 @@ read_fft_df <- function(ffts, tree = 1){
   # Main: ----
 
   # Extract elements of definition (as vectors):
-  classes    <- trimws(unlist(strsplit(cur_fft$classes,    fft_node_sep)))
-  cues       <- trimws(unlist(strsplit(cur_fft$cues,       fft_node_sep)))
-  directions <- trimws(unlist(strsplit(cur_fft$directions, fft_node_sep)))
-  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, fft_node_sep)))
-  exits      <- trimws(unlist(strsplit(cur_fft$exits,      fft_node_sep)))
-
+  classes    <- trimws(unlist(strsplit(cur_fft$classes,    split = fft_node_sep, fixed = TRUE)))
+  cues       <- trimws(unlist(strsplit(cur_fft$cues,       split = fft_node_sep, fixed = TRUE)))
+  directions <- trimws(unlist(strsplit(cur_fft$directions, split = fft_node_sep, fixed = TRUE)))
+  thresholds <- trimws(unlist(strsplit(cur_fft$thresholds, split = fft_node_sep, fixed = TRUE)))
+  exits      <- trimws(unlist(strsplit(cur_fft$exits,      split = fft_node_sep, fixed = TRUE)))
 
   # Verify that the vector lengths (of tree definition parts) correspond to n_nodes:
   v_lengths <- sapply(list(classes, cues, directions, thresholds, exits), FUN = length)
@@ -79,10 +78,11 @@ read_fft_df <- function(ffts, tree = 1){
 
     # Determine vectors with lengths differing from n_nodes:
     req_tvec_names <- c("classes", "cues", "directions", "thresholds", "exits")  # [mostly plural]
-    req_tvec_na_ix <- v_lengths != n_nodes
-    req_tvec_diffs <- paste(req_tvec_names[req_tvec_na_ix], collapse = ", ")
+    ixs_with_diffs <- v_lengths != n_nodes  # name indices
+    tvec_diffs_col <- paste(req_tvec_names[ixs_with_diffs], collapse = ", ")
+    vlen_diffs_col <- paste(v_lengths[ixs_with_diffs], collapse = ", ")
 
-    msg <- paste0("The lengths of some FFT definition parts differ from n_nodes = ", n_nodes, ": ", req_tvec_diffs)
+    msg <- paste0("The lengths of some FFT definition parts differ from n_nodes = ", n_nodes, ":\n  names of v = (", tvec_diffs_col, "), v_lengths = (", vlen_diffs_col, ").")
     stop(msg)
 
   }
