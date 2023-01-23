@@ -273,22 +273,22 @@ fftrees_wordstofftrees <- function(x,
 
   # OLD code start: ----
 
-  # fft_node_sep <- ";"  # (local constant)
-
-  my_tree_def_o <- data.frame(
-    # Add. variables:
-    tree       = 1L,
-    nodes      = nodes_n,
-    # Key variables of fft (all plural):
-    classes    = paste(classes_v,    collapse = fft_node_sep),
-    cues       = paste(cues_v,       collapse = fft_node_sep),
-    directions = paste(directions_v, collapse = fft_node_sep),
-    thresholds = paste(thresholds_v, collapse = fft_node_sep),
-    exits      = paste(exits_v,      collapse = fft_node_sep),
-    #
-    stringsAsFactors = FALSE
-  )
-  # print(my_tree_def_o)  # 4debugging
+  # # fft_node_sep <- ";"  # (local constant)
+  #
+  # my_tree_def_o <- data.frame(
+  #   # Add. variables:
+  #   tree       = 1L,
+  #   nodes      = nodes_n,
+  #   # Key variables of fft (all plural):
+  #   classes    = paste(classes_v,    collapse = fft_node_sep),
+  #   cues       = paste(cues_v,       collapse = fft_node_sep),
+  #   directions = paste(directions_v, collapse = fft_node_sep),
+  #   thresholds = paste(thresholds_v, collapse = fft_node_sep),
+  #   exits      = paste(exits_v,      collapse = fft_node_sep),
+  #   #
+  #   stringsAsFactors = FALSE
+  # )
+  # # print(my_tree_def_o)  # 4debugging
 
   # OLD code end. ----
 
@@ -310,8 +310,8 @@ fftrees_wordstofftrees <- function(x,
 
   # NEW code end. ----
 
-  # Check: Verify equality of OLD and NEW code results:
-  if (!all.equal(my_tree_def, my_tree_def_o)) { stop("OLD vs. NEW: my_tree_def diff") }
+  # # Check: Verify equality of OLD and NEW code results:
+  # if (!all.equal(my_tree_def, my_tree_def_o)) { stop("OLD vs. NEW: my_tree_def diff") }
 
 
   # Modify object x:
