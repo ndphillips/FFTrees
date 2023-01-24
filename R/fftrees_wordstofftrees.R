@@ -44,7 +44,7 @@ fftrees_wordstofftrees <- function(x,
   # Parameters / options: ------
 
   directions_df <- data.frame(
-    directions   = c("=",  ">",  ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
+    directions   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
     negations    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
     directions_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
     stringsAsFactors = FALSE
