@@ -43,12 +43,14 @@ fftrees_wordstofftrees <- function(x,
 
   # Parameters / options: ------
 
-  directions_df <- data.frame(
-    direction   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
-    negation    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
-    direction_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
-    stringsAsFactors = FALSE
-  ) # (local constant)
+  # # Direction markers (symbols/words):
+  # directions_df <- data.frame(
+  #   direction   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
+  #   negation    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
+  #   direction_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
+  #   #
+  #   stringsAsFactors = FALSE
+  # ) # (local constant)
 
   # ToDo: Delete if not used anywhere: ----
   #
@@ -241,7 +243,9 @@ fftrees_wordstofftrees <- function(x,
     })
 
     # Look for negations in sentences:
-    negations_v <- c("not")  # (local constant)
+
+    # Define negation markers:
+    # negations_v <- c("not")  # (local constant)
 
     # Which sentences have negations?
     negations_log <- unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
