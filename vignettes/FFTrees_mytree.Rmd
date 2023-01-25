@@ -68,7 +68,7 @@ Table: **Table 1**: Five cues and the binary criterion variable `diagnosis` for 
 
 Here's how we could verbally describe an FFT by using the first three cues in conditional sentences: 
 
-```{r fft-description}
+```{r my-tree-describe-fft-1}
 in_words <- "If sex = 1, predict True.
              If age < 45, predict False. 
              If thal = {fd, normal}, predict True. 
@@ -104,7 +104,7 @@ The text `Otherwise, predict EXIT` that we have included in the example above is
 Now, let's use our verbal description of an FFT (assigned to `in_words` above) as the `my.tree` argument of the `FFTrees()` function. 
 This creates a corresponding FFT and applies it to the `heartdisease` data:
 
-```{r create-my-tree, message = FALSE, results = 'hide'}
+```{r my-tree-create-1, message = FALSE, results = 'hide'}
 # Create FFTrees from a verbal FFT description (as my.tree): 
 my_fft <- FFTrees(diagnosis ~.,
                   data = heartdisease,
@@ -114,7 +114,7 @@ my_fft <- FFTrees(diagnosis ~.,
 
 Let's see how well our manually constructed FFT (`my_fft`) did:
 
-```{r plot-my-tree, fig.cap = "**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
+```{r my-tree-plot-1, fig.cap = "**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
 # Inspect FFTrees object:
 plot(my_fft)
 ```
@@ -123,6 +123,21 @@ plot(my_fft)
 
 When manually constructing a tree, the resulting `FFTrees` object only contains a single FFT. 
 Hence, the ROC plot (in the right bottom panel of **Figure\ 1**) cannot show a range of FFTs, but locates the constructed FFT in ROC space. 
+
+<!-- Note on tree definitions: -->
+
+The formal definition of our new FFT is available from the `FFTrees` object\ `my_fft`:
+
+```{r my-tree-def-1}
+# Get FFT definition(s):
+my_fft$trees$definitions
+```
+
+<!-- Note that noise exits (0) appear to have flipped directions: -->
+
+Note that the 2nd\ cue (`age`) in this FFT is predicting the _noise_ outcome (i.e., a non-final exit value of\ `0` or\ `FALSE`, shown to the left). 
+As the tree definitions always correspond to the _signal_ outcome (i.e., a non-final exit value of\ `1` or\ `TRUE`, shown to the right), 
+the direction of the 2nd node in **Figure\ 1** (if `age < 45`, predict\ `0`) is flipped relative to the tree definition (if `age >= 45`, predict\ `1`). Thus, the plot and the formal definition refer to the same\ FFT.
 
 <!-- Performance: -->
 
@@ -136,7 +151,7 @@ Consequently, its accuracy measures are only around baseline level.
 Let's see if we can come up with a better FFT. 
 The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
-```{r verbal-spec-fft-1, message = FALSE, results = 'hide'}
+```{r my-tree-verbal-fft-2, message = FALSE, results = 'hide'}
 # Create 2nd FFTrees from an alternative FFT description (as my.tree): 
 my_fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease, 
@@ -147,11 +162,17 @@ my_fft_2 <- FFTrees(diagnosis ~.,
                                Otherwise, predict False.")
 ```
 
-Again, let's view the best training tree to inspect its performance:
+Again, let's visualize the best training tree (to evaluate its performance) and briefly inspect its tree definition:
 
-```{r verbal-spec-fft-2, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
-# Inspect FFTrees object:
+```{r my-tree-plot-fft-2, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold', collapse = TRUE}
+# Visualize FFT:
 plot(my_fft_2)
+
+# FFT definition:
+my_fft_2$trees$definitions
+# Note the flipped direction value for 2nd cue (exit = '0'):
+# 'if (cp  = a), predict 1' in the definition corresponds to 
+# 'if (cp != a), predict 0' in the plot.  
 ```
 
 This alternative FFT is nicely balancing sensitivity and specificity and performs much better overall. 
@@ -162,7 +183,7 @@ Nevertheless, it is still far from perfect ---\ so check out whether you can cre
 <!-- 1. In `fftrees_wordstofftrees()`, "Otherwise" part is being ignored. --> 
 <!-- 2. In `fftrees_ffttowords()`, the final sentence always predicts positive (True) instances first. --> 
 
-```{r checking-my-tree, echo = FALSE, eval = FALSE}
+```{r my-tree-checks-1, echo = FALSE, eval = FALSE}
 # 1. FFT with 2 cues (final cue is categorical): ------ 
 
 fft_1 <- FFTrees(diagnosis ~.,
