@@ -44,19 +44,20 @@ fftrees_wordstofftrees <- function(x,
   # Parameters / options: ------
 
   directions_df <- data.frame(
-    directions   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
-    negations    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
-    directions_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
+    direction   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
+    negation    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
+    direction_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
     stringsAsFactors = FALSE
-  )
+  ) # (local constant)
 
   # ToDo: Delete if not used anywhere: ----
   #
   # exits_df <- data.frame(
   #   exit.char = x$params$decision.labels,
-  #   exit = c("0", "1"), # 0:left vs. 1:right
+  #   exit = c("0", "1"),       # 0:left/noise vs. 1:right/signal
   #   stringsAsFactors = FALSE
   # )
+
 
   # Clean up and check my.tree: ------
 
@@ -219,10 +220,13 @@ fftrees_wordstofftrees <- function(x,
 
   # 5. directions_v: ----
   {
+
+    # A. Detect directions and negations: ----
+
     # Look for directions in sentences:
 
     directions_v <- names(unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
-      output <- which(sapply(directions_df$directions, FUN = function(direction_i) {
+      output <- which(sapply(directions_df$direction, FUN = function(direction_i) {
         stringr::str_detect(node_sentence, direction_i)
       }))
 
@@ -232,16 +236,16 @@ fftrees_wordstofftrees <- function(x,
 
     })))
 
-    directions.index <- sapply(directions_v, function(direction_i) {
-      which(direction_i == directions_df$directions)
+    directions_ix <- sapply(directions_v, function(direction_i) {
+      which(direction_i == directions_df$direction)
     })
 
-    # Look for negations in sentences: ----
-    negations <- c("not")
+    # Look for negations in sentences:
+    negations_v <- c("not")  # (local constant)
 
     # Which sentences have negations?
     negations_log <- unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
-      output <- any(sapply(negations, FUN = function(negation_i) {
+      output <- any(sapply(negations_v, FUN = function(negation_i) {
         stringr::str_detect(node_sentence, negation_i)
       }))
 
@@ -249,18 +253,22 @@ fftrees_wordstofftrees <- function(x,
 
     }))
 
-    # Convert negation directions: ----
-    directions_v[negations_log] <- directions_df$negations[directions.index[negations_log]]
 
-    # Now convert to directions_f:
-    directions_v <- directions_df$directions_f[match(directions_v, table = directions_df$directions)]
+    # B. Adjust / flip directions: ----
+
+    # Convert negated directions / negations:
+    directions_v[negations_log] <- directions_df$negation[directions_ix[negations_log]]
+
+    # Convert to direction_f (formal symbol/forward direction/to signal):
+    directions_v <- directions_df$direction_f[match(directions_v, table = directions_df$direction)]
 
     # If any directions are 0, flip their direction:
-    flip_direction_log <- (exits_v == 0)
+    flip_direction_ix <- (exits_v == 0)
 
-    directions_v[flip_direction_log] <- directions_df$negations[match(directions_v[flip_direction_log], table = directions_df$directions)]
+    directions_v[flip_direction_ix] <- directions_df$negation[match(directions_v[flip_direction_ix], table = directions_df$direction)]
 
   }
+
 
   # Set final exit to .5: ----
 
