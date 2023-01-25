@@ -195,7 +195,7 @@ fft_1 <- FFTrees(diagnosis ~.,
 
 # inspect:
 fft_1$trees$definitions
-plot(fft_1)
+plot(fft_1)  # Note flipped direction for cue 1: exit = 0.
 fft_1
 inwords(fft_1)
 
