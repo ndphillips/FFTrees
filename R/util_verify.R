@@ -242,13 +242,15 @@ verify_fft_definitions <- function(fft_defs){
 
   if (all(req_tdef_vars %in% provided_vars)){
 
+    # ToDo: Verify variables further (e.g., verify their contents).
+
     return(TRUE)
 
   } else {
 
     missing_vars <- setdiff(req_tdef_vars, provided_vars)
 
-    message("Input fft_defs is missing the variables: ", paste(missing_vars, collapse = ", "))
+    message("Input fft_defs is not a valid FFT definition.\nMissing variables: ", paste(missing_vars, collapse = ", "))
 
     return(FALSE)
 
@@ -284,6 +286,8 @@ verify_fft_components <- function(fft_df){
   # Note: c("tree", "nodes") are only part of EXISTING tree definitions (i.e., not needed here).
 
   if (all(req_tree_vars %in% provided_vars)){
+
+    # ToDo: Verify variables further (e.g., verify their contents).
 
     return(TRUE)
 
