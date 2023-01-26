@@ -33,12 +33,12 @@ directions_df <- data.frame(
                   direction_more,
                   direction_less),
   direction_f = c("=",  ">",  ">=", "<",  "<=", "!=",
-                  rep("=",  length(direction_same)),  # same
-                  rep("!=", length(direction_diff)),  # diff
-                  rep(">",  length(direction_more)),   # more
-                  rep("<",  length(direction_less))),  # less
+                  rep("=",  length(direction_same)),    # same
+                  rep("!=", length(direction_diff)),    # diff
+                  rep(">",  length(direction_more)),    # more
+                  rep("<",  length(direction_less))),   # less
   negation    = c("!=", "<=", "<",  ">=", ">",  "=",
-                  rep("!=",  length(direction_same)),  # NOT same
+                  rep("!=",  length(direction_same)),   # NOT same
                   rep("=",   length(direction_diff)),   # NOT diff
                   rep("<=",  length(direction_more)),   # NOT more
                   rep(">=",  length(direction_less))),  # NOT less
