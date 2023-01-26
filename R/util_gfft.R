@@ -21,9 +21,15 @@ fft_node_sep <- ";"  # (global constant)
 # - Direction markers (symbols/words): ----
 
 directions_df <- data.frame(
-  direction   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to", "greater", "less"),
-  negation    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",       "<=",      ">=" ),
-  direction_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",       ">",       "<"  ),
+  direction   = c( "=",  ">", ">=", "<",  "<=", "!=", "equal", "equals", "equal to",
+                   "greater", "larger",  "bigger", "more",
+                   "less",    "smaller", "fewer"),
+  direction_f = c( "=",  ">", ">=", "<",  "<=", "!=",   "=",     "=",      "=",
+                   ">",       ">",       ">",      ">",
+                   "<",       "<",       "<"),
+  negation    = c("!=", "<=", "<",  ">=", ">",   "=",  "!=",    "!=",     "!=",
+                  "<=",      "<=",      "<=",      "<=",
+                  ">=",      ">=",      ">="),
   #
   stringsAsFactors = FALSE)  # (global constant)
 
