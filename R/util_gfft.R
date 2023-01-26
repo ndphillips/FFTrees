@@ -10,9 +10,46 @@
 # B. Tree manipulation functions for editing individual FFTs.
 
 
-# (0) Constants: ------
+# (0) Define global constants: ------
+
+
+# - Node separation marker (symbol): ----
 
 fft_node_sep <- ";"  # (global constant)
+
+
+# - Direction markers (symbols/words): ----
+
+direction_same <- c("equal", "identical", "same")
+direction_diff <- c("unequal", "different", "differs")
+
+direction_more <- c("more", "larger", "bigger", "greater", "above", "beyond", "exceed")
+direction_less <- c("less", "lower", "smaller", "fewer", "below")
+
+directions_df <- data.frame(
+  direction   = c("=",  ">", ">=", "<",  "<=", "!=",
+                  direction_same,
+                  direction_diff,
+                  direction_more,
+                  direction_less),
+  direction_f = c("=",  ">",  ">=", "<",  "<=", "!=",
+                  rep("=",  length(direction_same)),  # same
+                  rep("!=", length(direction_diff)),  # diff
+                  rep(">",  length(direction_more)),   # more
+                  rep("<",  length(direction_less))),  # less
+  negation    = c("!=", "<=", "<",  ">=", ">",  "=",
+                  rep("!=",  length(direction_same)),  # NOT same
+                  rep("=",   length(direction_diff)),   # NOT diff
+                  rep("<=",  length(direction_more)),   # NOT more
+                  rep(">=",  length(direction_less))),  # NOT less
+  #
+  stringsAsFactors = FALSE)  # (global constant)
+
+
+# - Negation markers: ----
+
+negations_v <- c("not", "is not")  # (global constant)
+
 
 
 # (A) Tree conversion/translation functions: ------

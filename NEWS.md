@@ -1,12 +1,14 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9012
+## 1.8.0.9014
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
 **FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [in 2023-02]. 
-This version improves consistency (by abstraction), robustness (by more global object verification), and transparency (by more explicit user feedback), but also fixes some bugs.
+This version adds functionality (e.g., optimizing for new goals), 
+improves consistency and robustness (by increasing abstraction, e.g., using more global constants and object verification), 
+increases transparency (by providing more explicit user feedback), and fixes some bugs. 
 
 <!-- Log of changes: --> 
 
@@ -16,7 +18,7 @@ Changes since last release:
 
 ### Major changes 
 
-- Prepared for modular tree translation and editing functions (`util_gfft.R`). 
+- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
 - Enabled user-defined `my.goal` on cue and tree levels (as defined by `my.goal.fun`). 
 - Enabled optimizing `dprime` on cue and tree levels (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
 - Added decision outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
@@ -26,12 +28,12 @@ Changes since last release:
 
 ### Minor changes 
 
-- Prepared for global tree notation separator (`fft_node_sep`). 
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
 - Improved `summary()`: Include current goal and cost values (if `"cost"` used in goals).
 - Improved user feedback on combinations of goal and cost values.
-
+- Prepared for modular tree translation and editing functions (`util_gfft.R`). 
+- Prepared for global tree notation separator (`fft_node_sep`). 
 
 <!-- Details: --> 
 
@@ -40,8 +42,9 @@ Changes since last release:
 - Added verification functions (for checking integrity of objects or validity of inputs).
 - Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
 - Re-arranged and cleaned code (in main and helper functions).
+- Re-defined local constants as global constants (in `util_gfft.R`). 
 - Revised status badges in `README`. 
-- Fixed bugs and revised vignettes.
+- Fixed bugs and revised vignettes. 
 
 
 <!-- Development version: --> 
@@ -67,9 +70,7 @@ Changes since last release:
 ### Major changes
 
 - Enabled manually defining FFTs with `tree.definitions` or using FFTs of `object` in `FFTrees()`. 
-
 - Enabled setting `goal = 'dprime'` to select FFTs in `FFTrees()`. 
-
 - Added and improved user feedback (when `quiet = FALSE`). 
 
 
@@ -81,6 +82,8 @@ Changes since last release:
     - Show `n.per.icon` legend when `what = 'icontree'`. 
     - Bug fix: Removed clipping of titles and labels.
     - Tweaked spacing parameters.
+
+<!-- Blank line. --> 
 
 - Trimmed white space from elements in tree definitions (in `fftrees_apply.R`). 
 
@@ -405,6 +408,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-22.]
+[File `NEWS.md` last updated on 2023-01-26.]
 
 <!-- eof. -->
