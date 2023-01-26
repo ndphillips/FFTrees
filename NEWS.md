@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9013
+## 1.8.0.9014
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -18,7 +18,7 @@ Changes since last release:
 
 ### Major changes 
 
-- Prepared for modular tree translation and editing functions (`util_gfft.R`). 
+- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
 - Enabled user-defined `my.goal` on cue and tree levels (as defined by `my.goal.fun`). 
 - Enabled optimizing `dprime` on cue and tree levels (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
 - Added decision outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
@@ -28,12 +28,12 @@ Changes since last release:
 
 ### Minor changes 
 
-- Prepared for global tree notation separator (`fft_node_sep`). 
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
 - Improved `summary()`: Include current goal and cost values (if `"cost"` used in goals).
 - Improved user feedback on combinations of goal and cost values.
-
+- Prepared for modular tree translation and editing functions (`util_gfft.R`). 
+- Prepared for global tree notation separator (`fft_node_sep`). 
 
 <!-- Details: --> 
 
@@ -408,6 +408,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-25.]
+[File `NEWS.md` last updated on 2023-01-26.]
 
 <!-- eof. -->
