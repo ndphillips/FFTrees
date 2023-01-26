@@ -151,8 +151,8 @@ Consequently, its accuracy measures are only around baseline level.
 Let's see if we can come up with a better FFT. 
 The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
-```{r my-tree-verbal-fft-2, message = FALSE, results = 'hide'}
-# Create 2nd FFTrees from an alternative FFT description (as my.tree): 
+```{r my-tree-fft-2-create, eval = FALSE, message = FALSE, results = 'hide'}
+# Create a 2nd FFT from an alternative FFT description (as my.tree): 
 my_fft_2 <- FFTrees(diagnosis ~.,
                     data = heartdisease, 
                     main = "My 2nd FFT", 
@@ -162,7 +162,29 @@ my_fft_2 <- FFTrees(diagnosis ~.,
                                Otherwise, predict False.")
 ```
 
-Again, let's visualize the best training tree (to evaluate its performance) and briefly inspect its tree definition:
+<!-- Show the flexibility in interpreting `my.tree`: -->
+
+As **FFTrees** aims to interpret the `my.tree` argument to the best of its abilities, there is some flexibility in entering a verbal description of an\ FFT. For instance, we also could have described our desired FFT in more flowery terms:
+
+```{r my-tree-fft-2-create-2, eval = TRUE, message = FALSE, results = 'hide'}
+# Create a 2nd FFT from an alternative FFT description (as my.tree): 
+my_fft_2 <- FFTrees(diagnosis ~.,
+                    data = heartdisease, 
+                    main = "My 2nd FFT", 
+                    my.tree = "If thal equals {rd,fd}, we shall say True.  
+                               If Cp differs from {a}, let's predict False.   
+                               If CA happens to exceed 1, we will insist on True.  
+                               Else, give up and go away.") 
+```
+
+However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Unambiguous `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
+To verify that **FFTrees** interpreted our `my.tree` description, let's check whether the FFT of `inwords(my_fft_2)` yields a description that corresponds to our intended\ FFT:
+
+```{r my-tree-fft-2-inwords}
+inwords(my_fft_2)
+```
+
+As this seems what we wanted, let's visualize the best training tree (to evaluate its performance) and briefly inspect its tree definition:
 
 ```{r my-tree-plot-fft-2, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold', collapse = TRUE}
 # Visualize FFT:
@@ -171,8 +193,8 @@ plot(my_fft_2)
 # FFT definition:
 my_fft_2$trees$definitions
 # Note the flipped direction value for 2nd cue (exit = '0'):
-# 'if (cp  = a), predict 1' in the definition corresponds to 
-# 'if (cp != a), predict 0' in the plot.  
+# 'if (cp  = a), predict 1' in the tree definition corresponds to 
+# 'if (cp != a), predict 0' in the my.tree description and plot.  
 ```
 
 This alternative FFT is nicely balancing sensitivity and specificity and performs much better overall. 
