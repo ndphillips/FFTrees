@@ -96,7 +96,8 @@ fftrees_wordstofftrees <- function(x,
 
   # Split my.tree into def parts (dropping "otherwise" clause): ------
 
-  def <- unlist(strsplit(my.tree, split = "if", fixed = TRUE))
+  def <- unlist(strsplit(my.tree, split = "if ", fixed = TRUE))  # Note: Also removes trailing " " after "if"!
+  def <- paste0(" ", def)    # add leading " " again (to include in detecting cue name below)
   def <- def[2:length(def)]  # remove initial empty string
   # print(def)  # 4debugging
 
@@ -118,17 +119,17 @@ fftrees_wordstofftrees <- function(x,
     cues_v <- names(unlist(lapply(def[1:nodes_n], FUN = function(node_sentence) {
 
       # Can I find the name of a cue in this sentence?
-      cue.exists <- any(sapply(cue_names_l, FUN = function(cue.i) {
-        any(stringr::str_detect(node_sentence, paste0(" ", cue.i, " ")))
+      cue_exists <- any(sapply(cue_names_l, FUN = function(cue_i_name) {
+        any(stringr::str_detect(node_sentence, paste0(" ", cue_i_name, " ")))
       }))
 
-      if (!cue.exists) {
+      if (!cue_exists) {
         stop(paste("I could not find any valid cue names in the sentence: '", node_sentence, "'. Please rewrite", sep = ""))
       }
 
-      if (cue.exists) {
-        output <- which(sapply(cue_names_l, FUN = function(cue.i) {
-          stringr::str_detect(node_sentence, paste0(" ", cue.i, " "))
+      if (cue_exists) {
+        output <- which(sapply(cue_names_l, FUN = function(cue_i_name) {
+          stringr::str_detect(node_sentence, paste0(" ", cue_i_name, " "))
         }))
       }
 
@@ -141,6 +142,7 @@ fftrees_wordstofftrees <- function(x,
       which(cue_names_l == x)
     })]
   }
+
 
   # 2. classes_v: ----
   {
@@ -219,6 +221,7 @@ fftrees_wordstofftrees <- function(x,
 
     })
   }
+
 
   # 5. directions_v: ----
   {
