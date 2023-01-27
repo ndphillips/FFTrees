@@ -74,6 +74,7 @@ negations_v <- c("not", "is not")  # (global constant)
 # - fftrees_apply()
 # - fftrees_ffttowords()
 
+
 read_fft_df <- function(ffts_df, tree = 1){
 
   # Prepare: ----

@@ -167,7 +167,7 @@ fftrees_apply <- function(x,
     # print(tree_defs)  # 4debugging
 
     # Read FFT definition (with 1 row per tree) into df (with 1 row per node):
-    cur_fft_df <- read_fft_df(ffts = tree_defs, tree = tree_i_id)
+    cur_fft_df <- read_fft_df(ffts_df = tree_defs, tree = tree_i_id)
     # print(cur_fft_df)  # 4debugging
 
     # Get variables of cur_fft_df (as vectors):
