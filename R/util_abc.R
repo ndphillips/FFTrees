@@ -473,9 +473,102 @@ exit_word <- function(data){
 
 
 
+# (E) Combinatorics: Number of combinations and permutations: --------
 
 
-# (E) FFTrees package: ------
+# all_permutations: List all permutations of a vector/set x / permute a set/vector x: ------
+
+# See also: library(combinat)
+# set <- c("a", "b", "c")
+# pm  <- combinat::permn(x = set)
+
+# Recursive definition:
+
+all_permutations <- function(x) {
+
+  # initialize: ----
+  out <- NA
+  n <- length(x)
+
+  if (n == 1) { # basic case: ----
+
+    out <- x
+
+  } else { # Use recursion: ----
+
+    out <- NULL  # init/stopping case
+
+    for (i in 1:n) { # loop: ----
+
+      out <- rbind(out, cbind(x[i], all_permutations(x[-i])))
+
+    }
+  }
+
+  return(out)
+
+} # all_permutations().
+
+# # Check:
+# all_permutations(246)
+# all_permutations(1:3)
+# all_permutations(c("A", "B", "b", "a"))
+
+
+# all_combinations: List all combinations of length n of a set x: ------
+
+# # (a) Using utils::combn:
+# m <- utils::combn(x = 1:4, m = 2)
+# m
+# is.matrix(m)
+# t(m)
+# is.vector(m)  # if m == length(x)
+
+all_combinations <- function(x, length){
+
+  # Prepare: ----
+  out <- NA  # initialize
+
+  # Verify inputs:
+  if (all(is.na(x)) || is.na(length)){
+    return(NA)
+  }
+
+  if (length > length(x)){
+    message(paste0("all_combinations: length must not exceed length(x). Using length = ", length(x)))
+    length <- length(x)
+  }
+
+  # Main: Use utils::combn to obtain matrix: ----
+  m <- utils::combn(x = x, m = length)
+
+  if (is.vector(m)){
+
+    out <- m  # return as is
+
+  } else if (is.matrix(m)){
+
+    out <- t(m)  # transpose m into matrix of rows
+
+  }
+
+  # Output: ----
+  return(out)
+
+} # all_combinations().
+
+# # Check:
+# all_combinations(x = c("a", "b", "c"), 2)
+# all_combinations(x = 1:5, length = 2)
+# all_combinations(x = 1:25, 2)  # Note: 25 * 24 / 2 = 300 combinations.
+# all_combinations(x = 1:3, length = 1)
+# all_combinations(x = 1:3, length = 88)
+# all_combinations(x = 1:3, length = NA)
+# all_combinations(x = NA, length = 1)
+
+
+
+# (F) FFTrees package: ------
 
 
 #' \code{FFTrees} package.
