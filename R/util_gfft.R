@@ -162,7 +162,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 # Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
 # Inputs:
 # - fft: A definition of 1 FFT (as df, with 1 row per node,
-#        and suitable variable names to pass verify_fft_vars()).
+#        and suitable variable names to pass verify_fft_as_df()).
 # - tree: tree ID (as integer).
 # Output: FFT definition in 1 line (as df).
 
@@ -175,7 +175,7 @@ write_fft_df <- function(fft, tree = -99L){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_vars(fft)) # verify structure and content
+  testthat::expect_true(verify_fft_as_df(fft)) # verify structure and content
 
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
@@ -264,7 +264,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
     }
 
-  } else if (verify_fft_vars(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per cue) ----
+  } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per cue) ----
 
     cur_fft <- write_fft_df(fft = fft, tree = 1)
 
@@ -320,7 +320,7 @@ reorder_nodes <- function(fft, order = NA){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_vars(fft)) # verify structure and content
+  testthat::expect_true(verify_fft_as_df(fft)) # verify structure and content
   n_cues <- nrow(fft)
 
   if (all(is.na(order))){
@@ -418,7 +418,7 @@ flip_exits <- function(fft, nodes){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_vars(fft))
+  testthat::expect_true(verify_fft_as_df(fft))
 
   nodes <- as.integer(nodes)
   testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
@@ -485,7 +485,7 @@ all_node_orders <- function(fft){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_vars(fft))
+  testthat::expect_true(verify_fft_as_df(fft))
 
   # Initialize:
   out <- NULL
@@ -535,7 +535,7 @@ all_exit_structures <- function(fft){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_vars(fft))
+  testthat::expect_true(verify_fft_as_df(fft))
 
   # Initialize:
   out <- NULL
