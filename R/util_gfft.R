@@ -64,9 +64,9 @@ negations_v <- c("not", "is not")  # (global constant)
 # Goal: Extract 1 FFT (as df) from multi-line FFT definitions (as df).
 #
 # Inputs:
-# ffts: A set of FFT definitions (as df, usually from an FFTrees object,
-#       with suitable variable names to pass verify_fft_definitions()).
-# tree: A tree ID (corresponding to tree in ffts).
+# ffts_df: A set of FFT definitions (as df, usually from an FFTrees object,
+#       with suitable variable names to pass verify_fft_definition()).
+# tree: A tree ID (corresponding to tree in ffts_df).
 #
 # Output: A definition of 1 FFT with 1 row per node (as df).
 
@@ -74,24 +74,24 @@ negations_v <- c("not", "is not")  # (global constant)
 # - fftrees_apply()
 # - fftrees_ffttowords()
 
-read_fft_df <- function(ffts, tree = 1){
+read_fft_df <- function(ffts_df, tree = 1){
 
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_definitions(ffts)) # verify structure and content
+  testthat::expect_true(verify_fft_definition(ffts_df)) # verify structure and content
 
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
 
-  if (!(tree %in% ffts$tree)){
-    stop(paste0("No FFT #", tree, " found in ffts"))
+  if (!(tree %in% ffts_df$tree)){
+    stop(paste0("No FFT #", tree, " found in ffts_df"))
   }
 
-  # print(ffts)  # 4debugging
+  # print(ffts_df)  # 4debugging
 
-  # Get 1 line by tree ID (ffts may be unsorted):
-  cur_fft <- ffts[(ffts$tree == tree), ]
+  # Get 1 line by tree ID (ffts_df may be unsorted):
+  cur_fft <- ffts_df[(ffts_df$tree == tree), ]
   # print(cur_fft)  # 4debugging
 
   # Key values:
@@ -161,7 +161,7 @@ read_fft_df <- function(ffts, tree = 1){
 # Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
 # Inputs:
 # - fft: A definition of 1 FFT (as df, with 1 row per node,
-#        and suitable variable names to pass verify_fft_components()).
+#        and suitable variable names to pass verify_fft_vars()).
 # - tree: tree ID (as integer).
 # Output: FFT definition in 1 line (as df).
 
@@ -174,7 +174,7 @@ write_fft_df <- function(fft, tree = -99L){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_components(fft)) # verify structure and content
+  testthat::expect_true(verify_fft_vars(fft)) # verify structure and content
 
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
@@ -222,7 +222,7 @@ write_fft_df <- function(fft, tree = -99L){
 # # Verify that read_fft_df() and write_fft_df() are complementary functions:
 #
 # # Show that:
-# # 1. converting a line of ffts by read_fft_df() into df of 1 FFT and
+# # 1. converting a line of ffts_df by read_fft_df() into df of 1 FFT and
 # # 2. re-converting df back into 1 row per tree by write_fft_df()
 # # yields original line:
 #
@@ -241,35 +241,35 @@ write_fft_df <- function(fft, tree = -99L){
 # Goal: Add an FFT definition (Case 1) or 1 FFT as df (Case 2) to an existing set of FFT definitions.
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
 
-add_fft_df <- function(fft, ffts = NULL){
+add_fft_df <- function(fft, ffts_df = NULL){
 
-  if (verify_fft_definitions(fft)){ # Case 1: fft is FFT-definition (in 1 row, as df) ----
+  if (verify_fft_definition(fft)){ # Case 1: fft is FFT-definition (in 1 row, as df) ----
 
-    if (is.null(ffts)){ # no addend:
+    if (is.null(ffts_df)){ # no addend:
 
-      return(fft) # return as is
+      return(fft)  # Output (as is)
 
-    } else { # add to existing ffts:
+    } else { # add to existing FFT definitions of ffts_df:
 
-      if (verify_fft_definitions(ffts)){
+      if (verify_fft_definition(ffts_df)){
 
-        out_defs <- rbind(ffts, fft)  # add to existing definitions
+        out_ffts_df <- rbind(ffts_df, fft)  # add to existing definitions
 
-        out_defs$tree <- 1:nrow(out_defs)  # re-set tree numbers
+        out_ffts_df$tree <- 1:nrow(out_ffts_df)  # re-set tree numbers
 
-        return(out_defs)
+        return(out_ffts_df)  # Output (default)
 
       }
 
     }
 
-  } else if (verify_fft_components(fft)){ # Case 2: fft is 1 FFT (as df) ----
+  } else if (verify_fft_vars(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per cue) ----
 
-    fft_def <- write_fft_df(fft, tree = 1)
+    cur_fft <- write_fft_df(fft = fft, tree = 1)
 
     message("Wrote 1 FFT (from df) to a 1-line definition.")
 
-    add_fft_df(fft_def, ffts)  # re-call (with modified 1st argument)
+    add_fft_df(fft = cur_fft, ffts_df = ffts_df)  # re-call (with modified 1st argument)
 
   } else {
 
@@ -281,14 +281,15 @@ add_fft_df <- function(fft, ffts = NULL){
 
 # # Check:
 # (ffts_df <- get_fft_definitions(x))
-# (fft_df <- read_fft_df(ffts_df, tree = 3))
+# (fft <- read_fft_df(ffts_df, tree = 2))
 #
-# add_fft_df(ffts_df)           # Case 0a: Add a set of definitions to NULL.
-# add_fft_df(ffts_df, ffts_df)  # Case 0b: Add a set of definitions to itself.
-# add_fft_df(fft_df)            # Case 0c: Add 1 FFT (as df) to NULL.
+# # Baselines:
+# add_fft_df(ffts_df)  # Case 0a: Add a set of definitions to NULL.
+# add_fft_df(fft)   # Case 0c: Add 1 FFT (as df) to NULL.
 #
-# add_fft_df(ffts_df[3, ], ffts_df)  # Case 1: Add 1 definition to a set of definitions.
-# add_fft_df(fft_df, ffts_df)        # Case 2: Add 1 FFT (as df) to a set of definitions.
+# # Intended use:
+# add_fft_df(ffts_df[2, ], ffts_df)  # Case 1: Add 1 definition to a set of definitions.
+# add_fft_df(fft, ffts_df)     # Case 2: Add 1 FFT (as df) to a set of definitions.
 
 
 
@@ -318,7 +319,7 @@ reorder_nodes <- function(fft, order = NA){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_components(fft)) # verify structure and content
+  testthat::expect_true(verify_fft_vars(fft)) # verify structure and content
   n_cues <- nrow(fft)
 
   if (all(is.na(order))){
@@ -416,7 +417,7 @@ flip_exits <- function(fft, nodes){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_components(fft))
+  testthat::expect_true(verify_fft_vars(fft))
 
   nodes <- as.integer(nodes)
   testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
@@ -473,7 +474,7 @@ flip_exits <- function(fft, nodes){
 
 # Goal: Apply reorder_nodes(fft) to all possible permutations of cues.
 # Input:
-#   fft: 1 FFT (as df)
+#   fft: 1 FFT (as df, 1 row per cue)
 # Output:
 #   Definitions of FFT in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
 
@@ -483,7 +484,7 @@ all_node_orders <- function(fft){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_components(fft))
+  testthat::expect_true(verify_fft_vars(fft))
 
   # Initialize:
   out <- NULL
@@ -500,7 +501,7 @@ all_node_orders <- function(fft){
 
     cur_fft_def <- write_fft_df(fft = cur_fft, tree = as.integer(i))
 
-    out <- add_fft_df(fft = cur_fft_def, ffts = out)
+    out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
 
   }
 
@@ -525,7 +526,7 @@ all_node_orders <- function(fft){
 
 # Goal: Get all 2^(n-1) possible exit structures for an FFT with n cues.
 # Method: Use flip_exits() on nodes = `all_combinations()` for all length values of 1:(n_cues - 1).
-# Input: 1 FFT (multi-line, as df)
+# Input: fft: 1 FFT (as df, 1 row per cue)
 
 
 all_exit_structures <- function(fft){
@@ -533,7 +534,7 @@ all_exit_structures <- function(fft){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_components(fft))
+  testthat::expect_true(verify_fft_vars(fft))
 
   # Initialize:
   out <- NULL
@@ -545,7 +546,7 @@ all_exit_structures <- function(fft){
 
   cur_fft_def <- write_fft_df(fft = fft, tree = as.integer(cnt))
 
-  out <- add_fft_df(fft = cur_fft_def, ffts = out)
+  out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
 
   if (n_cues > 1){
 
@@ -564,7 +565,7 @@ all_exit_structures <- function(fft){
 
         cur_fft_def <- write_fft_df(fft = cur_fft, tree = as.integer(cnt))
 
-        out <- add_fft_df(fft = cur_fft_def, ffts = out)
+        out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
 
       } # for j.
 
