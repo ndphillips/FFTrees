@@ -286,7 +286,7 @@ fftrees_wordstofftrees <- function(x,
 
   # NEW code start: ----
 
-  fft_df <- data.frame(class = classes_v,
+  cur_fft <- data.frame(class = classes_v,
                        cue = cues_v,
                        direction = directions_v,
                        threshold = thresholds_v,
@@ -295,7 +295,7 @@ fftrees_wordstofftrees <- function(x,
                        stringsAsFactors = FALSE
   )
 
-  my_tree_def <- write_fft_df(fft = fft_df, tree = 1L)
+  my_tree_def <- write_fft_df(fft = cur_fft, tree = 1L)
   # print(my_tree_def)  # 4debugging
 
   # NEW code end. ----
