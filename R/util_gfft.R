@@ -20,11 +20,11 @@
 valid_algorithm <- c("ifan", "dfan")  # (global) constant
 
 
-# - default_goals: ----
+# - default_goal: ----
 
 # A set of default goals (for FFT selection):
 
-default_goals <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
+default_goal <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
 
 
 # - fft_node_sep: ----

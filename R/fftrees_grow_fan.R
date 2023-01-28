@@ -496,9 +496,9 @@ fftrees_grow_fan <- function(x,
 
           # Current set of valid goals (for FFT selection):
           if (!is.null(my_goal)){
-            valid_goal <- c(default_goals, my_goal)  # add my.goal (name) to default
+            valid_goal <- c(default_goal, my_goal)  # add my.goal (name) to default
           } else { # default:
-            valid_goal <- default_goals  # use (global) constant
+            valid_goal <- default_goal  # use (global) constant
           }
 
           valid_goal_str <- paste(valid_goal, collapse = ", ")

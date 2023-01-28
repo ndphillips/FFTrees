@@ -146,9 +146,9 @@ fftrees_create <- function(formula = NULL,
 
   # Current set of valid goals (for FFT selection):
   if (!is.null(my.goal)){
-    valid_goal <- c(default_goals, my.goal)  # add my.goal (name) to default
+    valid_goal <- c(default_goal, my.goal)  # add my.goal (name) to default
   } else { # default:
-    valid_goal <- default_goals  # use (global) constant
+    valid_goal <- default_goal  # use (global) constant
   }
 
   if (is.null(goal)) { # goal NOT set by user:
