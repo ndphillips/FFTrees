@@ -39,10 +39,10 @@
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
-add_stats <- function(data,  # df with frequency counts of classification outcomes ('hi fa mi cr', as integers)
+add_stats <- function(data, # df with frequency counts of classification outcomes ('hi fa mi cr', as integers)
                       #
-                      correction = .25,  # used to compute dprime
-                      sens.w = NULL,     # used to compute wacc
+                      correction = .25,  # used for dprime
+                      sens.w = NULL,     # used for wacc
                       #
                       my.goal = NULL,
                       my.goal.fun = NULL,
@@ -107,16 +107,10 @@ add_stats <- function(data,  # df with frequency counts of classification outcom
   # b. dprime (corrected):
   data$dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
 
+  # AUC?
 
-  # Cost:
 
-  # Outcome cost (using NEGATIVE costs, to allow maximizing value to minimize cost):
-  data$cost_dec <- -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                         + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr)) / data$n  # Why data$n, not N?
-
-  # Total cost:
-  data$cost <- data$cost_dec - cost.each  # Note: cost.each is a constant and deducted (i.e., negative cost).
-
+  # my.goal:
   if (!is.null(my.goal)){
 
     # Compute my.goal value (by my.goal.fun):
@@ -128,6 +122,17 @@ add_stats <- function(data,  # df with frequency counts of classification outcom
     # print(paste0(my.goal, " = ", round(data[[my.goal]], 3)))  # 4debugging
 
   }
+
+
+  # Cost:
+
+  # a. Outcome cost (using NEGATIVE values, so that maximizing value will minimize costs):
+  data$cost_dec <- -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                         + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr)) / data$n  # Why data$n, not N?
+
+  # b. Total cost:
+  data$cost <- data$cost_dec - cost.each  # Subtract constant cost.each (due to negative cost).
+
 
 
   # Output: ----
@@ -205,6 +210,7 @@ add_stats <- function(data,  # df with frequency counts of classification outcom
 #'
 #' @importFrom stats qnorm
 #' @importFrom caret confusionMatrix
+
 
 classtable <- function(prediction_v = NULL,
                        criterion_v  = NULL,
@@ -306,13 +312,7 @@ classtable <- function(prediction_v = NULL,
 
       N <- (hi + mi + fa + cr)
 
-      # Corrected freq values:
-      hi_c <- hi + correction
-      fa_c <- fa + correction
-      mi_c <- mi + correction
-      cr_c <- cr + correction
-
-      # Get or compute statistics:
+      # Get (or compute) statistics:
       sens <- cm_byClass$Sensitivity
       spec <- cm_byClass$Specificity
       far  <- (1 - spec)
@@ -323,9 +323,19 @@ classtable <- function(prediction_v = NULL,
       acc   <- cm_overall$Accuracy
       acc_p <- cm_overall$AccuracyPValue
       bacc  <- cm_byClass$Balanced.Accuracy
-      wacc  <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
+      wacc  <- (sens * sens.w) + (spec * (1 - sens.w))  # (use values from above)
+      # wacc  <- (cm_byClass$Sensitivity * sens.w) + (cm_byClass$Specificity * (1 - sens.w))
 
-      # dprime (corrected):
+
+      # dprime:
+
+      # a. Corrected freq values:
+      hi_c <- hi + correction
+      fa_c <- fa + correction
+      mi_c <- mi + correction
+      cr_c <- cr + correction
+
+      # b. dprime (corrected):
       # hi_rate <- hi_c / (hi_c + mi_c)
       # fa_rate <- fa_c / (fa_c + cr_c)
       # dprime <- qnorm(hi_rate) - qnorm(fa_rate)
@@ -335,18 +345,22 @@ classtable <- function(prediction_v = NULL,
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-      # Costs (per classification outcome):
-      # print(cost_v)  # 4debugging: Cost of each decision (cue cost at current level, as a constant)
-      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
-
-      # Compute my.goal value (by my.goal.fun):
+      # my.goal:
       if (!is.null(my.goal)){
 
         my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
         # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
 
       }
+
+      # Cost:
+
+      # Costs (per classification outcome case):
+      # print(cost_v)  # 4debugging: Cost of each decision (cue cost at current level, as a constant)
+      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
+
 
     } else { # Case 2. Compute stats from freq combinations: ----
 
@@ -357,12 +371,6 @@ classtable <- function(prediction_v = NULL,
       cr <- sum(prediction_v == FALSE & criterion_v == FALSE)
 
       N <- (hi + fa + mi + cr)
-
-      # Corrected values:
-      hi_c <- hi + correction
-      fa_c <- fa + correction
-      mi_c <- mi + correction
-      cr_c <- cr + correction
 
       # Compute statistics:
       sens <- hi / (hi + mi)
@@ -377,24 +385,36 @@ classtable <- function(prediction_v = NULL,
       bacc <- (sens + spec) / 2  # = (sens * .50) + (spec * .50)
       wacc <- (sens * sens.w) + (spec * (1 - sens.w))
 
-      # dprime (corrected):
+      # dprime:
+
+      # a. Corrected freq values:
+      hi_c <- hi + correction
+      fa_c <- fa + correction
+      mi_c <- mi + correction
+      cr_c <- cr + correction
+
+      # b. dprime (corrected):
       dprime <- qnorm(hi_c / (hi_c + mi_c)) - qnorm(fa_c / (fa_c + cr_c))
 
       # AUC:
       # auc <- as.numeric(pROC::roc(response = as.numeric(criterion_v),
       #                             predictor = as.numeric(prediction_v))$auc)
 
-      # Cost per case:
-      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
-
-      # Compute my.goal value (by my.goal.fun):
+      # my.goal:
       if (!is.null(my.goal)){
 
         my_goal_value <- mapply(FUN = my.goal.fun, hi = hi, fa = fa, mi = mi, cr = cr)
         # print(paste0(my.goal, " = ", round(my_goal_value, 3)))  # 4debugging
 
       }
+
+
+      # Cost:
+
+      # Costs (per classification outcome case):
+      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
 
@@ -424,10 +444,10 @@ classtable <- function(prediction_v = NULL,
 
     # auc  <- NA
 
+    my_goal_val <- NA
+
     cost_dec <- NA
     cost     <- NA
-
-    my_goal_val <- NA
 
   }
 
@@ -478,6 +498,7 @@ classtable <- function(prediction_v = NULL,
 
 
 # comp_pred: ------
+
 
 #' A wrapper for competing classification algorithms
 #'
