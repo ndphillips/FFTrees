@@ -1,16 +1,19 @@
 #' Apply an FFT to data and generate accuracy statistics
 #'
 #' @description \code{fftrees_apply} applies a fast-and-frugal tree (FFT, as an \code{FFTrees} object)
-#' to a dataset and generates corresponding accuracy statistics.
+#' to a dataset (of type \code{mydata}) and generates corresponding accuracy statistics
+#' (on cue levels and for trees).
 #'
 #' \code{fftrees_apply} is called internally by the main \code{\link{FFTrees}} function
-#' (with \code{mydata = "train"} and --- if test data exists --- \code{mydata = "test"})
-#' and when predicting outcomes for new data by \code{\link{predict.FFTrees}}.
+#' (with \code{mydata = "train"} and --- if test data exists --- \code{mydata = "test"}).
+#' Alternatively, \code{fftrees_apply} is called when predicting outcomes for new data
+#' by \code{\link{predict.FFTrees}}.
 #'
-#' @param x An FFT to apply (as an \code{FFTrees} object).
+#' @param x An object with FFT definitions which are to be applied to current data (as an \code{FFTrees} object).
 #' @param mydata The type of data to which the FFT should be applied (as character, either \code{"train"} or \code{"test"}).
 #' @param newdata New data to which an FFT should be applied (as a data frame).
-#' @param allNA.pred What should be predicted if all cue values in tree are NA (as logical)?
+#'
+#' @param allNA.pred What should be predicted if all cue values in tree are \code{NA} (as logical)?
 #' Default: \code{allNA.pred = FALSE}.
 #'
 #' @return A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).

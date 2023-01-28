@@ -23,10 +23,8 @@ fftrees_create(
   cost.cues = NULL,
   main = NULL,
   decision.labels = NULL,
-  my.goal = "my_acc",
-  my.goal.fun = function(hi, fa, mi, cr) {
-     (hi + cr)/(hi + fa + mi + cr)
- },
+  my.goal = NULL,
+  my.goal.fun = NULL,
   my.tree = NULL,
   do.comp = TRUE,
   do.lr = TRUE,
