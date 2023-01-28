@@ -339,7 +339,7 @@ get_best_tree <- function(x,
                  "mcu")
 
   # Current goal is user-defined my.goal:
-  if (!is.null(x$params$my.goal) & (goal == x$params$my.goal)){
+  if (!is.null(x$params$my.goal) && (goal == x$params$my.goal)){
 
     if (my.goal.max) { # add my.goal to max_goals:
 
