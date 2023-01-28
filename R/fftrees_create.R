@@ -91,8 +91,8 @@ fftrees_create <- function(formula = NULL,
                            main = NULL,
                            decision.labels = NULL,
                            #
-                           my.goal = "my_acc",  # name of my.goal (as character)
-                           my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
+                           my.goal = NULL,      # "my_acc",  # name of my.goal (as character)
+                           my.goal.fun = NULL,  # function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
                            #
                            do.comp = TRUE,
