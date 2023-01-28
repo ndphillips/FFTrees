@@ -31,14 +31,16 @@
 #' @param main string.
 #' @param decision.labels string.
 #'
-#' @param my.goal The name of the optimization measure defined by \code{my.goal.fun} (as a character string).
+#' @param my.goal The name of an optimization measure defined by \code{my.goal.fun} (as a character string).
 #' Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
 #' Default: \code{my.goal = NULL}.
+#'
 #' @param my.goal.fun The definition of an outcome measure to optimize, defined in terms of the
 #' frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
 #' (i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).
 #' Example: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
 #' Default: \code{my.goal.fun = NULL}.
+#'
 #' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
@@ -143,7 +145,7 @@ fftrees_create <- function(formula = NULL,
   # goal: ----
 
   # Define a (constant) set of valid goals (for FFT selection via 'goal'):
-  goal_valid <- c("acc", "bacc", "wacc", "dprime", "cost")
+  goal_valid <- c("acc", "bacc", "wacc",  "dprime",  "cost")
 
   if (!is.null(my.goal)){  # include my.goal (name):
     goal_valid <- c(goal_valid, my.goal)
