@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9014
+## 1.8.0.9016
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -30,10 +30,11 @@ Changes since last release:
 
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
-- Improved `summary()`: Include current goal and cost values (if `"cost"` used in goals).
+- Improved `summary()` function: Include current goal and cost values (if `"cost"` occurs in goals).
 - Improved user feedback on combinations of goal and cost values.
 - Prepared for modular tree translation and editing functions (`util_gfft.R`). 
 - Prepared for global tree notation separator (`fft_node_sep`). 
+
 
 <!-- Details: --> 
 
@@ -342,16 +343,16 @@ The algorithms are contained in the file `heuristic_algorithm.R` and can be impl
 
 ## 1.2.0
 
-- Changed wording of statistics throughout package. `hr` (_hit rate_) and `far` (_false alarm rate_) are now `sens` for _sensitivity_, and `spec` for _specificity_ ($1 - $false alarm rate). 
+- Changed wording of statistics throughout package: 
+`hr` (_hit rate_) and `far` (_false alarm rate_) (based on the classification frequency values\ `hi` and\ `fa`), are now `sens` for _sensitivity_ and `spec` for _specificity_ (1 $-$ `far`), respectively. 
 
 - The `rank.method` argument is now deprecated. Use `algorithm` instead.
 
-- Added `stats` argument to `plot.FFTrees()`. When `stats = FALSE`, only the tree will be plotted without reference to any statistical output.
+- Added a `stats` argument to `plot.FFTrees()`. When `stats = FALSE`, only the tree will be plotted without reference to any statistical output.
 
 - Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new `x.fft$comp` slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general `comp_pred()` wrapper function.
 
-- Added `FFForest()`, a function for creating forests of FFTs, and `plot.FFForest()`, for visualizing forests of FFTs. 
-This function is very much still in development.
+- Added `FFForest()`, a function for creating forests of FFTs, and `plot.FFForest()`, for visualizing forests of FFTs. (This function is experimental and still in development.) 
 
 - Added random forests and support vector machines for comparison in `FFTrees()` using the **randomForest** and **e1071** packages.
 
@@ -359,8 +360,7 @@ This function is very much still in development.
 
 - `predict.FFTrees()` now returns a vector of predictions for a specific tree rather than creating an entirely new `FFTrees` object.
 
-- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. 
-This replaces the former `showcues()` function.
+- You can now plot cue accuracies within the `plot.FFTrees()` function by including the `plot.FFTrees(what = 'cues')` argument. (This replaces the former `showcues()` function.) 
 
 - Many cosmetic changes to `plot.FFTrees()` (e.g.; gray levels, more distinct classification balls). 
 You can also control whether the results from competing algorithms are displayed or not with the `comp` argument.
@@ -408,6 +408,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-26.]
+[File `NEWS.md` last updated on 2023-01-28.]
 
 <!-- eof. -->
