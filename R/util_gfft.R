@@ -372,7 +372,7 @@ reorder_nodes <- function(fft, order = NA){
 
 
 
-# flip_exits: ------
+# flip_exit: ------
 
 
 # Goal: Flip the exits (i.e., cue direction and exit type) of some FFT's (non-final) nodes.
@@ -382,12 +382,20 @@ reorder_nodes <- function(fft, order = NA){
 # Output: Modified version of fft (as df, with flipped cue directions/exits)
 
 
-flip_exits <- function(fft, nodes){
+flip_exit <- function(fft, nodes = NA){
 
   # Prepare: ----
 
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
+
+  if (all(is.na(nodes))) { # catch case:
+
+    message("flip_exit: fft remains unchanged")  # 4debugging
+
+    return(fft)
+
+  }
 
   nodes <- as.integer(nodes)
   testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
@@ -407,10 +415,11 @@ flip_exits <- function(fft, nodes){
 
   # Main: ----
 
-  # For all nodes:
+  # For current nodes:
 
-  # 1. flip cue direction:
-  fft$direction[nodes] <- directions_df$negation[match(fft$direction[nodes], table = directions_df$direction)]
+  # ERROR: Cue direction is ALWAYS for criterion = TRUE/signal/1 (on right) => Must not be flipped when exit changes!
+  # # 1. flip cue direction:
+  # fft$direction[nodes] <- directions_df$negation[match(fft$direction[nodes], table = directions_df$direction)]
 
   # 2. swap exit:
   fft$exit[nodes] <- ifelse(fft$exit[nodes] == 1, 0, 1)
@@ -420,19 +429,20 @@ flip_exits <- function(fft, nodes){
 
   return(fft)
 
-} # flip_exits().
+} # flip_exit().
 
 # # Check:
 # ffts_df <- get_fft_definitions(x)  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
 #
-# flip_exits(fft, nodes = c(1))
-# flip_exits(fft, nodes = c(3))
-# flip_exits(fft, nodes = c(3, 1))
+# flip_exit(fft)
+# flip_exit(fft, nodes = c(1))
+# flip_exit(fft, nodes = c(3))
+# flip_exit(fft, nodes = c(3, 1))
 #
 # # Note:
-# flip_exits(fft, nodes = 4)
-# flip_exits(fft, nodes = 1:4)
+# flip_exit(fft, nodes = 4)
+# flip_exit(fft, nodes = 1:4)
 
 
 
@@ -510,7 +520,7 @@ all_node_orders <- function(fft){
 
 
 # Goal: Get all 2^(n-1) possible exit structures for an FFT with n cues.
-# Method: Use flip_exits() on nodes = `all_combinations()` for all length values of 1:(n_cues - 1).
+# Method: Use flip_exit() on nodes = `all_combinations()` for all length values of 1:(n_cues - 1).
 # Input: fft: 1 FFT (as df, 1 row per cue)
 
 
@@ -544,7 +554,7 @@ all_exit_structures <- function(fft){
 
       for (j in 1:nrow(comb_i)){
 
-        cur_fft <- flip_exits(fft = fft, nodes = comb_i[j, ])
+        cur_fft <- flip_exit(fft = fft, nodes = comb_i[j, ])
 
         cnt <- cnt + 1
 

@@ -397,19 +397,14 @@ fftrees_create <- function(formula = NULL,
     cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 Setting 'cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)'\n"))
+      cat(u_f_msg("\u2014 Using the default list of 'cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)'\n"))
     }
   }
 
   testthat::expect_true(!is.null(cost.outcomes), info = "cost.outcomes is NULL")
-
-  testthat::expect_type(cost.outcomes, type = "list"
-                        # info = "cost.outcomes must be a list in the form list(hi = a, mi = x, fa = x, cr = x)"
-  )
-
+  testthat::expect_type(cost.outcomes, type = "list")
   testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "fa", "mi", "cr")),
-                        info = "cost.outcomes must be a list in the form list(hi = a, fa = b, mi = c, cr = d)"
-  )
+                        info = "cost.outcomes must be a list in the form list(hi = a, fa = b, mi = c, cr = d)")
 
 
   # cost.cues: ----
@@ -417,13 +412,13 @@ fftrees_create <- function(formula = NULL,
   if (!is.null(cost.cues) & (!"cost" %in% cur_goals)) {
 
     if (!quiet) {
-      msg <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
+      msg <- paste0("Specified a list of 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
       cat(u_f_hig(msg))
     }
   }
 
   if ((!quiet) & (!is.null(cost.cues))) {
-    cat(u_f_msg("\u2014 Setting list of 'cost.cues'\n"))
+    cat(u_f_msg("\u2014 Using a list of 'cost.cues'\n"))
   }
 
   # Append cost.cues (for all cues in data):
@@ -463,7 +458,8 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_type(repeat.cues, type = "logical")
 
 
-  # 2. Data quality checks: ------
+
+  # 2. Verify criterion and data: ------
 
   # Criterion is in data: ----
 
