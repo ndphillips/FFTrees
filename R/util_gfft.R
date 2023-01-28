@@ -4,83 +4,29 @@
 
 # A grammar of FFTs
 #
-# Functions for converting/translating and editing/manipulating FFTs:
+# Functions for converting/translating and editing/manipulating and varying FFTs:
 #
-# A. Tree translation functions for more modular elements.
-# B. Tree manipulation functions for editing individual FFTs.
-
-
-# # (0) Define global constants: --------
-#
-#
-# # - valid_algorithm: ----
-#
-# # Available algorithms (for FFT creation):
-#
-# valid_algorithm <- c("ifan", "dfan")  # (global) constant
-#
-#
-# # - default_goal: ----
-#
-# # A set of default goals (for FFT selection):
-#
-# default_goal <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
-#
-#
-# # - fft_node_sep: ----
-#
-# # A node separation marker in tree definitions (symbol):
-#
-# fft_node_sep <- ";"  # (global constant)
-#
-#
-# # - directions_df: ----
-#
-# # Direction markers for exit directions in verbal tree descriptions (symbols/words):
-#
-# direction_same <- c("equal", "identical", "same")
-# direction_diff <- c("unequal", "different", "differs")
-#
-# direction_more <- c("more", "larger", "bigger", "greater", "above", "beyond", "exceed")
-# direction_less <- c("less", "lower", "smaller", "fewer", "below")
-#
-# directions_df <- data.frame(
-#   direction   = c("=",  ">", ">=", "<",  "<=", "!=",
-#                   direction_same,
-#                   direction_diff,
-#                   direction_more,
-#                   direction_less),
-#   direction_f = c("=",  ">",  ">=", "<",  "<=", "!=",
-#                   rep("=",  length(direction_same)),    # same
-#                   rep("!=", length(direction_diff)),    # diff
-#                   rep(">",  length(direction_more)),    # more
-#                   rep("<",  length(direction_less))),   # less
-#   negation    = c("!=", "<=", "<",  ">=", ">",  "=",
-#                   rep("!=",  length(direction_same)),   # NOT same
-#                   rep("=",   length(direction_diff)),   # NOT diff
-#                   rep("<=",  length(direction_more)),   # NOT more
-#                   rep(">=",  length(direction_less))),  # NOT less
-#   #
-#   stringsAsFactors = FALSE)  # (global constant)
-#
-#
-# # - negations_v: ----
-#
-# # Negation markers in verbal tree node descriptions (words):
-#
-# negations_v <- c("not", "is not")  # (global constant)
-#
-#
+# A. Tree translation functions (for converting and collecting FFT definitions/trees)
+# B. Tree manipulation functions (for editing individual FFTs)
+# C. Macros / combinations (e.g., for creating specific variants of a given FFT)
 
 
 # (A) Tree conversion/translation functions: --------
 
-# Goals: Two translation functions:
+# General objective: Convert/translate FFT descriptions (definitions as df, with 1 row per tree)
+# into a more modular format of individual FFTs (as df with 1 row per node), and back.
+# Reason: The latter can be manipulated more easily in Tree manipulation functions (B).
+
+# Details:
+#
+# 2 FFT translation functions:
 # - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (with 1 row per node),
 # - write: back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
+#
+# 1 FFT collection function:
+# - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
 
-
-# - read_fft_df: ------
+# read_fft_df: ------
 
 # Goal: Extract 1 FFT (as df) from multi-line FFT definitions (as df).
 #
@@ -177,7 +123,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 
 
 
-# - write_fft_df: ------
+# write_fft_df: ------
 
 
 # Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
@@ -258,14 +204,14 @@ write_fft_df <- function(fft, tree = -99L){
 
 
 
-# - add_fft_df: ------
+# add_fft_df: ------
 
 # Goal: Add an FFT definition (Case 1) or 1 FFT as df (Case 2) to an existing set of FFT definitions.
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
 
 add_fft_df <- function(fft, ffts_df = NULL){
 
-  if (verify_fft_definition(fft)){ # Case 1: fft is FFT-definition (in 1 row, as df) ----
+  if (verify_fft_definition(fft)){   # Case 1: fft is a (set of) FFT-definitions (in 1 row per tree, as df) ----
 
     if (is.null(ffts_df)){ # no addend:
 
@@ -285,7 +231,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
     }
 
-  } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per cue) ----
+  } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per node) ----
 
     cur_fft <- write_fft_df(fft = fft, tree = 1)
 
@@ -316,6 +262,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 
 
+
 # (B) Editing tree descriptions: --------
 
 
@@ -326,7 +273,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 #       and return a modified version of 1 FFT (in same format) as output.
 
 
-# - reorder_nodes: ------
+# reorder_nodes: ------
 
 
 # Goal: Re-order the nodes of an existing FFT.
@@ -425,7 +372,7 @@ reorder_nodes <- function(fft, order = NA){
 
 
 
-# - flip_exits: ------
+# flip_exits: ------
 
 
 # Goal: Flip the exits (i.e., cue direction and exit type) of some FFT's (non-final) nodes.
@@ -489,11 +436,25 @@ flip_exits <- function(fft, nodes){
 
 
 
-# (C) Macros: Combinations of tree editing functions: --------
 
 
+# (C) Macros / Combinations of tree editing functions: --------
 
-# - all_node_orders: ------
+# Conundrums:
+# - What makes 2 FFTs "similar" (in which respect) or belong to the same "family"?
+# - What is the "identity" of an FFT?
+#
+# A clear demarcation: Using different cues corresponds to different trees.
+# However, if we define a "family of FFTs" as using a fixed set of cues,
+# we still allow for a considerable variation/range of options.
+#
+# Possible differences/similarities within a "family of FFTs" (from narrow to wide):
+# 1. A specific set of cues, their order, and exit structure:  1 FFT from FFTrees object.
+# 2. A specific set of cues, their order, but variable exit structures:  The FFTs in 1 FFTrees object.
+# 3. A specific set of cues, but variable cue orders and exit structures.
+
+
+# all_node_orders: ------
 
 
 # Goal: Apply reorder_nodes(fft) to all possible permutations of cues.
@@ -545,7 +506,7 @@ all_node_orders <- function(fft){
 
 
 
-# - all_exit_structures: ------
+# all_exit_structures: ------
 
 
 # Goal: Get all 2^(n-1) possible exit structures for an FFT with n cues.
@@ -611,6 +572,7 @@ all_exit_structures <- function(fft){
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
 # (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts_df, tree = 2)))
+
 
 
 
