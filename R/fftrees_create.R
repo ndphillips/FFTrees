@@ -144,11 +144,11 @@ fftrees_create <- function(formula = NULL,
 
   # goal: ----
 
-  # Define a (constant) set of valid goals (for FFT selection via 'goal'):
-  goal_valid <- c("acc", "bacc", "wacc",  "dprime",  "cost")
-
-  if (!is.null(my.goal)){  # include my.goal (name):
-    goal_valid <- c(goal_valid, my.goal)
+  # Current set of valid goals (for FFT selection):
+  if (!is.null(my.goal)){
+    valid_goals <- c(default_goals, my.goal)  # add my.goal (name) to default
+  } else { # default:
+    valid_goals <- default_goals  # use (global) constant
   }
 
   if (is.null(goal)) { # goal NOT set by user:
@@ -185,7 +185,7 @@ fftrees_create <- function(formula = NULL,
 
   # Verify goal:
   testthat::expect_true(!is.null(goal), info = "goal is NULL")
-  testthat::expect_true(goal %in% goal_valid)
+  testthat::expect_true(goal %in% valid_goals)
 
   if ((goal == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -231,7 +231,7 @@ fftrees_create <- function(formula = NULL,
   # Verify goal.chase:
 
   testthat::expect_true(!is.null(goal.chase), info = "goal.chase is NULL")
-  testthat::expect_true(goal.chase %in% goal_valid)
+  testthat::expect_true(goal.chase %in% valid_goals)
 
   if ((goal.chase == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
@@ -268,7 +268,7 @@ fftrees_create <- function(formula = NULL,
   # Verify goal.threshold:
 
   testthat::expect_true(!is.null(goal.threshold), info = "goal.threshold is NULL")
-  testthat::expect_true(goal.threshold %in% goal_valid)
+  testthat::expect_true(goal.threshold %in% valid_goals)
 
   if ((goal.threshold == "wacc") & (!enable_wacc(sens.w))){ # correct to "bacc":
 
