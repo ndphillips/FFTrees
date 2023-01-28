@@ -247,11 +247,32 @@ FFTrees <- function(formula = NULL,
     testthat::expect_s3_class(object, class = "FFTrees")
 
     # Fill in some missing defaults by current object values:
-    if (is.null(formula)){ formula <- object$formula }
+
+    # Main formula and data parameters (to keep/preserve):
+    if (is.null(formula)) { formula <- object$formula }
     if (is.null(data)) { data <- object$data$train }
     if (is.null(data.test) & (!is.null(object$data$test))) { data.test <- object$data$test }
 
-    # Other candidates: goal and threshold parameters.
+    # goal parameters:
+    if (is.null(goal)) { goal <- object$params$goal }
+    if (is.null(goal.chase)) { goal.chase <- object$params$goal.chase }
+    if (is.null(goal.threshold)) { goal.threshold <- object$params$goal.threshold }
+
+    # cost parameters:
+    if (is.null(cost.outcomes)) { cost.outcomes <- object$params$cost.outcomes }
+    if (is.null(cost.cues)) { cost.cues <- object$params$cost.cues }
+
+    # Other candidates (of parameters to keep/preserve):
+    # numthresh, stopping, ...
+    if (is.null(algorithm)) { algorithm <- object$params$algorithm }
+    if (is.null(max.levels)) { max.levels <- object$params$max.levels }
+
+    # Provide user feedback: ----
+
+    if (!quiet) {
+      msg <- paste0("Using the FFTrees object provided (and some of its key parameters).\n")
+      cat(u_f_hig(msg))
+    }
 
   }
 
