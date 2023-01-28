@@ -7,7 +7,7 @@
 # Functions for converting/translating and editing/manipulating and varying FFTs:
 #
 # A. Tree translation functions (for converting and collecting FFT definitions/trees)
-# B. Tree manipulation functions (for editing individual FFTs)
+# B. Tree editing functions (for manipulating individual FFTs)
 # C. Macros / combinations (e.g., for creating specific variants of a given FFT)
 
 
