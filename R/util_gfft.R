@@ -13,12 +13,24 @@
 # (0) Define global constants: --------
 
 
-# - Node separation marker (symbol): ----
+
+# - default_goals: ----
+
+# The set of valid goals (for FFT selection):
+
+default_goals <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
+
+
+# - fft_node_sep: ----
+
+# Node separation marker in tree definitions (symbol):
 
 fft_node_sep <- ";"  # (global constant)
 
 
-# - Direction markers (symbols/words): ----
+# - directions_df: ----
+
+# Direction markers for exit directions in verbal tree descriptions (symbols/words):
 
 direction_same <- c("equal", "identical", "same")
 direction_diff <- c("unequal", "different", "differs")
@@ -46,9 +58,12 @@ directions_df <- data.frame(
   stringsAsFactors = FALSE)  # (global constant)
 
 
-# - Negation markers: ----
+# - negations_v: ----
+
+# Negation markers in verbal tree node descriptions (words):
 
 negations_v <- c("not", "is not")  # (global constant)
+
 
 
 
@@ -294,6 +309,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 
 
+
 # (B) Editing tree descriptions: --------
 
 
@@ -466,6 +482,7 @@ flip_exits <- function(fft, nodes){
 # flip_exits(fft, nodes = 1:4)
 
 
+
 # (C) Macros: Combinations of tree editing functions: --------
 
 
@@ -588,6 +605,7 @@ all_exit_structures <- function(fft){
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
 # (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts_df, tree = 2)))
+
 
 
 
