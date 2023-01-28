@@ -130,9 +130,9 @@ fftrees_create <- function(formula = NULL,
 
   # algorithm: ----
 
-  algorithm_valid <- c("ifan", "dfan")
+  # valid_algorithm <- c("ifan", "dfan")  # as (local) constant
   testthat::expect_true(!is.null(algorithm), info = "algorithm is NULL")
-  testthat::expect_true(algorithm %in% algorithm_valid)
+  testthat::expect_true(algorithm %in% valid_algorithm)
 
 
   # sens.w: ----

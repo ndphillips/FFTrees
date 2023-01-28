@@ -13,17 +13,23 @@
 # (0) Define global constants: --------
 
 
+# - valid_algorithm: ----
+
+# Available algorithms (for FFT creation):
+
+valid_algorithm <- c("ifan", "dfan")  # (global) constant
+
 
 # - default_goals: ----
 
-# The set of valid goals (for FFT selection):
+# A set of default goals (for FFT selection):
 
 default_goals <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
 
 
 # - fft_node_sep: ----
 
-# Node separation marker in tree definitions (symbol):
+# A node separation marker in tree definitions (symbol):
 
 fft_node_sep <- ";"  # (global constant)
 
