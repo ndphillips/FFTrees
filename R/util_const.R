@@ -22,6 +22,7 @@ goal_options <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constan
 # - cost_outcomes_default: ----
 
 # Outcome cost = error cost / 1 - accuracy / "graded accuracy":
+# Note: Values of 0 1 1 0 correspond to (1 - accuracy, r = -1).
 
 cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global) constant
 
@@ -29,8 +30,9 @@ cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global) consta
 # - cost_cues_default: ----
 
 # Cue cost = graded mcu / "graded frugality":
+# Note: A value of 1 for all cues in data corresponds to mcu.
 
-cost_cues_default <- 1  # for all cues in data  # (global) constant
+cost_cues_default <- 0  # (global) constant
 
 
 # - fft_node_sep: ----
