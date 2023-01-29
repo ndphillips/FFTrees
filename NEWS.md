@@ -1,14 +1,15 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9016
+## 1.8.0.9017
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
 **FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [in 2023-02]. 
 This version adds functionality (e.g., optimizing for new goals), 
 improves consistency and robustness (by increasing abstraction, e.g., using more global constants and object verification), 
-increases transparency (by providing more explicit user feedback), and fixes some bugs. 
+increases transparency (by providing more explicit user feedback), 
+and fixes some bugs. 
 
 <!-- Log of changes: --> 
 
@@ -30,7 +31,7 @@ Changes since last release:
 
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
-- Improved `summary()` function: Include current goal and cost values (if `"cost"` occurs in goals).
+- Improved `summary.FFTrees()`: Include current goal and cost values (if `"cost"` occurs in goals).
 - Improved user feedback on combinations of goal and cost values.
 - Prepared for modular tree translation and editing functions (`util_gfft.R`). 
 - Prepared for global tree notation separator (`fft_node_sep`). 
@@ -40,10 +41,10 @@ Changes since last release:
 
 ### Details 
 
-- Added verification functions (for checking integrity of objects or validity of inputs).
+- Added verification functions (for checking integrity of objects and validity of inputs).
 - Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
 - Re-arranged and cleaned code (in main and helper functions).
-- Re-defined local constants as global constants (in `util_gfft.R`). 
+- Re-defined local constants as global constants (in `util_const.R`). 
 - Revised status badges in `README`. 
 - Fixed bugs and revised vignettes. 
 
@@ -408,6 +409,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-01-28.]
+[File `NEWS.md` last updated on 2023-01-29.]
 
 <!-- eof. -->

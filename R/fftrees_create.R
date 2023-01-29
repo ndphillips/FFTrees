@@ -130,9 +130,9 @@ fftrees_create <- function(formula = NULL,
 
   # algorithm: ----
 
-  # valid_algorithm <- c("ifan", "dfan")  # as (local) constant
+  # algorithm_options <- c("ifan", "dfan")  # as (local) constant
   testthat::expect_true(!is.null(algorithm), info = "algorithm is NULL")
-  testthat::expect_true(algorithm %in% valid_algorithm)
+  testthat::expect_true(algorithm %in% algorithm_options)
 
 
   # sens.w: ----
@@ -146,9 +146,9 @@ fftrees_create <- function(formula = NULL,
 
   # Current set of valid goals (for FFT selection):
   if (!is.null(my.goal)){
-    valid_goal <- c(default_goal, my.goal)  # add my.goal (name) to default
+    valid_goal <- c(goal_options, my.goal)  # add my.goal (name) to default
   } else { # default:
-    valid_goal <- default_goal  # use (global) constant
+    valid_goal <- goal_options  # use (global) constant
   }
 
   if (is.null(goal)) { # goal NOT set by user:
@@ -158,7 +158,7 @@ fftrees_create <- function(formula = NULL,
       goal <- "cost"
       if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal = cost'\n")) }
 
-    } else { # use accuracy goal:
+    } else { # use accuracy defaults (bacc/wacc):
 
       if (enable_wacc(sens.w)){ # use wacc:
 
@@ -205,7 +205,7 @@ fftrees_create <- function(formula = NULL,
 
     if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.chase = cost'\n")) }
 
-  } else if (is.null(goal.chase)) { # use accuracy:
+  } else if (is.null(goal.chase)) { # use accuracy defaults (bacc/wacc):
 
     if (enable_wacc(sens.w)){ # set to 'wacc':
 
@@ -245,24 +245,53 @@ fftrees_create <- function(formula = NULL,
 
   # goal.threshold: ----
 
-  # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
+  if (is.null(goal.threshold)) { # use accuracy defaults (bacc/wacc):
 
-  # Use argument value from FFTrees(), but provide feedback:
-  if (!quiet) {
+    if (enable_wacc(sens.w)){ # set to 'wacc':
 
-    if (goal.threshold == "bacc"){ # report using bacc (i.e., the default):
+      goal.threshold <- "wacc"
+      if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.threshold = wacc'\n")) }
 
-      msg <- paste0("\u2014 Setting 'goal.threshold = ", goal.threshold, "'\n")
-      cat(u_f_msg(msg))
+    } else { # set to 'bacc' (as bacc == wacc):
 
-    } else { # report user setting:
-
-      msg <- paste0("\u2014 User set 'goal.threshold = ", goal.threshold, "'\n")
-      cat(u_f_msg(msg))
+      goal.threshold <- "bacc"
+      if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal.threshold = bacc'\n")) }
 
     }
 
-  } # if (!quiet).
+  } else { # feedback user setting:
+
+    if (!quiet) {
+      msg <- paste0("\u2014 User set 'goal.threshold = ", goal.threshold, "'\n")
+      cat(u_f_msg(msg))
+    }
+
+  }
+
+
+  # # OLD code start: ----
+  #
+  # # Note: Default was set to goal.threshold = "bacc" (in FFTrees.R).
+  #
+  # # Use argument value from FFTrees(), but provide feedback:
+  # if (!quiet) {
+  #
+  #   if (goal.threshold == "bacc"){ # report using bacc (i.e., the default):
+  #
+  #     msg <- paste0("\u2014 Setting 'goal.threshold = ", goal.threshold, "'\n")
+  #     cat(u_f_msg(msg))
+  #
+  #   } else { # report user setting:
+  #
+  #     msg <- paste0("\u2014 User set 'goal.threshold = ", goal.threshold, "'\n")
+  #     cat(u_f_msg(msg))
+  #
+  #   }
+  #
+  # } # if (!quiet).
+  #
+  #
+  # # OLD code end. ----
 
 
   # Verify goal.threshold:
@@ -384,23 +413,35 @@ fftrees_create <- function(formula = NULL,
 
   # cost.outcomes: ----
 
-  if (!is.null(cost.outcomes) & (!"cost" %in% cur_goals)) {
+  if (!is.null(cost.outcomes)) { # A: user set cost.outcomes:
 
     if (!quiet) {
-      msg <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
-      cat(u_f_hig(msg))
+
+      cos <- paste(unlist(cost.outcomes), collapse = " ")
+      msg <- paste0("\u2014 User set 'cost.outcomes' = (", cos, ")\n")
+      cat(u_f_msg(msg))
+
+      if (!"cost" %in% cur_goals){
+        msg_2 <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
+        cat(u_f_hig(msg_2))
+      }
+
     }
-  }
 
-  if (is.null(cost.outcomes)) { # set defaults:
+  } else { # B: use default cost.outcomes:
 
-    cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
+    # cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
+    cost.outcomes <- cost_outcomes_default  # use global default
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 Using the default list of 'cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)'\n"))
+      cos <- paste(unlist(cost.outcomes), collapse = " ")
+      msg <- paste0("\u2014 Using default 'cost.outcomes' = (", cos, ")\n")
+      cat(u_f_msg(msg))
     }
+
   }
 
+  # Verify cost.outcomes:
   testthat::expect_true(!is.null(cost.outcomes), info = "cost.outcomes is NULL")
   testthat::expect_type(cost.outcomes, type = "list")
   testthat::expect_true(all(names(cost.outcomes) %in% c("hi", "fa", "mi", "cr")),
@@ -409,25 +450,37 @@ fftrees_create <- function(formula = NULL,
 
   # cost.cues: ----
 
-  if (!is.null(cost.cues) & (!"cost" %in% cur_goals)) {
+  if (!is.null(cost.cues)) { # A: user set cost.cues:
 
     if (!quiet) {
-      msg <- paste0("Specified a list of 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
-      cat(u_f_hig(msg))
+
+      ccs <- paste(unlist(cost.cues), collapse = " ")
+      msg <- paste0("\u2014 User set 'cost.cues' = (", ccs, ")\n")
+      cat(u_f_msg(msg))
+
+      if (!"cost" %in% cur_goals){
+        msg_2 <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
+        cat(u_f_hig(msg_2))
+      }
+
     }
+
+  } else { # B: use default cost.cues:
+
+    if (!quiet) {
+      msg <- paste0("\u2014 Using default 'cost.cues' = (", cost_cues_default, " per cue)\n")
+      cat(u_f_msg(msg))
+    }
+
   }
 
-  if ((!quiet) & (!is.null(cost.cues))) {
-    cat(u_f_msg("\u2014 Using a list of 'cost.cues'\n"))
-  }
-
-  # Append cost.cues (for all cues in data):
+  # Append cost.cues (to all cues in data):
   cost.cues <- cost_cues_append(formula,
                                 data,
                                 cost.cues = cost.cues)
-
   # str(cost.cues)  # 4debugging
 
+  # Verify cost.cues:
   testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL")
   testthat::expect_type(cost.cues, type = "list")
   testthat::expect_true(all(names(cost.cues) %in% names(data)),

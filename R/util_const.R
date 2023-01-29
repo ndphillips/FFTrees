@@ -5,18 +5,34 @@
 # Define global constants:
 
 
-# - valid_algorithm: ----
+# - algorithm_options: ----
 
 # Available algorithms (for FFT creation):
 
-valid_algorithm <- c("ifan", "dfan")  # (global) constant
+algorithm_options <- c("ifan", "dfan")  # (global) constant
 
 
-# - default_goal: ----
+# - goal_options: ----
 
 # A set of default goals (for FFT selection):
 
-default_goal <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
+goal_options <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constant
+
+
+# - cost_outcomes_default: ----
+
+# Outcome cost = error cost / 1 - accuracy / "graded accuracy":
+# Note: Values of 0 1 1 0 correspond to (1 - accuracy, r = -1).
+
+cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global) constant
+
+
+# - cost_cues_default: ----
+
+# Cue cost = graded mcu / "graded frugality":
+# Note: A value of 1 for all cues in data corresponds to mcu.
+
+cost_cues_default <- 0  # (global) constant
 
 
 # - fft_node_sep: ----

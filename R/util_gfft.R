@@ -585,10 +585,12 @@ all_exit_structures <- function(fft){
 
 
 
-
-
 # ToDo: ------
 
-# - etc.
+# - Make some functions (e.g., tree editing functions) work alternative inputs of either
+#   (1) FFT definitions (df, 1 row per tree) OR
+#   (2) single FFTs (as df, 1 row per node).
+# - Return the result in the same format as the input.
+# - When entering a set of FFT definitions, return modified set?
 
 # eof.
