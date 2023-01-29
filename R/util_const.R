@@ -21,12 +21,16 @@ default_goal <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global) constan
 
 # - default_cost_outcomes: ----
 
-default_cost_outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # = error cost / 1 - accuracy / "graded accuracy"
+# Outcome cost = error cost / 1 - accuracy / "graded accuracy":
+
+default_cost_outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global) constant
 
 
 # - default_cost_cues: ----
 
-default_cost_cues     <- 1  # for all cues in data / mcu / "graded frugality"
+# Cue cost = graded mcu / "graded frugality":
+
+default_cost_cues <- 1  # for all cues in data  # (global) constant
 
 
 # - fft_node_sep: ----
