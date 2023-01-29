@@ -83,10 +83,8 @@ cost_cues_append <- function(formula,
 
 
 
-
-
 # ToDo: ------
 
-# - etc.
+# - Collect misc. cost calculation functions in this file (rather than in util_stats()).
 
 # eof.
