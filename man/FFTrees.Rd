@@ -13,7 +13,7 @@ FFTrees(
   train.p = 1,
   goal = NULL,
   goal.chase = NULL,
-  goal.threshold = "bacc",
+  goal.threshold = NULL,
   max.levels = NULL,
   numthresh.method = "o",
   numthresh.n = 10,
@@ -54,7 +54,7 @@ FFTrees(
 
 \item{train.p}{numeric. What percentage of the data to use for training when \code{data.test} is not specified?
 For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
-Default: \code{train.p = 1} (i.e., using all data for training).}
+Default: \code{train.p = 1} (i.e., using \emph{all} data for training).}
 
 \item{goal}{A character string indicating the statistic to maximize when \emph{selecting trees}:
 \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
@@ -67,7 +67,7 @@ Default: \code{train.p = 1} (i.e., using all data for training).}
 \item{goal.threshold}{A character string indicating the criterion to maximize when \emph{optimizing cue thresholds}:
 \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
 \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
-Default: \code{goal.threshold = "bacc"}.}
+All default goals are set in \code{\link{fftrees_create}}.}
 
 \item{max.levels}{integer. The maximum number of nodes (or levels) considered for an FFT.
 As all combinations of possible exit structures are considered, larger values of \code{max.levels} will create larger sets of FFTs.}
@@ -158,7 +158,8 @@ Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corres
 that can then be printed, plotted, and examined further.
 
 The criterion and predictor variables are specified in \code{\link{formula}} notation.
-Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset and tested on an (optional) test dataset.
+Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset
+(given the set of current \code{goal} values) and evaluated on (or predict) an (optional) test dataset.
 
 If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
 no new FFTs are created.
