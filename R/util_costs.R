@@ -29,10 +29,10 @@ cost_cues_append <- function(formula,
 
   # Main: ------
 
-  if (is.null(cost.cues)) { # Case 1: No cost.cues provided: Use default_cost_cues ----
+  if (is.null(cost.cues)) { # Case 1: No cost.cues provided: Use cost_cues_default ----
 
     cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
-      default_cost_cues
+      cost_cues_default
     })
     names(cost.cues) <- names(cue_df)
 
@@ -53,12 +53,12 @@ cost_cues_append <- function(formula,
       }
     }
 
-    # Add any missing cue costs as default_cost_cues:
+    # Add any missing cue costs as cost_cues_default:
     {
       cost_cues_org <- cost.cues
 
       cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
-        default_cost_cues
+        cost_cues_default
       })
       names(cost.cues) <- names(cue_df)
 

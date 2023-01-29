@@ -130,9 +130,9 @@ fftrees_create <- function(formula = NULL,
 
   # algorithm: ----
 
-  # valid_algorithm <- c("ifan", "dfan")  # as (local) constant
+  # algorithm_options <- c("ifan", "dfan")  # as (local) constant
   testthat::expect_true(!is.null(algorithm), info = "algorithm is NULL")
-  testthat::expect_true(algorithm %in% valid_algorithm)
+  testthat::expect_true(algorithm %in% algorithm_options)
 
 
   # sens.w: ----
@@ -146,9 +146,9 @@ fftrees_create <- function(formula = NULL,
 
   # Current set of valid goals (for FFT selection):
   if (!is.null(my.goal)){
-    valid_goal <- c(default_goal, my.goal)  # add my.goal (name) to default
+    valid_goal <- c(goal_options, my.goal)  # add my.goal (name) to default
   } else { # default:
-    valid_goal <- default_goal  # use (global) constant
+    valid_goal <- goal_options  # use (global) constant
   }
 
   if (is.null(goal)) { # goal NOT set by user:
@@ -431,7 +431,7 @@ fftrees_create <- function(formula = NULL,
   } else { # B: use default cost.outcomes:
 
     # cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
-    cost.outcomes <- default_cost_outcomes  # use global default
+    cost.outcomes <- cost_outcomes_default  # use global default
 
     if (!quiet) {
       cos <- paste(unlist(cost.outcomes), collapse = " ")
@@ -468,7 +468,7 @@ fftrees_create <- function(formula = NULL,
   } else { # B: use default cost.cues:
 
     if (!quiet) {
-      msg <- paste0("\u2014 Using default 'cost.cues' = (", default_cost_cues, " per cue)\n")
+      msg <- paste0("\u2014 Using default 'cost.cues' = (", cost_cues_default, " per cue)\n")
       cat(u_f_msg(msg))
     }
 
