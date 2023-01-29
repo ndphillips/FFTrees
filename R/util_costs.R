@@ -4,6 +4,7 @@
 
 # Cost-related helper functions:
 
+
 # cost_cues_append: ------
 
 # Goal: Get cost.cues for ALL cues in data.
@@ -28,10 +29,10 @@ cost_cues_append <- function(formula,
 
   # Main: ------
 
-  if (is.null(cost.cues)) { # Case 1: No cost.cues provided: ----
+  if (is.null(cost.cues)) { # Case 1: No cost.cues provided: Use default_cost_cues ----
 
     cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
-      0
+      default_cost_cues
     })
     names(cost.cues) <- names(cue_df)
 
@@ -52,12 +53,12 @@ cost_cues_append <- function(formula,
       }
     }
 
-    # Add any missing cue costs as 0:
+    # Add any missing cue costs as default_cost_cues:
     {
       cost_cues_org <- cost.cues
 
       cost.cues <- lapply(1:ncol(cue_df), FUN = function(x) {
-        0
+        default_cost_cues
       })
       names(cost.cues) <- names(cue_df)
 

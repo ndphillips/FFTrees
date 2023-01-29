@@ -430,7 +430,8 @@ fftrees_create <- function(formula = NULL,
 
   } else { # B: use default cost.outcomes:
 
-    cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
+    # cost.outcomes <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # default values (analogous to accuracy: r = -1)
+    cost.outcomes <- default_cost_outcomes  # use global default
 
     if (!quiet) {
       cos <- paste(unlist(cost.outcomes), collapse = " ")
@@ -467,7 +468,8 @@ fftrees_create <- function(formula = NULL,
   } else { # B: use default cost.cues:
 
     if (!quiet) {
-      cat(u_f_msg("\u2014 Using default 'cost.cues' = 0 for all cues\n"))
+      msg <- paste0("\u2014 Using default 'cost.cues' = (", default_cost_cues, " per cue)\n")
+      cat(u_f_msg(msg))
     }
 
   }
