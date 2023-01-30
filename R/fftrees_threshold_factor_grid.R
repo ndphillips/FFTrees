@@ -10,22 +10,22 @@
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
 #' Default: \code{goal.threshold = "bacc"}.
 #'
-#' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
+#' @param sens.w numeric. Sensitivity weight parameter (from \code{0} to \code{1}, for computing \code{wacc}).
 #' Default: \code{sens.w = .50}.
 #'
 #' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
 #'
-#' @param cost.each numeric. Cost to add to each value (e.g.; cost of the cue).
+#' @param cost.each numeric. A constant cost value to add to each value (e.g., the cost of the cue).
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
-#' the costs of a hit, false alarm, miss, and correct rejection, respectively.
+#' the costs of a hit, false alarm, miss, and correct rejection, respectively, in some common currency.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
-#' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
+#' a false alarm and miss cost \code{10} and \code{20} units, respectively, while correct decisions have no cost.
+#'
+#' @return A data frame containing accuracy statistics for factor thresholds.
 #'
 #' @import testthat
-#' @importFrom  magrittr "%>%"
-#'
-#' @return A data frame containing accuracy statistics for several factor thresholds
+#' @importFrom magrittr "%>%"
 #'
 #' @seealso \code{\link{fftrees_threshold_numeric_grid}} for numeric cues.
 #'
@@ -34,17 +34,17 @@
 fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                           cue_v = NULL,
                                           criterion_v = NULL,
-                                          directions = "=",
+                                          directions = "=",  # categorical default (cue class in c("c", "f", "l"))
                                           #
-                                          goal.threshold = "bacc",
+                                          goal.threshold = NULL, # (was "bacc", but NULL enforces consistency w calling function)
                                           #
-                                          sens.w = .50,  # ToDo: set to NULL (to enforce that value is passed from calling function)?
+                                          sens.w = NULL, # (was ".50", but NULL enforces consistency w calling function)
                                           #
                                           my.goal = NULL,
                                           my.goal.fun = NULL,
                                           #
-                                          cost.each = 0,
-                                          cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+                                          cost.each = NULL, # (was "0", but NULL enforces consistency w calling function)
+                                          cost.outcomes = NULL # (was "list(hi = 0, fa = 1, mi = 1, cr = 0)", but NULL enforces consistency w calling function)
 ) {
 
   # Assertions:
