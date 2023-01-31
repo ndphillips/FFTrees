@@ -245,10 +245,10 @@ fftrees_cuerank <- function(x = NULL,
             #
             goal.threshold = goal.threshold,
             #
+            sens.w = sens.w,
+            #
             my.goal = x$params$my.goal,
             my.goal.fun = x$params$my.goal.fun,
-            #
-            sens.w = sens.w,
             #
             cost.each = cue_i_cost,
             cost.outcomes = cost.outcomes

@@ -34,9 +34,8 @@
 #' @param my.goal The name of an optimization measure defined by \code{my.goal.fun} (as a character string).
 #' Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
 #' Default: \code{my.goal = NULL}.
-#'
-#' @param my.goal.fun The definition of an outcome measure to optimize, defined in terms of the
-#' frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+#' @param my.goal.fun The definition of an outcome measure to optimize, defined as a function
+#' of the frequency counts of the 4 basic classification outcomes \code{hi, fa, mi, cr}
 #' (i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).
 #' Example: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
 #' Default: \code{my.goal.fun = NULL}.
@@ -91,8 +90,8 @@ fftrees_create <- function(formula = NULL,
                            main = NULL,
                            decision.labels = NULL,
                            #
-                           my.goal = NULL,      # "my_acc",  # name of my.goal (as character)
-                           my.goal.fun = NULL,  # function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
+                           my.goal = NULL,      # e.g., "my_acc",  # name of my.goal (as character)
+                           my.goal.fun = NULL,  # e.g., function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
                            #
                            do.comp = TRUE,
@@ -153,7 +152,7 @@ fftrees_create <- function(formula = NULL,
 
   if (is.null(goal)) { # goal NOT set by user:
 
-    if (!is.null(cost.outcomes) | !is.null(cost.cues)) { # use cost goal:
+    if (!is.null(cost.outcomes) | !is.null(cost.cues)) { # use 'cost' goal per default:
 
       goal <- "cost"
       if (!quiet) { cat(u_f_msg("\u2014 Setting 'goal = cost'\n")) }
