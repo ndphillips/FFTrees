@@ -41,6 +41,7 @@ Changes since last release:
 ### Details 
 
 - Added verification functions (for checking integrity of objects and validity of inputs).
+- Deprecated the `rounding` argument of `FFTrees()`. 
 - Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
 - Re-arranged and cleaned code (in main and helper functions).
 - Re-defined local constants as global constants (in `util_const.R`). 
@@ -137,7 +138,7 @@ Changes since last release:
 
 - Plotting with `plot.FFTrees()`: 
     - Adjusted space for title to width of `main` argument.
-    - Deprecated `stats` argument. 
+    - Deprecated the `stats` argument. 
     - Moved utility functions to `helper_plot.R`. 
 
 <!-- Details: --> 
@@ -206,7 +207,7 @@ Changes since last release:
 
 - Changed tree statistics for test data from data frames to tibbles.
 - Improved feedback on missing decision labels when creating FFTs from descriptions with `my.tree` or `fftrees_wordstofftrees()`. 
-- Deprecated `store.data` argument of `FFTrees()`. 
+- Deprecated the `store.data` argument of `FFTrees()`. 
 
 <!-- Details: --> 
 
@@ -264,13 +265,13 @@ Changes since last release:
 
 ## 1.5.7
 
-- Officially deprecated "max" and "zigzag" algorithms. 
+- Officially deprecated the `"max"` and `"zigzag"` algorithms. 
 - Minor cleanup throughout. 
 
 ## 1.5.0
 
 - Fixed warnings for CRAN submission. 
-- FFTrees objects have a nicer internal structure.
+- `FFTrees` objects now have a nicer internal structure.
 - Added tests throughout (finally). 
 - Extensive code cleanup, which should speed things up.
 - New print method includes an ASCII confusion matrix. 
