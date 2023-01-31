@@ -75,8 +75,8 @@ fftrees_create(
 Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
 Default: \code{my.goal = NULL}.}
 
-\item{my.goal.fun}{The definition of an outcome measure to optimize, defined in terms of the
-frequency counts of 4 basic classification outcomes \code{hi, fa, mi, cr}
+\item{my.goal.fun}{The definition of an outcome measure to optimize, defined as a function
+of the frequency counts of the 4 basic classification outcomes \code{hi, fa, mi, cr}
 (i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).
 Example: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
 Default: \code{my.goal.fun = NULL}.}

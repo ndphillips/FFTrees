@@ -26,6 +26,8 @@ FFTrees(
   cost.cues = NULL,
   main = NULL,
   decision.labels = c("False", "True"),
+  my.goal = NULL,
+  my.goal.fun = NULL,
   my.tree = NULL,
   object = NULL,
   tree.definitions = NULL,
@@ -94,9 +96,9 @@ Default: \code{stopping.par = .10}.}
 \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
 \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.}
 
-\item{sens.w}{numeric. A numeric value. A number from \code{0} to \code{1} indicating
-how to weight sensitivity relative to specificity when \code{goal = 'wacc'}.
-Default: \code{sens.w = .50}.}
+\item{sens.w}{A numeric value from \code{0} to \code{1} indicating how to weight
+sensitivity relative to specificity when optimizing \emph{weighted} accuracy (e.g., \code{goal = 'wacc'}).
+Default: \code{sens.w = .50} (i.e., \code{wacc} corresponds to \code{bacc}).}
 
 \item{cost.outcomes}{A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
 The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
@@ -111,8 +113,18 @@ Cues in \code{data} that are not present in \code{cost.cues} are assumed to have
 
 \item{decision.labels}{string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.}
 
-\item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as optional character string).
-For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}}
+\item{my.goal}{The name of an optimization measure defined by \code{my.goal.fun} (as a character string).
+Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
+Default: \code{my.goal = NULL}.}
+
+\item{my.goal.fun}{The definition of an outcome measure to optimize, defined as a function
+of the frequency counts of the 4 basic classification outcomes \code{hi, fa, mi, cr}
+(i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).
+Example: \code{my.goal.fun = function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)}} (i.e., accuracy).
+Default: \code{my.goal.fun = NULL}.}
+
+\item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as character string).
+For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.}
 
 \item{object}{An optional existing \code{FFTrees} object.
 When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
