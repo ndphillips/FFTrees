@@ -20,8 +20,9 @@
 #' @param newdata A dataset with cues to be ranked (as data frame).
 #' @param data The type of data with cues to be ranked (as character: \code{'train'}, \code{'test'}, or \code{'dynamic'}).
 #' Default: \code{data = 'train'}.
-#' @param rounding Number of digits used to round (as integer).
-#' Default: \code{rounding = NULL}.
+#' @param rounding integer. An integer value indicating the decimal digit
+#' to which non-integer numeric cue thresholds are to be rounded.
+#' Default: \code{rounding = NULL} (i.e., no rounding).
 #'
 #' @return A modified \code{FFTrees} object (with cue rank information
 #' for the current \code{data} type in \code{x$cues$stats}).

@@ -52,8 +52,6 @@
 #' @param numthresh.n integer. The number of numeric thresholds to try.
 #' @param repeat.cues logical. May cues occur multiple times within a tree?
 #' Default: \code{repeat.cues = TRUE}.
-#' @param rounding integer. An integer indicating digit rounding for non-integer numeric cue thresholds.
-#' Default: \code{rounding = NULL} (i.e., no rounding).
 #' A value of \code{0} rounds all possible thresholds to the nearest integer, \code{1} rounds to the nearest decade (.10), etc.
 #' @param stopping.par numeric. A numeric value indicating the parameter for the stopping rule.
 #' For stopping.rule \code{"levels"}, this is the number of levels.
@@ -110,7 +108,7 @@
 #' Setting \code{quiet = FALSE} is helpful for diagnosing errors.
 #' Default: \code{quiet = FALSE} (i.e., show progress).
 #'
-#' @param comp,force,rank.method,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
+#' @param comp,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
 #' @return An \code{FFTrees} object with the following elements:
 #' \describe{
@@ -187,7 +185,6 @@ FFTrees <- function(formula = NULL,
                     numthresh.method = "o",
                     numthresh.n = 10,
                     repeat.cues = TRUE,
-                    rounding = NULL,          # ToDo: Used anywhere?
                     stopping.par = .10,
                     stopping.rule = "exemplars",
                     #
@@ -219,6 +216,7 @@ FFTrees <- function(formula = NULL,
                     comp = NULL,         # do.comp
                     force = NULL,        # (none)
                     rank.method = NULL,  # algorithm
+                    rounding = NULL,     # in fftrees_cuerank()
                     store.data = NULL,   # (none)
                     verbose = NULL       # progress
 ) {
@@ -241,6 +239,10 @@ FFTrees <- function(formula = NULL,
     warning("The argument 'rank.method' is deprecated. Use 'algorithm' instead.")
 
     algorithm <- rank.method
+  }
+
+  if (!is.null(rounding)) {
+    warning("The argument 'rounding' is deprecated and ignored.")
   }
 
   if (!is.null(store.data)) {

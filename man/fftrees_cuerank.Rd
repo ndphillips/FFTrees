@@ -14,8 +14,9 @@ fftrees_cuerank(x = NULL, newdata = NULL, data = "train", rounding = NULL)
 \item{data}{The type of data with cues to be ranked (as character: \code{'train'}, \code{'test'}, or \code{'dynamic'}).
 Default: \code{data = 'train'}.}
 
-\item{rounding}{Number of digits used to round (as integer).
-Default: \code{rounding = NULL}.}
+\item{rounding}{integer. An integer value indicating the decimal digit
+to which non-integer numeric cue thresholds are to be rounded.
+Default: \code{rounding = NULL} (i.e., no rounding).}
 }
 \value{
 A modified \code{FFTrees} object (with cue rank information

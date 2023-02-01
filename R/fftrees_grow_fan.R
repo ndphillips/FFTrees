@@ -111,7 +111,8 @@ fftrees_grow_fan <- function(x,
   }
 
 
-  # Define key vectors of stats names (only once, before loop): ------
+  # Define the set of stats names (only once, before loop): ------
+
   # +++ here now +++
 
   # A. Define the set of ASIF stats [asif_stats_name_v]: ----
@@ -762,6 +763,8 @@ fftrees_grow_fan <- function(x,
 
       # NEW code end. ----
 
+      # +++ here now +++
+
       # OLD code start: ----
 
       # # Store OLD tree definition ("_o") using level_stats_i (each FFT as 1 line of df):
@@ -777,7 +780,6 @@ fftrees_grow_fan <- function(x,
 
       # OLD code end. ----
 
-      # +++ here now +++
 
     } # loop (over trees).
 

@@ -18,7 +18,6 @@ FFTrees(
   numthresh.method = "o",
   numthresh.n = 10,
   repeat.cues = TRUE,
-  rounding = NULL,
   stopping.par = 0.1,
   stopping.rule = "exemplars",
   sens.w = 0.5,
@@ -40,6 +39,7 @@ FFTrees(
   comp = NULL,
   force = NULL,
   rank.method = NULL,
+  rounding = NULL,
   store.data = NULL,
   verbose = NULL
 )
@@ -80,10 +80,7 @@ As all combinations of possible exit structures are considered, larger values of
 \item{numthresh.n}{integer. The number of numeric thresholds to try.}
 
 \item{repeat.cues}{logical. May cues occur multiple times within a tree?
-Default: \code{repeat.cues = TRUE}.}
-
-\item{rounding}{integer. An integer indicating digit rounding for non-integer numeric cue thresholds.
-Default: \code{rounding = NULL} (i.e., no rounding).
+Default: \code{repeat.cues = TRUE}.
 A value of \code{0} rounds all possible thresholds to the nearest integer, \code{1} rounds to the nearest decade (.10), etc.}
 
 \item{stopping.par}{numeric. A numeric value indicating the parameter for the stopping rule.
@@ -146,7 +143,7 @@ Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.}
 Setting \code{quiet = FALSE} is helpful for diagnosing errors.
 Default: \code{quiet = FALSE} (i.e., show progress).}
 
-\item{comp, force, rank.method, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
+\item{comp, force, rank.method, rounding, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
 }
 \value{
 An \code{FFTrees} object with the following elements:
