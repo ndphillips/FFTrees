@@ -551,7 +551,7 @@ plot.FFTrees <- function(x = NULL,
 
     } # for n.levels.
 
-    # print(level_stats)  # +++ here now +++: Tree with marginal frequency values (for each level)
+    # print(level_stats)  # tree with marginal frequency values (for each level)
 
 
     # Set plotting parameters: ----
@@ -588,1675 +588,1681 @@ plot.FFTrees <- function(x = NULL,
     }
 
     # Panel parameters:
-    panel.line.lwd <- 1
-    panel.line.col <- gray(0) # = black
-    panel.line.lty <- 1
+    panel_line_lwd <- 1
+    col_panel_line <- gray(0) # = black
+    panel_line_lty <- 1
 
     # Ball parameters:
-    ball.col <- c(gray(0), gray(0))  # = black
-    ball.bg  <- c(gray(1), gray(1))  # = white
-    ball.pch <- c(21, 24)
-    ball.cex <- c(1, 1)
+    ball_col <- c(gray(0), gray(0))  # = black
+    ball_bg  <- c(gray(1), gray(1))  # = white
+    ball_pch <- c(21, 24)
+    ball_cex <- c(1, 1)
 
-    error.col <- "red"
-      correct.col <- "green"
+    # error.col <- "red"      # NOT used anywhere?
+    # correct.col <- "green"  # NOT used anywhere?
 
-      max.label.length <- 100
-      def.par <- par(no.readonly = TRUE)
+    max_label_length <- 100
+    # def_par <- par(no.readonly = TRUE)  # NOT used anywhere?
 
-      ball.box.width   <- 10
-      label.box.height <-  2
-      label.box.width  <-  5
+    ball_box_width   <- 10
+    label_box_height <-  2
+    label_box_width  <-  5
 
-      # Cue labels:
-      if (is.null(cue.labels)) {
-        cue.labels <- level_stats$cue
-      }
+    # Cue labels:
+    if (is.null(cue.labels)) {
+      cue.labels <- level_stats$cue
+    }
 
-      # Trim labels:
-      cue.labels <- strtrim(cue.labels, max.label.length)
+    # Trim labels:
+    cue.labels <- strtrim(cue.labels, max_label_length)
 
-      # Lines/node segments:
-      segment.lty <- 1
-      segment.lwd <- 1
+    # Lines/node segments:
+    segment_lty <- 1
+    segment_lwd <- 1
 
-      continue.segment.lwd <- 1
-      continue.segment.lty <- 1
+    # continue_segment_lwd <- 1  # NOT used anywhere
+    # continue_segment_lty <- 1  # NOT used anywhere
 
-      exit.segment.lwd <- 1
-      exit.segment.lty <- 1
-
-
-      # Define plotting.parameters.df:
-      if (show.top & show.middle & show.bottom) {
-
-        plotting.parameters.df <- data.frame(
-          n.levels = 1:6,
-          plot.height = c(10, 12, 15, 19, 23, 27),
-          plot.width = c(14, 16, 20, 24, 28, 34),
-          label.box.text.cex = cue.cex,
-          break.label.cex = threshold.cex
-        )
-
-      } else if (show.top == FALSE & show.middle & show.bottom == FALSE) {
-
-        plotting.parameters.df <- data.frame(
-          n.levels = 1:6,
-          plot.height = c(10, 12, 15, 19, 23, 25),
-          plot.width = c(14, 16, 20, 24, 28, 32) * 1,
-          label.box.text.cex = cue.cex,
-          break.label.cex = threshold.cex
-        )
-
-      } else {
-
-        plotting.parameters.df <- data.frame(
-          n.levels = 1:6,
-          plot.height = c(10, 12, 15, 19, 23, 25),
-          plot.width = c(14, 16, 20, 24, 28, 32) * 1,
-          label.box.text.cex = cue.cex,
-          break.label.cex = threshold.cex
-        )
-      }
-
-      if (n.levels < 6) {
-
-        label.box.text.cex <- plotting.parameters.df$label.box.text.cex[n.levels]
-        break.label.cex <- plotting.parameters.df$break.label.cex[n.levels]
-        plot.height <- plotting.parameters.df$plot.height[n.levels]
-        plot.width <- plotting.parameters.df$plot.width[n.levels]
-
-      } else { # n.levels >= 6:
-
-        label.box.text.cex <- plotting.parameters.df$label.box.text.cex[6]
-        break.label.cex <- plotting.parameters.df$break.label.cex[6]
-        plot.height <- plotting.parameters.df$plot.height[6]
-        plot.width <- plotting.parameters.df$plot.width[6]
-
-      }
+    # exit_segment_lwd <- 1  # NOT used anywhere
+    # exit_segment_lty <- 1  # NOT used anywhere
 
 
-      # Colors: ----
+    # Define plotting_parameters_df:
+    if (show.top & show.middle & show.bottom) {
 
-      exit.node.bg <- "white"
+      plotting_parameters_df <- data.frame(
+        n.levels = 1:6,
+        plot.height = c(10, 12, 15, 19, 23, 27),
+        plot.width = c(14, 16, 20, 24, 28, 34),
+        label.box.text.cex = cue.cex,
+        break.label.cex = threshold.cex
+      )
 
-      # error.colfun <- circlize::colorRamp2(c(0, 50, 100),
-      #                            colors = c("white", "red", "black"))
-      #
-      # correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
-      #                            colors = c("white", "green", "black"))
-      #
-      # error.bg <- scales::alpha(error.colfun(35), .8)
-      # error.border <-  scales::alpha(error.colfun(65), .9)
-      # correct.bg <- scales::alpha(correct.colfun(35), .8)
-      # correct.border <-  scales::alpha(correct.colfun(65), .9)
+    } else if (show.top == FALSE & show.middle & show.bottom == FALSE) {
 
-      error.bg <- "#FF7352CC"
-        error.border <- "#AD1A0AE6"
-          correct.bg <- "#89FF6FCC"
-            correct.border <- "#24AB18E6"
+      plotting_parameters_df <- data.frame(
+        n.levels = 1:6,
+        plot.height = c(10, 12, 15, 19, 23, 25),
+        plot.width = c(14, 16, 20, 24, 28, 32) * 1,
+        label.box.text.cex = cue.cex,
+        break.label.cex = threshold.cex
+      )
 
-            max.cex <- 6
-            min.cex <- 1
+    } else {
 
-            exit.node.pch <- 21
+      plotting_parameters_df <- data.frame(
+        n.levels = 1:6,
+        plot.height = c(10, 12, 15, 19, 23, 25),
+        plot.width = c(14, 16, 20, 24, 28, 32) * 1,
+        label.box.text.cex = cue.cex,
+        break.label.cex = threshold.cex
+      )
+    }
 
-            decision.node.pch <- NA_integer_
+    if (n.levels < 6) {
+
+      label.box.text.cex <- plotting_parameters_df$label.box.text.cex[n.levels]
+      break.label.cex <- plotting_parameters_df$break.label.cex[n.levels]
+      plot.height <- plotting_parameters_df$plot.height[n.levels]
+      plot.width <- plotting_parameters_df$plot.width[n.levels]
+
+    } else { # n.levels >= 6:
+
+      label.box.text.cex <- plotting_parameters_df$label.box.text.cex[6]
+      break.label.cex <- plotting_parameters_df$break.label.cex[6]
+      plot.height <- plotting_parameters_df$plot.height[6]
+      plot.width <- plotting_parameters_df$plot.width[6]
+
+    }
 
 
-            # Balls: ----
+    # Colors: ----
 
-            ball.loc <- "variable"
+    col_exit_node_bg <- "white"
 
-            if (n.levels == 3) {
-              ball.box.width <- 14
+    # error.colfun <- circlize::colorRamp2(c(0, 50, 100),
+    #                            colors = c("white", "red", "black"))
+    #
+    # correct.colfun <-  circlize::colorRamp2(c(0, 50, 100),
+    #                            colors = c("white", "green", "black"))
+    #
+    # col_error_bg <- scales::alpha(error.colfun(35), .8)
+    # col_error_border <-  scales::alpha(error.colfun(65), .9)
+    # col_correct_bg <- scales::alpha(correct.colfun(35), .8)
+    # col_correct_border <-  scales::alpha(correct.colfun(65), .9)
+
+    col_error_bg <- "#FF7352CC"
+      col_error_border <- "#AD1A0AE6"
+        col_correct_bg <- "#89FF6FCC"
+          col_correct_border <- "#24AB18E6"
+
+          # max_cex <- 6  # NOT used anywhere
+          # min_cex <- 1  # NOT used anywhere
+
+          exit_node_pch <- 21
+
+          decision_node_pch <- NA_integer_
+
+
+          # Balls: ----
+
+          ball_loc <- "variable"
+
+          if (n.levels == 3) {
+            ball_box_width <- 14
+          }
+
+          if (n.levels == 4) {
+            ball_box_width <- 18
+          }
+
+          ball_box_height      <-  2.5
+          ball_box_horiz_shift <- 10
+          ball_box_vert_shift  <- -1
+          ball_box_max_shift_p <-  .9
+          ball_box_min_shift_p <-  .4
+
+          ball_box_fixed_x_shift <- c(ball_box_min_shift_p * plot.width, ball_box_max_shift_p * plot.width)
+
+          # Determine N per ball:
+          if (is.null(n.per.icon)) {
+
+            max_n_side <- max(c(n_pos_cases, n_neg_cases))
+
+            i <- max_n_side / c(1, 5, 10^(1:10))
+            i[i > 50] <- 0
+
+            n.per.icon <- c(1, 5, 10^(1:10))[which(i == max(i))]
+
+          }
+
+          noise_ball_pch  <- ball_pch[1]
+          signal_ball_pch <- ball_pch[2]
+          noise_ball_col  <- ball_col[1]
+          signal_ball_col <- ball_col[2]
+          noise_ball_bg   <- ball_bg[1]
+          signal_ball_bg  <- ball_bg[2]
+
+
+          # Arrows: ----
+
+          arrow_lty <- 1
+          arrow_lwd <- 1
+          arrow_length      <- 2.50
+          arrow_head_length <-  .08
+          arrow_col <- gray(0) # = black
+
+
+          # Final stats: ----
+
+          # spec_circle_x   <- .40  # NOT used anywhere
+          # dprime_circle_x <- .50  # NOT used anywhere
+          # sens_circle_x   <- .60  # NOT used anywhere
+
+          # stat_circle_y   <- .30  # NOT used anywhere
+
+          # sens_circle_col   <- "green"  # NOT used anywhere
+          # spec_circle_col   <- "red"    # NOT used anywhere
+          # dprime_circle_col <- "blue"   # NOT used anywhere
+          # stat_outer_circle_col <- gray(.50)  # NOT used anywhere
+
+
+          # 1: Initial Frequencies: ------
+
+          # Parameters:
+
+          if (show.top) {
+
+            par(mar = c(0, 0, 1, 0))
+
+            # Prepare plot:
+            plot(1,
+                 xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n",
+                 xlab = "", ylab = "", yaxt = "n", xaxt = "n"
+            )
+
+            # 1. Title: ----
+
+            par(xpd = TRUE)
+
+            # (a) lines:
+            if (hlines) {
+
+              segments(0, .95, 1, .95, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty) # top hline
+
+              x_dev <- get_x_dev(main)
+              y_dev <- .20
+              rect((.50 - x_dev), (1 - y_dev), (.50 + x_dev), (1 + y_dev), col = "white", border = NA) # title background
+
             }
 
-            if (n.levels == 4) {
-              ball.box.width <- 18
+            # (b) label:
+            text(x = .50, y = .96, main, cex = panel_title_cex, ...)  # title 1 (top): main
+
+
+            # 2. Data info: ----
+
+            # (a) N and labels:
+            text(x = .50, y = .78, paste("N = ", prettyNum(n_exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
+            text(.50, .63, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
+            text(.50, .63, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
+
+            # (b) Show balls:
+            n_true_pos <- with(final_stats, hi + mi)
+            n_true_neg <- with(final_stats, fa + cr)
+
+            add_balls(
+              x.lim = c(.33, .67),
+              y.lim = c(.12, .52),
+              n.vec = c(n_true_neg, n_true_pos),
+              pch.vec = c(noise_ball_pch, signal_ball_pch),
+              bg.vec = c(noise_ball_bg, signal_ball_bg),
+              col.vec = c(noise_ball_col, signal_ball_col),
+              ball.cex = ball_cex,
+              upper.text.adj = 2,
+              n.per.icon = n.per.icon
+            )
+
+            # (c) n.per.icon legend 1 (top):
+            if (show_icon_guide_legend){
+
+              text(.98, 0, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2)
+              points(.98, 0, pch = noise_ball_pch,  cex = ball_cex)
+              points(.99, 0, pch = signal_ball_pch, cex = ball_cex)
+
+            } # if (show_icon_guide_legend).
+
+
+            par(xpd = FALSE)
+
+
+            # 3. Add p.signal and p.noise levels: -----
+
+            signal.p <- mean(x$data[[data]][[x$criterion_name]])
+            noise.p  <- (1 - signal.p)
+
+            p.rect.ylim <- c(.10, .60)
+
+
+            # (a) p.signal level (right): ----
+
+            text(
+              x = .80, y = p.rect.ylim[2],
+              labels = paste("p(", decision.labels[2], ")", sep = ""),
+              pos = 3, cex = 1.2
+            )
+
+            # Filling:
+            rect(.775, p.rect.ylim[1],
+                 .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+                 col = gray(.50, .25), border = NA
+            )
+
+            # Filltop:
+            segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+                     .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+                     lwd = 1
+            )
+
+            # Outline:
+            rect(.775, p.rect.ylim[1],
+                 .825, p.rect.ylim[2],
+                 lwd = 1
+            )
+
+            if (signal.p < .0001) {
+              signal.p.text <- "<1%"
+            } else {
+              signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
             }
 
-            ball.box.height      <-  2.5
-            ball.box.horiz.shift <- 10
-            ball.box.vert.shift  <- -1
-            ball.box.max.shift.p <-  .9
-            ball.box.min.shift.p <-  .4
+            text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+                 labels = signal.p.text,
+                 pos = 4, cex = 1.2
+            )
 
-            ball.box.fixed.x.shift <- c(ball.box.min.shift.p * plot.width, ball.box.max.shift.p * plot.width)
 
-            # Determine N per ball:
-            if (is.null(n.per.icon)) {
-              max_n_side <- max(c(n_pos_cases, n_neg_cases))
+            # (b) p.noise level (left): ----
 
-              i <- max_n_side / c(1, 5, 10^(1:10))
-              i[i > 50] <- 0
+            text(
+              x = .20, y = p.rect.ylim[2],
+              labels = paste("p(", decision.labels[1], ")", sep = ""),
+              pos = 3, cex = 1.2
+            )
 
-              n.per.icon <- c(1, 5, 10^(1:10))[which(i == max(i))]
+
+            rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+                 col = gray(.50, .25), border = NA
+            )
+
+            # Filltop:
+            segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+                     .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+                     lwd = 1
+            )
+
+            # Outline:
+            rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
+                 lwd = 1
+            )
+
+            if (noise.p < .0001) {
+              noise.p.text <- "<0.01%"
+            } else {
+              noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
             }
 
-            noise.ball.pch  <- ball.pch[1]
-            signal.ball.pch <- ball.pch[2]
-            noise.ball.col  <- ball.col[1]
-            signal.ball.col <- ball.col[2]
-            noise.ball.bg   <- ball.bg[1]
-            signal.ball.bg  <- ball.bg[2]
+            text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+                 labels = noise.p.text,
+                 pos = 2, cex = 1.2
+            )
 
+          } # if (show.top).
 
-            # Arrows: ----
 
-            arrow.lty <- 1
-            arrow.lwd <- 1
-            arrow.length      <- 2.50
-            arrow.head.length <-  .08
-            arrow.col <- gray(0) # = black
+          # 2. Main TREE: ------
 
+          if (show.middle) {
 
-            # Final stats: ----
+            if (show.top == FALSE & show.bottom == FALSE) {
+              par(mar = c(3, 3, 3, 3) + .1)
+            } else {
+              par(mar = c(0, 0, 0, 0))
+            }
 
-            spec.circle.x   <- .40
-            dprime.circle.x <- .50
-            sens.circle.x   <- .60
+            par(xpd = TRUE)
 
-            stat.circle.y   <- .30
+            # Prepare plot:
+            plot(1,
+                 xlim = c(-plot.width, plot.width),
+                 ylim = c(-plot.height, 0),
+                 type = "n", bty = "n",
+                 xaxt = "n", yaxt = "n",
+                 ylab = "", xlab = ""
+            )
 
-            sens.circle.col   <- "green"
-              spec.circle.col   <- "red"
-                dprime.circle.col <- "blue"
-                  stat.outer.circle.col <- gray(.50)
 
+            # Middle title: ----
 
-                  # 1: Initial Frequencies: ------
+            if (show.top | show.bottom) {
 
-                  # Parameters:
+              if (hlines) {
+                x_dev <- .28  # scaling factor, rather than difference
+                segments(-plot.width, 0, -plot.width * x_dev, 0, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
+                segments( plot.width, 0,  plot.width * x_dev, 0, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
+              }
 
-                  if (show.top) {
+              if (is.null(label.tree)) {
+                label.tree <- paste("FFT #", tree, " (of ", x$trees$n, ")", sep = "")
+              }
 
-                    par(mar = c(0, 0, 1, 0))
+              text(x = 0, y = 0, label.tree, cex = panel_title_cex, ...)  # title 2 (middle): (a) tree label
 
-                    # Prepare plot:
-                    plot(1,
-                         xlim = c(0, 1), ylim = c(0, 1), bty = "n", type = "n",
-                         xlab = "", ylab = "", yaxt = "n", xaxt = "n"
-                    )
+            } # if (show.top | show.bottom).
 
-                    # 1. Title: ----
+            if (show.top == FALSE & show.bottom == FALSE) {
 
-                    par(xpd = TRUE)
+              if (is.null(main) & is.null(x$params$main)) {
+                main <- ""
+              }
 
-                    # (a) lines:
-                    if (hlines) {
+              mtext(text = main, side = 3, cex = panel_title_cex, ...)  # title 2 (middle): (b) main label
 
-                      segments(0, .95, 1, .95, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty) # top hline
+            } # if (show.top == FALSE & show.bottom == FALSE).
 
-                      x_dev <- get_x_dev(main)
-                      y_dev <- .20
-                      rect((.50 - x_dev), (1 - y_dev), (.50 + x_dev), (1 + y_dev), col = "white", border = NA) # title background
 
-                    }
+            # Icon guide: ------
 
-                    # (b) label:
-                    text(x = .50, y = .96, main, cex = panel_title_cex, ...)  # title 1 (top): main
+            if (show.iconguide) {
 
+              # Parameters:
+              if (what == "ico") {
 
-                    # 2. Data info: ----
+                f_x <- 1.2  # scaling factor (to stretch in x-dim)
+                f_y <- 0.8  # scaling factor (to shift up)
 
-                    # (a) N and labels:
-                    text(x = .50, y = .78, paste("N = ", prettyNum(n_exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
-                    text(.50, .63, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
-                    text(.50, .63, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
+              } else { # default scaling factors:
 
-                    # (b) Show balls:
-                    n_true_pos <- with(final_stats, hi + mi)
-                    n_true_neg <- with(final_stats, fa + cr)
+                f_x <- 1
+                f_y <- 1
 
-                    add_balls(
-                      x.lim = c(.33, .67),
-                      y.lim = c(.12, .52),
-                      n.vec = c(n_true_neg, n_true_pos),
-                      pch.vec = c(noise.ball.pch, signal.ball.pch),
-                      bg.vec = c(noise.ball.bg, signal.ball.bg),
-                      col.vec = c(noise.ball.col, signal.ball.col),
-                      ball.cex = ball.cex,
-                      upper.text.adj = 2,
-                      n.per.icon = n.per.icon
-                    )
+              }
 
-                    # (c) n.per.icon legend 1 (top):
-                    if (show_icon_guide_legend){
+              exit_word <- exit_word(data)  # either 'train':'decide' or 'test':'predict'
 
-                      text(.98, 0, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2)
-                      points(.98, 0, pch = noise.ball.pch,  cex = ball.cex)
-                      points(.99, 0, pch = signal.ball.pch, cex = ball.cex)
 
-                    } # if (show_icon_guide_legend).
+              # (a) Noise panel (on left): ----
 
+              # Heading:
+              text(-plot.width  * .60 * f_x,
+                   -plot.height * .05 * f_y,
+                   paste(exit_word, decision.labels[1], sep = " "),
+                   cex = 1.2, font = 3
+              )
 
-                    par(xpd = FALSE)
+              # Noise balls:
+              points(c(-plot.width * .70,  -plot.width  * .50) * f_x,
+                     c(-plot.height * .13, -plot.height * .13) * f_y,
+                     pch = c(noise_ball_pch, signal_ball_pch),
+                     bg = c(col_correct_bg, col_error_bg),
+                     col = c(col_correct_border, col_error_border),
+                     cex = ball_cex * 1.5
+              )
 
+              # Labels:
+              text(c(-plot.width * .70,  -plot.width  * .50) * f_x,
+                   c(-plot.height * .13, -plot.height * .13) * f_y,
+                   labels = c("Correct\nRejection", "Miss"),
+                   pos = c(2, 4), offset = 1
+              )
 
-                    # 3. Add p.signal and p.noise levels: -----
 
-                    signal.p <- mean(x$data[[data]][[x$criterion_name]])
-                    noise.p  <- (1 - signal.p)
 
-                    p.rect.ylim <- c(.10, .60)
+              # (b) Signal panel (on right): ----
 
+              # Heading:
+              text(plot.width   * .60 * f_x,
+                   -plot.height * .05 * f_y,
+                   paste(exit_word, decision.labels[2], sep = " "),
+                   cex = 1.2, font = 3
+              )
 
-                    # (a) p.signal level (right): ----
+              # Signal balls:
+              points(c(plot.width   * .50,  plot.width  * .70 ) * f_x,
+                     c(-plot.height * .13, -plot.height * .13) * f_y,
+                     pch = c(noise_ball_pch, signal_ball_pch),
+                     bg = c(col_error_bg, col_correct_bg),
+                     col = c(col_error_border, col_correct_border),
+                     cex = ball_cex * 1.5
+              )
 
-                    text(
-                      x = .80, y = p.rect.ylim[2],
-                      labels = paste("p(", decision.labels[2], ")", sep = ""),
-                      pos = 3, cex = 1.2
-                    )
+              # Labels:
+              text(c(plot.width * .50,    plot.width  * .70) * f_x,
+                   c(-plot.height * .13, -plot.height * .13) * f_y,
+                   labels = c("False\nAlarm", "Hit"),
+                   pos = c(2, 4), offset = 1
+              )
 
-                    # Filling:
-                    rect(.775, p.rect.ylim[1],
-                         .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-                         col = gray(.50, .25), border = NA
-                    )
 
-                    # Filltop:
-                    segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-                             .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-                             lwd = 1
-                    )
+              # (c) Additional lines (below icon guide): ----
+              if (what == "ico" & hlines) {
 
-                    # Outline:
-                    rect(.775, p.rect.ylim[1],
-                         .825, p.rect.ylim[2],
-                         lwd = 1
-                    )
+                x_hline <-  plot.width  * .95 * f_x
+                y_hline <- -plot.height * .19 * f_y
 
-                    if (signal.p < .0001) {
-                      signal.p.text <- "<1%"
-                    } else {
-                      signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
-                    }
+                segments(-x_hline, y_hline, x_hline, y_hline, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
+                rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
+              }
 
-                    text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-                         labels = signal.p.text,
-                         pos = 4, cex = 1.2
-                    )
 
+              # (d) n.per.icon legend 2 (middle): ----
+              if (what == "ico") { show_icon_guide_legend <- TRUE } # special case
 
-                    # (b) p.noise level (left): ----
+              if (show_icon_guide_legend){
 
-                    text(
-                      x = .20, y = p.rect.ylim[2],
-                      labels = paste("p(", decision.labels[1], ")", sep = ""),
-                      pos = 3, cex = 1.2
-                    )
+                if (what == "ico") { # special case:
 
+                  x_s2 <- plot.width
+                  x_s1 <- plot.width - .75
+                  y_s1 <- plot.height * -1.10
 
-                    rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-                         col = gray(.50, .25), border = NA
-                    )
+                } else { # defaults:
 
-                    # Filltop:
-                    segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-                             .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-                             lwd = 1
-                    )
+                  x_s2 <- plot.width
+                  x_s1 <- plot.width - .40
+                  y_s1 <- plot.height * -1
 
-                    # Outline:
-                    rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
-                         lwd = 1
-                    )
+                }
 
-                    if (noise.p < .0001) {
-                      noise.p.text <- "<0.01%"
-                    } else {
-                      noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
-                    }
+                text(x_s1, y_s1, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2, cex = ball_cex)
+                points(x_s1, y_s1, pch = noise_ball_pch,  cex = ball_cex)
+                points(x_s2, y_s1, pch = signal_ball_pch, cex = ball_cex)
 
-                    text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-                         labels = noise.p.text,
-                         pos = 2, cex = 1.2
-                    )
+              } # if (show_icon_guide_legend).
 
-                  } # if (show.top).
+            } # if (show.iconguide).
 
+            par(xpd = FALSE)
 
-                  # 2. Main TREE: ------
 
-                  if (show.middle) {
+            # Plot main TREE: ------
 
-                    if (show.top == FALSE & show.bottom == FALSE) {
-                      par(mar = c(3, 3, 3, 3) + .1)
-                    } else {
-                      par(mar = c(0, 0, 0, 0))
-                    }
+            # Set initial subplot center:
+            subplot.center <- c(0, -4)
 
-                    par(xpd = TRUE)
+            # Loop over levels: ------
+            for (level.i in 1:min(c(n.levels, 6))) {
 
-                    # Prepare plot:
-                    plot(1,
-                         xlim = c(-plot.width, plot.width),
-                         ylim = c(-plot.height, 0),
-                         type = "n", bty = "n",
-                         xaxt = "n", yaxt = "n",
-                         ylab = "", xlab = ""
-                    )
+              # Cue label:
+              current.cue <- cue.labels[level.i]
 
+              # Get stats for current level:
+              hi.i <- level_stats$hi.m[level.i]
+              mi.i <- level_stats$mi.m[level.i]
+              fa.i <- level_stats$fa.m[level.i]
+              cr.i <- level_stats$cr.m[level.i]
 
-                    # Middle title: ----
 
-                    if (show.top | show.bottom) {
+              # Top: If level.i == 1, draw top textbox: ----
 
-                      if (hlines) {
-                        x_dev <- .28  # scaling factor, rather than difference
-                        segments(-plot.width, 0, -plot.width * x_dev, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
-                        segments( plot.width, 0,  plot.width * x_dev, 0, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
-                      }
+              if (level.i == 1) {
 
-                      if (is.null(label.tree)) {
-                        label.tree <- paste("FFT #", tree, " (of ", x$trees$n, ")", sep = "")
-                      }
+                rect(subplot.center[1] - label_box_width / 2,
+                     subplot.center[2] + 2 - label_box_height / 2,
+                     subplot.center[1] + label_box_width / 2,
+                     subplot.center[2] + 2 + label_box_height / 2,
+                     col = "white",
+                     border = "black"
+                )
 
-                      text(x = 0, y = 0, label.tree, cex = panel_title_cex, ...)  # title 2 (middle): (a) tree label
+                points(
+                  x = subplot.center[1],
+                  y = subplot.center[2] + 2,
+                  cex = decision_node_cex,
+                  pch = decision_node_pch
+                )
 
-                    } # if (show.top | show.bottom).
+                text(
+                  x = subplot.center[1],
+                  y = subplot.center[2] + 2,
+                  labels = current.cue,
+                  cex = label.box.text.cex  # get_label_cex(current.cue, label.box.text.cex = label.box.text.cex)
+                )
 
-                    if (show.top == FALSE & show.bottom == FALSE) {
+              } # if (level.i == 1).
 
-                      if (is.null(main) & is.null(x$params$main)) {
-                        main <- ""
-                      }
 
-                      mtext(text = main, side = 3, cex = panel_title_cex, ...)  # title 2 (middle): (b) main label
+              # Left (Noise) classification / New level: ----
 
-                    } # if (show.top == FALSE & show.bottom == FALSE).
+              # Exit node on left: ----
 
+              if (level_stats$exit[level.i] %in% c(0, .5) | paste(level_stats$exit[level.i]) %in% c("0", ".5")) {
 
-                    # Icon guide: ------
+                segments(subplot.center[1],
+                         subplot.center[2] + 1,
+                         subplot.center[1] - 2,
+                         subplot.center[2] - 2,
+                         lty = segment_lty,
+                         lwd = segment_lwd
+                )
 
-                    if (show.iconguide) {
+                arrows(
+                  x0 = subplot.center[1] - 2,
+                  y0 = subplot.center[2] - 2,
+                  x1 = subplot.center[1] - 2 - arrow_length,
+                  y1 = subplot.center[2] - 2,
+                  lty = arrow_lty,
+                  lwd = arrow_lwd,
+                  col = arrow_col,
+                  length = arrow_head_length
+                )
 
-                      # Parameters:
-                      if (what == "ico") {
+                # Decision text:
 
-                        f_x <- 1.2  # scaling factor (to stretch in x-dim)
-                        f_y <- 0.8  # scaling factor (to shift up)
+                if (decision.cex > 0) {
 
-                      } else { # default scaling factors:
+                  text(
+                    x = subplot.center[1] - 2 - arrow_length * .7,
+                    y = subplot.center[2] - 2.2,
+                    labels = decision.labels[1],
+                    pos = 1, font = 3, cex = decision.cex
+                  )
+                }
 
-                        f_x <- 1
-                        f_y <- 1
+                if (ball_loc == "fixed") {
 
-                      }
+                  ball.x.lim <- c(-max(ball_box_fixed_x_shift), -min(ball_box_fixed_x_shift))
 
-                      exit_word <- exit_word(data)  # either 'train':'decide' or 'test':'predict'
+                  ball.y.lim <- c(
+                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  )
+                }
 
+                if (ball_loc == "variable") {
 
-                      # (a) Noise panel (on left): ----
+                  ball.x.lim <- c(
+                    subplot.center[1] - ball_box_horiz_shift - ball_box_width / 2,
+                    subplot.center[1] - ball_box_horiz_shift + ball_box_width / 2
+                  )
 
-                      # Heading:
-                      text(-plot.width  * .60 * f_x,
-                           -plot.height * .05 * f_y,
-                           paste(exit_word, decision.labels[1], sep = " "),
-                           cex = 1.2, font = 3
-                      )
+                  ball.y.lim <- c(
+                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  )
 
-                      # Noise balls:
-                      points(c(-plot.width * .70,  -plot.width  * .50) * f_x,
-                             c(-plot.height * .13, -plot.height * .13) * f_y,
-                             pch = c(noise.ball.pch, signal.ball.pch),
-                             bg = c(correct.bg, error.bg),
-                             col = c(correct.border, error.border),
-                             cex = ball.cex * 1.5
-                      )
+                }
 
-                      # Labels:
-                      text(c(-plot.width * .70,  -plot.width  * .50) * f_x,
-                           c(-plot.height * .13, -plot.height * .13) * f_y,
-                           labels = c("Correct\nRejection", "Miss"),
-                           pos = c(2, 4), offset = 1
-                      )
+                if (max(c(cr.i, mi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
 
+                  add_balls(
+                    x.lim = ball.x.lim,
+                    y.lim = ball.y.lim,
+                    n.vec = c(cr.i, mi.i),
+                    pch.vec = c(noise_ball_pch, signal_ball_pch),
+                    # bg.vec = c(noise_ball_bg, signal_ball_bg),
+                    bg.vec = c(col_correct_bg, col_error_bg),
+                    col.vec = c(col_correct_border, col_error_border),
+                    freq.text = TRUE,
+                    n.per.icon = n.per.icon,
+                    ball.cex = ball_cex
+                  )
 
+                }
 
-                      # (b) Signal panel (on right): ----
+                # level break label:
+                pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
+                neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
 
-                      # Heading:
-                      text(plot.width   * .60 * f_x,
-                           -plot.height * .05 * f_y,
-                           paste(exit_word, decision.labels[2], sep = " "),
-                           cex = 1.2, font = 3
-                      )
+                text_outline(
+                  x = subplot.center[1] - 1,
+                  y = subplot.center[2],
+                  labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
+                  pos = 2, cex = break.label.cex, r = .1
+                )
 
-                      # Signal balls:
-                      points(c(plot.width   * .50,  plot.width  * .70 ) * f_x,
-                             c(-plot.height * .13, -plot.height * .13) * f_y,
-                             pch = c(noise.ball.pch, signal.ball.pch),
-                             bg = c(error.bg, correct.bg),
-                             col = c(error.border, correct.border),
-                             cex = ball.cex * 1.5
-                      )
+                points(
+                  x = subplot.center[1] - 2,
+                  y = subplot.center[2] - 2,
+                  pch = exit_node_pch,
+                  cex = exit_node_cex,
+                  bg = col_exit_node_bg
+                )
+
+                text(
+                  x = subplot.center[1] - 2,
+                  y = subplot.center[2] - 2,
+                  labels = substr(decision.labels[1], 1, 1)
+                )
+              } # if (exit node on left).
+
+
+              # New level on left: ----
+
+              if (level_stats$exit[level.i] %in% c(1) | paste(level_stats$exit[level.i]) %in% c("1")) {
+
+                segments(subplot.center[1],
+                         subplot.center[2] + 1,
+                         subplot.center[1] - 2,
+                         subplot.center[2] - 2,
+                         lty = segment_lty,
+                         lwd = segment_lwd
+                )
+
+                rect(subplot.center[1] - 2 - label_box_width / 2,
+                     subplot.center[2] - 2 - label_box_height / 2,
+                     subplot.center[1] - 2 + label_box_width / 2,
+                     subplot.center[2] - 2 + label_box_height / 2,
+                     col = "white",
+                     border = "black"
+                )
+
+                if (level.i < 6) {
+
+                  text(
+                    x = subplot.center[1] - 2,
+                    y = subplot.center[2] - 2,
+                    labels = cue.labels[level.i + 1],
+                    cex = label.box.text.cex
+                  )
+
+                } else {
+
+                  text(
+                    x = subplot.center[1] - 2,
+                    y = subplot.center[2] - 2,
+                    labels = paste0("+ ", n.levels - 6, " More"),
+                    cex = label.box.text.cex,
+                    font = 3
+                  )
+
+                }
+              } # if (new level on left).
+
+
+              # Right (Signal) classification / New level: ----
+
+              # Exit node on right: ----
+
+              if (level_stats$exit[level.i] %in% c(1, .5) | paste(level_stats$exit[level.i]) %in% c("1", ".5")) {
+
+                segments(subplot.center[1],
+                         subplot.center[2] + 1,
+                         subplot.center[1] + 2,
+                         subplot.center[2] - 2,
+                         lty = segment_lty,
+                         lwd = segment_lwd
+                )
+
+                arrows(
+                  x0 = subplot.center[1] + 2,
+                  y0 = subplot.center[2] - 2,
+                  x1 = subplot.center[1] + 2 + arrow_length,
+                  y1 = subplot.center[2] - 2,
+                  lty = arrow_lty,
+                  lwd = arrow_lwd,
+                  col = arrow_col,
+                  length = arrow_head_length
+                )
+
+                # Decision text:
+
+                if (decision.cex > 0) {
+                  text(
+                    x = subplot.center[1] + 2 + arrow_length * .7,
+                    y = subplot.center[2] - 2.2,
+                    labels = decision.labels[2],
+                    pos = 1,
+                    font = 3,
+                    cex = decision.cex
+                  )
+                }
+
+                if (ball_loc == "fixed") {
+                  ball.x.lim <- c(min(ball_box_fixed_x_shift), max(ball_box_fixed_x_shift))
+                  ball.y.lim <- c(
+                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  )
+                }
+
+                if (ball_loc == "variable") {
+                  ball.x.lim <- c(
+                    subplot.center[1] + ball_box_horiz_shift - ball_box_width / 2,
+                    subplot.center[1] + ball_box_horiz_shift + ball_box_width / 2
+                  )
+
+                  ball.y.lim <- c(
+                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  )
+
+                }
+
+                if (max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
+
+                  add_balls(
+                    x.lim = ball.x.lim,
+                    y.lim = ball.y.lim,
+                    n.vec = c(fa.i, hi.i),
+                    pch.vec = c(noise_ball_pch, signal_ball_pch),
+                    # bg.vec = c(noise_ball_bg, signal_ball_bg),
+                    bg.vec = c(col_error_bg, col_correct_bg),
+                    col.vec = c(col_error_border, col_correct_border),
+                    freq.text = TRUE,
+                    n.per.icon = n.per.icon,
+                    ball.cex = ball_cex
+                  )
+
+                }
+
+                # level break label:
+                dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
+
+                pos.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+                neg.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+
+
+                text_outline(subplot.center[1] + 1,
+                             subplot.center[2],
+                             labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
+                             pos = 4, cex = break.label.cex, r = .1
+                )
 
-                      # Labels:
-                      text(c(plot.width * .50,    plot.width  * .70) * f_x,
-                           c(-plot.height * .13, -plot.height * .13) * f_y,
-                           labels = c("False\nAlarm", "Hit"),
-                           pos = c(2, 4), offset = 1
-                      )
+                points(
+                  x = subplot.center[1] + 2,
+                  y = subplot.center[2] - 2,
+                  pch = exit_node_pch,
+                  cex = exit_node_cex,
+                  bg = col_exit_node_bg
+                )
 
+                text(
+                  x = subplot.center[1] + 2,
+                  y = subplot.center[2] - 2,
+                  labels = substr(decision.labels[2], 1, 1)
+                )
 
-                      # (c) Additional lines (below icon guide): ----
-                      if (what == "ico" & hlines) {
+              } # if (exit node on right).
 
-                        x_hline <-  plot.width  * .95 * f_x
-                        y_hline <- -plot.height * .19 * f_y
 
-                        segments(-x_hline, y_hline, x_hline, y_hline, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
-                        rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
-                      }
+              # New level on right: ----
 
+              if (level_stats$exit[level.i] %in% 0 | paste(level_stats$exit[level.i]) %in% c("0")) {
 
-                      # (d) n.per.icon legend 2 (middle): ----
-                      if (what == "ico") { show_icon_guide_legend <- TRUE } # special case
+                segments(subplot.center[1],
+                         subplot.center[2] + 1,
+                         subplot.center[1] + 2,
+                         subplot.center[2] - 2,
+                         lty = segment_lty,
+                         lwd = segment_lwd
+                )
 
-                      if (show_icon_guide_legend){
+                if (level.i < 6) {
 
-                        if (what == "ico") { # special case:
+                  rect(subplot.center[1] + 2 - label_box_width / 2,
+                       subplot.center[2] - 2 - label_box_height / 2,
+                       subplot.center[1] + 2 + label_box_width / 2,
+                       subplot.center[2] - 2 + label_box_height / 2,
+                       col = "white",
+                       border = "black"
+                  )
 
-                          x_s2 <- plot.width
-                          x_s1 <- plot.width - .75
-                          y_s1 <- plot.height * -1.10
+                  text(
+                    x = subplot.center[1] + 2,
+                    y = subplot.center[2] - 2,
+                    labels = cue.labels[level.i + 1],
+                    cex = label.box.text.cex
+                  )
 
-                        } else { # defaults:
+                } else {
 
-                          x_s2 <- plot.width
-                          x_s1 <- plot.width - .40
-                          y_s1 <- plot.height * -1
+                  rect(subplot.center[1] + 2 - label_box_width / 2,
+                       subplot.center[2] - 2 - label_box_height / 2,
+                       subplot.center[1] + 2 + label_box_width / 2,
+                       subplot.center[2] - 2 + label_box_height / 2,
+                       col = "white",
+                       border = "black", lty = 2
+                  )
 
-                        }
+                  text(
+                    x = subplot.center[1] + 2,
+                    y = subplot.center[2] - 2,
+                    labels = paste0("+ ", n.levels - 6, " More"),
+                    cex = label.box.text.cex,
+                    font = 3
+                  )
+                }
 
-                        text(x_s1, y_s1, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2, cex = ball.cex)
-                        points(x_s1, y_s1, pch = noise.ball.pch,  cex = ball.cex)
-                        points(x_s2, y_s1, pch = signal.ball.pch, cex = ball.cex)
+              } # if (new level on right).
 
-                      } # if (show_icon_guide_legend).
 
-                    } # if (show.iconguide).
+              # Update plot center: ----
 
-                    par(xpd = FALSE)
+              if (identical(paste(level_stats$exit[level.i]), "0")) {
 
+                subplot.center <- c(
+                  subplot.center[1] + 2,
+                  subplot.center[2] - 4
+                )
+              } # if (identical exit 0 etc.
 
-                    # Plot main TREE: ------
+              if (identical(paste(level_stats$exit[level.i]), "1")) {
 
-                    # Set initial subplot center:
-                    subplot.center <- c(0, -4)
+                subplot.center <- c(
+                  subplot.center[1] - 2,
+                  subplot.center[2] - 4
+                )
 
-                    # Loop over levels: ------
-                    for (level.i in 1:min(c(n.levels, 6))) {
+              } # if (identical exit 1 etc.
 
-                      # Cue label:
-                      current.cue <- cue.labels[level.i]
+            } # for (level.i etc. loop.
 
-                      # Get stats for current level:
-                      hi.i <- level_stats$hi.m[level.i]
-                      mi.i <- level_stats$mi.m[level.i]
-                      fa.i <- level_stats$fa.m[level.i]
-                      cr.i <- level_stats$cr.m[level.i]
+          } # if (show.middle).
 
 
-                      # Top: If level.i == 1, draw top textbox: ----
+          # 3. Cumulative performance: ----
 
-                      if (level.i == 1) {
+          if (show.bottom == TRUE) { # obtain tree statistics:
 
-                        rect(subplot.center[1] - label.box.width / 2,
-                             subplot.center[2] + 2 - label.box.height / 2,
-                             subplot.center[1] + label.box.width / 2,
-                             subplot.center[2] + 2 + label.box.height / 2,
-                             col = "white",
-                             border = "black"
-                        )
+            fft_sens_vec <- tree_stats$sens
+            fft_spec_vec <- tree_stats$spec
 
-                        points(
-                          x = subplot.center[1],
-                          y = subplot.center[2] + 2,
-                          cex = decision_node_cex,
-                          pch = decision.node.pch
-                        )
+            # General plotting space: ----
 
-                        text(
-                          x = subplot.center[1],
-                          y = subplot.center[2] + 2,
-                          labels = current.cue,
-                          cex = label.box.text.cex  # get_label_cex(current.cue, label.box.text.cex = label.box.text.cex)
-                        )
+            # Parameters:
+            header.y.loc <- 1.0
+            subheader.y.loc <- .925
 
-                      } # if (level.i == 1).
+            header.cex <- 1.10
+            subheader.cex <- .90
 
+            par(mar = c(0, 0, 2, 0))
 
-                      # Left (Noise) classification / New level: ----
+            plot(1,
+                 xlim = c(0, 1), ylim = c(0, 1),
+                 bty = "n", type = "n",
+                 xlab = "", ylab = "",
+                 yaxt = "n", xaxt = "n"
+            )
 
-                      # Exit node on left: ----
 
-                      if (level_stats$exit[level.i] %in% c(0, .5) | paste(level_stats$exit[level.i]) %in% c("0", ".5")) {
+            if (what != "roc"){
 
-                        segments(subplot.center[1],
-                                 subplot.center[2] + 1,
-                                 subplot.center[1] - 2,
-                                 subplot.center[2] - 2,
-                                 lty = segment.lty,
-                                 lwd = segment.lwd
-                        )
+              # Set par:
+              par(xpd = TRUE)
 
-                        arrows(
-                          x0 = subplot.center[1] - 2,
-                          y0 = subplot.center[2] - 2,
-                          x1 = subplot.center[1] - 2 - arrow.length,
-                          y1 = subplot.center[2] - 2,
-                          lty = arrow.lty,
-                          lwd = arrow.lwd,
-                          col = arrow.col,
-                          length = arrow.head.length
-                        )
+              # Bottom title: ----
 
-                        # Decision text:
+              if (hlines) {
 
-                        if (decision.cex > 0) {
+                segments(0, 1.1, 1, 1.1, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
 
-                          text(
-                            x = subplot.center[1] - 2 - arrow.length * .7,
-                            y = subplot.center[2] - 2.2,
-                            labels = decision.labels[1],
-                            pos = 1, font = 3, cex = decision.cex
-                          )
-                        }
+                x_dev <- .20
+                rect((.50 - x_dev), 1, (.50 + x_dev), 1.2, col = "white", border = NA) # label background
+              }
 
-                        if (ball.loc == "fixed") {
+              # Bottom label:
+              if (is.null(label.performance)) {
+                if (data == "train") {
+                  label.performance <- "Accuracy (Training)"
+                }
+                if (data == "test") {
+                  label.performance <- "Accuracy (Testing)"
+                }
+              }
 
-                          ball.x.lim <- c(-max(ball.box.fixed.x.shift), -min(ball.box.fixed.x.shift))
+              text(.50, 1.1, label.performance, cex = panel_title_cex, ...)  # title 3 (bottom): Performance
 
-                          ball.y.lim <- c(
-                            subplot.center[2] + ball.box.vert.shift - ball.box.height / 2,
-                            subplot.center[2] + ball.box.vert.shift + ball.box.height / 2
-                          )
-                        }
+              par(xpd = FALSE)
 
-                        if (ball.loc == "variable") {
+            } # if (what != "roc").
 
-                          ball.x.lim <- c(
-                            subplot.center[1] - ball.box.horiz.shift - ball.box.width / 2,
-                            subplot.center[1] - ball.box.horiz.shift + ball.box.width / 2
-                          )
 
-                          ball.y.lim <- c(
-                            subplot.center[2] + ball.box.vert.shift - ball.box.height / 2,
-                            subplot.center[2] + ball.box.vert.shift + ball.box.height / 2
-                          )
-                        }
+            # Level parameters:
+            level.max.height <- .65
+            level.width <- .05
+            level.center.y <- .45
+            # level.bottom <- .1
+            level.bottom <- level.center.y - level.max.height / 2
+            level.top <- level.center.y + level.max.height / 2
 
-                        if (max(c(cr.i, mi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
+            # Get either bacc OR wacc (based on sens.w):
+            sens.w <- x$params$sens.w
+            bacc_wacc <- get_bacc_wacc(sens = final_stats$sens, spec = final_stats$spec, sens.w = sens.w)
+            bacc_wacc_name <- names(bacc_wacc)
 
-                          add_balls(
-                            x.lim = ball.x.lim,
-                            y.lim = ball.y.lim,
-                            n.vec = c(cr.i, mi.i),
-                            pch.vec = c(noise.ball.pch, signal.ball.pch),
-                            # bg.vec = c(noise.ball.bg, signal.ball.bg),
-                            bg.vec = c(correct.bg, error.bg),
-                            col.vec = c(correct.border, error.border),
-                            freq.text = TRUE,
-                            n.per.icon = n.per.icon,
-                            ball.cex = ball.cex
-                          )
-                        }
+            # Set labels, values, and locations (as df):
+            lloc <- data.frame(
+              element = c("classtable", "mcu", "pci", "sens", "spec", "acc", bacc_wacc_name, "roc"),
+              long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", bacc_wacc_name, "ROC"),
+              center.x = c(.18, seq(.35, .65, length.out = 6), .85),
+              center.y = rep(level.center.y, 8),
+              width = c(.2, rep(level.width, 6), .20),
+              height = c(.65, rep(level.max.height, 6), .65),
+              value = c(NA,
+                        abs(final_stats$mcu - 5) / (abs(1 - 5)), final_stats$pci,
+                        final_stats$sens, final_stats$spec,
+                        with(final_stats, (cr + hi) / n), bacc_wacc, NA),
+              value.name = c(NA,
+                             round(final_stats$mcu, 1), pretty_dec(final_stats$pci),
+                             pretty_dec(final_stats$sens), pretty_dec(final_stats$spec),
+                             pretty_dec(final_stats$acc), pretty_dec(bacc_wacc), NA)
+            )
 
-                        # level break label:
-                        pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
-                        neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
 
-                        text_outline(
-                          x = subplot.center[1] - 1,
-                          y = subplot.center[2],
-                          labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
-                          pos = 2, cex = break.label.cex, r = .1
-                        )
+            # Classification table: ----
 
-                        points(
-                          x = subplot.center[1] - 2,
-                          y = subplot.center[2] - 2,
-                          pch = exit.node.pch,
-                          cex = exit_node_cex,
-                          bg = exit.node.bg
-                        )
+            if (show.confusion) {
 
-                        text(
-                          x = subplot.center[1] - 2,
-                          y = subplot.center[2] - 2,
-                          labels = substr(decision.labels[1], 1, 1)
-                        )
-                      } # if (exit node on left).
+              # Parameters:
+              classtable.lwd <- 1
 
+              # x/y coordinates:
+              final.classtable.x.loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
+              final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
 
-                      # New level on left: ----
+              rect(final.classtable.x.loc[1], final.classtable.y.loc[1],
+                   final.classtable.x.loc[2], final.classtable.y.loc[2],
+                   lwd = classtable.lwd
+              )
 
-                      if (level_stats$exit[level.i] %in% c(1) | paste(level_stats$exit[level.i]) %in% c("1")) {
+              segments(mean(final.classtable.x.loc), final.classtable.y.loc[1], mean(final.classtable.x.loc), final.classtable.y.loc[2], col = gray(0), lwd = classtable.lwd)
+              segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(0), lwd = classtable.lwd)
 
-                        segments(subplot.center[1],
-                                 subplot.center[2] + 1,
-                                 subplot.center[1] - 2,
-                                 subplot.center[2] - 2,
-                                 lty = segment.lty,
-                                 lwd = segment.lwd
-                        )
 
-                        rect(subplot.center[1] - 2 - label.box.width / 2,
-                             subplot.center[2] - 2 - label.box.height / 2,
-                             subplot.center[1] - 2 + label.box.width / 2,
-                             subplot.center[2] - 2 + label.box.height / 2,
-                             col = "white",
-                             border = "black"
-                        )
+              # Column titles: ----
 
-                        if (level.i < 6) {
+              text(
+                x = mean(mean(final.classtable.x.loc)),
+                y = header.y.loc,
+                "Truth", pos = 1, cex = header.cex
+              )
 
-                          text(
-                            x = subplot.center[1] - 2,
-                            y = subplot.center[2] - 2,
-                            labels = cue.labels[level.i + 1],
-                            cex = label.box.text.cex
-                          )
+              text(
+                x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
+                y = subheader.y.loc, pos = 1, cex = subheader.cex,
+                decision.labels[2]
+              )
 
-                        } else {
+              text(
+                x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
+                y = subheader.y.loc, pos = 1, cex = subheader.cex,
+                decision.labels[1]
+              )
+
+
+              # Row titles: ----
+
+              text(
+                x = final.classtable.x.loc[1] - .01,
+                y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
+                decision.labels[2], adj = 1
+              )
 
-                          text(
-                            x = subplot.center[1] - 2,
-                            y = subplot.center[2] - 2,
-                            labels = paste0("+ ", n.levels - 6, " More"),
-                            cex = label.box.text.cex,
-                            font = 3
-                          )
+              text(
+                x = final.classtable.x.loc[1] - .01,
+                y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
+                decision.labels[1], adj = 1
+              )
 
-                        }
-                      } # if (new level on left).
+              text(
+                x = final.classtable.x.loc[1] - .065,
+                y = mean(final.classtable.y.loc), cex = header.cex,
+                "Decision"
+              )
 
+              # text(x = final.classtable.x.loc[1] - .05,
+              #      y = mean(final.classtable.y.loc), cex = header.cex,
+              #      "Decision", srt = 90, pos = 3)
 
-                      # Right (Signal) classification / New level: ----
 
-                      # Exit node on right: ----
+              # Add final frequencies: ----
 
-                      if (level_stats$exit[level.i] %in% c(1, .5) | paste(level_stats$exit[level.i]) %in% c("1", ".5")) {
+              text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
+                   prettyNum(final_stats$cr, big.mark = ","),
+                   cex = 1.5
+              )
 
-                        segments(subplot.center[1],
-                                 subplot.center[2] + 1,
-                                 subplot.center[1] + 2,
-                                 subplot.center[2] - 2,
-                                 lty = segment.lty,
-                                 lwd = segment.lwd
-                        )
+              text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
+                   prettyNum(final_stats$mi, big.mark = ","),
+                   cex = 1.5
+              )
 
-                        arrows(
-                          x0 = subplot.center[1] + 2,
-                          y0 = subplot.center[2] - 2,
-                          x1 = subplot.center[1] + 2 + arrow.length,
-                          y1 = subplot.center[2] - 2,
-                          lty = arrow.lty,
-                          lwd = arrow.lwd,
-                          col = arrow.col,
-                          length = arrow.head.length
-                        )
+              text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
+                   prettyNum(final_stats$fa, big.mark = ","),
+                   cex = 1.5
+              )
 
-                        # Decision text:
+              text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
+                   prettyNum(final_stats$hi, big.mark = ","),
+                   cex = 1.5
+              )
 
-                        if (decision.cex > 0) {
-                          text(
-                            x = subplot.center[1] + 2 + arrow.length * .7,
-                            y = subplot.center[2] - 2.2,
-                            labels = decision.labels[2],
-                            pos = 1,
-                            font = 3,
-                            cex = decision.cex
-                          )
-                        }
+              # Add symbols: ----
 
-                        if (ball.loc == "fixed") {
-                          ball.x.lim <- c(min(ball.box.fixed.x.shift), max(ball.box.fixed.x.shift))
-                          ball.y.lim <- c(
-                            subplot.center[2] + ball.box.vert.shift - ball.box.height / 2,
-                            subplot.center[2] + ball.box.vert.shift + ball.box.height / 2
-                          )
-                        }
+              points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
+                     final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
+                     pch = noise_ball_pch, bg = col_correct_bg, col = col_correct_border, cex = ball_cex
+              )
 
-                        if (ball.loc == "variable") {
-                          ball.x.lim <- c(
-                            subplot.center[1] + ball.box.horiz.shift - ball.box.width / 2,
-                            subplot.center[1] + ball.box.horiz.shift + ball.box.width / 2
-                          )
-
-                          ball.y.lim <- c(
-                            subplot.center[2] + ball.box.vert.shift - ball.box.height / 2,
-                            subplot.center[2] + ball.box.vert.shift + ball.box.height / 2
-                          )
-                        }
+              points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
+                     final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+                     pch = signal_ball_pch, bg = col_correct_bg, cex = ball_cex, col = col_correct_border
+              )
 
-                        if (max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
+              points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
+                     final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+                     pch = noise_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
+              )
 
-                          add_balls(
-                            x.lim = ball.x.lim,
-                            y.lim = ball.y.lim,
-                            n.vec = c(fa.i, hi.i),
-                            pch.vec = c(noise.ball.pch, signal.ball.pch),
-                            # bg.vec = c(noise.ball.bg, signal.ball.bg),
-                            bg.vec = c(error.bg, correct.bg),
-                            col.vec = c(error.border, correct.border),
-                            freq.text = TRUE,
-                            n.per.icon = n.per.icon,
-                            ball.cex = ball.cex
-                          )
-                        }
+              points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
+                     final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
+                     pch = signal_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
+              )
 
-                        # level break label:
-                        dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
 
-                        pos.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
-                        neg.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+              # Add labels: ----
 
+              text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
+                   "cr",
+                   cex = 1, font = 3, adj = 0
+              )
 
-                        text_outline(subplot.center[1] + 1,
-                                     subplot.center[2],
-                                     labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
-                                     pos = 4, cex = break.label.cex, r = .1
-                        )
+              text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
+                   "mi",
+                   cex = 1, font = 3, adj = 0
+              )
 
-                        points(
-                          x = subplot.center[1] + 2,
-                          y = subplot.center[2] - 2,
-                          pch = exit.node.pch,
-                          cex = exit_node_cex,
-                          bg = exit.node.bg
-                        )
+              text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
+                   "fa",
+                   cex = 1, font = 3, adj = 0
+              )
 
-                        text(
-                          x = subplot.center[1] + 2,
-                          y = subplot.center[2] - 2,
-                          labels = substr(decision.labels[2], 1, 1)
-                        )
+              text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
+                   final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
+                   "hi",
+                   cex = 1, font = 3, adj = 0
+              )
 
-                      } # if (exit node on right).
+            } # if (show.confusion).
 
 
-                      # New level on right: ----
+            # Levels: ----
 
-                      if (level_stats$exit[level.i] %in% 0 | paste(level_stats$exit[level.i]) %in% c("0")) {
+            if (show.levels) {
 
-                        segments(subplot.center[1],
-                                 subplot.center[2] + 1,
-                                 subplot.center[1] + 2,
-                                 subplot.center[2] - 2,
-                                 lty = segment.lty,
-                                 lwd = segment.lwd
-                        )
+              if (level.type %in% c("line", "bar")) {
 
-                        if (level.i < 6) {
+                # Color function (taken from colorRamp2 function in circlize package)
+                # col.fun <- circlize::colorRamp2(c(0, .75, 1),
+                #                                 c("red", "yellow", "green"),
+                #                                 transparency = .5)
 
-                          rect(subplot.center[1] + 2 - label.box.width / 2,
-                               subplot.center[2] - 2 - label.box.height / 2,
-                               subplot.center[1] + 2 + label.box.width / 2,
-                               subplot.center[2] - 2 + label.box.height / 2,
-                               col = "white",
-                               border = "black"
-                          )
+                paste(final_stats$cr, "/", 1, collapse = "")
 
-                          text(
-                            x = subplot.center[1] + 2,
-                            y = subplot.center[2] - 2,
-                            labels = cue.labels[level.i + 1],
-                            cex = label.box.text.cex
-                          )
+                # Add 100% reference line: ----
 
-                        } else {
+                # segments(x0 = lloc$center.x[lloc$element == "mcu"] - lloc$width[lloc$element == "mcu"] * .8,
+                #          y0 = level.top,
+                #          x1 = lloc$center.x[lloc$element == "bacc"] + lloc$width[lloc$element == "bacc"] * .8,
+                #          y1 = level.top,
+                #          lty = 3, lwd = .75)
 
-                          rect(subplot.center[1] + 2 - label.box.width / 2,
-                               subplot.center[2] - 2 - label.box.height / 2,
-                               subplot.center[1] + 2 + label.box.width / 2,
-                               subplot.center[2] - 2 + label.box.height / 2,
-                               col = "white",
-                               border = "black", lty = 2
-                          )
 
-                          text(
-                            x = subplot.center[1] + 2,
-                            y = subplot.center[2] - 2,
-                            labels = paste0("+ ", n.levels - 6, " More"),
-                            cex = label.box.text.cex,
-                            font = 3
-                          )
-                        }
+                # mcu level: ----
 
-                      } # if (new level on right).
+                add_level("mcu", ok.val = .75, min.val = 0, max.val = 1,
+                          level.type = level.type, lloc_row = lloc[lloc$element == "mcu", ],
+                          header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
 
 
-                      # Update plot center: ----
+                # pci level: ----
 
-                      if (identical(paste(level_stats$exit[level.i]), "0")) {
+                add_level("pci", ok.val = .75, min.val = 0, max.val = 1,
+                          level.type = level.type, lloc_row = lloc[lloc$element == "pci", ],
+                          header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
 
-                        subplot.center <- c(
-                          subplot.center[1] + 2,
-                          subplot.center[2] - 4
-                        )
-                      } # if (identical exit 0 etc.
+                # text(lloc$center.x[lloc$element == "pci"],
+                #      lloc$center.y[lloc$element == "pci"],
+                #      labels = paste0("mcu\n", round(mcu, 2)))
 
-                      if (identical(paste(level_stats$exit[level.i]), "1")) {
 
-                        subplot.center <- c(
-                          subplot.center[1] - 2,
-                          subplot.center[2] - 4
-                        )
+                # spec level: ----
 
-                      } # if (identical exit 1 etc.
+                add_level("spec", ok.val = .75, min.val = 0, max.val = 1,
+                          level.type = level.type, lloc_row = lloc[lloc$element == "spec", ],
+                          header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
 
-                    } # for (level.i etc. loop.
 
-                  } # if (show.middle).
+                # sens level: ----
 
+                add_level("sens", ok.val = .75, min.val = 0, max.val = 1,
+                          level.type = level.type, lloc_row = lloc[lloc$element == "sens", ],
+                          header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$hi, "/", final_stats$hi + final_stats$mi), collapse = ""))
 
-                  # 3. Cumulative performance: ----
 
-                  if (show.bottom == TRUE) { # obtain tree statistics:
+                # acc level: ----
 
-                    fft_sens_vec <- tree_stats$sens
-                    fft_spec_vec <- tree_stats$spec
+                min_acc <- max(crit_br, 1 - crit_br)
 
-                    # General plotting space: ----
+                add_level("acc", ok.val = .50, min.val = 0, max.val = 1,
+                          level.type = level.type, lloc_row = lloc[lloc$element == "acc", ],
+                          header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$hi + final_stats$cr, "/", final_stats$n), collapse = ""))
 
-                    # Parameters:
-                    header.y.loc <- 1.0
-                    subheader.y.loc <- .925
+                # Add baseline to acc level:
+                segments(
+                  x0 = lloc$center.x[lloc$element  == "acc"] - lloc$width[lloc$element  == "acc"] / 2,
+                  y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
+                  x1 = lloc$center.x[lloc$element  == "acc"] + lloc$width[lloc$element  == "acc"] / 2,
+                  y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
+                  lty = 3
+                )
 
-                    header.cex <- 1.10
-                    subheader.cex <- .90
+                text(
+                  x = lloc$center.x[lloc$element == "acc"],
+                  y = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
+                  labels = "BL", pos = 1
+                )
 
-                    par(mar = c(0, 0, 2, 0))
+                # paste("BL = ", pretty_dec(min_acc), sep = ""), pos = 1)
 
-                    plot(1,
-                         xlim = c(0, 1), ylim = c(0, 1),
-                         bty = "n", type = "n",
-                         xlab = "", ylab = "",
-                         yaxt = "n", xaxt = "n"
-                    )
 
+                # bacc OR wacc level: ----
 
-                    if (what != "roc"){
+                if (names(bacc_wacc) == "bacc"){ # show bacc level:
 
-                      # Set par:
-                      par(xpd = TRUE)
+                  add_level("bacc", ok.val = .50, min.val = 0, max.val = 1,
+                            level.type = level.type, lloc_row = lloc[lloc$element == "bacc", ],
+                            header_y = header.y.loc, header_cex = header.cex)
 
-                      # Bottom title: ----
+                } else { # show wacc level (and sens.w value):
 
-                      if (hlines) {
+                  sens.w_lbl <- paste0("sens.w = .", pretty_dec(sens.w))
 
-                        segments(0, 1.1, 1, 1.1, col = panel.line.col, lwd = panel.line.lwd, lty = panel.line.lty)
+                  add_level("wacc", ok.val = .50, min.val = 0, max.val = 1,
+                            level.type = level.type, lloc_row = lloc[lloc$element == "wacc", ],
+                            header_y = header.y.loc,
+                            bottom.text = sens.w_lbl, header_cex = header.cex)
 
-                        x_dev <- .20
-                        rect((.50 - x_dev), 1, (.50 + x_dev), 1.2, col = "white", border = NA) # label background
-                      }
+                } # if (bacc_wacc).
 
-                      # Bottom label:
-                      if (is.null(label.performance)) {
-                        if (data == "train") {
-                          label.performance <- "Accuracy (Training)"
-                        }
-                        if (data == "test") {
-                          label.performance <- "Accuracy (Testing)"
-                        }
-                      }
 
-                      text(.50, 1.1, label.performance, cex = panel_title_cex, ...)  # title 3 (bottom): Performance
+                # Add baseline (at bottom?):
+                #
+                # segments(x0 = mean(lloc$center.x[2]),
+                #          y0 = lloc$center.y[1] - lloc$height[1] / 2,
+                #          x1 = mean(lloc$center.x[7]),
+                #          y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
+                #          lwd = .5,
+                #          col = gray(0))
 
-                      par(xpd = FALSE)
 
-                    } # if (what != "roc").
+              } # if (level.type %in% c("line", "bar")).
 
+            } # if (show.levels).
 
-                    # Level parameters:
-                    level.max.height <- .65
-                    level.width <- .05
-                    level.center.y <- .45
-                    # level.bottom <- .1
-                    level.bottom <- level.center.y - level.max.height / 2
-                    level.top <- level.center.y + level.max.height / 2
 
-                    # Get either bacc OR wacc (based on sens.w):
-                    sens.w <- x$params$sens.w
-                    bacc_wacc <- get_bacc_wacc(sens = final_stats$sens, spec = final_stats$spec, sens.w = sens.w)
-                    bacc_wacc_name <- names(bacc_wacc)
+            # ROC curve: -----
 
-                    # Set labels, values, and locations (as df):
-                    lloc <- data.frame(
-                      element = c("classtable", "mcu", "pci", "sens", "spec", "acc", bacc_wacc_name, "roc"),
-                      long.name = c("Classification Table", "mcu", "pci", "sens", "spec", "acc", bacc_wacc_name, "ROC"),
-                      center.x = c(.18, seq(.35, .65, length.out = 6), .85),
-                      center.y = rep(level.center.y, 8),
-                      width = c(.2, rep(level.width, 6), .20),
-                      height = c(.65, rep(level.max.height, 6), .65),
-                      value = c(NA,
-                                abs(final_stats$mcu - 5) / (abs(1 - 5)), final_stats$pci,
-                                final_stats$sens, final_stats$spec,
-                                with(final_stats, (cr + hi) / n), bacc_wacc, NA),
-                      value.name = c(NA,
-                                     round(final_stats$mcu, 1), pretty_dec(final_stats$pci),
-                                     pretty_dec(final_stats$sens), pretty_dec(final_stats$spec),
-                                     pretty_dec(final_stats$acc), pretty_dec(bacc_wacc), NA)
-                    )
+            if (show.roc) {
 
+              # Parameters:
+              roc_border_lwd <- 1
+              roc_border_col <- gray(0)
 
-                    # Classification table: ----
+              roc_title <- "ROC"
+              roc_title_font <- 1
 
-                    if (show.confusion) {
+              roc_curve_col <- gray(.01) # ~black
+              roc_curve_lwd <- 1.1
 
-                      # Parameters:
-                      classtable.lwd <- 1
+              diag_col <- gray(.01) # ~black
+              diag_lty <- 3
 
-                      # x/y coordinates:
-                      final.classtable.x.loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
-                      final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
+              x_lbl <- expression(1 - Specificity~(FAR)) # to plot minus, rather than dash
+              y_lbl <- expression(Sensitivity~(HR))
 
-                      rect(final.classtable.x.loc[1], final.classtable.y.loc[1],
-                           final.classtable.x.loc[2], final.classtable.y.loc[2],
-                           lwd = classtable.lwd
-                      )
+              x_d <- .015  # distance of x-axis labels (on left) to x-axis
 
-                      segments(mean(final.classtable.x.loc), final.classtable.y.loc[1], mean(final.classtable.x.loc), final.classtable.y.loc[2], col = gray(0), lwd = classtable.lwd)
-                      segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(0), lwd = classtable.lwd)
+              # y-locations of legend labels (default: using full height):
+              roc_lbl_y <- seq(.10, .90, length.out = 5)  # SVM, RF, LR, CART, FFT
 
 
-                      # Column titles: ----
+              if (what == "roc"){ # ROC as main plot:
 
-                      text(
-                        x = mean(mean(final.classtable.x.loc)),
-                        y = header.y.loc,
-                        "Truth", pos = 1, cex = header.cex
-                      )
+                # Rescale key coordinates:
+                lloc$center.x[lloc$element == "roc"] <- .50
+                lloc$center.y[lloc$element == "roc"] <- .55
 
-                      text(
-                        x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
-                        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-                        decision.labels[2]
-                      )
+                lloc$width[lloc$element == "roc"]  <- .70
+                lloc$height[lloc$element == "roc"] <- .80
 
-                      text(
-                        x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-                        y = subheader.y.loc, pos = 1, cex = subheader.cex,
-                        decision.labels[1]
-                      )
+                # Reset some parameters:
+                if (is.null(main) == FALSE) { roc_title <- main }
 
+                roc_border_lwd <- .80
+                roc_border_col <- gray(.25)
 
-                      # Row titles: ----
+                roc_curve_col <- gray(.10) # "green2"
+                roc_curve_lwd <- 1.5
 
-                      text(
-                        x = final.classtable.x.loc[1] - .01,
-                        y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
-                        decision.labels[2], adj = 1
-                      )
+                diag_col <- gray(.60)  # as in showcues()
+                diag_lty <- 1          # as in showcues()
 
-                      text(
-                        x = final.classtable.x.loc[1] - .01,
-                        y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
-                        decision.labels[1], adj = 1
-                      )
+                x_d <- .035
 
-                      text(
-                        x = final.classtable.x.loc[1] - .065,
-                        y = mean(final.classtable.y.loc), cex = header.cex,
-                        "Decision"
-                      )
+                # y-locations of legend labels (cluster labels on top right):
+                roc_lbl_y <- seq(.55, .95, length.out = 5)  # SVM, RF, LR, CART, FFT
 
-                      # text(x = final.classtable.x.loc[1] - .05,
-                      #      y = mean(final.classtable.y.loc), cex = header.cex,
-                      #      "Decision", srt = 90, pos = 3)
 
+              } # if (what == "roc").
 
-                      # Add final frequencies: ----
+              # ROC plot coordinates:
+              final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element == "roc"] / 2, lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element == "roc"] / 2)
+              final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2, lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
 
-                      text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-                           prettyNum(final_stats$cr, big.mark = ","),
-                           cex = 1.5
-                      )
 
-                      text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
-                           prettyNum(final_stats$mi, big.mark = ","),
-                           cex = 1.5
-                      )
+              if (what == "roc"){ # ROC as main plot:
 
-                      text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-                           prettyNum(final_stats$fa, big.mark = ","),
-                           cex = 1.5
-                      )
+                # Title:
+                title(main = roc_title, ...)  # + graphical parameters
 
-                      text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
-                           prettyNum(final_stats$hi, big.mark = ","),
-                           cex = 1.5
-                      )
+                # Background:
+                rect(final.roc.x.loc[1], final.roc.y.loc[1], final.roc.x.loc[2], final.roc.y.loc[2],
+                     col = gray(.96))  # as in showcues()
 
-                      # Add symbols: ----
+                # Grid:
+                x_ax_seq <- seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)
+                y_ax_seq <- seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)
+                abline(v = x_ax_seq, lwd = c(2, rep(1, 4)), col = gray(1)) # x-grid
+                abline(h = y_ax_seq, lwd = c(2, rep(1, 4)), col = gray(1)) # y-grid
 
-                      points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
-                             final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
-                             pch = noise.ball.pch, bg = correct.bg, col = correct.border, cex = ball.cex
-                      )
+                # Axis ticks:
+                segments(x_ax_seq, final.roc.y.loc[1], x_ax_seq, (final.roc.y.loc[1] - .025), lty = 1, lwd = 1, col = gray(.10)) # x-axis
+                segments(final.roc.x.loc[1], y_ax_seq, (final.roc.x.loc[1] - .015), y_ax_seq, lty = 1, lwd = 1, col = gray(.10)) # y-axis
 
-                      points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
-                             final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
-                             pch = signal.ball.pch, bg = correct.bg, cex = ball.cex, col = correct.border
-                      )
+                # Tick labels:
+                text(x_ax_seq, (final.roc.y.loc[1] - .025), labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 1, cex = .9) # x-lbl
+                text((final.roc.x.loc[1] - .015), y_ax_seq, labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 2, cex = .9) # y-llb
 
-                      points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
-                             final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
-                             pch = noise.ball.pch, bg = error.bg, col = error.border, cex = ball.cex
-                      )
+                # Axis labels:
+                text(mean(final.roc.x.loc), final.roc.y.loc[1] - .125, labels = x_lbl, cex = 1) # x-lab
+                text(final.roc.x.loc[1] - (3.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, cex = 1, srt = 90) # y-lab
 
-                      points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
-                             final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
-                             pch = signal.ball.pch, bg = error.bg, col = error.border, cex = ball.cex
-                      )
+                # Subtitle: Note data used
+                subnote <- paste0("ROC for '", data, "' data:")
+                text(x = (final.roc.x.loc[1] - .015), y = (final.roc.y.loc[2] + .03),
+                     labels = subnote, pos = 4, cex = subheader.cex)
 
 
-                      # Add labels: ----
+              } else { # ROC as miniature plot:
 
-                      text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
-                           "cr",
-                           cex = 1, font = 3, adj = 0
-                      )
+                # Title:
+                text(lloc$center.x[lloc$element == "roc"], header.y.loc, labels = roc_title,
+                     font = roc_title_font, pos = 1, cex = header.cex)
 
-                      text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
-                           "mi",
-                           cex = 1, font = 3, adj = 0
-                      )
+                # x-axis:
+                text(c(final.roc.x.loc[1], final.roc.x.loc[2]),
+                     c(final.roc.y.loc[1], final.roc.y.loc[1]) - .04,
+                     labels = c(0, 1)
+                )
 
-                      text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
-                           "fa",
-                           cex = 1, font = 3, adj = 0
-                      )
+                text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, labels = x_lbl) # x-lab
 
-                      text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
-                           final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
-                           "hi",
-                           cex = 1, font = 3, adj = 0
-                      )
+                # y-axis:
+                text(c(final.roc.x.loc[1], final.roc.x.loc[1], final.roc.x.loc[1]) - x_d,
+                     c(final.roc.y.loc[1], mean(final.roc.y.loc[1:2]), final.roc.y.loc[2]),
+                     labels = c(0, .5, 1)
+                )
 
-                    } # if (show.confusion).
+                text(final.roc.x.loc[1] - (2.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, srt = 90) # y-lab
 
+                # AUC label:
+                # text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
 
-                    # Levels: ----
+                # Plot bg:
+                #
+                # rect(final.roc.x.loc[1],
+                #      final.roc.y.loc[1],
+                #      final.roc.x.loc[2],
+                #      final.roc.y.loc[2],
+                #      col = gray(1), lwd = .5)
 
-                    if (show.levels) {
+                # Gridlines:
+                # # Horizontal:
+                #  segments(x0 = rep(final.roc.x.loc[1], 9),
+                #           y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+                #           x1 = rep(final.roc.x.loc[2], 9),
+                #           y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+                #           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
+                #           )
+                #
+                #  # Vertical:
+                #  segments(y0 = rep(final.roc.y.loc[1], 9),
+                #           x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+                #           y1 = rep(final.roc.y.loc[2], 9),
+                #           x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+                #           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
+                #  )
 
-                      if (level.type %in% c("line", "bar")) {
+              }
 
-                        # Color function (taken from colorRamp2 function in circlize package)
-                        # col.fun <- circlize::colorRamp2(c(0, .75, 1),
-                        #                                 c("red", "yellow", "green"),
-                        #                                 transparency = .5)
+              # Plot border:
+              rect(final.roc.x.loc[1],
+                   final.roc.y.loc[1],
+                   final.roc.x.loc[2],
+                   final.roc.y.loc[2],
+                   border = roc_border_col,
+                   lwd = roc_border_lwd
+              )
 
-                        paste(final_stats$cr, "/", 1, collapse = "")
+              # Diagonal:
+              segments(final.roc.x.loc[1],
+                       final.roc.y.loc[1],
+                       final.roc.x.loc[2],
+                       final.roc.y.loc[2],
+                       col = diag_col,
+                       lwd = 1,
+                       lty = diag_lty
+              )
 
-                        # Add 100% reference line: ----
 
-                        # segments(x0 = lloc$center.x[lloc$element == "mcu"] - lloc$width[lloc$element == "mcu"] * .8,
-                        #          y0 = level.top,
-                        #          x1 = lloc$center.x[lloc$element == "bacc"] + lloc$width[lloc$element == "bacc"] * .8,
-                        #          y1 = level.top,
-                        #          lty = 3, lwd = .75)
+              # COMPETITIVE ALGORITHMS: ------
 
+              if (comp == TRUE) {
 
-                        # mcu level: ----
+                # CART: ----
 
-                        add_level("mcu", ok.val = .75, min.val = 0, max.val = 1,
-                                  level.type = level.type, lloc_row = lloc[lloc$element == "mcu", ],
-                                  header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
+                if ("cart" %in% x$competition[[data]]$algorithm) {
 
+                  cart.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "cart"]
+                  cart.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
 
-                        # pci level: ----
+                  # Plot point:
+                  points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 1.75,
+                         col = scales::alpha("red", .5),
+                         bg = scales::alpha("red", .3), lwd = 1
+                  )
 
-                        add_level("pci", ok.val = .75, min.val = 0, max.val = 1,
-                                  level.type = level.type, lloc_row = lloc[lloc$element == "pci", ],
-                                  header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
+                  points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
+                         pch = "C", cex = .7, col = gray(.2), lwd = 1
+                  )
 
-                        # text(lloc$center.x[lloc$element == "pci"],
-                        #      lloc$center.y[lloc$element == "pci"],
-                        #      labels = paste0("mcu\n", round(mcu, 2)))
 
+                  # Legend label:
+                  par("xpd" = TRUE)
 
-                        # spec level: ----
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 2.5,
+                         col = scales::alpha("red", .1),
+                         bg = scales::alpha("red", .3)
+                  )
 
-                        add_level("spec", ok.val = .75, min.val = 0, max.val = 1,
-                                  level.type = level.type, lloc_row = lloc[lloc$element == "spec", ],
-                                  header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
+                         pch = "C", cex = .9, col = gray(.2)
+                  )
 
+                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
+                       labels = "  CART", adj = 0, cex = .9
+                  )
 
-                        # sens level: ----
+                  par("xpd" = FALSE)
 
-                        add_level("sens", ok.val = .75, min.val = 0, max.val = 1,
-                                  level.type = level.type, lloc_row = lloc[lloc$element == "sens", ],
-                                  header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$hi, "/", final_stats$hi + final_stats$mi), collapse = ""))
+                } # if ("cart" etc.
 
 
-                        # acc level: ----
+                # LR: ----
 
-                        min_acc <- max(crit_br, 1 - crit_br)
+                if ("lr" %in% x$competition[[data]]$algorithm) {
 
-                        add_level("acc", ok.val = .50, min.val = 0, max.val = 1,
-                                  level.type = level.type, lloc_row = lloc[lloc$element == "acc", ],
-                                  header_y = header.y.loc, header_cex = header.cex) # , sub = paste(c(final_stats$hi + final_stats$cr, "/", final_stats$n), collapse = ""))
+                  lr.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
+                  lr.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
 
-                        # Add baseline to acc level:
-                        segments(
-                          x0 = lloc$center.x[lloc$element  == "acc"] - lloc$width[lloc$element  == "acc"] / 2,
-                          y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
-                          x1 = lloc$center.x[lloc$element  == "acc"] + lloc$width[lloc$element  == "acc"] / 2,
-                          y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
-                          lty = 3
-                        )
+                  # Plot point:
+                  points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 1.75,
+                         col = scales::alpha("blue", .1),
+                         bg = scales::alpha("blue", .2)
+                  )
 
-                        text(
-                          x = lloc$center.x[lloc$element == "acc"],
-                          y = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
-                          labels = "BL", pos = 1
-                        )
+                  points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
+                         pch = "L", cex = .7, col = gray(.2)
+                  )
 
-                        # paste("BL = ", pretty_dec(min_acc), sep = ""), pos = 1)
+                  # Legend label:
+                  par("xpd" = TRUE)
 
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 2.5,
+                         col = scales::alpha("blue", .1),
+                         bg = scales::alpha("blue", .2)
+                  )
 
-                        # bacc OR wacc level: ----
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
+                         pch = "L", cex = .9, col = gray(.2)
+                  )
 
-                        if (names(bacc_wacc) == "bacc"){ # show bacc level:
+                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
+                       labels = "  LR", adj = 0, cex = .9
+                  )
 
-                          add_level("bacc", ok.val = .50, min.val = 0, max.val = 1,
-                                    level.type = level.type, lloc_row = lloc[lloc$element == "bacc", ],
-                                    header_y = header.y.loc, header_cex = header.cex)
+                  par("xpd" = FALSE)
 
-                        } else { # show wacc level (and sens.w value):
+                } # if ("lr" etc.
 
-                          sens.w_lbl <- paste0("sens.w = .", pretty_dec(sens.w))
 
-                          add_level("wacc", ok.val = .50, min.val = 0, max.val = 1,
-                                    level.type = level.type, lloc_row = lloc[lloc$element == "wacc", ],
-                                    header_y = header.y.loc,
-                                    bottom.text = sens.w_lbl, header_cex = header.cex)
+                # RF: ----
 
-                        } # if (bacc_wacc).
+                if ("rf" %in% x$competition[[data]]$algorithm) {
 
+                  rf.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "rf"]
+                  rf.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "rf"]
 
-                        # Add baseline (at bottom?):
-                        #
-                        # segments(x0 = mean(lloc$center.x[2]),
-                        #          y0 = lloc$center.y[1] - lloc$height[1] / 2,
-                        #          x1 = mean(lloc$center.x[7]),
-                        #          y1 = lloc$center.y[1] - lloc$height[1] / 2, lend = 1,
-                        #          lwd = .5,
-                        #          col = gray(0))
+                  # # 4debugging:
+                  # print(paste0("RF: 1 - rf.spec = ", round(1 - rf.spec, 2),
+                  #              ", rf.sens = ", round(rf.sens, 2),
+                  #              ", data = ", data))  # RF coordinates
+                  #
+                  # print(final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"])) # y-coordinate
 
+                  # Plot point:
+                  points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 1.75,
+                         col = scales::alpha("purple", .1),
+                         bg = scales::alpha("purple", .3), lwd = 1
+                  )
 
-                      } # if (level.type %in% c("line", "bar")).
+                  points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
+                         pch = "R", cex = .7, col = gray(.2), lwd = 1
+                  )
 
-                    } # if (show.levels).
+                  # Legend label:
+                  par("xpd" = TRUE)
 
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 2.5,
+                         col = scales::alpha("purple", .1),
+                         bg = scales::alpha("purple", .3)
+                  )
 
-                    # ROC curve: -----
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
+                         pch = "R", cex = .9, col = gray(.2)
+                  )
 
-                    if (show.roc) {
+                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
+                       labels = "  RF", adj = 0, cex = .9
+                  )
 
-                      # Parameters:
-                      roc_border_lwd <- 1
-                      roc_border_col <- gray(0)
+                  par("xpd" = FALSE)
 
-                      roc_title <- "ROC"
-                      roc_title_font <- 1
+                } # if ("rf" etc.
 
-                      roc_curve_col <- gray(.01) # ~black
-                      roc_curve_lwd <- 1.1
 
-                      diag_col <- gray(.01) # ~black
-                      diag_lty <- 3
+                # SVM: ----
 
-                      x_lbl <- expression(1 - Specificity~(FAR)) # to plot minus, rather than dash
-                      y_lbl <- expression(Sensitivity~(HR))
+                if ("svm" %in% x$competition[[data]]$algorithm) {
 
-                      x_d <- .015  # distance of x-axis labels (on left) to x-axis
+                  svm.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
+                  svm.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
 
-                      # y-locations of legend labels (default: using full height):
-                      roc_lbl_y <- seq(.10, .90, length.out = 5)  # SVM, RF, LR, CART, FFT
+                  # Plot point:
+                  points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+                         final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
+                         pch = 21, cex = 1.75,
+                         col = scales::alpha("orange", .1),
+                         bg  = scales::alpha("orange", .3), lwd = 1
+                  )
 
+                  points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+                         final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
+                         pch = "S", cex = .7, col = gray(.2), lwd = 1
+                  )
 
-                      if (what == "roc"){ # ROC as main plot:
 
-                        # Rescale key coordinates:
-                        lloc$center.x[lloc$element == "roc"] <- .50
-                        lloc$center.y[lloc$element == "roc"] <- .55
+                  # Legend label:
+                  par("xpd" = TRUE)
 
-                        lloc$width[lloc$element == "roc"]  <- .70
-                        lloc$height[lloc$element == "roc"] <- .80
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 2.5,
+                         col = scales::alpha("orange", .1),
+                         bg  = scales::alpha("orange", .3)
+                  )
 
-                        # Reset some parameters:
-                        if (is.null(main) == FALSE) { roc_title <- main }
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
+                         pch = "S", cex = .9, col = gray(.2)
+                  )
 
-                        roc_border_lwd <- .80
-                        roc_border_col <- gray(.25)
+                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
+                       labels = "  SVM", adj = 0, cex = .9
+                  )
 
-                        roc_curve_col <- gray(.10) # "green2"
-                        roc_curve_lwd <- 1.5
+                  par("xpd" = FALSE)
 
-                        diag_col <- gray(.60)  # as in showcues()
-                        diag_lty <- 1          # as in showcues()
+                } # if ("svm" etc.
+              } # if (comp == TRUE).
 
-                        x_d <- .035
 
-                        # y-locations of legend labels (cluster labels on top right):
-                        roc_lbl_y <- seq(.55, .95, length.out = 5)  # SVM, RF, LR, CART, FFT
+              # FFTs: ----
 
+              {
+                roc_order <- order(fft_spec_vec, decreasing = TRUE)  # from highest to lowest spec
+                # roc_order <- 1:x$trees$n
 
-                      } # if (what == "roc").
+                fft_sens_vec_ord <- fft_sens_vec[roc_order]
+                fft_spec_vec_ord <- fft_spec_vec[roc_order]
 
-                      # ROC plot coordinates:
-                      final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element == "roc"] / 2, lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element == "roc"] / 2)
-                      final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2, lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
+                # Add segments and points for all trees but tree:
 
+                if (length(roc_order) > 1) {
 
-                      if (what == "roc"){ # ROC as main plot:
+                  segments(final.roc.x.loc[1] + c(0, 1 - fft_spec_vec_ord) * lloc$width[lloc$element == "roc"],
+                           final.roc.y.loc[1] + c(0, fft_sens_vec_ord) * lloc$height[lloc$element == "roc"],
+                           final.roc.x.loc[1] + c(1 - fft_spec_vec_ord, 1) * lloc$width[lloc$element == "roc"],
+                           final.roc.y.loc[1] + c(fft_sens_vec_ord, 1) * lloc$height[lloc$element == "roc"],
+                           lwd = roc_curve_lwd,
+                           col = roc_curve_col
+                  )
 
-                        # Title:
-                        title(main = roc_title, ...)  # + graphical parameters
+                  points(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 2.5, col = scales::alpha("green", .60),
+                         bg = scales::alpha("white", .90)
+                  )
 
-                        # Background:
-                        rect(final.roc.x.loc[1], final.roc.y.loc[1], final.roc.x.loc[2], final.roc.y.loc[2],
-                             col = gray(.96))  # as in showcues()
+                  text(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
+                       labels = roc_order[which(roc_order != tree)], cex = 1, col = gray(.20)
+                  )
+                }
 
-                        # Grid:
-                        x_ax_seq <- seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)
-                        y_ax_seq <- seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)
-                        abline(v = x_ax_seq, lwd = c(2, rep(1, 4)), col = gray(1)) # x-grid
-                        abline(h = y_ax_seq, lwd = c(2, rep(1, 4)), col = gray(1)) # y-grid
+                # Add larger point for plotted tree:
 
-                        # Axis ticks:
-                        segments(x_ax_seq, final.roc.y.loc[1], x_ax_seq, (final.roc.y.loc[1] - .025), lty = 1, lwd = 1, col = gray(.10)) # x-axis
-                        segments(final.roc.x.loc[1], y_ax_seq, (final.roc.x.loc[1] - .015), y_ax_seq, lty = 1, lwd = 1, col = gray(.10)) # y-axis
+                # white point (to hide point from above):
+                points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
+                       pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
+                       bg = scales::alpha("white", 1), lwd = 1
+                )
 
-                        # Tick labels:
-                        text(x_ax_seq, (final.roc.y.loc[1] - .025), labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 1, cex = .9) # x-lbl
-                        text((final.roc.x.loc[1] - .015), y_ax_seq, labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 2, cex = .9) # y-llb
+                # green point:
+                points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
+                       pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
+                       bg = scales::alpha("green", .30), lwd = 1
+                )
 
-                        # Axis labels:
-                        text(mean(final.roc.x.loc), final.roc.y.loc[1] - .125, labels = x_lbl, cex = 1) # x-lab
-                        text(final.roc.x.loc[1] - (3.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, cex = 1, srt = 90) # y-lab
+                text(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                     final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
+                     labels = tree, cex = 1.25, col = gray(.20), font = 2
+                )
 
-                        # Subtitle: Note data used
-                        subnote <- paste0("ROC for '", data, "' data:")
-                        text(x = (final.roc.x.loc[1] - .015), y = (final.roc.y.loc[2] + .03),
-                             labels = subnote, pos = 4, cex = subheader.cex)
+                # Labels:
 
+                if (comp == TRUE & any(
+                  is.null(x$competition$models$lr)   == FALSE,
+                  is.null(x$competition$models$cart) == FALSE,
+                  is.null(x$competition$models$svm)  == FALSE,
+                  is.null(x$competition$models$rf)   == FALSE
+                )) {
 
-                      } else { # ROC as miniature plot:
+                  # Legend label:
+                  par("xpd" = TRUE)
 
-                        # Title:
-                        text(lloc$center.x[lloc$element == "roc"], header.y.loc, labels = roc_title,
-                             font = roc_title_font, pos = 1, cex = header.cex)
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
+                         pch = 21, cex = 2.5, col = scales::alpha("green", .3),
+                         bg = scales::alpha("green", .67)
+                  )
 
-                        # x-axis:
-                        text(c(final.roc.x.loc[1], final.roc.x.loc[2]),
-                             c(final.roc.y.loc[1], final.roc.y.loc[1]) - .04,
-                             labels = c(0, 1)
-                        )
+                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
+                         pch = "#", cex = .9, col = gray(.20)
+                  )
 
-                        text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, labels = x_lbl) # x-lab
+                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
+                       labels = "  FFT", adj = 0, cex = .9
+                  )
 
-                        # y-axis:
-                        text(c(final.roc.x.loc[1], final.roc.x.loc[1], final.roc.x.loc[1]) - x_d,
-                             c(final.roc.y.loc[1], mean(final.roc.y.loc[1:2]), final.roc.y.loc[2]),
-                             labels = c(0, .5, 1)
-                        )
+                  par("xpd" = FALSE)
 
-                        text(final.roc.x.loc[1] - (2.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, srt = 90) # y-lab
+                }
+              } # FFTs.
 
-                        # AUC label:
-                        # text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
+            } # if (show.roc).
 
-                        # Plot bg:
-                        #
-                        # rect(final.roc.x.loc[1],
-                        #      final.roc.y.loc[1],
-                        #      final.roc.x.loc[2],
-                        #      final.roc.y.loc[2],
-                        #      col = gray(1), lwd = .5)
+          } # if (show.bottom).
 
-                        # Gridlines:
-                        # # Horizontal:
-                        #  segments(x0 = rep(final.roc.x.loc[1], 9),
-                        #           y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-                        #           x1 = rep(final.roc.x.loc[2], 9),
-                        #           y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-                        #           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
-                        #           )
-                        #
-                        #  # Vertical:
-                        #  segments(y0 = rep(final.roc.y.loc[1], 9),
-                        #           x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-                        #           y1 = rep(final.roc.y.loc[2], 9),
-                        #           x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-                        #           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
-                        #  )
-
-                      }
-
-                      # Plot border:
-                      rect(final.roc.x.loc[1],
-                           final.roc.y.loc[1],
-                           final.roc.x.loc[2],
-                           final.roc.y.loc[2],
-                           border = roc_border_col,
-                           lwd = roc_border_lwd
-                      )
-
-                      # Diagonal:
-                      segments(final.roc.x.loc[1],
-                               final.roc.y.loc[1],
-                               final.roc.x.loc[2],
-                               final.roc.y.loc[2],
-                               col = diag_col,
-                               lwd = 1,
-                               lty = diag_lty
-                      )
-
-
-                      # COMPETITIVE ALGORITHMS: ------
-
-                      if (comp == TRUE) {
-
-                        # CART: ----
-
-                        if ("cart" %in% x$competition[[data]]$algorithm) {
-
-                          cart.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "cart"]
-                          cart.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
-
-                          # Plot point:
-                          points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 1.75,
-                                 col = scales::alpha("red", .5),
-                                 bg = scales::alpha("red", .3), lwd = 1
-                          )
-
-                          points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
-                                 pch = "C", cex = .7, col = gray(.2), lwd = 1
-                          )
-
-
-                          # Legend label:
-                          par("xpd" = TRUE)
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 2.5,
-                                 col = scales::alpha("red", .1),
-                                 bg = scales::alpha("red", .3)
-                          )
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
-                                 pch = "C", cex = .9, col = gray(.2)
-                          )
-
-                          text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
-                               labels = "  CART", adj = 0, cex = .9
-                          )
-
-                          par("xpd" = FALSE)
-
-                        } # if ("cart" etc.
-
-
-                        # LR: ----
-
-                        if ("lr" %in% x$competition[[data]]$algorithm) {
-
-                          lr.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
-                          lr.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
-
-                          # Plot point:
-                          points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 1.75,
-                                 col = scales::alpha("blue", .1),
-                                 bg = scales::alpha("blue", .2)
-                          )
-
-                          points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
-                                 pch = "L", cex = .7, col = gray(.2)
-                          )
-
-                          # Legend label:
-                          par("xpd" = TRUE)
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 2.5,
-                                 col = scales::alpha("blue", .1),
-                                 bg = scales::alpha("blue", .2)
-                          )
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
-                                 pch = "L", cex = .9, col = gray(.2)
-                          )
-
-                          text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
-                               labels = "  LR", adj = 0, cex = .9
-                          )
-
-                          par("xpd" = FALSE)
-
-                        } # if ("lr" etc.
-
-
-                        # RF: ----
-
-                        if ("rf" %in% x$competition[[data]]$algorithm) {
-
-                          rf.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "rf"]
-                          rf.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "rf"]
-
-                          # # 4debugging:
-                          # print(paste0("RF: 1 - rf.spec = ", round(1 - rf.spec, 2),
-                          #              ", rf.sens = ", round(rf.sens, 2),
-                          #              ", data = ", data))  # RF coordinates
-                          #
-                          # print(final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"])) # y-coordinate
-
-                          # Plot point:
-                          points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 1.75,
-                                 col = scales::alpha("purple", .1),
-                                 bg = scales::alpha("purple", .3), lwd = 1
-                          )
-
-                          points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
-                                 pch = "R", cex = .7, col = gray(.2), lwd = 1
-                          )
-
-                          # Legend label:
-                          par("xpd" = TRUE)
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 2.5,
-                                 col = scales::alpha("purple", .1),
-                                 bg = scales::alpha("purple", .3)
-                          )
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
-                                 pch = "R", cex = .9, col = gray(.2)
-                          )
-
-                          text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
-                               labels = "  RF", adj = 0, cex = .9
-                          )
-
-                          par("xpd" = FALSE)
-
-                        } # if ("rf" etc.
-
-
-                        # SVM: ----
-
-                        if ("svm" %in% x$competition[[data]]$algorithm) {
-
-                          svm.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
-                          svm.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
-
-                          # Plot point:
-                          points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-                                 final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
-                                 pch = 21, cex = 1.75,
-                                 col = scales::alpha("orange", .1),
-                                 bg  = scales::alpha("orange", .3), lwd = 1
-                          )
-
-                          points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-                                 final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
-                                 pch = "S", cex = .7, col = gray(.2), lwd = 1
-                          )
-
-
-                          # Legend label:
-                          par("xpd" = TRUE)
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 2.5,
-                                 col = scales::alpha("orange", .1),
-                                 bg  = scales::alpha("orange", .3)
-                          )
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
-                                 pch = "S", cex = .9, col = gray(.2)
-                          )
-
-                          text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
-                               labels = "  SVM", adj = 0, cex = .9
-                          )
-
-                          par("xpd" = FALSE)
-
-                        } # if ("svm" etc.
-                      } # if (comp == TRUE).
-
-
-                      # FFTs: ----
-
-                      {
-                        roc_order <- order(fft_spec_vec, decreasing = TRUE)  # from highest to lowest spec
-                        # roc_order <- 1:x$trees$n
-
-                        fft_sens_vec_ord <- fft_sens_vec[roc_order]
-                        fft_spec_vec_ord <- fft_spec_vec[roc_order]
-
-                        # Add segments and points for all trees but tree:
-
-                        if (length(roc_order) > 1) {
-
-                          segments(final.roc.x.loc[1] + c(0, 1 - fft_spec_vec_ord) * lloc$width[lloc$element == "roc"],
-                                   final.roc.y.loc[1] + c(0, fft_sens_vec_ord) * lloc$height[lloc$element == "roc"],
-                                   final.roc.x.loc[1] + c(1 - fft_spec_vec_ord, 1) * lloc$width[lloc$element == "roc"],
-                                   final.roc.y.loc[1] + c(fft_sens_vec_ord, 1) * lloc$height[lloc$element == "roc"],
-                                   lwd = roc_curve_lwd,
-                                   col = roc_curve_col
-                          )
-
-                          points(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 2.5, col = scales::alpha("green", .60),
-                                 bg = scales::alpha("white", .90)
-                          )
-
-                          text(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
-                               labels = roc_order[which(roc_order != tree)], cex = 1, col = gray(.20)
-                          )
-                        }
-
-                        # Add larger point for plotted tree:
-
-                        # white point (to hide point from above):
-                        points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
-                               pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
-                               bg = scales::alpha("white", 1), lwd = 1
-                        )
-
-                        # green point:
-                        points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
-                               pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
-                               bg = scales::alpha("green", .30), lwd = 1
-                        )
-
-                        text(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
-                             final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
-                             labels = tree, cex = 1.25, col = gray(.20), font = 2
-                        )
-
-                        # Labels:
-
-                        if (comp == TRUE & any(
-                          is.null(x$competition$models$lr)   == FALSE,
-                          is.null(x$competition$models$cart) == FALSE,
-                          is.null(x$competition$models$svm)  == FALSE,
-                          is.null(x$competition$models$rf)   == FALSE
-                        )) {
-
-                          # Legend label:
-                          par("xpd" = TRUE)
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
-                                 pch = 21, cex = 2.5, col = scales::alpha("green", .3),
-                                 bg = scales::alpha("green", .67)
-                          )
-
-                          points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                                 final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
-                                 pch = "#", cex = .9, col = gray(.20)
-                          )
-
-                          text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                               final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
-                               labels = "  FFT", adj = 0, cex = .9
-                          )
-
-                          par("xpd" = FALSE)
-
-                        }
-                      } # FFTs.
-
-                    } # if (show.roc).
-
-                  } # if (show.bottom).
-
-                  # # Reset plotting space:
-                  # par(mfrow = c(1, 1))
-                  # par(mar = c(5, 4, 4, 1) + .1)
+          # # Reset plotting space:
+          # par(mfrow = c(1, 1))
+          # par(mar = c(5, 4, 4, 1) + .1)
 
 
   } # if (what != "cues").
@@ -2268,6 +2274,7 @@ plot.FFTrees <- function(x = NULL,
   return(invisible(x))
 
 } # plot.FFTrees().
+
 
 
 # ToDo: ------
