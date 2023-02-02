@@ -110,8 +110,8 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                          my.goal     = my.goal,         # (just passing to helper)
                          my.goal.fun = my.goal.fun,
                          #
-                         cost.each = cost.each,
-                         cost.outcomes = cost.outcomes
+                         cost.outcomes = cost.outcomes,
+                         cost.each = cost.each
   )
 
   # Add new accuracy statistics (to previous results): ----

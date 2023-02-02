@@ -96,8 +96,8 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                            my.goal     = my.goal,         # (just passing to helper)
                            my.goal.fun = my.goal.fun,
                            #
-                           # cost.each = cost.each,       # ToDo: WHY not used here?
-                           cost.outcomes = cost.outcomes
+                           cost.outcomes = cost.outcomes,
+                           cost.each = cost.each          # +++ here now +++  NOTE: Was not used here, but added on 2023-02-02.
     )
 
     # Add new statistics (to previous results): ----
@@ -161,8 +161,8 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                            my.goal     = my.goal,         # (just passing to helper)
                            my.goal.fun = my.goal.fun,
                            #
-                           cost.each = cost.each,
-                           cost.outcomes = cost.outcomes
+                           cost.outcomes = cost.outcomes,
+                           cost.each = cost.each
     )
 
     # Add new statistics (to previous results): ----

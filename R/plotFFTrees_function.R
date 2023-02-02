@@ -633,7 +633,7 @@ plot.FFTrees <- function(x = NULL,
       plotting_parameters_df <- data.frame(
         n.levels = 1:6,
         plot.height = c(10, 12, 15, 19, 23, 27),
-        plot.width = c(14, 16, 20, 24, 28, 34),
+        plot.width  = c(14, 16, 20, 24, 28, 34),
         label.box.text.cex = cue.cex,
         break.label.cex = threshold.cex
       )
@@ -643,7 +643,7 @@ plot.FFTrees <- function(x = NULL,
       plotting_parameters_df <- data.frame(
         n.levels = 1:6,
         plot.height = c(10, 12, 15, 19, 23, 25),
-        plot.width = c(14, 16, 20, 24, 28, 32) * 1,
+        plot.width  = c(14, 16, 20, 24, 28, 32) * 1,
         label.box.text.cex = cue.cex,
         break.label.cex = threshold.cex
       )
@@ -653,12 +653,13 @@ plot.FFTrees <- function(x = NULL,
       plotting_parameters_df <- data.frame(
         n.levels = 1:6,
         plot.height = c(10, 12, 15, 19, 23, 25),
-        plot.width = c(14, 16, 20, 24, 28, 32) * 1,
+        plot.width  = c(14, 16, 20, 24, 28, 32) * 1,
         label.box.text.cex = cue.cex,
         break.label.cex = threshold.cex
       )
     }
 
+    # local variables:
     if (n.levels < 6) {
 
       label.box.text.cex <- plotting_parameters_df$label.box.text.cex[n.levels]
@@ -838,46 +839,46 @@ plot.FFTrees <- function(x = NULL,
 
             # 3. Add p.signal and p.noise levels: -----
 
-            signal.p <- mean(x$data[[data]][[x$criterion_name]])
-            noise.p  <- (1 - signal.p)
+            signal_p <- mean(x$data[[data]][[x$criterion_name]])
+            noise_p  <- (1 - signal_p)
 
-            p.rect.ylim <- c(.10, .60)
+            p_rect_ylim <- c(.10, .60)
 
 
             # (a) p.signal level (right): ----
 
             text(
-              x = .80, y = p.rect.ylim[2],
+              x = .80, y = p_rect_ylim[2],
               labels = paste("p(", decision.labels[2], ")", sep = ""),
               pos = 3, cex = 1.2
             )
 
             # Filling:
-            rect(.775, p.rect.ylim[1],
-                 .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+            rect(.775, p_rect_ylim[1],
+                 .825, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
                  col = gray(.50, .25), border = NA
             )
 
             # Filltop:
-            segments(.775, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-                     .825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
+            segments(.775, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
+                     .825, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
                      lwd = 1
             )
 
             # Outline:
-            rect(.775, p.rect.ylim[1],
-                 .825, p.rect.ylim[2],
+            rect(.775, p_rect_ylim[1],
+                 .825, p_rect_ylim[2],
                  lwd = 1
             )
 
-            if (signal.p < .0001) {
-              signal.p.text <- "<1%"
+            if (signal_p < .0001) {
+              signal_p_text <- "<1%"
             } else {
-              signal.p.text <- paste(round(signal.p * 100, 0), "%", sep = "")
+              signal_p_text <- paste(round(signal_p * 100, 0), "%", sep = "")
             }
 
-            text(.825, p.rect.ylim[1] + signal.p * diff(p.rect.ylim),
-                 labels = signal.p.text,
+            text(.825, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
+                 labels = signal_p_text,
                  pos = 4, cex = 1.2
             )
 
@@ -885,35 +886,35 @@ plot.FFTrees <- function(x = NULL,
             # (b) p.noise level (left): ----
 
             text(
-              x = .20, y = p.rect.ylim[2],
+              x = .20, y = p_rect_ylim[2],
               labels = paste("p(", decision.labels[1], ")", sep = ""),
               pos = 3, cex = 1.2
             )
 
 
-            rect(.175, p.rect.ylim[1], .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+            rect(.175, p_rect_ylim[1], .225, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
                  col = gray(.50, .25), border = NA
             )
 
             # Filltop:
-            segments(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-                     .225, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
+            segments(.175, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
+                     .225, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
                      lwd = 1
             )
 
             # Outline:
-            rect(.175, p.rect.ylim[1], .225, p.rect.ylim[2],
+            rect(.175, p_rect_ylim[1], .225, p_rect_ylim[2],
                  lwd = 1
             )
 
-            if (noise.p < .0001) {
-              noise.p.text <- "<0.01%"
+            if (noise_p < .0001) {
+              noise_p_text <- "<0.01%"
             } else {
-              noise.p.text <- paste(round(noise.p * 100, 0), "%", sep = "")
+              noise_p_text <- paste(round(noise_p * 100, 0), "%", sep = "")
             }
 
-            text(.175, p.rect.ylim[1] + noise.p * diff(p.rect.ylim),
-                 labels = noise.p.text,
+            text(.175, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
+                 labels = noise_p_text,
                  pos = 2, cex = 1.2
             )
 
@@ -924,7 +925,7 @@ plot.FFTrees <- function(x = NULL,
 
           if (show.middle) {
 
-            if (show.top == FALSE & show.bottom == FALSE) {
+            if ((show.top == FALSE) & (show.bottom == FALSE)) {
               par(mar = c(3, 3, 3, 3) + .1)
             } else {
               par(mar = c(0, 0, 0, 0))
@@ -1001,7 +1002,7 @@ plot.FFTrees <- function(x = NULL,
               )
 
               # Noise balls:
-              points(c(-plot.width * .70,  -plot.width  * .50) * f_x,
+              points(c(-plot.width  * .70, -plot.width  * .50) * f_x,
                      c(-plot.height * .13, -plot.height * .13) * f_y,
                      pch = c(noise_ball_pch, signal_ball_pch),
                      bg = c(col_correct_bg, col_error_bg),
@@ -1010,7 +1011,7 @@ plot.FFTrees <- function(x = NULL,
               )
 
               # Labels:
-              text(c(-plot.width * .70,  -plot.width  * .50) * f_x,
+              text(c(-plot.width  * .70, -plot.width  * .50) * f_x,
                    c(-plot.height * .13, -plot.height * .13) * f_y,
                    labels = c("Correct\nRejection", "Miss"),
                    pos = c(2, 4), offset = 1
@@ -1021,7 +1022,7 @@ plot.FFTrees <- function(x = NULL,
               # (b) Signal panel (on right): ----
 
               # Heading:
-              text(plot.width   * .60 * f_x,
+              text( plot.width  * .60 * f_x,
                    -plot.height * .05 * f_y,
                    paste(exit_word, decision.labels[2], sep = " "),
                    cex = 1.2, font = 3
@@ -1037,7 +1038,7 @@ plot.FFTrees <- function(x = NULL,
               )
 
               # Labels:
-              text(c(plot.width * .50,    plot.width  * .70) * f_x,
+              text(c( plot.width  * .50,  plot.width  * .70) * f_x,
                    c(-plot.height * .13, -plot.height * .13) * f_y,
                    labels = c("False\nAlarm", "Hit"),
                    pos = c(2, 4), offset = 1
