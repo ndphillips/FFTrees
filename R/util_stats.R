@@ -139,7 +139,7 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 
   } else { # no cost.outcomes:
 
-    data&cost_dec <- NA
+    data$cost_dec <- NA
     data$cost     <- NA
 
   }
