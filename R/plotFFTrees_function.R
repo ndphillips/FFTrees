@@ -633,7 +633,7 @@ plot.FFTrees <- function(x = NULL,
       plotting_parameters_df <- data.frame(
         n.levels = 1:6,
         plot.height = c(10, 12, 15, 19, 23, 27),
-        plot.width = c(14, 16, 20, 24, 28, 34),
+        plot.width  = c(14, 16, 20, 24, 28, 34),
         label.box.text.cex = cue.cex,
         break.label.cex = threshold.cex
       )
@@ -659,19 +659,20 @@ plot.FFTrees <- function(x = NULL,
       )
     }
 
+    # local variables:
     if (n.levels < 6) {
 
-      label.box.text.cex <- plotting_parameters_df$label.box.text.cex[n.levels]
-      break.label.cex <- plotting_parameters_df$break.label.cex[n.levels]
-      plot.height <- plotting_parameters_df$plot.height[n.levels]
-      plot.width <- plotting_parameters_df$plot.width[n.levels]
+      label_box_text_cex <- plotting_parameters_df$label.box.text.cex[n.levels]
+      break_label_cex <- plotting_parameters_df$break.label.cex[n.levels]
+      plot_height <- plotting_parameters_df$plot.height[n.levels]
+      plot_width <- plotting_parameters_df$plot.width[n.levels]
 
     } else { # n.levels >= 6:
 
-      label.box.text.cex <- plotting_parameters_df$label.box.text.cex[6]
-      break.label.cex <- plotting_parameters_df$break.label.cex[6]
-      plot.height <- plotting_parameters_df$plot.height[6]
-      plot.width <- plotting_parameters_df$plot.width[6]
+      label_box_text_cex <- plotting_parameters_df$label.box.text.cex[6]
+      break_label_cex <- plotting_parameters_df$break.label.cex[6]
+      plot_height <- plotting_parameters_df$plot.height[6]
+      plot_width <- plotting_parameters_df$plot.width[6]
 
     }
 
@@ -722,7 +723,7 @@ plot.FFTrees <- function(x = NULL,
           ball_box_max_shift_p <-  .9
           ball_box_min_shift_p <-  .4
 
-          ball_box_fixed_x_shift <- c(ball_box_min_shift_p * plot.width, ball_box_max_shift_p * plot.width)
+          ball_box_fixed_x_shift <- c(ball_box_min_shift_p * plot_width, ball_box_max_shift_p * plot_width)
 
           # Determine N per ball:
           if (is.null(n.per.icon)) {
@@ -934,8 +935,8 @@ plot.FFTrees <- function(x = NULL,
 
             # Prepare plot:
             plot(1,
-                 xlim = c(-plot.width, plot.width),
-                 ylim = c(-plot.height, 0),
+                 xlim = c(-plot_width, plot_width),
+                 ylim = c(-plot_height, 0),
                  type = "n", bty = "n",
                  xaxt = "n", yaxt = "n",
                  ylab = "", xlab = ""
@@ -948,8 +949,8 @@ plot.FFTrees <- function(x = NULL,
 
               if (hlines) {
                 x_dev <- .28  # scaling factor, rather than difference
-                segments(-plot.width, 0, -plot.width * x_dev, 0, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
-                segments( plot.width, 0,  plot.width * x_dev, 0, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
+                segments(-plot_width, 0, -plot_width * x_dev, 0, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
+                segments( plot_width, 0,  plot_width * x_dev, 0, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
               }
 
               if (is.null(label.tree)) {
@@ -994,15 +995,15 @@ plot.FFTrees <- function(x = NULL,
               # (a) Noise panel (on left): ----
 
               # Heading:
-              text(-plot.width  * .60 * f_x,
-                   -plot.height * .05 * f_y,
+              text(-plot_width  * .60 * f_x,
+                   -plot_height * .05 * f_y,
                    paste(exit_word, decision.labels[1], sep = " "),
                    cex = 1.2, font = 3
               )
 
               # Noise balls:
-              points(c(-plot.width * .70,  -plot.width  * .50) * f_x,
-                     c(-plot.height * .13, -plot.height * .13) * f_y,
+              points(c(-plot_width  * .70, -plot_width  * .50) * f_x,
+                     c(-plot_height * .13, -plot_height * .13) * f_y,
                      pch = c(noise_ball_pch, signal_ball_pch),
                      bg = c(col_correct_bg, col_error_bg),
                      col = c(col_correct_border, col_error_border),
@@ -1010,8 +1011,8 @@ plot.FFTrees <- function(x = NULL,
               )
 
               # Labels:
-              text(c(-plot.width * .70,  -plot.width  * .50) * f_x,
-                   c(-plot.height * .13, -plot.height * .13) * f_y,
+              text(c(-plot_width  * .70, -plot_width  * .50) * f_x,
+                   c(-plot_height * .13, -plot_height * .13) * f_y,
                    labels = c("Correct\nRejection", "Miss"),
                    pos = c(2, 4), offset = 1
               )
@@ -1021,15 +1022,15 @@ plot.FFTrees <- function(x = NULL,
               # (b) Signal panel (on right): ----
 
               # Heading:
-              text(plot.width   * .60 * f_x,
-                   -plot.height * .05 * f_y,
+              text( plot_width  * .60 * f_x,
+                   -plot_height * .05 * f_y,
                    paste(exit_word, decision.labels[2], sep = " "),
                    cex = 1.2, font = 3
               )
 
               # Signal balls:
-              points(c(plot.width   * .50,  plot.width  * .70 ) * f_x,
-                     c(-plot.height * .13, -plot.height * .13) * f_y,
+              points(c(plot_width   * .50,  plot_width  * .70 ) * f_x,
+                     c(-plot_height * .13, -plot_height * .13) * f_y,
                      pch = c(noise_ball_pch, signal_ball_pch),
                      bg = c(col_error_bg, col_correct_bg),
                      col = c(col_error_border, col_correct_border),
@@ -1037,8 +1038,8 @@ plot.FFTrees <- function(x = NULL,
               )
 
               # Labels:
-              text(c(plot.width * .50,    plot.width  * .70) * f_x,
-                   c(-plot.height * .13, -plot.height * .13) * f_y,
+              text(c( plot_width  * .50,  plot_width  * .70) * f_x,
+                   c(-plot_height * .13, -plot_height * .13) * f_y,
                    labels = c("False\nAlarm", "Hit"),
                    pos = c(2, 4), offset = 1
               )
@@ -1047,8 +1048,8 @@ plot.FFTrees <- function(x = NULL,
               # (c) Additional lines (below icon guide): ----
               if (what == "ico" & hlines) {
 
-                x_hline <-  plot.width  * .95 * f_x
-                y_hline <- -plot.height * .19 * f_y
+                x_hline <-  plot_width  * .95 * f_x
+                y_hline <- -plot_height * .19 * f_y
 
                 segments(-x_hline, y_hline, x_hline, y_hline, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
                 rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
@@ -1062,15 +1063,15 @@ plot.FFTrees <- function(x = NULL,
 
                 if (what == "ico") { # special case:
 
-                  x_s2 <- plot.width
-                  x_s1 <- plot.width - .75
-                  y_s1 <- plot.height * -1.10
+                  x_s2 <- plot_width
+                  x_s1 <- plot_width - .75
+                  y_s1 <- plot_height * -1.10
 
                 } else { # defaults:
 
-                  x_s2 <- plot.width
-                  x_s1 <- plot.width - .40
-                  y_s1 <- plot.height * -1
+                  x_s2 <- plot_width
+                  x_s1 <- plot_width - .40
+                  y_s1 <- plot_height * -1
 
                 }
 
@@ -1126,7 +1127,7 @@ plot.FFTrees <- function(x = NULL,
                   x = subplot.center[1],
                   y = subplot.center[2] + 2,
                   labels = current.cue,
-                  cex = label.box.text.cex  # get_label_cex(current.cue, label.box.text.cex = label.box.text.cex)
+                  cex = label_box_text_cex  # get_label_cex(current.cue, label.box.text.cex = label_box_text.cex)
                 )
 
               } # if (level.i == 1).
@@ -1218,7 +1219,7 @@ plot.FFTrees <- function(x = NULL,
                   x = subplot.center[1] - 1,
                   y = subplot.center[2],
                   labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
-                  pos = 2, cex = break.label.cex, r = .1
+                  pos = 2, cex = break_label_cex, r = .1
                 )
 
                 points(
@@ -1263,7 +1264,7 @@ plot.FFTrees <- function(x = NULL,
                     x = subplot.center[1] - 2,
                     y = subplot.center[2] - 2,
                     labels = cue.labels[level.i + 1],
-                    cex = label.box.text.cex
+                    cex = label_box_text.cex
                   )
 
                 } else {
@@ -1272,7 +1273,7 @@ plot.FFTrees <- function(x = NULL,
                     x = subplot.center[1] - 2,
                     y = subplot.center[2] - 2,
                     labels = paste0("+ ", n.levels - 6, " More"),
-                    cex = label.box.text.cex,
+                    cex = label_box_text.cex,
                     font = 3
                   )
 
@@ -1366,7 +1367,7 @@ plot.FFTrees <- function(x = NULL,
                 text_outline(subplot.center[1] + 1,
                              subplot.center[2],
                              labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
-                             pos = 4, cex = break.label.cex, r = .1
+                             pos = 4, cex = break_label_cex, r = .1
                 )
 
                 points(
@@ -1412,7 +1413,7 @@ plot.FFTrees <- function(x = NULL,
                     x = subplot.center[1] + 2,
                     y = subplot.center[2] - 2,
                     labels = cue.labels[level.i + 1],
-                    cex = label.box.text.cex
+                    cex = label_box_text.cex
                   )
 
                 } else {
@@ -1429,7 +1430,7 @@ plot.FFTrees <- function(x = NULL,
                     x = subplot.center[1] + 2,
                     y = subplot.center[2] - 2,
                     labels = paste0("+ ", n.levels - 6, " More"),
-                    cex = label.box.text.cex,
+                    cex = label_box_text.cex,
                     font = 3
                   )
                 }
