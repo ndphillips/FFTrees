@@ -25,7 +25,7 @@
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
-#' Default: \code{sens.w = NULL} (to enforce that value is passed from calling function).
+#' Default: \code{sens.w = NULL} (to ensure that values are passed by calling function).
 #'
 #' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
@@ -194,14 +194,17 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
 #' @param sens.w numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-#' Default: \code{sens.w = NULL} (to enforce that the current value is passed by the calling function).
+#' Default: \code{sens.w = NULL} (to ensure that values are passed by calling function).
 #'
 #' @param cost.outcomes list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 #' the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
 #' a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
+#' Default: \code{cost.outcomes = NULL} (to ensure that values are passed by calling function).
+#'
 #' @param cost_v numeric. Additional cost value of each decision (as an optional vector of numeric values).
 #' Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).
+#' Default: \code{cost_v = NULL} (to ensure that values are passed by calling function).
 #'
 #' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
@@ -216,15 +219,15 @@ classtable <- function(prediction_v = NULL,
                        criterion_v  = NULL,
                        #
                        correction = .25,       # used for dprime calculation
-                       sens.w = NULL,          # sens.w (to allow passing by calling function)
+                       sens.w = NULL,          # sens.w (to ensure that values are passed by calling function)
                        #
-                       cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+                       cost.outcomes = NULL,   # WAS: list(hi = 0, fa = 1, mi = 1, cr = 0),
                        cost_v = NULL,          # cost value of each decision (at current level, as a constant)
                        #
                        my.goal = NULL,
                        my.goal.fun = NULL,
                        #
-                       na_prediction_action = "ignore"
+                       na_prediction_action = "ignore"  # NOT used anywhere
 ){
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
@@ -250,7 +253,7 @@ classtable <- function(prediction_v = NULL,
     stop("prediction_v and criterion_v must be logical")
   }
 
-  # Remove NA and infinite values (from prediction AND criterion):
+  # Remove NA and infinite values (from prediction AND criterion vectors):
   prediction_v <- prediction_v[is.finite(criterion_v)]
   criterion_v  <- criterion_v[is.finite(criterion_v)]
 
@@ -276,13 +279,35 @@ classtable <- function(prediction_v = NULL,
     var_crit_v <- var(criterion_v)
 
     if (is.na(var_pred_v)){
-      message("Variance of prediction_v is NA. See print(prediction_v) =")
-      print(prediction_v)
+
+      # Provide user feedback:
+      prediction_v_s <- paste(prediction_v, collapse = ", ")
+
+      msg_1 <- "A prediction vector has no variance (NA):\n"
+      msg_2 <- paste0("length(prediction_v) = ", length(prediction_v), "; prediction_v = ", prediction_v_s, ".\n")
+
+      cat(u_f_hig(msg_1))
+      cat(u_f_hig(msg_2))
+
+      # message("Variance of prediction_v is NA. See print(prediction_v) =")
+      # print(prediction_v)
+
     }
 
     if (is.na(var_crit_v)){
-      message("Variance of criterion_v is NA. See print(criterion_v) =")
-      print(criterion_v)
+
+      # Provide user feedback:
+      criterion_v_s <- paste(criterion_v, collapse = ", ")
+
+      msg_1 <- "A criterion vector has no variance (NA):\n"
+      msg_2 <- paste0("length(criterion_v) = ", length(criterion_v), "; criterion_v = ", criterion_v_s, ".\n")
+
+      cat(u_f_hig(msg_1))
+      cat(u_f_hig(msg_2))
+
+      # message("Variance of criterion_v is NA. See print(criterion_v) =")
+      # print(criterion_v)
+
     }
 
 
