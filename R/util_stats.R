@@ -30,12 +30,14 @@
 #' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
 #'
-#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that a
 #' false alarm and miss cost 10 and 20 units, respectively, while correct decisions incur no costs.
+#' Default: \code{cost.outcomes = NULL} (to ensure that values are passed by calling function).
 #'
+#' @param cost.each numeric. An optional fixed cost added to all outputs (e.g., the cost of using the cue).
+#' Default: \code{cost.each = NULL} (to ensure that values are passed by calling function).
 #'
 #' @return A data frame with variables of computed accuracy and cost measures (but dropping inputs).
 
@@ -47,8 +49,8 @@ add_stats <- function(data, # df with frequency counts of classification outcome
                       my.goal = NULL,
                       my.goal.fun = NULL,
                       #
-                      cost.each = NULL,
-                      cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0)
+                      cost.outcomes = NULL,  # (to ensure that values are passed by calling function), WAS: list(hi = 0, fa = 1, mi = 1, cr = 0)
+                      cost.each = NULL
 ) {
 
   # Prepare: ----
@@ -126,13 +128,21 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 
   # Cost:
 
-  # a. Outcome cost (using NEGATIVE values, so that maximizing value will minimize costs):
-  data$cost_dec <- -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
-                         + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr)) / data$n  # Why data$n, not N?
+  if (!is.null(cost.outcomes)){
 
-  # b. Total cost:
-  data$cost <- data$cost_dec - cost.each  # Subtract constant cost.each (due to negative cost).
+    # a. Outcome cost (using NEGATIVE values, so that maximizing value will minimize costs):
+    data$cost_dec <- -1 * ((hi * cost.outcomes$hi) + (fa * cost.outcomes$fa)
+                           + (mi * cost.outcomes$mi) + (cr * cost.outcomes$cr)) / data$n  # Why data$n, not N?
 
+    # b. Total cost:
+    data$cost <- data$cost_dec - cost.each  # Subtract constant cost.each (due to negative cost).
+
+  } else { # no cost.outcomes:
+
+    data&cost_dec <- NA
+    data$cost     <- NA
+
+  }
 
 
   # Output: ----
@@ -221,7 +231,7 @@ classtable <- function(prediction_v = NULL,
                        correction = .25,       # used for dprime calculation
                        sens.w = NULL,          # sens.w (to ensure that values are passed by calling function)
                        #
-                       cost.outcomes = NULL,   # WAS: list(hi = 0, fa = 1, mi = 1, cr = 0),
+                       cost.outcomes = NULL,   # (to ensure that values are passed by calling function), WAS: list(hi = 0, fa = 1, mi = 1, cr = 0),
                        cost_v = NULL,          # cost value of each decision (at current level, as a constant)
                        #
                        my.goal = NULL,
@@ -283,11 +293,11 @@ classtable <- function(prediction_v = NULL,
       # Provide user feedback:
       prediction_v_s <- paste(prediction_v, collapse = ", ")
 
-      msg_1 <- "A prediction vector has no variance (NA):\n"
-      msg_2 <- paste0("length(prediction_v) = ", length(prediction_v), "; prediction_v = ", prediction_v_s, ".\n")
+      msg_1a <- "A prediction vector has no variance (NA):\n"
+      msg_2a <- paste0("prediction_v = ", prediction_v_s, ".\n")
 
-      cat(u_f_hig(msg_1))
-      cat(u_f_hig(msg_2))
+      cat(u_f_hig(msg_1a))
+      cat(u_f_hig(msg_2a))
 
       # message("Variance of prediction_v is NA. See print(prediction_v) =")
       # print(prediction_v)
@@ -299,11 +309,11 @@ classtable <- function(prediction_v = NULL,
       # Provide user feedback:
       criterion_v_s <- paste(criterion_v, collapse = ", ")
 
-      msg_1 <- "A criterion vector has no variance (NA):\n"
-      msg_2 <- paste0("length(criterion_v) = ", length(criterion_v), "; criterion_v = ", criterion_v_s, ".\n")
+      msg_1b <- "A criterion vector has no variance (NA):\n"
+      msg_2b <- paste0("criterion_v = ", criterion_v_s, ".\n")
 
-      cat(u_f_hig(msg_1))
-      cat(u_f_hig(msg_2))
+      cat(u_f_hig(msg_1b))
+      cat(u_f_hig(msg_2b))
 
       # message("Variance of criterion_v is NA. See print(criterion_v) =")
       # print(criterion_v)
@@ -381,10 +391,21 @@ classtable <- function(prediction_v = NULL,
       # Cost:
 
       # Costs (per classification outcome case):
-      # print(cost_v)  # 4debugging: Cost of each decision (cue cost at current level, as a constant)
-      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
 
+      # print(unlist(cost.outcomes))  # 4debugging
+      # print(cost_v)  # 4debugging: Cost of each decision (cue cost at current level, as a constant)
+
+      if (!is.null(cost.outcomes)){
+
+        cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+        cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
+      } else { # no cost.outcomes:
+
+        cost_dec <- NA
+        cost     <- NA
+
+      }
 
 
     } else { # Case 2. Compute stats from freq combinations: ----
@@ -437,8 +458,21 @@ classtable <- function(prediction_v = NULL,
       # Cost:
 
       # Costs (per classification outcome case):
-      cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
-      cost <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
+      # print(unlist(cost.outcomes))  # 4debugging
+      # print(cost_v)  # 4debugging: Cost of each decision (cue cost at current level, as a constant)
+
+      if (!is.null(cost.outcomes)){
+
+        cost_dec <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr))) / N
+        cost     <- (as.numeric(c(hi, fa, mi, cr) %*% c(cost.outcomes$hi, cost.outcomes$fa, cost.outcomes$mi, cost.outcomes$cr)) + sum(cost_v)) / N
+
+      } else { # no cost.outcomes:
+
+        cost_dec <- NA
+        cost     <- NA
+
+      }
 
 
     } # else if ((var(prediction_v) > 0) & (var(criterion_v) > 0)).
