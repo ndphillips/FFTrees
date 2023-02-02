@@ -9,7 +9,7 @@ classtable(
   criterion_v = NULL,
   correction = 0.25,
   sens.w = NULL,
-  cost.outcomes = list(hi = 0, fa = 1, mi = 1, cr = 0),
+  cost.outcomes = NULL,
   cost_v = NULL,
   my.goal = NULL,
   my.goal.fun = NULL,
@@ -25,15 +25,17 @@ classtable(
 Default: \code{correction = .25}.}
 
 \item{sens.w}{numeric. Sensitivity weight parameter (from 0 to 1, for computing \code{wacc}).
-Default: \code{sens.w = NULL} (to enforce that the current value is passed by the calling function).}
+Default: \code{sens.w = NULL} (to ensure that values are passed by calling function).}
 
 \item{cost.outcomes}{list. A list of length 4 with names 'hi', 'fa', 'mi', and 'cr' specifying
 the costs of a hit, false alarm, miss, and correct rejection, respectively.
 For instance, \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} means that
-a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.}
+a false alarm and miss cost 10 and 20, respectively, while correct decisions have no cost.
+Default: \code{cost.outcomes = NULL} (to ensure that values are passed by calling function).}
 
 \item{cost_v}{numeric. Additional cost value of each decision (as an optional vector of numeric values).
-Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).}
+Typically used to include the cue cost of each decision (as a constant for the current level of an FFT).
+Default: \code{cost_v = NULL} (to ensure that values are passed by calling function).}
 
 \item{my.goal}{Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.}
 
