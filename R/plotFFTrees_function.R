@@ -1884,8 +1884,8 @@ plot.FFTrees <- function(x = NULL,
 
 
               # ROC plot coordinates:
-              final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element  == "roc"] / 2, lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element  == "roc"] / 2)
-              final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2, lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
+              final_roc_x <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element  == "roc"] / 2, lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element  == "roc"] / 2)
+              final_roc_y <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2, lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
 
 
               if (what == "roc"){ # ROC as main plot:
@@ -1894,30 +1894,30 @@ plot.FFTrees <- function(x = NULL,
                 title(main = roc_title, ...)  # + graphical parameters
 
                 # Background:
-                rect(final.roc.x.loc[1], final.roc.y.loc[1], final.roc.x.loc[2], final.roc.y.loc[2],
+                rect(final_roc_x[1], final_roc_y[1], final_roc_x[2], final_roc_y[2],
                      col = gray(.96))  # as in showcues()
 
                 # Grid:
-                x_ax_seq <- seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 11)
-                y_ax_seq <- seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 11)
+                x_ax_seq <- seq(final_roc_x[1], final_roc_x[2], length.out = 11)
+                y_ax_seq <- seq(final_roc_y[1], final_roc_y[2], length.out = 11)
                 abline(v = x_ax_seq, lwd = c(2, rep(1, 4)), col = gray(1)) # x-grid
                 abline(h = y_ax_seq, lwd = c(2, rep(1, 4)), col = gray(1)) # y-grid
 
                 # Axis ticks:
-                segments(x_ax_seq, final.roc.y.loc[1], x_ax_seq, (final.roc.y.loc[1] - .025), lty = 1, lwd = 1, col = gray(.10)) # x-axis
-                segments(final.roc.x.loc[1], y_ax_seq, (final.roc.x.loc[1] - .015), y_ax_seq, lty = 1, lwd = 1, col = gray(.10)) # y-axis
+                segments(x_ax_seq, final_roc_y[1], x_ax_seq, (final_roc_y[1] - .025), lty = 1, lwd = 1, col = gray(.10)) # x-axis
+                segments(final_roc_x[1], y_ax_seq, (final_roc_x[1] - .015), y_ax_seq, lty = 1, lwd = 1, col = gray(.10)) # y-axis
 
                 # Tick labels:
-                text(x_ax_seq, (final.roc.y.loc[1] - .025), labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 1, cex = .9) # x-lbl
-                text((final.roc.x.loc[1] - .015), y_ax_seq, labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 2, cex = .9) # y-llb
+                text(x_ax_seq, (final_roc_y[1] - .025), labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 1, cex = .9) # x-lbl
+                text((final_roc_x[1] - .015), y_ax_seq, labels = scales::comma(seq(0, 1, by = .1), accuracy = .1), pos = 2, cex = .9) # y-llb
 
                 # Axis labels:
-                text(mean(final.roc.x.loc), final.roc.y.loc[1] - .125, labels = x_lbl, cex = 1) # x-lab
-                text(final.roc.x.loc[1] - (3.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, cex = 1, srt = 90) # y-lab
+                text(mean(final_roc_x), final_roc_y[1] - .125, labels = x_lbl, cex = 1) # x-lab
+                text(final_roc_x[1] - (3.5 * x_d), mean(final_roc_y), labels = y_lbl, cex = 1, srt = 90) # y-lab
 
                 # Subtitle: Note data used
                 subnote <- paste0("ROC for '", data, "' data:")
-                text(x = (final.roc.x.loc[1] - .015), y = (final.roc.y.loc[2] + .03),
+                text(x = (final_roc_x[1] - .015), y = (final_roc_y[2] + .03),
                      labels = subnote, pos = 4, cex = subheader.cex)
 
 
@@ -1928,65 +1928,65 @@ plot.FFTrees <- function(x = NULL,
                      font = roc_title_font, pos = 1, cex = header.cex)
 
                 # x-axis:
-                text(c(final.roc.x.loc[1], final.roc.x.loc[2]),
-                     c(final.roc.y.loc[1], final.roc.y.loc[1]) - .04,
+                text(c(final_roc_x[1], final_roc_x[2]),
+                     c(final_roc_y[1], final_roc_y[1]) - .04,
                      labels = c(0, 1)
                 )
 
-                text(mean(final.roc.x.loc), final.roc.y.loc[1] - .08, labels = x_lbl) # x-lab
+                text(mean(final_roc_x), final_roc_y[1] - .08, labels = x_lbl) # x-lab
 
                 # y-axis:
-                text(c(final.roc.x.loc[1], final.roc.x.loc[1], final.roc.x.loc[1]) - x_d,
-                     c(final.roc.y.loc[1], mean(final.roc.y.loc[1:2]), final.roc.y.loc[2]),
+                text(c(final_roc_x[1], final_roc_x[1], final_roc_x[1]) - x_d,
+                     c(final_roc_y[1], mean(final_roc_y[1:2]), final_roc_y[2]),
                      labels = c(0, .5, 1)
                 )
 
-                text(final.roc.x.loc[1] - (2.5 * x_d), mean(final.roc.y.loc), labels = y_lbl, srt = 90) # y-lab
+                text(final_roc_x[1] - (2.5 * x_d), mean(final_roc_y), labels = y_lbl, srt = 90) # y-lab
 
                 # AUC label:
                 # text(final.roc.center[1], subheader.y.loc, paste("AUC =", round(final.auc, 2)), pos = 1)
 
                 # Plot bg:
                 #
-                # rect(final.roc.x.loc[1],
-                #      final.roc.y.loc[1],
-                #      final.roc.x.loc[2],
-                #      final.roc.y.loc[2],
+                # rect(final_roc_x[1],
+                #      final_roc_y[1],
+                #      final_roc_x[2],
+                #      final_roc_y[2],
                 #      col = gray(1), lwd = .5)
 
                 # Gridlines:
                 # # Horizontal:
-                #  segments(x0 = rep(final.roc.x.loc[1], 9),
-                #           y0 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
-                #           x1 = rep(final.roc.x.loc[2], 9),
-                #           y1 = seq(final.roc.y.loc[1], final.roc.y.loc[2], length.out = 5)[2:10],
+                #  segments(x0 = rep(final_roc_x[1], 9),
+                #           y0 = seq(final_roc_y[1], final_roc_y[2], length.out = 5)[2:10],
+                #           x1 = rep(final_roc_x[2], 9),
+                #           y1 = seq(final_roc_y[1], final_roc_y[2], length.out = 5)[2:10],
                 #           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
                 #           )
                 #
                 #  # Vertical:
-                #  segments(y0 = rep(final.roc.y.loc[1], 9),
-                #           x0 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
-                #           y1 = rep(final.roc.y.loc[2], 9),
-                #           x1 = seq(final.roc.x.loc[1], final.roc.x.loc[2], length.out = 5)[2:10],
+                #  segments(y0 = rep(final_roc_y[1], 9),
+                #           x0 = seq(final_roc_x[1], final_roc_x[2], length.out = 5)[2:10],
+                #           y1 = rep(final_roc_y[2], 9),
+                #           x1 = seq(final_roc_x[1], final_roc_x[2], length.out = 5)[2:10],
                 #           lty = 1, col = gray(.8), lwd = c(.5), lend = 3
                 #  )
 
               }
 
               # Plot border:
-              rect(final.roc.x.loc[1],
-                   final.roc.y.loc[1],
-                   final.roc.x.loc[2],
-                   final.roc.y.loc[2],
+              rect(final_roc_x[1],
+                   final_roc_y[1],
+                   final_roc_x[2],
+                   final_roc_y[2],
                    border = roc_border_col,
                    lwd = roc_border_lwd
               )
 
               # Diagonal:
-              segments(final.roc.x.loc[1],
-                       final.roc.y.loc[1],
-                       final.roc.x.loc[2],
-                       final.roc.y.loc[2],
+              segments(final_roc_x[1],
+                       final_roc_y[1],
+                       final_roc_x[2],
+                       final_roc_y[2],
                        col = diag_col,
                        lwd = 1,
                        lty = diag_lty
@@ -2005,15 +2005,15 @@ plot.FFTrees <- function(x = NULL,
                   cart.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
 
                   # Plot point:
-                  points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 1.75,
                          col = scales::alpha("red", .5),
                          bg = scales::alpha("red", .3), lwd = 1
                   )
 
-                  points(final.roc.x.loc[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
                          pch = "C", cex = .7, col = gray(.2), lwd = 1
                   )
 
@@ -2021,20 +2021,20 @@ plot.FFTrees <- function(x = NULL,
                   # Legend label:
                   par("xpd" = TRUE)
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5,
                          col = scales::alpha("red", .1),
                          bg = scales::alpha("red", .3)
                   )
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
                          pch = "C", cex = .9, col = gray(.2)
                   )
 
-                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
+                  text(final_roc_x[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (roc_lbl_y[4] * lloc$height[lloc$element == "roc"]),
                        labels = "  CART", adj = 0, cex = .9
                   )
 
@@ -2051,35 +2051,35 @@ plot.FFTrees <- function(x = NULL,
                   lr.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
 
                   # Plot point:
-                  points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 1.75,
                          col = scales::alpha("blue", .1),
                          bg = scales::alpha("blue", .2)
                   )
 
-                  points(final.roc.x.loc[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
                          pch = "L", cex = .7, col = gray(.2)
                   )
 
                   # Legend label:
                   par("xpd" = TRUE)
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5,
                          col = scales::alpha("blue", .1),
                          bg = scales::alpha("blue", .2)
                   )
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
                          pch = "L", cex = .9, col = gray(.2)
                   )
 
-                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
+                  text(final_roc_x[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (roc_lbl_y[3] * lloc$height[lloc$element == "roc"]),
                        labels = "  LR", adj = 0, cex = .9
                   )
 
@@ -2100,38 +2100,38 @@ plot.FFTrees <- function(x = NULL,
                   #              ", rf.sens = ", round(rf.sens, 2),
                   #              ", data = ", data))  # RF coordinates
                   #
-                  # print(final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"])) # y-coordinate
+                  # print(final_roc_y[1] + (rf.sens * lloc$height[lloc$element == "roc"])) # y-coordinate
 
                   # Plot point:
-                  points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 1.75,
                          col = scales::alpha("purple", .1),
                          bg = scales::alpha("purple", .3), lwd = 1
                   )
 
-                  points(final.roc.x.loc[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
                          pch = "R", cex = .7, col = gray(.2), lwd = 1
                   )
 
                   # Legend label:
                   par("xpd" = TRUE)
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5,
                          col = scales::alpha("purple", .1),
                          bg = scales::alpha("purple", .3)
                   )
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
                          pch = "R", cex = .9, col = gray(.2)
                   )
 
-                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
+                  text(final_roc_x[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (roc_lbl_y[2] * lloc$height[lloc$element == "roc"]),
                        labels = "  RF", adj = 0, cex = .9
                   )
 
@@ -2148,15 +2148,15 @@ plot.FFTrees <- function(x = NULL,
                   svm.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
 
                   # Plot point:
-                  points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-                         final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
+                  points(final_roc_x[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+                         final_roc_y[1] + svm.sens * lloc$height[lloc$element == "roc"],
                          pch = 21, cex = 1.75,
                          col = scales::alpha("orange", .1),
                          bg  = scales::alpha("orange", .3), lwd = 1
                   )
 
-                  points(final.roc.x.loc[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-                         final.roc.y.loc[1] + svm.sens * lloc$height[lloc$element == "roc"],
+                  points(final_roc_x[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
+                         final_roc_y[1] + svm.sens * lloc$height[lloc$element == "roc"],
                          pch = "S", cex = .7, col = gray(.2), lwd = 1
                   )
 
@@ -2164,26 +2164,27 @@ plot.FFTrees <- function(x = NULL,
                   # Legend label:
                   par("xpd" = TRUE)
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5,
                          col = scales::alpha("orange", .1),
                          bg  = scales::alpha("orange", .3)
                   )
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
                          pch = "S", cex = .9, col = gray(.2)
                   )
 
-                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
+                  text(final_roc_x[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (roc_lbl_y[1] * lloc$height[lloc$element == "roc"]),
                        labels = "  SVM", adj = 0, cex = .9
                   )
 
                   par("xpd" = FALSE)
 
                 } # if ("svm" etc.
+
               } # if (comp == TRUE).
 
 
@@ -2200,44 +2201,45 @@ plot.FFTrees <- function(x = NULL,
 
                 if (length(roc_order) > 1) {
 
-                  segments(final.roc.x.loc[1] + c(0, 1 - fft_spec_vec_ord) * lloc$width[lloc$element == "roc"],
-                           final.roc.y.loc[1] + c(0, fft_sens_vec_ord) * lloc$height[lloc$element == "roc"],
-                           final.roc.x.loc[1] + c(1 - fft_spec_vec_ord, 1) * lloc$width[lloc$element == "roc"],
-                           final.roc.y.loc[1] + c(fft_sens_vec_ord, 1) * lloc$height[lloc$element == "roc"],
+                  segments(final_roc_x[1] + c(0, 1 - fft_spec_vec_ord) * lloc$width[lloc$element == "roc"],
+                           final_roc_y[1] + c(0, fft_sens_vec_ord) * lloc$height[lloc$element == "roc"],
+                           final_roc_x[1] + c(1 - fft_spec_vec_ord, 1) * lloc$width[lloc$element == "roc"],
+                           final_roc_y[1] + c(fft_sens_vec_ord, 1) * lloc$height[lloc$element == "roc"],
                            lwd = roc_curve_lwd,
                            col = roc_curve_col
                   )
 
-                  points(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5, col = scales::alpha("green", .60),
                          bg = scales::alpha("white", .90)
                   )
 
-                  text(final.roc.x.loc[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
+                  text(final_roc_x[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
                        labels = roc_order[which(roc_order != tree)], cex = 1, col = gray(.20)
                   )
+
                 }
 
                 # Add larger point for plotted tree:
 
                 # white point (to hide point from above):
-                points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
+                points(final_roc_x[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
                        pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
                        bg = scales::alpha("white", 1), lwd = 1
                 )
 
                 # green point:
-                points(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
+                points(final_roc_x[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
                        pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
                        bg = scales::alpha("green", .30), lwd = 1
                 )
 
-                text(final.roc.x.loc[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
-                     final.roc.y.loc[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
+                text(final_roc_x[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
+                     final_roc_y[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
                      labels = tree, cex = 1.25, col = gray(.20), font = 2
                 )
 
@@ -2253,19 +2255,19 @@ plot.FFTrees <- function(x = NULL,
                   # Legend label:
                   par("xpd" = TRUE)
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5, col = scales::alpha("green", .3),
                          bg = scales::alpha("green", .67)
                   )
 
-                  points(final.roc.x.loc[1] + (1.10 * lloc$width[lloc$element == "roc"]),
-                         final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
                          pch = "#", cex = .9, col = gray(.20)
                   )
 
-                  text(final.roc.x.loc[1] + (1.13 * lloc$width[lloc$element == "roc"]),
-                       final.roc.y.loc[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
+                  text(final_roc_x[1] + (1.13 * lloc$width[lloc$element == "roc"]),
+                       final_roc_y[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
                        labels = "  FFT", adj = 0, cex = .9
                   )
 
