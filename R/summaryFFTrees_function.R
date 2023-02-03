@@ -40,6 +40,8 @@
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom knitr kable
+#' @importFrom scales percent
+#' @importFrom cli style_underline
 #'
 #' @export
 #'
