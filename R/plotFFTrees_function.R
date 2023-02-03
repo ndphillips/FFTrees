@@ -2001,19 +2001,19 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("cart" %in% x$competition[[data]]$algorithm) {
 
-                  cart.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "cart"]
-                  cart.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
+                  cart_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "cart"]
+                  cart_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "cart"]
 
                   # Plot point:
-                  points(final_roc_x[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
-                         final_roc_y[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - cart_spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (cart_sens * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 1.75,
                          col = scales::alpha("red", .5),
                          bg = scales::alpha("red", .3), lwd = 1
                   )
 
-                  points(final_roc_x[1] + ((1 - cart.spec) * lloc$width[lloc$element == "roc"]),
-                         final_roc_y[1] + (cart.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - cart_spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (cart_sens * lloc$height[lloc$element == "roc"]),
                          pch = "C", cex = .7, col = gray(.2), lwd = 1
                   )
 
@@ -2047,19 +2047,19 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("lr" %in% x$competition[[data]]$algorithm) {
 
-                  lr.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
-                  lr.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
+                  lr_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
+                  lr_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
 
                   # Plot point:
-                  points(final_roc_x[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
-                         final_roc_y[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - lr_spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (lr_sens * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 1.75,
                          col = scales::alpha("blue", .1),
                          bg = scales::alpha("blue", .2)
                   )
 
-                  points(final_roc_x[1] + ((1 - lr.spec) * lloc$width[lloc$element == "roc"]),
-                         final_roc_y[1] + (lr.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - lr_spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (lr_sens * lloc$height[lloc$element == "roc"]),
                          pch = "L", cex = .7, col = gray(.2)
                   )
 
@@ -2092,26 +2092,26 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("rf" %in% x$competition[[data]]$algorithm) {
 
-                  rf.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "rf"]
-                  rf.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "rf"]
+                  rf_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "rf"]
+                  rf_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "rf"]
 
                   # # 4debugging:
-                  # print(paste0("RF: 1 - rf.spec = ", round(1 - rf.spec, 2),
-                  #              ", rf.sens = ", round(rf.sens, 2),
+                  # print(paste0("RF: 1 - rf_spec = ", round(1 - rf_spec, 2),
+                  #              ", rf_sens = ", round(rf_sens, 2),
                   #              ", data = ", data))  # RF coordinates
                   #
-                  # print(final_roc_y[1] + (rf.sens * lloc$height[lloc$element == "roc"])) # y-coordinate
+                  # print(final_roc_y[1] + (rf_sens * lloc$height[lloc$element == "roc"])) # y-coordinate
 
                   # Plot point:
-                  points(final_roc_x[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
-                         final_roc_y[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - rf_spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (rf_sens * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 1.75,
                          col = scales::alpha("purple", .1),
                          bg = scales::alpha("purple", .3), lwd = 1
                   )
 
-                  points(final_roc_x[1] + ((1 - rf.spec) * lloc$width[lloc$element == "roc"]),
-                         final_roc_y[1] + (rf.sens * lloc$height[lloc$element == "roc"]),
+                  points(final_roc_x[1] + ((1 - rf_spec) * lloc$width[lloc$element == "roc"]),
+                         final_roc_y[1] + (rf_sens * lloc$height[lloc$element == "roc"]),
                          pch = "R", cex = .7, col = gray(.2), lwd = 1
                   )
 
@@ -2144,19 +2144,19 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("svm" %in% x$competition[[data]]$algorithm) {
 
-                  svm.spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
-                  svm.sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
+                  svm_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
+                  svm_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
 
                   # Plot point:
-                  points(final_roc_x[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-                         final_roc_y[1] + svm.sens * lloc$height[lloc$element == "roc"],
+                  points(final_roc_x[1] + (1 - svm_spec) * lloc$width[lloc$element == "roc"],
+                         final_roc_y[1] + svm_sens * lloc$height[lloc$element == "roc"],
                          pch = 21, cex = 1.75,
                          col = scales::alpha("orange", .1),
                          bg  = scales::alpha("orange", .3), lwd = 1
                   )
 
-                  points(final_roc_x[1] + (1 - svm.spec) * lloc$width[lloc$element == "roc"],
-                         final_roc_y[1] + svm.sens * lloc$height[lloc$element == "roc"],
+                  points(final_roc_x[1] + (1 - svm_spec) * lloc$width[lloc$element == "roc"],
+                         final_roc_y[1] + svm_sens * lloc$height[lloc$element == "roc"],
                          pch = "S", cex = .7, col = gray(.2), lwd = 1
                   )
 
