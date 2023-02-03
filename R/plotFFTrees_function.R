@@ -1559,37 +1559,37 @@ plot.FFTrees <- function(x = NULL,
             if (show.confusion) {
 
               # Parameters:
-              classtable.lwd <- 1
+              classtable_lwd <- 1
 
               # x/y coordinates:
-              final.classtable.x.loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
-              final.classtable.y.loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
+              final_classtable_x_loc <- c(lloc$center.x[lloc$element == "classtable"] - lloc$width[lloc$element  == "classtable"] / 2, lloc$center.x[lloc$element == "classtable"] + lloc$width[lloc$element  == "classtable"] / 2)
+              final_classtable_y_loc <- c(lloc$center.y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center.y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
 
-              rect(final.classtable.x.loc[1], final.classtable.y.loc[1],
-                   final.classtable.x.loc[2], final.classtable.y.loc[2],
-                   lwd = classtable.lwd
+              rect(final_classtable_x_loc[1], final_classtable_y_loc[1],
+                   final_classtable_x_loc[2], final_classtable_y_loc[2],
+                   lwd = classtable_lwd
               )
 
-              segments(mean(final.classtable.x.loc), final.classtable.y.loc[1], mean(final.classtable.x.loc), final.classtable.y.loc[2], col = gray(0), lwd = classtable.lwd)
-              segments(final.classtable.x.loc[1], mean(final.classtable.y.loc), final.classtable.x.loc[2], mean(final.classtable.y.loc), col = gray(0), lwd = classtable.lwd)
+              segments(mean(final_classtable_x_loc), final_classtable_y_loc[1], mean(final_classtable_x_loc), final_classtable_y_loc[2], col = gray(0), lwd = classtable_lwd)
+              segments(final_classtable_x_loc[1], mean(final_classtable_y_loc), final_classtable_x_loc[2], mean(final_classtable_y_loc), col = gray(0), lwd = classtable_lwd)
 
 
               # Column titles: ----
 
               text(
-                x = mean(mean(final.classtable.x.loc)),
+                x = mean(mean(final_classtable_x_loc)),
                 y = header.y.loc,
                 "Truth", pos = 1, cex = header.cex
               )
 
               text(
-                x = final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
+                x = final_classtable_x_loc[1] + .25 * diff(final_classtable_x_loc),
                 y = subheader.y.loc, pos = 1, cex = subheader.cex,
                 decision.labels[2]
               )
 
               text(
-                x = final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
+                x = final_classtable_x_loc[1] + .75 * diff(final_classtable_x_loc),
                 y = subheader.y.loc, pos = 1, cex = subheader.cex,
                 decision.labels[1]
               )
@@ -1598,50 +1598,50 @@ plot.FFTrees <- function(x = NULL,
               # Row titles: ----
 
               text(
-                x = final.classtable.x.loc[1] - .01,
-                y = final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc), cex = subheader.cex,
+                x = final_classtable_x_loc[1] - .01,
+                y = final_classtable_y_loc[1] + .75 * diff(final_classtable_y_loc), cex = subheader.cex,
                 decision.labels[2], adj = 1
               )
 
               text(
-                x = final.classtable.x.loc[1] - .01,
-                y = final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc), cex = subheader.cex,
+                x = final_classtable_x_loc[1] - .01,
+                y = final_classtable_y_loc[1] + .25 * diff(final_classtable_y_loc), cex = subheader.cex,
                 decision.labels[1], adj = 1
               )
 
               text(
-                x = final.classtable.x.loc[1] - .065,
-                y = mean(final.classtable.y.loc), cex = header.cex,
+                x = final_classtable_x_loc[1] - .065,
+                y = mean(final_classtable_y_loc), cex = header.cex,
                 "Decision"
               )
 
-              # text(x = final.classtable.x.loc[1] - .05,
-              #      y = mean(final.classtable.y.loc), cex = header.cex,
+              # text(x = final_classtable_x_loc[1] - .05,
+              #      y = mean(final_classtable_y_loc), cex = header.cex,
               #      "Decision", srt = 90, pos = 3)
 
 
               # Add final frequencies: ----
 
-              text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .75 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .25 * diff(final_classtable_y_loc),
                    prettyNum(final_stats$cr, big.mark = ","),
                    cex = 1.5
               )
 
-              text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .25 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .25 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .25 * diff(final_classtable_y_loc),
                    prettyNum(final_stats$mi, big.mark = ","),
                    cex = 1.5
               )
 
-              text(final.classtable.x.loc[1] + .75 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .75 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .75 * diff(final_classtable_y_loc),
                    prettyNum(final_stats$fa, big.mark = ","),
                    cex = 1.5
               )
 
-              text(final.classtable.x.loc[1] + .25 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .75 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .25 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .75 * diff(final_classtable_y_loc),
                    prettyNum(final_stats$hi, big.mark = ","),
                    cex = 1.5
               )
@@ -1649,49 +1649,49 @@ plot.FFTrees <- function(x = NULL,
 
               # Add symbols: ----
 
-              points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
-                     final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
+              points(final_classtable_x_loc[1] + .55 * diff(final_classtable_x_loc),
+                     final_classtable_y_loc[1] + .05 * diff(final_classtable_y_loc),
                      pch = noise_ball_pch, bg = col_correct_bg, col = col_correct_border, cex = ball_cex
               )
 
-              points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
-                     final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+              points(final_classtable_x_loc[1] + .05 * diff(final_classtable_x_loc),
+                     final_classtable_y_loc[1] + .55 * diff(final_classtable_y_loc),
                      pch = signal_ball_pch, bg = col_correct_bg, cex = ball_cex, col = col_correct_border
               )
 
-              points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
-                     final.classtable.y.loc[1] + .55 * diff(final.classtable.y.loc),
+              points(final_classtable_x_loc[1] + .55 * diff(final_classtable_x_loc),
+                     final_classtable_y_loc[1] + .55 * diff(final_classtable_y_loc),
                      pch = noise_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
               )
 
-              points(final.classtable.x.loc[1] + .05 * diff(final.classtable.x.loc),
-                     final.classtable.y.loc[1] + .05 * diff(final.classtable.y.loc),
+              points(final_classtable_x_loc[1] + .05 * diff(final_classtable_x_loc),
+                     final_classtable_y_loc[1] + .05 * diff(final_classtable_y_loc),
                      pch = signal_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
               )
 
 
               # Add labels: ----
 
-              text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .62 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .07 * diff(final_classtable_y_loc),
                    "cr",
                    cex = 1, font = 3, adj = 0
               )
 
-              text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .07 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .12 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .07 * diff(final_classtable_y_loc),
                    "mi",
                    cex = 1, font = 3, adj = 0
               )
 
-              text(final.classtable.x.loc[1] + .62 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .62 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .57 * diff(final_classtable_y_loc),
                    "fa",
                    cex = 1, font = 3, adj = 0
               )
 
-              text(final.classtable.x.loc[1] + .12 * diff(final.classtable.x.loc),
-                   final.classtable.y.loc[1] + .57 * diff(final.classtable.y.loc),
+              text(final_classtable_x_loc[1] + .12 * diff(final_classtable_x_loc),
+                   final_classtable_y_loc[1] + .57 * diff(final_classtable_y_loc),
                    "hi",
                    cex = 1, font = 3, adj = 0
               )
