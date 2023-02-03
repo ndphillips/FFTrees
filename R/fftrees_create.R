@@ -119,7 +119,7 @@ fftrees_create <- function(formula = NULL,
 
   # formula: ----
 
-  # Get criterion:
+  # Get criterion (from formula):
   criterion_name <- get_lhs_formula(formula)
 
   if (!criterion_name %in% names(data)){

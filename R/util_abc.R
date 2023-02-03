@@ -354,7 +354,7 @@ get_fft_definitions <- function(x){
 
 # get_lhs_formula: ------
 
-# Goal: Get criterion variable from formula (and verify formula).
+# Goal: Get the (name of the) criterion variable from (LHS of) a formula (and verify formula).
 
 get_lhs_formula <- function(formula){
 

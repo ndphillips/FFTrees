@@ -40,6 +40,8 @@
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @importFrom knitr kable
+#' @importFrom scales percent
+#' @importFrom cli style_underline
 #'
 #' @export
 #'
@@ -89,6 +91,7 @@ summary.FFTrees <- function(object,
   cat("- Trees: ", n_trees, " fast-and-frugal ", tree_s, " predicting ", cli::style_underline(o_crit), sep = "")
   cat("\n")
 
+
   # Parameter summary: ------
 
   # General information: Current algorithm, goals, numerical parameters, etc.:
@@ -118,6 +121,7 @@ summary.FFTrees <- function(object,
       params_goal, ".",
       sep = "")
   cat("\n")
+
 
   # Specific user feedback (conditional on current settings): ----
 
@@ -212,14 +216,30 @@ summary.FFTrees <- function(object,
 
   # Print tables (to Console): ----
 
-  cap_def <- in_blue(paste("Tree", cli::style_underline("definitions")))
+  # A. Tree definitions:
+  cap_def <- in_blue(paste("Tree", cli::style_underline("definitions.")))
   print(knitr::kable(out$definitions, caption = cap_def))
 
-  cap_train <- in_blue(paste("Tree statistics on", cli::style_underline("training"), "data"))
+
+  # B. Tree stats on training data:
+
+  # Compute criterion baseline/base rate:
+  criterion_name <- object$criterion_name
+  crit_br <- mean(object$data$train[[criterion_name]])
+  crit_val <- scales::percent(crit_br)
+  crit_lbl <- object$params$decision.labels[2]
+
+  cap_train <- in_blue(paste0("Tree statistics on ", cli::style_underline("training"), " data [p(", crit_lbl, ") = ", crit_val, "]."))
   print(knitr::kable(out$stats$train, caption = cap_train, digits = digits))
 
+  # C. Tree stats of test data:
   if (is.null(out$stats$test) == FALSE){
-    cap_test <- in_blue(paste("Tree statistics on", cli::style_underline("test"), "data"))
+
+    crit_br2 <- mean(object$data$test[[criterion_name]])
+    crit_val <- scales::percent(crit_br2)
+    # crit_lbl <- object$params$decision.labels[2]
+
+    cap_test <- in_blue(paste0("Tree statistics on ", cli::style_underline("test"), " data [p(", crit_lbl, ") = ", crit_val, "]."))
     print(knitr::kable(out$stats$test, caption = cap_test, digits = digits))
   }
 

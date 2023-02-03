@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.8.0.9021 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.8.0.9022 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
 
@@ -183,6 +183,9 @@ data.](man/figures/README-example-heart-plot-1.png)
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
 
+- A summary of the trees in an `FFTrees` object and their key
+  performance statistics can be obtained by `summary(heart_fft)`.
+
 - Additionally, we can compare the predictive performance of different
   machine learning algorithms on a range of metrics:
 
@@ -328,6 +331,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-02-02.\]
+\[File `README.Rmd` last updated on 2023-02-03.\]
 
 <!-- eof. -->
