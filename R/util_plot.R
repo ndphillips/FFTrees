@@ -447,7 +447,7 @@ get_label_cex <- function(i, label.box.text.cex = 2) {
 
 # add_level: Add level display to a plot ----
 
-# lloc_row: Data frame with labels, values, and locations.
+# lloc_row: Data frame with labels, size values, and locations.
 
 add_level <- function(name,
                       sub = "",
