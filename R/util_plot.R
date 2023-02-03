@@ -462,16 +462,16 @@ add_level <- function(name,
                       header_cex = NULL) {
 
   # Parameters:
-  rect.center.x <- lloc_row$center.x
-  rect.center.y <- lloc_row$center.y
-  rect.height <- lloc_row$height
-  rect.width <- lloc_row$width
+  rect_center_x <- lloc_row$center.x
+  rect_center_y <- lloc_row$center.y
+  rect_height <- lloc_row$height
+  rect_width  <- lloc_row$width
 
-  rect.bottom.y <- rect.center.y - rect.height / 2
-  rect.top.y    <- rect.center.y + rect.height / 2
+  rect_bottom_y <- rect_center_y - rect_height / 2
+  rect_top_y    <- rect_center_y + rect_height / 2
 
-  rect.left.x  <- rect.center.x - rect.width / 2
-  rect.right.x <- rect.center.x + rect.width / 2
+  rect_left_x  <- rect_center_x - rect_width / 2
+  rect_right_x <- rect_center_x + rect_width / 2
 
   long.name <- lloc_row$long.name
   value <- lloc_row$value
@@ -483,92 +483,92 @@ add_level <- function(name,
   #                                        transparency = .1)
 
 
-  text(x = rect.center.x, y = header_y,
+  text(x = rect_center_x, y = header_y,
        labels = long.name, pos = 1, cex = header_cex
   )
 
-  # text_outline(x = rect.center.x,
+  # text_outline(x = rect_center_x,
   #              y = header.y.loc,
   #              labels = long.name,
   #              pos = 1, cex = header_cex, r = .02
   # )
 
-  value.height <- rect.bottom.y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect.height
+  value_height <- rect_bottom_y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect_height
 
 
   # Add filling: ----
 
-  value.s <- min(value / max.val, 1)
+  value_s <- min(value / max.val, 1)
 
   delta <- 1
   gamma <- .50
 
-  value.col.scale <- delta * value.s^gamma / (delta * value.s^gamma + (1 - value.s)^gamma)
-  # value.col <- gray(1 - value.col.scale * .5)
+  value_col_scale <- delta * value_s^gamma / (delta * value_s^gamma + (1 - value_s)^gamma)
+  # value_col <- gray(1 - value_col_scale * .5)
 
-  value.col <- gray(1, .25)
+  value_col <- gray(1, .25)
 
   # plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
   if (level.type == "bar") {
 
-    rect(rect.left.x,
-         rect.bottom.y,
-         rect.right.x,
-         value.height,
-         # col = level.col.fun(value.s),
-         col = value.col,
+    rect(rect_left_x,
+         rect_bottom_y,
+         rect_right_x,
+         value_height,
+         # col = level.col.fun(value_s),
+         col = value_col,
          # col = spec.level.fun(lloc_row$value),
          border = "black"
     )
 
     text_outline(
-      x = rect.center.x,
-      y = value.height,
+      x = rect_center_x,
+      y = value_height,
       labels = lloc_row$value.name,
       cex = 1.5, r = .008, pos = 3
     )
 
     # Add level border:
 
-    # rect(rect.left.x,
-    #      rect.bottom.y,
-    #      rect.right.x,
-    #      rect.top.y,
+    # rect(rect_left_x,
+    #      rect_bottom_y,
+    #      rect_right_x,
+    #      rect_top_y,
     #      border = gray(.5, .5))
   }
 
 
   if (level.type == "line") {
 
-    # Stem:
-    segments(rect.center.x,
-             rect.bottom.y,
-             rect.center.x,
-             value.height,
+    # stem:
+    segments(rect_center_x,
+             rect_bottom_y,
+             rect_center_x,
+             value_height,
              lty = 3
     )
 
-    # Horizontal platform:
+    # horizontal platform:
     platform.width <- .02
 
     segments(
-      rect.center.x - platform.width,
-      value.height,
-      rect.center.x + platform.width,
-      value.height
+      rect_center_x - platform.width,
+      value_height,
+      rect_center_x + platform.width,
+      value_height
     )
 
-    # Text label:
+    # text label:
     text_outline(
-      x = rect.center.x,
-      y = value.height,
+      x = rect_center_x,
+      y = value_height,
       labels = lloc_row$value.name,
       cex = 1.5, r = 0, pos = 3
     )
 
-    # points(rect.center.x,
-    #        value.height,
+    # points(rect_center_x,
+    #        value_height,
     #        cex = 5.5,
     #        pch = 21,
     #        bg = "white",
@@ -578,19 +578,19 @@ add_level <- function(name,
   # Add subtext: ----
 
   text(
-    x = rect.center.x,
-    y = rect.center.y - .05,
+    x = rect_center_x,
+    y = rect_center_y - .05,
     labels = sub,
     cex = .8,
     font = 1,
-    pos = 1
+    pos  = 1
   )
 
   # Add bottom text: ----
 
   text(
-    x = rect.center.x,
-    y = rect.bottom.y,
+    x = rect_center_x,
+    y = rect_bottom_y,
     labels = bottom.text,
     pos = 1
   )
