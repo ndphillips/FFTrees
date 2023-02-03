@@ -425,7 +425,7 @@ plot.FFTrees <- function(x = NULL,
     }
 
 
-    # Extract important parameters from x: ------
+    # Extract key parameters from x: ------
 
     # goal: ----
 
@@ -433,11 +433,13 @@ plot.FFTrees <- function(x = NULL,
 
     # decision.labels:
     if (is.null(decision.labels)) {
+
       if (("decision.labels" %in% names(x$params))) {
         decision.labels <- x$params$decision.labels
       } else {
         decision.labels <- c(0, 1)
       }
+
     }
 
     # main: ----
@@ -445,12 +447,15 @@ plot.FFTrees <- function(x = NULL,
     if (is.null(main)) {
 
       if (("main" %in% names(x$params))) {
+
         if (is.null(x$params$main)) {
+
           if (show.header) {
             main <- "Data"
           } else {
             main <- ""
           }
+
         } else {
           main <- x$params$main
         }
@@ -458,9 +463,11 @@ plot.FFTrees <- function(x = NULL,
       } else {
 
         if (inherits(data, "character")) {
+
           if (data == "train") {
             main <- "Data (Training)"
           }
+
           if (data == "test") {
             main <- "Data (Testing)"
           }
@@ -469,8 +476,10 @@ plot.FFTrees <- function(x = NULL,
         if (inherits(data, "data.frame")) {
           main <- "Test Data"
         }
-      }
-    }
+
+      } # if (("main" %in% names(x$params))).
+
+    } # if (is.null(main)).
 
 
     # tree: ----
@@ -513,11 +522,16 @@ plot.FFTrees <- function(x = NULL,
     tree_stats  <- x$trees$stats[[data]]
     level_stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
 
+    # Get criterion (from object x):
+    criterion_name <- x$criterion_name  # (only ONCE)
+
+    # Compute criterion baseline/base rate:
+    crit_br <- mean(x$data[[data]][[criterion_name]])  # (from logical, i.e., proportion of TRUE values)
+
     n_exemplars <- nrow(x$data[[data]])
-    n_pos_cases <- sum(x$data[[data]][[x$criterion_name]])
-    n_neg_cases <- sum(x$data[[data]][[x$criterion_name]] == FALSE)
+    n_pos_cases <- sum(x$data[[data]][[criterion_name]])
+    n_neg_cases <- sum(x$data[[data]][[criterion_name]] == FALSE)
     mcu <- x$trees$stats[[data]]$mcu[tree]
-    crit_br <- mean(x$data[[data]][[x$criterion_name]])
 
     final_stats <- tree_stats[tree, ]
 
@@ -837,15 +851,15 @@ plot.FFTrees <- function(x = NULL,
             par(xpd = FALSE)
 
 
-            # 3. Add p.signal and p.noise levels: -----
+            # 3. Add p_signal and p_noise levels: -----
 
-            signal_p <- mean(x$data[[data]][[x$criterion_name]])
+            signal_p <- crit_br  # criterion baseline/base rate (from above)
             noise_p  <- (1 - signal_p)
 
             p_rect_ylim <- c(.10, .60)
 
 
-            # (a) p.signal level (right): ----
+            # (a) p_signal level (on right): ----
 
             text(
               x = .80, y = p_rect_ylim[2],
@@ -883,7 +897,7 @@ plot.FFTrees <- function(x = NULL,
             )
 
 
-            # (b) p.noise level (left): ----
+            # (b) p_noise level (on left): ----
 
             text(
               x = .20, y = p_rect_ylim[2],
@@ -1023,9 +1037,9 @@ plot.FFTrees <- function(x = NULL,
 
               # Heading:
               text( plot.width  * .60 * f_x,
-                   -plot.height * .05 * f_y,
-                   paste(exit_word, decision.labels[2], sep = " "),
-                   cex = 1.2, font = 3
+                    -plot.height * .05 * f_y,
+                    paste(exit_word, decision.labels[2], sep = " "),
+                    cex = 1.2, font = 3
               )
 
               # Signal balls:
@@ -1755,7 +1769,7 @@ plot.FFTrees <- function(x = NULL,
 
                 # acc level: ----
 
-                min_acc <- max(crit_br, 1 - crit_br)
+                min_acc <- max(crit_br, 1 - crit_br)  # accuracy baseline
 
                 add_level("acc", ok.val = .50, min.val = 0, max.val = 1,
                           level.type = level.type, lloc_row = lloc[lloc$element == "acc", ],
@@ -1763,10 +1777,10 @@ plot.FFTrees <- function(x = NULL,
 
                 # Add baseline to acc level:
                 segments(
-                  x0 = lloc$center.x[lloc$element  == "acc"] - lloc$width[lloc$element  == "acc"] / 2,
-                  y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
-                  x1 = lloc$center.x[lloc$element  == "acc"] + lloc$width[lloc$element  == "acc"] / 2,
-                  y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
+                  x0 = (lloc$center.x[lloc$element == "acc"] - lloc$width[lloc$element  == "acc"] / 2),
+                  y0 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + (lloc$height[lloc$element == "acc"] * min_acc),
+                  x1 = (lloc$center.x[lloc$element == "acc"] + lloc$width[lloc$element  == "acc"] / 2),
+                  y1 = (lloc$center.y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + (lloc$height[lloc$element == "acc"] * min_acc),
                   lty = 3
                 )
 
