@@ -183,7 +183,7 @@ data.](man/figures/README-example-heart-plot-1.png)
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
 
-- A summary of the trees in an `FFTrees` object and their key
+- A summary of the trees in our `FFTrees` object and their key
   performance statistics can be obtained by `summary(heart_fft)`.
 
 - Additionally, we can compare the predictive performance of different
@@ -280,7 +280,7 @@ decision trees* (available in
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017).
   FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal
   decision trees. *Judgment and Decision Making*, *12* (4), 344–368.
-  Retrieved from <https://journal.sjdm.org/17/17217/jdm17217.pdf>
+  doi [10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239)
 
 We encourage you to read the article to learn more about the history of
 FFTs and how the **FFTrees** package creates, visualizes, and evaluates
