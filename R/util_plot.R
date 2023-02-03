@@ -269,137 +269,144 @@ transparent <- function(col_orig = "red",
 
 
 
-# add_balls: Add balls to the plot ----
+# add_balls: Add balls/icon arrays to a plot ----
 
-add_balls <- function(x.lim = c(-10, 0),
-                      y.lim = c( -2, 0),
-                      n.vec = c(20, 10),
-                      pch.vec = c(21, 21),
-                      ball.cex = 1,
-                      bg.vec  = "white",
-                      col.vec = "black",
-                      ball.lwd = .70,
-                      freq.text = TRUE,
-                      freq.text.cex = 1.2,
-                      upper.text = "",
-                      upper.text.cex = 1,
-                      upper.text.adj = 0,
-                      rev.order = FALSE,
-                      box.col = NULL,
-                      box.bg = NULL,
-                      n.per.icon = NULL) {
+add_balls <- function(x_lim = c(-10, 0),
+                      y_lim = c( -2, 0),
+                      n_vec   = c(20, 10),
+                      pch_vec = c(21, 21),
+                      ball_cex = 1,
+                      bg_vec  = "white",
+                      col_vec = "black",
+                      ball_lwd = .70,
+                      freq_text = TRUE,
+                      freq_text_cex = 1.2,
+                      upper_text = "",
+                      upper_text_cex = 1,
+                      upper_text_adj = 0,
+                      # rev_order = FALSE,  # is NOT used
+                      box_col = NULL,
+                      box_bg = NULL,
+                      n_per_icon = NULL) {
 
 
   # Add box:
-  if (is.null(box.col) == FALSE | is.null(box.bg) == FALSE) {
+  if (is.null(box_col) == FALSE | is.null(box_bg) == FALSE) {
 
-    rect(x.lim[1],
-         y.lim[1],
-         x.lim[2],
-         y.lim[2],
-         col = box.bg,
-         border = box.col
+    rect(x_lim[1],
+         y_lim[1],
+         x_lim[2],
+         y_lim[2],
+         col = box_bg,
+         border = box_col
     )
+
   }
 
   # Add upper text:
-  text(mean(x.lim), y.lim[2] + upper.text.adj,
-       label = upper.text, cex = upper.text.cex
+  text(mean(x_lim), y_lim[2] + upper_text_adj,
+       label = upper_text, cex = upper_text_cex
   )
 
-  a.n <- n.vec[1]
-  b.n <- n.vec[2]
+  a_n <- n_vec[1]
+  b_n <- n_vec[2]
 
-  a.p <- n.vec[1] / sum(n.vec)
+  # a_p <- n_vec[1] / sum(n_vec)  # is NOT used
 
-  box.x.center <- sum(x.lim) / 2
-  box.y.center <- sum(y.lim) / 2
+  box_x_center <- sum(x_lim) / 2
+  # box_y_center <- sum(y_lim) / 2      # is NOT used
+  # box_x_width <- x_lim[2] - x_lim[1]  # is NOT used
 
-  box.x.width <- x.lim[2] - x.lim[1]
 
-  # Determine cases per ball:
-  if (is.null(n.per.icon)) {
-    max.n.side <- max(c(a.n, b.n))
+  if (is.null(n_per_icon)) { # determine cases per ball/icon:
 
-    i <- max.n.side / c(1, 5, 10, 50, 100, 1000, 10000)
+    max_n_side <- max(c(a_n, b_n))
+
+    i <- max_n_side / c(1, 5, 10, 50, 100, 1000, 10000)
     i[i > 50] <- 0
 
-    n.per.icon <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
+    n_per_icon <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
+
   }
 
-  # Determine general ball locations:
+  # Determine general ball/icon locations:
 
-  a.balls <- ceiling(a.n / n.per.icon)
-  b.balls <- ceiling(b.n / n.per.icon)
-  n.balls <- a.balls + b.balls
+  a_balls <- ceiling(a_n / n_per_icon)
+  b_balls <- ceiling(b_n / n_per_icon)
+  # n_balls <- a_balls + b_balls  # is NOT used
 
-  a.ball.x.loc <- 0
-  a.ball.y.loc <- 0
-  b.ball.x.loc <- 0
-  b.ball.y.loc <- 0
+  a_ball_x <- 0
+  a_ball_y <- 0
+  b_ball_x <- 0
+  b_ball_y <- 0
 
-  if (a.balls > 0) {
-    a.ball.x.loc <- rep(-1:-10, each = 5, length.out = 50)[1:a.balls]
-    a.ball.y.loc <- rep(1:5, times = 10, length.out = 50)[1:a.balls]
-    a.ball.x.loc <- a.ball.x.loc * (x.lim[2] - box.x.center) / 10 + box.x.center
-    a.ball.y.loc <- a.ball.y.loc * (y.lim[2] - y.lim[1]) / 5 + y.lim[1]
+  if (a_balls > 0) {
+
+    a_ball_x <- rep(-1:-10, each = 5, length.out = 50)[1:a_balls]
+    a_ball_y <- rep(1:5, times = 10, length.out = 50)[1:a_balls]
+    a_ball_x <- a_ball_x * (x_lim[2] - box_x_center) / 10 + box_x_center
+    a_ball_y <- a_ball_y * (y_lim[2] - y_lim[1]) / 5 + y_lim[1]
+
   }
 
-  if (b.balls > 0) {
-    b.ball.x.loc <- rep(1:10, each = 5, length.out = 50)[1:b.balls]
-    b.ball.y.loc <- rep(1:5, times = 10, length.out = 50)[1:b.balls]
-    b.ball.x.loc <- b.ball.x.loc * (x.lim[2] - box.x.center) / 10 + box.x.center
-    b.ball.y.loc <- b.ball.y.loc * (y.lim[2] - y.lim[1]) / 5 + y.lim[1]
+  if (b_balls > 0) {
+
+    b_ball_x <- rep(1:10, each = 5, length.out = 50)[1:b_balls]
+    b_ball_y <- rep(1:5, times = 10, length.out = 50)[1:b_balls]
+    b_ball_x <- b_ball_x * (x_lim[2] - box_x_center) / 10 + box_x_center
+    b_ball_y <- b_ball_y * (y_lim[2] - y_lim[1]) / 5 + y_lim[1]
+
   }
 
-  # if(rev.order) {
+  # if(rev_order) {
   #
-  #   x <- b.ball.x.loc
-  #   y <- b.ball.y.loc
+  #   x <- b_ball_x
+  #   y <- b_ball_y
   #
-  #   b.ball.x.loc <- a.x.loc
-  #   b.ball.y.loc <- a.y.loc
+  #   b_ball_x <- a.x.loc
+  #   b_ball_y <- a.y.loc
   #
-  #   a.ball.x.loc <- x
-  #   a.ball.y.loc <- y
+  #   a_ball_x <- x
+  #   a_ball_y <- y
   #
   # }
 
 
   # Add frequency text: ----
 
-  if (freq.text) {
-    text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, prettyNum(b.n, big.mark = ","), pos = 4, cex = freq.text.cex)
-    text(box.x.center, y.lim[1] - 1 * (y.lim[2] - y.lim[1]) / 5, prettyNum(a.n, big.mark = ","), pos = 2, cex = freq.text.cex)
+  if (freq_text) {
+    text(box_x_center, y_lim[1] - 1 * (y_lim[2] - y_lim[1]) / 5, prettyNum(b_n, big.mark = ","), pos = 4, cex = freq_text_cex)
+    text(box_x_center, y_lim[1] - 1 * (y_lim[2] - y_lim[1]) / 5, prettyNum(a_n, big.mark = ","), pos = 2, cex = freq_text_cex)
   }
 
   # Draw balls: ----
 
   # Noise:
-  suppressWarnings(if (a.balls > 0) {
+  suppressWarnings(if (a_balls > 0) {
     points(
-      x = a.ball.x.loc,
-      y = a.ball.y.loc,
-      pch = pch.vec[1],
-      bg = bg.vec[1],
-      col = col.vec[1],
-      cex = ball.cex,
-      lwd = ball.lwd
+      x = a_ball_x,
+      y = a_ball_y,
+      pch = pch_vec[1],
+      bg  = bg_vec[1],
+      col = col_vec[1],
+      cex = ball_cex,
+      lwd = ball_lwd
     )
   })
 
   # Signal:
-  suppressWarnings(if (b.balls > 0) {
+  suppressWarnings(if (b_balls > 0) {
     points(
-      x = b.ball.x.loc,
-      y = b.ball.y.loc,
-      pch = pch.vec[2],
-      bg = bg.vec[2],
-      col = col.vec[2],
-      cex = ball.cex,
-      lwd = ball.lwd
+      x = b_ball_x,
+      y = b_ball_y,
+      pch = pch_vec[2],
+      bg  = bg_vec[2],
+      col = col_vec[2],
+      cex = ball_cex,
+      lwd = ball_lwd
     )
   })
+
 
 } # add_balls().
 

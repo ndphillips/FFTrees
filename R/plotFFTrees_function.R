@@ -813,15 +813,15 @@ plot.FFTrees <- function(x = NULL,
             n_true_neg <- with(final_stats, fa + cr)
 
             add_balls(
-              x.lim = c(.33, .67),
-              y.lim = c(.12, .52),
-              n.vec = c(n_true_neg, n_true_pos),
-              pch.vec = c(noise_ball_pch, signal_ball_pch),
-              bg.vec = c(noise_ball_bg, signal_ball_bg),
-              col.vec = c(noise_ball_col, signal_ball_col),
-              ball.cex = ball_cex,
-              upper.text.adj = 2,
-              n.per.icon = n.per.icon
+              x_lim = c(.33, .67),
+              y_lim = c(.12, .52),
+              n_vec = c(n_true_neg, n_true_pos),
+              pch_vec = c(noise_ball_pch, signal_ball_pch),
+              bg_vec = c(noise_ball_bg, signal_ball_bg),
+              col_vec = c(noise_ball_col, signal_ball_col),
+              ball_cex = ball_cex,
+              upper_text_adj = 2,
+              n_per_icon = n.per.icon
             )
 
             # (c) n.per.icon legend 1 (top):
@@ -1197,16 +1197,16 @@ plot.FFTrees <- function(x = NULL,
                 if (max(c(cr.i, mi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
 
                   add_balls(
-                    x.lim = ball.x.lim,
-                    y.lim = ball.y.lim,
-                    n.vec = c(cr.i, mi.i),
-                    pch.vec = c(noise_ball_pch, signal_ball_pch),
-                    # bg.vec = c(noise_ball_bg, signal_ball_bg),
-                    bg.vec = c(col_correct_bg, col_error_bg),
-                    col.vec = c(col_correct_border, col_error_border),
-                    freq.text = TRUE,
-                    n.per.icon = n.per.icon,
-                    ball.cex = ball_cex
+                    x_lim = ball.x.lim,
+                    y_lim = ball.y.lim,
+                    n_vec = c(cr.i, mi.i),
+                    pch_vec = c(noise_ball_pch, signal_ball_pch),
+                    ball_cex = ball_cex,
+                    # bg_vec = c(noise_ball_bg, signal_ball_bg),
+                    bg_vec = c(col_correct_bg, col_error_bg),
+                    col_vec = c(col_correct_border, col_error_border),
+                    freq_text = TRUE,
+                    n_per_icon = n.per.icon
                   )
 
                 }
@@ -1320,6 +1320,7 @@ plot.FFTrees <- function(x = NULL,
                 }
 
                 if (ball_loc == "fixed") {
+
                   ball.x.lim <- c(min(ball_box_fixed_x_shift), max(ball_box_fixed_x_shift))
                   ball.y.lim <- c(
                     subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
@@ -1328,6 +1329,7 @@ plot.FFTrees <- function(x = NULL,
                 }
 
                 if (ball_loc == "variable") {
+
                   ball.x.lim <- c(
                     subplot.center[1] + ball_box_horiz_shift - ball_box_width / 2,
                     subplot.center[1] + ball_box_horiz_shift + ball_box_width / 2
@@ -1343,16 +1345,16 @@ plot.FFTrees <- function(x = NULL,
                 if (max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
 
                   add_balls(
-                    x.lim = ball.x.lim,
-                    y.lim = ball.y.lim,
-                    n.vec = c(fa.i, hi.i),
-                    pch.vec = c(noise_ball_pch, signal_ball_pch),
-                    # bg.vec = c(noise_ball_bg, signal_ball_bg),
-                    bg.vec = c(col_error_bg, col_correct_bg),
-                    col.vec = c(col_error_border, col_correct_border),
-                    freq.text = TRUE,
-                    n.per.icon = n.per.icon,
-                    ball.cex = ball_cex
+                    x_lim = ball.x.lim,
+                    y_lim = ball.y.lim,
+                    n_vec = c(fa.i, hi.i),
+                    pch_vec = c(noise_ball_pch, signal_ball_pch),
+                    ball_cex = ball_cex,
+                    # bg_vec = c(noise_ball_bg, signal_ball_bg),
+                    bg_vec = c(col_error_bg, col_correct_bg),
+                    col_vec = c(col_error_border, col_correct_border),
+                    freq_text = TRUE,
+                    n_per_icon = n.per.icon
                   )
 
                 }
@@ -1644,6 +1646,7 @@ plot.FFTrees <- function(x = NULL,
                    cex = 1.5
               )
 
+
               # Add symbols: ----
 
               points(final.classtable.x.loc[1] + .55 * diff(final.classtable.x.loc),
@@ -1863,11 +1866,11 @@ plot.FFTrees <- function(x = NULL,
                 # y-locations of legend labels (cluster labels on top right):
                 roc_lbl_y <- seq(.55, .95, length.out = 5)  # SVM, RF, LR, CART, FFT
 
-
               } # if (what == "roc").
 
+
               # ROC plot coordinates:
-              final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element == "roc"] / 2, lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element == "roc"] / 2)
+              final.roc.x.loc <- c(lloc$center.x[lloc$element == "roc"] - lloc$width[lloc$element  == "roc"] / 2, lloc$center.x[lloc$element == "roc"] + lloc$width[lloc$element  == "roc"] / 2)
               final.roc.y.loc <- c(lloc$center.y[lloc$element == "roc"] - lloc$height[lloc$element == "roc"] / 2, lloc$center.y[lloc$element == "roc"] + lloc$height[lloc$element == "roc"] / 2)
 
 
