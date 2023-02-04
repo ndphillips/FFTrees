@@ -1820,7 +1820,8 @@ plot.FFTrees <- function(x = NULL,
                   add_level("wacc", ok_val = .50, min_val = 0, max_val = 1,
                             level_type = level.type, lloc_row = lloc[lloc$element == "wacc", ],
                             header_y = header_y,
-                            bottom.text = sens.w_lbl, header_cex = header_cex)
+                            bottom_text = sens.w_lbl,  # (only here)
+                            header_cex = header_cex)
 
                 } # if (bacc_wacc).
 
