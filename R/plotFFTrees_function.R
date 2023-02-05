@@ -549,25 +549,25 @@ plot.FFTrees <- function(x = NULL,
 
     # Add marginal classification statistics to level_stats / Frequencies per level:
 
-    level_stats$hi.m <- NA
-    level_stats$mi.m <- NA
-    level_stats$fa.m <- NA
-    level_stats$cr.m <- NA
+    level_stats$hi_m <- NA  # initialize marginal freqs
+    level_stats$fa_m <- NA
+    level_stats$mi_m <- NA
+    level_stats$cr_m <- NA
 
     for (i in 1:n_levels) {
 
       if (i == 1) {
-        level_stats$hi.m[1] <- level_stats$hi[1]
-        level_stats$mi.m[1] <- level_stats$mi[1]
-        level_stats$fa.m[1] <- level_stats$fa[1]
-        level_stats$cr.m[1] <- level_stats$cr[1]
+        level_stats$hi_m[1] <- level_stats$hi[1]
+        level_stats$fa_m[1] <- level_stats$fa[1]
+        level_stats$mi_m[1] <- level_stats$mi[1]
+        level_stats$cr_m[1] <- level_stats$cr[1]
       }
 
       if (i > 1) {
-        level_stats$hi.m[i] <- level_stats$hi[i] - level_stats$hi[i - 1]
-        level_stats$mi.m[i] <- level_stats$mi[i] - level_stats$mi[i - 1]
-        level_stats$fa.m[i] <- level_stats$fa[i] - level_stats$fa[i - 1]
-        level_stats$cr.m[i] <- level_stats$cr[i] - level_stats$cr[i - 1]
+        level_stats$hi_m[i] <- level_stats$hi[i] - level_stats$hi[i - 1]
+        level_stats$fa_m[i] <- level_stats$fa[i] - level_stats$fa[i - 1]
+        level_stats$mi_m[i] <- level_stats$mi[i] - level_stats$mi[i - 1]
+        level_stats$cr_m[i] <- level_stats$cr[i] - level_stats$cr[i - 1]
       }
 
     } # for n_levels.
@@ -651,32 +651,32 @@ plot.FFTrees <- function(x = NULL,
 
 
     # Define plotting_parameters_df:
-    if (show.top & show.middle & show.bottom) {
+    if (show.top & show.middle & show.bottom) { # plot "all":
 
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
-        plot_height = c(10, 12, 15, 19, 23, 27),
-        plot_width  = c(14, 16, 20, 24, 28, 34),
+        plot_height = c(10, 12, 15, 19, 23, 27),        # Note: +2 for n_levels == 6
+        plot_width  = c(14, 16, 20, 24, 28, 34) * 1.0,  # Note: +2 for n_levels == 6
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
 
-    } else if (show.top == FALSE & show.middle & show.bottom == FALSE) {
+    } else if ((show.top == FALSE) & show.middle & (show.bottom == FALSE)) {  # only "tree" or "icontree":
 
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
         plot_height = c(10, 12, 15, 19, 23, 25),
-        plot_width  = c(14, 16, 20, 24, 28, 32) * 1,
+        plot_width  = c(14, 16, 20, 24, 28, 32) * 0.75,  # print wider
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
 
-    } else {
+    } else { # default:
 
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
         plot_height = c(10, 12, 15, 19, 23, 25),
-        plot_width  = c(14, 16, 20, 24, 28, 32) * 1,
+        plot_width  = c(14, 16, 20, 24, 28, 32) * 1,  # print in default width
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
@@ -1112,69 +1112,69 @@ plot.FFTrees <- function(x = NULL,
             # Plot main TREE: ------
 
             # Set initial subplot center:
-            subplot.center <- c(0, -4)
+            subplot_center <- c(0, -4)
 
             # Loop over levels: ------
-            for (level.i in 1:min(c(n_levels, 6))) {
+            for (level_i in 1:min(c(n_levels, 6))) {
 
               # Cue label:
-              current.cue <- cue.labels[level.i]
+              cur_cue <- cue.labels[level_i]
 
               # Get stats for current level:
-              hi.i <- level_stats$hi.m[level.i]
-              mi.i <- level_stats$mi.m[level.i]
-              fa.i <- level_stats$fa.m[level.i]
-              cr.i <- level_stats$cr.m[level.i]
+              hi_i <- level_stats$hi_m[level_i]
+              fa_i <- level_stats$fa_m[level_i]
+              mi_i <- level_stats$mi_m[level_i]
+              cr_i <- level_stats$cr_m[level_i]
 
 
-              # Top: If level.i == 1, draw top textbox: ----
+              # Top: If level_i == 1, draw top textbox: ----
 
-              if (level.i == 1) {
+              if (level_i == 1) {
 
-                rect(subplot.center[1] - label_box_width / 2,
-                     subplot.center[2] + 2 - label_box_height / 2,
-                     subplot.center[1] + label_box_width / 2,
-                     subplot.center[2] + 2 + label_box_height / 2,
+                rect(subplot_center[1] - label_box_width / 2,
+                     subplot_center[2] + 2 - label_box_height / 2,
+                     subplot_center[1] + label_box_width / 2,
+                     subplot_center[2] + 2 + label_box_height / 2,
                      col = "white",
                      border = "black"
                 )
 
                 points(
-                  x = subplot.center[1],
-                  y = subplot.center[2] + 2,
+                  x = subplot_center[1],
+                  y = subplot_center[2] + 2,
                   cex = decision_node_cex,
                   pch = decision_node_pch
                 )
 
                 text(
-                  x = subplot.center[1],
-                  y = subplot.center[2] + 2,
-                  labels = current.cue,
-                  cex = label_box_text_cex  # WAS: get_label_cex(current.cue, label_box_text_cex = label_box_text_cex)
+                  x = subplot_center[1],
+                  y = subplot_center[2] + 2,
+                  labels = cur_cue,
+                  cex = label_box_text_cex  # WAS: get_label_cex(cur_cue, label_box_text_cex = label_box_text_cex)
                 )
 
-              } # if (level.i == 1).
+              } # if (level_i == 1).
 
 
               # Left (Noise) classification / New level: ----
 
               # Exit node on left: ----
 
-              if (level_stats$exit[level.i] %in% c(0, .5) | paste(level_stats$exit[level.i]) %in% c("0", ".5")) {
+              if (level_stats$exit[level_i] %in% c(0, .5) | paste(level_stats$exit[level_i]) %in% c("0", ".5")) {
 
-                segments(subplot.center[1],
-                         subplot.center[2] + 1,
-                         subplot.center[1] - 2,
-                         subplot.center[2] - 2,
+                segments(subplot_center[1],
+                         subplot_center[2] + 1,
+                         subplot_center[1] - 2,
+                         subplot_center[2] - 2,
                          lty = segment_lty,
                          lwd = segment_lwd
                 )
 
                 arrows(
-                  x0 = subplot.center[1] - 2,
-                  y0 = subplot.center[2] - 2,
-                  x1 = subplot.center[1] - 2 - arrow_length,
-                  y1 = subplot.center[2] - 2,
+                  x0 = subplot_center[1] - 2,
+                  y0 = subplot_center[2] - 2,
+                  x1 = subplot_center[1] - 2 - arrow_length,
+                  y1 = subplot_center[2] - 2,
                   lty = arrow_lty,
                   lwd = arrow_lwd,
                   col = arrow_col,
@@ -1186,43 +1186,45 @@ plot.FFTrees <- function(x = NULL,
                 if (decision.cex > 0) {
 
                   text(
-                    x = subplot.center[1] - 2 - arrow_length * .7,
-                    y = subplot.center[2] - 2.2,
+                    x = subplot_center[1] - 2 - arrow_length * .7,
+                    y = subplot_center[2] - 2.2,
                     labels = decision.labels[1],
                     pos = 1, font = 3, cex = decision.cex
                   )
+
                 }
 
                 if (ball_loc == "fixed") {
 
-                  ball.x.lim <- c(-max(ball_box_fixed_x_shift), -min(ball_box_fixed_x_shift))
+                  ball_x_lim <- c(-max(ball_box_fixed_x_shift), -min(ball_box_fixed_x_shift))
 
-                  ball.y.lim <- c(
-                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
-                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  ball_y_lim <- c(
+                    subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
                   )
+
                 }
 
                 if (ball_loc == "variable") {
 
-                  ball.x.lim <- c(
-                    subplot.center[1] - ball_box_horiz_shift - ball_box_width / 2,
-                    subplot.center[1] - ball_box_horiz_shift + ball_box_width / 2
+                  ball_x_lim <- c(
+                    subplot_center[1] - ball_box_horiz_shift - ball_box_width / 2,
+                    subplot_center[1] - ball_box_horiz_shift + ball_box_width / 2
                   )
 
-                  ball.y.lim <- c(
-                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
-                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  ball_y_lim <- c(
+                    subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
                   )
 
                 }
 
-                if (max(c(cr.i, mi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
+                if ((max(c(cr_i, mi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
 
                   add_balls(
-                    x_lim = ball.x.lim,
-                    y_lim = ball.y.lim,
-                    n_vec = c(cr.i, mi.i),
+                    x_lim = ball_x_lim,
+                    y_lim = ball_y_lim,
+                    n_vec = c(cr_i, mi_i),
                     pch_vec = c(noise_ball_pch, signal_ball_pch),
                     ball_cex = ball_cex,
                     # bg_vec = c(noise_ball_bg, signal_ball_bg),
@@ -1235,72 +1237,74 @@ plot.FFTrees <- function(x = NULL,
                 }
 
                 # level break label:
-                pos.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c(">", ">=", "!=", "=", "<=", "<"))]
-                neg.direction.symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
+                pos_dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level_i] == c(">", ">=", "!=", "=", "<=", "<"))]
+                neg_dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level_i] == c("<=", "<", "=", "!=", ">", ">="))]
 
                 text_outline(
-                  x = subplot.center[1] - 1,
-                  y = subplot.center[2],
-                  labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
+                  x = subplot_center[1] - 1,
+                  y = subplot_center[2],
+                  labels = paste(pos_dir_symbol, " ", level_stats$threshold[level_i], sep = ""),
                   pos = 2, cex = break_label_cex, r = .1
                 )
 
                 points(
-                  x = subplot.center[1] - 2,
-                  y = subplot.center[2] - 2,
+                  x = subplot_center[1] - 2,
+                  y = subplot_center[2] - 2,
                   pch = exit_node_pch,
                   cex = exit_node_cex,
                   bg = col_exit_node_bg
                 )
 
                 text(
-                  x = subplot.center[1] - 2,
-                  y = subplot.center[2] - 2,
+                  x = subplot_center[1] - 2,
+                  y = subplot_center[2] - 2,
                   labels = substr(decision.labels[1], 1, 1)
                 )
+
               } # if (exit node on left).
 
 
               # New level on left: ----
 
-              if (level_stats$exit[level.i] %in% c(1) | paste(level_stats$exit[level.i]) %in% c("1")) {
+              if ((level_stats$exit[level_i] %in% c(1)) | (paste(level_stats$exit[level_i]) %in% c("1"))) {
 
-                segments(subplot.center[1],
-                         subplot.center[2] + 1,
-                         subplot.center[1] - 2,
-                         subplot.center[2] - 2,
+                segments(subplot_center[1],
+                         subplot_center[2] + 1,
+                         subplot_center[1] - 2,
+                         subplot_center[2] - 2,
                          lty = segment_lty,
                          lwd = segment_lwd
                 )
 
-                rect(subplot.center[1] - 2 - label_box_width / 2,
-                     subplot.center[2] - 2 - label_box_height / 2,
-                     subplot.center[1] - 2 + label_box_width / 2,
-                     subplot.center[2] - 2 + label_box_height / 2,
+                rect(subplot_center[1] - 2 - label_box_width / 2,
+                     subplot_center[2] - 2 - label_box_height / 2,
+                     subplot_center[1] - 2 + label_box_width / 2,
+                     subplot_center[2] - 2 + label_box_height / 2,
                      col = "white",
                      border = "black"
                 )
 
-                if (level.i < 6) {
+                if (level_i < 6) {
 
                   text(
-                    x = subplot.center[1] - 2,
-                    y = subplot.center[2] - 2,
-                    labels = cue.labels[level.i + 1],
+                    x = subplot_center[1] - 2,
+                    y = subplot_center[2] - 2,
+                    labels = cue.labels[level_i + 1],
                     cex = label_box_text_cex
                   )
 
                 } else {
 
                   text(
-                    x = subplot.center[1] - 2,
-                    y = subplot.center[2] - 2,
+                    x = subplot_center[1] - 2,
+                    y = subplot_center[2] - 2,
                     labels = paste0("+ ", n_levels - 6, " More"),
                     cex = label_box_text_cex,
                     font = 3
                   )
 
                 }
+
               } # if (new level on left).
 
 
@@ -1308,21 +1312,21 @@ plot.FFTrees <- function(x = NULL,
 
               # Exit node on right: ----
 
-              if (level_stats$exit[level.i] %in% c(1, .5) | paste(level_stats$exit[level.i]) %in% c("1", ".5")) {
+              if ((level_stats$exit[level_i] %in% c(1, .5)) | (paste(level_stats$exit[level_i]) %in% c("1", ".5"))) {
 
-                segments(subplot.center[1],
-                         subplot.center[2] + 1,
-                         subplot.center[1] + 2,
-                         subplot.center[2] - 2,
+                segments(subplot_center[1],
+                         subplot_center[2] + 1,
+                         subplot_center[1] + 2,
+                         subplot_center[2] - 2,
                          lty = segment_lty,
                          lwd = segment_lwd
                 )
 
                 arrows(
-                  x0 = subplot.center[1] + 2,
-                  y0 = subplot.center[2] - 2,
-                  x1 = subplot.center[1] + 2 + arrow_length,
-                  y1 = subplot.center[2] - 2,
+                  x0 = subplot_center[1] + 2,
+                  y0 = subplot_center[2] - 2,
+                  x1 = subplot_center[1] + 2 + arrow_length,
+                  y1 = subplot_center[2] - 2,
                   lty = arrow_lty,
                   lwd = arrow_lwd,
                   col = arrow_col,
@@ -1333,44 +1337,46 @@ plot.FFTrees <- function(x = NULL,
 
                 if (decision.cex > 0) {
                   text(
-                    x = subplot.center[1] + 2 + arrow_length * .7,
-                    y = subplot.center[2] - 2.2,
+                    x = subplot_center[1] + 2 + arrow_length * .7,
+                    y = subplot_center[2] - 2.2,
                     labels = decision.labels[2],
                     pos = 1,
                     font = 3,
                     cex = decision.cex
                   )
+
                 }
 
                 if (ball_loc == "fixed") {
 
-                  ball.x.lim <- c(min(ball_box_fixed_x_shift), max(ball_box_fixed_x_shift))
-                  ball.y.lim <- c(
-                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
-                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  ball_x_lim <- c(min(ball_box_fixed_x_shift), max(ball_box_fixed_x_shift))
+                  ball_y_lim <- c(
+                    subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
                   )
+
                 }
 
                 if (ball_loc == "variable") {
 
-                  ball.x.lim <- c(
-                    subplot.center[1] + ball_box_horiz_shift - ball_box_width / 2,
-                    subplot.center[1] + ball_box_horiz_shift + ball_box_width / 2
+                  ball_x_lim <- c(
+                    subplot_center[1] + ball_box_horiz_shift - ball_box_width / 2,
+                    subplot_center[1] + ball_box_horiz_shift + ball_box_width / 2
                   )
 
-                  ball.y.lim <- c(
-                    subplot.center[2] + ball_box_vert_shift - ball_box_height / 2,
-                    subplot.center[2] + ball_box_vert_shift + ball_box_height / 2
+                  ball_y_lim <- c(
+                    subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+                    subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
                   )
 
                 }
 
-                if (max(c(fa.i, hi.i), na.rm = TRUE) > 0 & show.icons == TRUE) {
+                if ((max(c(fa_i, hi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
 
                   add_balls(
-                    x_lim = ball.x.lim,
-                    y_lim = ball.y.lim,
-                    n_vec = c(fa.i, hi.i),
+                    x_lim = ball_x_lim,
+                    y_lim = ball_y_lim,
+                    n_vec = c(fa_i, hi_i),
                     pch_vec = c(noise_ball_pch, signal_ball_pch),
                     ball_cex = ball_cex,
                     # bg_vec = c(noise_ball_bg, signal_ball_bg),
@@ -1383,29 +1389,29 @@ plot.FFTrees <- function(x = NULL,
                 }
 
                 # level break label:
-                dir.symbols <- c("<=", "<", "=", "!=", ">", ">=")
+                dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")  # as (local) constant
 
-                pos.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == c("<=", "<", "=", "!=", ">", ">="))]
-                neg.direction.symbol <- dir.symbols[which(level_stats$direction[level.i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+                pos_dir_symbol <- dir_symbol[which(level_stats$direction[level_i] == c("<=", "<", "=", "!=", ">", ">="))]
+                neg_dir_symbol <- dir_symbol[which(level_stats$direction[level_i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
 
 
-                text_outline(subplot.center[1] + 1,
-                             subplot.center[2],
-                             labels = paste(pos.direction.symbol, " ", level_stats$threshold[level.i], sep = ""),
+                text_outline(subplot_center[1] + 1,
+                             subplot_center[2],
+                             labels = paste(pos_dir_symbol, " ", level_stats$threshold[level_i], sep = ""),
                              pos = 4, cex = break_label_cex, r = .1
                 )
 
                 points(
-                  x = subplot.center[1] + 2,
-                  y = subplot.center[2] - 2,
+                  x = subplot_center[1] + 2,
+                  y = subplot_center[2] - 2,
                   pch = exit_node_pch,
                   cex = exit_node_cex,
                   bg = col_exit_node_bg
                 )
 
                 text(
-                  x = subplot.center[1] + 2,
-                  y = subplot.center[2] - 2,
+                  x = subplot_center[1] + 2,
+                  y = subplot_center[2] - 2,
                   labels = substr(decision.labels[2], 1, 1)
                 )
 
@@ -1414,46 +1420,46 @@ plot.FFTrees <- function(x = NULL,
 
               # New level on right: ----
 
-              if (level_stats$exit[level.i] %in% 0 | paste(level_stats$exit[level.i]) %in% c("0")) {
+              if (level_stats$exit[level_i] %in% 0 | paste(level_stats$exit[level_i]) %in% c("0")) {
 
-                segments(subplot.center[1],
-                         subplot.center[2] + 1,
-                         subplot.center[1] + 2,
-                         subplot.center[2] - 2,
+                segments(subplot_center[1],
+                         subplot_center[2] + 1,
+                         subplot_center[1] + 2,
+                         subplot_center[2] - 2,
                          lty = segment_lty,
                          lwd = segment_lwd
                 )
 
-                if (level.i < 6) {
+                if (level_i < 6) {
 
-                  rect(subplot.center[1] + 2 - label_box_width / 2,
-                       subplot.center[2] - 2 - label_box_height / 2,
-                       subplot.center[1] + 2 + label_box_width / 2,
-                       subplot.center[2] - 2 + label_box_height / 2,
+                  rect(subplot_center[1] + 2 - label_box_width / 2,
+                       subplot_center[2] - 2 - label_box_height / 2,
+                       subplot_center[1] + 2 + label_box_width / 2,
+                       subplot_center[2] - 2 + label_box_height / 2,
                        col = "white",
                        border = "black"
                   )
 
                   text(
-                    x = subplot.center[1] + 2,
-                    y = subplot.center[2] - 2,
-                    labels = cue.labels[level.i + 1],
+                    x = subplot_center[1] + 2,
+                    y = subplot_center[2] - 2,
+                    labels = cue.labels[level_i + 1],
                     cex = label_box_text_cex
                   )
 
                 } else {
 
-                  rect(subplot.center[1] + 2 - label_box_width / 2,
-                       subplot.center[2] - 2 - label_box_height / 2,
-                       subplot.center[1] + 2 + label_box_width / 2,
-                       subplot.center[2] - 2 + label_box_height / 2,
+                  rect(subplot_center[1] + 2 - label_box_width / 2,
+                       subplot_center[2] - 2 - label_box_height / 2,
+                       subplot_center[1] + 2 + label_box_width / 2,
+                       subplot_center[2] - 2 + label_box_height / 2,
                        col = "white",
                        border = "black", lty = 2
                   )
 
                   text(
-                    x = subplot.center[1] + 2,
-                    y = subplot.center[2] - 2,
+                    x = subplot_center[1] + 2,
+                    y = subplot_center[2] - 2,
                     labels = paste0("+ ", n_levels - 6, " More"),
                     cex = label_box_text_cex,
                     font = 3
@@ -1465,24 +1471,24 @@ plot.FFTrees <- function(x = NULL,
 
               # Update plot center: ----
 
-              if (identical(paste(level_stats$exit[level.i]), "0")) {
+              if (identical(paste(level_stats$exit[level_i]), "0")) {
 
-                subplot.center <- c(
-                  subplot.center[1] + 2,
-                  subplot.center[2] - 4
+                subplot_center <- c(
+                  subplot_center[1] + 2,
+                  subplot_center[2] - 4
                 )
               } # if (identical exit 0 etc.
 
-              if (identical(paste(level_stats$exit[level.i]), "1")) {
+              if (identical(paste(level_stats$exit[level_i]), "1")) {
 
-                subplot.center <- c(
-                  subplot.center[1] - 2,
-                  subplot.center[2] - 4
+                subplot_center <- c(
+                  subplot_center[1] - 2,
+                  subplot_center[2] - 4
                 )
 
               } # if (identical exit 1 etc.
 
-            } # for (level.i etc. loop.
+            } # for (level_i etc. loop.
 
           } # if (show.middle).
 
