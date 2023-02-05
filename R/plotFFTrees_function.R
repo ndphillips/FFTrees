@@ -655,18 +655,18 @@ plot.FFTrees <- function(x = NULL,
 
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
-        plot_height = c(10, 12, 15, 19, 23, 27),        # Note: +2 for n_levels == 6
-        plot_width  = c(14, 16, 20, 24, 28, 34) * 1.0,  # Note: +2 for n_levels == 6
+        plot_height = c(10, 12, 15, 19, 23, 27),        # Note: use default, +2 for n_levels == 6
+        plot_width  = c(14, 16, 20, 24, 28, 34) * 1.0,  # Note: use default, +2 for n_levels == 6
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
 
-    } else if ((show.top == FALSE) & show.middle & (show.bottom == FALSE)) {  # only "tree" or "icontree":
+    } else if ((show.top == FALSE) & show.middle & (show.bottom == FALSE)) {  # only "ico" or "tree":
 
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
         plot_height = c(10, 12, 15, 19, 23, 25),
-        plot_width  = c(14, 16, 20, 24, 28, 32) * 0.75,  # print wider
+        plot_width  = c(14, 16, 20, 24, 28, 32) * 0.80,  # stretch wider (but not too wide for n.per.icon = 1)
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
@@ -676,7 +676,7 @@ plot.FFTrees <- function(x = NULL,
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
         plot_height = c(10, 12, 15, 19, 23, 25),
-        plot_width  = c(14, 16, 20, 24, 28, 32) * 1,  # print in default width
+        plot_width  = c(14, 16, 20, 24, 28, 32) * 1,  # stretch to default width
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
@@ -740,11 +740,11 @@ plot.FFTrees <- function(x = NULL,
             ball_box_width <- 18
           }
 
-          ball_box_height      <-  2.5
+          ball_box_height      <- 2.5
           ball_box_horiz_shift <- 10
           ball_box_vert_shift  <- -1
-          ball_box_max_shift_p <-  .9
-          ball_box_min_shift_p <-  .4
+          ball_box_max_shift_p <- .9
+          ball_box_min_shift_p <- .4
 
           ball_box_fixed_x_shift <- c(ball_box_min_shift_p * plot_width, ball_box_max_shift_p * plot_width)
 
@@ -812,11 +812,11 @@ plot.FFTrees <- function(x = NULL,
             # (a) lines:
             if (hlines) {
 
-              segments(0, .95, 1, .95, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty) # top hline
+              segments(0, .95, 1, .95, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)  # top hline
 
               x_dev <- get_x_dev(main)
               y_dev <- .20
-              rect((.50 - x_dev), (1 - y_dev), (.50 + x_dev), (1 + y_dev), col = "white", border = NA) # title background
+              rect((.50 - x_dev), (1 - y_dev), (.50 + x_dev), (1 + y_dev), col = "white", border = NA)  # title background
 
             }
 
@@ -1017,16 +1017,27 @@ plot.FFTrees <- function(x = NULL,
 
               # (a) Noise panel (on left): ----
 
+              # Parameters:
+
+              if (what == "ico"){
+                leg_head_y <- .02
+                leg_ball_y <- .14
+              } else {
+                leg_head_y <- .05
+                leg_ball_y <- .15
+              }
+
+
               # Heading:
               text(-plot_width  * .60 * f_x,
-                   -plot_height * .05 * f_y,
+                   -plot_height * leg_head_y * f_y,
                    paste(exit_word, decision.labels[1], sep = " "),
                    cex = 1.2, font = 3
               )
 
               # Noise balls:
               points(c(-plot_width  * .70, -plot_width  * .50) * f_x,
-                     c(-plot_height * .13, -plot_height * .13) * f_y,
+                     c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
                      pch = c(noise_ball_pch, signal_ball_pch),
                      bg = c(col_correct_bg, col_error_bg),
                      col = c(col_correct_border, col_error_border),
@@ -1035,9 +1046,9 @@ plot.FFTrees <- function(x = NULL,
 
               # Labels:
               text(c(-plot_width  * .70, -plot_width  * .50) * f_x,
-                   c(-plot_height * .13, -plot_height * .13) * f_y,
+                   c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
                    labels = c("Correct\nRejection", "Miss"),
-                   pos = c(2, 4), offset = 1
+                   pos = c(2, 4), offset = .80, cex = 1
               )
 
 
@@ -1046,14 +1057,14 @@ plot.FFTrees <- function(x = NULL,
 
               # Heading:
               text( plot_width  * .60 * f_x,
-                    -plot_height * .05 * f_y,
+                    -plot_height * leg_head_y * f_y,
                     paste(exit_word, decision.labels[2], sep = " "),
                     cex = 1.2, font = 3
               )
 
               # Signal balls:
               points(c(plot_width   * .50,  plot_width  * .70 ) * f_x,
-                     c(-plot_height * .13, -plot_height * .13) * f_y,
+                     c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
                      pch = c(noise_ball_pch, signal_ball_pch),
                      bg = c(col_error_bg, col_correct_bg),
                      col = c(col_error_border, col_correct_border),
@@ -1062,17 +1073,17 @@ plot.FFTrees <- function(x = NULL,
 
               # Labels:
               text(c( plot_width  * .50,  plot_width  * .70) * f_x,
-                   c(-plot_height * .13, -plot_height * .13) * f_y,
+                   c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
                    labels = c("False\nAlarm", "Hit"),
-                   pos = c(2, 4), offset = 1
+                   pos = c(2, 4), offset = .80, cex = 1
               )
 
 
               # (c) Additional lines (below icon guide): ----
               if (what == "ico" & hlines) {
 
-                x_hline <-  plot_width  * .95 * f_x
-                y_hline <- -plot_height * .19 * f_y
+                x_hline <-  plot_width  * 1.0 * f_x
+                y_hline <- -plot_height * .22 * f_y
 
                 segments(-x_hline, y_hline, x_hline, y_hline, col = col_panel_line, lwd = panel_line_lwd, lty = panel_line_lty)
                 rect(-x_hline * .33, (y_hline - .5), x_hline * .33, (y_hline + .5), col = "white", border = NA)
@@ -1080,6 +1091,7 @@ plot.FFTrees <- function(x = NULL,
 
 
               # (d) n.per.icon legend 2 (middle): ----
+
               if (what == "ico") { show_icon_guide_legend <- TRUE } # special case
 
               if (show_icon_guide_legend){
@@ -1087,8 +1099,8 @@ plot.FFTrees <- function(x = NULL,
                 if (what == "ico") { # special case:
 
                   x_s2 <- plot_width
-                  x_s1 <- plot_width - .75
-                  y_s1 <- plot_height * -1.10
+                  x_s1 <- plot_width - .80
+                  y_s1 <- plot_height * -1.12
 
                 } else { # defaults:
 
