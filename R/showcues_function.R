@@ -68,16 +68,18 @@ showcues <- function(x = NULL,
   # palette <- c("deepskyblue", "deeppink", "forestgreen", "darkorange", "gold",
   #              "firebrick", "grey50", "black")[1:top]
 
-  # 1. Read user input (to set cue.df and goal): ------
+  # 1. Read user input (to set cue_df and goal): ------
 
-  # cue.df: ----
+  # cue_df: ----
 
   if (is.null(cue.accuracies) == FALSE) { # prioritize user input:
 
-    cue.df <- cue.accuracies
+    cue_df <- cue.accuracies
 
-    if (quiet == FALSE){
-      message("Using cue.accuracies provided:")  # user feedback
+    # Provide user feedback: ----
+
+    if (!quiet) {
+      cat(u_f_ini("Plotting cue.accuracies provided:\n"))
     }
 
   } else if (is.null(x) == FALSE) { # use object x info:
@@ -88,7 +90,7 @@ showcues <- function(x = NULL,
     #     stop("There are no cue training statistics in this object.")
     #   }
     #
-    #   cue.df <- x$cues$stats$train
+    #   cue_df <- x$cues$stats$train
     #
     # } else if (data == "test") {
     #
@@ -96,7 +98,7 @@ showcues <- function(x = NULL,
     #     stop("There are no cue test statistics in this object.")
     #   }
     #
-    #   cue.df <- x$cues$stats$test
+    #   cue_df <- x$cues$stats$test
     #
     # } else { # other data values:
     #
@@ -111,15 +113,17 @@ showcues <- function(x = NULL,
 
     } else {
 
-      cue.df <- x$cues$stats$train
+      cue_df <- x$cues$stats$train
 
-      if (quiet == FALSE){
-        message("Using cue training statistics of object x:")  # user feedback
+      # Provide user feedback: ----
+
+      if (!quiet) {
+        cat(u_f_ini("Plotting cue training statistics:\n"))
       }
 
     }
 
-  } else { # cue.df not set:
+  } else { # cue_df not set:
 
     stop("No data frame of cue accuracies was found.")
 
@@ -145,41 +149,42 @@ showcues <- function(x = NULL,
 
   # Verify values: ----
 
-  if (goal %in% names(cue.df) == FALSE){
-    stop(paste0("The goal == '", goal, "' does not correspond to a variable in cue.df"))
+  if (goal %in% names(cue_df) == FALSE){
+    stop(paste0("The goal == '", goal, "' does not correspond to a variable in cue_df"))
   }
 
-  if (nrow(cue.df) < top) { top <- nrow(cue.df) }
+  if (nrow(cue_df) < top) { top <- nrow(cue_df) }
 
 
-  # Sort cue.df by current goal: ------
+  # Sort cue_df by current goal: ------
 
-  # # Bug: Always rank cue.df by goal == "wacc":
-  # cue.df$rank <- rank(-cue.df$wacc, ties.method = "first")
+  # # Bug: Always rank cue_df by goal == "wacc":
+  # cue_df$rank <- rank(-cue_df$wacc, ties.method = "first")
 
-  # Fix: Rank cue.df by current goal:
-  goal_ix <- which(names(cue.df) == goal)
-  goal_vc <- cue.df[[goal_ix]]  # values corresponding to current goal (as vector)
-  cue.df$rank <- rank(-goal_vc, ties.method = "first")
+  # Fix: Rank cue_df by current goal:
+  goal_ix <- which(names(cue_df) == goal)
+  goal_vc <- cue_df[[goal_ix]]  # values corresponding to current goal (as vector)
+  cue_df$rank <- rank(-goal_vc, ties.method = "first")
 
   # Order by rank and change row order:
-  ord_new <- order(cue.df$rank)
-  cue.df  <- cue.df[ord_new, ]
-  goal_vc <- cue.df[[goal_ix]]  # update sorted order, to report in table (below)
+  ord_new <- order(cue_df$rank)
+  cue_df  <- cue_df[ord_new, ]
+  goal_vc <- cue_df[[goal_ix]]  # update sorted order, to report in table (below)
 
-  # Feedback note/subtitle:
+
+  # Compose subnote:
   if (goal == "wacc"){
-    sens.w <- x$params$sens.w
+    sens.w  <- x$params$sens.w
     subnote <- paste0("Cue accuracies ranked by ", goal, " (sens.w = ", round(sens.w, 2), ")")
   } else {
     subnote <- paste0("Cue accuracies ranked by ", goal)
   }
 
-  # User feedback:
-  if (quiet == FALSE){ message(subnote) }
+  # Provide user feedback:
+  if (!quiet) { cat(u_f_msg(paste0("\u2014 ", subnote, "\n"))) }
 
   # Adjust color palette:
-  cue.df$col <- rep(palette, length.out = nrow(cue.df))
+  cue_df$col <- rep(palette, length.out = nrow(cue_df))
 
 
   # 2. Setup main plot: ------
@@ -209,8 +214,8 @@ showcues <- function(x = NULL,
   )
 
   # Axes:
-  axis(1, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1) # x-axis + lbls
-  axis(2, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1) # y-axis + lbls
+  axis(1, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1)  # x-axis + lbls
+  axis(2, at = seq(0, 1, .10), las = 1, lwd = 0, lwd.ticks = 1)  # y-axis + lbls
 
   # Subtitle (as margin text):
   mtext(paste0(subnote, ":"), side = 3, line = 0.25, adj = 0, cex = .90)
@@ -222,8 +227,8 @@ showcues <- function(x = NULL,
 
   # Plot region and grid:
   rect(-100, -100, 100, 100, col = gray(.96))
-  abline(h = seq(0, 1, .1), lwd = c(2, rep(1, 4)), col = gray(1)) # horizontal grid
-  abline(v = seq(0, 1, .1), lwd = c(2, rep(1, 4)), col = gray(1)) # vertical grid
+  abline(h = seq(0, 1, .1), lwd = c(2, rep(1, 4)), col = gray(1))  # horizontal grid
+  abline(v = seq(0, 1, .1), lwd = c(2, rep(1, 4)), col = gray(1))  # vertical grid
 
   # Diagonal:
   abline(a = 0, b = 1, col = gray(.60), lty = 1)
@@ -233,10 +238,10 @@ showcues <- function(x = NULL,
 
   #    a. Non-top cues: ----
 
-  if (any(cue.df$rank > top)) {
+  if (any(cue_df$rank > top)) {
 
-    with(cue.df[cue.df$rank > top, ], points(1 - spec, sens, cex = 1))
-    with(cue.df[cue.df$rank > top, ], text(1 - spec, sens,
+    with(cue_df[cue_df$rank > top, ], points(1 - spec, sens, cex = 1))
+    with(cue_df[cue_df$rank > top, ], text(1 - spec, sens,
                                            labels = rank,
                                            pos = 3,
                                            cex = .8,
@@ -249,7 +254,7 @@ showcues <- function(x = NULL,
   for (i in top:1) {
 
     with(
-      cue.df[cue.df$rank == i, ],
+      cue_df[cue_df$rank == i, ],
       points(
         x = 1 - spec, y = sens,
         col = col,
@@ -258,7 +263,7 @@ showcues <- function(x = NULL,
       )
     )
 
-    with(cue.df[cue.df$rank == i, ], text(1 - spec, sens,
+    with(cue_df[cue_df$rank == i, ], text(1 - spec, sens,
                                           labels = rank,
                                           # pos = 3,
                                           cex = 1
@@ -276,32 +281,32 @@ showcues <- function(x = NULL,
     cex = c(1, 1, 1, 1, 1, 1, 1)
   )
 
-  cue.box.y_max <- .43
-  cue.box.x0    <- .45
-  cue.box.x1 <- 1.02
-  cue.box.y0 <- 0
+  cue_box_y_max <- .43
+  cue_box_x0    <- .45
+  cue_box_x1 <- 1.02
+  cue_box_y0 <- 0
 
   if (top >= 5){
-    cue.box.y1 <- .38
+    cue_box_y1 <- .38
   } else {
-    cue.box.y1 <- c(.18, .23, .28, .33)[top]
+    cue_box_y1 <- c(.18, .23, .28, .33)[top]
   }
 
-  cue.lab.h <- (cue.box.y1 - cue.box.y0) / top
+  cue_lbl_h <- (cue_box_y1 - cue_box_y0) / top
 
-  cue.lab.y <- rev(seq((cue.box.y0 + cue.lab.h / 2), (cue.box.y1 - cue.lab.h / 2), length.out = top))
+  cue_lbl_y <- rev(seq((cue_box_y0 + cue_lbl_h / 2), (cue_box_y1 - cue_lbl_h / 2), length.out = top))
 
   if (top > 1){
-    cue.sep.y <- seq(cue.box.y0 + cue.lab.h, cue.box.y1 - cue.lab.h, length.out = top - 1)
+    cue_sep_y <- seq(cue_box_y0 + cue_lbl_h, cue_box_y1 - cue_lbl_h, length.out = top - 1)
   } else {
-    cue.sep.y <- 0
+    cue_sep_y <- 0
   }
 
-  header.y  <- mean(c(cue.box.y1, cue.box.y_max))
-  label.cex <- .80
+  header_y  <- mean(c(cue_box_y1, cue_box_y_max))
+  label_cex <- .80
 
   # Background:
-  rect(cue.box.x0, cue.box.y0, cue.box.x1, cue.box.y_max,
+  rect(cue_box_x0, cue_box_y0, cue_box_x1, cue_box_y_max,
        col = gray(.98),
        border = gray(.20)
   )
@@ -329,23 +334,23 @@ showcues <- function(x = NULL,
       location.df$x.loc[location.df$element == "spec"],
       location.df$x.loc[location.df$element == "wacc"]
     ),
-    y = header.y,
+    y = header_y,
     labels = c(c("Rank", "cue + thresh", "sens", "spec"), label_fin),
-    font = 1, cex = label.cex
+    font = 1, cex = label_cex
   )
 
-  segments(cue.box.x0, cue.box.y1, 1.02, cue.box.y1)
+  segments(cue_box_x0, cue_box_y1, 1.02, cue_box_y1)
 
-  segments(rep(cue.box.x0, 4), cue.sep.y, rep(1.02, 4), cue.sep.y, lty = 3)
+  segments(rep(cue_box_x0, 4), cue_sep_y, rep(1.02, 4), cue_sep_y, lty = 3)
 
   #    b. Cue names, directions, and thresholds: ----
 
   # Points:
   points(
     x = rep(location.df[location.df$element == "point.num", ]$x.loc, top),
-    y = cue.lab.y,
+    y = cue_lbl_y,
     pch = 21,
-    col = cue.df$col[1:top],
+    col = cue_df$col[1:top],
     bg = "white",
     lwd = 2,
     cex = 3
@@ -354,32 +359,32 @@ showcues <- function(x = NULL,
   # Cue numbers:
   text(
     x = rep(location.df[location.df$element == "point.num", ]$x.loc, top),
-    y = cue.lab.y,
-    labels = cue.df$rank[1:top],
+    y = cue_lbl_y,
+    labels = cue_df$rank[1:top],
     #  adj = subset(location.df, element == "point.num")$adj,
-    cex = label.cex
+    cex = label_cex
   )
 
   # Cue names:
   text(
     x = rep(location.df[location.df$element == "cue.name", ]$x.loc, top),
-    y = cue.lab.y,
-    labels = cue.df$cue[cue.df$rank <= top],
+    y = cue_lbl_y,
+    labels = cue_df$cue[cue_df$rank <= top],
     adj = location.df[location.df$element == "cue.name", ]$adj,
-    cex = label.cex
+    cex = label_cex
   )
 
   # Cue directions & thresholds:
-  thresh.text <- paste(cue.df$direction[cue.df$rank <= top], cue.df$threshold[cue.df$rank <= top])
+  thresh.text <- paste(cue_df$direction[cue_df$rank <= top], cue_df$threshold[cue_df$rank <= top])
   mnc <- 12  # max number of characters
   thresh.text[nchar(thresh.text) > mnc] <- paste(substr(thresh.text[nchar(thresh.text) > mnc], start = 1, stop = mnc), "...", sep = "") # truncate strings
 
   text(
     x = rep(location.df[location.df$element == "cue.thresh", ]$x.loc, top),
-    y = cue.lab.y,
+    y = cue_lbl_y,
     labels = thresh.text,
     adj = location.df[location.df$element == "cue.thresh", ]$adj,
-    cex = label.cex
+    cex = label_cex
   )
 
 
@@ -388,43 +393,43 @@ showcues <- function(x = NULL,
   # 1. sens:
   text(
     x = rep(location.df[location.df$element == "sens", ]$x.loc, top),
-    y = cue.lab.y,
-    labels = scales::comma(cue.df$sens[cue.df$rank <= top], accuracy = .01),
+    y = cue_lbl_y,
+    labels = scales::comma(cue_df$sens[cue_df$rank <= top], accuracy = .01),
     adj = location.df[location.df$element == "sens", ]$adj,
-    cex = label.cex
+    cex = label_cex
   )
 
   # 2. spec:
   text(
     x = rep(location.df[location.df$element == "spec", ]$x.loc, top),
-    y = cue.lab.y,
-    labels = scales::comma(cue.df$spec[cue.df$rank <= top], accuracy = .01),
+    y = cue_lbl_y,
+    labels = scales::comma(cue_df$spec[cue_df$rank <= top], accuracy = .01),
     adj = location.df[location.df$element == "spec", ]$adj,
-    cex = label.cex
+    cex = label_cex
   )
 
   # 3. wacc OR alt.goal:
   if (!goal %in% c("sens", "spec", "wacc")){ # report alt.goal values (from above):
 
-    values_fin <- scales::comma(goal_vc[cue.df$rank <= top], accuracy = .01)  # use goal_vc values
+    values_fin <- scales::comma(goal_vc[cue_df$rank <= top], accuracy = .01)  # use goal_vc values
 
   } else { # default:
 
-    values_fin <- scales::comma(cue.df$wacc[cue.df$rank <= top], accuracy = .01)  # use "wacc" values
+    values_fin <- scales::comma(cue_df$wacc[cue_df$rank <= top], accuracy = .01)  # use "wacc" values
 
   }
 
   text(
     x = rep(location.df[location.df$element == "wacc", ]$x.loc, top),
-    y = cue.lab.y,
+    y = cue_lbl_y,
     labels = values_fin,
     adj = location.df[location.df$element == "wacc", ]$adj,
-    cex = label.cex
+    cex = label_cex
   )
 
 
-
   # Currently NO output! ----
+
 
 } # showcues().
 
@@ -432,7 +437,7 @@ showcues <- function(x = NULL,
 # Done: ------
 
 # Bug fixes:
-# - Fixed bug: Use current goal for ranking/sorting cue.df
+# - Fixed bug: Use current goal for ranking/sorting cue_df
 #   (and report as final column in summary table, iff different from current columns).
 # - Fixed bug: There currently exist no cue statistics for "test" data in FFTrees object.
 #   Hence, removed data argument and using x$cues$stats$train whenever x is provided.
