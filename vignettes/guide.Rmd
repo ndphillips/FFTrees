@@ -142,9 +142,11 @@ As a comprehensive, but accessible introduction to FFTs, we recommend reading ou
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
 _Judgment and Decision Making_, _12_ (4), 344–368. 
-Retrieved from `r url_JDM_pdf`
+doi\ [10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239) 
 
-If you use **FFTrees** in your own work, please cite the article and spread the word, so that we can continue developing the package. 
+<!-- PDF available at `r url_JDM_pdf` -->
+
+When using **FFTrees** in your own work, please cite our article and spread the word, so that we can continue developing the package. 
 
 **BibTeX Citation**: 
 
@@ -157,7 +159,8 @@ If you use **FFTrees** in your own work, please cite the article and spread the 
  volume = 12,
  number = 4,
  pages = {344--368},
- url = {https://journal.sjdm.org/17/17217/jdm17217.pdf}
+ url = {https://journal.sjdm.org/17/17217/jdm17217.pdf},
+ doi = {10.1017/S1930297500006239}
 }
 ```
 

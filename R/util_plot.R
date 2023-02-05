@@ -433,15 +433,17 @@ get_x_dev <- function(string, csf = .80){
 } # get_x_dev().
 
 
-# get_label_cex: Adjust label cex to width of string i ----
+# get_label_cex: Adjust label cex to the width of a string i ----
 
-get_label_cex <- function(i, label.box.text.cex = 2) {
+# is NOT USED.
 
-  i <- nchar(i)
-
-  label.box.text.cex * i^-.25
-
-} # get_label_cex().
+# get_label_cex <- function(i, label_box_text_cex = 2) {
+#
+#   i <- nchar(i)
+#
+#   label_box_text_cex * i^-.25
+#
+# } # get_label_cex().
 
 
 
@@ -451,19 +453,20 @@ get_label_cex <- function(i, label.box.text.cex = 2) {
 
 add_level <- function(name,
                       sub = "",
-                      ok.val = .5,
-                      min.val = 0,
-                      max.val = 1,
-                      bottom.text = "",
-                      level.type = "line",
+                      ok_val = .5,
+                      min_val = 0,
+                      max_val = 1,
+                      bottom_text = "",
+                      level_type = "line",  # user argument "level.type" set in plot() to default "bar".
                       # needed from plot:
-                      lloc_row   = NULL,  # element == name row (of df)
+                      lloc_row   = NULL,    # element == name row (of df)
                       header_y   = NULL,
                       header_cex = NULL) {
 
   # Parameters:
-  rect_center_x <- lloc_row$center.x
-  rect_center_y <- lloc_row$center.y
+  rect_center_x <- lloc_row$center_x
+  rect_center_y <- lloc_row$center_y
+
   rect_height <- lloc_row$height
   rect_width  <- lloc_row$width
 
@@ -473,32 +476,32 @@ add_level <- function(name,
   rect_left_x  <- rect_center_x - rect_width / 2
   rect_right_x <- rect_center_x + rect_width / 2
 
-  long.name <- lloc_row$long.name
+  long_name <- lloc_row$long_name
   value <- lloc_row$value
-  value.name <- lloc_row$value.name
+  value_name <- lloc_row$value_name
 
-  #
-  # level.col.fun <- circlize::colorRamp2(c(min.val, ok.val,  max.val),
+  # # Color gradient:
+  # level_col_fun <- circlize::colorRamp2(c(min_val, ok_val,  max_val),
   #                                        colors = c("firebrick2", "yellow", "green4"),
   #                                        transparency = .1)
 
 
   text(x = rect_center_x, y = header_y,
-       labels = long.name, pos = 1, cex = header_cex
+       labels = long_name, pos = 1, cex = header_cex
   )
 
   # text_outline(x = rect_center_x,
   #              y = header.y.loc,
-  #              labels = long.name,
+  #              labels = long_name,
   #              pos = 1, cex = header_cex, r = .02
   # )
 
-  value_height <- rect_bottom_y + min(c(1, ((value - min.val) / (max.val - min.val)))) * rect_height
+  value_height <- rect_bottom_y + min(c(1, ((value - min_val) / (max_val - min_val)))) * rect_height
 
 
   # Add filling: ----
 
-  value_s <- min(value / max.val, 1)
+  value_s <- min(value / max_val, 1)
 
   delta <- 1
   gamma <- .50
@@ -510,13 +513,13 @@ add_level <- function(name,
 
   # plot(seq(0, 1, .01), delta * seq(0, 1, .01) ^ gamma / (delta * seq(0, 1, .01) ^ gamma + (1 - seq(0, 1, .01)) ^ gamma))
 
-  if (level.type == "bar") {
+  if (level_type == "bar") {
 
     rect(rect_left_x,
          rect_bottom_y,
          rect_right_x,
          value_height,
-         # col = level.col.fun(value_s),
+         # col = level_col_fun(value_s),
          col = value_col,
          # col = spec.level.fun(lloc_row$value),
          border = "black"
@@ -525,7 +528,7 @@ add_level <- function(name,
     text_outline(
       x = rect_center_x,
       y = value_height,
-      labels = lloc_row$value.name,
+      labels = lloc_row$value_name,
       cex = 1.5, r = .008, pos = 3
     )
 
@@ -539,7 +542,7 @@ add_level <- function(name,
   }
 
 
-  if (level.type == "line") {
+  if (level_type == "line") {
 
     # stem:
     segments(rect_center_x,
@@ -563,7 +566,7 @@ add_level <- function(name,
     text_outline(
       x = rect_center_x,
       y = value_height,
-      labels = lloc_row$value.name,
+      labels = lloc_row$value_name,
       cex = 1.5, r = 0, pos = 3
     )
 
@@ -591,7 +594,7 @@ add_level <- function(name,
   text(
     x = rect_center_x,
     y = rect_bottom_y,
-    labels = bottom.text,
+    labels = bottom_text,
     pos = 1
   )
 

@@ -81,7 +81,7 @@ be shown in the ROC plot (if available, as logical)?}
 
 \item{show.tree}{Show nodes and exits of FFT (in middle panel, as logical)?}
 
-\item{show.confusion}{Show 2x2 confusion matrix (in bottom panel, as logical)?}
+\item{show.confusion}{Show a 2x2 confusion matrix (in bottom panel, as logical)?}
 
 \item{show.levels}{Show performance levels (in bottom panel, as logical)?}
 
@@ -94,13 +94,14 @@ be shown in the ROC plot (if available, as logical)?}
 \item{hlines}{Show horizontal panel separation lines (as logical)?
 Default: \code{hlines = TRUE}.}
 
-\item{label.tree}{Label for the FFT (optional, as character string).}
+\item{label.tree}{A label for the FFT (optional, as character string).}
 
-\item{label.performance}{Labels for the performance section (optional, as character string).}
+\item{label.performance}{A label for the performance section (optional, as character string).}
 
-\item{n.per.icon}{Number of cases per icon (as numeric).}
+\item{n.per.icon}{The number of cases represented by each icon (as numeric).}
 
-\item{level.type}{How should bottom levels be drawn (as a string)? Can be \code{"bar"} (the default) or \code{"line"}.}
+\item{level.type}{The type of performance levels to be drawn at the bottom (as character string, either \code{"bar"} or \code{"line"}.
+Default: \code{level.type = "bar"}.}
 
 \item{which.tree}{Deprecated argument. Use \code{tree} instead.}
 
