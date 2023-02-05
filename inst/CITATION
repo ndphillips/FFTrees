@@ -1,4 +1,4 @@
-citHeader("To cite FFTrees in derivations and publications use:")
+citHeader("To cite FFTrees in publications and derivations please use:")
 
 citEntry(entry = "article",
          title        = "FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees",

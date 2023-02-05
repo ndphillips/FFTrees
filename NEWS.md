@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9022
+## 1.8.0.9025
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -9,7 +9,7 @@ This is the current development version of **FFTrees**, available at <https://gi
 This version adds functionality (e.g., optimizing for new goals), 
 improves consistency and robustness (by increasing abstraction, e.g., using more global constants and object verification), 
 increases transparency (by providing more explicit user feedback), 
-and fixes some bugs. 
+and fixes minor bugs. 
 
 <!-- Log of changes: --> 
 
@@ -47,6 +47,7 @@ Changes since last release:
 - Re-arranged and cleaned code (in main and helper functions).
 - Re-defined local constants as global constants (in `util_const.R`). 
 - Revised status badges in `README`. 
+- Tweaked plotting parameters.
 - Fixed bugs and revised vignettes. 
 
 
@@ -410,6 +411,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-03.]
+[File `NEWS.md` last updated on 2023-02-05.]
 
 <!-- eof. -->
