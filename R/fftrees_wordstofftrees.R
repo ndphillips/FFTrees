@@ -52,9 +52,7 @@ fftrees_wordstofftrees <- function(x,
   #   stringsAsFactors = FALSE
   # ) # (local constant)
 
-  # ToDo: Delete if not used anywhere: ----
-  #
-  # exits_df <- data.frame(
+  # exits_df <- data.frame(     # is NOT used
   #   exit.char = x$params$decision.labels,
   #   exit = c("0", "1"),       # 0:left/noise vs. 1:right/signal
   #   stringsAsFactors = FALSE
@@ -74,19 +72,19 @@ fftrees_wordstofftrees <- function(x,
   # Use lowercase spelling (for robustness against typos):
   my.tree         <- tolower(my.tree)
   cue_names_l     <- tolower(x$cue_names)
-  decision.labels <- tolower(x$params$decision.labels)
+  decision_labels <- tolower(x$params$decision.labels)
 
 
-  # Verify that both decision labels/exit types occur (at least once) in my.tree:
+  # Verify the presence of both decision labels/exit types (at least once):
 
-  lbl_0 <- decision.labels[1]  # exit type 0: left/False
+  lbl_0 <- decision_labels[1]  # exit type 0: False/noise/0/left
   if (all(grepl(lbl_0, x = my.tree) == FALSE)) {
-    warning(paste0("The decision label '", x$params$decision.labels[1], "' does not occur in my.tree."))
+    warning(paste0("The decision label '", decision_labels[1], "' does not occur in my.tree."))
   }
 
-  lbl_1 <- decision.labels[2]  # exit type 1: right/True
+  lbl_1 <- decision_labels[2]  # exit type 1: True/signal/1/right
   if (all(grepl(lbl_1, x = my.tree) == FALSE)) {
-    warning(paste0("The decision label '", x$params$decision.labels[2], "' does not occur in my.tree."))
+    warning(paste0("The decision label '", decision_labels[2], "' does not occur in my.tree."))
   }
 
   # Note: As the final else/'otherwise' part is ignored, rake trees CAN mention only 1 exit type.
@@ -160,29 +158,26 @@ fftrees_wordstofftrees <- function(x,
 
       y <- unlist(strsplit(node_sentence, " "))
 
-      true_ix  <- grep(tolower(decision.labels[2]), x = y)  # indices of TRUE
-      false_ix <- grep(tolower(decision.labels[1]), x = y)  # indices of FALSE
+      false_ix <- grep(tolower(decision_labels[1]), x = y)  # indices of FALSE/noise/0//left
+      true_ix  <- grep(tolower(decision_labels[2]), x = y)  # indices of TRUE/signal/1/right
 
-      if (any(grepl(decision.labels[2], x)) & any(grepl(decision.labels[1], y))) {
+      if (any(grepl(decision_labels[2], x)) & any(grepl(decision_labels[1], y))) {
 
         if (min(true_ix) < min(false_ix)) {
-
           return(1)
         }
 
         if (min(true_ix) > min(false_ix)) {
-
           return(0)
         }
+
       }
 
-      if (any(grepl(decision.labels[2], y)) & !any(grepl(decision.labels[1], y))) {
-
+      if (any(grepl(decision_labels[2], y)) & !any(grepl(decision_labels[1], y))) {
         return(1)
       }
 
-      if (!any(grepl("v", y)) & any(grepl(decision.labels[1], y))) {
-
+      if (!any(grepl("v", y)) & any(grepl(decision_labels[1], y))) {
         return(0)
       }
 
@@ -287,12 +282,12 @@ fftrees_wordstofftrees <- function(x,
   # NEW code start: ----
 
   cur_fft <- data.frame(class = classes_v,
-                       cue = cues_v,
-                       direction = directions_v,
-                       threshold = thresholds_v,
-                       exit = exits_v,
-                       #
-                       stringsAsFactors = FALSE
+                        cue = cues_v,
+                        direction = directions_v,
+                        threshold = thresholds_v,
+                        exit = exits_v,
+                        #
+                        stringsAsFactors = FALSE
   )
 
   my_tree_def <- write_fft_df(fft = cur_fft, tree = 1L)
@@ -344,5 +339,11 @@ fftrees_wordstofftrees <- function(x,
   return(x)
 
 } # fftrees_wordstofftrees().
+
+
+# ToDo: ------
+
+# - Abstraction: Store anonymous functions as utility functions
+#   (to enable re-use from elsewhere).
 
 # eof.

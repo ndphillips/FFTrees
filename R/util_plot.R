@@ -290,6 +290,8 @@ add_balls <- function(x_lim = c(-10, 0),
                       n_per_icon = NULL) {
 
 
+  par(xpd = TRUE)
+
   # Add box:
   if (is.null(box_col) == FALSE | is.null(box_bg) == FALSE) {
 
@@ -407,6 +409,7 @@ add_balls <- function(x_lim = c(-10, 0),
     )
   })
 
+  par(xpd = FALSE)
 
 } # add_balls().
 

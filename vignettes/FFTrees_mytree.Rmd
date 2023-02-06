@@ -106,17 +106,19 @@ This creates a corresponding FFT and applies it to the `heartdisease` data:
 
 ```{r my-tree-create-1, message = FALSE, results = 'hide'}
 # Create FFTrees from a verbal FFT description (as my.tree): 
-my_fft <- FFTrees(diagnosis ~.,
+my_fft <- FFTrees(formula = diagnosis ~.,
                   data = heartdisease,
                   main = "My 1st FFT", 
                   my.tree = in_words)
 ```
 
-Let's see how well our manually constructed FFT (`my_fft`) did:
+Running `FFTrees()` with the `my.tree` argument creates an object `my_fft` that contains one FFT. 
+A verbal description of this tree can be printed by `inwords(my_fft)`, but we want to print or plot the object to evaluate the tree's performance on training or testing data. 
+Let's see how well our manually constructed FFT (`my_fft`) did on the training data:
 
 ```{r my-tree-plot-1, fig.cap = "**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold'}
 # Inspect FFTrees object:
-plot(my_fft)
+plot(my_fft, data = "train")
 ```
 
 <!-- Note absence of ROC curve: -->
@@ -133,11 +135,11 @@ The formal definition of our new FFT is available from the `FFTrees` object\ `my
 my_fft$trees$definitions
 ```
 
-<!-- Note that noise exits (0) appear to have flipped directions: -->
+<!-- Note that noise exits (False/0) must have flipped direction symbols, as tree definitions always refer to signal (True/1): -->
 
-Note that the 2nd\ cue (`age`) in this FFT is predicting the _noise_ outcome (i.e., a non-final exit value of\ `0` or\ `FALSE`, shown to the left). 
-As the tree definitions always correspond to the _signal_ outcome (i.e., a non-final exit value of\ `1` or\ `TRUE`, shown to the right), 
-the direction of the 2nd node in **Figure\ 1** (if `age < 45`, predict\ `0`) is flipped relative to the tree definition (if `age >= 45`, predict\ `1`). Thus, the plot and the formal definition refer to the same\ FFT.
+Note that the 2nd\ node in this FFT (using the `age` cue) is predicting the _noise_ outcome (i.e., a non-final exit value of\ `0` or\ `FALSE`, shown to the left). 
+As our tree definitions always refer to the _signal_ outcome (i.e., a non-final exit value of\ `1` or\ `TRUE`, shown to the right), 
+the direction symbol of a left exit (i.e., the 2nd\ node in **Figure\ 1**: if `age < 45`, predict\ `0` or noise) must be flipped relative to its appearance in the tree definition (if `age >= 45`, predict\ `1` or signal). Thus, the plot and the formal definition describe the same\ FFT.
 
 <!-- Performance: -->
 
@@ -153,7 +155,7 @@ The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` ar
 
 ```{r my-tree-fft-2-create, eval = FALSE, message = FALSE, results = 'hide'}
 # Create a 2nd FFT from an alternative FFT description (as my.tree): 
-my_fft_2 <- FFTrees(diagnosis ~.,
+my_fft_2 <- FFTrees(formula = diagnosis ~.,
                     data = heartdisease, 
                     main = "My 2nd FFT", 
                     my.tree = "If thal = {rd,fd}, predict True.
@@ -168,7 +170,7 @@ As **FFTrees** aims to interpret the `my.tree` argument to the best of its abili
 
 ```{r my-tree-fft-2-create-2, eval = TRUE, message = FALSE, results = 'hide'}
 # Create a 2nd FFT from an alternative FFT description (as my.tree): 
-my_fft_2 <- FFTrees(diagnosis ~.,
+my_fft_2 <- FFTrees(formula = diagnosis ~.,
                     data = heartdisease, 
                     main = "My 2nd FFT", 
                     my.tree = "If thal equals {rd,fd}, we shall say True.  
@@ -276,7 +278,7 @@ fft_4 <- FFTrees(formula = survived ~.,
                  my.tree = "If sex = {female} true.",  # ignore otherwise/else part
                  main = "My test 4") 
 
-plot(fft_4)
+plot(fft_4, n.per.icon = 50, what = "ico", show.iconguide = T)
 
 # Note:
 # - Warning that 'False' does not occur in specification, but FFT is valid and constructed.
