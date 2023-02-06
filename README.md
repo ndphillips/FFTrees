@@ -29,7 +29,8 @@ The R package **FFTrees** creates, visualizes and evaluates
 *fast-and-frugal decision trees* (FFTs) for solving binary
 classification tasks following the methods described in Phillips, Neth,
 Woike & Gaissmaier (2017,
-as [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+[doi](https://doi.org/10.1017/S1930297500006239) \|
+[html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
 
 ## What are fast-and-frugal trees (FFTs)?
@@ -268,10 +269,10 @@ package enables us to design and evaluate a range of FFTs.
 
 We had a lot of fun creating **FFTrees** and hope you like it too! As a
 comprehensive, yet accessible introduction to FFTs, we recommend reading
-our article in the journal *Judgment and Decision Making* ([2017,
-volume 12, issue 4](https://journal.sjdm.org/vol12.4.html)), entitled
-*FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal
-decision trees* (available in
+our article in the journal *Judgment and Decision Making*
+([2017](https://doi.org/10.1017/S1930297500006239)), entitled *FFTrees:
+A toolbox to create, visualize,and evaluate fast-and-frugal decision
+trees* (available in
 [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf) ).
 
