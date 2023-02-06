@@ -1,7 +1,7 @@
 
 # FFTrees 1.8
 
-## 1.8.0.9025
+## 1.8.0.9026
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
@@ -411,6 +411,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-05.]
+[File `NEWS.md` last updated on 2023-02-06.]
 
 <!-- eof. -->
