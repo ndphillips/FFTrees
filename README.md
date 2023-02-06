@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.8.0.9026 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.9.0 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
 
@@ -14,7 +14,7 @@ status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.or
 
 <!-- Release badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=blue)](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- Release badges end. -->
 <!-- ALL status badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->

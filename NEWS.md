@@ -1,15 +1,12 @@
 
-# FFTrees 1.8
-
-## 1.8.0.9026
+# FFTrees 1.9
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
 
-**FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [in 2023-02]. 
-This version adds functionality (e.g., optimizing for new goals), 
-improves consistency and robustness (by increasing abstraction, e.g., using more global constants and object verification), 
-increases transparency (by providing more explicit user feedback), 
-and fixes minor bugs. 
+## 1.9.0
+
+**FFTrees** version 1.9.0 is to be released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-02-08]. 
+Apart from adding functionality and fixing minor bugs, this version improves consistency, robustness, and transparency. 
 
 <!-- Log of changes: --> 
 
@@ -21,7 +18,7 @@ Changes since last release:
 
 - Enabled optimizing for a user-defined `my.goal` on cue and tree levels (as defined by `my.goal.fun`). 
 - Enabled optimizing for `dprime` on cue and tree levels (by using `"dprime"` as `goal.threshold`, `goal.chase`, or `goal` values). 
-- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
+- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`). 
 - Improved `summary.FFTrees()` function: 
     - Included current goal and cost values (if `"cost"` occurs in goals). 
     - Included criterion base rates (in performance statistics on train and test data). 
@@ -32,7 +29,7 @@ Changes since last release:
 
 - Included `dprime` values in cue level statistics (`x$cues$thresholds` and `x$cues$stats`). 
 - Included `dprime` values in competition statistics (`x$competition$train` and `x$competition$test`). 
-- Improved user feedback on combinations of goal and cost values.
+- Improved user feedback on combinations of goal and cost values. 
 - Prepared for modular tree translation and editing functions (`util_gfft.R`). 
 - Prepared for global tree notation separator (`fft_node_sep`). 
 - Added decision outcome and cue costs to `asif_results` (in `fftrees_grow_fan()`). 
@@ -41,13 +38,13 @@ Changes since last release:
 
 ### Details 
 
-- Added verification functions (for checking integrity of objects and validity of inputs).
+- Added verification functions (for checking integrity of objects and validity of inputs). 
 - Deprecated the `rounding` argument of `FFTrees()`. 
 - Re-arranged arguments of key functions (`FFTrees()` and `fftrees_create()`) by functionality. 
-- Re-arranged and cleaned code (in main and helper functions).
+- Re-arranged and cleaned code (in main and helper functions). 
 - Re-defined local constants as global constants (in `util_const.R`). 
 - Revised status badges in `README`. 
-- Tweaked plotting parameters.
+- Tweaked plotting parameters. 
 - Fixed bugs and revised vignettes. 
 
 
@@ -60,6 +57,7 @@ The current development version of **FFTrees** is available at <https://github.c
 
 ------ 
 
+# FFTrees 1.8  
 
 ## 1.8.0
 
