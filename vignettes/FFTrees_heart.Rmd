@@ -1,12 +1,12 @@
 ---
-title: "Creating FFTs for heart disease"
+title: "Tutorial: Creating FFTs for heart disease"
 author: "Nathaniel Phillips and Hansjörg Neth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{Creating FFTs for heart disease}
+  %\VignetteIndexEntry{Tutorial: Creating FFTs for heart disease}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
