@@ -1,11 +1,11 @@
 citHeader("To cite FFTrees in publications and derivations please use:")
 
-citEntry(entry = "article",
+bibentry(bibtype = "Article",
          title        = "FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees",
-         author       = personList(as.person("Nathaniel D Phillips"),
-                                   as.person("Hansjörg Neth"),
-                                   as.person("Jan K Woike"),
-                                   as.person("Wolfgang Gaissmaier")),
+         author       = c(person("Nathaniel D Phillips", role = "aut"),
+                          person("Hansjörg Neth", role = c("aut", "cre")),
+                          person("Jan K Woike", role = "aut"),
+                          person("Wolfgang Gaissmaier", role = "aut")),
          year         = "2017",
          journal      = "Judgment and Decision Making",
          volume       = "12",
@@ -20,7 +20,5 @@ citEntry(entry = "article",
            paste("Phillips, N. D., Neth, H., Woike, J. K., & Gaissmaier, W. (2017).",
                  "FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees.",
                  "Judgment and Decision Making, 12 (4), 344--368.",
-                 "doi 10.1017/S1930297500006239",
-                 "PDF at <https://journal.sjdm.org/17/17217/jdm17217.pdf>.",
-                 "R package at <https://CRAN.R-project.org/package=FFTrees>.")
+                 "doi 10.1017/S1930297500006239")
          )
