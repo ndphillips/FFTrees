@@ -848,6 +848,9 @@ plot.FFTrees <- function(x = NULL,
             )
 
             # (c) n.per.icon legend 1 (top):
+
+            # show_icon_guide_legend <- TRUE  # 4debugging
+
             if (show_icon_guide_legend){
 
               text(.98, 0, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2)
@@ -1099,8 +1102,8 @@ plot.FFTrees <- function(x = NULL,
                 if (what == "ico") { # special case:
 
                   x_s2 <- plot_width
-                  x_s1 <- plot_width - .80
-                  y_s1 <- plot_height * -1.12
+                  x_s1 <- plot_width - .80     # left of default
+                  y_s1 <- plot_height * -1.10  # lower than default
 
                 } else { # defaults:
 
