@@ -30,7 +30,7 @@ The R package **FFTrees** creates, visualizes and evaluates
 *fast-and-frugal decision trees* (FFTs) for solving binary
 classification tasks, using the algorithms and methods described in
 Phillips, Neth, Woike & Gaissmaier (2017,
-[doi 10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239)
+doi [10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239)
 \| [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
 

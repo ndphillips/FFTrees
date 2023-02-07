@@ -57,7 +57,7 @@ url_JDM_doi <- "https://doi.org/10.1017/S1930297500006239"
 
 <!-- Pkg goal: -->
 
-The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks, using the algorithms and methods described in Phillips, Neth, Woike & Gaissmaier (2017, [doi\ 10.1017/S1930297500006239](`r url_JDM_doi`) | [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
+The R package **FFTrees** creates, visualizes and evaluates _fast-and-frugal decision trees_ (FFTs) for solving binary classification tasks, using the algorithms and methods described in Phillips, Neth, Woike & Gaissmaier (2017, doi\ [10.1017/S1930297500006239](`r url_JDM_doi`) | [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
 
 
 ## What are fast-and-frugal trees (FFTs)?
