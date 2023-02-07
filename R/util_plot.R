@@ -284,7 +284,7 @@ add_balls <- function(x_lim = c(-10, 0),
                       upper_text = "",
                       upper_text_cex = 1,
                       upper_text_adj = 0,
-                      # rev_order = FALSE,  # is NOT used
+                      # rev_order = FALSE,  # is NOT used anywhere?
                       box_col = NULL,
                       box_bg = NULL,
                       n_per_icon = NULL) {
@@ -313,11 +313,11 @@ add_balls <- function(x_lim = c(-10, 0),
   a_n <- n_vec[1]
   b_n <- n_vec[2]
 
-  # a_p <- n_vec[1] / sum(n_vec)  # is NOT used
+  # a_p <- n_vec[1] / sum(n_vec)  # is NOT used anywhere?
 
   box_x_center <- sum(x_lim) / 2
-  # box_y_center <- sum(y_lim) / 2      # is NOT used
-  # box_x_width <- x_lim[2] - x_lim[1]  # is NOT used
+  # box_y_center <- sum(y_lim) / 2      # is NOT used anywhere?
+  # box_x_width <- x_lim[2] - x_lim[1]  # is NOT used anywhere?
 
 
   if (is.null(n_per_icon)) { # determine cases per ball/icon:
@@ -335,7 +335,7 @@ add_balls <- function(x_lim = c(-10, 0),
 
   a_balls <- ceiling(a_n / n_per_icon)
   b_balls <- ceiling(b_n / n_per_icon)
-  # n_balls <- a_balls + b_balls  # is NOT used
+  # n_balls <- a_balls + b_balls  # is NOT used anywhere?
 
   a_ball_x <- 0
   a_ball_y <- 0
@@ -438,7 +438,7 @@ get_x_dev <- function(string, csf = .80){
 
 # get_label_cex: Adjust label cex to the width of a string i ----
 
-# is NOT USED.
+# is NOT used anywhere?
 
 # get_label_cex <- function(i, label_box_text_cex = 2) {
 #
