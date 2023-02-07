@@ -1,6 +1,6 @@
 citHeader("To cite FFTrees in publications and derivations please use:")
 
-bibentry(bibtype = "Article",
+bibentry(bibtype = "article",
          title        = "FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees",
          author       = c(person("Nathaniel D Phillips", role = "aut"),
                           person("Hansjörg Neth", role = c("aut", "cre")),
