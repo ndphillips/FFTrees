@@ -621,11 +621,11 @@ plot.FFTrees <- function(x = NULL,
     ball_pch <- c(21, 24)
     ball_cex <- c(1, 1)
 
-    # error.col <- "red"      # NOT used anywhere?
-    # correct.col <- "green"  # NOT used anywhere?
+    # error.col <- "red"      # is NOT used anywhere?
+    # correct.col <- "green"  # is NOT used anywhere?
 
     max_label_length <- 100
-    # def_par <- par(no.readonly = TRUE)  # NOT used anywhere?
+    # def_par <- par(no.readonly = TRUE)  # is NOT used anywhere?
 
     ball_box_width   <- 10
     label_box_height <-  2
@@ -643,11 +643,11 @@ plot.FFTrees <- function(x = NULL,
     segment_lty <- 1
     segment_lwd <- 1
 
-    # continue_segment_lwd <- 1  # NOT used anywhere
-    # continue_segment_lty <- 1  # NOT used anywhere
+    # continue_segment_lwd <- 1  # is NOT used anywhere?
+    # continue_segment_lty <- 1  # is NOT used anywhere?
 
-    # exit_segment_lwd <- 1  # NOT used anywhere
-    # exit_segment_lty <- 1  # NOT used anywhere
+    # exit_segment_lwd <- 1  # is NOT used anywhere?
+    # exit_segment_lty <- 1  # is NOT used anywhere?
 
 
     # Define plotting_parameters_df:
@@ -720,8 +720,8 @@ plot.FFTrees <- function(x = NULL,
         col_correct_bg <- "#89FF6FCC"
           col_correct_border <- "#24AB18E6"
 
-          # max_cex <- 6  # NOT used anywhere
-          # min_cex <- 1  # NOT used anywhere
+          # max_cex <- 6  # is NOT used anywhere?
+          # min_cex <- 1  # is NOT used anywhere?
 
           exit_node_pch <- 21
 
@@ -779,16 +779,16 @@ plot.FFTrees <- function(x = NULL,
 
           # Final stats: ----
 
-          # spec_circle_x   <- .40  # NOT used anywhere
-          # dprime_circle_x <- .50  # NOT used anywhere
-          # sens_circle_x   <- .60  # NOT used anywhere
+          # spec_circle_x   <- .40  # is NOT used anywhere?
+          # dprime_circle_x <- .50  # is NOT used anywhere?
+          # sens_circle_x   <- .60  # is NOT used anywhere?
 
-          # stat_circle_y   <- .30  # NOT used anywhere
+          # stat_circle_y   <- .30  # is NOT used anywhere?
 
-          # sens_circle_col   <- "green"  # NOT used anywhere
-          # spec_circle_col   <- "red"    # NOT used anywhere
-          # dprime_circle_col <- "blue"   # NOT used anywhere
-          # stat_outer_circle_col <- gray(.50)  # NOT used anywhere
+          # sens_circle_col   <- "green"  # is NOT used anywhere?
+          # spec_circle_col   <- "red"    # is NOT used anywhere?
+          # dprime_circle_col <- "blue"   # is NOT used anywhere?
+          # stat_outer_circle_col <- gray(.50)  # is NOT used anywhere?
 
 
           # 1: Initial Frequencies: ------

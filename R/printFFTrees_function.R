@@ -50,8 +50,8 @@ print.FFTrees <- function(x = NULL,
   train_cues   <- paste(unique(unlist(strsplit(x$trees$definitions$cues[tree], ";"))), collapse = ",")
   train_cues_n <- length(unique(unlist(strsplit(train_cues, ","))))
 
-  # all_cues   <- paste(unique(unlist(strsplit(x$trees$definitions$cues, ";"))), collapse = ",")
-  # all_cues_n <- length(unique(unlist(strsplit(x$trees$definitions$cues, ";"))))  # is NOT used
+  # all_cues   <- paste(unique(unlist(strsplit(x$trees$definitions$cues, ";"))), collapse = ",")  # is NOT used anywhere?
+  # all_cues_n <- length(unique(unlist(strsplit(x$trees$definitions$cues, ";"))))  # is NOT used anywhere?
 
   n_cues <- x$trees$definitions$nodes[tree]
 

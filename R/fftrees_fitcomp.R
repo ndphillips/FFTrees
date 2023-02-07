@@ -73,7 +73,7 @@ fftrees_fitcomp <- function(x) {
   {
     if (do.lr) {
 
-      lr.acc <- comp_pred(
+      lr_acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -82,19 +82,19 @@ fftrees_fitcomp <- function(x) {
         sens.w = sens.w
       )
 
-      lr.stats <- lr.acc$accuracy
-      lr.model <- lr.acc$model
+      lr_stats <- lr_acc$accuracy
+      lr_model <- lr_acc$model
 
-      x$competition$models$lr <- lr.model
+      x$competition$models$lr <- lr_model
 
       x$competition$train <- x$competition$train %>%
-        dplyr::bind_rows(lr.stats[["train"]] %>%
+        dplyr::bind_rows(lr_stats[["train"]] %>%
                            dplyr::mutate(algorithm = "lr") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
-        dplyr::bind_rows(lr.stats[["test"]] %>%
+        dplyr::bind_rows(lr_stats[["test"]] %>%
                            dplyr::mutate(algorithm = "lr") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
@@ -107,7 +107,7 @@ fftrees_fitcomp <- function(x) {
   {
     if (do.cart) {
 
-      cart.acc <- comp_pred(
+      cart_acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -116,19 +116,19 @@ fftrees_fitcomp <- function(x) {
         sens.w = sens.w
       )
 
-      cart.stats <- cart.acc$accuracy
-      cart.model <- cart.acc$model
+      cart_stats <- cart_acc$accuracy
+      cart_model <- cart_acc$model
 
-      x$competition$models$cart <- cart.model
+      x$competition$models$cart <- cart_model
 
       x$competition$train <- x$competition$train %>%
-        dplyr::bind_rows(cart.stats[["train"]] %>%
+        dplyr::bind_rows(cart_stats[["train"]] %>%
                            dplyr::mutate(algorithm = "cart") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
-        dplyr::bind_rows(cart.stats[["test"]] %>%
+        dplyr::bind_rows(cart_stats[["test"]] %>%
                            dplyr::mutate(algorithm = "cart") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
@@ -141,7 +141,7 @@ fftrees_fitcomp <- function(x) {
   {
     if (do.rf) {
 
-      rf.acc <- comp_pred(
+      rf_acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -151,19 +151,19 @@ fftrees_fitcomp <- function(x) {
       )
 
 
-      rf.stats <- rf.acc$accuracy
-      rf.model <- rf.acc$model
+      rf_stats <- rf_acc$accuracy
+      rf_model <- rf_acc$model
 
-      x$competition$models$rf <- rf.model
+      x$competition$models$rf <- rf_model
 
       x$competition$train <- x$competition$train %>%
-        dplyr::bind_rows(rf.stats[["train"]] %>%
+        dplyr::bind_rows(rf_stats[["train"]] %>%
                            dplyr::mutate(algorithm = "rf") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
-        dplyr::bind_rows(rf.stats[["test"]] %>%
+        dplyr::bind_rows(rf_stats[["test"]] %>%
                            dplyr::mutate(algorithm = "rf") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
@@ -176,7 +176,7 @@ fftrees_fitcomp <- function(x) {
   {
     if (do.svm) {
 
-      svm.acc <- comp_pred(
+      svm_acc <- comp_pred(
         formula = x$formula,
         data.train = x$data$train,
         data.test = x$data$test,
@@ -185,19 +185,19 @@ fftrees_fitcomp <- function(x) {
         sens.w = sens.w
       )
 
-      svm.stats <- svm.acc$accuracy
-      svm.model <- svm.acc$model
+      svm_stats <- svm_acc$accuracy
+      svm_model <- svm_acc$model
 
-      x$competition$models$svm <- svm.model
+      x$competition$models$svm <- svm_model
 
       x$competition$train <- x$competition$train %>%
-        dplyr::bind_rows(svm.stats[["train"]] %>%
+        dplyr::bind_rows(svm_stats[["train"]] %>%
                            dplyr::mutate(algorithm = "svm") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))
 
       x$competition$test <- x$competition$test %>%
-        dplyr::bind_rows(svm.stats[["test"]] %>%
+        dplyr::bind_rows(svm_stats[["test"]] %>%
                            dplyr::mutate(algorithm = "svm") %>%
                            dplyr::mutate(cost_cue = NA) %>%
                            dplyr::select(tidyselect::all_of(my_cols)))

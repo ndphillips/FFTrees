@@ -52,7 +52,7 @@ fftrees_wordstofftrees <- function(x,
   #   stringsAsFactors = FALSE
   # ) # (local constant)
 
-  # exits_df <- data.frame(     # is NOT used
+  # exits_df <- data.frame(     # is NOT used anywhere?
   #   exit.char = x$params$decision.labels,
   #   exit = c("0", "1"),       # 0:left/noise vs. 1:right/signal
   #   stringsAsFactors = FALSE
