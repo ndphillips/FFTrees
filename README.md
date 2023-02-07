@@ -5,17 +5,18 @@
 # FFTrees 1.9.0 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+<!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
+<!-- Devel badges end. -->
+<!-- Release badges start: -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
-[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
-<!-- Devel badges end. -->
-
-<!-- Release badges start: -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+[![Total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Release badges end. -->
+
 <!-- ALL status badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
@@ -332,6 +333,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-02-06.\]
+\[File `README.Rmd` last updated on 2023-02-07.\]
 
 <!-- eof. -->
