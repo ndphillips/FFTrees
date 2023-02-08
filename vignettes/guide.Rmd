@@ -49,15 +49,18 @@ url_contact   <- "https://www.linkedin.com/in/nathanieldphillips/"
 
 <!-- Brief intro: -->
 
-The R package **FFTrees** [@phillips2017FFTrees] makes it easy to create, visualize, and evaluate fast-and-frugal decision trees\ (FFTs) for solving binary classification problems in an efficient, effective, and transparent fashion. 
+The R package **FFTrees** [@phillips2017FFTrees; @FFTrees-pkg] makes it easy to create, visualize, and evaluate fast-and-frugal decision trees\ (FFTs). 
+FFTs are simple and transparent decision algorithms for solving binary classification problems in an efficient and effective fashion. 
 
 
 ## Fast-and-Frugal Trees (FFTs) 
 
 <!-- Defining FFTs: -->
 
-A _fast-and-frugal tree_ (FFT) [@martignon2003naive] is a set of hierarchical rules for solving binary classification tasks based on very little pieces of information (usually\ 4 or fewer cues). 
-In contrast to more complex decision trees, each node of an FFT has exactly two branches, where at least one branch is an exit branch (and both branches of the final nodes are exits). 
+A _fast-and-frugal tree_ (FFT) [@martignon2003naive] is a set of hierarchical rules for solving binary classification tasks based on very little pieces of information (usually using\ 4 or fewer cues). 
+In contrast to more complex decision trees, each node of an\ FFT has exactly two branches. 
+A branch can either contain another cue (i.e., ask another question) or lead to an exit (i.e., yield a decision or prediction outcome).  
+Each non-final node of an\ FFT has one exit branch and the final node has two exit branches. 
 
 <!-- Characteristics and benefits of FFTs: -->
 
@@ -100,8 +103,9 @@ plot(heart.fft, data = "test")
 ## Getting started 
 
 To start using the **FFTrees** package, we recommend studying the [Tutorial: Creating FFTs for heart disease](FFTrees_heart.html). 
-This tutorial illustrates the basics steps of creating, visualizing, and evaluating fast-and-frugal trees (FFTs). The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees (in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
-The following vignettes provide details on additional topics and corresponding examples. 
+The tutorial illustrates the basics steps of creating, visualizing, and evaluating fast-and-frugal trees (FFTs). 
+The scientific background of FFTs and the development of **FFTrees** are described in @phillips2017FFTrees (doi\ [10.1017/S1930297500006239](`r url_JDM_doi`) | [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)). 
+The following vignettes provide details on related topics and corresponding examples. 
 
 ### Vignettes
 
@@ -137,7 +141,7 @@ The **FFTrees** package contains several datasets ---\ mostly from the [UCI Mach
 ## Citing **FFTrees** 
 
 We had a lot of fun creating **FFTrees** and hope you like it too! 
-For an accessible introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017](`r url_JDM_doi`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
+For an accessible introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017](`r url_JDM_doi`)), entitled _FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
 
 **Citation** (in APA format): 
 

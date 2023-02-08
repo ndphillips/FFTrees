@@ -5,32 +5,33 @@
 # FFTrees 1.9.0 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+<!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
+<!-- Devel badges end. -->
+<!-- Release badges start: -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
-[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
-<!-- Devel badges end. -->
-
-<!-- Release badges start: -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+[![Total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Release badges end. -->
-<!-- ALL status badges start: -->
+
+<!-- ALL badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
 <!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
 <!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='b22222')](https://www.r-pkg.org/pkg/FFTrees) -->
-<!-- ALL status badges end. -->
+<!-- ALL badges end. -->
 <!-- Pkg goal: -->
 
 The R package **FFTrees** creates, visualizes and evaluates
 *fast-and-frugal decision trees* (FFTs) for solving binary
-classification tasks following the methods described in Phillips, Neth,
-Woike & Gaissmaier (2017,
-[doi](https://doi.org/10.1017/S1930297500006239) \|
-[html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
+classification tasks, using the algorithms and methods described in
+Phillips, Neth, Woike & Gaissmaier (2017,
+doi [10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239)
+\| [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
 
 ## What are fast-and-frugal trees (FFTs)?
@@ -298,40 +299,41 @@ Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2055283105915586
 for the full list).  
 Examples include:
 
-- [Lötsch, J., Haehner, A., & Hummel, T. (2020).
-  Machine-learning-derived rules set excludes risk of Parkinson’s
-  disease in patients with olfactory or gustatory symptoms with high
-  accuracy. *Journal of Neurology*, *267*(2),
-  469–478.](https://link.springer.com/article/10.1007/s00415-019-09604-6)
+- Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived
+  rules set excludes risk of Parkinson’s disease in patients with
+  olfactory or gustatory symptoms with high accuracy. *Journal of
+  Neurology*, *267*(2), 469–478.
+  doi [10.1007/s00415-019-09604-6](https://doi.org/10.1007/s00415-019-09604-6)
 
-- [Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., &
+- Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., &
   Doung, Y. C. (2020). Radiographic parameter-driven decision tree
   reliably predicts aseptic mechanical failure of compressive
-  osseointegration fixation. *Acta Orthopaedica*, *91*(2),
-  171–176.](https://www.tandfonline.com/doi/full/10.1080/17453674.2020.1716295)
+  osseointegration fixation. *Acta Orthopaedica*, *91*(2), 171–176.
+  doi [10.1080/17453674.2020.1716295](https://doi.org/10.1080/17453674.2020.1716295)
 
-- [Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold,
+- Klement, R. J., Sonke, J. J., Allgäuer, M., Andratschke, N., Appold,
   S., Belderbos, J., … & Mantel, F. (2020). Correlating dose variables
   with local tumor control in stereotactic body radiotherapy for early
   stage non-small cell lung cancer: A modeling study on 1500 individual
   treatments. *International Journal of Radiation Oncology \* Biology \*
-  Physics*.](https://www.sciencedirect.com/science/article/pii/S036030162030897X)
+  Physics*.
+  doi [10.1016/j.ijrobp.2020.03.005](https://doi.org/10.1016/j.ijrobp.2020.03.005)
 
-- [Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J.
+- Nobre, G. G., Hunink, J. E., Baruth, B., Aerts, J. C., & Ward, P. J.
   (2019). Translating large-scale climate variability into crop
-  production forecast in Europe. *Scientific Reports*, *9*(1),
-  1–13.](https://www.nature.com/articles/s41598-018-38091-4)
+  production forecast in Europe. *Scientific Reports*, *9*(1), 1–13.
+  doi [10.1038/s41598-018-38091-4](https://doi.org/10.1038/s41598-018-38091-4)
 
-- [Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E.,
+- Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E.,
   Derkay, C. S., Seedat, R. Y., … & Mortelliti, A. J. (2019). Age at
   diagnosis, but not HPV type, is strongly associated with clinical
-  course in recurrent respiratory papillomatosis. *PloS One*,
-  *14*(6).](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6563955/)
+  course in recurrent respiratory papillomatosis. *PloS One*, *14*(6).
+  doi [10.1371/journal.pone.0216697](https://doi.org/10.1371/journal.pone.0216697)
 
 <!-- footer: -->
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-02-06.\]
+\[File `README.Rmd` last updated on 2023-02-08.\]
 
 <!-- eof. -->
