@@ -7,6 +7,8 @@ This is the current development version of **FFTrees**, available at <https://gi
 
 <!-- Log of changes: --> 
 
+This version increases robustness (in parsing verbal `my.tree` descriptions).
+
 Changes since last release: 
 
 <!-- Major: --> 
@@ -19,13 +21,13 @@ Changes since last release:
 
 ### Minor changes 
 
-- none yet.
+- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
 
 <!-- Details: --> 
 
 ### Details 
 
-- none yet.
+- Revised vignettes.
 
 <!-- Development version: --> 
 
@@ -33,6 +35,8 @@ The current development version of **FFTrees** is available at <https://github.c
 
 
 <!-- Released versions: --> 
+
+------ 
 
 ## 1.9.0
 
@@ -435,6 +439,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-08.]
+[File `NEWS.md` last updated on 2023-02-09.]
 
 <!-- eof. -->
