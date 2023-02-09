@@ -146,7 +146,7 @@ the direction symbol of a left exit (i.e., the 2nd\ node in **Figure\ 1**: if `a
 
 As it turns out, the performance of our first FFT created from a verbal description is a mixed affair: 
 The tree has a rather high sensitivity (of\ 91%), but its low specificity (of only\ 10%) allows for many false alarms. 
-Consequently, its accuracy measures are only around baseline level. 
+Consequently, its accuracy measures fail to exceed the baseline level. 
 
 
 #### Creating an alternative FFT
@@ -175,9 +175,9 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
                     data = heartdisease, 
                     main = "My 2nd FFT", 
                     my.tree = "If thal equals {rd,fd}, we shall say True.  
-                               If Cp differs from {a}, let's predict False.   
-                               If CA happens to exceed 1, we insist on True.  
-                               Else, give up and go away.") 
+                               When Cp differs from {a}, let's predict False. 
+                               Whenever CA happens to exceed 1, we will insist on True.
+                               Else, we give up and go away.") 
 ```
 
 However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Unambiguous `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
@@ -276,13 +276,13 @@ fft_3
 
 fft_4 <- FFTrees(formula = survived ~., 
                  data = titanic, 
-                 my.tree = "If sex = {female} true.",  # ignore otherwise/else part
+                 my.tree = "If sex = {male} false.",  # ignore otherwise/else part
                  main = "My test 4") 
 
 plot(fft_4, n.per.icon = 50, what = "all", show.iconguide = TRUE)
 
 # Note:
-# - Warning that 'False' does not occur in specification, but FFT is valid and constructed.
+# - Warning that either 'True' or 'False' label does NOT occur in specification, but FFT is valid and constructed.
 # - fft_4 shows good specificity (i.e., few false alarms, relative to high number of correct rejections), 
 #   but poor sensitivity (many misses).
 #   Overall accuracy is 10% above baseline (predicting False for all cases).
