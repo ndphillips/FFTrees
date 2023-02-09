@@ -373,7 +373,8 @@ get_lhs_formula <- function(formula){
 
 
 
-# (D) Strings or quotes: ------
+
+# (D) Handling strings or quotes: ------
 
 
 # add_quotes: ------
@@ -393,6 +394,7 @@ exit_word <- function(data){
   if (data == "test"){ "Predict" } else { "Decide" }
 
 } # exit_word().
+
 
 
 
