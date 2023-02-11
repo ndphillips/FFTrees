@@ -24,11 +24,14 @@
 #'
 #' @param correction numeric. Correction added to all counts for calculating \code{dprime}.
 #' Default: \code{correction = .25}.
+#'
 #' @param sens.w numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
 #' Default: \code{sens.w = NULL} (to ensure that values are passed by calling function).
 #'
-#' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
-#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
+#' @param my.goal Name of an optional, user-defined goal (as character string).
+#' Default: \code{my.goal = NULL}.
+#' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}).
+#' Default: \code{my.goal.fun = NULL}.
 #'
 #' @param cost.outcomes list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 #' specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.
@@ -569,12 +572,14 @@ classtable <- function(prediction_v = NULL,
 #' @param data.train A training dataset (as data frame).
 #' @param data.test A testing dataset (as data frame).
 #'
-#' @param algorithm character string. An algorithm in the set:
-#' "lr" -- logistic regression;
-#' "rlr" -- regularized logistic regression;
-#' "cart" -- decision trees;
-#' "svm" -- support vector machines;
-#' "rf" -- random forests.
+#' @param algorithm A character string specifying an algorithm in the set:
+#' \itemize{
+#'   \item{\code{"lr"}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
+#'   \item{\code{"rlr"}: Regularized logistic regression (currently not supported);}
+#'   \item{\code{"cart"}: Decision trees (using \code{rpart} from \stong{rpart});}
+#'   \item{\code{"svm"}: Support vector machines (using \code{svm} from \strong{e1071});}
+#'   \item{\code{"rf"}: Random forests (using \code{randomForest} from \strong{randomForest}.}
+#' }
 #'
 #' @param model model. An optional existing model, applied to the test data.
 #' @param sens.w Sensitivity weight parameter (from 0 to 1, required to compute \code{wacc}).
@@ -602,7 +607,7 @@ comp_pred <- function(formula,
   #   model = NULL
 
   if (is.null(formula)) {
-    stop("You must enter a valid formula")
+    stop("A valid formula is required")
   }
 
   if (is.null(algorithm)) {
@@ -614,70 +619,72 @@ comp_pred <- function(formula,
     algorithm <- tolower(algorithm)  # 4robustness
   }
 
+
   # SETUP: ----
-  {
-    if (is.null(data.test) & (is.null(data.train) == FALSE)) {
-      data_all <- data.train
-      train_cases <- 1:nrow(data.train)
-      test_cases <- c()
-    }
 
-    if (is.null(data.test) == FALSE & (is.null(data.train) == FALSE)) {
-      # data_all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
-      data_all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
-      train_cases <- 1:nrow(data.train)
-      test_cases <- (nrow(data.train) + 1):nrow(data_all)
-    }
+  if (is.null(data.test) & (is.null(data.train) == FALSE)) {
+    data_all <- data.train
+    train_cases <- 1:nrow(data.train)
+    test_cases <- c()
+  }
 
-    if (is.null(data.train) & is.null(data.test) == FALSE) {
-      data_all <- data.test
-      train_cases <- c()
-      test_cases <- 1:nrow(data_all)
-    }
+  if (is.null(data.test) == FALSE & (is.null(data.train) == FALSE)) {
+    # data_all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
+    data_all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
+    train_cases <- 1:nrow(data.train)
+    test_cases <- (nrow(data.train) + 1):nrow(data_all)
+  }
 
-    data_all <- model.frame(
-      formula = formula,
-      data = data_all
-    )
+  if (is.null(data.train) & is.null(data.test) == FALSE) {
+    data_all <- data.test
+    train_cases <- c()
+    test_cases <- 1:nrow(data_all)
+  }
 
-    train_crit <- data_all[train_cases, 1]
+  data_all <- model.frame(
+    formula = formula,
+    data = data_all
+  )
 
-    # Remove columns with no variance in training data:
-    if (is.null(data.train) == FALSE) {
+  train_crit <- data_all[train_cases, 1]
 
-      if (isTRUE(all.equal(length(unique(data_all[train_cases, 1])), 1))) {
+  # Set flag:
+  do_test <- TRUE  # default
 
-        do_test <- FALSE
+  # Remove columns with no variance in training data:
+  if (is.null(data.train) == FALSE) {
 
-      } else {
+    if (isTRUE(all.equal(length(unique(data_all[train_cases, 1])), 1))) { # no variance in train_cases:
 
-        do_test <- TRUE
-
-      }
-
-    } else {
-
-      do_test <- TRUE
+      do_test <- FALSE
 
     }
   }
 
 
+  # Pre-process columns in data_all:
+
   if (do_test) {
 
+    # Identify the columns with variance in data_all:
     if (is.null(train_cases) == FALSE) {
+
       ok_cols <- sapply(1:ncol(data_all), FUN = function(x) {
         length(unique(data_all[train_cases, x])) > 1
       })
-      data_all <- data_all[ , ok_cols]
+
+      data_all <- data_all[ , ok_cols]  # select columns
+
     }
 
     # Convert character columns to factors:
     for (col_i in 1:ncol(data_all)) {
+
       if (inherits(data_all[ , col_i], c("logical", "character", "factor"))) {
         data_all[ , col_i] <- factor(data_all[ , col_i])
       }
-    }
+
+    } # for (col_i).
 
   } # if (do_test).
 
@@ -701,7 +708,8 @@ comp_pred <- function(formula,
 
   # Build models for training data: ------
 
-  # 1. LR: ----
+
+  # 1. LR: binomial LR ----
 
   if (algorithm == "lr") {
 
@@ -791,6 +799,7 @@ comp_pred <- function(formula,
                             data.train,
                             type = "class"
       )
+
     } else {
 
       pred_train <- NULL
