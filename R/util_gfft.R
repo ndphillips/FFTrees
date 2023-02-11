@@ -4,11 +4,11 @@
 
 # A grammar of FFTs
 #
-# Functions for converting/translating and editing/manipulating and varying FFTs:
+# Functions for converting/translating and editing/manipulating/trimming and varying FFTs:
 #
 # A. Tree translation functions (for converting and collecting FFT definitions/trees)
-# B. Tree editing functions (for manipulating individual FFTs)
-# C. Macros / combinations (e.g., for creating specific variants of a given FFT)
+# B. Tree editing/trimming functions (for changing and manipulating individual FFTs)
+# C. Macros / combinations (e.g., for creating sets of variants of a given FFT)
 
 
 # (A) Tree conversion/translation functions: --------
