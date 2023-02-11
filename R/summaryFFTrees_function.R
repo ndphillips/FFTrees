@@ -149,7 +149,7 @@ summary.FFTrees <- function(object,
       # User feedback:
       # cat("- Cost of cues: ", params_cost_cue, "\n", sep = "")
       cat("- Cost of cues: ", "\n", sep = "")
-      print(cost_cue_v)
+      print(cost_cue_v)  # print named vector
 
     }
 
