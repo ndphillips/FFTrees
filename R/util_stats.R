@@ -576,7 +576,7 @@ classtable <- function(prediction_v = NULL,
 #' \itemize{
 #'   \item{\code{"lr"}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
 #'   \item{\code{"rlr"}: Regularized logistic regression (currently not supported);}
-#'   \item{\code{"cart"}: Decision trees (using \code{rpart} from \stong{rpart});}
+#'   \item{\code{"cart"}: Decision trees (using \code{rpart} from \strong{rpart});}
 #'   \item{\code{"svm"}: Support vector machines (using \code{svm} from \strong{e1071});}
 #'   \item{\code{"rf"}: Random forests (using \code{randomForest} from \strong{randomForest}.}
 #' }
@@ -587,7 +587,7 @@ classtable <- function(prediction_v = NULL,
 #' "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
 #'
 #' @importFrom dplyr bind_rows
-#' @importFrom stats model.frame formula glm model.matrix
+#' @importFrom stats formula glm model.frame model.matrix
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
 #' @importFrom randomForest randomForest
