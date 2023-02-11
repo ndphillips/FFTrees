@@ -135,7 +135,7 @@ Instead, the tree definitions provided are used to re-evaluate the current \code
 All options set to \code{TRUE} by default. Available options correspond to:
 \itemize{
   \item{\code{do.lr}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
-  \item{\code{do.cart}: Decision trees (using \code{rpart} from \stong{rpart});}
+  \item{\code{do.cart}: Decision trees (using \code{rpart} from \strong{rpart});}
   \item{\code{do.svm}: Support vector machines (using \code{svm} from \strong{e1071});}
   \item{\code{do.rf}: Random forests (using \code{randomForest} from \strong{randomForest}.}
 }

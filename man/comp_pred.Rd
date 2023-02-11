@@ -25,7 +25,7 @@ comp_pred(
 \itemize{
   \item{\code{"lr"}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
   \item{\code{"rlr"}: Regularized logistic regression (currently not supported);}
-  \item{\code{"cart"}: Decision trees (using \code{rpart} from \stong{rpart});}
+  \item{\code{"cart"}: Decision trees (using \code{rpart} from \strong{rpart});}
   \item{\code{"svm"}: Support vector machines (using \code{svm} from \strong{e1071});}
   \item{\code{"rf"}: Random forests (using \code{randomForest} from \strong{randomForest}.}
 }}
