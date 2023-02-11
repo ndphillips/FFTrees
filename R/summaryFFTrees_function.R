@@ -128,6 +128,8 @@ summary.FFTrees <- function(object,
   # Cost information:
   if ("cost" %in% cur_goals){ # report cost information:
 
+    # Note alternative if-condition: Use 2 flags (print_cost_dec and print_cost_cue) as in printFFTrees_function.R.
+
     cost_out_v <- unlist(object$params$cost.outcomes)
 
     params_cost_out <- paste0("(",
