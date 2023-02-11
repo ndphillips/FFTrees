@@ -21,12 +21,14 @@ comp_pred(
 
 \item{data.test}{A testing dataset (as data frame).}
 
-\item{algorithm}{character string. An algorithm in the set:
-"lr" -- logistic regression;
-"rlr" -- regularized logistic regression;
-"cart" -- decision trees;
-"svm" -- support vector machines;
-"rf" -- random forests.}
+\item{algorithm}{A character string specifying an algorithm in the set:
+\itemize{
+  \item{\code{"lr"}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
+  \item{\code{"rlr"}: Regularized logistic regression (currently not supported);}
+  \item{\code{"cart"}: Decision trees (using \code{rpart} from \stong{rpart});}
+  \item{\code{"svm"}: Support vector machines (using \code{svm} from \strong{e1071});}
+  \item{\code{"rf"}: Random forests (using \code{randomForest} from \strong{randomForest}.}
+}}
 
 \item{model}{model. An optional existing model, applied to the test data.}
 
