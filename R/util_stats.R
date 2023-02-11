@@ -569,8 +569,8 @@ classtable <- function(prediction_v = NULL,
 #' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
 #'
 #' @param formula A formula (usually \code{x$formula}, for an \code{FFTrees} object \code{x}).
-#' @param data.train A training dataset (as data frame).
-#' @param data.test A testing dataset (as data frame).
+#' @param data.train A training dataset (as a data frame).
+#' @param data.test A testing dataset (as a data frame).
 #'
 #' @param algorithm A character string specifying an algorithm in the set:
 #' \itemize{
@@ -581,10 +581,17 @@ classtable <- function(prediction_v = NULL,
 #'   \item{\code{"rf"}: Random forests (using \code{randomForest} from \strong{randomForest}.}
 #' }
 #'
-#' @param model model. An optional existing model, applied to the test data.
-#' @param sens.w Sensitivity weight parameter (from 0 to 1, required to compute \code{wacc}).
-#' @param new.factors string. What should be done if new factor values are discovered in the test set?
-#' "exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.
+#' @param model An optional existing model (as a \code{model}), to be applied to the test data.
+#'
+#' @param sens.w Sensitivity weight parameter (numeric, from \code{0} to \code{1}), required to compute \code{wacc}.
+#'
+#' @param new.factors What should be done if new factor values are discovered in the test set (as a character string)?
+#' Available options:
+#' \itemize{
+#'   \item{\code{"exclude"}: exclude case (i.e., remove these cases, used by default);}
+#'   \item{\code{"base"}: predict the base rate of the criterion.}
+#' }
+#'
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom stats formula glm model.frame model.matrix
@@ -894,7 +901,7 @@ comp_pred <- function(formula,
 
       if (any(cannot_pred_vec)) {
 
-        if (substr(new.factors, 1, 1) == "e") {
+        if (substr(new.factors, 1, 1) == "e") { # "exclude":
 
           warning(paste(sum(cannot_pred_vec), "cases in the test data could not be predicted by 'e' due to new factor values. These cases will be excluded"))
 
@@ -903,7 +910,7 @@ comp_pred <- function(formula,
           crit_test <- crit_test[cannot_pred_vec == FALSE]
         }
 
-        if (substr(new.factors, 1, 1) == "b") {
+        if (substr(new.factors, 1, 1) == "b") { # "base" rate:
 
           warning(paste(sum(cannot_pred_vec), "cases in the test data could not be predicted by 'b' due to new factor values. They will be predicted to be", mean(train_crit) > .5))
         }
@@ -922,7 +929,7 @@ comp_pred <- function(formula,
 
         pred_test <- rep(0, nrow(data.test))
 
-        if (any(cannot_pred_vec) & substr(new.factors, 1, 1) == "b") {
+        if (any(cannot_pred_vec) & substr(new.factors, 1, 1) == "b") { # "base" rate:
 
           pred_test[cannot_pred_vec] <- mean(train_crit) > .5
           pred_test[cannot_pred_vec == FALSE] <- round(1 / (1 + exp(-predict(train_mod, data.test[cannot_pred_vec == FALSE, ]))), 0)
@@ -976,7 +983,7 @@ comp_pred <- function(formula,
 
       if (is.null(data.test) == FALSE) {
 
-        if (any(cannot_pred_vec) & substr(new.factors, 1, 1) == "b") {
+        if (any(cannot_pred_vec) & substr(new.factors, 1, 1) == "b") { # "base" rate:
 
           pred_test <- rep(0, nrow(data.test))
           pred_test[cannot_pred_vec] <- mean(train_crit) > .5
@@ -1023,7 +1030,7 @@ comp_pred <- function(formula,
           pred_test <- predict(train_mod, data.test)
         }
 
-        # if(any(cannot_pred_vec) & substr(new.factors, 1, 1) == "b") {
+        # if(any(cannot_pred_vec) & substr(new.factors, 1, 1) == "b") { # "base" rate:
         #
         #   pred_test <- rep(0, nrow(data.test))
         #   pred_test[cannot_pred_vec] <- mean(train_crit) > .5
