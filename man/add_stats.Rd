@@ -23,9 +23,11 @@ Default: \code{correction = .25}.}
 \item{sens.w}{numeric. Sensitivity weight (for computing weighted accuracy, \code{wacc}).
 Default: \code{sens.w = NULL} (to ensure that values are passed by calling function).}
 
-\item{my.goal}{Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.}
+\item{my.goal}{Name of an optional, user-defined goal (as character string).
+Default: \code{my.goal = NULL}.}
 
-\item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.}
+\item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}).
+Default: \code{my.goal.fun = NULL}.}
 
 \item{cost.outcomes}{list. A list of length 4 named \code{"hi"}, \code{"fa"}, \code{"mi"}, \code{"cr"}, and
 specifying the costs of a hit, false alarm, miss, and correct rejection, respectively.

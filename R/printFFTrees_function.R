@@ -166,18 +166,39 @@ print.FFTrees <- function(x = NULL,
       sep = ""
   )
 
-  # Outcome costs: ----
 
-  cat("- Outcome costs: [hi = ", x$params$cost.outcomes$hi, ", fa = ", x$params$cost.outcomes$fa,
-      ", mi = ", x$params$cost.outcomes$mi, ", cr = ", x$params$cost.outcomes$cr, "]\n",
-      sep = ""
-  )
+  # Costs: ----
+
+  # Set 2 flags:
+  if (!is.null(x$params$cost.outcomes) & any(unlist(x$params$cost.outcomes) != 0)){
+    print_cost_dec <- TRUE
+  } else {
+    print_cost_dec <- FALSE
+  }
+
+  if (!is.null(x$params$cost.cues) & any(unlist(x$params$cost.cues) != 0)){
+    print_cost_cue <- TRUE
+  } else {
+    print_cost_cue <- FALSE
+  }
 
 
-  # Cue costs: ----
-  #
-  # out <- x$params$cost.cues[unlist(strsplit(train_cues, ","))]
-  # cat("- Cue costs: [", paste(names(out), "=", out, collapse = ", "), ", ...]\n", sep = "")
+  if (print_cost_dec){
+
+    cat("- Cost of outcomes:  hi = ", x$params$cost.outcomes$hi, ",  fa = ", x$params$cost.outcomes$fa,
+        ",  mi = ", x$params$cost.outcomes$mi, ",  cr = ", x$params$cost.outcomes$cr, "\n",
+        sep = "")
+
+  }
+
+  if (print_cost_cue){
+
+    cost_cue_v <- unlist(x$params$cost.cues)
+
+    cat("- Cost of cues: ", "\n", sep = "")
+    print(cost_cue_v)  # print named vector
+
+  }
 
 
   # Parameters of best.train tree: ----
@@ -229,7 +250,10 @@ print.FFTrees <- function(x = NULL,
     cr <- x$trees$stats$train$cr[tree]
 
     N <- nrow(x$data$train)
-    cost <- x$trees$stats$train$cost[tree]
+
+    cost_dec <- x$trees$stats$train$cost_dec[tree]
+    cost_cue <- x$trees$stats$train$cost_cue[tree]
+    cost     <- x$trees$stats$train$cost[tree]
 
   } else { # else (data == "test"): use stats of test/prediction data (by default):
 
@@ -242,7 +266,10 @@ print.FFTrees <- function(x = NULL,
     cr <- x$trees$stats$test$cr[tree]
 
     N <- nrow(x$data$test)
-    cost <- x$trees$stats$test$cost[tree]
+
+    cost_dec <- x$trees$stats$test$cost_dec[tree]
+    cost_cue <- x$trees$stats$test$cost_cue[tree]
+    cost     <- x$trees$stats$test$cost[tree]
 
   }
 
@@ -272,7 +299,7 @@ print.FFTrees <- function(x = NULL,
 
   # - Confusion table: ----
 
-  console_confusionmatrix( # See utility function in helper.R:
+  console_confusionmatrix( # See utility function in util_plot.R:
 
     hi = hi,
     mi = mi,
@@ -288,18 +315,52 @@ print.FFTrees <- function(x = NULL,
   cat("\n")
 
 
-  # Speed, frugality, and cost: ------
+  # Speed and frugality: ------
 
   cat(in_blue("FFT #", tree, ": ", cli::style_underline(task), " Speed, Frugality, and Cost\n", sep = ""), sep = "")
 
   cat("mcu = ", round(x$trees$stats[[mydata]]$mcu[tree], 2), sep = "")
   cat(",  pci = ", round(x$trees$stats[[mydata]]$pci[tree], 2), sep = "")
-  cat(",  E(cost) = ", scales::comma(cost, accuracy = .001), sep = "")
 
-  cat("\n\n")
+  # cat("\n")
+
+
+  # Cost: ------
+
+  if (print_cost_dec & print_cost_cue){
+    cat("\n")  # cost info on a new line
+  } else if (print_cost_dec | print_cost_cue){
+    cat(",  ")  # add a separator
+  } else { # report total costs as zero (0):
+    cat(",  cost = ", scales::comma(cost, accuracy = .01), sep = "")
+  }
+
+
+  if (print_cost_dec){ # add decision outcome cost:
+
+    cat("cost_dec = ", scales::comma(cost_dec, accuracy = .001), sep = "")
+
+  }
+
+  if (print_cost_cue){ # add cue cost:
+
+    if (print_cost_dec){ cat(",  ") } # add separator
+
+    cat("cost_cue = ", scales::comma(cost_cue, accuracy = .001), sep = "")
+  }
+
+  if (print_cost_dec & print_cost_cue){ # add total cost:
+
+    cat(",  cost = ", scales::comma(cost, accuracy = .001), sep = "") # total costs
+
+  }
+
+  cat("\n")
 
 
   # Output: ------
+
+  cat("\n")
 
   # Output x may differ from input x when applying new 'test' data (as df):
   return(invisible(x))

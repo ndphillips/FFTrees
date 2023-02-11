@@ -1,11 +1,13 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9001
+## 1.9.0.9002
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
 <!-- Log of changes: --> 
+
+This version adds functionality and increases robustness.
 
 Changes since last release: 
 
@@ -17,15 +19,18 @@ Changes since last release:
 
 <!-- Minor: --> 
 
+
 ### Minor changes 
 
-- none yet.
+- Added detailed cost information when printing FFTs (with `print.FFTrees()`).  
+- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
 
 <!-- Details: --> 
 
+
 ### Details 
 
-- none yet.
+- Revised documentation and vignettes.
 
 <!-- Development version: --> 
 
@@ -33,6 +38,8 @@ The current development version of **FFTrees** is available at <https://github.c
 
 
 <!-- Released versions: --> 
+
+------ 
 
 ## 1.9.0
 
@@ -195,7 +202,7 @@ Changes since last release:
     - Enabled setting `tree` to `"best.train"` or `"best.test"` (as when plotting FFTs).  
     - Reporting `bacc` or `wacc` in _Accuracy_ section (and `sens.w`, if deviating from the default of 0.50). 
     - Improved readability of 2x2 confusion table (by right-justifying digits). 
-    - Moved expected cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
+    - Moved cost information from _Accuracy_ to _Speed, Frugality, and Cost_ section. 
 
 <!-- plot.FFTrees(): --> 
 
@@ -435,6 +442,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-08.]
+[File `NEWS.md` last updated on 2023-02-11.]
 
 <!-- eof. -->

@@ -4,11 +4,11 @@
 
 # A grammar of FFTs
 #
-# Functions for converting/translating and editing/manipulating and varying FFTs:
+# Functions for converting/translating and editing/manipulating/trimming and varying FFTs:
 #
 # A. Tree translation functions (for converting and collecting FFT definitions/trees)
-# B. Tree editing functions (for manipulating individual FFTs)
-# C. Macros / combinations (e.g., for creating specific variants of a given FFT)
+# B. Tree editing/trimming functions (for changing and manipulating individual FFTs)
+# C. Macros / combinations (e.g., for creating sets of variants of a given FFT)
 
 
 # (A) Tree conversion/translation functions: --------
@@ -305,7 +305,7 @@ reorder_nodes <- function(fft, order = NA){
 
   if (all(order == 1:n_cues)) { # catch case:
 
-    message("reorder_nodes: fft remains unchanged")  # 4debugging
+    message("reorder_nodes: FFT remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -322,24 +322,26 @@ reorder_nodes <- function(fft, order = NA){
 
   if (exit_cue_pos != n_cues){
 
-    message(paste0("reorder_nodes: Previous exit cue moved to cue position ", exit_cue_pos))
+    message(paste0("reorder_nodes: Previous exit node moved to node position ", exit_cue_pos))
+
+    # ?: Which exit direction should be used for previous exit cue?
 
     # Option 1:
     # Current direction and threshold settings always predict Signal (1):
 
     # a. previous exit cue: Decide/predict 1 (signal)
-    fft_mod$exit[exit_cue_pos] <- 1
+    fft_mod$exit[exit_cue_pos] <- 1  # (as by cue threshold definition)
 
-    # b. final cue: Make new exit (0.5)
+    # b. final cue: Make final exit bi-directional (0.5)
     fft_mod$exit[n_cues] <- 0.5
 
     # Option 2:
     # Goal: Preserve the overall tree structure:
-    #       Swap exit directions of previous and new exit cues!
-    #       (Requires flipping directions when predicting NON-signal direction 0)
+    # How:  Align exit directions of previous exit node to previous non-exit node!
+    #       (Requires setting exit to 0 when previous non-exit node was predicting NON-signal direction 0)
 
     # Option 3:
-    # Goal: Provide BOTH noise (0: left) and signal (1: right) alternatives.
+    # Goal: Provide BOTH the noise (0: left) and the signal (1: right) alternative for a previous exit node.
 
   } # if (exit_cue_pos).
 
@@ -391,7 +393,7 @@ flip_exit <- function(fft, nodes = NA){
 
   if (all(is.na(nodes))) { # catch case:
 
-    message("flip_exit: fft remains unchanged")  # 4debugging
+    message("flip_exit: FFT remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -403,11 +405,14 @@ flip_exit <- function(fft, nodes = NA){
   n_cues <- nrow(fft)
 
   if (any(nodes %in% 1:n_cues == FALSE)){
-    stop("Some nodes do not occur in fft.")
+
+    missing_nodes <- setdiff(nodes, 1:n_cues)
+
+    stop("flip_exit: Some nodes do not occur in FFT: ", paste(missing_nodes, collapse = ", "))
   }
 
   if (n_cues %in% nodes){
-    msg <- paste0("The final cue ", n_cues, " cannot be flipped and will be ignored...")
+    msg <- paste0("flip_exit: Exits of a final node (", n_cues, ") cannot be flipped")
     message(msg)
     nodes <- nodes[nodes != n_cues]
   }
@@ -432,7 +437,7 @@ flip_exit <- function(fft, nodes = NA){
 } # flip_exit().
 
 # # Check:
-# ffts_df <- get_fft_definitions(x)  # x$trees$definitions / definitions (as df)
+# (ffts_df <- get_fft_definitions(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
 #
 # flip_exit(fft)
@@ -443,7 +448,10 @@ flip_exit <- function(fft, nodes = NA){
 # # Note:
 # flip_exit(fft, nodes = 4)
 # flip_exit(fft, nodes = 1:4)
-
+# flip_exit(fft, nodes = 1:10)
+#
+# # Flipping all and back:
+# all.equal(fft, flip_exit(flip_exit(fft, nodes = 3:1), nodes = 1:3))
 
 
 

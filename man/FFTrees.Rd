@@ -131,12 +131,14 @@ When \code{formula}, \code{data} or \code{data.test} are not specified, the curr
 If specified, no new FFTs are being fitted (i.e., \code{algorithm} and functions for evaluating cues and creating FFTs are skipped).
 Instead, the tree definitions provided are used to re-evaluate the current \code{FFTrees} object on current data.}
 
-\item{do.comp, do.cart, do.lr, do.rf, do.svm}{logical. Should alternative algorithms be used for comparison?
-All options set to \code{TRUE} by default. Available options are:
-\code{cart} = regular (non-frugal) trees with \strong{rpart};
-\code{lr} = logistic regression with \strong{glm};
-\code{rf} = random forests with \strong{randomForest};
-\code{svm} = support vector machines with \strong{e1071}.
+\item{do.comp, do.lr, do.cart, do.svm, do.rf}{Should alternative algorithms be used for comparison (as logical)?
+All options set to \code{TRUE} by default. Available options correspond to:
+\itemize{
+  \item{\code{do.lr}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
+  \item{\code{do.cart}: Decision trees (using \code{rpart} from \strong{rpart});}
+  \item{\code{do.svm}: Support vector machines (using \code{svm} from \strong{e1071});}
+  \item{\code{do.rf}: Random forests (using \code{randomForest} from \strong{randomForest}.}
+}
 Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.}
 
 \item{quiet}{logical. Should progress reports be suppressed?

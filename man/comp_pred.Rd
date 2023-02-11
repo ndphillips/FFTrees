@@ -17,23 +17,29 @@ comp_pred(
 \arguments{
 \item{formula}{A formula (usually \code{x$formula}, for an \code{FFTrees} object \code{x}).}
 
-\item{data.train}{A training dataset (as data frame).}
+\item{data.train}{A training dataset (as a data frame).}
 
-\item{data.test}{A testing dataset (as data frame).}
+\item{data.test}{A testing dataset (as a data frame).}
 
-\item{algorithm}{character string. An algorithm in the set:
-"lr" -- logistic regression;
-"rlr" -- regularized logistic regression;
-"cart" -- decision trees;
-"svm" -- support vector machines;
-"rf" -- random forests.}
+\item{algorithm}{A character string specifying an algorithm in the set:
+\itemize{
+  \item{\code{"lr"}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
+  \item{\code{"rlr"}: Regularized logistic regression (currently not supported);}
+  \item{\code{"cart"}: Decision trees (using \code{rpart} from \strong{rpart});}
+  \item{\code{"svm"}: Support vector machines (using \code{svm} from \strong{e1071});}
+  \item{\code{"rf"}: Random forests (using \code{randomForest} from \strong{randomForest}.}
+}}
 
-\item{model}{model. An optional existing model, applied to the test data.}
+\item{model}{An optional existing model (as a \code{model}), to be applied to the test data.}
 
-\item{sens.w}{Sensitivity weight parameter (from 0 to 1, required to compute \code{wacc}).}
+\item{sens.w}{Sensitivity weight parameter (numeric, from \code{0} to \code{1}), required to compute \code{wacc}.}
 
-\item{new.factors}{string. What should be done if new factor values are discovered in the test set?
-"exclude" = exclude (i.e.; remove these cases), "base" = predict the base rate of the criterion.}
+\item{new.factors}{What should be done if new factor values are discovered in the test set (as a character string)?
+Available options:
+\itemize{
+  \item{\code{"exclude"}: exclude case (i.e., remove these cases, used by default);}
+  \item{\code{"base"}: predict the base rate of the criterion.}
+}}
 }
 \description{
 \code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),

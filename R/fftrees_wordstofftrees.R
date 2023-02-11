@@ -54,7 +54,7 @@ fftrees_wordstofftrees <- function(x,
 
   # exits_df <- data.frame(     # is NOT used anywhere?
   #   exit.char = x$params$decision.labels,
-  #   exit = c("0", "1"),       # 0:left/noise vs. 1:right/signal
+  #   exit = c("0", "1"),       # 0:FALSE/noise/left vs. 1:TRUE/signal/right
   #   stringsAsFactors = FALSE
   # )
 
@@ -92,20 +92,26 @@ fftrees_wordstofftrees <- function(x,
   # Done: Turn stops into warnings, but provide feedback which exit type is not being mentioned.
 
 
-  # Split my.tree into def parts (dropping "otherwise" clause): ------
+  # Split my.tree into def parts (dropping the final "otherwise" clause): ------
+  {
+    def <- unlist(strsplit(my.tree, split = "if |when |whenever ", fixed = FALSE))  # Note: Also removes trailing " " after "if"!
+    def <- paste0(" ", def)    # add a leading " " again (to include in detecting cue name below)
+    def <- def[2:length(def)]  # remove initial empty string
+    # print(def)  # 4debugging
 
-  def <- unlist(strsplit(my.tree, split = "if ", fixed = TRUE))  # Note: Also removes trailing " " after "if"!
-  def <- paste0(" ", def)    # add leading " " again (to include in detecting cue name below)
-  def <- def[2:length(def)]  # remove initial empty string
-  # print(def)  # 4debugging
+    def_fin_2 <- unlist(strsplit(def[length(def)], split = "else|otherwise|other", fixed = FALSE))
+    # Done: Generalized to include "else", "in other cases", etc.
+    # print(def_fin_2)  # 4debugging
 
-  def_fin_2 <- unlist(strsplit(def[length(def)], split = "otherwise", fixed = TRUE))
-  # ToDo: Could be generalized to include "else", "in other cases", etc.
-  # print(def_fin_2)  # 4debugging
+    # Drop the final sub-sentence (its else/otherwise part):
+    def <- c(def[-length(def)], def_fin_2[1])
 
-  # Drop the final sub-sentence (beginning with "otherwise"):
-  def <- c(def[-length(def)], def_fin_2[1])
-  # print(def)  # 4debugging
+    # Drop trailing spaces (" "):
+    # def <- gsub(pattern = "\\.\\s+$", replacement = "\\.", x = def)  # remove trailing spaces (after ".")
+    def <- gsub(pattern = "\\s+$", replacement = "", x = def)  # remove ANY trailing spaces
+
+    # print(def)  # 4debugging
+  }
 
   nodes_n <- length(def)
 
@@ -136,8 +142,8 @@ fftrees_wordstofftrees <- function(x,
     })))
 
     # Convert cue names back to original (non lower) values:
-    cues_v <- x$cue_names[sapply(cues_v, FUN = function(x) {
-      which(cue_names_l == x)
+    cues_v <- x$cue_names[sapply(cues_v, FUN = function(c_name) {
+      which(cue_names_l == c_name)
     })]
   }
 
