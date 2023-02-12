@@ -25,7 +25,7 @@
 # - write: back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
 #
 # 1 FFT collection function:
-# - stack_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
+# - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
 
 
 # read_fft_df: ------
@@ -202,12 +202,12 @@ write_fft_df <- function(fft, tree = -99L){
 
 
 
-# stack_fft_df: ------
+# add_fft_df: ------
 
 # Goal: Add an FFT definition (Case 1) or 1 FFT as df (Case 2) to an existing set of FFT definitions.
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
 
-stack_fft_df <- function(fft, ffts_df = NULL){
+add_fft_df <- function(fft, ffts_df = NULL){
 
   if (verify_fft_definition(fft)){   # Case 1: fft is a (set of) FFT-definitions (in 1 row per tree, as df) ----
 
@@ -235,7 +235,7 @@ stack_fft_df <- function(fft, ffts_df = NULL){
 
     message("Wrote 1 FFT (from df) to a 1-line definition.")
 
-    stack_fft_df(fft = cur_fft, ffts_df = ffts_df)  # re-call (with modified 1st argument)
+    add_fft_df(fft = cur_fft, ffts_df = ffts_df)  # re-call (with modified 1st argument)
 
   } else {
 
@@ -243,19 +243,19 @@ stack_fft_df <- function(fft, ffts_df = NULL){
 
   }
 
-} # stack_fft_df().
+} # add_fft_df().
 
 # # Check:
 # (ffts_df <- get_fft_definitions(x))
 # (fft <- read_fft_df(ffts_df, tree = 2))
 #
 # # Baselines:
-# stack_fft_df(ffts_df)  # Case 0a: Add a set of definitions to NULL.
-# stack_fft_df(fft)   # Case 0c: Add 1 FFT (as df) to NULL.
+# add_fft_df(ffts_df)  # Case 0a: Add a set of definitions to NULL.
+# add_fft_df(fft)   # Case 0c: Add 1 FFT (as df) to NULL.
 #
 # # Intended use:
-# stack_fft_df(ffts_df[2, ], ffts_df)  # Case 1: Add 1 definition to a set of definitions.
-# stack_fft_df(fft, ffts_df)     # Case 2: Add 1 FFT (as df) to a set of definitions.
+# add_fft_df(ffts_df[2, ], ffts_df)  # Case 1: Add 1 definition to a set of definitions.
+# add_fft_df(fft, ffts_df)     # Case 2: Add 1 FFT (as df) to a set of definitions.
 
 
 
@@ -461,7 +461,7 @@ flip_exits <- function(fft, nodes = NA){
 # all.equal(fft, flip_exits(flip_exits(fft, nodes = 3:1), nodes = 1:3))
 
 
-# swap_nodes: ------
+# reorder_nodes: ------
 
 # Goal: Re-order the nodes of an existing FFT.
 # Inputs:
@@ -470,7 +470,7 @@ flip_exits <- function(fft, nodes = NA){
 # Output:
 # fft_mod: modified FFT (in multi-line format, as df)
 
-swap_nodes <- function(fft, order = NA){
+reorder_nodes <- function(fft, order = NA){
 
   # Prepare: ----
 
@@ -491,7 +491,7 @@ swap_nodes <- function(fft, order = NA){
 
   if (all(order == 1:n_cues)) { # catch case:
 
-    message("swap_nodes: FFT remains unchanged")  # 4debugging
+    message("reorder_nodes: FFT remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -508,7 +508,7 @@ swap_nodes <- function(fft, order = NA){
 
   if (exit_cue_pos != n_cues){
 
-    message(paste0("swap_nodes: Previous exit node moved to node position ", exit_cue_pos))
+    message(paste0("reorder_nodes: Previous exit node moved to node position ", exit_cue_pos))
 
     # ?: Which exit direction should be used for previous exit cue?
 
@@ -539,7 +539,7 @@ swap_nodes <- function(fft, order = NA){
 
   return(fft_mod)
 
-} # swap_nodes().
+} # reorder_nodes().
 
 
 # # Check:
@@ -551,11 +551,11 @@ swap_nodes <- function(fft, order = NA){
 # x$trees$definitions[5, ]
 # x$trees$inwords[5]
 #
-# swap_nodes(fft_df)  # unchanged
-# swap_nodes(fft_df, order = c(1, 2, 3))  # unchanged
-# swap_nodes(fft_df, order = c(3, 2))     # ERROR: wrong length of order
-# swap_nodes(fft_df, order = c(2, 1, 3))  # exit cue unchanged
-# swap_nodes(fft_df, order = c(1, 3, 2))  # exit cue changed
+# reorder_nodes(fft_df)  # unchanged
+# reorder_nodes(fft_df, order = c(1, 2, 3))  # unchanged
+# reorder_nodes(fft_df, order = c(3, 2))     # ERROR: wrong length of order
+# reorder_nodes(fft_df, order = c(2, 1, 3))  # exit cue unchanged
+# reorder_nodes(fft_df, order = c(1, 3, 2))  # exit cue changed
 
 
 
@@ -579,11 +579,11 @@ swap_nodes <- function(fft, order = NA){
 # all_node_orders: ------
 
 
-# Goal: Apply swap_nodes(fft) to all possible permutations of cues.
+# Goal: Apply reorder_nodes(fft) to all possible permutations of cues.
 # Input:
 #   fft: 1 FFT (as df, 1 row per cue)
 # Output:
-#   Definitions of FFT in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as swap_nodes())
+#   Definitions of FFT in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
 
 
 all_node_orders <- function(fft){
@@ -604,11 +604,11 @@ all_node_orders <- function(fft){
 
   for (i in 1:nrow(all_orders)){
 
-    cur_fft <- swap_nodes(fft = fft, order = all_orders[i, ])
+    cur_fft <- reorder_nodes(fft = fft, order = all_orders[i, ])
 
     cur_fft_def <- write_fft_df(fft = cur_fft, tree = as.integer(i))
 
-    out <- stack_fft_df(fft = cur_fft_def, ffts_df = out)
+    out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
 
   }
 
@@ -651,7 +651,7 @@ all_exit_structures <- function(fft){
 
   cur_fft_def <- write_fft_df(fft = fft, tree = as.integer(cnt))
 
-  out <- stack_fft_df(fft = cur_fft_def, ffts_df = out)
+  out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
 
   if (n_cues > 1){
 
@@ -670,7 +670,7 @@ all_exit_structures <- function(fft){
 
         cur_fft_def <- write_fft_df(fft = cur_fft, tree = as.integer(cnt))
 
-        out <- stack_fft_df(fft = cur_fft_def, ffts_df = out)
+        out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
 
       } # for j.
 
