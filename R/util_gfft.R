@@ -13,9 +13,9 @@
 
 # (A) Tree conversion/translation functions: --------
 
-# General objective: Convert/translate FFT descriptions (definitions as df, with 1 row per tree)
+# Goal: Convert/translate FFT descriptions (definitions as df, with 1 row per tree)
 # into a more modular format of individual FFTs (as df with 1 row per node), and back.
-# Reason: The latter can be manipulated more easily in Tree manipulation functions (B).
+# Reason: The latter can be manipulated more easily by tree editing/manipulation/trimming functions (B).
 
 # Details:
 #
@@ -265,12 +265,10 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 # (B) Editing tree descriptions: --------
 
-
-# Goals: Functions for converting, manipulating, and processing
-#        (e.g., storing) FFT descriptions.
+# Goal: Functions for editing, manipulating, and trimming individual FFTs (in df format).
 
 # Note: These functions assume 1 FFT (in multi-line format, as df) as their 1-st input argument (for piping)
-#       and return a modified version of 1 FFT (in same format) as output.
+#       and return a modified version of 1 FFT (in the same format) as output.
 
 
 # reorder_nodes: ------
@@ -346,11 +344,10 @@ reorder_nodes <- function(fft, order = NA){
   } # if (exit_cue_pos).
 
 
+  # Output: ----
+
   # Repair row names:
   row.names(fft_mod) <- 1:nrow(fft_mod)
-
-
-  # Output: ----
 
   return(fft_mod)
 
@@ -391,7 +388,7 @@ flip_exit <- function(fft, nodes = NA){
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
 
-  if (all(is.na(nodes))) { # catch case:
+  if (all(is.na(nodes))) { # catch case 0:
 
     message("flip_exit: FFT remains unchanged")  # 4debugging
 
@@ -404,17 +401,36 @@ flip_exit <- function(fft, nodes = NA){
 
   n_cues <- nrow(fft)
 
-  if (any(nodes %in% 1:n_cues == FALSE)){
+  # Special case 1:
+  if (any(nodes %in% 1:n_cues == FALSE)){ # some nodes are missing:
 
     missing_nodes <- setdiff(nodes, 1:n_cues)
 
-    stop("flip_exit: Some nodes do not occur in FFT: ", paste(missing_nodes, collapse = ", "))
+    # A. Stop with error:
+    # err_msg <- paste0("flip_exit: Some nodes do not occur in FFT: ",
+    #                   paste(missing_nodes, collapse = ", "))
+    #
+    # stop(err_msg)  # Error
+
+    # B. Continue, but ignore the missing nodes:
+    msg <- paste0("flip_exit: Some nodes do not occur in FFT and will be ignored: ",
+                  paste(missing_nodes, collapse = ", "))
+
+    message(msg)
+
+    nodes <- setdiff(nodes, missing_nodes)
+
   }
 
-  if (n_cues %in% nodes){
+  # Special case 2:
+  if (n_cues %in% nodes){ # aiming to flip the final/exit node:
+
     msg <- paste0("flip_exit: Exits of a final node (", n_cues, ") cannot be flipped")
+
     message(msg)
+
     nodes <- nodes[nodes != n_cues]
+
   }
 
 
@@ -444,14 +460,113 @@ flip_exit <- function(fft, nodes = NA){
 # flip_exit(fft, nodes = c(1))
 # flip_exit(fft, nodes = c(3))
 # flip_exit(fft, nodes = c(3, 1))
+# flip_exit(fft, 3:1)
 #
-# # Note:
-# flip_exit(fft, nodes = 4)
-# flip_exit(fft, nodes = 1:4)
-# flip_exit(fft, nodes = 1:10)
+# # Flipping missing nodes and exit node:
+# flip_exit(fft, nodes = 6:9)  # message & no change
+# flip_exit(fft, nodes = 4)    # message & no change
+# flip_exit(fft, nodes = 1:4)  # message & others change
+# flip_exit(fft, nodes = 1:10) # 2 messages & others change
 #
 # # Flipping all and back:
 # all.equal(fft, flip_exit(flip_exit(fft, nodes = 3:1), nodes = 1:3))
+
+
+
+# drop_nodes: ------
+
+
+# Goal: Delete/drop some nodes (or cues) of a given FFT.
+# Inputs:
+#   fft = 1 FFT (as df)
+#   nodes = vector of nodes to drop (as integer in 1:nrow(fft))
+# Output: Modified version of fft (as df, with fewer nodes)
+
+
+drop_nodes <- function(fft, nodes = NA){
+
+  # Prepare: ----
+
+  # Verify inputs:
+  testthat::expect_true(verify_fft_as_df(fft))
+
+  if (all(is.na(nodes))) { # catch case 0:
+
+    message("drop_nodes: FFT remains unchanged")  # 4debugging
+
+    return(fft)
+
+  }
+
+  nodes <- as.integer(nodes)
+  testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
+
+  n_cues <- nrow(fft)
+
+  # Special case 1:
+  if (any(nodes %in% 1:n_cues == FALSE)){ # notify that nodes are missing:
+
+    missing_nodes <- setdiff(nodes, 1:n_cues)
+
+    msg <- paste0("drop_nodes: Some nodes do not occur in FFT and will be ignored: ",
+                  paste(missing_nodes, collapse = ", "))
+
+    message(msg)
+
+  }
+
+  # Main: ----
+
+  # Determine new nodes:
+  new_nodes <- setdiff(1:n_cues, nodes)
+
+  # Special case 2:
+  if ( length(new_nodes) == 0 ){  # nothing left:
+
+    msg <- paste0("drop_nodes: Nothing left of fft")
+    stop(msg)
+
+  }
+
+  # Filter rows of fft:
+  fft_mod <- fft[new_nodes, ]
+
+  # Special case 3:
+  if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
+
+    new_exit_node <- max(new_nodes)
+
+    fft_mod$exit[new_exit_node] <- 0.5  # Set new exit node
+
+    msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
+    message(msg)
+
+  }
+
+
+  # Output: ----
+
+  # Repair row names:
+  row.names(fft_mod) <- 1:nrow(fft_mod)
+
+  return(fft_mod)
+
+} # drop_nodes().
+
+# # Check:
+# (ffts_df <- get_fft_definitions(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
+#
+# drop_nodes(fft)
+# drop_nodes(fft, nodes = c(1))
+# drop_nodes(fft, nodes = c(3))
+# drop_nodes(fft, nodes = c(3, 1))
+#
+# # Dropping final node or dropping everything:
+# drop_nodes(fft, nodes = 4)    # works
+# drop_nodes(fft, nodes = 2:6)  # works (1 node left)
+# drop_nodes(fft, nodes = 1:6)  # note + error: nothing left
+# drop_nodes(fft, nodes = 1:4)  # error: nothing left
 
 
 
