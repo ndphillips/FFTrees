@@ -275,7 +275,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 # Inputs:
 #   fft = 1 FFT (as df)
 #   nodes = vector of nodes to drop (as integer in 1:nrow(fft))
-# Output: Modified version of fft (as df, with fewer nodes)
+# Output: Modified version of fft (as df, with fewer nodes).
 
 drop_nodes <- function(fft, nodes = NA){
 
@@ -360,6 +360,111 @@ drop_nodes <- function(fft, nodes = NA){
 # drop_nodes(fft, nodes = 2:6)  # works (1 node left)
 # drop_nodes(fft, nodes = 1:6)  # note + error: nothing left
 # drop_nodes(fft, nodes = 1:4)  # error: nothing left
+
+
+# edit_nodes: ------
+
+# Goal: Change (parameters of) existing nodes.
+# Inputs:
+#   fft = 1 FFT (as df)
+#   nodes = vector of nodes to change (as integer in 1:nrow(fft))
+#   cues = cues to change (classes are set accordingly)
+#   directions = directions to change
+#   thresholds = threshold values to change
+#   exits = exits to change
+#   my.nodes = a vector of verbal node descriptions (dominates all other arguments).
+# Output: Modified version of fft (as df, but with modified nodes).
+
+edit_nodes <- function(fft, nodes = NA,
+                       cues = NA, directions = NA, thresholds = NA, exits = NA,
+                       my.nodes = NA){
+
+  # Prepare: ----
+
+  # Verify inputs:
+  testthat::expect_true(verify_fft_as_df(fft))
+
+  if (all(is.na(nodes))) { # catch case 0:
+
+    message("edit_nodes: FFT remains unchanged")  # 4debugging
+
+    return(fft)
+
+  }
+
+  nodes <- as.integer(nodes)
+  testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
+
+  # Do all args have same length:
+  key_args <- list(nodes, cues, directions, thresholds, exits, my.nodes)
+  non_NA_args  <- (is.na(key_args) == FALSE)
+  len_set_args <- sapply(X = key_args, FUN = length)[non_NA_args]
+
+  if (length(unique(len_set_args)) > 1){
+    stop("edit_nodes: All modifier args (e.g., nodes, ..., exits) must have the same length.")
+  }
+
+  n_cues <- nrow(fft)
+
+  # Special case 1:
+  if (any(nodes %in% 1:n_cues == FALSE)){ # notify that nodes are missing:
+
+    missing_nodes <- setdiff(nodes, 1:n_cues)
+
+    msg <- paste0("edit_nodes: Some nodes do not occur in FFT and will be ignored: ",
+                  paste(missing_nodes, collapse = ", "))
+
+    message(msg)
+
+  }
+
+  # +++ here now +++
+
+  # Main: ----
+
+  # Determine new nodes:
+  new_nodes <- setdiff(1:n_cues, nodes)
+
+  # Special case 2:
+  if ( length(new_nodes) == 0 ){  # nothing left:
+
+    msg <- paste0("drop_nodes: Nothing left of fft")
+    stop(msg)
+
+  }
+
+  # Filter rows of fft:
+  fft_mod <- fft[new_nodes, ]
+
+  # Special case 3:
+  if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
+
+    new_exit_node <- max(new_nodes)
+
+    fft_mod$exit[new_exit_node] <- 0.5  # Set new exit node
+
+    msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
+    message(msg)
+
+  }
+
+  # Output: ----
+
+  # Repair row names:
+  row.names(fft_mod) <- 1:nrow(fft_mod)
+
+  return(fft_mod)
+
+} # edit_nodes().
+
+# # Check:
+# (ffts_df <- get_fft_definitions(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts_df, tree = 1))  # 1 FFT (as df, from above)
+
+# edit_nodes(fft)
+# edit_nodes(fft, nodes = c(1, 1), exits = c(1, 0))  # works
+# edit_nodes(fft, nodes = c(1, 1), cues = "ABC", exits = c(1, 0))  # error: args differ in length
+
 
 
 
