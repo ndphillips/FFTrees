@@ -60,7 +60,7 @@ fftrees_ffttowords <- function(x = NULL,
   n_trees <- x$trees$n
 
   # tree_df <- x$trees$definition  # df (from object x)
-  tree_df <- get_fft_definitions(x = x)  # df (using helper fn)
+  tree_df <- get_fft_df(x = x)  # df (using helper fn)
   # print(tree_df)  # 4debugging
 
   # Provide user feedback: ----

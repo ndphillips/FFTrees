@@ -84,7 +84,7 @@ fftrees_apply <- function(x,
   # Extract key parts from FFTrees object x:
   n_trees <- x$trees$n
   # tree_defs <- x$trees$definition  # df (from object x)
-  tree_defs <- get_fft_definitions(x = x)  # df (using helper fn)
+  tree_defs <- get_fft_df(x = x)  # df (using helper fn)
   # print(tree_defs)  # 4debugging
 
 

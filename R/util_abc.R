@@ -324,12 +324,12 @@ get_best_tree <- function(x,
 
 
 
-# get_fft_definitions: ------
+# get_fft_df: ------
 
 # Goal: Extract (and verify) ALL definitions from an FFTrees object (as 1 df).
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
 
-get_fft_definitions <- function(x){
+get_fft_df <- function(x){
 
   # verify input:
   testthat::expect_s3_class(x, class = "FFTrees")
@@ -348,7 +348,7 @@ get_fft_definitions <- function(x){
 
   }
 
-} # get_fft_definitions().
+} # get_fft_df().
 
 
 

@@ -115,7 +115,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 # x <- hd  # copy object (with 7 FFTs)
 #
 # # FFT definitions:
-# ffts_df <- get_fft_definitions(x)  # using the helper function
+# ffts_df <- get_fft_df(x)  # using the helper function
 # ffts_df
 
 # read_fft_df(ffts_df, 2)
@@ -246,7 +246,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 } # add_fft_df().
 
 # # Check:
-# (ffts_df <- get_fft_definitions(x))
+# (ffts_df <- get_fft_df(x))
 # (fft <- read_fft_df(ffts_df, tree = 2))
 #
 # # Baselines:
@@ -347,7 +347,7 @@ drop_nodes <- function(fft, nodes = NA){
 } # drop_nodes().
 
 # # Check:
-# (ffts_df <- get_fft_definitions(x))  # x$trees$definitions / definitions (as df)
+# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
 #
 # drop_nodes(fft)
@@ -418,47 +418,54 @@ edit_nodes <- function(fft, nodes = NA,
 
   }
 
-  # +++ here now +++
-
   # Main: ----
 
-  # Determine new nodes:
-  new_nodes <- setdiff(1:n_cues, nodes)
+  fft_mod <- fft  # copy
 
-  # Special case 2:
-  if ( length(new_nodes) == 0 ){  # nothing left:
+  for (i in seq_along(nodes)){ # loop through nodes:
 
-    msg <- paste0("drop_nodes: Nothing left of fft")
-    stop(msg)
+    # +++ here now +++
 
-  }
+  } # for (i in nodes).
 
-  # Filter rows of fft:
-  fft_mod <- fft[new_nodes, ]
 
-  # Special case 3:
-  if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
+  # # Determine new nodes:
+  # new_nodes <- setdiff(1:n_cues, nodes)
 
-    new_exit_node <- max(new_nodes)
+  # # Special case 2:
+  # if ( length(new_nodes) == 0 ){  # nothing left:
+  #
+  #   msg <- paste0("drop_nodes: Nothing left of fft")
+  #   stop(msg)
+  #
+  # }
 
-    fft_mod$exit[new_exit_node] <- 0.5  # Set new exit node
+  # # Filter rows of fft:
+  # fft_mod <- fft[new_nodes, ]
 
-    msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
-    message(msg)
-
-  }
+  # # Special case 3:
+  # if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
+  #
+  #   new_exit_node <- max(new_nodes)
+  #
+  #   fft_mod$exit[new_exit_node] <- 0.5  # Set new exit node
+  #
+  #   msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
+  #   message(msg)
+  #
+  # }
 
   # Output: ----
 
-  # Repair row names:
-  row.names(fft_mod) <- 1:nrow(fft_mod)
+  # # Repair row names:
+  # row.names(fft_mod) <- 1:nrow(fft_mod)
 
   return(fft_mod)
 
 } # edit_nodes().
 
 # # Check:
-# (ffts_df <- get_fft_definitions(x))  # x$trees$definitions / definitions (as df)
+# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts_df, tree = 1))  # 1 FFT (as df, from above)
 
 # edit_nodes(fft)
@@ -547,7 +554,7 @@ flip_exits <- function(fft, nodes = NA){
 } # flip_exits().
 
 # # Check:
-# (ffts_df <- get_fft_definitions(x))  # x$trees$definitions / definitions (as df)
+# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
 #
 # flip_exits(fft)
@@ -648,7 +655,7 @@ reorder_nodes <- function(fft, order = NA){
 
 
 # # Check:
-# ffts_df <- get_fft_definitions(x)  # x$trees$definitions / definitions (as df)
+# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
 # fft_df  <- read_fft_df_v0(ffts_df, tree = 5)
 # fft_df
 #
@@ -725,7 +732,7 @@ all_node_orders <- function(fft){
 
 
 # Check:
-# ffts_df <- get_fft_definitions(x)  # x$trees$definitions / definitions (as df)
+# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
 # fft  <- read_fft_df(ffts_df, tree = 1)  # 1 FFT (as df, from above)
 
 # (dfs_1 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 1)))
@@ -792,7 +799,7 @@ all_exit_structures <- function(fft){
 
 
 # # Check:
-# ffts_df <- get_fft_definitions(x)  # x$trees$definitions / definitions (as df)
+# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
 # fft  <- read_fft_df(ffts_df, tree = 1)  # 1 FFT (as df, from above)
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
