@@ -375,11 +375,12 @@ drop_nodes <- function(fft, nodes = NA){
 #   my.nodes = a vector of verbal node descriptions (dominates all other arguments).
 # Output: Modified version of fft (as df, but with modified nodes).
 
-edit_nodes <- function(fft, nodes = NA,
-                       cues = NA, directions = NA, thresholds = NA, exits = NA,
-                       my.nodes = NA){
+edit_nodes <- function(fft,
+                       nodes = NA,  # as vector (1 or multiple nodes)
+                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # vars in fft (as df)
+                       my.node = NA){
 
-  # Prepare: ----
+  # Prepare: ------
 
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
@@ -396,12 +397,12 @@ edit_nodes <- function(fft, nodes = NA,
   testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
 
   # Do all args have same length:
-  key_args <- list(nodes, cues, directions, thresholds, exits, my.nodes)
+  key_args <- list(nodes, class, cue, direction, threshold, exit, my.node)
   non_NA_args  <- (is.na(key_args) == FALSE)
   len_set_args <- sapply(X = key_args, FUN = length)[non_NA_args]
 
   if (length(unique(len_set_args)) > 1){
-    stop("edit_nodes: All modifier args (e.g., nodes, ..., exits) must have the same length.")
+    stop("edit_nodes: All modifier args (e.g., nodes, ..., exit) must have the same length.")
   }
 
   n_cues <- nrow(fft)
@@ -416,18 +417,99 @@ edit_nodes <- function(fft, nodes = NA,
 
     message(msg)
 
+    # Remove missing nodes:
+    nodes <- setdiff(nodes, missing_nodes)
+
   }
 
-  # Main: ----
+  # Main: ------
 
   fft_mod <- fft  # copy
 
   for (i in seq_along(nodes)){ # loop through nodes:
 
-    # +++ here now +++
+    # class: ----
+
+    cur_class <- class[i]
+
+    if (cur_class %in% cue_classes){ # verify: valid cue class
+
+      fft_mod$class[i] <- cur_class  # set value
+
+    } else {
+
+      msg_class <- paste0("edit_nodes: The class of node ", i, " must be in ", paste0(cue_classes, collapse = ", "))
+      stop(msg_class)
+
+    }
+
+    # cue: ----
+
+    fft_mod$cue[i] <- cue[i]  # set value (by brute force)
+
+
+    # direction: ----
+
+    cur_dir <- direction[i]
+
+    # Get 6 direction symbols:
+    direction_symbols <- directions_df$direction[1:6]
+
+    if (cur_dir %in% direction_symbols){ # verify: valid direction symbol
+
+      fft_mod$direction[i] <- cur_dir  # set value
+
+    } else {
+
+      msg_dir <- paste0("edit_nodes: The direction symbol of node ", i, " must be in ", paste0(direction_symbols, collapse = ", "))
+      stop(msg_dir)
+
+    }
+
+    # threshold: ----
+
+    fft_mod$threshold[i] <- threshold[i]  # set value (by brute force)
+
+
+    # exit: ----
+
+    cur_exit <- as.numeric(exit[i])
+
+    if (i < n_cues){ # non-final nodes:
+
+      if (cur_exit %in% c(0, 1)){  # verify: valid non-final exit
+
+        fft_mod$exit[i] <- cur_exit  # set value
+
+      } else {
+
+        msg_exit <- paste0("edit_nodes: The exit of non-final node ", i, " must be in ", paste0(c(0, 1), collapse = ", "))
+        stop(msg_exit)
+
+      }
+
+    } else if (i == n_cues){ # final node:
+
+      if (cur_exit == 0.5){  # verify: valid final exit
+
+        fft_mod$exit[i] <- cur_exit  # set value
+
+      } else {
+
+        msg_final <- paste0("edit_nodes: The exit of final node ", i, " must be 0.5")
+        stop(msg_final)
+
+      }
+
+    } else { # Error:
+
+      stop("edit_nodes: Current node i exceeds n_cues of fft")
+
+    }
 
   } # for (i in nodes).
 
+  # +++ here now +++
 
   # # Determine new nodes:
   # new_nodes <- setdiff(1:n_cues, nodes)
@@ -455,7 +537,7 @@ edit_nodes <- function(fft, nodes = NA,
   #
   # }
 
-  # Output: ----
+  # Output: ------
 
   # # Repair row names:
   # row.names(fft_mod) <- 1:nrow(fft_mod)
