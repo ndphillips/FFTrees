@@ -51,7 +51,7 @@ breast.fft <- FFTrees(
   data = breast.train
 )
 
-# Predict classes for test data:
+# Predict classification outcomes for test data:
 breast.fft.pred <- predict(breast.fft,
   newdata = breast.test
 )
