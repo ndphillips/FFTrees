@@ -499,7 +499,7 @@ fftrees_grow_fan <- function(x,
           if (!is.null(my_goal)){
             valid_goal <- c(goal_options, my_goal)  # add my.goal (name) to default
           } else { # default:
-            valid_goal <- goal_options  # use (global) constant
+            valid_goal <- goal_options  # use (global constant)
           }
 
           valid_goal_str <- paste(valid_goal, collapse = ", ")
