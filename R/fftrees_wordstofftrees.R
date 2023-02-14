@@ -152,9 +152,10 @@ fftrees_wordstofftrees <- function(x,
   {
     classes_v <- rep(NA, nodes_n)
 
-    contains_brack <- stringr::str_detect(def[1:nodes_n], "\\[") | stringr::str_detect(def[1:nodes_n], "\\{")
-    classes_v[contains_brack] <- "c"
-    classes_v[contains_brack == FALSE] <- "n"
+    in_brackets <- stringr::str_detect(def[1:nodes_n], "\\[") | stringr::str_detect(def[1:nodes_n], "\\{")
+
+    classes_v[ in_brackets] <- "c"  # categorical (character, factor, logical)
+    classes_v[!in_brackets] <- "n"  # numeric (integer, numeric)
 
   }
 
