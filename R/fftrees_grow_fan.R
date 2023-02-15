@@ -68,11 +68,11 @@ fftrees_grow_fan <- function(x,
     if (x$params$max.levels > 1) {
       expand_ls <- lapply(1:(x$params$max.levels - 1),
                           FUN = function(x) {
-                            return(c(0, 1))
+                            return(exit_types[1:2]) # return(c(0, 1))
                           }
       )
 
-      expand_ls[[length(expand_ls) + 1]] <- .5
+      expand_ls[[length(expand_ls) + 1]] <- exit_types[3] # .5
       names(expand_ls) <- c(
         paste("exit.", 1:(x$params$max.levels - 1), sep = ""),
         paste("exit.", x$params$max.levels, sep = "")
@@ -85,7 +85,7 @@ fftrees_grow_fan <- function(x,
     }
 
     if (isTRUE(all.equal(x$params$max.levels, 1))) {
-      tree_dm <- data.frame("exit.1" = .5)
+      tree_dm <- data.frame("exit.1" = exit_types[3]) # .5)
     }
 
     tree_dm$tree.num <- 1:nrow(tree_dm)
@@ -529,20 +529,24 @@ fftrees_grow_fan <- function(x,
       # Step 3: Classify exemplars at current level: ------
       # ToDo: Use exit_types (global constant).
       {
-        if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
+        if (dplyr::near(exit_current, exit_types[2]) | dplyr::near(exit_current, exit_types[3])) {
+        # if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
 
           decide_1_index <- case_remaining_ix & cue_decisions == TRUE
 
           decision_v[decide_1_index] <- TRUE
           levelout_v[decide_1_index] <- level_current
+
         }
 
-        if (exit_current == 0 | dplyr::near(exit_current, .50)) {
+        if (exit_current == exit_types[1] | dplyr::near(exit_current, exit_types[3])) {
+        # if (exit_current == 0 | dplyr::near(exit_current, .50)) {
 
           decide_0_index <- is.na(decision_v) & cue_decisions == FALSE
 
           decision_v[decide_0_index] <- FALSE
           levelout_v[decide_0_index] <- level_current
+
         }
 
         # Update cost vectors:
