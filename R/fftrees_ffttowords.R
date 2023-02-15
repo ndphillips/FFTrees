@@ -243,11 +243,11 @@ fftrees_ffttowords <- function(x = NULL,
           # Positive directions (TRUE cases first):
           sentence_i_1 <- paste0(
             "If ", cue_v[i], " ", direction_pos_i, " {", threshold_v[i], "}, ",
-            exit_word, " ", decision.labels[2], "") # TRUE cases/right
+            exit_word, " ", decision.labels[2], "") # 1 / TRUE / signal / right cases
 
           sentence_i_2 <- paste0(
             ", otherwise, ", exit_word, " ",
-            decision.labels[1], ".") # FALSE cases/left
+            decision.labels[1], ".") # 0 / FALSE / noise / left cases
 
         }
 
@@ -268,11 +268,11 @@ fftrees_ffttowords <- function(x = NULL,
           # Positive directions (TRUE cases first):
           sentence_i_1 <- paste0(
             "If ", cue_v[i], " ", direction_pos_i, " ", threshold_v[i],
-            ", ", exit_word, " ", decision.labels[2], "") # TRUE cases/right
+            ", ", exit_word, " ", decision.labels[2], "") # 1 / TRUE / signal / right cases
 
           sentence_i_2 <- paste0(
             ", otherwise, ", exit_word, " ",
-            decision.labels[1], ".") # FALSE cases/left
+            decision.labels[1], ".") # 0 / FALSE / noise / left cases
 
         }
 
