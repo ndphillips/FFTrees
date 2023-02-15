@@ -89,14 +89,12 @@ negations_v <- c("not", "is not")  # (global constant)
 
 # - exit_types: ----
 
-# Exit types:
+# Exit types (as numeric):
+# 1. exit_types[1]: 0   representing FALSE, left, noise
+# 2. exit_types[2]: 1   representing TRUE, right, signal
+# 3. exit_types[3]: 0.5 representing 2/4, both, final
 
 exit_types <- c(0, 1, 0.5)  # (global constant)
-
-# Note:
-# 1. exit_types[1]: 0, FALSE, left, noise
-# 2. exit_types[2]: 1, TRUE, right, signal
-# 3. exit_types[3]: 0.5, 2/4, both, final
 
 
 
