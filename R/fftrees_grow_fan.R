@@ -63,6 +63,7 @@ fftrees_grow_fan <- function(x,
   # Setup trees: ----
 
   # [tree_dm, tree_stats_ls, level_stats_ls]
+  # ToDo: Use exit_types (global constant).
   {
     if (x$params$max.levels > 1) {
       expand_ls <- lapply(1:(x$params$max.levels - 1),
@@ -304,7 +305,7 @@ fftrees_grow_fan <- function(x,
 
         cues_name_new <- cue_best_df_current$cue[cue_best_i]
         cue_stats_new <- cue_best_df_current$cue[cue_best_i]
-        cue_cost_new <- x$params$cost.cues[[cues_name_new]]
+        cue_cost_new  <- x$params$cost.cues[[cues_name_new]]
         cue_class_new <- cue_best_df_current$class[cue_best_i]
         cue_threshold_new <- cue_best_df_current$threshold[cue_best_i]
         cue_direction_new <- cue_best_df_current$direction[cue_best_i]
@@ -526,6 +527,7 @@ fftrees_grow_fan <- function(x,
 
 
       # Step 3: Classify exemplars at current level: ------
+      # ToDo: Use exit_types (global constant).
       {
         if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
 
@@ -665,7 +667,7 @@ fftrees_grow_fan <- function(x,
 
       last_exit_direction <- level_stats_i$exit[level_stats_i$level == last_level_nr]
 
-      if (last_exit_direction != .5) {
+      if (last_exit_direction != exit_types[3]) {  # != .5:
 
         decision_v[levelout_v == last_level_nr] <- NA
 
@@ -705,7 +707,7 @@ fftrees_grow_fan <- function(x,
           my.goal.fun = my_goal_fun
         )
 
-        level_stats_i$exit[last_level_nr] <- .5
+        level_stats_i$exit[last_level_nr] <- exit_types[3]  # .5
 
 
         # Note: Why not use same stats as in level_stats_name_v above? (Here: "dprime" and "cost" missing): +++ here now +++
