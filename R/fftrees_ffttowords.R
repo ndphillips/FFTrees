@@ -143,10 +143,12 @@ fftrees_ffttowords <- function(x = NULL,
 
       # 1. Non-final nodes: ----
 
-      if (exit_i %in% c("0", "1")) {
+      non_final_exit_types <- as.character(exit_types[1:2])
 
-        # a. Node with positive exit:
-        if (exit_i == "1") {
+      if (exit_i %in% non_final_exit_types) {
+
+        # a. Node with positive exit ("1" / TRUE / signal / right):
+        if (exit_i == non_final_exit_types[2]) {
 
           if (class_v[i] %in% c("c", "l")) {
 
@@ -169,10 +171,10 @@ fftrees_ffttowords <- function(x = NULL,
         } # a. Node with positive exit.
 
 
-        # b. Node with negative exit:
-        if (exit_i == "0") {
+        # b. Node with negative exit ("0" / FALSE / noise / left):
+        if (exit_i == non_final_exit_types[1]) {
 
-          # Negate the direction:
+          # Negate the exit / cue threshold direction:
           direction_i <- switch(direction_v[i],
                                 "=" = "!=",
                                 "!=" = "=",
@@ -210,7 +212,8 @@ fftrees_ffttowords <- function(x = NULL,
 
       # 2. Final nodes: ----
 
-      if (exit_i %in% c(".5", "0.5", "0.50", "0.500")) {
+      # Final exit type (0.5 / both / final):
+      if (exit_i == as.character(exit_types[3]))  {
 
         direction_pos_i <- direction_v[i]
 

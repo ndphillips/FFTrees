@@ -333,7 +333,7 @@ drop_nodes <- function(fft, nodes = NA){
 
     new_exit_node <- max(new_nodes)
 
-    fft_mod$exit[new_exit_node] <- 0.5  # Set new exit node
+    fft_mod$exit[new_exit_node] <- exit_types[3]  # Set new exit node
 
     msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
     message(msg)
@@ -381,7 +381,7 @@ drop_nodes <- function(fft, nodes = NA){
 # Output: Modified version of fft (as df, but with modified nodes).
 #
 # Note: As edit_nodes() is ignorant of data, the values of class, cue, and threshold
-#       are currently NOT validated for current data.
+#       are currently NOT validated for a specific set of data.
 
 edit_nodes <- function(fft,
                        nodes = NA,  # as vector (1 or multiple nodes)
@@ -504,30 +504,30 @@ edit_nodes <- function(fft,
 
     if (!any(is.na(exit))){
 
-      cur_exit <- as.numeric(exit[i])
+      cur_exit <- get_exit_type(exit[i])
 
       if (node_i < n_cues){ # non-final nodes:
 
-        if (cur_exit %in% c(0, 1)){  # verify: valid non-final exit
+        if (cur_exit %in% exit_types[1:2]){  # verify: valid non-final exit
 
           fft_mod$exit[node_i] <- cur_exit  # set value
 
         } else {
 
-          msg_exit <- paste0("edit_nodes: The exit of non-final node ", node_i, " must be in ", paste0(c(0, 1), collapse = ", "))
+          msg_exit <- paste0("edit_nodes: The exit of non-final node ", node_i, " must be in ", paste0(exit_types[1:2], collapse = ", "))
           stop(msg_exit)
 
         }
 
       } else if (node_i == n_cues){ # final node:
 
-        if (cur_exit == 0.5){  # verify: valid final exit
+        if (cur_exit == exit_types[3]){  # verify: valid final exit
 
           fft_mod$exit[node_i] <- cur_exit  # set value
 
         } else {
 
-          msg_final <- paste0("edit_nodes: The exit of final node ", node_i, " must be 0.5")
+          msg_final <- paste0("edit_nodes: The exit of final node ", node_i, " must be ", exit_types[3])
           stop(msg_final)
 
         }
@@ -573,7 +573,7 @@ edit_nodes <- function(fft,
 #
 # edit_nodes(fft, nodes = c(1, 1, 1), exit = c(1, 0, 1))  # repeated change of 1 node works
 # edit_nodes(fft, nodes = c(1, 2, 2), exit = c(0, 0, 1))
-# edit_nodes(fft, nodes = c(1, 2, 3), exit = c(0, 0, 0.5))
+# edit_nodes(fft, nodes = c(1, 2, 3), exit = c("FALse", " Signal ", 3/6))
 
 
 
@@ -734,10 +734,10 @@ reorder_nodes <- function(fft, order = NA){
     # Current direction and threshold settings always predict Signal (1):
 
     # a. previous exit cue: Decide/predict 1 (signal)
-    fft_mod$exit[exit_cue_pos] <- 1  # (as by cue threshold definition)
+    fft_mod$exit[exit_cue_pos] <- exit_types[2]  # (as by cue threshold definition)
 
     # b. final cue: Make final exit bi-directional (0.5)
-    fft_mod$exit[n_cues] <- 0.5
+    fft_mod$exit[n_cues] <- exit_types[3]
 
     # Option 2:
     # Goal: Preserve the overall tree structure:

@@ -165,27 +165,27 @@ fftrees_wordstofftrees <- function(x,
 
       y <- unlist(strsplit(node_sentence, " "))
 
-      false_ix <- grep(tolower(decision_labels[1]), x = y)  # indices of FALSE/noise/0//left
-      true_ix  <- grep(tolower(decision_labels[2]), x = y)  # indices of TRUE/signal/1/right
+      false_ix <- grep(pattern = tolower(decision_labels[1]), x = y)  # indices of labels (for 0 / FALSE / noise / left exits)
+      true_ix  <- grep(pattern = tolower(decision_labels[2]), x = y)  # indices of labels (for 1 / TRUE / signal / right exits)
 
       if (any(grepl(decision_labels[2], x)) & any(grepl(decision_labels[1], y))) {
 
         if (min(true_ix) < min(false_ix)) {
-          return(1)
+          return(exit_types[2])  # == 1 / TRUE / signal / right
         }
 
         if (min(true_ix) > min(false_ix)) {
-          return(0)
+          return(exit_types[1])  # == 0 / FALSE / noise / left
         }
 
       }
 
       if (any(grepl(decision_labels[2], y)) & !any(grepl(decision_labels[1], y))) {
-        return(1)
+        return(exit_types[2])  # == 1 / TRUE / signal / right
       }
 
       if (!any(grepl("v", y)) & any(grepl(decision_labels[1], y))) {
-        return(0)
+        return(exit_types[1])  # == 0 / FALSE / noise / left
       }
 
     }))
@@ -271,17 +271,18 @@ fftrees_wordstofftrees <- function(x,
     # Convert to direction_f (formal symbol/forward direction/to signal):
     directions_v <- directions_df$direction_f[match(directions_v, table = directions_df$direction)]
 
-    # If any directions are 0, flip their direction:
-    flip_direction_ix <- (exits_v == 0)
+    # If any current exit types/directions are 0/FALSE/left/noise, flip their direction:
+    cur_exits <- get_exit_type(exits_v)
+    flip_direction_ix <- (cur_exits == exit_types[1])  # exit type == 0 / FALSE / left / noise
 
     directions_v[flip_direction_ix] <- directions_df$negation[match(directions_v[flip_direction_ix], table = directions_df$direction)]
 
   }
 
 
-  # Set final exit to .5: ----
+  # Set final exit (to .5): ----
 
-  exits_v[nodes_n] <- ".5"
+  exits_v[nodes_n] <- exit_types[3]
 
 
   # Save result in x$trees$definitions (1 line, as df): ----
