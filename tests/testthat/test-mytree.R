@@ -44,7 +44,7 @@ test_that("Can build tree based on custom tree in words (v2)", {
       cues = paste(c("thalach", "slope", "ca"), collapse = fft_node_sep), # "thalach;slope;ca",
       directions = paste(c(">", "!=", ">"),     collapse = fft_node_sep), # ">;!=;>",
       thresholds = paste(c("170", "flat", "0"), collapse = fft_node_sep), # "170;flat;0",
-      exits = paste(c("1", "0", ".5"),          collapse = fft_node_sep)  # "1;0;.5"
+      exits = paste(c("1", "0", "0.5"),          collapse = fft_node_sep)  # "1;0;.5"
     ),
     row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame")
     )
@@ -76,7 +76,7 @@ test_that("Can build tree based on custom tree in words (v3)", {
       cues = paste(c("thal", "age", "ca"),    collapse = fft_node_sep), # "thal;age;ca",
       directions = paste(c("!=", "<=", "<="), collapse = fft_node_sep), # "!=;<=;<=",
       thresholds = paste(c("fd", "40", "0"),  collapse = fft_node_sep), # "fd;40;0",
-      exits = paste(c("0", "0", ".5"),        collapse = fft_node_sep)  # "0;0;.5"
+      exits = paste(c("0", "0", "0.5"),        collapse = fft_node_sep)  # "0;0;.5"
     ),
     row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame")
     )
@@ -110,7 +110,7 @@ test_that("A custom tree in my.tree is built successfully (v4)", {
       cues = paste(c("sex", "age", "thal"),         collapse = fft_node_sep), # "sex;age;thal",
       directions = paste(c("=", ">=", "!="),        collapse = fft_node_sep), # "=;>=;!=",
       thresholds = paste(c("1", "45", "fd,normal"), collapse = fft_node_sep), # "1;45;fd,normal",
-      exits = paste(c("1", "0", ".5"),              collapse = fft_node_sep)  # "1;0;.5"
+      exits = paste(c("1", "0", "0.5"),             collapse = fft_node_sep)  # "1;0;.5"
     ), class = c(
       "tbl_df",
       "tbl", "data.frame"
