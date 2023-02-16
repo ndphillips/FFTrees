@@ -4,6 +4,59 @@
 
 # Functions for validating or verifying stuff: ------
 
+# verify_exit_type: ------
+
+# Goal: Ensure that a vector x contains valid exit types
+#       given the options of current exit_types (as global constant).
+
+verify_exit_type <- function(x){
+
+  valid <- FALSE
+
+  if ( all(x %in% exit_types) ) { # c1. only valid exit_types:
+
+    if ( x[length(x)] == exit_types[3] ){ # c2. final exit:
+
+      if ( all(x[-length(x)] %in% exit_types[1:2]) ){ # c3. non-final exits:
+
+        valid <- TRUE
+
+      } else {
+
+        stop("All non-final exit types must be in: ", paste(exit_types[1:2], collapse = ", "))
+
+      } # c3.
+
+    } else {
+
+      stop("The final node's exit type must be ", exit_types[3])
+
+    } # c2.
+
+  } else {
+
+    invalid_exits <- setdiff(x, exit_types)
+
+    stop("Some exit types are invalid: ", paste(invalid_exits, collapse = ", "))
+
+  } # c1.
+
+  # Output: ----
+
+  return(valid)
+
+} # verify_exit_type().
+
+# # Check:
+# verify_exit_type(c(1, 0, 1, 0.5))
+# verify_exit_type(c(0.5))
+#
+# # Fails:
+# verify_exit_type(c(1, 0, 2, 0))
+# verify_exit_type(c(1, 0, 1, 0))
+# verify_exit_type(c(1, 0, 0.5, 0.5))
+
+
 
 # verify_train_test_data: ------
 
