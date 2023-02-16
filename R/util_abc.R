@@ -347,6 +347,9 @@ get_best_tree <- function(x,
 #'
 #' @param x A vector of FFT exit descriptions.
 #'
+#' @param verify A flag to turn verification on/off (as logical).
+#' Default: \code{verify = TRUE}.
+#'
 #' @examples
 #' get_exit_type(c(0, 1, .5))
 #' get_exit_type(c(FALSE,   " True ",  2/4))
@@ -362,7 +365,7 @@ get_best_tree <- function(x,
 #'
 #' @export
 
-get_exit_type <- function(x){
+get_exit_type <- function(x, verify = TRUE){
 
   # Prepare: ----
 
@@ -391,8 +394,12 @@ get_exit_type <- function(x){
   extype[x == "final"] <- exit_types[3]
 
 
+  if (verify){
+
   # Verify that extype describes an FFT:
   verify_exit_type(extype) # verify (without consequences)
+
+  }
 
 
   # Output: ----

@@ -272,7 +272,7 @@ fftrees_wordstofftrees <- function(x,
     directions_v <- directions_df$direction_f[match(directions_v, table = directions_df$direction)]
 
     # If any current exit types/directions are 0/FALSE/left/noise, flip their direction:
-    cur_exits <- get_exit_type(exits_v)
+    cur_exits <- get_exit_type(exits_v, verify = FALSE)
     flip_direction_ix <- (cur_exits == exit_types[1])  # exit type == 0 / FALSE / left / noise
 
     directions_v[flip_direction_ix] <- directions_df$negation[match(directions_v[flip_direction_ix], table = directions_df$direction)]
