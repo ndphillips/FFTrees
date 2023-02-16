@@ -194,7 +194,7 @@ get_bacc_wacc <- function(sens, spec,  sens.w){
 #' a \code{goal} for which corresponding statistics are available
 #' in the designated \code{data} type (in \code{x$trees$stats}).
 #'
-#' Importantly, \code{get_best_tree} only identifies and selects the `tree` identifier
+#' Importantly, \code{get_best_tree} only identifies and selects the `tree` \emph{identifier}
 #' (as an integer) from the set of \emph{existing} trees with known statistics,
 #' rather than creating new trees or computing new cue thresholds.
 #' More specifically, \code{goal} is used for identifying and selecting the `tree`
@@ -214,8 +214,12 @@ get_bacc_wacc <- function(sens, spec,  sens.w){
 #'
 #' @return An integer denoting the \code{tree} that maximizes/minimizes \code{goal} in \code{data}.
 #'
+#' @family utility functions
+#'
 #' @seealso
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 get_best_tree <- function(x,
                           data,
@@ -323,11 +327,113 @@ get_best_tree <- function(x,
 
 
 
+# get_exit_type: ------
+
+# Goal: Convert/get various exit type descriptions (from a vector x)
+#       given current exit_types (given by global constant).
+# Output: Verified FFT exit types (else Error from verify_exit_type()).
+
+
+#' Get exit type (from a vector \code{x} of FFT exit descriptions)
+#'
+#' \code{get_exit_type} checks and converts a vector \code{x}
+#' of FFT exit descriptions into exits of an FFT
+#' that correspond to the current options of
+#' \code{exit_types} (as a global constant).
+#'
+#' \code{get_exit_type} also verifies that the exit types conform to an FFT
+#' (e.g., only the exits of the final node are bi-directional).
+#'
+#' @param x A vector of FFT exit descriptions.
+#'
+#' @examples
+#' get_exit_type(c(0, 1, .5))
+#' get_exit_type(c(FALSE,   " True ",  2/4))
+#' get_exit_type(c("noise", "signal", "final"))
+#' get_exit_type(c("left",  "right",  "both"))
+#'
+#' @return A vector of \code{exit_types} (or an error).
+#'
+#' @family utility functions
+#'
+#' @seealso
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
+
+get_exit_type <- function(x){
+
+  # Prepare: ----
+
+  extype <- rep(NA, length(x))  # initialize
+
+  x <- trimws(tolower(as.character(x)))  # 4robustness
+
+
+  # Main: ----
+
+  # Case 1:
+  extype[x == "0"]     <- exit_types[1]
+  extype[x == "false"] <- exit_types[1]
+  extype[x == "noise"] <- exit_types[1]
+  extype[x == "left"]  <- exit_types[1]
+
+  # Case 2:
+  extype[x == "1"]      <- exit_types[2]
+  extype[x == "true"]   <- exit_types[2]
+  extype[x == "signal"] <- exit_types[2]
+  extype[x == "right"]  <- exit_types[2]
+
+  # Case 3:
+  extype[x == "0.5"]   <- exit_types[3]
+  extype[x == "both"]  <- exit_types[3]
+  extype[x == "final"] <- exit_types[3]
+
+
+  # Verify that extype describes an FFT:
+  verify_exit_type(extype) # verify (without consequences)
+
+
+  # Output: ----
+
+  return(extype)
+
+} # get_exit_type().
+
+# # Check:
+# get_exit_type(c(0, FALSE, " Left ", " NOISE ", "both"))
+# get_exit_type(c(1, TRUE, " RigHT ", " SIGnal ", "final"))
+# get_exit_type(c(TRUE, "left ", " signaL ", 3/6))
+
+
 
 # get_fft_df: ------
 
 # Goal: Extract (and verify) ALL definitions from an FFTrees object (as 1 df).
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
+
+
+#' Get FFT definitions (from an \code{FFTrees} object \code{x})
+#'
+#' \code{get_fft_df} gets the FFT definitions
+#' of an \code{FFTrees} object \code{x}
+#' (as a \code{data.frame}).
+#'
+#' In addition to looking up \code{x$trees$definitions},
+#' \code{get_fft_df} verifies that the FFT definitions
+#' are valid (given current settings).
+#'
+#' @param x An \code{FFTrees} object.
+#'
+#' @return A set of FFT definitions (as a \code{data.frame}/\code{tibble}).
+#'
+#' @family utility functions
+#'
+#' @seealso
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
+
 
 get_fft_df <- function(x){
 
@@ -478,6 +584,7 @@ all_combinations <- function(x, length){
   }
 
   # Output: ----
+
   return(out)
 
 } # all_combinations().
