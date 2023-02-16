@@ -29,7 +29,9 @@ verify_exit_type <- function(x){
 
     } else {
 
-      stop("The final node's exit type must be ", exit_types[3])
+      cur_fin_exit <- x[length(x)]
+
+      stop("The final node's exit type must be ", exit_types[3], ", but is ", cur_fin_exit)
 
     } # c2.
 
