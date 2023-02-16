@@ -75,7 +75,7 @@ fftrees_ffttowords <- function(x = NULL,
 
   x$trees$inwords <- vector("list", length = n_trees)
 
-  exit_word <- tolower(exit_word(mydata))  # either 'train':'decide' or 'test':'predict'
+  get_exit_word <- tolower(get_exit_word(mydata))  # either 'train':'decide' or 'test':'predict'
 
 
 
@@ -154,7 +154,7 @@ fftrees_ffttowords <- function(x = NULL,
 
             sentence_i <- paste0(
               "If ", cue_v[i], " ", direction_v[i], " {", threshold_v[i],
-              "}, ", exit_word, " ", decision.labels[2], ".")
+              "}, ", get_exit_word, " ", decision.labels[2], ".")
 
           }
 
@@ -165,7 +165,7 @@ fftrees_ffttowords <- function(x = NULL,
 
             sentence_i <- paste0(
               "If ", cue_v[i], " ", direction_v[i], " ", threshold_i,
-              ", ", exit_word, " ", decision.labels[2], ".")
+              ", ", get_exit_word, " ", decision.labels[2], ".")
           }
 
         } # a. Node with positive exit.
@@ -188,7 +188,7 @@ fftrees_ffttowords <- function(x = NULL,
 
             sentence_i <- paste0(
               "If ", cue_v[i], " ", direction_i, " {", threshold_v[i], "}, ",
-              exit_word, " ", decision.labels[1], ".")
+              get_exit_word, " ", decision.labels[1], ".")
 
           }
 
@@ -199,7 +199,7 @@ fftrees_ffttowords <- function(x = NULL,
 
             sentence_i <- paste0(
               "If ", cue_v[i], " ", direction_i, " ", threshold_i,
-              ", ", exit_word, " ", decision.labels[1], ".")
+              ", ", get_exit_word, " ", decision.labels[1], ".")
 
           }
 
@@ -243,10 +243,10 @@ fftrees_ffttowords <- function(x = NULL,
           # Positive directions (TRUE cases first):
           sentence_i_1 <- paste0(
             "If ", cue_v[i], " ", direction_pos_i, " {", threshold_v[i], "}, ",
-            exit_word, " ", decision.labels[2], "") # 1 / TRUE / signal / right cases
+            get_exit_word, " ", decision.labels[2], "") # 1 / TRUE / signal / right cases
 
           sentence_i_2 <- paste0(
-            ", otherwise, ", exit_word, " ",
+            ", otherwise, ", get_exit_word, " ",
             decision.labels[1], ".") # 0 / FALSE / noise / left cases
 
         }
@@ -268,10 +268,10 @@ fftrees_ffttowords <- function(x = NULL,
           # Positive directions (TRUE cases first):
           sentence_i_1 <- paste0(
             "If ", cue_v[i], " ", direction_pos_i, " ", threshold_v[i],
-            ", ", exit_word, " ", decision.labels[2], "") # 1 / TRUE / signal / right cases
+            ", ", get_exit_word, " ", decision.labels[2], "") # 1 / TRUE / signal / right cases
 
           sentence_i_2 <- paste0(
-            ", otherwise, ", exit_word, " ",
+            ", otherwise, ", get_exit_word, " ",
             decision.labels[1], ".") # 0 / FALSE / noise / left cases
 
         }

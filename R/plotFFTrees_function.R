@@ -1015,7 +1015,7 @@ plot.FFTrees <- function(x = NULL,
 
               }
 
-              exit_word <- exit_word(data)  # either 'train':'decide' or 'test':'predict'
+              get_exit_word <- get_exit_word(data)  # either 'train':'decide' or 'test':'predict'
 
 
               # (a) Noise panel (on left): ----
@@ -1034,7 +1034,7 @@ plot.FFTrees <- function(x = NULL,
               # Heading:
               text(-plot_width  * .60 * f_x,
                    -plot_height * leg_head_y * f_y,
-                   paste(exit_word, decision.labels[1], sep = " "),
+                   paste(get_exit_word, decision.labels[1], sep = " "),
                    cex = 1.2, font = 3
               )
 
@@ -1061,7 +1061,7 @@ plot.FFTrees <- function(x = NULL,
               # Heading:
               text( plot_width  * .60 * f_x,
                     -plot_height * leg_head_y * f_y,
-                    paste(exit_word, decision.labels[2], sep = " "),
+                    paste(get_exit_word, decision.labels[2], sep = " "),
                     cex = 1.2, font = 3
               )
 
