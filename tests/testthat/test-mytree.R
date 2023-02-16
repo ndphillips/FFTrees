@@ -1,24 +1,26 @@
 context("test-mytree")
 
 
+
 test_that("Can build tree based on best auto-generated tree in words (v1)", {
 
   x <- FFTrees(diagnosis ~ .,
-    data = heartdisease,
-    quiet = TRUE
+               data = heartdisease,
+               quiet = TRUE
   )
 
   best_tree_in_words <- x$trees$inwords[[1]]
 
   x <- FFTrees(diagnosis ~ .,
-    data = heart.train,
-    data.test = heart.test,
-    my.tree = best_tree_in_words
+               data = heart.train,
+               data.test = heart.test,
+               my.tree = best_tree_in_words
   )
 
   expect_s3_class(object = x, class = "FFTrees")
 
 })
+
 
 
 test_that("Can build tree based on custom tree in words (v2)", {
@@ -28,9 +30,9 @@ test_that("Can build tree based on custom tree in words (v2)", {
    If ca <= 0, decide False, otherwise, decide True."
 
   x <- FFTrees(diagnosis ~ .,
-    data = heart.train,
-    data.test = heart.test,
-    my.tree = my_tree_in_words
+               data = heart.train,
+               data.test = heart.test,
+               my.tree = my_tree_in_words
   )
 
   expect_s3_class(object = x, class = "FFTrees")
@@ -44,13 +46,14 @@ test_that("Can build tree based on custom tree in words (v2)", {
       cues = paste(c("thalach", "slope", "ca"), collapse = fft_node_sep), # "thalach;slope;ca",
       directions = paste(c(">", "!=", ">"),     collapse = fft_node_sep), # ">;!=;>",
       thresholds = paste(c("170", "flat", "0"), collapse = fft_node_sep), # "170;flat;0",
-      exits = paste(c("1", "0", "0.5"),          collapse = fft_node_sep)  # "1;0;.5"
+      exits = paste(c(1, 0, .5),                collapse = fft_node_sep)  # "1;0;.5"
     ),
     row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame")
     )
   )
 
 })
+
 
 
 test_that("Can build tree based on custom tree in words (v3)", {
@@ -60,9 +63,9 @@ test_that("Can build tree based on custom tree in words (v3)", {
    If ca > 0, decide False, otherwise, decide True."
 
   x <- FFTrees(diagnosis ~ .,
-    data = heart.train,
-    data.test = heart.test,
-    my.tree = my_tree_2
+               data = heart.train,
+               data.test = heart.test,
+               my.tree = my_tree_2
   )
 
   expect_s3_class(object = x, class = "FFTrees")
@@ -76,13 +79,14 @@ test_that("Can build tree based on custom tree in words (v3)", {
       cues = paste(c("thal", "age", "ca"),    collapse = fft_node_sep), # "thal;age;ca",
       directions = paste(c("!=", "<=", "<="), collapse = fft_node_sep), # "!=;<=;<=",
       thresholds = paste(c("fd", "40", "0"),  collapse = fft_node_sep), # "fd;40;0",
-      exits = paste(c("0", "0", "0.5"),        collapse = fft_node_sep)  # "0;0;.5"
+      exits = paste(c(0, 0, .5),              collapse = fft_node_sep)  # "0;0;.5"
     ),
     row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame")
     )
   )
 
 })
+
 
 
 test_that("A custom tree in my.tree is built successfully (v4)", {
@@ -99,7 +103,7 @@ test_that("A custom tree in my.tree is built successfully (v4)", {
                If age < 45, predict Healthy.
                If thal = {fd, normal}, predict Healthy,
                (and ignore the rest of this sentence)."
-    )
+  )
 
   expect_identical(
     object = my.fft$trees$definitions,
@@ -110,7 +114,7 @@ test_that("A custom tree in my.tree is built successfully (v4)", {
       cues = paste(c("sex", "age", "thal"),         collapse = fft_node_sep), # "sex;age;thal",
       directions = paste(c("=", ">=", "!="),        collapse = fft_node_sep), # "=;>=;!=",
       thresholds = paste(c("1", "45", "fd,normal"), collapse = fft_node_sep), # "1;45;fd,normal",
-      exits = paste(c("1", "0", "0.5"),             collapse = fft_node_sep)  # "1;0;.5"
+      exits = paste(c(1, 0, .5),                    collapse = fft_node_sep)  # "1;0;.5"
     ), class = c(
       "tbl_df",
       "tbl", "data.frame"
