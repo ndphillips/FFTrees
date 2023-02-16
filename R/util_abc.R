@@ -369,7 +369,7 @@ get_exit_type <- function(x, verify = TRUE){
 
   # Prepare: ----
 
-  extype <- rep(NA, length(x))  # initialize
+  extypes <- rep(NA, length(x))  # initialize
 
   x <- trimws(tolower(as.character(x)))  # 4robustness
 
@@ -377,41 +377,64 @@ get_exit_type <- function(x, verify = TRUE){
   # Main: ----
 
   # Case 1:
-  extype[x == "0"]     <- exit_types[1]
-  extype[x == "false"] <- exit_types[1]
-  extype[x == "noise"] <- exit_types[1]
-  extype[x == "left"]  <- exit_types[1]
+  extyp_1 <- exit_types[1]  # from global constant
+
+  extypes[x == extyp_1] <- extyp_1
+  extypes[x == "0"]     <- extyp_1
+  extypes[x == "false"] <- extyp_1
+  extypes[x == "noise"] <- extyp_1
+  extypes[x == "left"]  <- extyp_1
 
   # Case 2:
-  extype[x == "1"]      <- exit_types[2]
-  extype[x == "true"]   <- exit_types[2]
-  extype[x == "signal"] <- exit_types[2]
-  extype[x == "right"]  <- exit_types[2]
+  extyp_2 <- exit_types[2]  # from global constant
+
+  extypes[x == extyp_2]  <- extyp_2
+  extypes[x == "1"]      <- extyp_2
+  extypes[x == "true"]   <- extyp_2
+  extypes[x == "signal"] <- extyp_2
+  extypes[x == "right"]  <- extyp_2
 
   # Case 3:
-  extype[x == "0.5"]   <- exit_types[3]
-  extype[x == "both"]  <- exit_types[3]
-  extype[x == "final"] <- exit_types[3]
+  extyp_3 <- exit_types[3]  # from global constant
+
+  extypes[x == extyp_3] <- extyp_3
+  extypes[x == "0.5"]   <- extyp_3
+  extypes[x == "both"]  <- extyp_3
+  extypes[x == "final"] <- extyp_3
 
 
   if (verify){
 
-  # Verify that extype describes an FFT:
-  verify_exit_type(extype) # verify (without consequences)
+  # Verify that extypes describe an FFT:
+  verify_exit_type(extypes) # verify (without consequences)
 
   }
 
 
   # Output: ----
 
-  return(extype)
+  return(extypes)
 
 } # get_exit_type().
 
 # # Check:
 # get_exit_type(c(0, FALSE, " Left ", " NOISE ", "both"))
 # get_exit_type(c(1, TRUE, " RigHT ", " SIGnal ", "final"))
-# get_exit_type(c(TRUE, "left ", " signaL ", 3/6))
+# get_exit_type(c(TRUE, FALSE, " right ", "LEFT ", " signaL ", " Noise", 3/6))
+
+
+
+
+# get_exit_word: ------
+
+# Goal: Get "Decide" for 'train' data vs. "Predict" for 'test' data.
+
+get_exit_word <- function(data){
+
+  if (data == "test"){ "Predict" } else { "Decide" }
+
+} # get_exit_word().
+
 
 
 
@@ -498,16 +521,6 @@ add_quotes <- function(x) {
   toString(sQuote(x))
 
 } # add_quotes().
-
-
-
-# exit_word: ------
-
-exit_word <- function(data){
-
-  if (data == "test"){ "Predict" } else { "Decide" }
-
-} # exit_word().
 
 
 
