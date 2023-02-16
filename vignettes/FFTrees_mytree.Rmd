@@ -133,7 +133,7 @@ The formal definition of our new FFT is available from the `FFTrees` object\ `my
 
 ```{r my-tree-def-1}
 # Get FFT definition(s):
-my_fft$trees$definitions
+get_fft_df(my_fft)  # my_fft$trees$definitions
 ```
 
 <!-- Note that noise exits (False/0) must have flipped direction symbols, as tree definitions always refer to signal (True/1): -->
@@ -194,7 +194,7 @@ As this seems (a more prosaic version of) what we wanted, let's visualize the be
 plot(my_fft_2)
 
 # FFT definition:
-my_fft_2$trees$definitions
+get_fft_df(my_fft_2)  # my_fft_2$trees$definitions
 # Note the flipped direction value for 2nd cue (exit = '0'):
 # 'if (cp  = a), predict 1' in the tree definition corresponds to 
 # 'if (cp != a), predict 0' in the my.tree description and plot.  
