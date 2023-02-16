@@ -4,10 +4,13 @@
 \alias{get_exit_type}
 \title{Get exit type (from a vector \code{x} of FFT exit descriptions)}
 \usage{
-get_exit_type(x)
+get_exit_type(x, verify = TRUE)
 }
 \arguments{
 \item{x}{A vector of FFT exit descriptions.}
+
+\item{verify}{A flag to turn verification on/off (as logical).
+Default: \code{verify = TRUE}.}
 }
 \value{
 A vector of \code{exit_types} (or an error).
