@@ -79,6 +79,7 @@ directions_df <- data.frame(                          # (global constant)
   stringsAsFactors = FALSE)  # (global constant)
 
 
+
 # - negations_v: ----
 
 # Negation markers in verbal tree node descriptions (words):
@@ -97,46 +98,6 @@ negations_v <- c("not", "is not")  # (global constant)
 exit_types <- c(0, 1, 0.5)  # (global constant)
 
 
-
-# get_exit_type: ----
-
-get_exit_type <- function(x){
-
-  # Prepare: ----
-  extype <- rep(NA, length(x))  # initialize
-
-  x <- trimws(tolower(as.character(x))) # 4robustness
-
-
-  # Main: ----
-
-  # Case 1:
-  extype[x == "0"]     <- exit_types[1]
-  extype[x == "false"] <- exit_types[1]
-  extype[x == "noise"] <- exit_types[1]
-  extype[x == "left"]  <- exit_types[1]
-
-  # Case 2:
-  extype[x == "1"]      <- exit_types[2]
-  extype[x == "true"]   <- exit_types[2]
-  extype[x == "signal"] <- exit_types[2]
-  extype[x == "right"]  <- exit_types[2]
-
-  # Case 3:
-  extype[x == "0.5"]   <- exit_types[3]
-  extype[x == "both"]  <- exit_types[3]
-  extype[x == "final"] <- exit_types[3]
-
-  # Output: ----
-
-  return(extype)
-
-} # get_exit_type().
-
-# # Check:
-# get_exit_type(c(0, FALSE, " Left ", " NOISE "))
-# get_exit_type(c(1, TRUE, " RigHT ", " SIGnal "))
-# get_exit_type(c(0.5, 2/4, " boTH", " FINal "))
 
 
 # ToDo: ------
