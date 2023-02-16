@@ -314,13 +314,13 @@ fftrees_apply <- function(x,
 
       # classify_now:
 
-      if (isTRUE(all.equal(exit_i, 0))) {
+      if (isTRUE(all.equal(exit_i, exit_types[1]))) { # exit_i 0:
         classify_now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
       }
-      if (isTRUE(all.equal(exit_i, 1))) {
+      if (isTRUE(all.equal(exit_i, exit_types[2]))) { # exit_i 1:
         classify_now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)
       }
-      if (isTRUE(all.equal(exit_i, .5))) {
+      if (isTRUE(all.equal(exit_i, exit_types[3]))) { # exit_i .5:
         classify_now <- is.na(decisions_df$decision)
       }
 
@@ -328,14 +328,14 @@ fftrees_apply <- function(x,
       # Handle NAs: ----
 
       # If this is NOT the final node, then don't classify NA cases:
-      if (exit_i %in% c(0, 1)) {
+      if (exit_i %in% exit_types[1:2]) { # c(0, 1)
         classify_now[is.na(classify_now)] <- FALSE
       }
 
       # [was:] If this IS the final node, then classify NA cases into the most common class [?: seems not done here]
 
       # If this IS the final node, then classify NA cases according to allNA.pred value:
-      if (exit_i %in% .5) {
+      if (exit_i %in% exit_types[3]) { # .5:
         decisions_df$current_decision[is.na(decisions_df$current_decision)] <- allNA.pred
       }
 

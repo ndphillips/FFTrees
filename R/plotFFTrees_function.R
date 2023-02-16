@@ -1015,7 +1015,7 @@ plot.FFTrees <- function(x = NULL,
 
               }
 
-              exit_word <- exit_word(data)  # either 'train':'decide' or 'test':'predict'
+              get_exit_word <- get_exit_word(data)  # either 'train':'decide' or 'test':'predict'
 
 
               # (a) Noise panel (on left): ----
@@ -1034,7 +1034,7 @@ plot.FFTrees <- function(x = NULL,
               # Heading:
               text(-plot_width  * .60 * f_x,
                    -plot_height * leg_head_y * f_y,
-                   paste(exit_word, decision.labels[1], sep = " "),
+                   paste(get_exit_word, decision.labels[1], sep = " "),
                    cex = 1.2, font = 3
               )
 
@@ -1061,7 +1061,7 @@ plot.FFTrees <- function(x = NULL,
               # Heading:
               text( plot_width  * .60 * f_x,
                     -plot_height * leg_head_y * f_y,
-                    paste(exit_word, decision.labels[2], sep = " "),
+                    paste(get_exit_word, decision.labels[2], sep = " "),
                     cex = 1.2, font = 3
               )
 
@@ -1173,9 +1173,10 @@ plot.FFTrees <- function(x = NULL,
 
               # Left (Noise) classification / New level: ----
 
-              # Exit node on left: ----
+              # Exit node on 0 / FALSE / noise / left: ----
 
-              if (level_stats$exit[level_i] %in% c(0, .5) | paste(level_stats$exit[level_i]) %in% c("0", ".5")) {
+              # if (level_stats$exit[level_i] %in% c(0, .5) | paste(level_stats$exit[level_i]) %in% c("0", ".5")) {
+              if ( (level_stats$exit[level_i] %in% exit_types[c(1, 3)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(1, 3)], collapse = ", ")) ) {
 
                 segments(subplot_center[1],
                          subplot_center[2] + 1,
@@ -1279,9 +1280,10 @@ plot.FFTrees <- function(x = NULL,
               } # if (exit node on left).
 
 
-              # New level on left: ----
+              # New level on 1 / TRUE / signal / right: ----
 
-              if ((level_stats$exit[level_i] %in% c(1)) | (paste(level_stats$exit[level_i]) %in% c("1"))) {
+              # if ((level_stats$exit[level_i] %in% c(1)) | (paste(level_stats$exit[level_i]) %in% c("1"))) {
+              if ( (level_stats$exit[level_i] %in% exit_types[c(2)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(2)], collapse = ", ")) ) {
 
                 segments(subplot_center[1],
                          subplot_center[2] + 1,
@@ -1320,14 +1322,15 @@ plot.FFTrees <- function(x = NULL,
 
                 }
 
-              } # if (new level on left).
+              } # if (new level on right).
 
 
               # Right (Signal) classification / New level: ----
 
-              # Exit node on right: ----
+              # Exit node on 1 / TRUE / signal / right: ----
 
-              if ((level_stats$exit[level_i] %in% c(1, .5)) | (paste(level_stats$exit[level_i]) %in% c("1", ".5"))) {
+              # if ((level_stats$exit[level_i] %in% c(1, .5)) | (paste(level_stats$exit[level_i]) %in% c("1", ".5"))) {
+              if ( (level_stats$exit[level_i] %in% exit_types[c(2, 3)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(2, 3)], collapse = ", ")) ) {
 
                 segments(subplot_center[1],
                          subplot_center[2] + 1,
@@ -1433,9 +1436,10 @@ plot.FFTrees <- function(x = NULL,
               } # if (exit node on right).
 
 
-              # New level on right: ----
+              # New level on 0 / FALSE / noise / left: ----
 
-              if (level_stats$exit[level_i] %in% 0 | paste(level_stats$exit[level_i]) %in% c("0")) {
+              # if (level_stats$exit[level_i] %in% 0 | paste(level_stats$exit[level_i]) %in% c("0")) {
+              if ( (level_stats$exit[level_i] %in% exit_types[c(1)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(1)], collapse = ", ")) ) {
 
                 segments(subplot_center[1],
                          subplot_center[2] + 1,
@@ -1486,22 +1490,24 @@ plot.FFTrees <- function(x = NULL,
 
               # Update plot center: ----
 
-              if (identical(paste(level_stats$exit[level_i]), "0")) {
+              # if (identical(paste(level_stats$exit[level_i]), "0")) { # 0 / FALSE / noise / left:
+              if (identical(paste(level_stats$exit[level_i]), paste0(exit_types[1]))) {
 
                 subplot_center <- c(
                   subplot_center[1] + 2,
                   subplot_center[2] - 4
                 )
-              } # if (identical exit 0 etc.
+              } # if (identical exit 0 / left etc.
 
-              if (identical(paste(level_stats$exit[level_i]), "1")) {
+              # if (identical(paste(level_stats$exit[level_i]), "1")) { # 1 / TRUE / signal / right:
+              if (identical(paste(level_stats$exit[level_i]), paste0(exit_types[2]))) {
 
                 subplot_center <- c(
                   subplot_center[1] - 2,
                   subplot_center[2] - 4
                 )
 
-              } # if (identical exit 1 etc.
+              } # if (identical exit 1 / right etc.
 
             } # for (level_i etc. loop.
 
