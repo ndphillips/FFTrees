@@ -11,10 +11,11 @@ get_best_tree(x, data, goal, my.goal.max = TRUE)
 
 \item{data}{The type of data to consider (as character: either 'train' or 'test').}
 
-\item{goal}{character. A goal to maximize or minimize when selecting a tree from an existing \code{x}
-(for which values exist in \code{x$trees$stats}).}
+\item{goal}{A goal (as character) to be maximized or minimized when selecting a tree
+from an existing \code{FFTrees} object \code{x} (with existing \code{x$trees$stats}).}
 
-\item{my.goal.max}{logical. Default direction for user-defined \code{my.goal}: Should \code{my.goal} be maximized?
+\item{my.goal.max}{Default direction for user-defined \code{my.goal} (as logical):
+Should \code{my.goal} be maximized?
 Default: \code{my.goal.max = TRUE}.}
 }
 \value{
@@ -28,7 +29,7 @@ a \code{goal} for which corresponding statistics are available
 in the designated \code{data} type (in \code{x$trees$stats}).
 }
 \details{
-Importantly, \code{get_best_tree} only identifies and selects the `tree` identifier
+Importantly, \code{get_best_tree} only identifies and selects the `tree` \emph{identifier}
 (as an integer) from the set of \emph{existing} trees with known statistics,
 rather than creating new trees or computing new cue thresholds.
 More specifically, \code{goal} is used for identifying and selecting the `tree`
@@ -38,4 +39,9 @@ creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
 }
 \seealso{
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+
+Other utility functions: 
+\code{\link{get_exit_type}()},
+\code{\link{get_fft_df}()}
 }
+\concept{utility functions}
