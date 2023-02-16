@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9002
+## 1.9.0.9004
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -15,7 +15,11 @@ Changes since last release:
 
 ### Major changes 
 
-- none yet.
+- Added utility functions (and corresponding verifications):
+    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`)
+    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`)
+    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object
+
 
 <!-- Minor: --> 
 
@@ -30,6 +34,7 @@ Changes since last release:
 
 ### Details 
 
+- Added `exit_types` as global constant.
 - Revised documentation and vignettes.
 
 <!-- Development version: --> 
@@ -442,6 +447,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-11.]
+[File `NEWS.md` last updated on 2023-02-16.]
 
 <!-- eof. -->
