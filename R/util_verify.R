@@ -4,6 +4,46 @@
 
 # Functions for validating or verifying stuff: ------
 
+
+# verify_dir_sym: ------
+
+# Goal: Verify a vector x of direction symbols
+#       (given global constant directions_df)
+
+verify_dir_sym <- function(x){
+
+  valid <- FALSE
+
+  # Get first 6 direction symbols:
+  dir_sym <- directions_df$direction[1:6]  # from global constant.
+
+  if (all(x %in% dir_sym)){ # verify: valid direction symbol
+
+    valid <- TRUE  # set value
+
+  } else {
+
+    missing_sym <- setdiff(x, dir_sym)
+    msg <- paste0("verify_dir_sym: Some symbols (", paste0(missing_sym, collapse = ", "),
+                  ") are NOT in (", paste0(dir_sym, collapse = ", "), ")")
+    message(msg)
+
+  }
+
+
+  # Output: ----
+
+  return(valid)
+
+} # verify_dir_sym().
+
+# # Check:
+# verify_dir_sym(c("=", "!=", ">", ">=", "<", "<=", "=")) # is TRUE
+# verify_dir_sym(c("==")) # is FALSE
+# verify_dir_sym(c("=<", "+", "=>")) # are FALSE
+
+
+
 # verify_exit_type: ------
 
 # Goal: Ensure that a vector x contains valid exit types
