@@ -383,7 +383,12 @@ verify_fft_as_df <- function(fft_df){
 
   if (all(req_tree_vars %in% provided_vars)){
 
-    # ToDo: Verify variables further (e.g., verify their contents).
+    # Verify variables further (e.g., verify their contents):
+    # ToDo: verify class (requires data)
+    # ToDo: verify cue (requires data)
+    testthat::expect_true(verify_dir_sym(fft_df$direction))
+    # ToDo: verify threshold
+    testthat::expect_true(verify_exit_type(fft_df$exit))
 
     return(TRUE)
 
