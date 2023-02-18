@@ -292,7 +292,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 add_nodes <- function(fft,
                       nodes = NA,  # as vector (1 integer or multiple nodes)
-                      class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft (as df)
+                      class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
                       my.node = NA){
 
   # Prepare: ------
@@ -320,143 +320,113 @@ add_nodes <- function(fft,
     stop("edit_nodes: All modifier args (e.g., nodes, ..., exit) must have the same length.")
   }
 
-  n_cues <- nrow(fft)
+  n_cues  <- nrow(fft)         # N of existing fft nodes
+  n_nodes <- length(nodes)     # N of new nodes
+  n_total <- n_cues + n_nodes  # N of nodes defined for new fft
 
   # Special case 1:
-  if (any(nodes %in% 1:n_cues == FALSE)){ # notify that nodes are missing:
+  if (max(nodes) > n_total){
 
-    missing_nodes <- setdiff(nodes, 1:n_cues)
-
-    msg <- paste0("edit_nodes: Some nodes do not occur in FFT and will be ignored: ",
-                  paste(missing_nodes, collapse = ", "))
-
+    msg <- paste0("add_nodes: Maximum node value (", max(nodes), ") > total of defined nodes (", n_total, ")")
     message(msg)
 
-    # Remove missing nodes:
-    nodes <- setdiff(nodes, missing_nodes)
+    # Adjusting values of nodes beyond n_total:
+    ix_decr <- (nodes > n_total)
+    nodes[ix_decr] <- (n_total - sum(ix_decr) + 1):n_total
+
+    message("Adjusted nodes to ", paste(nodes, collapse = ", "))
+
+  }
+
+  # Special case 2:
+  if (any(duplicated(nodes))){
+
+    # Find the last ix of each unique node:
+    uni_nodes <- unique(nodes)
+    last_node_ix <- rep(NA, length(uni_nodes))
+
+    for (i in seq_along(uni_nodes)){ # loop though unique nodes:
+
+      cur_node <- uni_nodes[i]
+
+      last_node_ix[i] <- max(which(nodes == cur_node))  # last ix
+
+    }
+
+    # Remove duplicated nodes:
+    nodes <- nodes[last_node_ix]
+
+    message(paste0("add_nodes: Removing duplicate nodes leaves nodes = ", paste0(nodes, collapse = ", ")))
+
+    # Adjust other inputs accordingly:
+    class <- class[last_node_ix]
+    cue <- cue[last_node_ix]
+    direction <- direction[last_node_ix]
+    threshold <- threshold[last_node_ix]
+    exit <- exit[last_node_ix]
+
+    n_nodes <- length(nodes)     # N of new nodes
+    n_total <- n_cues + n_nodes  # N of nodes defined for new fft
 
   }
 
 
   # Main: ------
 
-  fft_mod <- fft  # copy
+  new_row <- rep(NA, n_total)
+  fft_new <- data.frame(class = new_row,
+                        cue = new_row,
+                        direction = new_row,
+                        threshold = new_row,
+                        exit = new_row)
+
+  cue_i  <- 1
+  ix_old <- cue_i:n_cues
 
   for (i in seq_along(nodes)){ # loop through nodes:
 
+    # print(paste0("i = ", i)) # 4debugging
+
     node_i <- nodes[i]
+    # print(paste0("node_i = ", node_i)) # 4debugging
 
-    # class: ----
+    if (node_i <= max(ix_old)){
 
-    if (!any(is.na(class))){
+      ix_inc <- (node_i <= ix_old)  # indices to increment
 
-      cur_class <- tolower(class[i])
+      ix_old[ix_inc] <- ix_old[ix_inc] + 1  # increment indices
+      # print(ix_old) # 4debugging
 
-      if (cur_class %in% cue_classes){ # verify: valid cue class
-
-        fft_mod$class[node_i] <- cur_class  # set value
-
-      } else {
-
-        msg_class <- paste0("edit_nodes: The class of node ", node_i, " must be in ", paste0(cue_classes, collapse = ", "))
-        stop(msg_class)
-
-      }
-
-    } # class.
-
-
-    # cue: ----
-
-    if (!any(is.na(cue))){
-
-      fft_mod$cue[node_i] <- cue[i]  # set value (unchanged/by brute force)
+      # cue_i <- cue_i + 1
+      # print(paste0("cue_i = ", cue_i)) # 4debugging
 
     }
 
-
-    # direction: ----
-
-    if (!any(is.na(direction))){
-
-      cur_dir <- direction[i]
-
-      # Get 6 direction symbols:
-      direction_symbols <- directions_df$direction[1:6]
-
-      if (cur_dir %in% direction_symbols){ # verify: valid direction symbol
-
-        fft_mod$direction[node_i] <- cur_dir  # set value
-
-      } else {
-
-        msg_dir <- paste0("edit_nodes: The direction symbol of node ", node_i, " must be in ", paste0(direction_symbols, collapse = ", "))
-        stop(msg_dir)
-
-      }
-
-    } # direction.
-
-
-    # threshold: ----
-
-    if (!any(is.na(threshold))){
-
-      fft_mod$threshold[node_i] <- threshold[i]  # set value (unchanged/by brute force)
-
-    } # threshold.
-
-
-    # exit: ----
-
-    if (!any(is.na(exit))){
-
-      cur_exit <- get_exit_type(exit[i])
-
-      if (node_i < n_cues){ # non-final nodes:
-
-        if (cur_exit %in% exit_types[1:2]){  # verify: valid non-final exit
-
-          fft_mod$exit[node_i] <- cur_exit  # set value
-
-        } else {
-
-          msg_exit <- paste0("edit_nodes: The exit of non-final node ", node_i, " must be in ", paste0(exit_types[1:2], collapse = ", "))
-          stop(msg_exit)
-
-        }
-
-      } else if (node_i == n_cues){ # final node:
-
-        if (cur_exit == exit_types[3]){  # verify: valid final exit
-
-          fft_mod$exit[node_i] <- cur_exit  # set value
-
-        } else {
-
-          msg_final <- paste0("edit_nodes: The exit of final node ", node_i, " must be ", exit_types[3])
-          stop(msg_final)
-
-        }
-
-      } else { # Error:
-
-        stop("edit_nodes: Current node_i exceeds n_cues of fft")
-
-      }
-
-    } # exit.
-
   } # for (i in nodes).
 
+  # print(ix_old) # 4debugging
+
+  # Fill fft_new:
+  fft_new[ix_old, ] <- fft[1:n_cues, ]  # original nodes/cues/rows
+
+  # New nodes/rows:
+  fft_new[nodes, ]  <- data.frame(class = class,
+                                  cue = cue,
+                                  direction = direction,
+                                  threshold = threshold,
+                                  exit = exit)
+
   # +++ here now +++
+
+  # ToDo: Add verification of inputs and output.
+
 
   # Output: ------
 
   # # Repair row names:
-  # row.names(fft_mod) <- 1:nrow(fft_mod)
+  # row.names(fft_new) <- 1:nrow(fft_new)
 
-  return(fft_mod)
+  return(fft_new)
 
 } # add_nodes().
 
@@ -465,6 +435,35 @@ add_nodes <- function(fft,
 # (fft <- read_fft_df(ffts_df, tree = 1))  # 1 FFT (as df, from above)
 #
 # add_nodes(fft)
+# add_nodes(fft, nodes = 1,
+#           class = "class_1", cue = "cue_1", direction = "dir_1", threshold = "thr_1", exit = "ext_1")
+# add_nodes(fft, nodes = 2,
+#           class = "class_2", cue = "cue_2", direction = "dir_2", threshold = "thr_2", exit = "ext_2")
+# add_nodes(fft, nodes = 4,
+#           class = "class_4", cue = "cue_4", direction = "dir_4", threshold = "thr_4", exit = "ext_4")
+#
+# my_nodes <- c(1, 2, 4, 6, 8:10, 50, 100)
+#
+# add_nodes(fft, nodes = my_nodes,
+#           class = paste0("class_", my_nodes),
+#           cue = paste0("cue_", my_nodes),
+#           direction = paste0("dir_", my_nodes),
+#           threshold = paste0("thr_", my_nodes),
+#           exit = paste0("ext_", my_nodes)
+#           )
+#
+# my_nodes <- c(2, 4, 2, 4)
+# my_value <- 1:4
+#
+# add_nodes(fft, nodes = my_nodes,
+#           class = paste0("class_", my_value),
+#           cue = paste0("cue_", my_value),
+#           direction = paste0("dir_", my_value),
+#           threshold = paste0("thr_", my_value),
+#           exit = paste0("ext_", my_value)
+# )
+
+
 
 
 # drop_nodes: ------
@@ -583,7 +582,7 @@ drop_nodes <- function(fft, nodes = NA){
 
 edit_nodes <- function(fft,
                        nodes = NA,  # as vector (1 or multiple nodes)
-                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft (as df)
+                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
                        my.node = NA){
 
   # Prepare: ------
