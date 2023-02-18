@@ -442,29 +442,29 @@ add_nodes <- function(fft,
 #
 # add_nodes(fft)
 # add_nodes(fft, nodes = 1,
-#           class = "class_1", cue = "cue_1", direction = "dir_1", threshold = "thr_1", exit = "ext_1")
+#           class = "class_1", cue = "cue_1", direction = ">=", threshold = "thr_1", exit = "ext_1")
 # add_nodes(fft, nodes = 2,
-#           class = "class_2", cue = "cue_2", direction = "dir_2", threshold = "thr_2", exit = "ext_2")
+#           class = "class_2", cue = "cue_2", direction = "<=", threshold = "thr_2", exit = "ext_2")
 # add_nodes(fft, nodes = 4,
-#           class = "class_4", cue = "cue_4", direction = "dir_4", threshold = "thr_4", exit = "ext_4")
+#           class = "class_4", cue = "cue_4", direction = "!=", threshold = "thr_4", exit = "ext_4")
 #
 # my_nodes <- c(1, 2, 4, 6, 8:10, 50, 100)
 #
 # add_nodes(fft, nodes = my_nodes,
 #           class = paste0("class_", my_nodes),
 #           cue = paste0("cue_", my_nodes),
-#           direction = paste0("dir_", my_nodes),
+#           direction = sample(c("!=", ">=", "<="), length(my_nodes), replace = TRUE),
 #           threshold = paste0("thr_", my_nodes),
 #           exit = paste0("ext_", my_nodes)
 #           )
 #
 # my_nodes <- c(2, 4, 2, 4)
-# my_value <- 1:4
+# my_value <- 11:14
 #
 # add_nodes(fft, nodes = my_nodes,
 #           class = paste0("class_", my_value),
 #           cue = paste0("cue_", my_value),
-#           direction = paste0("dir_", my_value),
+#           direction = sample(c("!=", ">=", "<="), length(my_nodes), replace = TRUE),
 #           threshold = paste0("thr_", my_value),
 #           exit = paste0("ext_", my_value)
 # )
@@ -770,11 +770,12 @@ edit_nodes <- function(fft,
 # edit_nodes(fft, nodes = c(1, 1, 1), cue = c("A", "B", "C"))  # repeated change of 1 node: works
 #
 # edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<=", ">="))  # works, for valid direction symbols
-# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<<", ">>"))  # repeated change of 1 node: works
-# edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<<", ">>"))  # NOTE: INVALID direction symbol are IGNORED.
+# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<=", ">="))  # repeated change of 1 node: works (use LAST)
+# edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<<", ">"))  # NOTE: INVALID direction symbol FAILS.
 #
 # edit_nodes(fft, nodes = 1:3, cue = c("A", "B", "C"), threshold = c("X", "Y", "xyz"))  # works, but NO validation with data
 #
+# ToDo: +++ here now +++ NO LONGER WORKS:
 # edit_nodes(fft, nodes = c(1, 1, 1), exit = c(1, 0, 1))  # repeated change of 1 node works
 # edit_nodes(fft, nodes = c(1, 2, 2), exit = c(0, 0, 1))
 # edit_nodes(fft, nodes = c(1, 2, 3), exit = c("FALse", " Signal ", 3/6))
