@@ -160,7 +160,7 @@ set.seed(246)  # for reproducible randomness
 
 ```{r example-heart-create, collapse = FALSE, results = "hide"}
 # Create an FFTrees object from the heartdisease data: 
-heart_fft <- FFTrees(formula = diagnosis ~., 
+heart_fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
