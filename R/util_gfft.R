@@ -300,6 +300,10 @@ add_nodes <- function(fft,
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
 
+  if (!all(is.na(direction))){
+    testthat::expect_true(verify_dir_sym(direction))
+  }
+
   if (all(is.na(nodes))) { # catch case 0:
 
     message("add_nodes: FFT remains unchanged")  # 4debugging
@@ -426,6 +430,8 @@ add_nodes <- function(fft,
   # # Repair row names:
   # row.names(fft_new) <- 1:nrow(fft_new)
 
+  # ToDo: Verify fft_new?
+
   return(fft_new)
 
 } # add_nodes().
@@ -540,6 +546,8 @@ drop_nodes <- function(fft, nodes = NA){
 
   # Repair row names:
   row.names(fft_mod) <- 1:nrow(fft_mod)
+
+  # ToDo: Verify fft_mod?
 
   return(fft_mod)
 
@@ -671,17 +679,13 @@ edit_nodes <- function(fft,
 
       cur_dir <- direction[i]
 
-      # Get 6 direction symbols:
-      direction_symbols <- directions_df$direction[1:6]
-
-      if (cur_dir %in% direction_symbols){ # verify: valid direction symbol
+      if (verify_dir_sym(cur_dir)){ # verify direction symbol:
 
         fft_mod$direction[node_i] <- cur_dir  # set value
 
       } else {
 
-        msg_dir <- paste0("edit_nodes: The direction symbol of node ", node_i, " must be in ", paste0(direction_symbols, collapse = ", "))
-        stop(msg_dir)
+        stop(paste0("edit_nodes: Unknown direction symbol: ", cur_dir))
 
       }
 
@@ -746,6 +750,8 @@ edit_nodes <- function(fft,
   # # Repair row names:
   # row.names(fft_mod) <- 1:nrow(fft_mod)
 
+  # ToDo: Verify fft_mod?
+
   return(fft_mod)
 
 } # edit_nodes().
@@ -764,7 +770,8 @@ edit_nodes <- function(fft,
 # edit_nodes(fft, nodes = c(1, 1, 1), cue = c("A", "B", "C"))  # repeated change of 1 node: works
 #
 # edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<=", ">="))  # works, for valid direction symbols
-# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<", ">"))  # repeated change of 1 node: works
+# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<<", ">>"))  # repeated change of 1 node: works
+# edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<<", ">>"))  # NOTE: INVALID direction symbol are IGNORED.
 #
 # edit_nodes(fft, nodes = 1:3, cue = c("A", "B", "C"), threshold = c("X", "Y", "xyz"))  # works, but NO validation with data
 #
