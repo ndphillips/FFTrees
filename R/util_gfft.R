@@ -961,7 +961,7 @@ reorder_nodes <- function(fft, order = NA){
 
     return(fft)
 
-  }
+  } # if no change.
 
 
   # Main: ----
@@ -972,9 +972,10 @@ reorder_nodes <- function(fft, order = NA){
   # IF the exit cue has been changed:
   exit_cue_pos <- which(order == n_cues)
 
+  # Special case 1:
   if (exit_cue_pos != n_cues){
 
-    message(paste0("reorder_nodes: Previous exit node moved to node position ", exit_cue_pos))
+    message(paste0("reorder_nodes: Former exit node now is node ", exit_cue_pos))
 
     # ?: Which exit direction should be used for previous exit cue?
 
@@ -995,7 +996,7 @@ reorder_nodes <- function(fft, order = NA){
     # Option 3:
     # Goal: Provide BOTH the noise (0: left) and the signal (1: right) alternative for a previous exit node.
 
-  } # if (exit_cue_pos).
+  } # if sc 1.
 
 
   # Output: ----
@@ -1010,13 +1011,12 @@ reorder_nodes <- function(fft, order = NA){
 
 } # reorder_nodes().
 
-
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 5))
 #
 # plot(x, tree = 5)
-# x$trees$definitions[5, ]
+# ffts[5, ]
 # x$trees$inwords[5]
 #
 # reorder_nodes(fft)  # unchanged
