@@ -791,27 +791,28 @@ edit_nodes <- function(fft,
 } # edit_nodes().
 
 # # Check:
-# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
-# (fft <- read_fft_df(ffts_df, tree = 1))  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
 # edit_nodes(fft)
 # edit_nodes(fft, nodes = c(1, 1), cue = "ABC", exit = c(1, 0))  # error: args differ in length
 #
 # edit_nodes(fft, nodes = 1:3, class = c("c", "n", "c"))  # works, for valid class values
-# edit_nodes(fft, nodes = 1:3, class = c("c", "n", "n"))  # works, but NO validation with data
+# edit_nodes(fft, nodes = 1:3, class = c("N", "C", "N"))  # works, but NO validation with data
 #
 # edit_nodes(fft, nodes = 1:3, cue = c("A", "B", "C"))  # works, but NO validation with data
 # edit_nodes(fft, nodes = c(1, 1, 1), cue = c("A", "B", "C"))  # repeated change of 1 node: works
 #
 # edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<=", ">="))  # works, for valid direction symbols
-# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<=", ">="))  # repeated change of 1 node: works (use LAST)
+# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<=", ">="))  # repeated change of 1 node: works (using LAST)
 # edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<<", ">"))  # NOTE: INVALID direction symbol FAILS.
 #
 # edit_nodes(fft, nodes = 1:3, cue = c("A", "B", "C"), threshold = c("X", "Y", "xyz"))  # works, but NO validation with data
 #
-# edit_nodes(fft, nodes = c(1, 1, 1), exit = c(0, 0, 1))  # repeated change of 1 node works
-# edit_nodes(fft, nodes = c(1, 2, 2), exit = c(0, 0, 1))
-# edit_nodes(fft, nodes = c(1, 2, 3), exit = c("FALse", " Signal ", 3/6))
+# edit_nodes(fft, nodes = c(1, 1, 1), exit = c(0, 0, 1))  # repeated change of 1 node works (using LAST)
+# edit_nodes(fft, nodes = c(1, 2, 2), exit = c(0, 0, 1))  # works (using LAST)
+# edit_nodes(fft, nodes = c(1, 2, 3), exit = c("FALse", " Signal ", 3/6)) # interpreting exit_type
+# edit_nodes(fft, nodes = c(1, 2, 3), exit = c(0, 0, 1))  # Error: Final exit must be 0.5
 
 
 
