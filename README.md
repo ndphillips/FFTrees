@@ -155,7 +155,7 @@ We use the main `FFTrees()` function to create FFTs for the
 
 ``` r
 # Create an FFTrees object from the heartdisease data: 
-heart_fft <- FFTrees(formula = diagnosis ~., 
+heart_fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
@@ -333,6 +333,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-02-18.\]
+\[File `README.Rmd` last updated on 2023-02-19.\]
 
 <!-- eof. -->
