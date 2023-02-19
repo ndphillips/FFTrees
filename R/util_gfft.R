@@ -846,6 +846,7 @@ flip_exits <- function(fft, nodes = NA){
 
   n_cues <- nrow(fft)
 
+
   # Special case 1:
   if (any(nodes %in% 1:n_cues == FALSE)){ # some nodes are missing:
 
@@ -865,18 +866,20 @@ flip_exits <- function(fft, nodes = NA){
 
     nodes <- setdiff(nodes, missing_nodes)
 
-  }
+  } # if sc 1.
+
 
   # Special case 2:
   if (n_cues %in% nodes){ # aiming to flip the final/exit node:
 
-    msg <- paste0("flip_exits: Exits of a final node (", n_cues, ") cannot be flipped")
+    msg <- paste0("flip_exits: Cannot flip exits of the final node: ", n_cues)
 
     message(msg)
 
     nodes <- nodes[nodes != n_cues]
 
-  }
+  } # if sc 2.
+
 
   # Main: ----
 
@@ -884,7 +887,7 @@ flip_exits <- function(fft, nodes = NA){
 
   # For current nodes:
 
-  # ERROR: Cue direction is ALWAYS for criterion = TRUE/signal/1 (on right) => Must not be flipped when exit changes!
+  # Note ERROR: Cue direction is ALWAYS for criterion = TRUE/signal/1 (on right) => Must not be flipped when exit changes!
   # # 1. flip cue direction:
   # fft_mod$direction[nodes] <- directions_df$negation[match(fft_mod$direction[nodes], table = directions_df$direction)]
 
@@ -902,8 +905,8 @@ flip_exits <- function(fft, nodes = NA){
 } # flip_exits().
 
 # # Check:
-# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
-# (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
 #
 # flip_exits(fft)
 # flip_exits(fft, nodes = c(1))
@@ -919,6 +922,7 @@ flip_exits <- function(fft, nodes = NA){
 #
 # # Flipping all and back:
 # all.equal(fft, flip_exits(flip_exits(fft, nodes = 3:1), nodes = 1:3))
+
 
 
 # reorder_nodes: ------
