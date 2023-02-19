@@ -269,6 +269,222 @@ add_fft_df <- function(fft, ffts_df = NULL){
 #       and return a modified version of 1 FFT (in the same format) as output.
 
 
+# add_nodes: ------
+
+# Goal: Add some node(s) (or cues) to a given FFT.
+#
+# Inputs:
+#   fft = 1 FFT (as df)
+#   nodes = vector of added node positions (as integer from 1 to nrow(fft) + length(nodes))
+#   class = class of cue to add
+#   cue = cue to add
+#   direction = direction to change
+#   threshold = threshold values to change
+#   exit = exit to change
+#   my.node = a vector of verbal node descriptions (dominates all other arguments).
+#
+# Output: Modified version of fft (as df, but with modified nodes).
+#
+# Notes:
+# 1. As add_nodes() is ignorant of data, the values of class, cue, and threshold
+#    are currently NOT validated for a specific set of data.
+# 2. The values of nodes refer to their position in NEW fft (after inserting new nodes).
+# 3. Duplicate values of nodes are ignored and only the last entry is used.
+# 4. If nodes contain a new exit, it needs to have a valid final type (i.e., exit_types[3]).
+#    The exit of the former exit is re-set to signal (i.e., exit_types[2]).
+
+
+add_nodes <- function(fft,
+                      nodes = NA,  # as vector (1 integer or multiple nodes)
+                      class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
+                      my.node = NA){
+
+  # Prepare: ----
+
+  # Verify inputs:
+  testthat::expect_true(verify_fft_as_df(fft))
+
+  if (!all(is.na(direction))){
+    testthat::expect_true(verify_dir_sym(direction))
+  }
+
+  if (all(is.na(nodes))) { # catch case 0:
+
+    message("add_nodes: FFT remains unchanged")  # 4debugging
+
+    return(fft)
+
+  }
+
+  nodes <- as.integer(nodes)
+  testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
+
+  # Do all args have same length:
+  key_args <- list(nodes, class, cue, direction, threshold, exit, my.node)
+  non_NA_args  <- (is.na(key_args) == FALSE)
+  len_set_args <- sapply(X = key_args, FUN = length)[non_NA_args]
+
+  if (length(unique(len_set_args)) > 1){
+    stop("edit_nodes: All modifier args (e.g., nodes, ..., exit) must have the same length.")
+  }
+
+  n_cues  <- nrow(fft)         # N of existing fft nodes
+  n_nodes <- length(nodes)     # N of new nodes
+  n_total <- n_cues + n_nodes  # N of nodes defined for new fft
+
+
+  # Special case 1:
+  if (any(duplicated(nodes))){ # remove duplicate nodes:
+
+    # Find the last ix of each unique node:
+    uni_nodes <- unique(nodes)
+    last_node_ix <- rep(NA, length(uni_nodes))  # initialize
+
+    for (i in seq_along(uni_nodes)){ # loop though unique nodes:
+
+      cur_node <- uni_nodes[i]
+
+      last_node_ix[i] <- max(which(nodes == cur_node))  # last ix
+
+    } # for unique nodes.
+
+    # Remove duplicated nodes:
+    nodes <- nodes[last_node_ix]
+
+    message(paste0("add_nodes: Removing duplicate nodes. Remaining nodes: ", paste0(nodes, collapse = ", ")))
+
+    # Adjust other inputs accordingly:
+    class <- class[last_node_ix]
+    cue <- cue[last_node_ix]
+    direction <- direction[last_node_ix]
+    threshold <- threshold[last_node_ix]
+    exit <- exit[last_node_ix]
+
+    n_nodes <- length(nodes)     # N of new nodes
+    n_total <- n_cues + n_nodes  # N of nodes defined for new fft
+
+  } # if sc 1.
+
+
+  # Special case 2:
+  if (max(nodes) > n_total){ # values of nodes are too high:
+
+    # msg_1 <- paste0("add_nodes: Maximum node value (", max(nodes), ") > total of defined nodes (", n_total, ")")
+    # message(msg_1)
+
+    # Adjusting values of nodes beyond n_total:
+    ix_decr <- (nodes > n_total)
+    nodes[ix_decr] <- (n_total - sum(ix_decr) + 1):n_total
+
+    msg_2 <- paste0("add_nodes: Adjusted values of nodes to ", paste(nodes, collapse = ", "))
+    message(msg_2)
+
+  } # if sc 2.
+
+
+  # Initialize new df:
+  new_vec <- rep(NA, n_total)
+  fft_mod <- data.frame(class = new_vec,
+                        cue = new_vec,
+                        direction = new_vec,
+                        threshold = new_vec,
+                        exit = new_vec)
+
+
+  # Main: ----
+
+  # 1. Adjust old indices (to evade new nodes):
+  ix_old <- 1:n_cues
+
+  for (i in seq_along(nodes)){ # loop through nodes:
+
+    node_i <- nodes[i]
+
+    if (node_i <= max(ix_old)){
+
+      ix_inc <- (node_i <= ix_old)  # indices to increment
+
+      ix_old[ix_inc] <- ix_old[ix_inc] + 1  # increment indices
+      # print(ix_old) # 4debugging
+
+    }
+
+  } # for (i in nodes).
+
+  # print(ix_old) # 4debugging
+
+  # 2. Fill fft_mod:
+  fft_mod[ix_old, ] <- fft[1:n_cues, ]  # a. original nodes/rows
+
+  fft_mod[nodes, ]  <- data.frame(class = class,  # b. new nodes/rows
+                                  cue = cue,
+                                  direction = direction,
+                                  threshold = threshold,
+                                  exit = exit)
+
+  # Special case 3: Remove duplicate exit nodes
+  if (max(nodes) > max(ix_old)){ # new exit node:
+
+    ix_old_exit <- max(ix_old)
+
+    fft_mod$exit[ix_old_exit] <- exit_types[2]
+
+    msg <- paste0("add_nodes: Set former exit node (now node ", ix_old_exit, ") to ", exit_types[2])
+    message(msg)
+
+  } # if sc 3.
+
+
+  # Output: ----
+
+  # # Repair row names:
+  # row.names(fft_mod) <- 1:nrow(fft_mod)
+
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
+
+  return(fft_mod)
+
+} # add_nodes().
+
+# # Check:
+# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts_df, tree = 1))  # 1 FFT (as df, from above)
+#
+# add_nodes(fft)
+# add_nodes(fft, nodes = 1,
+#           class = "class_1", cue = "cue_1", direction = ">=", threshold = "thr_1", exit = 1)
+# add_nodes(fft, nodes = 2,
+#           class = "class_2", cue = "cue_2", direction = "<=", threshold = "thr_2", exit = 1)
+#
+# # A new exit node:
+# add_nodes(fft, nodes = 4,
+#           class = "class_4", cue = "cue_4", direction = "!=", threshold = "thr_4", exit = 0.5)
+#
+# # More adjustments:
+# my_nodes <- c(1, 2, 4, 6, 8:10, 50, 100)
+#
+# add_nodes(fft, nodes = my_nodes,
+#           class = paste0("class_", my_nodes),
+#           cue = paste0("cue_", my_nodes),
+#           direction = sample(c("!=", ">=", "<="), length(my_nodes), replace = TRUE),
+#           threshold = paste0("thr_", my_nodes),
+#           exit = c(sample(exit_types[1:2], size = length(my_nodes) - 1, replace = TRUE), 0.5)
+#           )
+#
+# my_nodes <- c(2, 10, 2, 10)
+# my_value <- 11:14
+#
+# add_nodes(fft, nodes = my_nodes,
+#           class = paste0("class_", my_value),
+#           cue = paste0("cue_", my_value),
+#           direction = sample(c("!=", ">=", "<="), length(my_nodes), replace = TRUE),
+#           threshold = paste0("thr_", my_value),
+#           exit = c(sample(exit_types[1:2], size = length(my_nodes) - 1, replace = TRUE), 0.5)
+# )
+
+
+
 
 # drop_nodes: ------
 
@@ -305,45 +521,62 @@ drop_nodes <- function(fft, nodes = NA){
 
     missing_nodes <- setdiff(nodes, 1:n_cues)
 
-    msg <- paste0("drop_nodes: Some nodes do not occur in FFT and will be ignored: ",
-                  paste(missing_nodes, collapse = ", "))
+    msg_1 <- paste0("drop_nodes: Some nodes do not occur in FFT and will be ignored: ",
+                    paste(missing_nodes, collapse = ", "))
 
-    message(msg)
+    message(msg_1)
 
-  }
+  } # if sc 1.
+
+  # Special case 2:
+  if (any(duplicated(nodes))){
+
+    duplicated_nodes <- unique(nodes[duplicated(nodes)])
+
+    msg_2 <- paste0("drop_nodes: Duplicated nodes can be dropped only once: ",
+                    paste(duplicated_nodes, collapse = ", "))
+
+    message(msg_2)
+
+  } # if sc 2.
+
 
   # Main: ----
 
   # Determine new nodes:
   new_nodes <- setdiff(1:n_cues, nodes)
 
-  # Special case 2:
-  if ( length(new_nodes) == 0 ){  # nothing left:
+  # Special case 3:
+  if (length(new_nodes) == 0){ # nothing left:
 
-    msg <- paste0("drop_nodes: Nothing left of fft")
-    stop(msg)
+    msg_3 <- paste0("drop_nodes: Nothing left of fft")
+    stop(msg_3)
 
-  }
+  } # if sc 3.
 
   # Filter rows of fft:
-  fft_mod <- fft[new_nodes, ]
+  fft_mod <- fft[new_nodes, ]  # main step
 
-  # Special case 3:
+  # Special case 4:
   if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
 
     new_exit_node <- max(new_nodes)
 
-    fft_mod$exit[new_exit_node] <- exit_types[3]  # Set new exit node
+    fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
 
-    msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
-    message(msg)
+    msg_4 <- paste0("drop_nodes: New final node: ", new_exit_node)
+    message(msg_4)
 
-  }
+  } # if sc 4.
+
 
   # Output: ----
 
   # Repair row names:
   row.names(fft_mod) <- 1:nrow(fft_mod)
+
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
 
   return(fft_mod)
 
@@ -358,11 +591,16 @@ drop_nodes <- function(fft, nodes = NA){
 # drop_nodes(fft, nodes = c(3))
 # drop_nodes(fft, nodes = c(3, 1))
 #
-# # Dropping final node or dropping everything:
-# drop_nodes(fft, nodes = 4)    # works
-# drop_nodes(fft, nodes = 2:6)  # works (1 node left)
+# drop_nodes(fft, nodes = c(1, 1, 1))  # duplicate nodes are only dropped once.
+#
+# # Dropping final node / new final node:
+# drop_nodes(fft, nodes = 4)    # works: new final node
+# drop_nodes(fft, nodes = 2:6)  # works (1 node left: new exit)
+#
+# # Dropping everything:
 # drop_nodes(fft, nodes = 1:6)  # note + error: nothing left
 # drop_nodes(fft, nodes = 1:4)  # error: nothing left
+
 
 
 # edit_nodes: ------
@@ -372,11 +610,12 @@ drop_nodes <- function(fft, nodes = NA){
 # Inputs:
 #   fft = 1 FFT (as df)
 #   nodes = vector of nodes to change (as integer in 1:nrow(fft))
-#   cues = cues to change (classes are set accordingly)
-#   directions = directions to change
-#   thresholds = threshold values to change
-#   exits = exits to change
-#   my.nodes = a vector of verbal node descriptions (dominates all other arguments).
+#   class = class of cue to add
+#   cue = cue to change
+#   direction = direction to change
+#   threshold = threshold values to change
+#   exit = exit value to change
+#   my.node = a vector of verbal node descriptions (dominates all other arguments).
 #
 # Output: Modified version of fft (as df, but with modified nodes).
 #
@@ -385,10 +624,10 @@ drop_nodes <- function(fft, nodes = NA){
 
 edit_nodes <- function(fft,
                        nodes = NA,  # as vector (1 or multiple nodes)
-                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft (as df)
+                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
                        my.node = NA){
 
-  # Prepare: ------
+  # Prepare: ----
 
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
@@ -428,10 +667,10 @@ edit_nodes <- function(fft,
     # Remove missing nodes:
     nodes <- setdiff(nodes, missing_nodes)
 
-  }
+  } # if sc 1.
 
 
-  # Main: ------
+  # Main: ----
 
   fft_mod <- fft  # copy
 
@@ -474,17 +713,13 @@ edit_nodes <- function(fft,
 
       cur_dir <- direction[i]
 
-      # Get 6 direction symbols:
-      direction_symbols <- directions_df$direction[1:6]
-
-      if (cur_dir %in% direction_symbols){ # verify: valid direction symbol
+      if (verify_dir_sym(cur_dir)){ # verify direction symbol:
 
         fft_mod$direction[node_i] <- cur_dir  # set value
 
       } else {
 
-        msg_dir <- paste0("edit_nodes: The direction symbol of node ", node_i, " must be in ", paste0(direction_symbols, collapse = ", "))
-        stop(msg_dir)
+        stop(paste0("edit_nodes: Unknown direction symbol: ", cur_dir))
 
       }
 
@@ -504,7 +739,7 @@ edit_nodes <- function(fft,
 
     if (!any(is.na(exit))){
 
-      cur_exit <- get_exit_type(exit[i])
+      cur_exit <- get_exit_type(exit[i], verify = FALSE)
 
       if (node_i < n_cues){ # non-final nodes:
 
@@ -542,38 +777,42 @@ edit_nodes <- function(fft,
 
   } # for (i in nodes).
 
-  # +++ here now +++
 
   # Output: ------
 
   # # Repair row names:
   # row.names(fft_mod) <- 1:nrow(fft_mod)
 
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
+
   return(fft_mod)
 
 } # edit_nodes().
 
 # # Check:
-# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
-# (fft <- read_fft_df(ffts_df, tree = 1))  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
 # edit_nodes(fft)
 # edit_nodes(fft, nodes = c(1, 1), cue = "ABC", exit = c(1, 0))  # error: args differ in length
 #
 # edit_nodes(fft, nodes = 1:3, class = c("c", "n", "c"))  # works, for valid class values
-# edit_nodes(fft, nodes = 1:3, class = c("c", "n", "n"))  # works, but NO validation with data
+# edit_nodes(fft, nodes = 1:3, class = c("N", "C", "N"))  # works, but NO validation with data
 #
 # edit_nodes(fft, nodes = 1:3, cue = c("A", "B", "C"))  # works, but NO validation with data
 # edit_nodes(fft, nodes = c(1, 1, 1), cue = c("A", "B", "C"))  # repeated change of 1 node: works
 #
 # edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<=", ">="))  # works, for valid direction symbols
-# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<", ">"))  # repeated change of 1 node: works
+# edit_nodes(fft, nodes = c(1, 1, 1), direction = c("=", "<=", ">="))  # repeated change of 1 node: works (using LAST)
+# edit_nodes(fft, nodes = c(1, 2, 3), direction = c("!=", "<<", ">"))  # NOTE: INVALID direction symbol FAILS.
 #
 # edit_nodes(fft, nodes = 1:3, cue = c("A", "B", "C"), threshold = c("X", "Y", "xyz"))  # works, but NO validation with data
 #
-# edit_nodes(fft, nodes = c(1, 1, 1), exit = c(1, 0, 1))  # repeated change of 1 node works
-# edit_nodes(fft, nodes = c(1, 2, 2), exit = c(0, 0, 1))
-# edit_nodes(fft, nodes = c(1, 2, 3), exit = c("FALse", " Signal ", 3/6))
+# edit_nodes(fft, nodes = c(1, 1, 1), exit = c(0, 0, 1))  # repeated change of 1 node works (using LAST)
+# edit_nodes(fft, nodes = c(1, 2, 2), exit = c(0, 0, 1))  # works (using LAST)
+# edit_nodes(fft, nodes = c(1, 2, 3), exit = c("FALse", " Signal ", 3/6)) # interpreting exit_type
+# edit_nodes(fft, nodes = c(1, 2, 3), exit = c(0, 0, 1))  # Error: Final exit must be 0.5
 
 
 
@@ -607,6 +846,7 @@ flip_exits <- function(fft, nodes = NA){
 
   n_cues <- nrow(fft)
 
+
   # Special case 1:
   if (any(nodes %in% 1:n_cues == FALSE)){ # some nodes are missing:
 
@@ -626,40 +866,47 @@ flip_exits <- function(fft, nodes = NA){
 
     nodes <- setdiff(nodes, missing_nodes)
 
-  }
+  } # if sc 1.
+
 
   # Special case 2:
   if (n_cues %in% nodes){ # aiming to flip the final/exit node:
 
-    msg <- paste0("flip_exits: Exits of a final node (", n_cues, ") cannot be flipped")
+    msg <- paste0("flip_exits: Cannot flip exits of the final node: ", n_cues)
 
     message(msg)
 
     nodes <- nodes[nodes != n_cues]
 
-  }
+  } # if sc 2.
+
 
   # Main: ----
 
+  fft_mod <- fft  # copy
+
   # For current nodes:
 
-  # ERROR: Cue direction is ALWAYS for criterion = TRUE/signal/1 (on right) => Must not be flipped when exit changes!
+  # Note ERROR: Cue direction is ALWAYS for criterion = TRUE/signal/1 (on right) => Must not be flipped when exit changes!
   # # 1. flip cue direction:
-  # fft$direction[nodes] <- directions_df$negation[match(fft$direction[nodes], table = directions_df$direction)]
+  # fft_mod$direction[nodes] <- directions_df$negation[match(fft_mod$direction[nodes], table = directions_df$direction)]
 
   # 2. swap exit:
-  fft$exit[nodes] <- ifelse(fft$exit[nodes] == 1, 0, 1)
+  fft_mod$exit[nodes] <- ifelse(fft_mod$exit[nodes] == 1, 0, 1)
 
 
   # Output: ----
 
-  return(fft)
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
+
+  return(fft_mod)
 
 } # flip_exits().
 
 # # Check:
-# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
-# (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
 #
 # flip_exits(fft)
 # flip_exits(fft, nodes = c(1))
@@ -675,6 +922,7 @@ flip_exits <- function(fft, nodes = NA){
 #
 # # Flipping all and back:
 # all.equal(fft, flip_exits(flip_exits(fft, nodes = 3:1), nodes = 1:3))
+
 
 
 # reorder_nodes: ------
@@ -713,7 +961,7 @@ reorder_nodes <- function(fft, order = NA){
 
     return(fft)
 
-  }
+  } # if no change.
 
 
   # Main: ----
@@ -724,9 +972,10 @@ reorder_nodes <- function(fft, order = NA){
   # IF the exit cue has been changed:
   exit_cue_pos <- which(order == n_cues)
 
+  # Special case 1:
   if (exit_cue_pos != n_cues){
 
-    message(paste0("reorder_nodes: Previous exit node moved to node position ", exit_cue_pos))
+    message(paste0("reorder_nodes: Former exit node now is node ", exit_cue_pos))
 
     # ?: Which exit direction should be used for previous exit cue?
 
@@ -747,7 +996,7 @@ reorder_nodes <- function(fft, order = NA){
     # Option 3:
     # Goal: Provide BOTH the noise (0: left) and the signal (1: right) alternative for a previous exit node.
 
-  } # if (exit_cue_pos).
+  } # if sc 1.
 
 
   # Output: ----
@@ -755,26 +1004,27 @@ reorder_nodes <- function(fft, order = NA){
   # Repair row names:
   row.names(fft_mod) <- 1:nrow(fft_mod)
 
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
+
   return(fft_mod)
 
 } # reorder_nodes().
 
-
 # # Check:
-# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
-# fft_df  <- read_fft_df_v0(ffts_df, tree = 5)
-# fft_df
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 5))
 #
 # plot(x, tree = 5)
-# x$trees$definitions[5, ]
+# ffts[5, ]
 # x$trees$inwords[5]
 #
-# reorder_nodes(fft_df)  # unchanged
-# reorder_nodes(fft_df, order = c(1, 2, 3))  # unchanged
-# reorder_nodes(fft_df, order = c(3, 2))     # ERROR: wrong length of order
-# reorder_nodes(fft_df, order = c(2, 1, 3))  # exit cue unchanged
-# reorder_nodes(fft_df, order = c(1, 3, 2))  # exit cue changed
-
+# reorder_nodes(fft)  # unchanged
+# reorder_nodes(fft, order = c(1, 2, 3))  # unchanged
+# reorder_nodes(fft, order = c(3, 2))     # ERROR: wrong length of order
+# reorder_nodes(fft, order = c(2, 1, 3))  # exit cue unchanged
+# reorder_nodes(fft, order = c(1, 3, 2))  # exit cue changed
+# reorder_nodes(fft, order = c(3, 1, 2))  # exit cue changed
 
 
 
@@ -793,18 +1043,26 @@ reorder_nodes <- function(fft, order = NA){
 # 2. A specific set of cues, their order, but variable exit structures:  The FFTs in 1 FFTrees object.
 # 3. A specific set of cues, but variable cue orders and exit structures.
 
+# ToDo:
+# 1. get all node subsets (with all possible subsets of nodes)
+#    = all_combinations() for each possible length (1:n_nodes).
+#
+# 2. Combine
+#    1. all node subsets,
+#    2. all_node_orders(), and
+#    3. all_exit_structures()
+#    to get all possible variants of a given FFT.
+
 
 # all_node_orders: ------
 
-
-# Goal: Apply reorder_nodes(fft) to all possible permutations of cues.
+# Goal: Apply reorder_nodes(fft) to get all possible permutations of cues for a fft.
 #
 # Input:
 #   fft: 1 FFT (as df, 1 row per cue)
 #
 # Output:
 #   Definitions of FFT in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
-
 
 all_node_orders <- function(fft){
 
@@ -838,11 +1096,10 @@ all_node_orders <- function(fft){
 
 } # all_node_orders().
 
-
-# Check:
-# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
-# fft  <- read_fft_df(ffts_df, tree = 1)  # 1 FFT (as df, from above)
-
+# # Check:
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
+#
 # (dfs_1 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 1)))
 # (dfs_2 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 2)))
 
@@ -907,14 +1164,12 @@ all_exit_structures <- function(fft){
 
 } # all_exit_structures().
 
-
 # # Check:
-# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
-# fft  <- read_fft_df(ffts_df, tree = 1)  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
 # (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts_df, tree = 2)))
-
 
 
 # ToDo: ------
@@ -923,6 +1178,6 @@ all_exit_structures <- function(fft){
 #   (1) FFT definitions (df, 1 row per tree) OR
 #   (2) single FFTs (as df, 1 row per node).
 # - Return the result in the same format as the input.
-# - When entering a set of FFT definitions, return modified set?
+# - When applying fn to a set of FFT definitions, return the modified set?
 
 # eof.

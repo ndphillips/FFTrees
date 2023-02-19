@@ -44,7 +44,6 @@ url_JDM_doi <- "https://doi.org/10.1017/S1930297500006239"
 <!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- Release badges end. -->
 
-
 <!-- ALL badges start: --> 
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
@@ -52,7 +51,6 @@ url_JDM_doi <- "https://doi.org/10.1017/S1930297500006239"
 <!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='b22222')](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- ALL badges end. --> 
-
 
 
 <!-- Pkg goal: -->
@@ -158,7 +156,7 @@ set.seed(246)  # for reproducible randomness
 
 ```{r example-heart-create, collapse = FALSE, results = "hide"}
 # Create an FFTrees object from the heartdisease data: 
-heart_fft <- FFTrees(formula = diagnosis ~., 
+heart_fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test, 
                      decision.labels = c("Healthy", "Disease"))
