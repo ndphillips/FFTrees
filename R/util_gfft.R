@@ -285,15 +285,21 @@ add_fft_df <- function(fft, ffts_df = NULL){
 #
 # Output: Modified version of fft (as df, but with modified nodes).
 #
-# Note: As edit_nodes() is ignorant of data, the values of class, cue, and threshold
-#       are currently NOT validated for a specific set of data.
+# Notes:
+# 1. As add_nodes() is ignorant of data, the values of class, cue, and threshold
+#    are currently NOT validated for a specific set of data.
+# 2. The values of nodes refer to their position in NEW fft (after inserting new nodes).
+# 3. Duplicate values of nodes are ignored and only the last entry is used.
+# 4. If nodes contain a new exit, it needs to have a valid final type (i.e., exit_types[3]).
+#    The exit of the former exit is re-set to signal (i.e., exit_types[2]).
+
 
 add_nodes <- function(fft,
                       nodes = NA,  # as vector (1 integer or multiple nodes)
                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
                       my.node = NA){
 
-  # Prepare: ------
+  # Prepare: ----
 
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
@@ -326,26 +332,13 @@ add_nodes <- function(fft,
   n_nodes <- length(nodes)     # N of new nodes
   n_total <- n_cues + n_nodes  # N of nodes defined for new fft
 
+
   # Special case 1:
-  if (max(nodes) > n_total){
-
-    msg <- paste0("add_nodes: Maximum node value (", max(nodes), ") > total of defined nodes (", n_total, ")")
-    message(msg)
-
-    # Adjusting values of nodes beyond n_total:
-    ix_decr <- (nodes > n_total)
-    nodes[ix_decr] <- (n_total - sum(ix_decr) + 1):n_total
-
-    message("Adjusted nodes to ", paste(nodes, collapse = ", "))
-
-  }
-
-  # Special case 2:
-  if (any(duplicated(nodes))){
+  if (any(duplicated(nodes))){ # remove duplicate nodes:
 
     # Find the last ix of each unique node:
     uni_nodes <- unique(nodes)
-    last_node_ix <- rep(NA, length(uni_nodes))
+    last_node_ix <- rep(NA, length(uni_nodes))  # initialize
 
     for (i in seq_along(uni_nodes)){ # loop though unique nodes:
 
@@ -353,12 +346,12 @@ add_nodes <- function(fft,
 
       last_node_ix[i] <- max(which(nodes == cur_node))  # last ix
 
-    }
+    } # for unique nodes.
 
     # Remove duplicated nodes:
     nodes <- nodes[last_node_ix]
 
-    message(paste0("add_nodes: Removing duplicate nodes leaves nodes = ", paste0(nodes, collapse = ", ")))
+    message(paste0("add_nodes: Removing duplicate nodes. Remaining nodes: ", paste0(nodes, collapse = ", ")))
 
     # Adjust other inputs accordingly:
     class <- class[last_node_ix]
@@ -370,27 +363,42 @@ add_nodes <- function(fft,
     n_nodes <- length(nodes)     # N of new nodes
     n_total <- n_cues + n_nodes  # N of nodes defined for new fft
 
-  }
+  } # if sc 1.
 
 
-  # Main: ------
+  # Special case 2:
+  if (max(nodes) > n_total){ # values of nodes are too high:
 
-  new_row <- rep(NA, n_total)
-  fft_mod <- data.frame(class = new_row,
-                        cue = new_row,
-                        direction = new_row,
-                        threshold = new_row,
-                        exit = new_row)
+    # msg_1 <- paste0("add_nodes: Maximum node value (", max(nodes), ") > total of defined nodes (", n_total, ")")
+    # message(msg_1)
 
-  cue_i  <- 1
-  ix_old <- cue_i:n_cues
+    # Adjusting values of nodes beyond n_total:
+    ix_decr <- (nodes > n_total)
+    nodes[ix_decr] <- (n_total - sum(ix_decr) + 1):n_total
+
+    msg_2 <- paste0("add_nodes: Adjusted values of nodes to ", paste(nodes, collapse = ", "))
+    message(msg_2)
+
+  } # if sc 2.
+
+
+  # Initialize new df:
+  new_vec <- rep(NA, n_total)
+  fft_mod <- data.frame(class = new_vec,
+                        cue = new_vec,
+                        direction = new_vec,
+                        threshold = new_vec,
+                        exit = new_vec)
+
+
+  # Main: ----
+
+  # 1. Adjust old indices (to evade new nodes):
+  ix_old <- 1:n_cues
 
   for (i in seq_along(nodes)){ # loop through nodes:
 
-    # print(paste0("i = ", i)) # 4debugging
-
     node_i <- nodes[i]
-    # print(paste0("node_i = ", node_i)) # 4debugging
 
     if (node_i <= max(ix_old)){
 
@@ -399,37 +407,41 @@ add_nodes <- function(fft,
       ix_old[ix_inc] <- ix_old[ix_inc] + 1  # increment indices
       # print(ix_old) # 4debugging
 
-      # cue_i <- cue_i + 1
-      # print(paste0("cue_i = ", cue_i)) # 4debugging
-
     }
 
   } # for (i in nodes).
 
   # print(ix_old) # 4debugging
 
-  # Fill fft_mod:
-  fft_mod[ix_old, ] <- fft[1:n_cues, ]  # original nodes/cues/rows
+  # 2. Fill fft_mod:
+  fft_mod[ix_old, ] <- fft[1:n_cues, ]  # a. original nodes/rows
 
-  # New nodes/rows:
-  fft_mod[nodes, ]  <- data.frame(class = class,
+  fft_mod[nodes, ]  <- data.frame(class = class,  # b. new nodes/rows
                                   cue = cue,
                                   direction = direction,
                                   threshold = threshold,
                                   exit = exit)
 
-  # +++ here now +++
+  # Special case 3: Remove duplicate exit nodes
+  if (max(nodes) > max(ix_old)){ # new exit node:
 
-  # ToDo: Add verification of inputs and output.
+    ix_old_exit <- max(ix_old)
+
+    fft_mod$exit[ix_old_exit] <- exit_types[2]
+
+    msg <- paste0("add_nodes: Set former exit node (now node ", ix_old_exit, ") to ", exit_types[2])
+    message(msg)
+
+  } # if sc 3.
 
 
-  # Output: ------
+  # Output: ----
 
   # # Repair row names:
   # row.names(fft_mod) <- 1:nrow(fft_mod)
 
-  # ToDo: Verify output:
-  # testthat::expect_true(verify_fft_as_df(fft_mod))
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
 
   return(fft_mod)
 
@@ -445,10 +457,11 @@ add_nodes <- function(fft,
 # add_nodes(fft, nodes = 2,
 #           class = "class_2", cue = "cue_2", direction = "<=", threshold = "thr_2", exit = 1)
 #
+# # A new exit node:
 # add_nodes(fft, nodes = 4,
 #           class = "class_4", cue = "cue_4", direction = "!=", threshold = "thr_4", exit = 0.5)
-# +++ here now +++ : ToDo: 2 nodes with exit = 0.5: Set old exit to 1.
 #
+# # More adjustments:
 # my_nodes <- c(1, 2, 4, 6, 8:10, 50, 100)
 #
 # add_nodes(fft, nodes = my_nodes,
@@ -459,7 +472,7 @@ add_nodes <- function(fft,
 #           exit = c(sample(exit_types[1:2], size = length(my_nodes) - 1, replace = TRUE), 0.5)
 #           )
 #
-# my_nodes <- c(2, 4, 2, 4)
+# my_nodes <- c(2, 10, 2, 10)
 # my_value <- 11:14
 #
 # add_nodes(fft, nodes = my_nodes,
@@ -467,7 +480,7 @@ add_nodes <- function(fft,
 #           cue = paste0("cue_", my_value),
 #           direction = sample(c("!=", ">=", "<="), length(my_nodes), replace = TRUE),
 #           threshold = paste0("thr_", my_value),
-#           exit = paste0("ext_", my_value)
+#           exit = c(sample(exit_types[1:2], size = length(my_nodes) - 1, replace = TRUE), 0.5)
 # )
 
 
@@ -508,47 +521,62 @@ drop_nodes <- function(fft, nodes = NA){
 
     missing_nodes <- setdiff(nodes, 1:n_cues)
 
-    msg <- paste0("drop_nodes: Some nodes do not occur in FFT and will be ignored: ",
-                  paste(missing_nodes, collapse = ", "))
+    msg_1 <- paste0("drop_nodes: Some nodes do not occur in FFT and will be ignored: ",
+                    paste(missing_nodes, collapse = ", "))
 
-    message(msg)
+    message(msg_1)
 
-  }
+  } # if sc 1.
+
+  # Special case 2:
+  if (any(duplicated(nodes))){
+
+    duplicated_nodes <- unique(nodes[duplicated(nodes)])
+
+    msg_2 <- paste0("drop_nodes: Duplicated nodes can be dropped only once: ",
+                    paste(duplicated_nodes, collapse = ", "))
+
+    message(msg_2)
+
+  } # if sc 2.
+
 
   # Main: ----
 
   # Determine new nodes:
   new_nodes <- setdiff(1:n_cues, nodes)
 
-  # Special case 2:
-  if ( length(new_nodes) == 0 ){  # nothing left:
+  # Special case 3:
+  if (length(new_nodes) == 0){ # nothing left:
 
-    msg <- paste0("drop_nodes: Nothing left of fft")
-    stop(msg)
+    msg_3 <- paste0("drop_nodes: Nothing left of fft")
+    stop(msg_3)
 
-  }
+  } # if sc 3.
 
   # Filter rows of fft:
-  fft_mod <- fft[new_nodes, ]
+  fft_mod <- fft[new_nodes, ]  # main step
 
-  # Special case 3:
+  # Special case 4:
   if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
 
     new_exit_node <- max(new_nodes)
 
-    fft_mod$exit[new_exit_node] <- exit_types[3]  # Set new exit node
+    fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
 
-    msg <- paste0("drop_nodes: New final node (", new_exit_node, ")")
-    message(msg)
+    msg_4 <- paste0("drop_nodes: New final node: ", new_exit_node)
+    message(msg_4)
 
-  }
+  } # if sc 4.
+
 
   # Output: ----
 
   # Repair row names:
   row.names(fft_mod) <- 1:nrow(fft_mod)
 
-  # ToDo: Verify fft_mod?
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
 
   return(fft_mod)
 
@@ -563,11 +591,16 @@ drop_nodes <- function(fft, nodes = NA){
 # drop_nodes(fft, nodes = c(3))
 # drop_nodes(fft, nodes = c(3, 1))
 #
-# # Dropping final node or dropping everything:
-# drop_nodes(fft, nodes = 4)    # works
-# drop_nodes(fft, nodes = 2:6)  # works (1 node left)
+# drop_nodes(fft, nodes = c(1, 1, 1))  # duplicate nodes are only dropped once.
+#
+# # Dropping final node / new final node:
+# drop_nodes(fft, nodes = 4)    # works: new final node
+# drop_nodes(fft, nodes = 2:6)  # works (1 node left: new exit)
+#
+# # Dropping everything:
 # drop_nodes(fft, nodes = 1:6)  # note + error: nothing left
 # drop_nodes(fft, nodes = 1:4)  # error: nothing left
+
 
 
 # edit_nodes: ------
@@ -594,7 +627,7 @@ edit_nodes <- function(fft,
                        class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
                        my.node = NA){
 
-  # Prepare: ------
+  # Prepare: ----
 
   # Verify inputs:
   testthat::expect_true(verify_fft_as_df(fft))
@@ -634,10 +667,10 @@ edit_nodes <- function(fft,
     # Remove missing nodes:
     nodes <- setdiff(nodes, missing_nodes)
 
-  }
+  } # if sc 1.
 
 
-  # Main: ------
+  # Main: ----
 
   fft_mod <- fft  # copy
 
@@ -744,7 +777,6 @@ edit_nodes <- function(fft,
 
   } # for (i in nodes).
 
-  # +++ here now +++
 
   # Output: ------
 
