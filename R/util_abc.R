@@ -579,7 +579,6 @@ all_permutations <- function(x) {
 all_combinations <- function(x, length){
 
   # Prepare: ----
-  out <- NA  # initialize
 
   # Verify inputs:
   if (all(is.na(x)) || is.na(length)){
@@ -591,18 +590,24 @@ all_combinations <- function(x, length){
     length <- length(x)
   }
 
-  # Main: Use utils::combn to obtain matrix: ----
-  m <- utils::combn(x = x, m = length)
+  out <- NA  # initialize
 
-  if (is.vector(m)){
 
-    out <- m  # return as is
+  # Main: ----
 
-  } else if (is.matrix(m)){
+  # Use utils::combn to obtain a matrix:
+  mx <- utils::combn(x = x, m = length)
 
-    out <- t(m)  # transpose m into matrix of rows
+  if (is.vector(mx)){
+
+    out <- mx  # return as is
+
+  } else if (is.matrix(mx)){
+
+    out <- t(mx)  # transpose m into matrix of rows
 
   }
+
 
   # Output: ----
 
@@ -645,6 +650,6 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 # ToDo: ------
 
-# - etc.
+# - Get all_subsets() based on all_combinations().
 
 # eof.
