@@ -1043,18 +1043,26 @@ reorder_nodes <- function(fft, order = NA){
 # 2. A specific set of cues, their order, but variable exit structures:  The FFTs in 1 FFTrees object.
 # 3. A specific set of cues, but variable cue orders and exit structures.
 
+# ToDo:
+# 1. get all node subsets (with all possible subsets of nodes)
+#    = all_combinations() for each possible length (1:n_nodes).
+#
+# 2. Combine
+#    1. all node subsets,
+#    2. all_node_orders(), and
+#    3. all_exit_structures()
+#    to get all possible variants of a given FFT.
+
 
 # all_node_orders: ------
 
-
-# Goal: Apply reorder_nodes(fft) to all possible permutations of cues.
+# Goal: Apply reorder_nodes(fft) to get all possible permutations of cues for a fft.
 #
 # Input:
 #   fft: 1 FFT (as df, 1 row per cue)
 #
 # Output:
 #   Definitions of FFT in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
-
 
 all_node_orders <- function(fft){
 
@@ -1088,11 +1096,10 @@ all_node_orders <- function(fft){
 
 } # all_node_orders().
 
-
-# Check:
-# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
-# fft  <- read_fft_df(ffts_df, tree = 1)  # 1 FFT (as df, from above)
-
+# # Check:
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
+#
 # (dfs_1 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 1)))
 # (dfs_2 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 2)))
 
@@ -1157,14 +1164,12 @@ all_exit_structures <- function(fft){
 
 } # all_exit_structures().
 
-
 # # Check:
-# ffts_df <- get_fft_df(x)  # x$trees$definitions / definitions (as df)
-# fft  <- read_fft_df(ffts_df, tree = 1)  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
 # (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts_df, tree = 2)))
-
 
 
 # ToDo: ------
@@ -1173,6 +1178,6 @@ all_exit_structures <- function(fft){
 #   (1) FFT definitions (df, 1 row per tree) OR
 #   (2) single FFTs (as df, 1 row per node).
 # - Return the result in the same format as the input.
-# - When entering a set of FFT definitions, return modified set?
+# - When applying fn to a set of FFT definitions, return the modified set?
 
 # eof.
