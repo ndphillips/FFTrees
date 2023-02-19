@@ -405,8 +405,8 @@ get_exit_type <- function(x, verify = TRUE){
 
   if (verify){
 
-  # Verify that extypes describe an FFT:
-  verify_exit_type(extypes) # verify (without consequences)
+    # Verify that extypes describe an FFT:
+    verify_exit_type(extypes) # verify (without consequences)
 
   }
 
@@ -623,6 +623,34 @@ all_combinations <- function(x, length){
 # all_combinations(x = 1:3, length = 88)
 # all_combinations(x = 1:3, length = NA)
 # all_combinations(x = NA, length = 1)
+
+
+
+# all_subsets: List all combinations of length 0 < n < length(x) of a set x: ------
+
+all_subsets <- function(x){
+
+  if (length(x) < 2){
+    return(x)
+  }
+
+  l_out <- vector("list", 0)
+
+  for (i in 1:length(x)){
+
+    l_i <- utils::combn(x = x, m = i, simplify = FALSE)
+
+    l_out <- c(l_out, l_i)
+
+  } # for i.
+
+  return(l_out)
+
+} # all_subsets().
+
+# # Check:
+# all_subsets(1:3)
+# all_subsets(LETTERS[1:3])
 
 
 
