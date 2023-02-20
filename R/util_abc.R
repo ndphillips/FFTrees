@@ -629,9 +629,9 @@ all_combinations <- function(x, length){
 # all_subsets: List all combinations of all sub-lengths 0 < n < length(x) of a set x: ------
 
 # Goal: Get all subsets of x (i.e., all possible combinations of all possible lengths 0 < n < length(x)).
-#       Note: Both extremes (an empty set NULL, and the full set x) are NOT included/returned here.
+#       Note: The extreme NULL (an empty set) is NOT, but the full set (all of x) can be included/returned.
 
-all_subsets <- function(x){
+all_subsets <- function(x, include_x = TRUE){
 
   # Prepare: ----
 
@@ -644,7 +644,18 @@ all_subsets <- function(x){
 
   # Main: ----
 
-  for (i in 1:(length(x) - 1)){
+  if (include_x){
+
+    max_size <- length(x)  # a. include maximum subset with ALL length(x) elements
+
+  } else {
+
+    max_size <- (length(x) - 1)  # b. exclude maximum subset with ALL length(x) elements
+
+  }
+
+  # Loop through set sizes:
+  for (i in 1:max_size){
 
     l_i <- utils::combn(x = x, m = i, simplify = FALSE)
 
@@ -661,6 +672,7 @@ all_subsets <- function(x){
 
 # # Check:
 # all_subsets(1:4)
+# all_subsets(1:4, include_x = FALSE)  # excluding 1:4 set
 # all_subsets(LETTERS[1:3])
 # all_subsets(NA)
 # all_subsets("X")
