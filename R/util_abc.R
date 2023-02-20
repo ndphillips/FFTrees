@@ -405,8 +405,8 @@ get_exit_type <- function(x, verify = TRUE){
 
   if (verify){
 
-  # Verify that extypes describe an FFT:
-  verify_exit_type(extypes) # verify (without consequences)
+    # Verify that extypes describe an FFT:
+    verify_exit_type(extypes) # verify (without consequences)
 
   }
 
@@ -567,7 +567,7 @@ all_permutations <- function(x) {
 # all_permutations(c("A", "B", "b", "a"))
 
 
-# all_combinations: List all combinations of length n of a set x: ------
+# all_combinations: List all combinations of a length n of a set x: ------
 
 # # (a) Using utils::combn:
 # m <- utils::combn(x = 1:4, m = 2)
@@ -579,7 +579,6 @@ all_permutations <- function(x) {
 all_combinations <- function(x, length){
 
   # Prepare: ----
-  out <- NA  # initialize
 
   # Verify inputs:
   if (all(is.na(x)) || is.na(length)){
@@ -591,18 +590,24 @@ all_combinations <- function(x, length){
     length <- length(x)
   }
 
-  # Main: Use utils::combn to obtain matrix: ----
-  m <- utils::combn(x = x, m = length)
+  out <- NA  # initialize
 
-  if (is.vector(m)){
 
-    out <- m  # return as is
+  # Main: ----
 
-  } else if (is.matrix(m)){
+  # Use utils::combn to obtain a matrix:
+  mx <- utils::combn(x = x, m = length)
 
-    out <- t(m)  # transpose m into matrix of rows
+  if (is.vector(mx)){
+
+    out <- mx  # return as is
+
+  } else if (is.matrix(mx)){
+
+    out <- t(mx)  # transpose m into matrix of rows
 
   }
+
 
   # Output: ----
 
@@ -618,6 +623,59 @@ all_combinations <- function(x, length){
 # all_combinations(x = 1:3, length = 88)
 # all_combinations(x = 1:3, length = NA)
 # all_combinations(x = NA, length = 1)
+
+
+
+# all_subsets: List all combinations of all sub-lengths 0 < n < length(x) of a set x: ------
+
+# Goal: Get all subsets of x (i.e., all possible combinations of all possible lengths 0 < n < length(x)).
+#       Note: The extreme NULL (an empty set) is NOT, but the full set (all of x) can be included/returned.
+
+all_subsets <- function(x, include_x = TRUE){
+
+  # Prepare: ----
+
+  if (length(x) < 2){
+    return(x)
+  }
+
+  l_out <- vector("list", 0)  # initialize
+
+
+  # Main: ----
+
+  if (include_x){
+
+    max_size <- length(x)  # a. include maximum subset with ALL length(x) elements
+
+  } else {
+
+    max_size <- (length(x) - 1)  # b. exclude maximum subset with ALL length(x) elements
+
+  }
+
+  # Loop through set sizes:
+  for (i in 1:max_size){
+
+    l_i <- utils::combn(x = x, m = i, simplify = FALSE)
+
+    l_out <- c(l_out, l_i)
+
+  } # for i.
+
+
+  # Output: ----
+
+  return(l_out) # as list
+
+} # all_subsets().
+
+# # Check:
+# all_subsets(1:4)
+# all_subsets(1:4, include_x = FALSE)  # excluding 1:4 set
+# all_subsets(LETTERS[1:3])
+# all_subsets(NA)
+# all_subsets("X")
 
 
 
@@ -645,6 +703,6 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new",
 
 # ToDo: ------
 
-# - etc.
+# - Get all_subsets() based on all_combinations().
 
 # eof.
