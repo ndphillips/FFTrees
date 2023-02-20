@@ -334,7 +334,7 @@ add_nodes <- function(fft,
 
 
   # Special case 1:
-  if (any(duplicated(nodes))){ # remove duplicate nodes:
+  if (any(duplicated(nodes))){ # remove duplicated nodes:
 
     # Find the last ix of each unique node:
     uni_nodes <- unique(nodes)
@@ -351,7 +351,7 @@ add_nodes <- function(fft,
     # Remove duplicated nodes:
     nodes <- nodes[last_node_ix]
 
-    message(paste0("add_nodes: Removing duplicate nodes. Remaining nodes: ", paste0(nodes, collapse = ", ")))
+    message(paste0("add_nodes: Removing duplicated nodes. Remaining nodes: ", paste0(nodes, collapse = ", ")))
 
     # Adjust other inputs accordingly:
     class <- class[last_node_ix]
@@ -533,7 +533,7 @@ drop_nodes <- function(fft, nodes = NA){
 
     duplicated_nodes <- unique(nodes[duplicated(nodes)])
 
-    msg_2 <- paste0("drop_nodes: Duplicated nodes can be dropped only once: ",
+    msg_2 <- paste0("drop_nodes: Duplicated nodes are dropped only once: ",
                     paste(duplicated_nodes, collapse = ", "))
 
     message(msg_2)
@@ -560,11 +560,12 @@ drop_nodes <- function(fft, nodes = NA){
   # Special case 4:
   if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
 
-    new_exit_node <- max(new_nodes)
+    new_exit_node <- max(new_nodes)  # NOT length(new_nodes)
+    old_exit_node <- n_cues
 
     fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
 
-    msg_4 <- paste0("drop_nodes: New final node: ", new_exit_node)
+    msg_4 <- paste0("drop_nodes: New final node: ", new_exit_node, " (was node ", old_exit_node, " of fft)")
     message(msg_4)
 
   } # if sc 4.
@@ -583,15 +584,15 @@ drop_nodes <- function(fft, nodes = NA){
 } # drop_nodes().
 
 # # Check:
-# (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
-# (fft <- read_fft_df(ffts_df, tree = 2))  # 1 FFT (as df, from above)
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
 #
 # drop_nodes(fft)
 # drop_nodes(fft, nodes = c(1))
 # drop_nodes(fft, nodes = c(3))
 # drop_nodes(fft, nodes = c(3, 1))
 #
-# drop_nodes(fft, nodes = c(1, 1, 1))  # duplicate nodes are only dropped once.
+# drop_nodes(fft, nodes = c(1, 1, 1))  # duplicated nodes are only dropped once.
 #
 # # Dropping final node / new final node:
 # drop_nodes(fft, nodes = 4)    # works: new final node
@@ -600,6 +601,146 @@ drop_nodes <- function(fft, nodes = NA){
 # # Dropping everything:
 # drop_nodes(fft, nodes = 1:6)  # note + error: nothing left
 # drop_nodes(fft, nodes = 1:4)  # error: nothing left
+
+
+# select_nodes: ------
+
+# Goal: Select some nodes (or cues) of a given FFT.
+#       Note: select_nodes() is the complement of drop_nodes().
+#
+# Inputs:
+#   fft = 1 FFT (as df)
+#   nodes = vector of nodes to select (as integer in 1:nrow(fft))
+#
+# Output: Modified version of fft (as df, with fewer nodes).
+
+select_nodes <- function(fft, nodes = NA){
+
+  # Prepare: ----
+
+  # Verify inputs:
+  testthat::expect_true(verify_fft_as_df(fft))
+
+  if (all(is.na(nodes))) { # catch case 0:
+
+    stop("select_nodes: Nothing left of fft")
+
+    # return(NA)
+
+  } # if case 0.
+
+
+  nodes <- as.integer(nodes)
+  testthat::expect_true(is.integer(nodes), info = "nodes must be an integer vector")
+
+  n_cues <- nrow(fft)
+
+
+  # Special case 1:
+  if (any(nodes %in% 1:n_cues == FALSE)){ # notify that nodes are missing:
+
+    missing_nodes <- setdiff(nodes, 1:n_cues)
+
+    msg_1 <- paste0("select_nodes: Some nodes do not occur in FFT and will be ignored: ",
+                    paste(missing_nodes, collapse = ", "))
+
+    message(msg_1)
+
+    nodes <- setdiff(nodes, missing_nodes)  # remove missing nodes
+
+  } # if sc 1.
+
+
+  # Special case 2:
+  if (any(duplicated(nodes))){
+
+    duplicated_nodes <- unique(nodes[duplicated(nodes)])
+
+    msg_2 <- paste0("select_nodes: Duplicated nodes are selected only once: ",
+                    paste(duplicated_nodes, collapse = ", "))
+
+    message(msg_2)
+
+    nodes <- unique(nodes)  # remove duplicated nodes
+
+  } # if sc 2.
+
+
+  # Special case 3 (AFTER removing any missing or duplicated nodes):
+  if (length(nodes) == n_cues) {
+
+    message("select_nodes: FFT remains unchanged")  # 4debugging
+
+    return(fft)
+
+  } # if sc 3.
+
+
+  # Main: ----
+
+  # Determine nodes to drop (complement):
+  drop_nodes <- setdiff(1:n_cues, nodes)
+
+  # # Special case 3:
+  # if (length(drop_nodes) == n_cues){ # nothing left:
+  #
+  #   msg_3 <- paste0("select_nodes: Nothing left of fft")
+  #   stop(msg_3)
+  #
+  # } # if sc 3.
+
+  # Filter rows of fft:
+  fft_mod <- fft[nodes, ]  # main step
+
+  # Special case 4:
+  if (n_cues %in% drop_nodes){ # Previous exit cue was dropped/new exit node:
+
+    new_exit_node <- length(nodes)  # NOT max(nodes)
+    old_exit_node <- max(nodes)
+
+    fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
+
+    msg_4 <- paste0("select_nodes: New final node: ", new_exit_node, " (was node ", old_exit_node, " of fft)")
+    message(msg_4)
+
+  } # if sc 4.
+
+
+  # Output: ----
+
+  # Repair row names:
+  row.names(fft_mod) <- 1:nrow(fft_mod)
+
+  # Verify output:
+  testthat::expect_true(verify_fft_as_df(fft_mod))
+
+  return(fft_mod)
+
+} # select_nodes().
+
+# # Check:
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
+#
+# select_nodes(fft)  # Nothing selected => nothing left (as ERROR)
+# select_nodes(fft, nodes = 4:1)  # selecting all: fft unchanged.
+#
+# select_nodes(fft, nodes = c(1))
+# select_nodes(fft, nodes = c(3))
+#
+# select_nodes(fft, nodes = c(3, 1))
+#
+# select_nodes(fft, nodes = c(1, 1, 1))  # duplicated nodes are only dropped once.
+#
+# # Selecting final node / new final node:
+# select_nodes(fft, nodes = 4)        # works: OLD final node
+# select_nodes(fft, nodes = c(1, 3))  # works: NEW final node
+# select_nodes(fft, nodes = 2:6)  # works (1 node left: OLD exit)
+# select_nodes(fft, nodes = c(1, 3, 6:9))  # works (2 nodes left: NEW exit)
+#
+# # Selecting everything/nothing:
+# select_nodes(fft, nodes = 4:1)  # note + error: nothing left
+# select_nodes(fft, nodes = NA)  # error: nothing left
 
 
 
