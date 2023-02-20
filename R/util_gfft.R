@@ -18,6 +18,7 @@
 # into a more modular format of individual FFTs (as df with 1 row per node), and back.
 # Reason: The latter can be manipulated more easily by tree editing/manipulation/trimming functions (B).
 
+
 # Details:
 #
 # 2 FFT translation functions:
@@ -310,7 +311,7 @@ add_nodes <- function(fft,
 
   if (all(is.na(nodes))) { # catch case 0:
 
-    message("add_nodes: FFT remains unchanged")  # 4debugging
+    message("add_nodes: fft remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -505,7 +506,7 @@ drop_nodes <- function(fft, nodes = NA){
 
   if (all(is.na(nodes))) { # catch case 0:
 
-    message("drop_nodes: FFT remains unchanged")  # 4debugging
+    message("drop_nodes: fft remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -669,7 +670,7 @@ select_nodes <- function(fft, nodes = NA){
   # Special case 3 (AFTER removing any missing or duplicated nodes):
   if (length(nodes) == n_cues) {
 
-    message("select_nodes: FFT remains unchanged")  # 4debugging
+    message("select_nodes: fft remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -775,7 +776,7 @@ edit_nodes <- function(fft,
 
   if (all(is.na(nodes))) { # catch case 0:
 
-    message("edit_nodes: FFT remains unchanged")  # 4debugging
+    message("edit_nodes: fft remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -976,7 +977,7 @@ flip_exits <- function(fft, nodes = NA){
 
   if (all(is.na(nodes))) { # catch case 0:
 
-    message("flip_exits: FFT remains unchanged")  # 4debugging
+    message("flip_exits: fft remains unchanged")  # 4debugging
 
     return(fft)
 
@@ -1098,7 +1099,7 @@ reorder_nodes <- function(fft, order = NA){
 
   if (all(order == 1:n_cues)) { # catch case:
 
-    message("reorder_nodes: FFT remains unchanged")  # 4debugging
+    message("reorder_nodes: fft remains unchanged")  # 4debugging
 
     return(fft)
 
