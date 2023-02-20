@@ -262,6 +262,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 
 
+
 # (B) Editing tree descriptions: --------
 
 # Goal: Functions for editing, manipulating, and trimming individual FFTs (in df format).
@@ -1167,6 +1168,7 @@ reorder_nodes <- function(fft, order = NA){
 # reorder_nodes(fft, order = c(2, 1, 3))  # exit cue unchanged
 # reorder_nodes(fft, order = c(1, 3, 2))  # exit cue changed
 # reorder_nodes(fft, order = c(3, 1, 2))  # exit cue changed
+
 
 
 
