@@ -111,17 +111,17 @@ read_fft_df <- function(ffts_df, tree = 1){
 
 # # Check:
 # hd <- FFTrees(formula = diagnosis ~ .,
-#                 data = heart.train,
-#                 data.test = heart.test)
+#               data = heart.train,
+#               data.test = heart.test)
 # x <- hd  # copy object (with 7 FFTs)
 #
 # # FFT definitions:
-# ffts_df <- get_fft_df(x)  # using the helper function
-# ffts_df
+# (ffts <- get_fft_df(x))  # using the helper function
 #
-# read_fft_df(ffts_df, 2)
-# read_fft_df(ffts_df, 2:3)  # yields error
-# read_fft_df(ffts_df, 8)    # yields error
+# read_fft_df(ffts, 1)    # works
+# read_fft_df(ffts, 7)    # works
+# read_fft_df(ffts, 2:3)  # yields an error
+# read_fft_df(ffts, 8)    # yields an error
 
 
 
@@ -180,22 +180,28 @@ write_fft_df <- function(fft, tree = -99L){
 } # write_fft_df().
 
 # # Check:
-# fft_df <- read_fft_df(ffts_df, 3)  # from above
-# fft_df
+# (ffts <- get_fft_df(x))  # using the helper function
+# (fft <- read_fft_df(ffts, 2))  # from above
 #
-# write_fft_df(fft_df, tree = 123)
+# write_fft_df(fft, tree = 123)
+
 
 
 # # Verify that read_fft_df() and write_fft_df() are complementary functions:
+
+# Show that:
+# 1. converting a line of ffts_df by read_fft_df() into df of 1 FFT and
+# 2. re-converting df back into 1 row per tree by write_fft_df()
+# yields original line:
+
+# for (id in 1:nrow(ffts)){
 #
-# # Show that:
-# # 1. converting a line of ffts_df by read_fft_df() into df of 1 FFT and
-# # 2. re-converting df back into 1 row per tree by write_fft_df()
-# # yields original line:
+#   def_org <- as.data.frame(ffts[id, ])
+#   def_new <- write_fft_df(read_fft_df(ffts, id), id)
+#   # print(def_org)  # 4debugging
+#   # print(def_new)  # 4debugging
 #
-# for (id in 1:nrow(ffts_df)){
-#
-#   check <- all.equal(ffts_df[id, ], write_fft_df(read_fft_df(ffts_df, id), id))
+#   check <- all.equal(def_org, def_new)
 #
 #   print(paste0("\u2014 tree id = ", id, ": ", check))
 #
@@ -1244,8 +1250,8 @@ all_node_orders <- function(fft){
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
-# (dfs_1 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 1)))
-# (dfs_2 <- all_node_orders(fft = read_fft_df(ffts_df, tree = 2)))
+# (dfs_1 <- all_node_orders(fft = read_fft_df(ffts, tree = 1)))
+# (dfs_2 <- all_node_orders(fft = read_fft_df(ffts, tree = 2)))
 
 
 
@@ -1313,7 +1319,7 @@ all_exit_structures <- function(fft){
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
-# (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts_df, tree = 2)))
+# (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts, tree = 2)))
 
 
 # all_node_subsets(): ------
