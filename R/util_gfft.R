@@ -1183,17 +1183,17 @@ reorder_nodes <- function(fft, order = NA){
 # Possible differences/similarities within a "family of FFTs" (from narrow to wide):
 # 1. A specific set of cues, their order, and exit structure:  1 FFT from FFTrees object.
 # 2. A specific set of cues, their order, but variable exit structures:  The FFTs in 1 FFTrees object.
-# 3. A specific set of cues, but variable cue orders and exit structures.
+# +. A specific set of cues, but variable cue orders AND exit structures.
+#
+# 3. get all node subsets (with all possible subsets of nodes)
+#    = all_combinations() for each possible length (excluding extremes of 0 and n_nodes, i.e., 1:(n_nodes - 1)).
 
 # ToDo:
-# 1. get all node subsets (with all possible subsets of nodes)
-#    = all_combinations() for each possible length (1:n_nodes).
-#
-# 2. Combine
-#    1. all node subsets,
-#    2. all_node_orders(), and
+# Combine 3 macro-functions:
+#    1. all_node_subsets(), and
+#    2. all_node_orders(),  and
 #    3. all_exit_structures()
-#    to get all possible variants of a given FFT.
+#    to get ALL possible variants of a given FFT.
 
 
 # all_node_orders: ------
@@ -1312,6 +1312,64 @@ all_exit_structures <- function(fft){
 #
 # (dfs_3 <- all_exit_structures(fft = fft))
 # (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts_df, tree = 2)))
+
+
+# all_node_subsets(): ------
+
+# Goal: Get all subtrees of an FFT.
+
+all_node_subsets <- function(fft){
+
+  # Prepare: ----
+
+  # Verify inputs:
+  testthat::expect_true(verify_fft_as_df(fft))
+
+  # Initialize:
+  out <- NULL
+  cnt <- 1
+
+  n_cues <- nrow(fft)
+
+
+  # Main: ----
+
+  # Get subsets of nodes (as list):
+  node_subsets_l <- all_subsets(1:n_cues)
+
+  # Loop through list elements:
+  for (i in 1:length(node_subsets_l)){
+
+    cur_nodes <- node_subsets_l[[i]]
+    # print(cur_nodes)  # 4debugging
+
+    fft_sub <- select_nodes(fft, nodes = cur_nodes)
+    # print(fft_sub)  # 4debugging
+
+    fft_df <- write_fft_df(fft = fft_sub, tree = cnt)
+    # print(fft_df)  # 4debugging
+
+    cnt <- cnt + 1 # increment
+
+    out <- add_fft_df(fft = fft_df, ffts_df = out)
+
+  } # for i.
+
+
+  # Output: ----
+
+  return(out)
+
+} # all_node_subsets().
+
+# Check:
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
+#
+# (ast_3 <- all_node_subsets(fft = fft))
+# (ast_4 <- all_node_subsets(fft = read_fft_df(ffts, tree = 2)))
+
+
 
 
 # ToDo: ------
