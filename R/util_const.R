@@ -13,11 +13,13 @@
 algorithm_options <- c("ifan", "dfan")  # (global constant)
 
 
+
 # - goal_options: ----
 
 # A set of default goals (for FFT selection):
 
 goal_options <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global constant)
+
 
 
 # - cost_outcomes_default: ----
@@ -28,6 +30,7 @@ goal_options <- c("acc", "bacc", "wacc",  "dprime",  "cost")  # (global constant
 cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global constant)
 
 
+
 # - cost_cues_default: ----
 
 # Cue cost = graded mcu / "graded frugality":
@@ -36,17 +39,21 @@ cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global constan
 cost_cues_default <- 0  # (global constant)
 
 
+
+# - cue_classes: ----
+
+cue_classes <- c( #  (global constant)
+  "c",  # categorical: character, factor, logical
+  "n")  # numeric: integer, double
+
+
+
 # - fft_node_sep: ----
 
 # A node separation marker in tree definitions (symbol):
 
 fft_node_sep <- ";"  # (global constant)
 
-
-# - cue_classes: ----
-
-cue_classes <- c("c",  # categorical: character, factor, logical
-                 "n")  # numeric: integer, double
 
 
 # - directions_df: ----
@@ -91,12 +98,11 @@ negations_v <- c("not", "is not")  # (global constant)
 # - exit_types: ----
 
 # Exit types (as numeric):
-# 1. exit_types[1]: 0   representing FALSE, left, noise
-# 2. exit_types[2]: 1   representing TRUE, right, signal
+# 1. exit_types[1]: 0   representing FALSE, left, noise N
+# 2. exit_types[2]: 1   representing TRUE, right, signal S
 # 3. exit_types[3]: 0.5 representing 2/4, both, final
 
 exit_types <- c(0, 1, 0.5)  # (global constant)
-
 
 
 
