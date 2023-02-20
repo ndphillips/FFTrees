@@ -317,7 +317,6 @@ verify_tree_arg <- function(x, data, tree){
 # Inputs: ffts_df FFT definitions (1-line per FFT, as df, usually from x$trees$definitions or get_fft_df(x)).
 # Output: Boolean.
 
-
 verify_fft_definition <- function(ffts_df){
 
   # verify ffts_df:
@@ -338,15 +337,54 @@ verify_fft_definition <- function(ffts_df){
 
   if (all(req_tdef_vars %in% provided_vars)){
 
-    # ToDo: Verify variables further (e.g., verify their contents).
+    # Verify variables further (e.g., verify their contents):
+
+    # ToDo: verify classes (requires data)
+    # ToDo: verify cues (requires data)
+
+    # Verify directions:
+
+    # (a) as list elements:
+    lapply(ffts_df$directions, FUN = function(x){
+
+      directions <- trimws(unlist(strsplit(x, split = fft_node_sep, fixed = TRUE)))
+      # print(directions)  # 4debugging
+      testthat::expect_true(verify_dir_sym(directions))
+
+    })
+
+    # (b) as 1 long vector:
+    # directions <- trimws(unlist(strsplit(ffts_df$directions, split = fft_node_sep, fixed = TRUE)))
+    # print(directions)  # 4debugging
+    # testthat::expect_true(verify_dir_sym(directions))
+
+    # ToDo: verify thresholds
+
+    # Verify exits:
+
+    # (a) as list elements:
+    lapply(ffts_df$exits, FUN = function(x){
+
+      exits <- trimws(unlist(strsplit(x, split = fft_node_sep, fixed = TRUE)))
+      # print(exits)  # 4debugging
+      testthat::expect_true(verify_exit_type(exits))
+
+    })
+
+
+    # Output 1:
 
     return(TRUE)
+
 
   } else {
 
     missing_vars <- setdiff(req_tdef_vars, provided_vars)
 
     message("Input 'ffts_df' is not a valid (set of) FFT definition(s).\nMissing variables: ", paste(missing_vars, collapse = ", "))
+
+
+    # Output 2:
 
     return(FALSE)
 
