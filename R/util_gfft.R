@@ -1335,7 +1335,7 @@ all_node_subsets <- function(fft){
   # Main: ----
 
   # Get subsets of nodes (as list):
-  node_subsets_l <- all_subsets(1:n_cues)
+  node_subsets_l <- all_subsets(x = 1:n_cues, include_x = TRUE)  # include the full set of all nodes
 
   # Loop through list elements:
   for (i in 1:length(node_subsets_l)){
@@ -1343,7 +1343,7 @@ all_node_subsets <- function(fft){
     cur_nodes <- node_subsets_l[[i]]
     # print(cur_nodes)  # 4debugging
 
-    fft_sub <- select_nodes(fft, nodes = cur_nodes)
+    fft_sub <- select_nodes(fft = fft, nodes = cur_nodes)
     # print(fft_sub)  # 4debugging
 
     fft_df <- write_fft_df(fft = fft_sub, tree = cnt)
@@ -1371,12 +1371,18 @@ all_node_subsets <- function(fft){
 
 
 
-
 # ToDo: ------
 
+# - Combine 3 macro-functions:
+#    1. all_node_subsets(), and
+#    2. all_node_orders(),  and
+#    3. all_exit_structures()
+#    to get ALL possible variants of a given FFT.
+#
 # - Make some functions (e.g., tree editing functions) work alternative inputs of either
 #   (1) FFT definitions (df, 1 row per tree) OR
 #   (2) single FFTs (as df, 1 row per node).
+#
 # - Return the result in the same format as the input.
 # - When applying fn to a set of FFT definitions, return the modified set?
 
