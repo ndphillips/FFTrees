@@ -567,7 +567,7 @@ all_permutations <- function(x) {
 # all_permutations(c("A", "B", "b", "a"))
 
 
-# all_combinations: List all combinations of length n of a set x: ------
+# all_combinations: List all combinations of a length n of a set x: ------
 
 # # (a) Using utils::combn:
 # m <- utils::combn(x = 1:4, m = 2)
@@ -626,17 +626,25 @@ all_combinations <- function(x, length){
 
 
 
-# all_subsets: List all combinations of length 0 < n < length(x) of a set x: ------
+# all_subsets: List all combinations of all sub-lengths 0 < n < length(x) of a set x: ------
+
+# Goal: Get all subsets of x (i.e., all possible combinations of all possible lengths 0 < n < length(x)).
+#       Note: Both extremes (an empty set NULL, and the full set x) are NOT included/returned here.
 
 all_subsets <- function(x){
+
+  # Prepare: ----
 
   if (length(x) < 2){
     return(x)
   }
 
-  l_out <- vector("list", 0)
+  l_out <- vector("list", 0)  # initialize
 
-  for (i in 1:length(x)){
+
+  # Main: ----
+
+  for (i in 1:(length(x) - 1)){
 
     l_i <- utils::combn(x = x, m = i, simplify = FALSE)
 
@@ -644,13 +652,18 @@ all_subsets <- function(x){
 
   } # for i.
 
-  return(l_out)
+
+  # Output: ----
+
+  return(l_out) # as list
 
 } # all_subsets().
 
 # # Check:
-# all_subsets(1:3)
+# all_subsets(1:4)
 # all_subsets(LETTERS[1:3])
+# all_subsets(NA)
+# all_subsets("X")
 
 
 
