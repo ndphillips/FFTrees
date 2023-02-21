@@ -1430,8 +1430,12 @@ all_fft_variants <- function(fft){
   # Main: ------
 
   # 1. Get all_node_subsets(): ----
+
   set_1 <- all_node_subsets(fft = fft)
   # print(set_1)  # 4debugging
+
+  # Provide user feedback:
+  cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_1), " node subsets.\n")))
 
 
   # 2. Get all node orders (for each fft definition): ----
@@ -1450,6 +1454,9 @@ all_fft_variants <- function(fft){
 
   } # for i.
 
+  # Provide user feedback:
+  cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_2), " node orders.\n")))
+
 
   # 3. Get all exit structures (for each fft definition): ----
 
@@ -1467,6 +1474,9 @@ all_fft_variants <- function(fft){
 
   } # for i.
 
+  # Provide user feedback:
+  cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_3), " exit structures.\n")))
+
 
   # Output: ------
 
@@ -1481,7 +1491,7 @@ all_fft_variants <- function(fft){
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
-# (all_3 <- all_fft_variants(fft = fft))
+# (all_3 <- all_fft_variants(fft = read_fft_df(ffts, tree = 1)))
 # nrow(all_3)
 # verify_ffts_df(all_3)
 #
