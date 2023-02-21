@@ -1212,7 +1212,7 @@ reorder_nodes <- function(fft, order = NA){
 #   fft: 1 FFT (as df, 1 row per cue)
 #
 # Output:
-#   Definitions of FFT in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
+#   A set of FFT definitions in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
 
 all_node_orders <- function(fft){
 
@@ -1225,6 +1225,20 @@ all_node_orders <- function(fft){
   out <- NULL
   n_cues <- nrow(fft)
 
+
+  # Special case 1:
+  if (n_cues == 1){
+
+    message(paste0("all_orders: fft contains only 1 node"))
+
+    # Write fft definition:
+    cur_fft_df <- write_fft_df(fft = fft, tree = 1)
+
+    return(cur_fft_df)
+
+  } # if sc 1.
+
+
   # Main: ----
 
   all_orders <- all_permutations(1:n_cues)
@@ -1234,15 +1248,16 @@ all_node_orders <- function(fft){
 
     cur_fft <- reorder_nodes(fft = fft, order = all_orders[i, ])
 
-    cur_fft_def <- write_fft_df(fft = cur_fft, tree = as.integer(i))
+    cur_fft_df <- write_fft_df(fft = cur_fft, tree = as.integer(i))
 
-    out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
+    out <- add_fft_df(fft = cur_fft_df, ffts_df = out)
 
-  }
+  } # for i.
+
 
   # Output: ----
 
-  return(out)
+  return(out)  # ffts_df (definitions of ffts)
 
 } # all_node_orders().
 
@@ -1261,7 +1276,8 @@ all_node_orders <- function(fft){
 #
 # Method: Use flip_exits() on nodes = `all_combinations()` for all length values of 1:(n_cues - 1).
 #
-# Input: fft: 1 FFT (as df, 1 row per cue)
+# Input: fft: 1 FFT (as df, 1 row per cue).
+# Output: A set of FFT definitions (ffts_df).
 
 all_exit_structures <- function(fft){
 
@@ -1276,6 +1292,7 @@ all_exit_structures <- function(fft){
 
   n_cues <- nrow(fft)
 
+
   # Main: ----
 
   cur_fft_def <- write_fft_df(fft = fft, tree = as.integer(cnt))
@@ -1286,20 +1303,20 @@ all_exit_structures <- function(fft){
 
     n_non_exit_cues <- (n_cues - 1)
 
-    for (i in 1:n_non_exit_cues){
+    for (i in 1:n_non_exit_cues){ # loop 1: non-exit cues
 
       comb_i <- all_combinations(1:n_non_exit_cues, length = i)
       # print(comb_i)  # 4debugging
 
-      for (j in 1:nrow(comb_i)){
+      for (j in 1:nrow(comb_i)){ # loop 2: combinations
 
         cur_fft <- flip_exits(fft = fft, nodes = comb_i[j, ])
 
-        cnt <- cnt + 1
+        cnt <- cnt + 1  # increment
 
-        cur_fft_def <- write_fft_df(fft = cur_fft, tree = as.integer(cnt))
+        cur_fft_df <- write_fft_df(fft = cur_fft, tree = as.integer(cnt))
 
-        out <- add_fft_df(fft = cur_fft_def, ffts_df = out)
+        out <- add_fft_df(fft = cur_fft_df, ffts_df = out)
 
       } # for j.
 
@@ -1310,7 +1327,7 @@ all_exit_structures <- function(fft){
 
   # Output: ----
 
-  return(out)
+  return(out)  # ffts_df (definitions of ffts)
 
 } # all_exit_structures().
 
@@ -1322,9 +1339,13 @@ all_exit_structures <- function(fft){
 # (dfs_4 <- all_exit_structures(fft = read_fft_df(ffts, tree = 2)))
 
 
+
 # all_node_subsets(): ------
 
 # Goal: Get all subtrees of an FFT.
+#
+# Input: fft: 1 FFT (as df, 1 row per cue).
+# Output: A set of FFT definitions (ffts_df).
 
 all_node_subsets <- function(fft){
 
@@ -1357,7 +1378,7 @@ all_node_subsets <- function(fft){
     fft_df <- write_fft_df(fft = fft_sub, tree = cnt)
     # print(fft_df)  # 4debugging
 
-    cnt <- cnt + 1 # increment
+    cnt <- cnt + 1  # increment
 
     out <- add_fft_df(fft = fft_df, ffts_df = out)
 
@@ -1366,7 +1387,7 @@ all_node_subsets <- function(fft){
 
   # Output: ----
 
-  return(out)
+  return(out)  # ffts_df (definitions of ffts)
 
 } # all_node_subsets().
 
@@ -1379,14 +1400,99 @@ all_node_subsets <- function(fft){
 
 
 
+# all_fft_variants: ------
+
+# Goal: Get all node subsets, node orders, and exit structures of a given fft.
+#       Combine 3 macro-functions:
+#       1. all_node_subsets(), and
+#       2. all_node_orders(),  and
+#       3. all_exit_structures()
+#       to get ALL possible variants of a given FFT.
+#
+# Input: fft: 1 FFT (as df, 1 row per cue).
+# Output: A set of FFT definitions (ffts_df).
+
+
+all_fft_variants <- function(fft){
+
+  # Prepare: ------
+
+  # Verify inputs:
+  testthat::expect_true(verify_fft_as_df(fft))
+
+  # Initialize:
+  out <- NULL
+  cnt <- 1
+
+  n_cues <- nrow(fft)
+
+
+  # Main: ------
+
+  # 1. Get all_node_subsets(): ----
+  set_1 <- all_node_subsets(fft = fft)
+  # print(set_1)  # 4debugging
+
+
+  # 2. Get all node orders (for each fft definition): ----
+
+  set_2 <- NULL
+
+  for (i in 1:nrow(set_1)){ # for each fft definition in set_1:
+
+    cur_fft <- read_fft_df(ffts_df = set_1, tree = i)
+    # print(cur_fft)  # 4debugging
+
+    # Get all_node_orders() for cur_fft:
+    cur_node_orders <- all_node_orders(fft = cur_fft)
+
+    set_2 <- add_fft_df(fft = cur_node_orders, ffts_df = set_2)
+
+  } # for i.
+
+
+  # 3. Get all exit structures (for each fft definition): ----
+
+  set_3 <- NULL
+
+  for (i in 1:nrow(set_2)){ # for each fft definition in set_2:
+
+    cur_fft <- read_fft_df(ffts_df = set_2, tree = i)
+    # print(cur_fft)  # 4debugging
+
+    # Get all_() for cur_fft:
+    cur_exit_structures <- all_exit_structures(fft = cur_fft)
+
+    set_3 <- add_fft_df(fft = cur_exit_structures, ffts_df = set_3)
+
+  } # for i.
+
+
+  # Output: ------
+
+  out <- set_3  # copy
+
+  return(out)  # ffts_df (definitions of ffts)
+
+} # all_fft_variants().
+
+
+# # Check:
+# (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
+# (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
+#
+# (all_3 <- all_fft_variants(fft = fft))
+# nrow(all_3)
+# verify_ffts_df(all_3)
+#
+# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2)))
+# nrow(all_4)
+# verify_ffts_df(all_4)
+
+
+
 # ToDo: ------
 
-# - Combine 3 macro-functions:
-#    1. all_node_subsets(), and
-#    2. all_node_orders(),  and
-#    3. all_exit_structures()
-#    to get ALL possible variants of a given FFT.
-#
 # - Make some functions (e.g., tree editing functions) work alternative inputs of either
 #   (1) FFT definitions (df, 1 row per tree) OR
 #   (2) single FFTs (as df, 1 row per node).
