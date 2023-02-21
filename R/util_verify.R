@@ -311,13 +311,13 @@ verify_tree_arg <- function(x, data, tree){
 
 
 
-# verify_fft_definition: ------
+# verify_ffts_df: ------
 
 # Goal: Verify a set of existing tree definitions (defs as df, from an FFTrees object).
 # Inputs: ffts_df FFT definitions (1-line per FFT, as df, usually from x$trees$definitions or get_fft_df(x)).
 # Output: Boolean.
 
-verify_fft_definition <- function(ffts_df){
+verify_ffts_df <- function(ffts_df){
 
   # verify ffts_df:
   testthat::expect_true(is.data.frame(ffts_df), info = "Input 'ffts_df' are not a data.frame")
@@ -390,7 +390,7 @@ verify_fft_definition <- function(ffts_df){
 
   }
 
-} # verify_fft_definition().
+} # verify_ffts_df().
 
 
 

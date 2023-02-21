@@ -310,7 +310,7 @@ FFTrees <- function(formula = NULL,
 
     # ToDo: Verify integrity of tree definitions:
     # 1. tree.definitions contains valid tree definitions (in appropriate format):
-    testthat::expect_true(verify_fft_definition(tree.definitions))
+    testthat::expect_true(verify_ffts_df(tree.definitions))
 
     # 2. tree.definitions fit to provided data (see verify_all_cues_in_data() in helper.R)
 
