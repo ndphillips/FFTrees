@@ -35,7 +35,7 @@
 #
 # Inputs:
 # ffts_df: A set of FFT definitions (as df, usually from an FFTrees object,
-#       with suitable variable names to pass verify_fft_definition()).
+#       with suitable variable names to pass verify_ffts_df()).
 # tree: A tree ID (corresponding to tree in ffts_df).
 #
 # Output: A definition of 1 FFT with 1 row per node (as df).
@@ -50,7 +50,7 @@ read_fft_df <- function(ffts_df, tree = 1){
   # Prepare: ----
 
   # Verify inputs:
-  testthat::expect_true(verify_fft_definition(ffts_df)) # verify structure and content
+  testthat::expect_true(verify_ffts_df(ffts_df)) # verify structure and content
 
   testthat::expect_true(is.numeric(tree))
   testthat::expect_true(length(tree) == 1)
@@ -217,7 +217,7 @@ write_fft_df <- function(fft, tree = -99L){
 
 add_fft_df <- function(fft, ffts_df = NULL){
 
-  if (verify_fft_definition(fft)){   # Case 1: fft is a (set of) FFT-definitions (in 1 row per tree, as df) ----
+  if (verify_ffts_df(fft)){   # Case 1: fft is a (set of) FFT-definitions (in 1 row per tree, as df) ----
 
     if (is.null(ffts_df)){ # no addend:
 
@@ -225,7 +225,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
     } else { # add to existing FFT definitions of ffts_df:
 
-      if (verify_fft_definition(ffts_df)){
+      if (verify_ffts_df(ffts_df)){
 
         out_ffts_df <- rbind(ffts_df, fft)  # add to existing definitions
 
@@ -1370,7 +1370,7 @@ all_node_subsets <- function(fft){
 
 } # all_node_subsets().
 
-# Check:
+# # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
