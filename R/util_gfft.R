@@ -28,6 +28,13 @@
 # 1 FFT collection function:
 # - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
 
+# # Create example data/object x:
+# hd <- FFTrees(formula = diagnosis ~ .,
+#               data = heart.train,
+#               data.test = heart.test)
+# x <- hd  # copy object (with 7 FFTs)
+
+
 
 # read_fft_df: ------
 
@@ -110,11 +117,6 @@ read_fft_df <- function(ffts_df, tree = 1){
 } # read_fft_df().
 
 # # Check:
-# hd <- FFTrees(formula = diagnosis ~ .,
-#               data = heart.train,
-#               data.test = heart.test)
-# x <- hd  # copy object (with 7 FFTs)
-#
 # # FFT definitions:
 # (ffts <- get_fft_df(x))  # using the helper function
 #
@@ -1214,7 +1216,7 @@ reorder_nodes <- function(fft, order = NA){
 # Output:
 #   A set of FFT definitions in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
 
-all_node_orders <- function(fft){
+all_node_orders <- function(fft, quiet = FALSE){
 
   # Prepare: ----
 
@@ -1255,6 +1257,12 @@ all_node_orders <- function(fft){
   } # for i.
 
 
+  # Provide user feedback:
+  if (!quiet){
+    cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node orders.\n")))
+  }
+
+
   # Output: ----
 
   return(out)  # ffts_df (definitions of ffts)
@@ -1279,7 +1287,7 @@ all_node_orders <- function(fft){
 # Input: fft: 1 FFT (as df, 1 row per cue).
 # Output: A set of FFT definitions (ffts_df).
 
-all_exit_structures <- function(fft){
+all_exit_structures <- function(fft, quiet = FALSE){
 
   # Prepare: ----
 
@@ -1325,6 +1333,12 @@ all_exit_structures <- function(fft){
   } # if (n_cues > 1).
 
 
+  # Provide user feedback:
+  if (!quiet){
+    cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " exit structures.\n")))
+  }
+
+
   # Output: ----
 
   return(out)  # ffts_df (definitions of ffts)
@@ -1347,7 +1361,7 @@ all_exit_structures <- function(fft){
 # Input: fft: 1 FFT (as df, 1 row per cue).
 # Output: A set of FFT definitions (ffts_df).
 
-all_node_subsets <- function(fft){
+all_node_subsets <- function(fft, quiet = FALSE){
 
   # Prepare: ----
 
@@ -1385,6 +1399,12 @@ all_node_subsets <- function(fft){
   } # for i.
 
 
+  # Provide user feedback:
+  if (!quiet){
+    cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node subsets.\n")))
+  }
+
+
   # Output: ----
 
   return(out)  # ffts_df (definitions of ffts)
@@ -1413,7 +1433,7 @@ all_node_subsets <- function(fft){
 # Output: A set of FFT definitions (ffts_df).
 
 
-all_fft_variants <- function(fft){
+all_fft_variants <- function(fft, quiet = FALSE){
 
   # Prepare: ------
 
@@ -1431,11 +1451,8 @@ all_fft_variants <- function(fft){
 
   # 1. Get all_node_subsets(): ----
 
-  set_1 <- all_node_subsets(fft = fft)
+  set_1 <- all_node_subsets(fft = fft, quiet = quiet)
   # print(set_1)  # 4debugging
-
-  # Provide user feedback:
-  cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_1), " node subsets.\n")))
 
 
   # 2. Get all node orders (for each fft definition): ----
@@ -1448,14 +1465,11 @@ all_fft_variants <- function(fft){
     # print(cur_fft)  # 4debugging
 
     # Get all_node_orders() for cur_fft:
-    cur_node_orders <- all_node_orders(fft = cur_fft)
+    cur_node_orders <- all_node_orders(fft = cur_fft, quiet = quiet)
 
     set_2 <- add_fft_df(fft = cur_node_orders, ffts_df = set_2)
 
   } # for i.
-
-  # Provide user feedback:
-  cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_2), " node orders.\n")))
 
 
   # 3. Get all exit structures (for each fft definition): ----
@@ -1468,14 +1482,17 @@ all_fft_variants <- function(fft){
     # print(cur_fft)  # 4debugging
 
     # Get all_() for cur_fft:
-    cur_exit_structures <- all_exit_structures(fft = cur_fft)
+    cur_exit_structures <- all_exit_structures(fft = cur_fft, quiet = quiet)
 
     set_3 <- add_fft_df(fft = cur_exit_structures, ffts_df = set_3)
 
   } # for i.
 
+
   # Provide user feedback:
-  cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_3), " exit structures.\n")))
+  if (!quiet){
+    cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_3), " variants.\n")))
+  }
 
 
   # Output: ------
@@ -1495,7 +1512,7 @@ all_fft_variants <- function(fft){
 # nrow(all_3)
 # verify_ffts_df(all_3)
 #
-# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2)))
+# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2), quiet = TRUE))
 # nrow(all_4)
 # verify_ffts_df(all_4)
 
