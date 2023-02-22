@@ -28,6 +28,8 @@
 # 1 FFT collection function:
 # - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
 
+
+
 # # Create example data/object x:
 # hd <- FFTrees(formula = diagnosis ~ .,
 #               data = heart.train,
@@ -37,6 +39,7 @@
 
 
 # read_fft_df: ------
+
 
 # Goal: Extract 1 FFT (as df) from multi-line FFT definitions (as df).
 #
@@ -63,6 +66,7 @@ read_fft_df <- function(ffts_df, tree = 1){
   testthat::expect_true(length(tree) == 1)
 
   if (!(tree %in% ffts_df$tree)){
+    # Error message:
     stop(paste0("No FFT #", tree, " found in ffts_df"))
   }
 
@@ -97,6 +101,7 @@ read_fft_df <- function(ffts_df, tree = 1){
     tvec_diffs_col <- paste(req_tvec_names[ixs_with_diffs], collapse = ", ")
     vlen_diffs_col <- paste(v_lengths[ixs_with_diffs], collapse = ", ")
 
+    # Error message:
     msg <- paste0("The lengths of some FFT definition parts differ from n_nodes = ", n_nodes, ":\n  names of v = (", tvec_diffs_col, "), v_lengths = (", vlen_diffs_col, ").")
     stop(msg)
 
@@ -110,11 +115,13 @@ read_fft_df <- function(ffts_df, tree = 1){
                     exit = exits,
                     stringsAsFactors = FALSE)
 
+
   # Output: ----
 
   return(fft) # (df with 1 row per node)
 
 } # read_fft_df().
+
 
 # # Check:
 # # FFT definitions:
@@ -129,6 +136,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 
 # write_fft_df: ------
 
+
 # Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
 # Inputs:
 # - fft: A definition of 1 FFT (as df, with 1 row per node,
@@ -139,6 +147,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 # Note: Code is currently used at the end of
 # - fftrees_grow_fan()         +++ here now +++
 # - fftrees_wordstofftrees()   +++ here now +++
+
 
 write_fft_df <- function(fft, tree = -99L){
 
@@ -172,6 +181,7 @@ write_fft_df <- function(fft, tree = -99L){
     stringsAsFactors = FALSE
   )
 
+
   # Output: ----
 
   # Convert df to tibble:
@@ -180,6 +190,7 @@ write_fft_df <- function(fft, tree = -99L){
   return(fft_in_1_line)
 
 } # write_fft_df().
+
 
 # # Check:
 # (ffts <- get_fft_df(x))  # using the helper function
@@ -213,9 +224,11 @@ write_fft_df <- function(fft, tree = -99L){
 
 # add_fft_df: ------
 
+
 # Goal: Add an FFT definition (Case 1) or 1 FFT as df (Case 2) to an existing set of FFT definitions.
 #
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
+
 
 add_fft_df <- function(fft, ffts_df = NULL){
 
@@ -243,17 +256,20 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
     cur_fft <- write_fft_df(fft = fft, tree = 1)
 
+    # ToDo: Use quiet arg & cat(u_f_msg()) here?
     message("Wrote 1 FFT (from df) to a 1-line definition.")
 
     add_fft_df(fft = cur_fft, ffts_df = ffts_df)  # re-call (with modified 1st argument)
 
   } else {
 
+    # Error message:
     stop("fft must be a valid FFT definition (as df) or a valid FFT (as df)")
 
   }
 
 } # add_fft_df().
+
 
 # # Check:
 # (ffts_df <- get_fft_df(x))
@@ -280,6 +296,7 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 
 # add_nodes: ------
+
 
 # Goal: Add some node(s) (or cues) to a given FFT.
 #
@@ -518,6 +535,7 @@ add_nodes <- function(fft,
 
 # drop_nodes: ------
 
+
 # Goal: Delete/drop some nodes (or cues) of a given FFT.
 #
 # Inputs:
@@ -525,6 +543,7 @@ add_nodes <- function(fft,
 #   nodes = vector of nodes to drop (as integer in 1:nrow(fft))
 #
 # Output: Modified version of fft (as df, with fewer nodes).
+
 
 drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
@@ -630,6 +649,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 } # drop_nodes().
 
+
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
@@ -657,6 +677,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 # select_nodes: ------
 
+
 # Goal: Select some nodes (or cues) of a given FFT.
 #       Note: select_nodes() is the complement of drop_nodes().
 #
@@ -665,6 +686,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #   nodes = vector of nodes to select (as integer in 1:nrow(fft))
 #
 # Output: Modified version of fft (as df, with fewer nodes).
+
 
 select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
@@ -777,6 +799,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 } # select_nodes().
 
+
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
@@ -805,6 +828,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 # edit_nodes: ------
 
+
 # Goal: Change (some parameters of) existing nodes.
 #
 # Inputs:
@@ -821,6 +845,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #
 # Note: As edit_nodes() is ignorant of data, the values of class, cue, and threshold
 #       are currently NOT validated for a specific set of data.
+
 
 edit_nodes <- function(fft,
                        nodes = NA,  # as vector (1 or multiple nodes)
@@ -1003,6 +1028,7 @@ edit_nodes <- function(fft,
 
 } # edit_nodes().
 
+
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
@@ -1031,6 +1057,7 @@ edit_nodes <- function(fft,
 
 # flip_exits: ------
 
+
 # Goal: Flip the exits (i.e., cue direction and exit type) of some FFT's (non-final) nodes.
 #
 # Inputs:
@@ -1038,6 +1065,7 @@ edit_nodes <- function(fft,
 #   nodes = vector of nodes to swap (as integer in 1:nrow(fft))
 #
 # Output: Modified version of fft (as df, with flipped cue directions/exits)
+
 
 flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 
@@ -1129,6 +1157,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 
 } # flip_exits().
 
+
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
@@ -1152,6 +1181,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 
 # reorder_nodes: ------
 
+
 # Goal: Re-order the nodes of an existing FFT.
 #
 # Inputs:
@@ -1160,6 +1190,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 #
 # Output:
 # fft_mod: modified FFT (in multi-line format, as df)
+
 
 reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 
@@ -1242,6 +1273,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 
 } # reorder_nodes().
 
+
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 5))
@@ -1288,6 +1320,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 
 # all_node_orders: ------
 
+
 # Goal: Apply reorder_nodes(fft) to get all possible permutations of cues for a fft.
 #
 # Input:
@@ -1295,6 +1328,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 #
 # Output:
 #   A set of FFT definitions in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
+
 
 all_node_orders <- function(fft, quiet = FALSE){
 
@@ -1352,6 +1386,7 @@ all_node_orders <- function(fft, quiet = FALSE){
 
 } # all_node_orders().
 
+
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
@@ -1363,12 +1398,14 @@ all_node_orders <- function(fft, quiet = FALSE){
 
 # all_exit_structures: ------
 
+
 # Goal: Get all 2^(n-1) possible exit structures for an FFT with n cues.
 #
 # Method: Use flip_exits() on nodes = `all_combinations()` for all length values of 1:(n_cues - 1).
 #
 # Input: fft: 1 FFT (as df, 1 row per cue).
 # Output: A set of FFT definitions (ffts_df).
+
 
 all_exit_structures <- function(fft, quiet = FALSE){
 
