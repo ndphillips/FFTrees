@@ -307,7 +307,8 @@ add_fft_df <- function(fft, ffts_df = NULL){
 add_nodes <- function(fft,
                       nodes = NA,  # as vector (1 integer or multiple nodes)
                       class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
-                      my.node = NA){
+                      my.node = NA,
+                      quiet = FALSE){
 
   # Prepare: ----
 
@@ -320,7 +321,10 @@ add_nodes <- function(fft,
 
   if (all(is.na(nodes))) { # catch case 0:
 
-    message("add_nodes: fft remains unchanged")  # 4debugging
+    # Provide user feedback:
+    if (!quiet){
+      cat(u_f_msg(paste0("add_nodes: fft remains unchanged\n")))
+    }
 
     return(fft)
 
@@ -335,6 +339,8 @@ add_nodes <- function(fft,
   len_set_args <- sapply(X = key_args, FUN = length)[non_NA_args]
 
   if (length(unique(len_set_args)) > 1){
+
+    # Error message:
     stop("edit_nodes: All modifier args (e.g., nodes, ..., exit) must have the same length.")
   }
 
@@ -361,7 +367,11 @@ add_nodes <- function(fft,
     # Remove duplicated nodes:
     nodes <- nodes[last_node_ix]
 
-    message(paste0("add_nodes: Removing duplicated nodes. Remaining nodes: ", paste0(nodes, collapse = ", ")))
+    # Provide user feedback:
+    if (!quiet){
+      msg_1 <- paste0("add_nodes: Removing duplicated nodes. Remaining nodes: ", paste0(nodes, collapse = ", "))
+      cat(u_f_msg(paste0(msg_1, "\n")))
+    }
 
     # Adjust other inputs accordingly:
     class <- class[last_node_ix]
@@ -386,8 +396,11 @@ add_nodes <- function(fft,
     ix_decr <- (nodes > n_total)
     nodes[ix_decr] <- (n_total - sum(ix_decr) + 1):n_total
 
-    msg_2 <- paste0("add_nodes: Adjusted values of nodes to ", paste(nodes, collapse = ", "))
-    message(msg_2)
+    # Provide user feedback:
+    if (!quiet){
+      msg_2 <- paste0("add_nodes: Adjusted values of nodes to ", paste(nodes, collapse = ", "))
+      cat(u_f_msg(paste0(msg_2, "\n")))
+    }
 
   } # if sc 2.
 
@@ -433,14 +446,21 @@ add_nodes <- function(fft,
                                   exit = exit)
 
   # Special case 3: Remove duplicate exit nodes
-  if (max(nodes) > max(ix_old)){ # new exit node:
+  if (max(nodes) > max(ix_old)){ # A new exit node:
 
     ix_old_exit <- max(ix_old)
 
-    fft_mod$exit[ix_old_exit] <- exit_types[2]
+    fft_mod$exit[ix_old_exit] <- exit_types[2]  # set to 1/TRUE/Signal
 
-    msg <- paste0("add_nodes: Set former exit node (now node ", ix_old_exit, ") to ", exit_types[2])
-    message(msg)
+    # Provide user feedback:
+    if (!quiet){
+
+      old_exit_cue <- fft_mod$cue[ix_old_exit]
+
+      msg_3 <- paste0("add_nodes: Set exit type of former final node ", n_cues, ": ", old_exit_cue, " (now node ", ix_old_exit, ") to ", exit_types[2])
+      cat(u_f_msg(paste0(msg_3, "\n")))
+    }
+
 
   } # if sc 3.
 
@@ -456,6 +476,7 @@ add_nodes <- function(fft,
   return(fft_mod)
 
 } # add_nodes().
+
 
 # # Check:
 # (ffts_df <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
@@ -492,7 +513,6 @@ add_nodes <- function(fft,
 #           threshold = paste0("thr_", my_value),
 #           exit = c(sample(exit_types[1:2], size = length(my_nodes) - 1, replace = TRUE), 0.5)
 # )
-
 
 
 
@@ -591,7 +611,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
       new_exit_cue <- fft_mod$cue[new_exit_node]
       old_node_pos <- which(fft$cue == new_exit_cue)
 
-      msg_4 <- paste0("drop_nodes: New final node ", new_exit_node, ": cue = ", new_exit_cue, " (was node ", old_node_pos, " of fft)")
+      msg_4 <- paste0("drop_nodes: New final node ", new_exit_node, ": ", new_exit_cue, " (was node ", old_node_pos, " of fft)")
       cat(u_f_msg(paste0(msg_4, "\n")))
     }
 
