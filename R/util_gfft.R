@@ -579,16 +579,19 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
   fft_mod <- fft[new_nodes, ]  # main step
 
   # Special case 4:
-  if (n_cues %in% nodes){ # Previous exit cue was dropped/new exit node:
+  if (n_cues %in% new_nodes == FALSE){ # Previous exit cue was dropped/new exit node:
 
-    new_exit_node <- nrow(fft_mod)  # NOT length(new_nodes)
-    old_exit_node <- n_cues
+    new_exit_node <- nrow(fft_mod) # = length(new_nodes)
 
     fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
 
     # Provide user feedback:
     if (!quiet){
-      msg_4 <- paste0("drop_nodes: New final node: ", new_exit_node, " (was node ", old_exit_node, " of fft)")
+
+      new_exit_cue <- fft_mod$cue[new_exit_node]
+      old_node_pos <- which(fft$cue == new_exit_cue)
+
+      msg_4 <- paste0("drop_nodes: New final node ", new_exit_node, ": cue = ", new_exit_cue, " (was node ", old_node_pos, " of fft)")
       cat(u_f_msg(paste0(msg_4, "\n")))
     }
 
@@ -609,22 +612,27 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 # # Check:
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
-# (fft <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
+# (fft <- read_fft_df(ffts, tree = 2))  # 1 FFT (as df, from above)
 #
 # drop_nodes(fft)
 # drop_nodes(fft, nodes = c(1))
 # drop_nodes(fft, nodes = c(3))
 # drop_nodes(fft, nodes = c(3, 1))
+# drop_nodes(fft, nodes = c(3, 1, 2))  # works: NO new final node
 #
-# drop_nodes(fft, nodes = c(1, 1, 1))  # duplicated nodes are only dropped once.
+# drop_nodes(fft, nodes = c(1, 1, 2, 2))  # duplicated nodes are only dropped once.
 #
 # # Dropping final node / new final node:
+# drop_nodes(fft, nodes = 2)    # works: NO new final node
+# drop_nodes(fft, nodes = 1:3)
 # drop_nodes(fft, nodes = 4)    # works: new final node
+# drop_nodes(fft, nodes = 3:4)  # works: new final node
 # drop_nodes(fft, nodes = 2:6)  # works (1 node left: new exit)
 #
 # # Dropping everything:
 # drop_nodes(fft, nodes = 1:6)  # note + error: nothing left
 # drop_nodes(fft, nodes = 1:4)  # error: nothing left
+
 
 
 # select_nodes: ------
