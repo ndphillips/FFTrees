@@ -1476,7 +1476,7 @@ all_exit_structures <- function(fft, quiet = FALSE){
 
 
 
-# all_node_subsets(): ------
+# all_node_subsets: ------
 
 # Goal: Get all subtrees of an FFT.
 #
@@ -1630,11 +1630,11 @@ all_fft_variants <- function(fft, quiet = FALSE){
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
-# (all_3 <- all_fft_variants(fft = read_fft_df(ffts, tree = 1)))
+# (all_3 <- all_fft_variants(fft = read_fft_df(ffts, tree = 1), quiet = FALSE))
 # nrow(all_3)
 # verify_ffts_df(all_3)
 #
-# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2), quiet = FALSE))
+# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2), quiet = TRUE))
 # nrow(all_4)
 # verify_ffts_df(all_4)
 
