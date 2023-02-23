@@ -50,8 +50,11 @@ fftrees_define <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    msg <- paste0("Aiming to define FFTs:\n")
-    cat(u_f_ini(msg))
+
+    # msg <- paste0("Aiming to define FFTs:\n")
+    # cat(u_f_ini(msg))
+
+    cli::cli_alert("Defining FFTs:", class = "alert-start")
   }
 
 
@@ -131,14 +134,17 @@ fftrees_define <- function(x,
     n_trees <- x$trees$n
 
     if (n_trees == 1){
-      msg <- paste0("Successfully defined ", n_trees, " FFT.\n")
+      msg <- paste0("Successfully defined ", n_trees, " FFT.")
     } else if (n_trees > 1){
-      msg <- paste0("Successfully defined ", n_trees, " FFTs.\n")
+      msg <- paste0("Successfully defined ", n_trees, " FFTs.")
     } else {
       msg <- "No FFTs were defined."
     }
 
-    cat(u_f_fin(msg))
+    # cat(u_f_fin(msg, "\n"))
+
+    cli::cli_alert_success("Defined {n_trees} FFT{?s}.")
+
   }
 
 

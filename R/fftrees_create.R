@@ -105,8 +105,12 @@ fftrees_create <- function(formula = NULL,
   # Provide user feedback: ----
 
   if (!quiet) {
-    msg <- "Aiming to create a new FFTrees object:\n"
-    cat(u_f_ini(msg))
+
+    # msg <- "Aiming to create a new FFTrees object:\n"
+    # cat(u_f_ini(msg))
+
+    cli::cli_alert("Creating a new FFTrees object:", class = "alert-start")
+
   }
 
   # 1. Validation tests: ------
@@ -706,7 +710,11 @@ fftrees_create <- function(formula = NULL,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    cat(u_f_fin("Successfully created a new FFTrees object.\n"))
+
+    # cat(u_f_fin("Successfully created a new FFTrees object.\n"))
+
+    cli::cli_alert_success("Created a new FFTrees object.")
+
   }
 
 

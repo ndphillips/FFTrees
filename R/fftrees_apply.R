@@ -44,8 +44,12 @@ fftrees_apply <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    msg <- paste0("Aiming to apply FFTs to '", mydata, "' data:\n")
-    cat(u_f_ini(msg))
+
+    # msg <- paste0("Aiming to apply FFTs to '", mydata, "' data:\n")
+    # cat(u_f_ini(msg))
+
+    n_trees <- x$trees$n
+    cli::cli_alert("Applying {n_trees} FFT{?s} to '{mydata}' data:", class = "alert-start")
   }
 
 
@@ -445,8 +449,13 @@ fftrees_apply <- function(x,
   # Provide user feedback: ----
 
   if (!x$params$quiet) {
-    msg <- paste0("Successfully applied FFTs to '", mydata, "' data.\n")
-    cat(u_f_fin(msg))
+
+    # msg <- paste0("Successfully applied FFTs to '", mydata, "' data.\n")
+    # cat(u_f_fin(msg))
+
+    n_trees <- x$trees$n
+    cli::cli_alert_success("Applied {n_trees} FFT{?s} to '{mydata}' data.")
+
   }
 
 

@@ -69,8 +69,13 @@ fftrees_cuerank <- function(x = NULL,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    msg <- paste0("Aiming to rank ", cue_n, " cues (optimizing '", goal.threshold, "'):\n")
-    cat(u_f_ini(msg))
+
+    # msg <- paste0("Aiming to rank ", cue_n, " cues (optimizing '", goal.threshold, "'):\n")
+    # cat(u_f_ini(msg))
+
+    cli::cli_alert("Ranking {cue_n} cue{?s} (optimizing '{goal.threshold}'):",
+                   class = "alert-start")
+
   }
 
   # Define progress bar:
@@ -357,8 +362,12 @@ fftrees_cuerank <- function(x = NULL,
 
   # Provide user feedback:
   if (!x$params$quiet) {
-    msg <- paste0("Successfully ranked ", cue_n, " cues.\n")
-    cat(u_f_fin(msg))
+
+    # msg <- paste0("Successfully ranked ", cue_n, " cues.\n")
+    # cat(u_f_fin(msg))
+
+    cli::cli_alert_success("Ranked {cue_n} cue{?s} (optimizing '{goal.threshold}').")
+
   }
 
 
