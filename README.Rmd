@@ -146,9 +146,9 @@ Once we have created some FFTs, additional questions include:
 
 - How accurate are the predictions of a specific FFT?
 - How does its performance compare with alternative machine-learning algorithms?
-- How costly are the predictions of each algorithm?
+- How costly are the predictions of each algorithm? 
 
-The **FFTrees** package answers these questions by creating FFTs and allowing to evaluate, visualize, and compare them to alternative algorithms.
+The **FFTrees** package answers these questions by creating FFTs and allowing to evaluate, visualize, and compare them to alternative algorithms. 
 
 
 ### Creating fast-and-frugal trees (FFTs) 
