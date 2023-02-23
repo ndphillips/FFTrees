@@ -333,6 +333,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-02-22.\]
+\[File `README.Rmd` last updated on 2023-02-23.\]
 
 <!-- eof. -->
