@@ -289,7 +289,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
 
 
-# (B) Editing tree descriptions: --------
+# (B) Tree editing/trimming functions: --------
 
 # Goal: Functions for editing, manipulating, and trimming individual FFTs (in df format).
 
@@ -1642,7 +1642,7 @@ all_fft_variants <- function(fft, quiet = FALSE){
 
 # ToDo: ------
 
-# - Make some functions (e.g., tree editing functions) work alternative inputs of either
+# - Make some functions (e.g., tree editing functions) work for alternative inputs of either
 #   (1) FFT definitions (df, 1 row per tree) OR
 #   (2) single FFTs (as df, 1 row per node).
 #
