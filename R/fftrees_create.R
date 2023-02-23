@@ -425,8 +425,12 @@ fftrees_create <- function(formula = NULL,
       cat(u_f_msg(msg))
 
       if (!"cost" %in% cur_goals){
-        msg_2 <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
-        cat(u_f_hig(msg_2))
+
+        msg_2 <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.")
+        cat(u_f_hig(msg_2, "\n"))
+
+        # cli::cli_alert_warning(msg_2)
+
       }
 
     }
@@ -437,9 +441,11 @@ fftrees_create <- function(formula = NULL,
     cost.outcomes <- cost_outcomes_default  # use global default
 
     if (!quiet) {
+
       cos <- paste(unlist(cost.outcomes), collapse = " ")
       msg <- paste0("\u2014 Using default 'cost.outcomes' = (", cos, ")\n")
       cat(u_f_msg(msg))
+
     }
 
   }
@@ -458,12 +464,17 @@ fftrees_create <- function(formula = NULL,
     if (!quiet) {
 
       ccs <- paste(unlist(cost.cues), collapse = " ")
-      msg <- paste0("\u2014 User set 'cost.cues' = (", ccs, ")\n")
-      cat(u_f_msg(msg))
+      msg <- paste0("\u2014 User set 'cost.cues' = (", ccs, ")")
+      cat(u_f_msg(msg, "\n"))
+
 
       if (!"cost" %in% cur_goals){
-        msg_2 <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.\n")
-        cat(u_f_hig(msg_2))
+
+        msg_2 <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.")
+        cat(u_f_hig(msg_2, "\n"))
+
+        # cli::cli_alert_warning(msg_2)
+
       }
 
     }
