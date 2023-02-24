@@ -174,7 +174,7 @@ predict.FFTrees <- function(object = NULL,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet$fin) {
+  if (!object$params$quiet$fin) {
 
     msg <- paste0("Generated predictions for tree ", tree, ".")
     # cat(u_f_fin(msg, "\n"))
