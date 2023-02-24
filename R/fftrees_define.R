@@ -49,7 +49,7 @@ fftrees_define <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet & !quiet.ini) {
+  if (!x$params$quiet$ini) {
 
     # msg <- paste0("Aiming to define FFTs:\n")
     # cat(u_f_ini(msg))
@@ -77,7 +77,7 @@ fftrees_define <- function(x,
 
       # Provide user feedback: ----
 
-      if (!x$params$quiet) {
+      if (any(sapply(x$params$quiet, isFALSE))) {
 
         msg <- paste0("Sorted tree IDs in tree.definitions into 1:n_trees (tree = 1:", n_trees, ").")
 
@@ -95,7 +95,7 @@ fftrees_define <- function(x,
     x$trees$definitions <- tree.definitions
     x$trees$n <- n_trees
 
-    if (!x$params$quiet) {
+    if (any(sapply(x$params$quiet, isFALSE))) {
 
       # msg <- paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees:\n")
       # cat(u_f_hig(msg))
@@ -114,7 +114,7 @@ fftrees_define <- function(x,
     x$trees$definitions <- object$trees$definitions
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
-    if (!x$params$quiet) {
+    if (any(sapply(x$params$quiet, isFALSE))) {
 
       # msg <- paste0("Using ", x$trees$n, " FFTs from 'object' as current trees:\n")
       # cat(u_f_hig(msg))
@@ -142,7 +142,7 @@ fftrees_define <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet & !quiet.fin) {
+  if (!x$params$quiet$fin) {
 
     n_trees <- x$trees$n
 

@@ -68,7 +68,7 @@ fftrees_cuerank <- function(x = NULL,
   goal.threshold <- x$params$goal.threshold  # (assign ONCE here and then use below)
 
   # Provide user feedback:
-  if (!x$params$quiet & !quiet.ini) {
+  if (!x$params$quiet$ini) {
 
     # msg <- paste0("Aiming to rank ", cue_n, " cues (optimizing '", goal.threshold, "'):\n")
     # cat(u_f_ini(msg))
@@ -81,7 +81,7 @@ fftrees_cuerank <- function(x = NULL,
 
   # Define progress bar: ----
 
-  if (!x$params$quiet) {
+  if (any(sapply(x$params$quiet, isFALSE))) {
 
     pb <- progress::progress_bar$new(format = u_f_msg("[:bar] :percent"),
                                      width = 70,
@@ -97,7 +97,7 @@ fftrees_cuerank <- function(x = NULL,
   for (cue_i in 1:cue_n) {
 
     # Progress bar update:
-    if (!x$params$quiet) {
+    if (any(sapply(x$params$quiet, isFALSE))) {
 
       pb$tick()
       Sys.sleep(1 / cue_n)
@@ -362,7 +362,7 @@ fftrees_cuerank <- function(x = NULL,
 
 
   # Provide user feedback:
-  if (!x$params$quiet & !quiet.fin) {
+  if (!x$params$quiet$fin) {
 
     # msg <- paste0("Successfully ranked ", cue_n, " cues.\n")
     # cat(u_f_fin(msg))

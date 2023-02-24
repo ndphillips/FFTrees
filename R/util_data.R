@@ -50,7 +50,7 @@ handle_NA <- function(data, criterion_name){
       dplyr::mutate_if(is.factor, addNA)
 
     # Provide user feedback:
-    cli::cli_alert_info("Converted NA cases in factor predictors to <NA> level.")
+    cli::cli_alert_info("Converted NA cases in factor predictors to an <NA> level.")
 
   }
 

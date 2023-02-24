@@ -106,9 +106,10 @@
 #' }
 #' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
-#' @param quiet logical. Should progress reports be suppressed?
-#' Setting \code{quiet = FALSE} is helpful for diagnosing errors.
-#' Default: \code{quiet = FALSE} (i.e., show progress).
+#' @param quiet A list of 3 logical arguments. Should detailed progress reports be suppressed?
+#' Setting elements to \code{FALSE} is helpful when diagnosing errors.
+#' Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = TRUE)},
+#' for initial, final, and user settings, respectively.
 #'
 #' @param comp,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
@@ -212,7 +213,7 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     #
-                    quiet = FALSE,       # ToDo: Deprecate, in favor of 3 more detailed Boolean parameters
+                    quiet = list(ini = TRUE, fin = FALSE, set = TRUE), # ToDo: Deprecate, in favor of 3 more detailed Boolean parameters
                     # ufeed = 2L,        # ToDo: user feedback level (from feed_types 0:3)
                     #
                     # Deprecated args:   Use instead:
@@ -225,8 +226,6 @@ FFTrees <- function(formula = NULL,
 ) {
 
   # Prepare: ------
-
-
 
   # A. Handle deprecated arguments and options: ------
 
@@ -264,13 +263,25 @@ FFTrees <- function(formula = NULL,
     stop("The 'max' and 'zigzag' algorithms are no longer supported.")
   }
 
+  if (is.logical(quiet)) {
+
+    quiet <- list(ini = quiet, fin = quiet, set = quiet)
+
+    if (any(sapply(quiet, isFALSE))) {
+
+      cli::cli_alert_info("Set 'quiet' elements to '{quiet}'.")
+
+    }
+
+  }
+
 
   # B. Verify inputs: ------
 
 
   # Provide user feedback: ----
 
-  # if (!quiet.ini) { cli::cli_h2("Get FFTrees:") }
+  # if (!quiet$ini) { cli::cli_h2("Get FFTrees:") }
 
 
   # object: ----
@@ -303,7 +314,7 @@ FFTrees <- function(formula = NULL,
 
     # Provide user feedback: ----
 
-    if (!quiet) {
+    if (any(sapply(quiet, isFALSE))) {
 
       msg <- paste0("Using the FFTrees object provided (and some of its key parameters).")
 
@@ -369,7 +380,7 @@ FFTrees <- function(formula = NULL,
 
     # Provide user feedback: ----
 
-    if (!quiet) {
+    if (any(sapply(quiet, isFALSE))) {
 
       msg <- paste0("Split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
                     scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set.")
@@ -463,7 +474,7 @@ FFTrees <- function(formula = NULL,
 
   # Provide user feedback: ----
 
-  # if (!quiet.fin) { cli::cli_h2("Got FFTrees.") }
+  # if (!quiet$fin) { cli::cli_h2("Got FFTrees.") }
 
 
   # Output: ------

@@ -31,7 +31,7 @@ fftrees_ranktrees <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet & !quiet.ini) {
+  if (!x$params$quiet$ini) {
 
     # msg <- paste0("Aiming to rank FFTs by '", data, "' data:\n")
     # cat(u_f_ini(msg))
@@ -108,7 +108,7 @@ fftrees_ranktrees <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet & !quiet.fin) {
+  if (!x$params$quiet$fin) {
 
     # msg <- paste0("Successfully ranked FFTs by '", data, "' data.\n")
     # cat(u_f_fin(msg))

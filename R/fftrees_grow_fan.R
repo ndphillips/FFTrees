@@ -25,7 +25,7 @@ fftrees_grow_fan <- function(x,
   # Prepare: ------
 
   # Provide user feedback:
-  if (!x$params$quiet & !quiet.ini) {
+  if (!x$params$quiet$ini) {
 
     cur_algorithm  <- x$params$algorithm
     cur_goal.chase <- x$params$goal.chase
@@ -491,7 +491,7 @@ fftrees_grow_fan <- function(x,
 
           # ToDo: What if goal.chase == my_goal?
 
-          if (!x$params$quiet) {
+          if (any(sapply(x$params$quiet, isFALSE))) {
             msg <- paste0("\u2014 A limit for growing FFTs with goal.chase = '", x$params$goal.chase, "' is unknown.\n")
             cat(u_f_hig(msg))
           }
@@ -813,7 +813,7 @@ fftrees_grow_fan <- function(x,
 
 
   # Provide user feedback:
-  if (!x$params$quiet & !quiet.fin) {
+  if (!x$params$quiet$fin) {
 
     n_trees <- x$trees$n
     cur_algorithm  <- x$params$algorithm

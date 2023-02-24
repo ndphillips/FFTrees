@@ -61,7 +61,7 @@ fftrees_fitcomp <- function(x) {
   # Provide user feedback: ----
 
   if (do.lr | do.cart | do.rf | do.svm) {
-    if (!x$params$quiet & !quiet.ini) {
+    if (!x$params$quiet$ini) {
 
       # msg <- "Aiming to fit comparative algorithms (disable by do.comp = FALSE):\n"
       # cat(u_f_ini(msg))
@@ -216,7 +216,7 @@ fftrees_fitcomp <- function(x) {
 
   if (do.lr | do.cart | do.rf | do.svm) {
 
-    if (!x$params$quiet & !quiet.fin) {
+    if (!x$params$quiet$fin) {
 
       # cat(u_f_fin("Successfully fitted comparative algorithms.\n"))
 

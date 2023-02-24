@@ -78,7 +78,7 @@ showcues <- function(x = NULL,
 
     # Provide user feedback: ----
 
-    if (!quiet) {
+    if (any(sapply(quiet, isFALSE))) {
       cat(u_f_ini("Plotting cue.accuracies provided:\n"))
     }
 
@@ -117,7 +117,7 @@ showcues <- function(x = NULL,
 
       # Provide user feedback: ----
 
-      if (!quiet) {
+      if (any(sapply(quiet, isFALSE))) {
         cat(u_f_ini("Plotting cue training statistics:\n"))
       }
 
@@ -181,7 +181,7 @@ showcues <- function(x = NULL,
   }
 
   # Provide user feedback:
-  if (!quiet) { cat(u_f_msg(paste0("\u2014 ", subnote, "\n"))) }
+  if (any(sapply(quiet, isFALSE))) { cat(u_f_msg(paste0("\u2014 ", subnote, "\n"))) }
 
   # Adjust color palette:
   cue_df$col <- rep(palette, length.out = nrow(cue_df))
