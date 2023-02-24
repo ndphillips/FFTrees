@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9007
+## 1.9.0.9010
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -23,14 +23,14 @@ Changes since last release:
 
 <!-- Minor: --> 
 
-
 ### Minor changes 
 
 - Added detailed cost information when printing FFTs (with `print.FFTrees()`).  
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
+- Improved user feedback (on different levels of detail). 
+
 
 <!-- Details: --> 
-
 
 ### Details 
 
@@ -447,6 +447,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-21.]
+[File `NEWS.md` last updated on 2023-02-24.]
 
 <!-- eof. -->
