@@ -213,7 +213,7 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     #
-                    quiet = list(ini = TRUE, fin = FALSE, set = TRUE), # ToDo: Deprecate, in favor of 3 more detailed Boolean parameters
+                    quiet = list(ini = TRUE, fin = FALSE, set = TRUE),  # a list of 3 Boolean args
                     # ufeed = 2L,        # ToDo: user feedback level (from feed_types 0:3)
                     #
                     # Deprecated args:   Use instead:
