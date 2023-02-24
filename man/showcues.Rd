@@ -10,7 +10,7 @@ showcues(
   alt.goal = NULL,
   main = NULL,
   top = 5,
-  quiet = FALSE,
+  quiet = list(ini = TRUE, fin = FALSE, set = TRUE),
   ...
 )
 }
@@ -25,8 +25,8 @@ showcues(
 
 \item{top}{How many of the top cues should be highlighted (as an integer)?}
 
-\item{quiet}{Should user feedback messages be printed (as logical)?
-Default: \code{quiet = FALSE} (i.e., show messages).}
+\item{quiet}{Should user feedback messages be suppressed (as a list of 3 logical arguments)?
+Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = FALSE)}.}
 
 \item{...}{Graphical parameters (passed to \code{\link{plot}}).}
 }
