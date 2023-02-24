@@ -343,11 +343,15 @@ FFTrees <- function(formula = NULL,
 
   # C. Handle data: ------
 
-  # # Convert factor NA to new missing factor level:
-  #
-  # data <- data %>%
-  #   dplyr::mutate_if(is.factor, addNA)   %>%
-  #   dplyr::mutate_if(is.character, addNA)
+  # Handle NA cases: ----
+
+  if (any(is.na(data))){
+
+    data <- handle_NA(data = data, criterion_name = criterion_name)
+
+    # +++ here now +++
+
+  } # (any(is.na(data))).
 
 
   # Split training / test data: ----
