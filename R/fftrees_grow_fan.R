@@ -25,7 +25,7 @@ fftrees_grow_fan <- function(x,
   # Prepare: ------
 
   # Provide user feedback:
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.ini) {
 
     cur_algorithm  <- x$params$algorithm
     cur_goal.chase <- x$params$goal.chase
@@ -33,7 +33,7 @@ fftrees_grow_fan <- function(x,
     # msg <- paste0("Aiming to create FFTs with '", cur_algorithm, "' algorithm (chasing '", cur_goal.chase, "'):\n")
     # cat(u_f_ini(msg))
 
-    cli::cli_alert("Creating FFTs with '{cur_algorithm}' algorithm (chasing '{cur_goal.chase}'):",
+    cli::cli_alert("Create FFTs with '{cur_algorithm}' algorithm (chasing '{cur_goal.chase}'):",
               class = "alert-start")
   }
 
@@ -813,7 +813,7 @@ fftrees_grow_fan <- function(x,
 
 
   # Provide user feedback:
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.fin) {
 
     n_trees <- x$trees$n
     cur_algorithm  <- x$params$algorithm

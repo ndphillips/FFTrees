@@ -65,12 +65,12 @@ fftrees_ffttowords <- function(x = NULL,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.ini) {
 
     # msg <- paste0("Aiming to express FFTs in words:\n")
     # cat(u_f_ini(msg))
 
-    cli::cli_alert("Expressing {x$trees$n} FFT{?s} in words:", class = "alert-start")
+    cli::cli_alert("Express {x$trees$n} FFT{?s} in words:", class = "alert-start")
 
   }
 
@@ -300,7 +300,7 @@ fftrees_ffttowords <- function(x = NULL,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.fin) {
 
     # msg <- paste0("Successfully expressed FFTs in words.\n")
     # cat(u_f_fin(msg))

@@ -31,13 +31,13 @@ fftrees_ranktrees <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.ini) {
 
     # msg <- paste0("Aiming to rank FFTs by '", data, "' data:\n")
     # cat(u_f_ini(msg))
 
     n_trees <- x$trees$n
-    cli::cli_alert("Ranking {n_trees} FFT{?s} by '{data}' data:",
+    cli::cli_alert("Rank {n_trees} FFT{?s} by '{data}' data:",
                    class = "alert-start")
 
   }
@@ -108,7 +108,7 @@ fftrees_ranktrees <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.fin) {
 
     # msg <- paste0("Successfully ranked FFTs by '", data, "' data.\n")
     # cat(u_f_fin(msg))

@@ -49,12 +49,12 @@ fftrees_define <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.ini) {
 
     # msg <- paste0("Aiming to define FFTs:\n")
     # cat(u_f_ini(msg))
 
-    cli::cli_alert("Defining FFTs:", class = "alert-start")
+    cli::cli_alert("Define FFTs:", class = "alert-start")
   }
 
 
@@ -79,8 +79,11 @@ fftrees_define <- function(x,
 
       if (!x$params$quiet) {
 
-        msg <- paste0("Sorted tree IDs in tree.definitions into 1:n_trees (tree = 1:", n_trees, ").\n")
-        cat(u_f_hig(msg))
+        msg <- paste0("Sorted tree IDs in tree.definitions into 1:n_trees (tree = 1:", n_trees, ").")
+
+        # cat(u_f_hig(msg, "\n"))
+
+        cli::cli_alert_info(msg)
 
       }
 
@@ -139,7 +142,7 @@ fftrees_define <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.fin) {
 
     n_trees <- x$trees$n
 
