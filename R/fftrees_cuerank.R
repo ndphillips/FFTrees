@@ -78,7 +78,8 @@ fftrees_cuerank <- function(x = NULL,
 
   }
 
-  # Define progress bar:
+
+  # Define progress bar: ----
 
   if (!x$params$quiet) {
 

@@ -47,9 +47,14 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
                                           cost.outcomes = NULL # (was "list(hi = 0, fa = 1, mi = 1, cr = 0)", but NULL enforces consistency w calling function)
 ) {
 
+  # Prepare: ------
+
   # Assertions:
   testthat::expect_true(!any(is.na(criterion_v)))
   testthat::expect_true(!any(is.na(cue_v)))
+
+
+  # Main: ------
 
   if (!is.null(thresholds)) {
 
@@ -57,6 +62,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
     case_n <- length(cue_v)
 
     results <- matrix(NA, nrow = thresholds_n, ncol = 5)
+
 
     # Loop 1 over all thresholds: ------
     # C++
