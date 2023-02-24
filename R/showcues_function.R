@@ -14,8 +14,8 @@
 #' @param alt.goal An optional alternative goal to sort the current cue accuracies (without using the goal of \code{FFTrees} object \code{x}).
 #' @param main A main plot title (as character string).
 #' @param top How many of the top cues should be highlighted (as an integer)?
-#' @param quiet Should user feedback messages be printed (as logical)?
-#' Default: \code{quiet = FALSE} (i.e., show messages).
+#' @param quiet Should user feedback messages be suppressed (as a list of 3 logical arguments)?
+#' Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = FALSE)}.
 #'
 #' @param ... Graphical parameters (passed to \code{\link{plot}}).
 #'
@@ -54,7 +54,7 @@ showcues <- function(x = NULL,
                      alt.goal = NULL,  # alternative goal (takes local priority over x$params$goal)
                      main = NULL,
                      top = 5,
-                     quiet = FALSE,
+                     quiet = list(ini = TRUE, fin = FALSE, set = TRUE),  # a list of 3 Boolean args,
                      ...  # graphical parameters, passed to plot()
 ) {
 
@@ -78,7 +78,7 @@ showcues <- function(x = NULL,
 
     # Provide user feedback: ----
 
-    if (!quiet) {
+    if (any(sapply(quiet, isFALSE))) {
       cat(u_f_ini("Plotting cue.accuracies provided:\n"))
     }
 
@@ -117,7 +117,7 @@ showcues <- function(x = NULL,
 
       # Provide user feedback: ----
 
-      if (!quiet) {
+      if (any(sapply(quiet, isFALSE))) {
         cat(u_f_ini("Plotting cue training statistics:\n"))
       }
 
@@ -181,7 +181,7 @@ showcues <- function(x = NULL,
   }
 
   # Provide user feedback:
-  if (!quiet) { cat(u_f_msg(paste0("\u2014 ", subnote, "\n"))) }
+  if (any(sapply(quiet, isFALSE))) { cat(u_f_msg(paste0("\u2014 ", subnote, "\n"))) }
 
   # Adjust color palette:
   cue_df$col <- rep(palette, length.out = nrow(cue_df))

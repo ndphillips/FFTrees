@@ -278,7 +278,7 @@ verify_tree_arg <- function(x, data, tree){
 
       if (data == "train") {
 
-        if (!x$params$quiet) { # user feedback:
+        if (any(sapply(x$params$quiet, isFALSE))) { # user feedback:
           msg <- paste0("Assuming you want the 'best.train' tree for 'train' data...\n")
           cat(u_f_hig(msg))
         }
@@ -287,7 +287,7 @@ verify_tree_arg <- function(x, data, tree){
 
       } else if (data == "test") {
 
-        if (!x$params$quiet) { # user feedback:
+        if (any(sapply(x$params$quiet, isFALSE))) { # user feedback:
           msg <- paste0("Assuming you want the 'best.test' tree for 'test' data...\n")
           cat(u_f_hig(msg))
         }

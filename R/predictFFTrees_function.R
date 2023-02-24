@@ -72,9 +72,12 @@ predict.FFTrees <- function(object = NULL,
 
   # Provide user feedback: ----
 
-  if (!object$params$quiet) {
-    msg <- paste0("Aiming to generate predictions for tree ", tree, ":\n")
-    cat(u_f_ini(msg))
+  if (!object$params$quiet$ini) {
+
+    msg <- paste0("Generate predictions for tree ", tree, ":")
+    # cat(u_f_ini(msg, "\n"))
+
+    cli::cli_alert(msg, class = "alert-start")
   }
 
 
@@ -171,9 +174,13 @@ predict.FFTrees <- function(object = NULL,
 
   # Provide user feedback: ----
 
-  if (!object$params$quiet) {
-    msg <- paste0("Successfully generated predictions for tree ", tree, ".\n")
-    cat(u_f_fin(msg))
+  if (!object$params$quiet$fin) {
+
+    msg <- paste0("Generated predictions for tree ", tree, ".")
+    # cat(u_f_fin(msg, "\n"))
+
+    cli::cli_alert_success(msg)
+
   }
 
 

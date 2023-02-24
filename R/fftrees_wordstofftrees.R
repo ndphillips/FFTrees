@@ -37,11 +37,11 @@ fftrees_wordstofftrees <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet$ini) {
 
     # cat(u_f_ini("Aiming to create an FFT from 'my.tree' description:\n"))
 
-    cli::cli_alert("Creating an FFT from 'my.tree' description:", class = "alert-start")
+    cli::cli_alert("Create an FFT from 'my.tree' description:", class = "alert-start")
 
   }
 
@@ -345,7 +345,7 @@ fftrees_wordstofftrees <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet & !quiet.fin) {
+  if (!x$params$quiet$fin) {
 
     # cat(u_f_fin("Successfully created an FFT from 'my.tree' description.\n"))
 

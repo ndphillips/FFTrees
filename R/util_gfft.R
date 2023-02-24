@@ -257,7 +257,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
     cur_fft <- write_fft_df(fft = fft, tree = 1)
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("add_fft_df: Wrote fft to a 1-line definition\n")))
     }
 
@@ -341,7 +341,7 @@ add_nodes <- function(fft,
   if (all(is.na(nodes))) { # catch case 0:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("add_nodes: fft remains unchanged\n")))
     }
 
@@ -387,7 +387,7 @@ add_nodes <- function(fft,
     nodes <- nodes[last_node_ix]
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       msg_1 <- paste0("add_nodes: Removing duplicated nodes. Remaining nodes: ", paste0(nodes, collapse = ", "))
       cat(u_f_msg(paste0(msg_1, "\n")))
     }
@@ -416,7 +416,7 @@ add_nodes <- function(fft,
     nodes[ix_decr] <- (n_total - sum(ix_decr) + 1):n_total
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       msg_2 <- paste0("add_nodes: Adjusted values of nodes to ", paste(nodes, collapse = ", "))
       cat(u_f_msg(paste0(msg_2, "\n")))
     }
@@ -472,7 +472,7 @@ add_nodes <- function(fft,
     fft_mod$exit[ix_old_exit] <- exit_types[2]  # set to 1/TRUE/Signal
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       old_exit_cue <- fft_mod$cue[ix_old_exit]
 
@@ -557,7 +557,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
   if (all(is.na(nodes))) { # catch case 0:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("drop_nodes: fft remains unchanged\n")))
     }
 
@@ -574,7 +574,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
   if (any(nodes %in% 1:n_cues == FALSE)){ # notify that nodes are missing:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       missing_nodes <- setdiff(nodes, 1:n_cues)
 
@@ -589,7 +589,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
   if (any(duplicated(nodes))){
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       duplicated_nodes <- unique(nodes[duplicated(nodes)])
 
@@ -627,7 +627,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
     fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       new_exit_cue <- fft_mod$cue[new_exit_node]
       old_node_pos <- which(fft$cue == new_exit_cue)
@@ -721,7 +721,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
     nodes <- setdiff(nodes, missing_nodes)  # remove missing nodes
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       msg <- paste0("select_nodes: Some nodes do not occur in FFT and will be ignored: ",
                     paste(missing_nodes, collapse = ", "))
@@ -737,7 +737,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
     nodes <- unique(nodes)  # remove duplicated nodes
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       duplicated_nodes <- unique(nodes[duplicated(nodes)])
 
@@ -753,7 +753,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
   if (length(nodes) == n_cues) {
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("select_nodes: fft remains unchanged\n")))
     }
 
@@ -779,7 +779,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
     fft_mod$exit[new_exit_node] <- exit_types[3]  # set new exit node
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       msg <- paste0("select_nodes: New final node: ", new_exit_node, " (was node ", old_exit_node, " of fft)")
       cat(u_f_msg(paste0(msg, "\n")))
@@ -863,7 +863,7 @@ edit_nodes <- function(fft,
   if (all(is.na(nodes))) { # catch case 0:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("edit_nodes: fft remains unchanged\n")))
     }
 
@@ -891,7 +891,7 @@ edit_nodes <- function(fft,
     missing_nodes <- setdiff(nodes, 1:n_cues)
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       msg <- paste0("edit_nodes: Some nodes do not occur in FFT and will be ignored: ",
                     paste(missing_nodes, collapse = ", "))
@@ -1079,7 +1079,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
   if (all(is.na(nodes))) { # catch case 0:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("flip_exits: fft remains unchanged\n")))
     }
 
@@ -1107,7 +1107,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
     # B. Continue, but ignore the missing nodes:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       msg <- paste0("flip_exits: Some nodes do not occur in FFT and will be ignored: ",
                     paste(missing_nodes, collapse = ", "))
@@ -1124,7 +1124,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
   if (n_cues %in% nodes){ # aiming to flip the final/exit node:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
 
       msg <- paste0("flip_exits: Cannot flip exits of the final node: ", n_cues)
       cat(u_f_msg(paste0(msg, "\n")))
@@ -1216,7 +1216,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
   if (all(order == 1:n_cues)) { # catch case:
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("reorder_nodes: fft remains unchanged\n")))
     }
 
@@ -1237,7 +1237,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
   if (exit_cue_pos != n_cues){
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("reorder_nodes: Former exit node now is node ", exit_cue_pos, "\n")))
     }
 
@@ -1348,7 +1348,7 @@ all_node_orders <- function(fft, quiet = FALSE){
   if (n_cues == 1){
 
     # Provide user feedback:
-    if (!quiet){
+    if (any(sapply(quiet, isFALSE))){
       cat(u_f_msg(paste0("all_orders: fft contains only 1 node\n")))
     }
 
@@ -1377,7 +1377,7 @@ all_node_orders <- function(fft, quiet = FALSE){
 
 
   # Provide user feedback:
-  if (!quiet){
+  if (any(sapply(quiet, isFALSE))){
     cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node orders.\n")))
   }
 
@@ -1456,7 +1456,7 @@ all_exit_structures <- function(fft, quiet = FALSE){
 
 
   # Provide user feedback:
-  if (!quiet){
+  if (any(sapply(quiet, isFALSE))){
     cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " exit structures.\n")))
   }
 
@@ -1522,7 +1522,7 @@ all_node_subsets <- function(fft, quiet = FALSE){
 
 
   # Provide user feedback:
-  if (!quiet){
+  if (any(sapply(quiet, isFALSE))){
     cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node subsets.\n")))
   }
 
@@ -1612,7 +1612,7 @@ all_fft_variants <- function(fft, quiet = FALSE){
 
 
   # Provide user feedback:
-  if (!quiet){
+  if (any(sapply(quiet, isFALSE))){
     cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_3), " variants.\n")))
   }
 

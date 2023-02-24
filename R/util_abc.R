@@ -273,8 +273,8 @@ get_best_tree <- function(x,
 
       max_goals <- c(max_goals, x$params$my.goal)
 
-      if (!x$params$quiet) {
-        msg <- paste0("\u2014 Selecting an FFT to maximize your goal = '", x$params$my.goal, "'\n")
+      if (any(sapply(x$params$quiet, isFALSE))) {
+        msg <- paste0("\u2014 Selecting an FFT to maximize goal = '", x$params$my.goal, "'\n")
         cat(u_f_hig(msg))
       }
 
@@ -282,8 +282,8 @@ get_best_tree <- function(x,
 
       min_goals <- c(min_goals, x$params$my.goal)
 
-      if (!x$params$quiet) {
-        msg <- paste0("\u2014 Selecting an FFT to minimize your goal = '", x$params$my.goal, "'\n")
+      if (any(sapply(x$params$quiet, isFALSE))) {
+        msg <- paste0("\u2014 Selecting an FFT to minimize goal = '", x$params$my.goal, "'\n")
         cat(u_f_hig(msg))
       }
 
