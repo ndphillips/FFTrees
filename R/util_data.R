@@ -23,9 +23,9 @@ handle_NA <- function(data, criterion_name){
   ix_crit <- names(data) == criterion_name
   ix_pred <- names(data) != criterion_name
 
-  ix_chr <- sapply(my_data, is.character)
-  ix_fct <- sapply(my_data, is.factor)
-  ix_num <- sapply(my_data, is.numeric)
+  ix_chr <- sapply(data, is.character)
+  ix_fct <- sapply(data, is.factor)
+  ix_num <- sapply(data, is.numeric)
 
   ix_pred_chr <- ix_pred & ix_chr
   ix_pred_fct <- ix_pred & ix_fct
