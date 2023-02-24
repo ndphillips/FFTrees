@@ -102,8 +102,8 @@ read_fft_df <- function(ffts_df, tree = 1){
     vlen_diffs_col <- paste(v_lengths[ixs_with_diffs], collapse = ", ")
 
     # Error message:
-    msg <- paste0("The lengths of some FFT definition parts differ from n_nodes = ", n_nodes, ":\n  names of v = (", tvec_diffs_col, "), v_lengths = (", vlen_diffs_col, ").")
-    stop(msg)
+    stop(paste0("The lengths of some FFT definition parts differ from n_nodes = ", n_nodes,
+                ":\n  names of v = (", tvec_diffs_col, "), v_lengths = (", vlen_diffs_col, ")."))
 
   }
 
@@ -230,7 +230,7 @@ write_fft_df <- function(fft, tree = -99L){
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
 
 
-add_fft_df <- function(fft, ffts_df = NULL){
+add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
   if (verify_ffts_df(fft)){   # Case 1: fft is a (set of) FFT-definitions (in 1 row per tree, as df) ----
 
@@ -248,16 +248,19 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
         return(out_ffts_df)  # Output (default)
 
-      }
+      } # if ffts_df.
 
-    }
+    } # if else fft.
 
   } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per node) ----
 
     cur_fft <- write_fft_df(fft = fft, tree = 1)
 
-    # ToDo: Use quiet arg & cat(u_f_msg()) here?
-    message("Wrote 1 FFT (from df) to a 1-line definition.")
+    # Provide user feedback:
+    if (!quiet){
+      cat(u_f_msg(paste0("add_fft_df: Wrote fft to a 1-line definition\n")))
+    }
+
 
     add_fft_df(fft = cur_fft, ffts_df = ffts_df)  # re-call (with modified 1st argument)
 
@@ -272,22 +275,21 @@ add_fft_df <- function(fft, ffts_df = NULL){
 
 
 # # Check:
-# (ffts_df <- get_fft_df(x))
-# (fft <- read_fft_df(ffts_df, tree = 2))
+# (ffts <- get_fft_df(x))
+# (fft  <- read_fft_df(ffts, tree = 2))
 #
 # # Baselines:
-# add_fft_df(ffts_df)  # Case 0a: Add a set of definitions to NULL.
+# add_fft_df(ffts)  # Case 0a: Add a set of definitions to NULL.
 # add_fft_df(fft)   # Case 0c: Add 1 FFT (as df) to NULL.
 #
 # # Intended use:
-# add_fft_df(ffts_df[2, ], ffts_df)  # Case 1: Add 1 definition to a set of definitions.
-# add_fft_df(fft, ffts_df)     # Case 2: Add 1 FFT (as df) to a set of definitions.
+# add_fft_df(ffts[2, ], ffts)  # Case 1: Add 1 definition to a set of definitions.
+# add_fft_df(fft, ffts)        # Case 2: Add 1 FFT (as df) to a set of definitions.
 
 
 
 
-
-# (B) Editing tree descriptions: --------
+# (B) Tree editing/trimming functions: --------
 
 # Goal: Functions for editing, manipulating, and trimming individual FFTs (in df format).
 
@@ -1474,7 +1476,7 @@ all_exit_structures <- function(fft, quiet = FALSE){
 
 
 
-# all_node_subsets(): ------
+# all_node_subsets: ------
 
 # Goal: Get all subtrees of an FFT.
 #
@@ -1628,11 +1630,11 @@ all_fft_variants <- function(fft, quiet = FALSE){
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
-# (all_3 <- all_fft_variants(fft = read_fft_df(ffts, tree = 1)))
+# (all_3 <- all_fft_variants(fft = read_fft_df(ffts, tree = 1), quiet = FALSE))
 # nrow(all_3)
 # verify_ffts_df(all_3)
 #
-# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2), quiet = FALSE))
+# (all_4 <- all_fft_variants(fft = read_fft_df(ffts, tree = 2), quiet = TRUE))
 # nrow(all_4)
 # verify_ffts_df(all_4)
 
@@ -1640,7 +1642,7 @@ all_fft_variants <- function(fft, quiet = FALSE){
 
 # ToDo: ------
 
-# - Make some functions (e.g., tree editing functions) work alternative inputs of either
+# - Make some functions (e.g., tree editing functions) work for alternative inputs of either
 #   (1) FFT definitions (df, 1 row per tree) OR
 #   (2) single FFTs (as df, 1 row per node).
 #

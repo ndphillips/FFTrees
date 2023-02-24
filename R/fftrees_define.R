@@ -49,9 +49,12 @@ fftrees_define <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
-    msg <- paste0("Aiming to define FFTs:\n")
-    cat(u_f_ini(msg))
+  if (!x$params$quiet & !quiet.ini) {
+
+    # msg <- paste0("Aiming to define FFTs:\n")
+    # cat(u_f_ini(msg))
+
+    cli::cli_alert("Define FFTs:", class = "alert-start")
   }
 
 
@@ -75,8 +78,13 @@ fftrees_define <- function(x,
       # Provide user feedback: ----
 
       if (!x$params$quiet) {
-        msg <- paste0("Sorted tree IDs in tree.definitions into 1:n_trees (tree = 1:", n_trees, ").\n")
-        cat(u_f_hig(msg))
+
+        msg <- paste0("Sorted tree IDs in tree.definitions into 1:n_trees (tree = 1:", n_trees, ").")
+
+        # cat(u_f_hig(msg, "\n"))
+
+        cli::cli_alert_info(msg)
+
       }
 
       # print(tree.definitions)  # 4debugging
@@ -88,8 +96,12 @@ fftrees_define <- function(x,
     x$trees$n <- n_trees
 
     if (!x$params$quiet) {
-      msg <- paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees.\n")
-      cat(u_f_hig(msg))
+
+      # msg <- paste0("Using ", x$trees$n, " FFTs from 'tree.definitions' as current trees:\n")
+      # cat(u_f_hig(msg))
+
+      cli::cli_alert_info("Using {x$trees$n} FFT{?s} from 'tree.definitions' as current tree{?s}.")
+
     }
 
 
@@ -103,8 +115,12 @@ fftrees_define <- function(x,
     x$trees$n <- as.integer(nrow(object$trees$definitions))
 
     if (!x$params$quiet) {
-      msg <- paste0("Using ", x$trees$n, " FFTs from 'object' as current trees.\n")
-      cat(u_f_hig(msg))
+
+      # msg <- paste0("Using ", x$trees$n, " FFTs from 'object' as current trees:\n")
+      # cat(u_f_hig(msg))
+
+      cli::cli_alert_info("Using {x$trees$n} FFT{?s} from 'object' as current tree{?s}.")
+
     }
 
 
@@ -126,19 +142,22 @@ fftrees_define <- function(x,
 
   # Provide user feedback: ----
 
-  if (!x$params$quiet) {
+  if (!x$params$quiet & !quiet.fin) {
 
     n_trees <- x$trees$n
 
     if (n_trees == 1){
-      msg <- paste0("Successfully defined ", n_trees, " FFT.\n")
+      msg <- paste0("Successfully defined ", n_trees, " FFT.")
     } else if (n_trees > 1){
-      msg <- paste0("Successfully defined ", n_trees, " FFTs.\n")
+      msg <- paste0("Successfully defined ", n_trees, " FFTs.")
     } else {
       msg <- "No FFTs were defined."
     }
 
-    cat(u_f_fin(msg))
+    # cat(u_f_fin(msg, "\n"))
+
+    cli::cli_alert_success("Defined {n_trees} FFT{?s}.")
+
   }
 
 

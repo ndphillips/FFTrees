@@ -48,6 +48,24 @@ u_f_msg <- cli::make_ansi_style("grey50", grey = TRUE, colors = 256)  # normal m
 u_f_hig <- cli::make_ansi_style("dodgerblue4",         colors = 256)  # highlighted msg
 
 
+# Define cli themes: ----
+
+# # Color of headings, that are only active in paragraphs with an 'output' class:
+#
+#   list(
+#     "par.output h1" = list("background-color" = "red", color = "#e0e0e0"),
+#     "par.output h2" = list("background-color" = "orange", color = "#e0e0e0"),
+#     "par.output h3" = list("background-color" = "blue", color = "#e0e0e0")
+#   )
+#
+# # Create custom alert types:
+#
+#   list(
+#     ".alert-start" = list(before = symbol$play),
+#     ".alert-stop"  = list(before = symbol$stop)
+#   )
+
+
 # ToDo: ------
 
 # - etc.

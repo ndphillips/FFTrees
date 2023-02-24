@@ -33,6 +33,8 @@ url_JDM_doi <- "https://doi.org/10.1017/S1930297500006239"
 
 # FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
+
+
 <!-- Devel badges start: --> 
 [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
@@ -142,9 +144,9 @@ Once we have created some FFTs, additional questions include:
 
 - How accurate are the predictions of a specific FFT?
 - How does its performance compare with alternative machine-learning algorithms?
-- How costly are the predictions of each algorithm?
+- How costly are the predictions of each algorithm? 
 
-The **FFTrees** package answers these questions by creating FFTs and allowing to evaluate, visualize, and compare them to alternative algorithms.
+The **FFTrees** package answers these questions by creating FFTs and allowing to evaluate, visualize, and compare them to alternative algorithms. 
 
 
 ### Creating fast-and-frugal trees (FFTs) 

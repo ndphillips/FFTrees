@@ -61,9 +61,16 @@ fftrees_fitcomp <- function(x) {
   # Provide user feedback: ----
 
   if (do.lr | do.cart | do.rf | do.svm) {
-    if (!x$params$quiet) {
-      msg <- "Aiming to fit comparative algorithms (disable by do.comp = FALSE):\n"
-      cat(u_f_ini(msg))
+    if (!x$params$quiet & !quiet.ini) {
+
+      # msg <- "Aiming to fit comparative algorithms (disable by do.comp = FALSE):\n"
+      # cat(u_f_ini(msg))
+
+      sum_alg <- sum(c(do.lr, do.cart, do.rf, do.svm))
+
+      cli::cli_alert("Fit {sum_alg} comparative algorithm{?s} (disable by {.code do.comp = FALSE}):",
+                     class = "alert-start")
+
     }
   }
 
@@ -208,8 +215,14 @@ fftrees_fitcomp <- function(x) {
   # Provide user feedback: ----
 
   if (do.lr | do.cart | do.rf | do.svm) {
-    if (!x$params$quiet) {
-      cat(u_f_fin("Successfully fitted comparative algorithms.\n"))
+
+    if (!x$params$quiet & !quiet.fin) {
+
+      # cat(u_f_fin("Successfully fitted comparative algorithms.\n"))
+
+      sum_alg <- sum(c(do.lr, do.cart, do.rf, do.svm))
+      cli::cli_alert_success("Fitted {sum_alg} comparative algorithm{?s}.")
+
     }
   }
 
