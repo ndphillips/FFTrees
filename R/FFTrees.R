@@ -212,7 +212,8 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     #
-                    quiet = FALSE,
+                    quiet = FALSE,       # ToDo: Deprecate, in favor of 3 more detailed Boolean parameters
+                    # ufeed = 2L,        # ToDo: user feedback level (from feed_types 0:3)
                     #
                     # Deprecated args:   Use instead:
                     comp = NULL,         # do.comp
@@ -224,6 +225,8 @@ FFTrees <- function(formula = NULL,
 ) {
 
   # Prepare: ------
+
+
 
   # A. Handle deprecated arguments and options: ------
 
@@ -264,6 +267,12 @@ FFTrees <- function(formula = NULL,
 
   # B. Verify inputs: ------
 
+
+  # Provide user feedback: ----
+
+  # if (!quiet.ini) { cli::cli_h2("Get FFTrees:") }
+
+
   # object: ----
 
   if (!is.null(object)) { # an FFTrees object is provided:
@@ -295,8 +304,13 @@ FFTrees <- function(formula = NULL,
     # Provide user feedback: ----
 
     if (!quiet) {
-      msg <- paste0("Using the FFTrees object provided (and some of its key parameters).\n")
-      cat(u_f_hig(msg))
+
+      msg <- paste0("Using the FFTrees object provided (and some of its key parameters).")
+
+      # cat(u_f_hig(msg, "\n"))
+
+      cli::cli_alert_info(msg)
+
     }
 
   }
@@ -352,9 +366,14 @@ FFTrees <- function(formula = NULL,
     # Provide user feedback: ----
 
     if (!quiet) {
-      msg <- paste0("Successfully split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
-                    scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set.\n")
-      cat(u_f_fin(msg))
+
+      msg <- paste0("Split data into a ", scales::percent(train.p), " (N = ", scales::comma(nrow(data)), ") training and ",
+                    scales::percent(1 - train.p), " (N = ", scales::comma(nrow(data.test)), ") test set.")
+
+      # cat(u_f_fin(msg), "\n")
+
+      cli::cli_alert_success(msg)
+
     }
 
   }
@@ -436,6 +455,11 @@ FFTrees <- function(formula = NULL,
   # 7. Fit competitive algorithms: ----
 
   x <- fftrees_fitcomp(x)
+
+
+  # Provide user feedback: ----
+
+  # if (!quiet.fin) { cli::cli_h2("Got FFTrees.") }
 
 
   # Output: ------
