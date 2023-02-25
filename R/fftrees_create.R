@@ -475,7 +475,8 @@ fftrees_create <- function(formula = NULL,
 
       if (!"cost" %in% cur_goals){
 
-        wrn_msg <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.")
+        my_sp <- "  "
+        wrn_msg <- paste0("Specified 'cost.outcomes', but no goal = 'cost':\n{my_sp}FFT creation will ignore costs, but report cost statistics.")
 
         # cat(u_f_hig(wrn_msg, "\n"))
 
@@ -524,7 +525,8 @@ fftrees_create <- function(formula = NULL,
 
       if (!"cost" %in% cur_goals){
 
-        wrn_msg <- paste0("Specified 'cost.cues', but no goal = 'cost':\nFFT creation will ignore costs, but report cost statistics.")
+        my_sp <- "  "
+        wrn_msg <- paste0("Specified 'cost.cues', but no goal = 'cost':\n{my_sp}FFT creation will ignore costs, but report cost statistics.")
 
         # cat(u_f_hig(wrn_msg, "\n"))
 
