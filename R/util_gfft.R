@@ -1295,6 +1295,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 
 # (C) Macros / Combinations of tree editing functions: --------
 
+
 # Conundrums:
 # - What makes 2 FFTs "similar" (in which respect) or belong to the same "family"?
 # - What is the "identity" of an FFT?
@@ -1378,7 +1379,11 @@ all_node_orders <- function(fft, quiet = FALSE){
 
   # Provide user feedback:
   if (any(sapply(quiet, isFALSE))){
-    cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node orders.\n")))
+
+    # cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node orders.\n")))
+
+    cli::cli_alert_success("Generated {nrow(out)} node order{?s}.")
+
   }
 
 
@@ -1457,7 +1462,11 @@ all_exit_structures <- function(fft, quiet = FALSE){
 
   # Provide user feedback:
   if (any(sapply(quiet, isFALSE))){
-    cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " exit structures.\n")))
+
+    # cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " exit structures.\n")))
+
+    cli::cli_alert_success("Generated {nrow(out)} exit structure{?s}.")
+
   }
 
 
@@ -1523,7 +1532,11 @@ all_node_subsets <- function(fft, quiet = FALSE){
 
   # Provide user feedback:
   if (any(sapply(quiet, isFALSE))){
-    cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node subsets.\n")))
+
+    # cat(u_f_msg(paste0("\u2014 Generated ", nrow(out), " node subsets.\n")))
+
+    cli::cli_alert_success("Generated {nrow(out)} node subset{?s}.")
+
   }
 
 
@@ -1537,8 +1550,8 @@ all_node_subsets <- function(fft, quiet = FALSE){
 # (ffts <- get_fft_df(x))  # x$trees$definitions / definitions (as df)
 # (fft  <- read_fft_df(ffts, tree = 1))  # 1 FFT (as df, from above)
 #
-# (ast_3 <- all_node_subsets(fft = fft))
-# (ast_4 <- all_node_subsets(fft = read_fft_df(ffts, tree = 2)))
+# (ast_3 <- all_node_subsets(fft = fft, quiet = FALSE))
+# (ast_4 <- all_node_subsets(fft = read_fft_df(ffts, tree = 2), quiet = FALSE))
 
 
 
@@ -1613,7 +1626,11 @@ all_fft_variants <- function(fft, quiet = FALSE){
 
   # Provide user feedback:
   if (any(sapply(quiet, isFALSE))){
-    cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_3), " variants.\n")))
+
+    # cat(u_f_msg(paste0("\u2014 Generated ", nrow(set_3), " variants.\n")))
+
+    cli::cli_alert_success("Generated {nrow(set_3)} variant{?s}.")
+
   }
 
 
