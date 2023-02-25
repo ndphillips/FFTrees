@@ -27,9 +27,9 @@
 #' @return A modified \code{FFTrees} object (with cue rank information
 #' for the current \code{data} type in \code{x$cues$stats}).
 #'
-#' @importFrom stats median var
-#' @importFrom progress progress_bar
+#' @importFrom cli cli_progress_bar cli_progress_update cli_progress_done
 #' @importFrom dplyr pull
+#' @importFrom stats median var
 #'
 #' @export
 
@@ -83,11 +83,21 @@ fftrees_cuerank <- function(x = NULL,
 
   if (any(sapply(x$params$quiet, isFALSE))) {
 
-    pb <- progress::progress_bar$new(format = u_f_msg("[:bar] :percent"),
-                                     width = 70,
-                                     total = cue_n, clear = FALSE, show_after = .200)
+    # # Using progress pkg:
+    # pb <- progress::progress_bar$new(format = u_f_msg("[:bar] :percent"),
+    #                                  width = 60,
+    #                                  total = cue_n, clear = FALSE, show_after = .200)
 
-    # cli::cli_progress_bar("Ranking cues", total = cue_n)
+    # Using cli pkg:
+    options(cli.progress_show_after = 1/5,  # delay of bar? (default = 2)
+            cli.progress_clear = FALSE,     # clear after finishing? (default = TRUE)
+            cli.spinner = "line")           # spinner for type = "tasks"?
+
+    n_1 <- paste0("  Ranking ", cue_n, " cues: ")
+    cli::cli_progress_bar(name = n_1, total = cue_n)  # linear bar
+
+    # n_2 <- paste0("Ranking cues.")
+    # cli::cli_progress_bar(name = n_2, total = cue_n, type = "tasks") # tasks
 
   }
 
@@ -99,11 +109,11 @@ fftrees_cuerank <- function(x = NULL,
     # Progress bar update:
     if (any(sapply(x$params$quiet, isFALSE))) {
 
-      pb$tick()
-      Sys.sleep(1 / cue_n)
+      # pb$tick()
+      # Sys.sleep(1 / cue_n)
 
-      # Sys.sleep(10/100)
-      # cli::cli_progress_update()
+      cli::cli_progress_update()
+      Sys.sleep(1 / cue_n)
 
     }
 
@@ -338,7 +348,6 @@ fftrees_cuerank <- function(x = NULL,
 
   } # for (cue_i).
 
-  # cli::cli_progress_done()
 
 
   # Set rownames: ----
@@ -359,6 +368,11 @@ fftrees_cuerank <- function(x = NULL,
   # Store in x$cues$stats (as df): ----
 
   x$cues$stats[[data]] <- cuerank_df
+
+
+  # Progress bar:
+
+  cli::cli_progress_done()
 
 
   # Provide user feedback:

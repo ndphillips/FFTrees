@@ -106,10 +106,11 @@
 #' }
 #' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
-#' @param quiet A list of 3 logical arguments. Should detailed progress reports be suppressed?
-#' Setting elements to \code{FALSE} is helpful when diagnosing errors.
+#' @param quiet A list of 3 logical arguments: Should detailed progress reports be suppressed?
+#' Setting list elements to \code{FALSE} is helpful when diagnosing errors.
 #' Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = TRUE)},
-#' for initial, final, and user settings, respectively.
+#' for initial, final, and parameter settings, respectively.
+#' Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.
 #'
 #' @param comp,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
@@ -269,7 +270,7 @@ FFTrees <- function(formula = NULL,
 
     if (any(sapply(quiet, isFALSE))) {
 
-      cli::cli_alert_info("Set 'quiet' elements to '{quiet}'.")
+      cli::cli_alert_success("Set 'quiet' elements to '{quiet}'.")
 
     }
 
@@ -348,7 +349,7 @@ FFTrees <- function(formula = NULL,
   criterion_name <- get_lhs_formula(formula)
 
   if (!criterion_name %in% names(data)){
-    stop(paste0("Criterion variable '", criterion_name, "' was not found in data"))
+    stop(paste0("A criterion variable '", criterion_name, "' was not found in data"))
   }
 
 
@@ -359,8 +360,6 @@ FFTrees <- function(formula = NULL,
   if (any(is.na(data))){
 
     data <- handle_NA(data = data, criterion_name = criterion_name)
-
-    # +++ here now +++
 
   } # (any(is.na(data))).
 
