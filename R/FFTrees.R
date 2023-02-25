@@ -106,10 +106,11 @@
 #' }
 #' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
-#' @param quiet A list of 3 logical arguments. Should detailed progress reports be suppressed?
-#' Setting elements to \code{FALSE} is helpful when diagnosing errors.
+#' @param quiet A list of 3 logical arguments: Should detailed progress reports be suppressed?
+#' Setting list elements to \code{FALSE} is helpful when diagnosing errors.
 #' Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = TRUE)},
-#' for initial, final, and user settings, respectively.
+#' for initial, final, and parameter settings, respectively.
+#' Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.
 #'
 #' @param comp,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
