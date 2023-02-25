@@ -27,9 +27,9 @@
 #' @return A modified \code{FFTrees} object (with cue rank information
 #' for the current \code{data} type in \code{x$cues$stats}).
 #'
-#' @importFrom stats median var
-#' @importFrom progress progress_bar
+#' @importFrom cli cli_progress_bar cli_progress_update cli_progress_done
 #' @importFrom dplyr pull
+#' @importFrom stats median var
 #'
 #' @export
 
