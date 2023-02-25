@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9010
+## 1.9.0.9012
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -26,16 +26,18 @@ Changes since last release:
 ### Minor changes 
 
 - Added detailed cost information when printing FFTs (with `print.FFTrees()`).  
+- Improved user feedback (by making `quiet` a list with three distinct options). 
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
-- Improved user feedback (on different levels of detail). 
 
 
 <!-- Details: --> 
 
 ### Details 
 
+- Added progress bar of **cli** package (removing dependency on **progress**). 
 - Added `exit_types` as global constant.
 - Revised documentation and vignettes.
+
 
 <!-- Development version: --> 
 
@@ -447,6 +449,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-24.]
+[File `NEWS.md` last updated on 2023-02-25.]
 
 <!-- eof. -->
