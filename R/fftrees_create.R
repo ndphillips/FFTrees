@@ -205,7 +205,7 @@ fftrees_create <- function(formula = NULL,
 
     if (any(sapply(quiet, isFALSE))) {
 
-      wrn_msg <- "\u2014 User set 'goal = wacc', but 'sens.w = 0.50': Setting 'goal = bacc'"
+      wrn_msg <- "User set 'goal = wacc', but 'sens.w = 0.50': Setting 'goal = bacc'"
 
       # cat(u_f_hig(wrn_msg, "\n"))
 
@@ -243,8 +243,11 @@ fftrees_create <- function(formula = NULL,
   } else { # feedback user setting:
 
     if (!quiet$set) {
+
       msg <- paste0("\u2014 User set 'goal.chase = ", goal.chase, "'\n")
+
       cat(u_f_msg(msg))
+
     }
 
   }
@@ -258,7 +261,7 @@ fftrees_create <- function(formula = NULL,
 
     if (any(sapply(quiet, isFALSE))) {
 
-      wrn_msg <- "\u2014 User set 'goal.chase = wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'"
+      wrn_msg <- "User set 'goal.chase = wacc', but 'sens.w = 0.50': Setting 'goal.chase = bacc'"
 
       # cat(u_f_hig(wrn_msg, "\n"))
 
@@ -283,6 +286,7 @@ fftrees_create <- function(formula = NULL,
     } else { # set to 'bacc' (as bacc == wacc):
 
       goal.threshold <- "bacc"
+
       if (!quiet$set) { cat(u_f_msg("\u2014 Setting 'goal.threshold = bacc'\n")) }
 
     }
@@ -290,8 +294,11 @@ fftrees_create <- function(formula = NULL,
   } else { # feedback user setting:
 
     if (!quiet$set) {
+
       msg <- paste0("\u2014 User set 'goal.threshold = ", goal.threshold, "'\n")
+
       cat(u_f_msg(msg))
+
     }
 
   }
@@ -331,7 +338,7 @@ fftrees_create <- function(formula = NULL,
 
     if (any(sapply(quiet, isFALSE))) {
 
-      wrn_msg <- "\u2014 User set 'goal.threshold = wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'"
+      wrn_msg <- "User set 'goal.threshold = wacc', but 'sens.w = 0.50': Setting 'goal.threshold = bacc'"
 
       # cat(u_f_hig(wrn_msg, "\n"))
 
@@ -377,6 +384,7 @@ fftrees_create <- function(formula = NULL,
       invalid_avec <- paste(invalid_args, collapse = ", ")
 
       stop("my.goal.fun must contain 4 arguments (hi, fa, mi, cr), but not ", invalid_avec)
+
     }
 
     if (any(my_goal_arg_valid %in% fn_arg_names == FALSE)){
@@ -385,7 +393,8 @@ fftrees_create <- function(formula = NULL,
       missing_avec <- paste(missing_args, collapse = ", ")
       if (length(missing_args) < 2) {be <- "is"} else { be <- "are"}
 
-      message("my.goal.fun usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
+      cli::cli_alert_warning("my.goal.fun usually contains 4 arguments (hi, fa, mi, cr), but (", missing_avec, ") ", be, " missing")
+
     }
 
   } # if (my.goal).
@@ -442,14 +451,19 @@ fftrees_create <- function(formula = NULL,
     max.levels <- 4  # default
 
     if (!quiet$set) {
+
       cat(u_f_msg("\u2014 Setting 'max.levels = 4'\n"))
+
     }
 
   } else { # user set max.levels:
 
     if (!quiet$set) {
+
       msg <- paste0("\u2014 User set 'max.levels = ", max.levels, "'\n")
+
       cat(u_f_msg(msg))
+
     }
 
   }
@@ -469,6 +483,7 @@ fftrees_create <- function(formula = NULL,
       if (!quiet$set){
 
         msg <- paste0("\u2014 User set 'cost.outcomes' = (", cos, ")\n")
+
         cat(u_f_msg(msg))
 
       }
@@ -519,6 +534,7 @@ fftrees_create <- function(formula = NULL,
       if (!quiet$set){
 
         msg <- paste0("\u2014 User set 'cost.cues' = (", ccs, ")")
+
         cat(u_f_msg(msg, "\n"))
 
       }
@@ -541,6 +557,7 @@ fftrees_create <- function(formula = NULL,
     if (!quiet$set) {
 
       msg <- paste0("\u2014 Using default 'cost.cues' = (", cost_cues_default, " per cue)\n")
+
       cat(u_f_msg(msg))
 
     }
@@ -632,6 +649,7 @@ fftrees_create <- function(formula = NULL,
   # Check that criterion is in data.test: ----
 
   if (!is.null(data.test)) {
+
     testthat::expect_true(is.data.frame(data),
                           info = "Object is not a dataframe."
     )
@@ -639,6 +657,7 @@ fftrees_create <- function(formula = NULL,
     testthat::expect_true(criterion_name %in% names(data.test),
                           info = paste("The criterion", criterion_name, "is not in data.test")
     )
+
   }
 
 
