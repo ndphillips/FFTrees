@@ -57,7 +57,7 @@ fftrees_cuerank <- function(x = NULL,
   # Define criterion (vector) and cues (data.frame): ----
 
   cue_df <- newdata[names(newdata) != x$criterion_name]
-  criterion_v <- newdata %>% dplyr::pull(x$criterion_name)
+  criterion_v <- newdata[[x$criterion_name]]
   cases_n <- length(criterion_v)
   cue_n <- ncol(cue_df)
 
