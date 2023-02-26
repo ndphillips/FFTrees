@@ -44,6 +44,9 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                            cost.outcomes = NULL # (was "list(hi = 0, fa = 1, mi = 1, cr = 0)", but NULL enforces consistency w calling function)
 ) {
 
+  thresholds <- thresholds[!is.na(thresholds)]
+  cue_v <- cue_v[!is.na(cue_v)]
+
   thresholds_n <- length(thresholds)
 
   results_gt <- matrix(NA, nrow = thresholds_n, ncol = 5)
