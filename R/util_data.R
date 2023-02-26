@@ -146,7 +146,7 @@ handle_NA <- function(data, criterion_name){
 
     # Replace NA values:
     data[ix_pred_chr] <- data[ix_pred_chr] %>%
-      dplyr::mutate_if(is.character, addNA)
+      dplyr::mutate_if(is.character, addNA)  # add NA as a new factor level
 
     # Provide user feedback:
     cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA case{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
@@ -157,28 +157,27 @@ handle_NA <- function(data, criterion_name){
 
     # Replace NA values:
     data[ix_pred_fct] <- data[ix_pred_fct] %>%
-      dplyr::mutate_if(is.factor, addNA)
+      dplyr::mutate_if(is.factor, addNA)  # add NA as a new factor level
 
     # Provide user feedback:
     cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA case{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
 
   }
 
+  if (any(ix_pred_log_NA)){ # NA values in logical predictors: ----
+
+    # Replace NA values:
+    data[ix_pred_log] <- data[ix_pred_log] %>%
+      dplyr::mutate_if(is.logical, addNA)  # add NA as a new factor level
+
+    # Provide user feedback:
+    cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA case{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
+
+  }
+
 
   # +++ here now +++
 
-
-  if (any(ix_pred_log_NA)){ # NA values in logical predictors: ----
-
-    # ToDo: What to do about NA values in logical variables?
-
-    # Idea: Simply convert to character:
-    data[ix_pred_log_NA] <- as.character(data[ix_pred_log_NA])
-
-    # Provide user feedback:
-    cli::cli_alert_success("Converted {sum(ix_pred_log_NA)} logical predictor{?s} to character, due to {sum(nr_pred_log_NA)} NA case{?s}.")
-
-  }
 
   if (any(ix_pred_num_NA)){ # NA values in numeric predictors: ----
 
@@ -199,7 +198,7 @@ handle_NA <- function(data, criterion_name){
   }
 
 
-  # print(data)  # 4debugging
+  print(tibble::as_tibble(data))  # 4debugging
 
 
   # Output: ------
