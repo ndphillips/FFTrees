@@ -172,8 +172,11 @@ handle_NA <- function(data, criterion_name){
 
     # ToDo: What to do about NA values in logical variables?
 
+    # Idea: Simply convert to character:
+    data[ix_pred_log_NA] <- as.character(data[ix_pred_log_NA])
+
     # Provide user feedback:
-    cli::cli_alert_warning("There are NA cases in logical predictors.")
+    cli::cli_alert_success("Converted {sum(ix_pred_log_NA)} logical predictor{?s} to character, due to {sum(nr_pred_log_NA)} NA case{?s}.")
 
   }
 
