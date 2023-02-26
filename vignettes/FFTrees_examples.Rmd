@@ -178,7 +178,7 @@ In this example, we'll create trees using the entire dataset (without splitting 
 iris_fft <- FFTrees(formula = virginica ~.,
                     data = iris.v,
                     main = "Iris",
-                    decision.labels = c("Not-V", "V"))
+                    decision.labels = c("Not-Vir", "Vir"))
 ```
 
 The **FFTrees** package provides various functions to inspect the `FFTrees` object `iris_fft`. 
@@ -259,4 +259,3 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 ## References 
 
 <!-- eof. -->
-

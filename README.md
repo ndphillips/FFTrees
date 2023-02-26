@@ -154,7 +154,7 @@ We use the main `FFTrees()` function to create FFTs for the
   the `heartdisease` data:
 
 ``` r
-# Create an FFTrees object from the heartdisease data: 
+# Create an FFTrees object from the heartdisease data:
 heart_fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
                      data.test = heart.test, 
