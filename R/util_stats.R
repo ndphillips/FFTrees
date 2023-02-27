@@ -276,7 +276,9 @@ classtable <- function(prediction_v = NULL,
 
     # Report NA values (prior to removing them): ----
 
-    if (!x$params$quiet$mis) { # Provide user feedback:
+    quiet_mis <- FALSE  # HACK: as local constant (as object x not passed)
+
+    if (!quiet_mis) { # Provide user feedback:
 
       # 1. NA in prediction_v:
       if (any(is.na(prediction_v))){
@@ -304,7 +306,7 @@ classtable <- function(prediction_v = NULL,
 
       }
 
-    } # if (!x$params$quiet$mis).
+    } # if (!quiet_mis).
 
 
     # Filter rows: Remove NA and infinite values (from prediction AND criterion vectors): ----
