@@ -34,7 +34,7 @@ fftrees_grow_fan <- function(x,
     # cat(u_f_ini(msg))
 
     cli::cli_alert("Create FFTs with '{cur_algorithm}' algorithm (chasing '{cur_goal.chase}'):",
-              class = "alert-start")
+                   class = "alert-start")
   }
 
   # Global variables which can be changed later:
@@ -93,6 +93,8 @@ fftrees_grow_fan <- function(x,
 
     tree_dm$tree.num <- 1:nrow(tree_dm)
     tree_n <- nrow(tree_dm)
+    # print(paste0("\u2014 Growing tree_n = ", tree_n, " FFTs."))  # 4debugging
+
 
     # Set up tree_stats_ls:
     #  A list containing dataframes representing
@@ -107,6 +109,7 @@ fftrees_grow_fan <- function(x,
       names(output) <- paste("tree", 1:tree_n, sep = ".")
 
       output
+
     })
 
     names(tree_stats_ls) <- tree_table_names
@@ -116,8 +119,6 @@ fftrees_grow_fan <- function(x,
 
 
   # Define the set of stats names (only once, before loop): ------
-
-  # +++ here now +++
 
   # A. Define the set of ASIF stats [asif_stats_name_v]: ----
   if (!is.null(my_goal)){ # include my.goal (name and value):
@@ -184,7 +185,7 @@ fftrees_grow_fan <- function(x,
     levelout_v <- rep(NA, cases_n)
     cuecost_v  <- rep(0, cases_n)
     outcomecost_v <- rep(NA, cases_n)
-    totalcost_v   <- rep(0,  cases_n)
+    totalcost_v   <- rep(0,  cases_n)  # is NOT used anywhere?
 
     hi_v <- rep(NA, cases_n)
     fa_v <- rep(NA, cases_n)
@@ -459,17 +460,22 @@ fftrees_grow_fan <- function(x,
         # }
 
 
-        # Stop growing tree, if ASIF classification is perfect: ----
+        # If ASIF classification is perfect/ideal, set grow_tree to FALSE: ----
+
+        asif_goal_chase_value <- asif_stats[[x$params$goal.chase]][level_current]
+        # print(asif_goal_chase_value)  # 4debugging
+
+        # Identify perfect/ideal FFTs:
 
         if (x$params$goal.chase %in% c("acc", "bacc", "wacc")) { # A. chasing an accuracy measure:
 
-          if (dplyr::near(asif_stats[[x$params$goal.chase]][level_current], 1)) { # perfect/ideal acc = 1
+          if (dplyr::near(asif_goal_chase_value, 1)) { # perfect/ideal acc = 1
             grow_tree <- FALSE
           }
 
         } else if (x$params$goal.chase == "cost") { # B. chasing "cost" measure:
 
-          if (dplyr::near(asif_stats[[x$params$goal.chase]][level_current], 0)) { # perfect/ideal cost = 0  # ToDo: Or is best cost -1?
+          if (dplyr::near(asif_goal_chase_value, 0)) { # perfect/ideal cost = 0  # ToDo: Or is best cost -1?
             grow_tree <- FALSE
           }
 
@@ -483,7 +489,7 @@ fftrees_grow_fan <- function(x,
 
           max_dprime <- 4.65  # effective limit (using .99 and .01)
 
-          if (asif_stats[[x$params$goal.chase]][level_current] >= max_dprime){
+          if (asif_goal_chase_value >= max_dprime){
             grow_tree <- FALSE
           }
 
@@ -510,7 +516,20 @@ fftrees_grow_fan <- function(x,
 
           stop(paste0("The current goal.chase value '", x$params$goal.chase, "' is not in '", valid_goal_str, "'"))
 
-        } # If stop?
+        } # If perfect/ideal tree: Set grow_tree to FALSE.
+
+        # print(paste0("1. grow_tree = ", grow_tree))  # 4debugging
+
+
+        if (!grow_tree){ # A perfect/ideal tree_i (based on current goal.chase) was found:
+
+          # Provide user feedback: ----
+
+          if (any(sapply(x$params$quiet, isFALSE))) {
+            cli::cli_alert_info("Found a perfect tree (i = {tree_i}): {x$params$goal.chase} = {asif_goal_chase_value}")
+          }
+
+        }
 
 
         # Calculate the goal_change value: ----
@@ -533,7 +552,7 @@ fftrees_grow_fan <- function(x,
       # ToDo: Use exit_types (global constant).
       {
         if (dplyr::near(exit_current, exit_types[2]) | dplyr::near(exit_current, exit_types[3])) {
-        # if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
+          # if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
 
           decide_1_index <- case_remaining_ix & cue_decisions == TRUE
 
@@ -543,7 +562,7 @@ fftrees_grow_fan <- function(x,
         }
 
         if (exit_current == exit_types[1] | dplyr::near(exit_current, exit_types[3])) {
-        # if (exit_current == 0 | dplyr::near(exit_current, .50)) {
+          # if (exit_current == 0 | dplyr::near(exit_current, .50)) {
 
           decide_0_index <- is.na(decision_v) & cue_decisions == FALSE
 
@@ -552,16 +571,18 @@ fftrees_grow_fan <- function(x,
 
         }
 
-        # Update cost vectors:
-        hi_v <- (decision_v == TRUE)  & (criterion_v == TRUE)
-        fa_v <- (decision_v == TRUE)  & (criterion_v == FALSE)
-        mi_v <- (decision_v == FALSE) & (criterion_v == TRUE)
-        cr_v <- (decision_v == FALSE) & (criterion_v == FALSE)
+        # # Update cost vectors:
+        # hi_v <- (decision_v == TRUE)  & (criterion_v == TRUE)
+        # fa_v <- (decision_v == TRUE)  & (criterion_v == FALSE)
+        # mi_v <- (decision_v == FALSE) & (criterion_v == TRUE)
+        # cr_v <- (decision_v == FALSE) & (criterion_v == FALSE)
 
-        outcomecost_v[hi_v == TRUE] <- x$params$cost.outcomes$hi
-        outcomecost_v[fa_v == TRUE] <- x$params$cost.outcomes$fa
-        outcomecost_v[mi_v == TRUE] <- x$params$cost.outcomes$mi
-        outcomecost_v[cr_v == TRUE] <- x$params$cost.outcomes$cr
+        # outcomecost_v[hi_v == TRUE] <- x$params$cost.outcomes$hi  # is NOT used anywhere?
+        # outcomecost_v[fa_v == TRUE] <- x$params$cost.outcomes$fa  # is NOT used anywhere?
+        # outcomecost_v[mi_v == TRUE] <- x$params$cost.outcomes$mi  # is NOT used anywhere?
+        # outcomecost_v[cr_v == TRUE] <- x$params$cost.outcomes$cr  # is NOT used anywhere?
+
+        # ToDo: NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS.
 
       } # Step 3.
 
@@ -569,8 +590,6 @@ fftrees_grow_fan <- function(x,
       # Step 4: Update results: ------
       {
         case_remaining_ix <- is.na(decision_v)
-
-        # ToDo: NEED TO FIX THIS BELOW TO INCORPORATE ALL COSTS.
 
         # Get cumulative stats of exemplars currently classified:
 
@@ -629,37 +648,53 @@ fftrees_grow_fan <- function(x,
 
       # Step 5: Continue growing tree? ------
       {
-        n_case_remaining <- sum(case_remaining_ix)
 
-        if (n_case_remaining > 0 & level_current != cues_n & exit_method == "fixed") {
+        if (!grow_tree){ # grow_tree has been set to FALSE above:
+
+          break
+
+        } # else:
+
+        n_case_remaining <- sum(case_remaining_ix)
+        # print(n_case_remaining)  # 4debugging
+
+        if ((n_case_remaining > 0) & (level_current != cues_n) & (exit_method == "fixed")) {
+
           if (level_current < level_n) {
             grow_tree <- TRUE
-          }
-
-          if (level_current == level_n) {
+          } else {
             grow_tree <- FALSE
             break
           }
+
         }
 
         if ((n_case_remaining == 0) | (level_current == cues_n)) {
+          grow_tree <- FALSE
           break
         }
 
         if ((x$params$stopping.rule == "exemplars") & (n_case_remaining < x$params$stopping.par * nrow(cue_df))) {
+          grow_tree <- FALSE
           break
         }
 
         if ((x$params$stopping.rule == "levels") & (level_current == x$params$stopping.par)) {
+          grow_tree <- FALSE
           break
         }
 
         if ((x$params$algorithm == "dfan") & sd(criterion_v[case_remaining_ix]) == 0) {
+          grow_tree <- FALSE
           break
         }
 
+        # print(paste0("2. grow_tree = ", grow_tree))  # 4debugging
+
+
         # Set up next level stats:
         level_stats_i[level_current + 1, ] <- NA
+
 
       } # Step 5.
 
