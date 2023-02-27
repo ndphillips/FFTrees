@@ -105,87 +105,93 @@ negations_v <- c("not", "is not")  # (global constant)
 exit_types <- c(0, 1, 0.5)  # (global constant)
 
 
-# quiet.ini: ----
 
-# Boolean: Should user feedback for initialization (of a command or process) be shown (i.e., NOT hidden/quiet)?
+# User feedback: ------
+#
+# Now regulated by quiet = list(ini, fin, set).
+#
+# # - quiet.ini: ----
+#
+# # Boolean: Should user feedback for initialization (of a command or process) be shown (i.e., NOT hidden/quiet)?
+#
+# quiet.ini <- TRUE # FALSE # default: TRUE
+#
+#
+# # - quiet.fin: ----
+#
+# # Boolean: Should user feedback for finalization/success (of a command or process) be shown (i.e., NOT hidden/quiet)?
+#
+# quiet.fin <- FALSE # TRUE # default: FALSE
+#
+#
+# # - quiet.set: ----
+#
+# # Boolean: Should user feedback for parameter settings be shown (i.e., NOT hidden/quiet)?
+#
+# quiet.set <- FALSE # TRUE # FALSE # default: FALSE
+#
+#
+# # - feed_types: ----
+#
+# feed_types <- 0L:3L  # options: 4 levels
+#
+#
+# # - ufeed: ----
+#
+# # #' @param ufeed User feedback level (as an integer from \code{0} to \code{3},
+# # #' with higher values implying more detailed user feedback).
+# # #' Setting \code{ufeed = 0} provides no user feedback.
+# # #' Default: \code{ufeed = 2} (show parameter settings and success alerts).
+#
+#
+# ufeed <- 3L  # user feedback level (from feed_types 0:3)
+#
+#
+# if (ufeed %in% feed_types == FALSE){
+#
+#   msg <- paste0("The value of 'ufeed' must be in: ", paste(feed_types, collapse = ", "))
+#
+#   stop(msg)
+#
+# }
+#
+#
+# # Define custom ufeed categories (from 0 to 3):
+#
+# if (ufeed == 0){ # most basic/elementary/sparse:
+#
+#   # quiet <- TRUE  # hide progress
+#
+#   quiet.ini <- TRUE  # hide initials
+#   quiet.set <- TRUE  # hide settings
+#   quiet.fin <- TRUE  # hide success
+#
+# } else if (ufeed == 1){ # show success/warnings:
+#
+#   # quiet <- FALSE  # show progress
+#
+#   quiet.ini <- TRUE   # hide initials
+#   quiet.set <- TRUE   # hide settings
+#   quiet.fin <- FALSE  # show success
+#
+# } else if (ufeed == 2){ # add settings:
+#
+#   # quiet <- FALSE  # show progress
+#
+#   quiet.ini <- TRUE   # hide initials
+#   quiet.set <- FALSE  # show settings
+#   quiet.fin <- FALSE  # show success
+#
+# } else if (ufeed == 3){ # most detailed/explicit:
+#
+#   # quiet <- FALSE  # show progress
+#
+#   quiet.ini <- FALSE  # show initials
+#   quiet.set <- FALSE  # show settings
+#   quiet.fin <- FALSE  # show success
+#
+# }
 
-quiet.ini <- TRUE # FALSE # default: TRUE
-
-
-# quiet.fin: ----
-
-# Boolean: Should user feedback for finalization/success (of a command or process) be shown (i.e., NOT hidden/quiet)?
-
-quiet.fin <- FALSE # TRUE # default: FALSE
-
-
-# quiet.set: ----
-
-# Boolean: Should user feedback for parameter settings be shown (i.e., NOT hidden/quiet)?
-
-quiet.set <- FALSE # TRUE # FALSE # default: FALSE
-
-
-# feed_types: ----
-
-feed_types <- 0L:3L  # options: 4 levels
-
-
-# ufeed: ----
-
-# #' @param ufeed User feedback level (as an integer from \code{0} to \code{3},
-# #' with higher values implying more detailed user feedback).
-# #' Setting \code{ufeed = 0} provides no user feedback.
-# #' Default: \code{ufeed = 2} (show parameter settings and success alerts).
-
-
-ufeed <- 3L  # user feedback level (from feed_types 0:3)
-
-
-if (ufeed %in% feed_types == FALSE){
-
-  msg <- paste0("The value of 'ufeed' must be in: ", paste(feed_types, collapse = ", "))
-
-  stop(msg)
-
-}
-
-
-# Define custom ufeed categories (from 0 to 3):
-
-if (ufeed == 0){ # most basic/elementary/sparse:
-
-  # quiet <- TRUE  # hide progress
-
-  quiet.ini <- TRUE  # hide initials
-  quiet.set <- TRUE  # hide settings
-  quiet.fin <- TRUE  # hide success
-
-} else if (ufeed == 1){ # show success/warnings:
-
-  # quiet <- FALSE  # show progress
-
-  quiet.ini <- TRUE   # hide initials
-  quiet.set <- TRUE   # hide settings
-  quiet.fin <- FALSE  # show success
-
-} else if (ufeed == 2){ # add settings:
-
-  # quiet <- FALSE  # show progress
-
-  quiet.ini <- TRUE   # hide initials
-  quiet.set <- FALSE  # show settings
-  quiet.fin <- FALSE  # show success
-
-} else if (ufeed == 3){ # most detailed/explicit:
-
-  # quiet <- FALSE  # show progress
-
-  quiet.ini <- FALSE  # show initials
-  quiet.set <- FALSE  # show settings
-  quiet.fin <- FALSE  # show success
-
-}
 
 
 # ToDo: ------
