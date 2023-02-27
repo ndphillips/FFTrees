@@ -61,7 +61,7 @@ fftrees_threshold_numeric_grid <- function(thresholds,
     # Create vector of decisions:
     decisions_i <- cue_v > threshold_i
 
-    # Calculate decisions:
+    # Calculate frequency of decision outcomes:
     hi_i <- sum((decisions_i == TRUE)  & (criterion_v == TRUE),  na.rm = TRUE)
     fa_i <- sum((decisions_i == TRUE)  & (criterion_v == FALSE), na.rm = TRUE)
     mi_i <- sum((decisions_i == FALSE) & (criterion_v == TRUE),  na.rm = TRUE)
