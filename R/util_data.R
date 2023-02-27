@@ -7,6 +7,7 @@
 # Inputs:
 # - data (as df)
 # - criterion_name (in data)
+# - quiet (as list)
 #
 # Output:
 # - modified data (as df)
@@ -14,7 +15,7 @@
 # Side-effect: Report on NA cases and corresponding conversions.
 
 
-handle_NA <- function(data, criterion_name){
+handle_NA <- function(data, criterion_name, quiet){
 
   # Prepare: ------
 
@@ -79,59 +80,63 @@ handle_NA <- function(data, criterion_name){
 
   # Provide user feedback: Report NA values ----
 
-  cli::cli_alert_info("Found NA values in data variables:")
+  if (!quiet$mis) {
 
-  if (any(ix_pred_chr_NA)){ # character predictors:
+    cli::cli_alert_info("Found NA values in data variables:")
 
-    msg_chr <- paste0("\u2014 ", sum(ix_pred_chr_NA), " predictors (of type character): ",
-                      paste0(nm_pred_chr_NA, collapse = ", "), " (",
-                      paste0(nr_pred_chr_NA, collapse = ", "), ")")
+    if (any(ix_pred_chr_NA)){ # character predictors:
 
-    cli::cli_alert_info(msg_chr)
+      msg_chr <- paste0("\u2014 ", sum(ix_pred_chr_NA), " predictors (of type character): ",
+                        paste0(nm_pred_chr_NA, collapse = ", "), " (",
+                        paste0(nr_pred_chr_NA, collapse = ", "), ")")
 
-  }
+      cli::cli_alert_info(msg_chr)
 
-  if (any(ix_pred_fct_NA)){ # factor predictors:
+    }
 
-    msg_fct <- paste0("\u2014 ", sum(ix_pred_fct_NA), " predictors (of type factor):    ",
-                      paste0(nm_pred_fct_NA, collapse = ", "), " (",
-                      paste0(nr_pred_fct_NA, collapse = ", "), ")")
+    if (any(ix_pred_fct_NA)){ # factor predictors:
 
-    cli::cli_alert_info(msg_fct)
+      msg_fct <- paste0("\u2014 ", sum(ix_pred_fct_NA), " predictors (of type factor):    ",
+                        paste0(nm_pred_fct_NA, collapse = ", "), " (",
+                        paste0(nr_pred_fct_NA, collapse = ", "), ")")
 
-  }
+      cli::cli_alert_info(msg_fct)
 
-  if (any(ix_pred_log_NA)){ # logical predictors:
+    }
 
-    msg_log <- paste0("\u2014 ", sum(ix_pred_log_NA), " predictors (of type logical):   ",
-                      paste0(nm_pred_log_NA, collapse = ", "), " (",
-                      paste0(nr_pred_log_NA, collapse = ", "), ")")
+    if (any(ix_pred_log_NA)){ # logical predictors:
 
-    cli::cli_alert_info(msg_log)
+      msg_log <- paste0("\u2014 ", sum(ix_pred_log_NA), " predictors (of type logical):   ",
+                        paste0(nm_pred_log_NA, collapse = ", "), " (",
+                        paste0(nr_pred_log_NA, collapse = ", "), ")")
 
-  }
+      cli::cli_alert_info(msg_log)
 
-  if (any(ix_pred_num_NA)){ # numeric predictors:
+    }
 
-    msg_num <- paste0("\u2014 ", sum(ix_pred_num_NA), " predictors (of type numeric):   ",
-                      paste0(nm_pred_num_NA, collapse = ", "), " (",
-                      paste0(nr_pred_num_NA, collapse = ", "), ")")
+    if (any(ix_pred_num_NA)){ # numeric predictors:
 
-    cli::cli_alert_info(msg_num)
+      msg_num <- paste0("\u2014 ", sum(ix_pred_num_NA), " predictors (of type numeric):   ",
+                        paste0(nm_pred_num_NA, collapse = ", "), " (",
+                        paste0(nr_pred_num_NA, collapse = ", "), ")")
 
-  }
+      cli::cli_alert_info(msg_num)
 
-  if (any(ix_crit_NA)){ # criterion:
+    }
 
-    crit_type <- all_types[ix_crit]
+    if (any(ix_crit_NA)){ # criterion:
 
-    msg_crit <- paste0("\u2014 ", sum(ix_crit_NA), " criterion (of type ", crit_type, "):    ",
-                      paste0(nm_crit_NA, collapse = ", "), " (",
-                      paste0(nr_crit_NA, collapse = ", "), ")")
+      crit_type <- all_types[ix_crit]
 
-    cli::cli_alert_info(msg_crit)
+      msg_crit <- paste0("\u2014 ", sum(ix_crit_NA), " criterion (of type ", crit_type, "):    ",
+                         paste0(nm_crit_NA, collapse = ", "), " (",
+                         paste0(nr_crit_NA, collapse = ", "), ")")
 
-  }
+      cli::cli_alert_info(msg_crit)
+
+    }
+
+  } # if (!quiet$mis).
 
 
   # Main: Handle NA values (by role and type) ------
@@ -148,8 +153,9 @@ handle_NA <- function(data, criterion_name){
     data[ix_pred_chr] <- data[ix_pred_chr] %>%
       dplyr::mutate_if(is.character, addNA)  # add NA as a new factor level
 
-    # Provide user feedback:
-    cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA case{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
+    if (!quiet$mis) { # Provide user feedback:
+      cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA case{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
+    }
 
   }
 
@@ -159,8 +165,9 @@ handle_NA <- function(data, criterion_name){
     data[ix_pred_fct] <- data[ix_pred_fct] %>%
       dplyr::mutate_if(is.factor, addNA)  # add NA as a new factor level
 
-    # Provide user feedback:
-    cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA case{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
+    if (!quiet$mis) { # Provide user feedback:
+      cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA case{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
+    }
 
   }
 
@@ -170,8 +177,9 @@ handle_NA <- function(data, criterion_name){
     data[ix_pred_log] <- data[ix_pred_log] %>%
       dplyr::mutate_if(is.logical, addNA)  # add NA as a new factor level
 
-    # Provide user feedback:
-    cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA case{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
+    if (!quiet$mis) { # Provide user feedback:
+      cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA case{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
+    }
 
   }
 
@@ -181,10 +189,11 @@ handle_NA <- function(data, criterion_name){
 
   if (any(ix_pred_num_NA)){ # NA values in numeric predictors: ----
 
-    # ToDo: What to do about NA values in numeric variables?
+    # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
 
-    # Provide user feedback:
-    cli::cli_alert_warning("There are NA cases in numeric predictors.")
+    if (!quiet$mis) { # Provide user feedback:
+      cli::cli_alert_warning("Keeping the {sum(nr_pred_num_NA)} NA case{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
+    }
 
   }
 
@@ -192,8 +201,9 @@ handle_NA <- function(data, criterion_name){
 
     # ToDo: What to do about NA values in criterion?
 
-    # Provide user feedback:
-    cli::cli_alert_warning("There are NA values in the criterion variable.")
+    if (!quiet$mis) { # Provide user feedback:
+      cli::cli_alert_warning("Keeping the {sum(nr_crit_NA)} NA case{?s} in the criterion {nm_crit_NA}.")
+    }
 
   }
 

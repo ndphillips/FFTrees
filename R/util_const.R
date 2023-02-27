@@ -13,6 +13,20 @@
 algorithm_options <- c("ifan", "dfan")  # (global constant)
 
 
+# - allow_NA_pred: ----
+
+# Allow NA cases in predictors (as logical)?
+
+allow_NA_pred <- TRUE  # (global constant)
+
+
+# - allow_NA_crit: ----
+
+# Allow NA cases in criterion (as logical)?
+
+allow_NA_crit <- FALSE  # (global constant)
+
+
 
 # - goal_options: ----
 

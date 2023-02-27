@@ -50,8 +50,14 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
   # Prepare: ------
 
   # Assertions:
-  testthat::expect_true(!any(is.na(criterion_v)))
-  testthat::expect_true(!any(is.na(cue_v)))
+
+  if (!allow_NA_crit){
+
+    testthat::expect_true(!any(is.na(criterion_v)))
+
+  }
+
+  testthat::expect_true(!any(is.na(cue_v)))  # Any NA values have been turned into <NA> level (if allow_NA_pred)
 
 
   # Main: ------
@@ -74,7 +80,7 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
       # Create vector of decisions
       decisions_i <- cue_v == threshold_i
 
-      # Calculate decisions
+      # Calculate frequency of decision outcomes:
       hi_i <- sum(decisions_i == TRUE  & criterion_v == TRUE)
       fa_i <- sum(decisions_i == TRUE  & criterion_v == FALSE)
       mi_i <- sum(decisions_i == FALSE & criterion_v == TRUE)

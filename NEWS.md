@@ -28,7 +28,7 @@ Changes since last release:
 ### Minor changes 
 
 - Added detailed cost information when printing FFTs (with `print.FFTrees()`).  
-- Improved user feedback (by making `quiet` a list with three distinct options). 
+- Improved user feedback (by making `quiet` a list with four distinct options). 
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
 
 
