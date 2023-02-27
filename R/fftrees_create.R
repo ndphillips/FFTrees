@@ -583,9 +583,12 @@ fftrees_create <- function(formula = NULL,
 
   # stopping.par: ----
 
-  if (stopping.rule == "levels"){
+  if (stopping.rule == "levels"){ # stopping.par must be positive integer:
+
+    stopping.par <- as.integer(stopping.par)  # aim to coerce to integer
 
     testthat::expect_true(is.integer(stopping.par))
+    testthat::expect_gt(stopping.par, expected = 0)
 
   } else { # 0 < stopping.par < 1:
 
@@ -593,6 +596,7 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_lt(stopping.par, expected = 1)
 
   }
+
 
   # decision.labels: ----
 
