@@ -267,9 +267,11 @@ classtable <- function(prediction_v = NULL,
   }
 
   # Remove NA and infinite values (from prediction AND criterion vectors):
-  prediction_v <- prediction_v[is.finite(criterion_v)]
-  criterion_v  <- criterion_v[is.finite(criterion_v)]
 
+  both_finite <- is.finite(criterion_v) & is.finite(prediction_v)
+
+  prediction_v <- prediction_v[both_finite]
+  criterion_v  <- criterion_v[both_finite]
 
   # Remove NA prediction values: ----
 
