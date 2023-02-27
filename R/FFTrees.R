@@ -110,10 +110,10 @@
 #' }
 #' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
-#' @param quiet A list of 3 logical arguments: Should detailed progress reports be suppressed?
+#' @param quiet A list of 4 logical arguments: Should detailed progress reports be suppressed?
 #' Setting list elements to \code{FALSE} is helpful when diagnosing errors.
-#' Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = TRUE)},
-#' for initial, final, and parameter settings, respectively.
+#' Default: \code{quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)},
+#' for initial vs. final steps, missing cases, and parameter settings, respectively.
 #' Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.
 #'
 #' @param comp,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
@@ -218,7 +218,7 @@ FFTrees <- function(formula = NULL,
                     do.rf = TRUE,
                     do.svm = TRUE,
                     #
-                    quiet = list(ini = TRUE, fin = FALSE, set = TRUE),  # a list of 3 Boolean args
+                    quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE),  # a list of 4 Boolean args
                     # ufeed = 2L,        # ToDo: user feedback level (from feed_types 0:3)
                     #
                     # Deprecated args:   Use instead:
@@ -270,7 +270,7 @@ FFTrees <- function(formula = NULL,
 
   if (is.logical(quiet)) {
 
-    quiet <- list(ini = quiet, fin = quiet, set = quiet)
+    quiet <- list(ini = quiet, fin = quiet, mis = quiet, set = quiet)
 
     if (any(sapply(quiet, isFALSE))) {
 
@@ -361,11 +361,11 @@ FFTrees <- function(formula = NULL,
 
   # Handle NA cases: ----
 
-  if (any(is.na(data))){
+  if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
 
-    data <- handle_NA(data = data, criterion_name = criterion_name)
+    data <- handle_NA(data = data, criterion_name = criterion_name, quiet = quiet)
 
-  } # (any(is.na(data))).
+  } # if ( allow_NA & any(is.na(data)) ).
 
 
   # Split training / test data: ----
