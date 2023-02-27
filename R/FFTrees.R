@@ -60,7 +60,7 @@
 #' \code{"statdelta"} (currently not available) means the tree grows until the change in the criterion statistic is less than a specified level.
 #' Default: \code{stopping.rule = "exemplars"}.
 #' @param stopping.par numeric. A numeric value indicating the parameter for the stopping rule.
-#' For stopping.rule \code{"levels"}, this is the number of levels.
+#' For stopping.rule \code{"levels"}, this is the number of levels (as an integer).
 #' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
 #' Default: \code{stopping.par = .10}.
 #'
