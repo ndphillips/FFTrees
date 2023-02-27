@@ -35,7 +35,7 @@ FFTrees(
   do.lr = TRUE,
   do.rf = TRUE,
   do.svm = TRUE,
-  quiet = list(ini = TRUE, fin = FALSE, set = TRUE),
+  quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE),
   comp = NULL,
   force = NULL,
   rank.method = NULL,
@@ -145,10 +145,10 @@ All options set to \code{TRUE} by default. Available options correspond to:
 }
 Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.}
 
-\item{quiet}{A list of 3 logical arguments: Should detailed progress reports be suppressed?
+\item{quiet}{A list of 4 logical arguments: Should detailed progress reports be suppressed?
 Setting list elements to \code{FALSE} is helpful when diagnosing errors.
-Default: \code{quiet = list(ini = TRUE, fin = FALSE, set = TRUE)},
-for initial, final, and parameter settings, respectively.
+Default: \code{quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)},
+for initial vs. final steps, missing cases, and parameter settings, respectively.
 Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.}
 
 \item{comp, force, rank.method, rounding, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
