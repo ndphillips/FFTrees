@@ -138,9 +138,8 @@ fftrees_create <- function(formula = NULL,
 
   # algorithm: ----
 
-  # algorithm_options <- c("ifan", "dfan")  # as (local) constant
   testthat::expect_true(!is.null(algorithm), info = "algorithm is NULL")
-  testthat::expect_true(algorithm %in% algorithm_options)
+  testthat::expect_true(algorithm %in% algorithm_options)  # use global constant
 
 
   # sens.w: ----
@@ -156,7 +155,7 @@ fftrees_create <- function(formula = NULL,
   if (!is.null(my.goal)){
     valid_goal <- c(goal_options, my.goal)  # add my.goal (name) to default
   } else { # default:
-    valid_goal <- goal_options  # use (global constant)
+    valid_goal <- goal_options  # use global constant
   }
 
   if (is.null(goal)) { # goal NOT set by user:
@@ -579,16 +578,21 @@ fftrees_create <- function(formula = NULL,
 
   # stopping.rule: ----
 
-  stopping_rule_valid <- c("exemplars", "levels")
-
-  testthat::expect_true(stopping.rule %in% stopping_rule_valid)
+  testthat::expect_true(stopping.rule %in% stopping_rules)  # use global constant
 
 
   # stopping.par: ----
 
+  if (stopping.rule == "levels"){
+
+    testthat::expect_true(is.integer(stopping.par))
+
+  } else { # 0 < stopping.par < 1:
+
   testthat::expect_gt(stopping.par, expected = 0)
   testthat::expect_lt(stopping.par, expected = 1)
 
+  }
 
   # decision.labels: ----
 
