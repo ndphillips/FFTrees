@@ -266,23 +266,56 @@ classtable <- function(prediction_v = NULL,
     stop("prediction_v and criterion_v must be logical")
   }
 
-  # Remove NA and infinite values (from prediction AND criterion vectors):
 
-  both_finite <- is.finite(criterion_v) & is.finite(prediction_v)
+  # Handle NA values: ------
 
-  prediction_v <- prediction_v[both_finite]
-  criterion_v  <- criterion_v[both_finite]
+  # Note: As NA values in predictors of type character / factor / logical were handled in handle_NA(),
+  #       only NA values in numeric predictors or the criterion variable appear here.
 
-  # Remove NA prediction values: ----
+  if ( allow_NA_pred | allow_NA_crit ){
 
-  # if(na_prediction_action == "ignore") { # is NOT used anywhere?
-  #
-  #   bad_index <- !is.finite(prediction_v)
-  #
-  #   prediction_v <- prediction_v[-bad_index]
-  #   criterion_v <- criterion_v[-bad_index]
-  #
-  # }
+    # Report NA values (prior to removing them): ----
+
+    if (!x$params$quiet$mis) { # Provide user feedback:
+
+      # 1. NA in prediction_v:
+      if (any(is.na(prediction_v))){
+
+        # d_type <- typeof(prediction_v)  # logical
+        sum_NA <- sum(is.na(prediction_v))
+
+        # msg_NA_p <- paste0("A prediction_v contains ", sum_NA, " NA values that will be removed.")
+        # cat(u_f_hig(msg_NA_p, "\n"))  # highlighted and non-optional
+
+        cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'prediction_v' (and corresponding 'criterion_v').")
+
+      }
+
+      # 2. NA in criterion_v:
+      if (any(is.na(criterion_v))){
+
+        # d_type <- typeof(criterion_v)  # logical
+        sum_NA <- sum(is.na(criterion_v))
+
+        # msg_NA_c <- paste0("The criterion_v contains ", sum_NA, " NA values that will be removed.")
+        # cat(u_f_hig(msg_NA_c, "\n"))  # highlighted and non-optional
+
+        cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'criterion_v' (and corresponding 'prediction_v').")
+
+      }
+
+    } # if (!x$params$quiet$mis).
+
+
+    # Filter rows: Remove NA and infinite values (from prediction AND criterion vectors): ----
+
+    both_finite <- is.finite(criterion_v) & is.finite(prediction_v)
+
+    prediction_v <- prediction_v[both_finite]
+    criterion_v  <- criterion_v[both_finite]
+
+  } # if ( allow_NA_pred | allow_NA_crit ).
+
 
   N <- min(length(criterion_v), length(prediction_v))
 
@@ -299,14 +332,14 @@ classtable <- function(prediction_v = NULL,
       # Provide user feedback:
       prediction_v_s <- paste(prediction_v, collapse = ", ")
 
-      msg_1a <- "A prediction vector has no variance (NA):\n"
-      msg_2a <- paste0("prediction_v = ", prediction_v_s, ".\n")
+      msg_1a <- "A prediction vector has no variance (NA):"
+      msg_2a <- paste0("prediction_v = ", prediction_v_s, ".")
 
-      cat(u_f_hig(msg_1a))
-      cat(u_f_hig(msg_2a))
+      cat(u_f_hig(msg_1a, "\n"))  # highlighted and non-optional
+      cat(u_f_hig(msg_2a, "\n"))
 
-      # message("Variance of prediction_v is NA. See print(prediction_v) =")
-      # print(prediction_v)
+      # cli::cli_alert_warning(msg_1a)
+      # cli::cli_alert_warning(msg_2a)
 
     }
 
@@ -315,14 +348,14 @@ classtable <- function(prediction_v = NULL,
       # Provide user feedback:
       criterion_v_s <- paste(criterion_v, collapse = ", ")
 
-      msg_1b <- "A criterion vector has no variance (NA):\n"
-      msg_2b <- paste0("criterion_v = ", criterion_v_s, ".\n")
+      msg_1b <- "A criterion vector has no variance (NA):"
+      msg_2b <- paste0("criterion_v = ", criterion_v_s, ".")
 
-      cat(u_f_hig(msg_1b))
-      cat(u_f_hig(msg_2b))
+      cat(u_f_hig(msg_1b, "\n"))  # highlighted and non-optional
+      cat(u_f_hig(msg_2b, "\n"))
 
-      # message("Variance of criterion_v is NA. See print(criterion_v) =")
-      # print(criterion_v)
+      # cli::cli_alert_warning(msg_1b)
+      # cli::cli_alert_warning(msg_2b)
 
     }
 
