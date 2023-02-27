@@ -198,7 +198,7 @@ handle_NA <- function(data, criterion_name){
   }
 
 
-  print(tibble::as_tibble(data))  # 4debugging
+  # print(tibble::as_tibble(data))  # 4debugging
 
 
   # Output: ------

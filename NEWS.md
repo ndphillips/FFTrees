@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9012
+## 1.9.0.9013
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -18,7 +18,9 @@ Changes since last release:
 - Added utility functions (and corresponding verification functions):
     - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`)
     - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`)
-    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object
+    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object  
+    
+- Fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given current `goal.chase` parameter).  
 
 
 <!-- Minor: --> 
@@ -449,6 +451,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-25.]
+[File `NEWS.md` last updated on 2023-02-27.]
 
 <!-- eof. -->

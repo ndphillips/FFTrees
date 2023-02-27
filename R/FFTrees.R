@@ -48,19 +48,21 @@
 #' @param max.levels integer. The maximum number of nodes (or levels) considered for an FFT.
 #' As all combinations of possible exit structures are considered, larger values of \code{max.levels} will create larger sets of FFTs.
 #' @param numthresh.method character. How should thresholds for numeric cues be determined?
-#' \code{"o"} will optimize thresholds, while \code{"m"} will always use the median.
-#' @param numthresh.n integer. The number of numeric thresholds to try.
-#' @param repeat.cues logical. May cues occur multiple times within a tree?
+#' \code{"o"} will optimize thresholds (for \code{goal.threshold}), while \code{"m"} will always use the median.
+#' Default: \code{numthresh.method = "o"}.
+#' @param numthresh.n The number of numeric thresholds to try (as integer).
+#' Default: \code{numthresh.n = 10}.
+#' @param repeat.cues May cues occur multiple times within a tree (as logical)?
 #' Default: \code{repeat.cues = TRUE}.
-#' A value of \code{0} rounds all possible thresholds to the nearest integer, \code{1} rounds to the nearest decade (.10), etc.
-#' @param stopping.par numeric. A numeric value indicating the parameter for the stopping rule.
-#' For stopping.rule \code{"levels"}, this is the number of levels.
-#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
-#' Default: \code{stopping.par = .10}.
-#' @param stopping.rule character. A character string indicating the method to stop growing trees. Available options are:
+#' @param stopping.rule A character string indicating the method to stop growing trees. Available options are:
 #' \code{"levels"} means the tree grows until a certain level;
 #' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
-#' \code{"statdelta"} means the tree grows until the change in the criterion statistic is less than a specified level.
+#' \code{"statdelta"} (currently not available) means the tree grows until the change in the criterion statistic is less than a specified level.
+#' Default: \code{stopping.rule = "exemplars"}.
+#' @param stopping.par numeric. A numeric value indicating the parameter for the stopping rule.
+#' For stopping.rule \code{"levels"}, this is the number of levels (as an integer).
+#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
+#' Default: \code{stopping.par = .10}.
 #'
 #' @param sens.w A numeric value from \code{0} to \code{1} indicating how to weight
 #' sensitivity relative to specificity when optimizing \emph{weighted} accuracy (e.g., \code{goal = 'wacc'}).
@@ -75,7 +77,9 @@
 #' Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of \code{0}).
 #'
 #' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
-#' @param decision.labels string. A vector of strings of length 2 indicating labels for negative and positive cases. E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
+#' @param decision.labels A vector of strings of length 2 for the text labels for negative and positive decision/prediction outcomes
+#' (i.e., left vs. right, noise vs. signal, 0 vs. 1, respectively, as character).
+#' E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
 #'
 #' @param my.goal The name of an optimization measure defined by \code{my.goal.fun} (as a character string).
 #' Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
@@ -189,8 +193,8 @@ FFTrees <- function(formula = NULL,
                     numthresh.method = "o",
                     numthresh.n = 10,
                     repeat.cues = TRUE,
-                    stopping.par = .10,
                     stopping.rule = "exemplars",
+                    stopping.par = .10,
                     #
                     sens.w = .50,
                     #
