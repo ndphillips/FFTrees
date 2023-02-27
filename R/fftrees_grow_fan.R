@@ -868,7 +868,11 @@ fftrees_grow_fan <- function(x,
 
   return(x)
 
-
 } # fftrees_grow_fan().
+
+
+# ToDo: ------
+
+# - implement stopping.rule = "statdelta"
 
 # eof.
