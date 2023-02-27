@@ -8,8 +8,10 @@ test_that("FFTrees works with NA numeric features", {
 
   fft <- FFTrees(crit ~ .,
                  data = data_missing_numeric,
-                 comp = FALSE)
+                 do.comp = FALSE)
 
   testthat::expect_is(fft, "FFTrees")
 
 })
+
+# eof.
