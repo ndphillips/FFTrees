@@ -592,8 +592,8 @@ fftrees_create <- function(formula = NULL,
 
   } else { # 0 < stopping.par < 1:
 
-  testthat::expect_gt(stopping.par, expected = 0)
-  testthat::expect_lt(stopping.par, expected = 1)
+    testthat::expect_gt(stopping.par, expected = 0)
+    testthat::expect_lt(stopping.par, expected = 1)
 
   }
 
@@ -609,7 +609,6 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_type(repeat.cues, type = "logical")
 
 
-
   # 2. Verify criterion and data: ------
 
   # Criterion is in data: ----
@@ -618,18 +617,27 @@ fftrees_create <- function(formula = NULL,
                         info = paste("The criterion", criterion_name, "is not in data")
   )
 
-  # No missing criterion values: ----
 
-  testthat::expect_true(all(!is.na(data[[criterion_name]])),
-                        info = "At least one of the criterion values are missing. Please remove these cases and try again."
-  )
+  # Handle missing criterion values: ----
 
-  # Criterion has two unique values: : ----
+  if (!allow_NA_crit){
 
-  testthat::expect_equal(length(unique(data[[criterion_name]])),
-                         expected = 2,
-                         info = "The criterion variable is non-binary"
-  )
+    # Criterion must NOT contain NA values:
+    testthat::expect_true(all(!is.na(data[[criterion_name]])),
+                          info = "At least one of the criterion values are NA. Please remove missing cases and try again")
+
+    # Criterion has exactly 2 unique values:
+    testthat::expect_equal(length(unique(data[[criterion_name]])),
+                           expected = 2,
+                           info = "The criterion variable is non-binary")
+
+  } else { # the criterion must maximally contain 3 distinct values:
+
+    testthat::expect_lt(length(unique(data[[criterion_name]])),
+                        expected = 4)#,
+                        # info = "The criterion variable must only contain TRUE/FALSE, and NA values")
+
+  }
 
 
   # Make criterion logical: ----
