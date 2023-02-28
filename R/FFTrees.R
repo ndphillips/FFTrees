@@ -359,13 +359,13 @@ FFTrees <- function(formula = NULL,
 
   # C. Handle data: ------
 
-  # Handle NA cases: ----
+  # Handle NA cases (prior to splitting data): ----
 
   if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
 
-    data <- handle_NA(data = data, criterion_name = criterion_name, quiet = quiet)
+    data <- handle_NA_data(data = data, criterion_name = criterion_name, quiet = quiet)
 
-  } # if ( allow_NA & any(is.na(data)) ).
+  } # if ( allow_NA_any & any(is.na(data)) ).
 
 
   # Split training / test data: ----

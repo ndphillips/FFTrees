@@ -2,7 +2,7 @@
 # Data-related utility functions.
 # ------------------------------------------
 
-# Handle NA cases: ------
+# handle_NA_data: ------
 
 # Inputs:
 # - data (as df)
@@ -15,7 +15,7 @@
 # Side-effect: Report on NA cases and corresponding conversions.
 
 
-handle_NA <- function(data, criterion_name, quiet){
+handle_NA_data <- function(data, criterion_name, quiet){
 
   # Prepare: ------
 
@@ -78,7 +78,7 @@ handle_NA <- function(data, criterion_name, quiet){
   nm_crit_NA <- names(data)[ix_crit_NA]
 
 
-  # Provide user feedback: Report NA values ----
+  # Provide user feedback: Report NA values (by role and type) ----
 
   if (!quiet$mis) {
 
@@ -215,14 +215,13 @@ handle_NA <- function(data, criterion_name, quiet){
 
   return(data)
 
-} # handle_NA().
+} # handle_NA_data().
 
 
 
 # ToDo: ------
 
-# - Handle NAs in logical predictors.
-# - Handle NAs in numeric predictors.
+# - Handle consequences of allowing NAs in numeric predictors.
 # - Handle NAs in criterion variable.
 
 # eof.
