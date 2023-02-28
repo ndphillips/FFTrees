@@ -94,7 +94,7 @@ For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict F
 
 \item{do.rf}{logical.}
 
-\item{quiet}{logical}
+\item{quiet}{A list of logical elements.}
 }
 \value{
 A new \code{FFTrees} object.
