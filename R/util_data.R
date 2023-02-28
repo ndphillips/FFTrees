@@ -2,11 +2,18 @@
 # Data-related utility functions.
 # ------------------------------------------
 
-# Handle NA cases: ------
 
+# clean_data: ------
+
+# Goal: Pre-process data (using the same steps for both train AND test data).
+#
 # Inputs:
 # - data (as df)
-# - criterion_name (in data)
+# - criterion_name (character, a name in data)
+# - formula
+#
+# Auxiliary arguments:
+# - mydata (the data type of 'data': either "train" or "test")
 # - quiet (as list)
 #
 # Output:
@@ -15,7 +22,9 @@
 # Side-effect: Report on NA cases and corresponding conversions.
 
 
-handle_NA <- function(data, criterion_name, quiet){
+clean_data <- function(data, criterion_name, formula,
+                       # auxiliary args:
+                       mydata, quiet){
 
   # Prepare: ------
 
@@ -23,6 +32,106 @@ handle_NA <- function(data, criterion_name, quiet){
 
   testthat::expect_true(is.data.frame(data))
   testthat::expect_true(is.character(criterion_name))
+  testthat::expect_true(is.character(mydata))
+  testthat::expect_true(is.list(quiet))
+
+
+  # Main: ------
+
+  # 1. Remove any cues not in formula:
+  data <- model.frame(
+    formula = formula,
+    data = data,
+    na.action = NULL
+  )
+
+
+  # 2. Handle NA cases in data:
+  if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
+
+    data <- handle_NA_data(data = data, criterion_name = criterion_name,
+                           # auxiliary args:
+                           mydata = mydata,  # indicate data type
+                           quiet = quiet)
+
+  }
+
+
+  # 3. Convert any factor variable to character variable:
+  data <- data %>%
+    dplyr::mutate_if(is.factor, paste)
+
+
+  # 4. Convert a character criterion to logical:
+  if (inherits(data[[criterion_name]], "character")) {
+
+    # Save original values (as decision.labels):
+    decision.labels <- unique(data[[criterion_name]])
+
+    # Remove any NA values (if present):
+    decision.labels <- decision.labels[!is.na(decision.labels)]
+
+    # Convert criterion to logical:
+    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
+
+    if (any(sapply(quiet, isFALSE))) { # Provide user feedback:
+
+      msg_lgc <- paste0("Converted criterion to logical (by '", criterion_name, " == ", decision.labels[2], "') in '", mydata, "' data.")
+      # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
+
+      cli::cli_alert_warning(msg_lgc)
+
+    }
+
+  }
+
+
+  # 5. Convert data to tibble:
+  data <- data %>%
+    tibble::as_tibble()
+
+
+  # print(data)  # 4debugging
+
+
+  # Output: ------
+
+  return(data)
+
+} # clean_data().
+
+
+
+
+
+# handle_NA_data: ------
+
+# Goal: Identify, handle, and report NA cases in criterion and data (train AND test).
+#
+# Inputs:
+# - data (as df)
+# - criterion_name (character, a name in data)
+#
+# Auxiliary arguments:
+# - mydata (the data type of 'data': either "train" or "test")
+# - quiet (as list)
+#
+# Output:
+# - modified data (as df)
+#
+# Side-effect: Report on NA cases and corresponding conversions.
+
+
+handle_NA_data <- function(data, criterion_name, mydata, quiet){
+
+  # Prepare: ------
+
+  # Verify inputs: ----
+
+  testthat::expect_true(is.data.frame(data))
+  testthat::expect_true(is.character(criterion_name))
+  testthat::expect_true(is.character(mydata))
+  testthat::expect_true(is.list(quiet))
 
 
   # Identify roles & NA data types: ----
@@ -78,11 +187,11 @@ handle_NA <- function(data, criterion_name, quiet){
   nm_crit_NA <- names(data)[ix_crit_NA]
 
 
-  # Provide user feedback: Report NA values ----
+  # Provide user feedback: Report NA values (by role and type) ----
 
   if (!quiet$mis) {
 
-    cli::cli_alert_info("Found NA values in data variables:")
+    cli::cli_alert_info("Found NA values in '{mydata}' data:")
 
     if (any(ix_pred_chr_NA)){ # character predictors:
 
@@ -139,13 +248,14 @@ handle_NA <- function(data, criterion_name, quiet){
   } # if (!quiet$mis).
 
 
-  # Main: Handle NA values (by role and type) ------
+  # Main: ------
+
+  # Handle NA values (by role and type) ------
 
   # # Convert factor NA values to a missing <NA> factor level:
   # data <- data %>%
   #  dplyr::mutate_if(is.factor, addNA) %>%
   #  dplyr::mutate_if(is.character, addNA)
-
 
   if (any(ix_pred_chr_NA)){ # NA values in character predictors: ----
 
@@ -208,21 +318,20 @@ handle_NA <- function(data, criterion_name, quiet){
   }
 
 
-  # print(tibble::as_tibble(data))  # 4debugging
+  # print(data)  # 4debugging
 
 
   # Output: ------
 
   return(data)
 
-} # handle_NA().
+} # handle_NA_data().
 
 
 
 # ToDo: ------
 
-# - Handle NAs in logical predictors.
-# - Handle NAs in numeric predictors.
+# - Handle consequences of allowing NAs in numeric predictors.
 # - Handle NAs in criterion variable.
 
 # eof.

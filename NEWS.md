@@ -1,13 +1,13 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9013
+## 1.9.0.9014
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
 <!-- Log of changes: --> 
 
-This version adds functionality and increases robustness.
+This version adds functionality, improves consistency, and increases robustness.
 
 Changes since last release: 
 
@@ -15,10 +15,10 @@ Changes since last release:
 
 ### Major changes 
 
-- Added utility functions (and corresponding verification functions):
-    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`)
-    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`)
-    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object  
+- Allowing for missing data values:
+    - `NA` values in character/factor/logical predictors are treated as `<NA>` factor levels. 
+    - `NA` values in numeric predictors are ignored when using FFTs to decide/predict (if possible). 
+    - `NA` values in criterion are yet to be dealt with.  
     
 - Fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given current `goal.chase` parameter).  
 
@@ -27,18 +27,25 @@ Changes since last release:
 
 ### Minor changes 
 
-- Added detailed cost information when printing FFTs (with `print.FFTrees()`).  
+- Added utility functions (and corresponding verification functions): 
+    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`).
+    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`).
+    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object.  
+    
+- Added detailed cost information when printing FFTs (with `print.FFTrees()`). 
 - Improved user feedback (by making `quiet` a list with four distinct options). 
-- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`).
+- Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`). 
 
 
 <!-- Details: --> 
 
 ### Details 
 
+- Added global constants and utility functions. 
 - Added progress bar of **cli** package (removing dependency on **progress**). 
-- Added `exit_types` as global constant.
-- Revised documentation and vignettes.
+- Added `exit_types` as global constant. 
+- Improved data cleaning (consistent for training and test data). 
+- Revised documentation and vignettes. 
 
 
 <!-- Development version: --> 
@@ -451,6 +458,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-02-27.]
+[File `NEWS.md` last updated on 2023-02-28.]
 
 <!-- eof. -->
