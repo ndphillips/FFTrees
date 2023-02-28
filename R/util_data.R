@@ -2,11 +2,90 @@
 # Data-related utility functions.
 # ------------------------------------------
 
-# handle_NA_data: ------
 
+# clean_data: ------
+
+# Goal: Pre-process data (using the same steps for both train AND test data).
+#
 # Inputs:
 # - data (as df)
-# - criterion_name (in data)
+# - criterion_name (character, a name in data)
+# - formula
+#
+# Auxiliary arguments:
+# - mydata (the data type of 'data': either "train" or "test")
+# - quiet (as list)
+#
+# Output:
+# - modified data (as df)
+#
+# Side-effect: Report on NA cases and corresponding conversions.
+
+
+clean_data <- function(data, criterion_name, formula,
+                       # auxiliary args:
+                       mydata, quiet){
+
+  # Prepare: ------
+
+  # Verify inputs: ----
+
+  testthat::expect_true(is.data.frame(data))
+  testthat::expect_true(is.character(criterion_name))
+  testthat::expect_true(is.character(mydata))
+  testthat::expect_true(is.list(quiet))
+
+
+  # Main: ------
+
+  # 1. Remove any cues not in formula:
+  data <- model.frame(
+    formula = formula,
+    data = data,
+    na.action = NULL
+  )
+
+  # 2. Handle NA cases:
+  if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
+
+    data <- handle_NA_data(data = data, criterion_name = criterion_name,
+                           # auxiliary args:
+                           mydata = mydata,  # indicate data type
+                           quiet = quiet)
+
+  }
+
+  # 3. Convert any factor variables to character variables:
+  data <- data %>%
+    dplyr::mutate_if(is.factor, paste)
+
+  # 4. Convert data to tibble:
+  data <- data %>%
+    tibble::as_tibble()
+
+
+  # print(data)  # 4debugging
+
+
+  # Output: ------
+
+  return(data)
+
+} # clean_data().
+
+
+
+
+
+# handle_NA_data: ------
+
+# Goal: Identify, handle, and report NA cases in criterion and data (train AND test).
+#
+# Inputs:
+# - data (as df)
+# - criterion_name (character, a name in data)
+#
+# Auxiliary arguments:
 # - mydata (the data type of 'data': either "train" or "test")
 # - quiet (as list)
 #
@@ -24,6 +103,8 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
   testthat::expect_true(is.data.frame(data))
   testthat::expect_true(is.character(criterion_name))
+  testthat::expect_true(is.character(mydata))
+  testthat::expect_true(is.list(quiet))
 
 
   # Identify roles & NA data types: ----
@@ -140,13 +221,14 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   } # if (!quiet$mis).
 
 
-  # Main: Handle NA values (by role and type) ------
+  # Main: ------
+
+  # Handle NA values (by role and type) ------
 
   # # Convert factor NA values to a missing <NA> factor level:
   # data <- data %>%
   #  dplyr::mutate_if(is.factor, addNA) %>%
   #  dplyr::mutate_if(is.character, addNA)
-
 
   if (any(ix_pred_chr_NA)){ # NA values in character predictors: ----
 
@@ -209,7 +291,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   }
 
 
-  # print(tibble::as_tibble(data))  # 4debugging
+  # print(data)  # 4debugging
 
 
   # Output: ------

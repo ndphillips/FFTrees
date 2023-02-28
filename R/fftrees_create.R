@@ -609,7 +609,7 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_type(repeat.cues, type = "logical")
 
 
-  # 2. Verify criterion and data: ------
+  # 2. Verify and pre-process criterion and data: ------
 
   # Verify data and criterion: ----
 
@@ -620,7 +620,7 @@ fftrees_create <- function(formula = NULL,
   }
 
 
-  # Convert (a non-logical) criterion to logical: ----
+  # Convert (a character or factor) criterion to logical: ----
 
   if (inherits(data[[criterion_name]], "character") |
       inherits(data[[criterion_name]], "factor")) {
@@ -628,7 +628,10 @@ fftrees_create <- function(formula = NULL,
     # Save original values as decision.labels:
     decision.labels <- unique(data[[criterion_name]])
 
-    # Convert criterion to logical:
+    # Remove any NA values from decision.labels (if present):
+    decision.labels <- decision.labels[!is.na(decision.labels)]
+
+    # Main: Convert criterion to logical:
     data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
 
     if (any(sapply(quiet, isFALSE))) {
@@ -641,57 +644,63 @@ fftrees_create <- function(formula = NULL,
 
     }
 
-  } # ToDo: Repeat for data.test?
+  } # ToDo: Move to pre-process of data (below) TO ALSO repeat for data.test.
 
 
-  # Pre-process training data: ----
+  # Clean/pre-process training data: ----
 
-  # A. Remove any cues not in formula:
-  data <- model.frame(
-    formula = formula,
-    data = data,
-    na.action = NULL
-  )
+  # # A. Remove any cues not in formula:
+  # data <- model.frame(
+  #   formula = formula,
+  #   data = data,
+  #   na.action = NULL
+  # )
+  #
+  # # B. Handle NA cases:
+  # if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
+  #   data <- handle_NA_data(data = data, criterion_name = criterion_name,
+  #                          mydata = "train", quiet = quiet)
+  # }
+  #
+  # # C. Convert any factor variables to character variables:
+  # data <- data %>%
+  #   dplyr::mutate_if(is.factor, paste)
+  #
+  # # D. Convert to tibble:
+  # data <- data %>%
+  #   tibble::as_tibble()
 
-  # B. Handle NA cases:
-  if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
-    data <- handle_NA_data(data = data, criterion_name = criterion_name,
-                           mydata = "train", quiet = quiet)
-  }
-
-  # C. Convert any factor variables to character variables:
-  data <- data %>%
-    dplyr::mutate_if(is.factor, paste)
-
-  # D. Convert to tibble:
-  data <- data %>%
-    tibble::as_tibble()
+  data <- clean_data(data = data, criterion_name = criterion_name, formula = formula,
+                     mydata = "train", quiet = quiet)
 
 
-  # Pre-process data.test (same steps): ----
+  # Clean/pre-process data.test (same steps): ----
 
   if (!is.null(data.test)) {
 
-    # A. Remove any cues not in formula:
-    data.test <- model.frame(
-      formula = formula,
-      data = data.test,
-      na.action = NULL
-    )
+    # # A. Remove any cues not in formula:
+    # data.test <- model.frame(
+    #   formula = formula,
+    #   data = data.test,
+    #   na.action = NULL
+    # )
+    #
+    # # B. Handle NA cases:
+    # if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data.test)) ){
+    #   data.test <- handle_NA_data(data = data.test, criterion_name = criterion_name,
+    #                               mydata = "test", quiet = quiet)
+    # }
+    #
+    # # C. Convert any factor variables to character variables:
+    # data.test <- data.test %>%
+    #   dplyr::mutate_if(is.factor, paste)
+    #
+    # # D. Convert to tibble:
+    # data.test <- data.test %>%
+    #   tibble::as_tibble()
 
-    # B. Handle NA cases:
-    if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data.test)) ){
-      data.test <- handle_NA_data(data = data.test, criterion_name = criterion_name,
-                                  mydata = "test", quiet = quiet)
-    }
-
-    # C. Convert any factor variables to character variables:
-    data.test <- data.test %>%
-      dplyr::mutate_if(is.factor, paste)
-
-    # D. Convert to tibble:
-    data.test <- data.test %>%
-      tibble::as_tibble()
+    data.test <- clean_data(data = data.test, criterion_name = criterion_name, formula = formula,
+                            mydata = "test", quiet = quiet)
 
   }
 
