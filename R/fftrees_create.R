@@ -49,7 +49,7 @@
 #' @param do.svm logical.
 #' @param do.rf logical.
 #'
-#' @param quiet logical
+#' @param quiet A list of logical elements.
 #'
 #'
 #' @return A new \code{FFTrees} object.
@@ -611,32 +611,29 @@ fftrees_create <- function(formula = NULL,
 
   # 2. Verify criterion and data: ------
 
+  # Verify data and criterion: ----
 
-  # Make (non-logical) criterion logical: ----
+  testthat::expect_true(is.data.frame(data),
+                        info = "The training data is not a data.frame")
 
-  if (inherits(data[[criterion_name]], "character") |
-      inherits(data[[criterion_name]], "factor")) {
+  testthat::expect_true(criterion_name %in% names(data),
+                        info = paste0("The criterion ", criterion_name, " does not occur in training data"))
 
-    # Save original values as decision.labels:
-    decision.labels <- unique(data[[criterion_name]])
 
-    # Convert criterion to logical:
-    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
+  # Verify data.test and criterion (same steps): ----
 
-    if (any(sapply(quiet, isFALSE))) {
+  if (!is.null(data.test)) {
 
-      msg_lgc <- paste0("Converting the criterion into logical by '", criterion_name, " == ", decision.labels[2], "'")
+    testthat::expect_true(is.data.frame(data.test),
+                          info = "The test data data.test is not a data.frame")
 
-      # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
-
-      cli::cli_alert_warning(msg_lgc)
-
-    }
+    testthat::expect_true(criterion_name %in% names(data.test),
+                          info = paste0("The criterion ", criterion_name, " does not occur in data.test"))
 
   }
 
 
-  # Handle missing criterion values: ----
+  # Verify number of criterion values: ----
 
   if (!allow_NA_crit){
 
@@ -655,77 +652,95 @@ fftrees_create <- function(formula = NULL,
                         expected = 4)#,
     # info = "The criterion variable must only contain TRUE/FALSE, and NA values")
 
-  }
+  } # ToDo: Repeat for data.test?
 
 
-  # Verify that criterion is in data: ----
+  # Convert (a non-logical) criterion to logical: ----
 
-  testthat::expect_true(criterion_name %in% names(data),
-                        info = paste("The criterion", criterion_name, "is not in data")
-  )
+  if (inherits(data[[criterion_name]], "character") |
+      inherits(data[[criterion_name]], "factor")) {
+
+    # Save original values as decision.labels:
+    decision.labels <- unique(data[[criterion_name]])
+
+    # Convert criterion to logical:
+    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
+
+    if (any(sapply(quiet, isFALSE))) {
+
+      msg_lgc <- paste0("Converted the criterion to logical by '", criterion_name, " == ", decision.labels[2], "'.")
+
+      # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
+
+      cli::cli_alert_warning(msg_lgc)
+
+    }
+
+  } # ToDo: Repeat for data.test?
 
 
-  # Verify that criterion is in data.test: ----
+  # Pre-process training data: ----
 
-  if (!is.null(data.test)) {
-
-    testthat::expect_true(is.data.frame(data),
-                          info = "Object is not a dataframe."
-    )
-
-    testthat::expect_true(criterion_name %in% names(data.test),
-                          info = paste("The criterion", criterion_name, "is not in data.test")
-    )
-
-  }
-
-
-  # Remove cues not included in formula: ----
-
+  # A. Remove any cues not in formula:
   data <- model.frame(
     formula = formula,
     data = data,
     na.action = NULL
   )
 
+  # B. Handle NA cases:
+  if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
+    data <- handle_NA_data(data = data, criterion_name = criterion_name,
+                           mydata = "train", quiet = quiet)
+  }
 
-  # Convert factors to character variables: ----
-
+  # C. Convert any factor variables to character variables:
   data <- data %>%
     dplyr::mutate_if(is.factor, paste)
 
-  # Do the same to data.test:
+  # D. Convert to tibble:
+  data <- data %>%
+    tibble::as_tibble()
+
+
+  # Pre-process data.test (same steps): ----
+
   if (!is.null(data.test)) {
 
+    # A. Remove any cues not in formula:
     data.test <- model.frame(
       formula = formula,
       data = data.test,
       na.action = NULL
     )
 
-    # Convert factor columns to character:
+    # B. Handle NA cases:
+    if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data.test)) ){
+      data.test <- handle_NA_data(data = data.test, criterion_name = criterion_name,
+                                  mydata = "test", quiet = quiet)
+    }
 
+    # C. Convert any factor variables to character variables:
     data.test <- data.test %>%
-      dplyr::mutate_if(is.factor, paste) %>%
+      dplyr::mutate_if(is.factor, paste)
+
+    # D. Convert to tibble:
+    data.test <- data.test %>%
       tibble::as_tibble()
+
   }
-
-
-  # Get cue names: ----
-
-  cue_names <- names(data)[2:ncol(data)]
-
-
-  # Convert data to tibble: ----
-
-  data <- data %>%
-    tibble::as_tibble()
 
 
 
   # 3. Create the FFTrees object: ------
 
+  # Get cue names:
+  cue_names <- names(data)[2:ncol(data)]  # (all except for criterion)
+
+  # Create x (as list):
   x <- list(
+
+    # Names of criterion vs. cues:
     criterion_name = criterion_name,
     cue_names = cue_names,
 
@@ -788,7 +803,6 @@ fftrees_create <- function(formula = NULL,
       quiet = quiet
     ),
 
-
     # One row per algorithm competition:
     competition = list(
 
@@ -813,8 +827,10 @@ fftrees_create <- function(formula = NULL,
       ),
 
       models = list(lr = NULL, cart = NULL, rf = NULL, svm = NULL)
-    )
-  )
+
+    ) # competition.
+
+  ) # x.
 
   class(x) <- "FFTrees"
 
