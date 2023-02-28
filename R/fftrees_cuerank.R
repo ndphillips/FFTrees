@@ -91,7 +91,7 @@ fftrees_cuerank <- function(x = NULL,
     # Using cli pkg:
     options(cli.progress_show_after = 1/5,  # delay of bar? (default = 2)
             cli.progress_clear = FALSE,     # clear after finishing? (default = TRUE)
-            cli.spinner = "line")           # spinner for type = "tasks"?
+            cli.spinner = "line")           # spinner for cli_progress_bar() of type = "tasks"?
 
     n_1 <- paste0("  Ranking ", cue_n, " cues: ")
     cli::cli_progress_bar(name = n_1, total = cue_n)  # linear bar
