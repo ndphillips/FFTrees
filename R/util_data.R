@@ -7,6 +7,7 @@
 # Inputs:
 # - data (as df)
 # - criterion_name (in data)
+# - mydata (the data type of 'data': either "train" or "test")
 # - quiet (as list)
 #
 # Output:
@@ -15,7 +16,7 @@
 # Side-effect: Report on NA cases and corresponding conversions.
 
 
-handle_NA_data <- function(data, criterion_name, quiet){
+handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
   # Prepare: ------
 
@@ -82,7 +83,7 @@ handle_NA_data <- function(data, criterion_name, quiet){
 
   if (!quiet$mis) {
 
-    cli::cli_alert_info("Found NA values in data variables:")
+    cli::cli_alert_info("Found NA values in '{mydata}' data:")
 
     if (any(ix_pred_chr_NA)){ # character predictors:
 
