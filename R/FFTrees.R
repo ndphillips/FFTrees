@@ -359,15 +359,6 @@ FFTrees <- function(formula = NULL,
 
   # C. Handle data: ------
 
-  # Handle NA cases (prior to splitting data): ----
-
-  if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
-
-    data <- handle_NA_data(data = data, criterion_name = criterion_name, quiet = quiet)
-
-  } # if ( allow_NA_any & any(is.na(data)) ).
-
-
   # Split training / test data: ----
 
   if ((train.p < 1) && is.null(data.test)) {
@@ -435,7 +426,7 @@ FFTrees <- function(formula = NULL,
                       do.rf   = do.rf,
                       do.comp = do.comp,
                       #
-                      quiet = quiet # stored in x$params$quiet
+                      quiet = quiet # as list, stored in x$params$quiet
   )
 
 
