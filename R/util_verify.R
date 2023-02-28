@@ -5,6 +5,59 @@
 # Functions for validating or verifying stuff: ------
 
 
+# verify_data_and_criterion: ------
+
+# Inputs:
+# - data (as df)
+# - criterion_name (character, a name in data)
+#
+# Auxiliary arguments:
+# - mydata (the data type of 'data': either "train" or "test")
+#
+# Output:
+# - modified data (as df)
+#
+# Side-effect: Report failed tests.
+
+
+verify_data_and_criterion <- function(data, criterion_name, mydata){
+
+  # Verify data types:
+  testthat::expect_true(is.data.frame(data),
+                        info = paste0("The ", mydata, " data is not a data.frame"))
+  testthat::expect_true(is.character(criterion_name),
+                        info = paste0("The criterion_name is not of type character"))
+
+  # Verify that criterion occurs in data:
+  testthat::expect_true(criterion_name %in% names(data),
+                        info = paste0("The criterion name '", criterion_name, "' does not occur in ", mydata, " data"))
+
+  # Verify the number of criterion values:
+  if (!allow_NA_crit){ # default:
+
+    # Verify that criterion does NOT contain NA values:
+    testthat::expect_true(all(!is.na(data[[criterion_name]])),
+                          info = "At least one of the criterion values are NA. Please remove missing cases and try again")
+
+    # Verify that criterion is binary:
+    testthat::expect_equal(length(unique(data[[criterion_name]])),
+                           expected = 2,
+                           info = "The criterion variable is non-binary")
+
+  } else { # allow_NA_crit: the criterion must maximally contain 3 distinct values:
+
+    testthat::expect_lt(length(unique(data[[criterion_name]])),
+                        expected = 4)#,
+    # info = "The criterion variable must only contain binary values, plus optional NA values")
+
+  }
+
+  # NO output.
+
+} # verify_data_and_criterion().
+
+
+
 # verify_dir_sym: ------
 
 # Goal: Verify a vector x of direction symbols
