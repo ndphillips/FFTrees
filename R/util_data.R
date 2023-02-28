@@ -45,7 +45,8 @@ clean_data <- function(data, criterion_name, formula,
     na.action = NULL
   )
 
-  # 2. Handle NA cases:
+
+  # 2. Handle NA cases in data:
   if ( (allow_NA_pred | allow_NA_crit) & any(is.na(data)) ){
 
     data <- handle_NA_data(data = data, criterion_name = criterion_name,
@@ -55,11 +56,37 @@ clean_data <- function(data, criterion_name, formula,
 
   }
 
-  # 3. Convert any factor variables to character variables:
+
+  # 3. Convert any factor variable to character variable:
   data <- data %>%
     dplyr::mutate_if(is.factor, paste)
 
-  # 4. Convert data to tibble:
+
+  # 4. Convert a character criterion to logical:
+  if (inherits(data[[criterion_name]], "character")) {
+
+    # Save original values (as decision.labels):
+    decision.labels <- unique(data[[criterion_name]])
+
+    # Remove any NA values (if present):
+    decision.labels <- decision.labels[!is.na(decision.labels)]
+
+    # Convert criterion to logical:
+    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
+
+    if (any(sapply(quiet, isFALSE))) { # Provide user feedback:
+
+      msg_lgc <- paste0("Converted criterion to logical (by '", criterion_name, " == ", decision.labels[2], "') in '", mydata, "' data.")
+      # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
+
+      cli::cli_alert_warning(msg_lgc)
+
+    }
+
+  }
+
+
+  # 5. Convert data to tibble:
   data <- data %>%
     tibble::as_tibble()
 

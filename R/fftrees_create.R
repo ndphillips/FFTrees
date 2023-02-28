@@ -620,31 +620,31 @@ fftrees_create <- function(formula = NULL,
   }
 
 
-  # Convert (a character or factor) criterion to logical: ----
-
-  if (inherits(data[[criterion_name]], "character") |
-      inherits(data[[criterion_name]], "factor")) {
-
-    # Save original values as decision.labels:
-    decision.labels <- unique(data[[criterion_name]])
-
-    # Remove any NA values from decision.labels (if present):
-    decision.labels <- decision.labels[!is.na(decision.labels)]
-
-    # Main: Convert criterion to logical:
-    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
-
-    if (any(sapply(quiet, isFALSE))) {
-
-      msg_lgc <- paste0("Converted the criterion to logical by '", criterion_name, " == ", decision.labels[2], "'.")
-
-      # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
-
-      cli::cli_alert_warning(msg_lgc)
-
-    }
-
-  } # ToDo: Move to pre-process of data (below) TO ALSO repeat for data.test.
+  # # Convert (a character or factor) criterion to logical: ----
+  #
+  # if (inherits(data[[criterion_name]], "character") |
+  #     inherits(data[[criterion_name]], "factor")) {
+  #
+  #   # Save original values as decision.labels:
+  #   decision.labels <- unique(data[[criterion_name]])
+  #
+  #   # Remove any NA values from decision.labels (if present):
+  #   decision.labels <- decision.labels[!is.na(decision.labels)]
+  #
+  #   # Main: Convert criterion to logical:
+  #   data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
+  #
+  #   if (any(sapply(quiet, isFALSE))) {
+  #
+  #     msg_lgc <- paste0("Converted the criterion to logical by '", criterion_name, " == ", decision.labels[2], "'.")
+  #
+  #     # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
+  #
+  #     cli::cli_alert_warning(msg_lgc)
+  #
+  #   }
+  #
+  # } # Note: Moved into clean_data() TO ALSO repeat for data.test.
 
 
   # Clean/pre-process training data: ----
