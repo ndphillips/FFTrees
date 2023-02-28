@@ -152,10 +152,15 @@ fftrees_create <- function(formula = NULL,
   # goal: ----
 
   # Current set of valid goals (for FFT selection):
+
   if (!is.null(my.goal)){
+
     valid_goal <- c(goal_options, my.goal)  # add my.goal (name) to default
+
   } else { # default:
+
     valid_goal <- goal_options  # use global constant
+
   }
 
   if (is.null(goal)) { # goal NOT set by user:
@@ -442,7 +447,6 @@ fftrees_create <- function(formula = NULL,
   )
 
 
-
   # max.levels: ----
 
   if (is.null(max.levels)) {
@@ -613,13 +617,15 @@ fftrees_create <- function(formula = NULL,
 
   # Verify data and criterion: ----
 
-  verify_data_and_criterion(data = data, criterion_name = criterion_name, mydata = "train")
+  verify_data_and_criterion(data = data, criterion_name = criterion_name, mydata = "train")  # no output
 
-  if (!is.null(data.test)) {
-    verify_data_and_criterion(data = data.test, criterion_name = criterion_name, mydata = "test")
+  if (!is.null(data.test)) { # same for test data:
+    verify_data_and_criterion(data = data.test, criterion_name = criterion_name, mydata = "test")  # no output
   }
 
 
+  # # OLD code start: ----
+  #
   # # Convert (a character or factor) criterion to logical: ----
   #
   # if (inherits(data[[criterion_name]], "character") |
@@ -645,10 +651,14 @@ fftrees_create <- function(formula = NULL,
   #   }
   #
   # } # Note: Moved into clean_data() TO ALSO repeat for data.test.
+  #
+  # # OLD code end. ----
 
 
   # Clean/pre-process training data: ----
 
+  # # OLD code start: ----
+  #
   # # A. Remove any cues not in formula:
   # data <- model.frame(
   #   formula = formula,
@@ -669,6 +679,8 @@ fftrees_create <- function(formula = NULL,
   # # D. Convert to tibble:
   # data <- data %>%
   #   tibble::as_tibble()
+  #
+  # # OLD code end. ----
 
   data <- clean_data(data = data, criterion_name = criterion_name, formula = formula,
                      mydata = "train", quiet = quiet)
@@ -676,8 +688,10 @@ fftrees_create <- function(formula = NULL,
 
   # Clean/pre-process data.test (same steps): ----
 
-  if (!is.null(data.test)) {
+  if (!is.null(data.test)) { # same for test data:
 
+    # # OLD code start: ----
+    #
     # # A. Remove any cues not in formula:
     # data.test <- model.frame(
     #   formula = formula,
@@ -698,6 +712,8 @@ fftrees_create <- function(formula = NULL,
     # # D. Convert to tibble:
     # data.test <- data.test %>%
     #   tibble::as_tibble()
+    #
+    # # OLD code end. ----
 
     data.test <- clean_data(data = data.test, criterion_name = criterion_name, formula = formula,
                             mydata = "test", quiet = quiet)
