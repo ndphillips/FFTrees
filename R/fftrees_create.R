@@ -573,24 +573,24 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_true(!is.null(cost.cues), info = "cost.cues is NULL")
   testthat::expect_type(cost.cues, type = "list")
   testthat::expect_true(all(names(cost.cues) %in% names(data)),
-                        info = "At least one of the values specified in cost.cues is not in data")
+                        info = "At least one of the cue names specified in cost.cues is not in data")
 
 
   # stopping.rule: ----
 
-  testthat::expect_true(stopping.rule %in% stopping_rules)  # use global constant
-
+  testthat::expect_true(stopping.rule %in% stopping_rules,  # use global constant
+                        info = paste0("The stopping.rule must be in ('", paste(stopping_rules, collapse = "', '"), "')"))
 
   # stopping.par: ----
 
-  if (stopping.rule == "levels"){ # stopping.par must be positive integer:
+  if (stopping.rule == "levels"){ # stopping.par must be a positive integer:
 
     stopping.par <- as.integer(stopping.par)  # aim to coerce to integer
 
     testthat::expect_true(is.integer(stopping.par))
     testthat::expect_gt(stopping.par, expected = 0)
 
-  } else { # 0 < stopping.par < 1:
+  } else { # e.g., stopping.rule == "exemplars": 0 < stopping.par < 1:
 
     testthat::expect_gt(stopping.par, expected = 0)
     testthat::expect_lt(stopping.par, expected = 1)
@@ -611,11 +611,29 @@ fftrees_create <- function(formula = NULL,
 
   # 2. Verify criterion and data: ------
 
-  # Criterion is in data: ----
 
-  testthat::expect_true(criterion_name %in% names(data),
-                        info = paste("The criterion", criterion_name, "is not in data")
-  )
+  # Make (non-logical) criterion logical: ----
+
+  if (inherits(data[[criterion_name]], "character") |
+      inherits(data[[criterion_name]], "factor")) {
+
+    # Save original values as decision.labels:
+    decision.labels <- unique(data[[criterion_name]])
+
+    # Convert criterion to logical:
+    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]  # Note: NA values remain NA
+
+    if (any(sapply(quiet, isFALSE))) {
+
+      msg_lgc <- paste0("Converting the criterion into logical by '", criterion_name, " == ", decision.labels[2], "'")
+
+      # cat(u_f_hig("\u2014 ", msg_lgc), "\n")
+
+      cli::cli_alert_warning(msg_lgc)
+
+    }
+
+  }
 
 
   # Handle missing criterion values: ----
@@ -635,34 +653,19 @@ fftrees_create <- function(formula = NULL,
 
     testthat::expect_lt(length(unique(data[[criterion_name]])),
                         expected = 4)#,
-                        # info = "The criterion variable must only contain TRUE/FALSE, and NA values")
+    # info = "The criterion variable must only contain TRUE/FALSE, and NA values")
 
   }
 
 
-  # Make criterion logical: ----
+  # Verify that criterion is in data: ----
 
-  if (inherits(data[[criterion_name]], "character") |
-      inherits(data[[criterion_name]], "factor")) {
-
-    # Save original values as decision.labels:
-    decision.labels <- unique(data[[criterion_name]])
-
-    # Convert criterion to logical:
-    data[[criterion_name]] <- data[[criterion_name]] == decision.labels[2]
-
-    if (!quiet$set) {
-
-      msg <- paste0("\u2014 Setting target to ", criterion_name, " == ", decision.labels[2], "\n")
-
-      cat(u_f_msg(msg))
-
-    }
-
-  }
+  testthat::expect_true(criterion_name %in% names(data),
+                        info = paste("The criterion", criterion_name, "is not in data")
+  )
 
 
-  # Check that criterion is in data.test: ----
+  # Verify that criterion is in data.test: ----
 
   if (!is.null(data.test)) {
 
@@ -706,6 +709,7 @@ fftrees_create <- function(formula = NULL,
       dplyr::mutate_if(is.factor, paste) %>%
       tibble::as_tibble()
   }
+
 
   # Get cue names: ----
 
