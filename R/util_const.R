@@ -13,11 +13,13 @@
 algorithm_options <- c("ifan", "dfan")  # (global constant)
 
 
+
 # - allow_NA_pred: ----
 
 # Allow NA cases in predictors (as logical)?
 
-allow_NA_pred <- TRUE  # (global constant)
+allow_NA_pred <- TRUE # FALSE  # (global constant)
+
 
 
 # - allow_NA_crit: ----
@@ -56,7 +58,12 @@ cost_cues_default <- 0  # (global constant)
 
 # - cue_classes: ----
 
-cue_classes <- c( #  (global constant)
+# FFTrees only distinguishes/uses 2 types of cues / predictors:
+# - character (converted from factor / logical)
+# - numerical (integer / double )
+# See clean_data() and handle_NA_data() in util_data.R for conversions.
+
+cue_classes <- c(            #  (global constant)
   "c",  # categorical: character, factor, logical
   "n")  # numeric: integer, double
 
@@ -133,7 +140,8 @@ stopping_rules <- c("exemplars", "levels")  # (global constant)
 
 # User feedback: ------
 #
-# Now regulated by quiet = list(ini, fin, set).
+# Now obsolete, as handled by FFTrees() argument:
+# quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)
 #
 # # - quiet.ini: ----
 #
