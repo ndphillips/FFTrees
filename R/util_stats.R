@@ -297,7 +297,7 @@ classtable <- function(prediction_v = NULL,
 
         # cli::cli_alert_warning("Removing {sum_NA} value{?s} from the corresponding 'criterion_v': ({rem_criterion_v}).")
 
-        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'prediction_v' and drop 'criterion_v' value{?s}: {rem_criterion_s}.")
+        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'prediction_v': Drop corresponding 'criterion_v = c({rem_criterion_s}).")
 
       }
 
@@ -318,7 +318,7 @@ classtable <- function(prediction_v = NULL,
 
         # cli::cli_alert_info("The values removed from 'prediction_v' are {rem_prediction_v}.")
 
-        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'criterion_v' and drop 'prediction_v' value{?s}: {rem_prediction_s}.")
+        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'criterion_v': Drop corresponding 'prediction_v = c({rem_prediction_s}).")
 
       }
 
@@ -350,11 +350,13 @@ classtable <- function(prediction_v = NULL,
       # Provide user feedback:
       prediction_v_s <- paste(prediction_v, collapse = ", ")
 
-      msg_1a <- "A prediction vector has no variance (NA):"
-      msg_2a <- paste0("prediction_v = ", prediction_v_s, ".")
+      # msg_1a <- "A prediction vector has no variance (NA):"
+      # msg_2a <- paste0("prediction_v = ", prediction_v_s, ".")
+      msg_3a <- paste0("\u2014 No variance in 'prediction_v = c(", prediction_v_s, ")'.")
 
-      cat(u_f_hig(msg_1a, "\n"))  # highlighted and non-optional
-      cat(u_f_hig(msg_2a, "\n"))
+      # cat(u_f_hig(msg_1a, "\n"))  # highlighted and non-optional
+      # cat(u_f_hig(msg_2a, "\n"))
+      cat(u_f_hig(msg_3a, "\n"))
 
       # cli::cli_alert_warning(msg_1a)
       # cli::cli_alert_warning(msg_2a)
@@ -366,11 +368,13 @@ classtable <- function(prediction_v = NULL,
       # Provide user feedback:
       criterion_v_s <- paste(criterion_v, collapse = ", ")
 
-      msg_1b <- "A criterion vector has no variance (NA):"
-      msg_2b <- paste0("criterion_v = ", criterion_v_s, ".")
+      # msg_1b <- "A criterion vector has no variance (NA):"
+      # msg_2b <- paste0("criterion_v = ", criterion_v_s, ".")
+      msg_3b <- paste0("\u2014 No variance in 'criterion_v = c(", criterion_v_s, ")'.")
 
-      cat(u_f_hig(msg_1b, "\n"))  # highlighted and non-optional
-      cat(u_f_hig(msg_2b, "\n"))
+      # cat(u_f_hig(msg_1b, "\n"))  # highlighted and non-optional
+      # cat(u_f_hig(msg_2b, "\n"))
+      cat(u_f_hig(msg_3b, "\n"))
 
       # cli::cli_alert_warning(msg_1b)
       # cli::cli_alert_warning(msg_2b)
