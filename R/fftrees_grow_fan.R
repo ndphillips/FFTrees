@@ -318,14 +318,14 @@ fftrees_grow_fan <- function(x,
         cuecost_v[is.na(decision_v)] <- cuecost_v[is.na(decision_v)] + cue_cost_new
 
         # ADD CUE INFO TO LEVEL.STATS:
-        level_stats_i$level[level_current] <- level_current
-        level_stats_i$cue[level_current] <- cues_name_new
+        level_stats_i$level[level_current]    <- level_current
+        level_stats_i$cue[level_current]      <- cues_name_new
         level_stats_i$cost_cue[level_current] <- cue_cost_new
         level_stats_i$cost_cue_cum[level_current] <- sum(level_stats_i$cost_cue[1:level_current])
-        level_stats_i$class[level_current] <- cue_class_new
+        level_stats_i$class[level_current]     <- cue_class_new
         level_stats_i$threshold[level_current] <- cue_threshold_new
         level_stats_i$direction[level_current] <- cue_direction_new
-        level_stats_i$exit[level_current] <- exit_current
+        level_stats_i$exit[level_current]      <- exit_current
 
       } # Step 1.
 
@@ -354,6 +354,8 @@ fftrees_grow_fan <- function(x,
         asif_decision_v[case_remaining_ix] <- cue_decisions[case_remaining_ix]
         asif_levelout_v[case_remaining_ix] <- level_current
         asif_cuecost_v[case_remaining_ix]  <- cue_cost_new
+
+        # ToDo: Pass level_current and cues_name_new to classtable() (to handle NA values)? +++ here now +++
 
         # Get results for ASIF classifications:
         asif_results <- classtable(
