@@ -276,12 +276,12 @@ classtable <- function(prediction_v = NULL,
 
     # Report NA values (prior to removing them): ----
 
-    quiet_mis <- FALSE  # HACK: as local constant (as object x not passed)
+    quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
 
     if (!quiet_mis) { # Provide user feedback:
 
       # 1. NA in prediction_v:
-      if (any(is.na(prediction_v))){
+      if (allow_NA_pred & any(is.na(prediction_v))){
 
         # d_type <- typeof(prediction_v)  # logical
         sum_NA <- sum(is.na(prediction_v))
@@ -289,12 +289,20 @@ classtable <- function(prediction_v = NULL,
         # msg_NA_p <- paste0("A prediction_v contains ", sum_NA, " NA values that will be removed.")
         # cat(u_f_hig(msg_NA_p, "\n"))  # highlighted and non-optional
 
-        cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'prediction_v' (and corresponding 'criterion_v').")
+        # cli::cli_alert_info("Found {sum_NA} NA value{?s} in 'prediction_v':")
+
+        # Which values in criterion_v will be removed?
+        rem_criterion_v <- criterion_v[is.na(prediction_v)]
+        rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
+
+        # cli::cli_alert_warning("Removing {sum_NA} value{?s} from the corresponding 'criterion_v': ({rem_criterion_v}).")
+
+        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'prediction_v': Dropping 'criterion_v = c({rem_criterion_s}).")
 
       }
 
       # 2. NA in criterion_v:
-      if (any(is.na(criterion_v))){
+      if (allow_NA_crit & any(is.na(criterion_v))){
 
         # d_type <- typeof(criterion_v)  # logical
         sum_NA <- sum(is.na(criterion_v))
@@ -302,7 +310,15 @@ classtable <- function(prediction_v = NULL,
         # msg_NA_c <- paste0("The criterion_v contains ", sum_NA, " NA values that will be removed.")
         # cat(u_f_hig(msg_NA_c, "\n"))  # highlighted and non-optional
 
-        cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'criterion_v' (and corresponding 'prediction_v').")
+        # cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'criterion_v' (and corresponding 'prediction_v').")
+
+        # Which values in prediction_v will be removed?
+        rem_prediction_v <- prediction_v[is.na(criterion_v)]
+        rem_prediction_s <- paste0(rem_prediction_v, collapse = ", ")
+
+        # cli::cli_alert_info("The values removed from 'prediction_v' are {rem_prediction_v}.")
+
+        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'criterion_v': Dropping 'prediction_v = c({rem_prediction_s}).")
 
       }
 
@@ -329,37 +345,48 @@ classtable <- function(prediction_v = NULL,
     var_pred_v <- var(prediction_v)
     var_crit_v <- var(criterion_v)
 
-    if (is.na(var_pred_v)){
 
-      # Provide user feedback:
-      prediction_v_s <- paste(prediction_v, collapse = ", ")
+    quiet_na_var <- TRUE # FALSE  # HACK: as local constant (as object x or quiet list are not passed)
 
-      msg_1a <- "A prediction vector has no variance (NA):"
-      msg_2a <- paste0("prediction_v = ", prediction_v_s, ".")
+    if (!quiet_na_var) { # Provide user feedback:
 
-      cat(u_f_hig(msg_1a, "\n"))  # highlighted and non-optional
-      cat(u_f_hig(msg_2a, "\n"))
+      if (is.na(var_pred_v)){
 
-      # cli::cli_alert_warning(msg_1a)
-      # cli::cli_alert_warning(msg_2a)
+        # Provide user feedback:
+        prediction_v_s <- paste(prediction_v, collapse = ", ")
 
-    }
+        # msg_1a <- "A prediction vector has no variance (NA):"
+        # msg_2a <- paste0("prediction_v = ", prediction_v_s, ".")
+        msg_3a <- paste0("\u2014 No variance in 'prediction_v = c(", prediction_v_s, ")'.")
 
-    if (is.na(var_crit_v)){
+        # cat(u_f_hig(msg_1a, "\n"))  # highlighted and non-optional
+        # cat(u_f_hig(msg_2a, "\n"))
+        cat(u_f_hig(msg_3a, "\n"))
 
-      # Provide user feedback:
-      criterion_v_s <- paste(criterion_v, collapse = ", ")
+        # cli::cli_alert_warning(msg_1a)
+        # cli::cli_alert_warning(msg_2a)
 
-      msg_1b <- "A criterion vector has no variance (NA):"
-      msg_2b <- paste0("criterion_v = ", criterion_v_s, ".")
+      }
 
-      cat(u_f_hig(msg_1b, "\n"))  # highlighted and non-optional
-      cat(u_f_hig(msg_2b, "\n"))
+      if (is.na(var_crit_v)){
 
-      # cli::cli_alert_warning(msg_1b)
-      # cli::cli_alert_warning(msg_2b)
+        # Provide user feedback:
+        criterion_v_s <- paste(criterion_v, collapse = ", ")
 
-    }
+        # msg_1b <- "A criterion vector has no variance (NA):"
+        # msg_2b <- paste0("criterion_v = ", criterion_v_s, ".")
+        msg_3b <- paste0("\u2014 No variance in 'criterion_v = c(", criterion_v_s, ")'.")
+
+        # cat(u_f_hig(msg_1b, "\n"))  # highlighted and non-optional
+        # cat(u_f_hig(msg_2b, "\n"))
+        cat(u_f_hig(msg_3b, "\n"))
+
+        # cli::cli_alert_warning(msg_1b)
+        # cli::cli_alert_warning(msg_2b)
+
+      }
+
+    } # if (!quiet_na_var).
 
 
     # Main: Compute statistics:
@@ -372,6 +399,14 @@ classtable <- function(prediction_v = NULL,
         stop("Different lengths of prediction_v and criterion_v.\nLength of prediction_v is ", length(prediction_v),
              "and length of criterion_v is ", length(criterion_v))
       }
+
+
+      # if (!quiet_na_var){ # Provide user feedback:
+      #
+      #   msg_c1 <- ("\u2014 Computing stats by caret::confusionMatrix()")
+      #   cat(u_f_hig(msg_c1, "\n"))
+      #
+      # }
 
       # Use caret::confusionMatrix:
       cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
@@ -450,6 +485,13 @@ classtable <- function(prediction_v = NULL,
 
 
     } else { # Case 2. Compute stats from freq combinations: ----
+
+      if (!quiet_na_var){ # Provide user feedback:
+
+        msg_c2 <- ("\u2014 Computing stats from freq counts, rather than caret::confusionMatrix()")
+        cat(u_f_hig(msg_c2, "\n"))
+
+      }
 
       # Compute freqs as sum of T/F combinations:
       hi <- sum(prediction_v == TRUE  & criterion_v == TRUE)

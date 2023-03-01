@@ -104,7 +104,7 @@ fftrees_apply <- function(x,
       decision = rep(NA, criterion_n),
       levelout = rep(NA, criterion_n),
       cost_cue = rep(NA, criterion_n),
-      cost_decision = rep(NA, criterion_n),
+      cost_dec = rep(NA, criterion_n),
       cost = rep(NA, criterion_n),
       current_decision = rep(NA, criterion_n)
     )
@@ -356,12 +356,12 @@ fftrees_apply <- function(x,
       decisions_df$levelout[classify_now] <- level_i
       decisions_df$cost_cue[classify_now] <- cost_cue_level_cum[level_i]
 
-      decisions_df$cost_decision[decisions_df$criterion == TRUE  & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$hi
-      decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$fa
-      decisions_df$cost_decision[decisions_df$criterion == TRUE  & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
-      decisions_df$cost_decision[decisions_df$criterion == FALSE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$cr
+      decisions_df$cost_dec[decisions_df$criterion == TRUE  & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$hi
+      decisions_df$cost_dec[decisions_df$criterion == FALSE & decisions_df$decision == TRUE]  <- x$params$cost.outcomes$fa
+      decisions_df$cost_dec[decisions_df$criterion == TRUE  & decisions_df$decision == FALSE] <- x$params$cost.outcomes$mi
+      decisions_df$cost_dec[decisions_df$criterion == FALSE & decisions_df$decision == FALSE] <- x$params$cost.outcomes$cr
 
-      decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_decision
+      decisions_df$cost <- decisions_df$cost_cue + decisions_df$cost_dec
 
 
       # Get cumulative level stats: ----

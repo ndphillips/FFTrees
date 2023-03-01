@@ -137,7 +137,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   # Identify roles & NA data types: ----
 
   # NA values (in data):
-  nr_NA <- colSums(is.na(data))
+  nr_NA <- colSums(is.na(data))  # Note: per column in data
   ix_NA <- nr_NA > 0
   nm_NA <- names(ix_NA)
 
@@ -191,7 +191,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
   if (!quiet$mis) {
 
-    cli::cli_alert_info("Found NA values in '{mydata}' data:")
+    cli::cli_alert_info("Found {sum(nr_NA)} NA value{?s} in '{mydata}' data:")
 
     if (any(ix_pred_chr_NA)){ # character predictors:
 
