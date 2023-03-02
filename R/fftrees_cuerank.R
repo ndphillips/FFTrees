@@ -250,10 +250,9 @@ fftrees_cuerank <- function(x = NULL,
 
         # Report NA values (prior to removing them): ----
 
-        quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
+        # quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
 
-
-        if (!quiet_mis) { # Provide user feedback:
+        if (!x$params$quiet$mis) { # Provide user feedback:
 
           # 1. NA in cue_i_v:
           ix_NA_cue <- is.na(cue_i_v)
@@ -266,7 +265,7 @@ fftrees_cuerank <- function(x = NULL,
             rem_criterion_v <- criterion_v[ix_NA_cue]
             rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
-            cli::cli_alert_warning("Found {sum_NA_cue} NA value{?s} in cue {cue_i} {cue_i_name}: Dropping 'criterion_v = c({rem_criterion_s}).")
+            cli::cli_alert_warning("Found {sum_NA_cue} NA value{?s} in cue {cue_i} '{cue_i_name}': Dropping from criterion '{x$criterion_name} = c({rem_criterion_s})'.")
 
           }
 
@@ -282,11 +281,11 @@ fftrees_cuerank <- function(x = NULL,
             rem_cue_i_v <- cue_i_v[ix_NA_crit]
             rem_cue_i_s <- paste0(rem_cue_i_v, collapse = ", ")
 
-            cli::cli_alert_warning("Found {sum_NA_crit} NA value{?s} in 'criterion_v': Dropping from cue {cue_i}: {cue_i_name} = c({rem_cue_i_s}).")
+            cli::cli_alert_warning("Found {sum_NA_crit} NA value{?s} in criterion '{x$criterion_name}': Dropping from cue {cue_i}: '{cue_i_name} = c({rem_cue_i_s})'.")
 
           }
 
-        } # if (!quiet_mis).
+        } # if (!x$params$quiet$mis).
 
 
         # Main: ----
