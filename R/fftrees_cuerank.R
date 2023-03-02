@@ -217,6 +217,90 @@ fftrees_cuerank <- function(x = NULL,
       } # Step 2.
 
 
+      # Monitoring: ------
+
+      # # unequal lenghts:
+      # len_crt <- length(criterion_v)
+      # len_cue <- length(cue_i_v)
+      #
+      # if (len_crt != len_cue){
+      #   cli::cli_alert_warning("Cue {cue_i} has {len_cue} value{?s} vs. {len_crt} criterion value{?s}.")
+      # }
+
+      #       ix_NA_crt <- is.na(criterion_v)
+      #       ix_NA_cue <- is.na(cue_i_v)
+      #
+      #       nr_NA_crt <- sum(ix_NA_crt)
+      #       nr_NA_cue <- sum(ix_NA_cue)
+      #
+      #       if (nr_NA_cue > 0){
+      #        cli::cli_alert_info("Seeing {nr_NA_cue} NA value{?s} in cue {cue_i}: {cue_i_name}")
+      #       }
+      #
+      #       if (nr_NA_crt > 0){
+      #        cli::cli_alert_info("Seeing {nr_NA_crt} NA value{?s} in criterion")
+      #       }
+
+      # +++ here now +++
+
+
+      # Handle NA values: ------
+
+      if ( allow_NA_pred | allow_NA_crit ){
+
+        # Report NA values (prior to removing them): ----
+
+        quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
+
+
+        if (!quiet_mis) { # Provide user feedback:
+
+          # 1. NA in cue_i_v:
+          ix_NA_cue <- is.na(cue_i_v)
+
+          if (allow_NA_pred & any(ix_NA_cue)){
+
+            sum_NA_cue <- sum(ix_NA_cue)
+
+            # Which corresponding values in criterion_v will be removed?
+            rem_criterion_v <- criterion_v[ix_NA_cue]
+            rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
+
+            cli::cli_alert_warning("Found {sum_NA_cue} NA value{?s} in cue {cue_i} {cue_i_name}: Dropping 'criterion_v = c({rem_criterion_s}).")
+
+          }
+
+          # 2. NA in criterion_v:
+          ix_NA_crit <- is.na(criterion_v)
+
+          if (allow_NA_crit & any(ix_NA_crit)){
+
+            # d_type <- typeof(criterion_v)  # logical
+            sum_NA_crit <- sum(ix_NA_crit)
+
+            # Which values in cue_i_v will be removed?
+            rem_cue_i_v <- cue_i_v[ix_NA_crit]
+            rem_cue_i_s <- paste0(rem_cue_i_v, collapse = ", ")
+
+            cli::cli_alert_warning("Found {sum_NA_crit} NA value{?s} in 'criterion_v': Dropping from cue {cue_i}: {cue_i_name} = c({rem_cue_i_s}).")
+
+          }
+
+        } # if (!quiet_mis).
+
+
+        # Main: ----
+
+        # Filter rows: Remove NA and infinite values (from cue_i_v AND criterion_v vectors):
+        both_finite <- is.finite(cue_i_v) & is.finite(criterion_v)
+
+        cue_i_v      <- cue_i_v[both_finite]
+        criterion_v  <- criterion_v[both_finite]
+
+      } # if ( allow_NA_pred | allow_NA_crit ).
+
+
+
       # Step 3: Determine best direction and threshold for cue [cue_i_best]: ----
       {
 
