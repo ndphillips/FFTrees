@@ -269,6 +269,8 @@ classtable <- function(prediction_v = NULL,
 
   # Handle NA values: ------
 
+  # ToDo: Move functionality to upper function, BEFORE calling utility function.
+
   # Note: As NA values in predictors of type character / factor / logical were handled in handle_NA(),
   #       only NA values in numeric predictors or the criterion variable appear here.
 
@@ -278,21 +280,24 @@ classtable <- function(prediction_v = NULL,
 
     quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
 
+
     if (!quiet_mis) { # Provide user feedback:
 
       # 1. NA in prediction_v:
-      if (allow_NA_pred & any(is.na(prediction_v))){
+      ix_NA_pred <- is.na(prediction_v)
+
+      if (allow_NA_pred & any(ix_NA_pred)){
 
         # d_type <- typeof(prediction_v)  # logical
-        sum_NA <- sum(is.na(prediction_v))
+        sum_NA <- sum(ix_NA_pred)
 
         # msg_NA_p <- paste0("A prediction_v contains ", sum_NA, " NA values that will be removed.")
         # cat(u_f_hig(msg_NA_p, "\n"))  # highlighted and non-optional
 
         # cli::cli_alert_info("Found {sum_NA} NA value{?s} in 'prediction_v':")
 
-        # Which values in criterion_v will be removed?
-        rem_criterion_v <- criterion_v[is.na(prediction_v)]
+        # Which corresponding values in criterion_v will be removed?
+        rem_criterion_v <- criterion_v[ix_NA_pred]
         rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
         # cli::cli_alert_warning("Removing {sum_NA} value{?s} from the corresponding 'criterion_v': ({rem_criterion_v}).")
@@ -302,10 +307,12 @@ classtable <- function(prediction_v = NULL,
       }
 
       # 2. NA in criterion_v:
-      if (allow_NA_crit & any(is.na(criterion_v))){
+      ix_NA_crit <- is.na(criterion_v)
+
+      if (allow_NA_crit & any(ix_NA_crit)){
 
         # d_type <- typeof(criterion_v)  # logical
-        sum_NA <- sum(is.na(criterion_v))
+        sum_NA <- sum(ix_NA_crit)
 
         # msg_NA_c <- paste0("The criterion_v contains ", sum_NA, " NA values that will be removed.")
         # cat(u_f_hig(msg_NA_c, "\n"))  # highlighted and non-optional
@@ -313,7 +320,7 @@ classtable <- function(prediction_v = NULL,
         # cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'criterion_v' (and corresponding 'prediction_v').")
 
         # Which values in prediction_v will be removed?
-        rem_prediction_v <- prediction_v[is.na(criterion_v)]
+        rem_prediction_v <- prediction_v[ix_NA_crit]
         rem_prediction_s <- paste0(rem_prediction_v, collapse = ", ")
 
         # cli::cli_alert_info("The values removed from 'prediction_v' are {rem_prediction_v}.")
@@ -325,9 +332,10 @@ classtable <- function(prediction_v = NULL,
     } # if (!quiet_mis).
 
 
-    # Filter rows: Remove NA and infinite values (from prediction AND criterion vectors): ----
+    # Main: ----
 
-    both_finite <- is.finite(criterion_v) & is.finite(prediction_v)
+    # Filter rows: Remove NA and infinite values (from prediction AND criterion vectors): ----
+    both_finite <- is.finite(prediction_v) & is.finite(criterion_v)
 
     prediction_v <- prediction_v[both_finite]
     criterion_v  <- criterion_v[both_finite]
