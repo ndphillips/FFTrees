@@ -265,7 +265,7 @@ fftrees_cuerank <- function(x = NULL,
             rem_criterion_v <- criterion_v[ix_NA_cue]
             rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
-            cli::cli_alert_warning("Found {sum_NA_cue} NA value{?s} in cue {cue_i} '{cue_i_name}': Dropping from criterion '{x$criterion_name} = c({rem_criterion_s})'.")
+            cli::cli_alert_warning("Found {sum_NA_cue} NA value{?s} in {cue_i_name}: Dropping {x$criterion_name} = c({rem_criterion_s}) from cue validation.")
 
           }
 
@@ -281,7 +281,7 @@ fftrees_cuerank <- function(x = NULL,
             rem_cue_i_v <- cue_i_v[ix_NA_crit]
             rem_cue_i_s <- paste0(rem_cue_i_v, collapse = ", ")
 
-            cli::cli_alert_warning("Found {sum_NA_crit} NA value{?s} in criterion '{x$criterion_name}': Dropping from cue {cue_i}: '{cue_i_name} = c({rem_cue_i_s})'.")
+            cli::cli_alert_warning("Found {sum_NA_crit} NA value{?s} in {x$criterion_name}: Dropping {cue_i_name} = c({rem_cue_i_s}) from cue validation.")
 
           }
 
