@@ -302,7 +302,7 @@ classtable <- function(prediction_v = NULL,
 
         # cli::cli_alert_warning("Removing {sum_NA} value{?s} from the corresponding 'criterion_v': ({rem_criterion_v}).")
 
-        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'prediction_v': Dropping 'criterion_v = c({rem_criterion_s}).")
+        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'prediction_v': Dropping criterion_v = c({rem_criterion_s}).")
 
       }
 
@@ -325,7 +325,7 @@ classtable <- function(prediction_v = NULL,
 
         # cli::cli_alert_info("The values removed from 'prediction_v' are {rem_prediction_v}.")
 
-        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'criterion_v': Dropping 'prediction_v = c({rem_prediction_s}).")
+        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'criterion_v': Dropping prediction_v = c({rem_prediction_s}).")
 
       }
 
@@ -334,11 +334,19 @@ classtable <- function(prediction_v = NULL,
 
     # Main: ----
 
-    # Filter rows: Remove NA and infinite values (from prediction AND criterion vectors): ----
-    both_finite <- is.finite(prediction_v) & is.finite(criterion_v)
+    # Filter rows:
+    # # A. Remove NA and infinite values (from prediction AND criterion vectors): ----
+    # both_finite <- is.finite(prediction_v) & is.finite(criterion_v)
+    #
+    # prediction_v <- prediction_v[both_finite]
+    # criterion_v  <- criterion_v[both_finite]
 
-    prediction_v <- prediction_v[both_finite]
-    criterion_v  <- criterion_v[both_finite]
+    # B. Only filter NA cases (from either vector):
+    both_not_NA  <- !ix_NA_pred & !ix_NA_crit
+
+    prediction_v <- prediction_v[both_not_NA]
+    criterion_v  <- criterion_v[both_not_NA]
+
 
   } # if ( allow_NA_pred | allow_NA_crit ).
 

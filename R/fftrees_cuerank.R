@@ -290,14 +290,15 @@ fftrees_cuerank <- function(x = NULL,
 
         # Main: ----
 
-        # Filter rows: Remove NA and infinite values (from cue_i_v AND criterion_v vectors):
+        # Filter rows:
+        # A: Remove NA and infinite values (from cue_i_v AND criterion_v vectors):
         # both_finite <- is.finite(cue_i_v) & is.finite(criterion_v)
 
         # cue_i_v      <- cue_i_v[both_finite]
         # criterion_v  <- criterion_v[both_finite]
 
-        # only filter NAs:
-        both_not_NA  <- !is.na(cue_i_v) & !is.na(criterion_v)
+        # B. Only filter NA cases (from either vector):
+        both_not_NA  <- !ix_NA_cue & !ix_NA_crit
 
         cue_i_v      <- cue_i_v[both_not_NA]
         criterion_v  <- criterion_v[both_not_NA]
