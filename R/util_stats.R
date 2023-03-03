@@ -276,56 +276,41 @@ classtable <- function(prediction_v = NULL,
 
   if ( allow_NA_pred | allow_NA_crit ){
 
+    # Detect NA values: ----
+
+    ix_NA_pred <- is.na(prediction_v)  # 1. NA in prediction_v
+    ix_NA_crit <- is.na(criterion_v)   # 2. NA in criterion_v
+
+
     # Report NA values (prior to removing them): ----
 
     quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
 
-
     if (!quiet_mis) { # Provide user feedback:
 
-      # 1. NA in prediction_v:
-      ix_NA_pred <- is.na(prediction_v)
-
+      # 1. Report NA in prediction_v:
       if (allow_NA_pred & any(ix_NA_pred)){
 
-        # d_type <- typeof(prediction_v)  # logical
-        sum_NA <- sum(ix_NA_pred)
-
-        # msg_NA_p <- paste0("A prediction_v contains ", sum_NA, " NA values that will be removed.")
-        # cat(u_f_hig(msg_NA_p, "\n"))  # highlighted and non-optional
-
-        # cli::cli_alert_info("Found {sum_NA} NA value{?s} in 'prediction_v':")
+        sum_NA_pred <- sum(ix_NA_pred)
 
         # Which corresponding values in criterion_v will be removed?
         rem_criterion_v <- criterion_v[ix_NA_pred]
         rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
-        # cli::cli_alert_warning("Removing {sum_NA} value{?s} from the corresponding 'criterion_v': ({rem_criterion_v}).")
-
-        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'prediction_v': Dropping criterion_v = c({rem_criterion_s}).")
+        cli::cli_alert_warning("Dropping {sum_NA_pred} NA value{?s} from 'prediction_v' and criterion_v = c({rem_criterion_s}).")
 
       }
 
-      # 2. NA in criterion_v:
-      ix_NA_crit <- is.na(criterion_v)
-
+      # 2. Report NA in criterion_v:
       if (allow_NA_crit & any(ix_NA_crit)){
 
-        # d_type <- typeof(criterion_v)  # logical
-        sum_NA <- sum(ix_NA_crit)
-
-        # msg_NA_c <- paste0("The criterion_v contains ", sum_NA, " NA values that will be removed.")
-        # cat(u_f_hig(msg_NA_c, "\n"))  # highlighted and non-optional
-
-        # cli::cli_alert_warning("Removing {sum_NA} NA value{?s} from 'criterion_v' (and corresponding 'prediction_v').")
+        sum_NA_crit <- sum(ix_NA_crit)
 
         # Which values in prediction_v will be removed?
         rem_prediction_v <- prediction_v[ix_NA_crit]
         rem_prediction_s <- paste0(rem_prediction_v, collapse = ", ")
 
-        # cli::cli_alert_info("The values removed from 'prediction_v' are {rem_prediction_v}.")
-
-        cli::cli_alert_warning("Found {sum_NA} NA value{?s} in 'criterion_v': Dropping prediction_v = c({rem_prediction_s}).")
+        cli::cli_alert_warning("Dropping {sum_NA_crit} NA value{?s} from 'criterion_v' and prediction_v = c({rem_prediction_s}).")
 
       }
 
@@ -348,7 +333,7 @@ classtable <- function(prediction_v = NULL,
     criterion_v  <- criterion_v[both_not_NA]
 
 
-  } # if ( allow_NA_pred | allow_NA_crit ).
+  } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
 
 
   N <- min(length(criterion_v), length(prediction_v))
