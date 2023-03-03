@@ -217,6 +217,73 @@ fftrees_cuerank <- function(x = NULL,
       } # Step 2.
 
 
+      # +++ here now +++
+
+
+      # Handle NA values: ------
+
+      if ( allow_NA_pred | allow_NA_crit ){
+
+        # Detect NA values: ----
+
+        ix_NA_cue  <- is.na(cue_i_v)      # 1. NA in cue_i_v
+        ix_NA_crit <- is.na(criterion_v)  # 2. NA in criterion_v
+
+
+        # Report NA values (prior to removing them): ----
+
+        if (!x$params$quiet$mis) { # Provide user feedback:
+
+          # 1. Report NA in cue_i_v:
+          if (allow_NA_pred & any(ix_NA_cue)){
+
+            sum_NA_cue <- sum(ix_NA_cue)
+
+            # Which corresponding values in criterion_v will be removed?
+            rem_criterion_v <- criterion_v[ix_NA_cue]
+            rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
+
+            cli::cli_alert_warning("Dropping {sum_NA_cue} NA value{?s} from {cue_i_name} and {x$criterion_name} = c({rem_criterion_s}).")
+
+          }
+
+          # 2. Report NA in criterion_v:
+          if (allow_NA_crit & any(ix_NA_crit)){
+
+            # d_type <- typeof(criterion_v)  # logical
+            sum_NA_crit <- sum(ix_NA_crit)
+
+            # Which values in cue_i_v will be removed?
+            rem_cue_i_v <- cue_i_v[ix_NA_crit]
+            rem_cue_i_s <- paste0(rem_cue_i_v, collapse = ", ")
+
+            cli::cli_alert_warning("Dropping {sum_NA_crit} NA value{?s} from {x$criterion_name} and {cue_i_name} = c({rem_cue_i_s}).")
+
+          }
+
+        } # if (!x$params$quiet$mis).
+
+
+        # Main: Filter vectors ----
+
+        # # A: Remove NA and infinite values (from both):
+        # both_finite <- is.finite(cue_i_v) & is.finite(criterion_v)
+        #
+        # cue_i_v      <- cue_i_v[both_finite]
+        # criterion_v  <- criterion_v[both_finite]
+
+
+        # B. Remove only NA cases (from both):
+        both_not_NA  <- !ix_NA_cue & !ix_NA_crit
+
+        cue_i_v      <- cue_i_v[both_not_NA]
+        criterion_v  <- criterion_v[both_not_NA]
+
+
+      } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
+
+
+
       # Step 3: Determine best direction and threshold for cue [cue_i_best]: ----
       {
 

@@ -49,7 +49,7 @@ fftrees_grow_fan <- function(x,
   cases_n <- nrow(x$data$train)
   cue_df  <- x$data$train[, names(x$data$train) != criterion_name]
 
-  my_goal     <- x$params$my.goal          # (only ONCE)
+  my_goal     <- x$params$my.goal      # (only ONCE)
   my_goal_fun <- x$params$my.goal.fun  # (only ONCE)
 
 

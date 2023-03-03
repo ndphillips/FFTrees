@@ -57,7 +57,9 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
 
   }
 
-  testthat::expect_true(!any(is.na(cue_v)))  # Any NA values have been turned into <NA> level (if allow_NA_pred)
+  # No NA values (any more):
+  testthat::expect_true(!any(is.na(cue_v)), info = "Cannot compute thresholds for cues with NA values")
+  # Note: Any NA values in categorical variables have been turned into an <NA> level (if allow_NA_pred).
 
 
   # Main: ------

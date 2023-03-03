@@ -44,12 +44,14 @@ fftrees_threshold_numeric_grid <- function(thresholds,
                                            cost.outcomes = NULL # (was "list(hi = 0, fa = 1, mi = 1, cr = 0)", but NULL enforces consistency w calling function)
 ) {
 
+  # Remove NA values in thresholds and cue_v:
   thresholds <- thresholds[!is.na(thresholds)]
-  cue_v <- cue_v[!is.na(cue_v)]
+  cue_v      <- cue_v[!is.na(cue_v)]
 
   thresholds_n <- length(thresholds)
 
   results_gt <- matrix(NA, nrow = thresholds_n, ncol = 5)
+
 
   # Loop over all thresholds: ------
   # C++
@@ -58,8 +60,30 @@ fftrees_threshold_numeric_grid <- function(thresholds,
 
     threshold_i <- thresholds[i]
 
-    # Create vector of decisions:
+    # Create a logical vector of decisions:
     decisions_i <- cue_v > threshold_i
+
+
+   # ix_NA_decisions <- is.na(decisions_i)
+   # ix_NA_criterion <- is.na(criterion_v)
+   #
+   # nr_NA_decisions <- sum(ix_NA_decisions)
+   # nr_NA_criterion <- sum(ix_NA_criterion)
+
+   # len_crt <- length(criterion_v)
+   # len_dec <- length(decisions_i)
+   #
+   # if (len_crt != len_dec){
+   #   cli::cli_alert_warning("Seeing {len_dec} decision{?s} vs. {len_crt} criterion value{?s}.")
+   # }
+
+   # if (nr_NA_decisions > 0){
+   #  cli::cli_alert_info("Seeing {nr_NA_decisions} NA value{?s} in decisions")
+   # }
+   #
+   # if (nr_NA_criterion > 0){
+   #  cli::cli_alert_info("Seeing {nr_NA_criterion} NA value{?s} in criterion")
+   # }
 
     # Calculate frequency of decision outcomes:
     hi_i <- sum((decisions_i == TRUE)  & (criterion_v == TRUE),  na.rm = TRUE)
