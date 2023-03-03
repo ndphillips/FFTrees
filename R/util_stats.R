@@ -332,16 +332,16 @@ classtable <- function(prediction_v = NULL,
     } # if (!quiet_mis).
 
 
-    # Main: ----
+    # Main: Filter vectors ----
 
-    # Filter rows:
-    # # A. Remove NA and infinite values (from prediction AND criterion vectors): ----
+    # # A. Remove NA and infinite values (from both):
     # both_finite <- is.finite(prediction_v) & is.finite(criterion_v)
     #
     # prediction_v <- prediction_v[both_finite]
     # criterion_v  <- criterion_v[both_finite]
 
-    # B. Only filter NA cases (from either vector):
+
+    # B. Remove only NA cases (from both):
     both_not_NA  <- !ix_NA_pred & !ix_NA_crit
 
     prediction_v <- prediction_v[both_not_NA]
