@@ -16,12 +16,11 @@
 #' @param finNA.pred What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
 #' (as character)?
 #' Default: \code{finNA.pred = "noise"}.
-#' Options to implement include:
+#' Options (yet to implement) include:
 #' - "noise"  (predict FALSE/0/left),
 #' - "signal" (predict TRUE/1/right),
-#' Yet ToDo:
-#' - "majority" (predict the more common baseline case, else predict noise),
-#' - "baseline" (flip a coin using the criterion baseline),
+#' - "baseline" (flip a random coin that is biased by the criterion baseline/base rate),
+#' - "majority" (predict 'signal' if its baseline/base rate > 0.50, else predict 'noise'),
 #' - "dnk" (decide to 'do not know'/tertium datur).
 #'
 #' @return A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).
@@ -40,7 +39,7 @@ fftrees_apply <- function(x,
                           mydata = NULL,   # data type (either "train" or "test")
                           newdata = NULL,
                           #
-                          finNA.pred = "noise"  # Options available: c("noise", "signal")
+                          finNA.pred = "baseline"  # Options available: c("noise", "signal", "baseline", "majority")
 ) {
 
   # Prepare: ------
@@ -166,6 +165,25 @@ fftrees_apply <- function(x,
     )
 
   }
+
+
+  # Compute only ONCE (before loop):
+
+  if ( (finNA.pred == "baseline") | (finNA.pred == "majority") ){
+
+    criterion_name <- x$criterion_name
+
+    # Compute criterion baseline/base rate (for "train" data ONLY):
+    if (allow_NA_crit){
+      crit_br <- mean(x$data[["train"]][[criterion_name]], na.rm = TRUE)
+    } else { # default:
+      crit_br <- mean(x$data[["train"]][[criterion_name]])  # (from logical, i.e., proportion of TRUE values)
+    }
+
+    crit_br <- round(crit_br, 3)  # rounding
+
+  }
+
 
   # LOOPs: ------
 
@@ -364,7 +382,7 @@ fftrees_apply <- function(x,
 
         }
 
-        # 2. If this IS the final node, then classify NA cases according to finNA.pred:
+        # 2. If this IS the final node, then classify all NA cases according to finNA.pred:
         if (exit_i %in% exit_types[3]) {  # exit_types = .5:
 
           ix_na_current_decision <- is.na(decisions_df$current_decision)
@@ -378,6 +396,46 @@ fftrees_apply <- function(x,
           } else if (finNA.pred == "signal"){
 
             decisions_df$current_decision[ix_na_current_decision] <- TRUE
+
+          } else if (finNA.pred == "baseline"){
+
+            nr_NA <- sum(ix_na_current_decision)
+
+            # Flip baseline coin:
+            cur_decisions <- sample(x = c(TRUE, FALSE), size = nr_NA, replace = TRUE, prob = c(crit_br, 1 - crit_br))
+
+            decisions_df$current_decision[ix_na_current_decision] <- cur_decisions
+
+            if (!x$params$quiet$mis) { # Provide user feedback:
+
+              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Made {nr_NA} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+
+            }
+
+          } else if (finNA.pred == "majority"){
+
+            nr_NA <- sum(ix_na_current_decision)
+
+            if (crit_br > .50){
+              cur_decisions <- rep(TRUE, nr_NA)
+            } else {
+              cur_decisions <- rep(FALSE, nr_NA)
+            }
+
+            decisions_df$current_decision[ix_na_current_decision] <- cur_decisions
+
+            if (!x$params$quiet$mis) { # Provide user feedback:
+
+              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Made {nr_NA} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+
+            }
+
+          } else {
+
+            finNA_options <- c("noise", "signal", "baseline", "majority")
+            finNA_opt_s <- paste0(finNA_options, collapse = ", ")
+
+            stop(paste0("The value of finNA.pred must be in c('", finNA_opt_s, "')."))
 
           }
 
