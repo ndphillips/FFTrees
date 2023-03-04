@@ -54,6 +54,17 @@ clean_data <- function(data, criterion_name, formula,
                            mydata = mydata,  # indicate data type
                            quiet = quiet)
 
+  } else {
+
+    # Mention NA cases (if present):
+    if (any(is.na(data))){
+
+      sum_NA_all <- sum(is.na(data))
+
+      cli::cli_alert_danger("Found {sum_NA_all} NA value{?s} in '{mydata}' data.")
+
+    }
+
   }
 
 

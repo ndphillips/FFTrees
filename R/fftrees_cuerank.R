@@ -64,6 +64,9 @@ fftrees_cuerank <- function(x = NULL,
   # Verify: Make sure there is variance in the criterion!
   testthat::expect_true(length(unique(criterion_v)) > 1)
 
+  # Store safe copy:
+  criterion_v_org <- criterion_v
+
   # Determine current goal.threshold:
   goal.threshold <- x$params$goal.threshold  # (assign ONCE here and then use below)
 
@@ -102,6 +105,7 @@ fftrees_cuerank <- function(x = NULL,
   }
 
 
+
   # Main: Loop over cues: ------
 
   for (cue_i in 1:cue_n) {
@@ -117,8 +121,10 @@ fftrees_cuerank <- function(x = NULL,
 
     }
 
-    # Get key information of the current cue:
+    # Re-store from safe copy (to allow dropping NA cases for every cue_i):
+    criterion_v  <- criterion_v_org
 
+    # Get key information of the current cue:
     cue_i_name  <- names(cue_df)[cue_i]
     cue_i_class <- class(cue_df %>% dplyr::pull(cue_i))
     cue_i_v     <- unlist(cue_df[, cue_i])

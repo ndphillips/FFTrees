@@ -269,7 +269,7 @@ classtable <- function(prediction_v = NULL,
 
   # Handle NA values: ------
 
-  # ToDo: Move functionality to upper function, BEFORE calling utility function.
+  # ToDo: Consider moving functionality to calling functions, BEFORE calling the classtable() utility function.
 
   # Note: As NA values in predictors of type character / factor / logical were handled in handle_NA(),
   #       only NA values in numeric predictors or the criterion variable appear here.

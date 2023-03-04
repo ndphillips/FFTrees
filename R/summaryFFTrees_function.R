@@ -227,7 +227,13 @@ summary.FFTrees <- function(object,
 
   # Compute criterion baseline/base rate:
   criterion_name <- object$criterion_name
-  crit_br <- mean(object$data$train[[criterion_name]])
+
+  if (allow_NA_crit){
+    crit_br <- mean(object$data$train[[criterion_name]], na.rm = TRUE)
+  } else { # default:
+    crit_br <- mean(object$data$train[[criterion_name]])
+  }
+
   crit_val <- scales::percent(crit_br)
   crit_lbl <- object$params$decision.labels[2]
 

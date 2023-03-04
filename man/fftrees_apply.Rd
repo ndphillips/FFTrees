@@ -4,7 +4,7 @@
 \alias{fftrees_apply}
 \title{Apply an FFT to data and generate accuracy statistics}
 \usage{
-fftrees_apply(x, mydata = NULL, newdata = NULL, allNA.pred = FALSE)
+fftrees_apply(x, mydata = NULL, newdata = NULL, finNA.pred = "majority")
 }
 \arguments{
 \item{x}{An object with FFT definitions which are to be applied to current data (as an \code{FFTrees} object).}
@@ -13,8 +13,17 @@ fftrees_apply(x, mydata = NULL, newdata = NULL, allNA.pred = FALSE)
 
 \item{newdata}{New data to which an FFT should be applied (as a data frame).}
 
-\item{allNA.pred}{What should be predicted if all cue values in tree are \code{NA} (as logical)?
-Default: \code{allNA.pred = FALSE}.}
+\item{finNA.pred}{What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
+(as character)?
+Valid options are:
+\describe{
+  \item{'noise'}{predict \code{FALSE} (0/left/signal) for all corresponding cases}
+  \item{'signal'}{predict \code{TRUE} (1/right/noise) for all corresponding cases}
+  \item{'majority'}{predict more common criterion (i.e., \code{TRUE} if base rate \code{p(TRUE) > .50} in 'train' data) for all corresponding cases}
+  \item{'baseline'}{flip a random coin that is biased by the criterion baseline of \code{p(TRUE)} (in 'train' data) for all corresponding cases}
+  \item{'dnk'}{yet ToDo: decide to 'do not know' / tertium datur}
+  }
+Default: \code{finNA.pred = "majority"}.}
 }
 \value{
 A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).
