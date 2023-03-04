@@ -533,10 +533,14 @@ plot.FFTrees <- function(x = NULL,
     criterion_name <- x$criterion_name  # (only ONCE)
 
     # Compute criterion baseline/base rate:
-    crit_br <- mean(x$data[[data]][[criterion_name]])  # (from logical, i.e., proportion of TRUE values)
+    if (allow_NA_crit){
+      crit_br <- mean(x$data[[data]][[criterion_name]], na.rm = TRUE)
+    } else { # default:
+      crit_br <- mean(x$data[[data]][[criterion_name]])  # (from logical, i.e., proportion of TRUE values)
+    }
 
     n_exemplars <- nrow(x$data[[data]])
-    n_pos_cases <- sum(x$data[[data]][[criterion_name]])
+    n_pos_cases <- sum(x$data[[data]][[criterion_name]] == TRUE)
     n_neg_cases <- sum(x$data[[data]][[criterion_name]] == FALSE)
     mcu <- x$trees$stats[[data]]$mcu[tree]
 
