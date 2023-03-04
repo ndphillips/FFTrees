@@ -355,7 +355,8 @@ fftrees_grow_fan <- function(x,
         asif_levelout_v[case_remaining_ix] <- level_current
         asif_cuecost_v[case_remaining_ix]  <- cue_cost_new
 
-        # ToDo: Pass level_current and cues_name_new to classtable() (to handle NA values)? +++ here now +++
+        # ToDo: Pass level_current and cues_name_new to classtable() helper (to handle NA values in utility fn)
+        #    OR move NA handling code to calling functions (to diagnose what happens here)?   +++ here now +++
 
         # Get results for ASIF classifications:
         asif_results <- classtable(
@@ -368,7 +369,9 @@ fftrees_grow_fan <- function(x,
           cost_v = asif_cuecost_v,                 # add cue cost
           #
           my.goal = my_goal,
-          my.goal.fun = my_goal_fun
+          my.goal.fun = my_goal_fun,
+          #
+          quiet_mis = x$params$quiet$mis  # passed to hide/show NA user feedback
         )
         # Note: The 2 cost arguments cost.outcomes and cost_v were NOT being used to compute asif_results.
         # DONE: ADDED asif_cuecost_v to call to classtable() here (on 2023-01-19)     +++ here now +++
@@ -605,7 +608,9 @@ fftrees_grow_fan <- function(x,
           cost_v = cuecost_v[case_remaining_ix == FALSE],
           #
           my.goal = my_goal,
-          my.goal.fun = my_goal_fun
+          my.goal.fun = my_goal_fun,
+          #
+          quiet_mis = x$params$quiet$mis  # passed to hide/show NA user feedback
         )
 
         # Update level stats:
@@ -748,7 +753,9 @@ fftrees_grow_fan <- function(x,
           cost_v = cuecost_v,
           #
           my.goal = my_goal,
-          my.goal.fun = my_goal_fun
+          my.goal.fun = my_goal_fun,
+          #
+          quiet_mis = x$params$quiet$mis  # passed to hide/show NA user feedback
         )
 
         level_stats_i$exit[last_level_nr] <- exit_types[3]  # .5

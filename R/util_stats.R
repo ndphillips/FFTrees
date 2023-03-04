@@ -222,6 +222,9 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 #' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
 #'
+#' @param quiet_mis A logical value passed to hide/show \code{NA} user feedback
+#' (usually \code{x$params$quiet$mis} of calling function).
+#' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
 #' @param na_prediction_action What happens when no prediction is possible? (experimental).
 #'
 #' @importFrom stats qnorm
@@ -240,6 +243,7 @@ classtable <- function(prediction_v = NULL,
                        my.goal = NULL,
                        my.goal.fun = NULL,
                        #
+                       quiet_mis = FALSE,               # logical arg passed to hide/show NA user feedback
                        na_prediction_action = "ignore"  # is NOT used anywhere?
 ){
 
@@ -284,8 +288,6 @@ classtable <- function(prediction_v = NULL,
 
     # Report NA values (prior to removing them): ----
 
-    quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
-
     if (!quiet_mis) { # Provide user feedback:
 
       # 1. Report NA in prediction_v:
@@ -297,7 +299,7 @@ classtable <- function(prediction_v = NULL,
         rem_criterion_v <- criterion_v[ix_NA_pred]
         rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
-        cli::cli_alert_warning("Dropping {sum_NA_pred} NA value{?s} from 'prediction_v' and criterion_v = c({rem_criterion_s}).")
+        cli::cli_alert_warning("2x2: Ignoring {sum_NA_pred} NA value{?s} in 'prediction_v' and corresponding criterion_v = c({rem_criterion_s}).")
 
       }
 
@@ -310,7 +312,7 @@ classtable <- function(prediction_v = NULL,
         rem_prediction_v <- prediction_v[ix_NA_crit]
         rem_prediction_s <- paste0(rem_prediction_v, collapse = ", ")
 
-        cli::cli_alert_warning("Dropping {sum_NA_crit} NA value{?s} from 'criterion_v' and prediction_v = c({rem_prediction_s}).")
+        cli::cli_alert_warning("2x2: Ignoring {sum_NA_crit} NA value{?s} in 'criterion_v' and corresponding prediction_v = c({rem_prediction_s}).")
 
       }
 

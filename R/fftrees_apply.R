@@ -511,11 +511,13 @@ fftrees_apply <- function(x,
         #
         sens.w = x$params$sens.w,
         #
-        cost.outcomes = x$params$cost.outcomes,              # outcome cost (per outcome type)
+        cost.outcomes = x$params$cost.outcomes,          # outcome cost (per outcome type)
         cost_v = decisions_df$cost_cue[ix_non_NA_deci],  # cue cost (per decision at level)
         #
         my.goal = x$params$my.goal,
-        my.goal.fun = x$params$my.goal.fun
+        my.goal.fun = x$params$my.goal.fun,
+        #
+        quiet_mis = x$params$quiet$mis  # passed to hide/show NA user feedback
       )
 
       # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)
