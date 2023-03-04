@@ -15,7 +15,7 @@
 #'
 #' @param finNA.pred What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
 #' (as character)?
-#' Default: \code{finNA.pred = TRUE}.
+#' Default: \code{finNA.pred = "noise"}.
 #' Options to implement include:
 #' - "noise"  (predict FALSE/0/left),
 #' - "signal" (predict TRUE/1/right),
@@ -40,7 +40,7 @@ fftrees_apply <- function(x,
                           mydata = NULL,   # data type (either "train" or "test")
                           newdata = NULL,
                           #
-                          finNA.pred = "signal"  # Options available: c("noise", "signal")
+                          finNA.pred = "noise"  # Options available: c("noise", "signal")
 ) {
 
   # Prepare: ------
@@ -358,7 +358,7 @@ fftrees_apply <- function(x,
 
             sum_NA_cur <- sum(ix_na_classify_now)
 
-            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_cur} NA value{?s} in intermediate cue {cue_i} and go on.")
+            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_cur} NA value{?s} in intermediate cue {cue_i} and proceed.")
 
           }
 
