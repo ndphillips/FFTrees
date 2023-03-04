@@ -4,13 +4,7 @@
 \alias{fftrees_apply}
 \title{Apply an FFT to data and generate accuracy statistics}
 \usage{
-fftrees_apply(
-  x,
-  mydata = NULL,
-  newdata = NULL,
-  allNA.pred = FALSE,
-  finNA.pred = "noise"
-)
+fftrees_apply(x, mydata = NULL, newdata = NULL, finNA.pred = "noise")
 }
 \arguments{
 \item{x}{An object with FFT definitions which are to be applied to current data (as an \code{FFTrees} object).}
@@ -19,17 +13,13 @@ fftrees_apply(
 
 \item{newdata}{New data to which an FFT should be applied (as a data frame).}
 
-\item{allNA.pred}{What outcome should be predicted if \emph{all} cue values in tree nodes are \code{NA} (as logical)?
-Default: \code{allNA.pred = FALSE}.
-(Note: The name of this arg is misleading, as it is used whenever the \emph{final} node of a tree encounters a cue value of \code{NA}.
-The cue values of earlier nodes just need not to have pointed to an exit to reach the final node.
-Hence, the case that \emph{all} cue values are \code{NA} is only a rare special case of this particular one.)}
-
-\item{finNA.pred}{What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA} (as logical)?
-Default: \code{finNA.pred = TRUE}.
+\item{finNA.pred}{What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
+(as character)?
+Default: \code{finNA.pred = "noise"}.
 Options to implement include:
 - "noise"  (predict FALSE/0/left),
 - "signal" (predict TRUE/1/right),
+Yet ToDo:
 - "majority" (predict the more common baseline case, else predict noise),
 - "baseline" (flip a coin using the criterion baseline),
 - "dnk" (decide to 'do not know'/tertium datur).}
