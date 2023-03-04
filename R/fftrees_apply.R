@@ -367,24 +367,24 @@ fftrees_apply <- function(x,
 
       if ( allow_NA_pred | allow_NA_crit ){
 
-        # 1. If this is NOT the final node, then don't classify NA cases:
+        # 1. If this is an intermediate / NOT the final node, then don't classify NA cases:
         if (exit_i %in% exit_types[1:2]) {  # exit_types in c(0, 1)
 
           ix_na_classify_now <- is.na(classify_now)
 
           classify_now[ix_na_classify_now] <- FALSE  # Do NOT classify NA cases (which is NOT "classify as FALSE")!
 
-          if (!x$params$quiet$mis) { # Provide user feedback:
+          if (!x$params$quiet$mis & any(ix_na_classify_now)) { # Provide user feedback:
 
             sum_NA_cur <- sum(ix_na_classify_now)
 
-            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_cur} NA value{?s} in intermediate cue {cue_i} and proceed.")
+            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_cur} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
 
           }
 
         }
 
-        # 2. If this IS the final node, then classify all NA cases according to finNA.pred:
+        # 2. If this IS the final / terminal node, then classify all NA cases according to finNA.pred:
         if (exit_i %in% exit_types[3]) {  # exit_types = .5:
 
           ix_na_current_decision <- is.na(decisions_df$current_decision)
@@ -408,9 +408,9 @@ fftrees_apply <- function(x,
 
             decisions_df$current_decision[ix_na_current_decision] <- cur_decisions
 
-            if (!x$params$quiet$mis) { # Provide user feedback:
+            if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Made {nr_NA} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Making {nr_NA} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
 
             }
 
@@ -426,9 +426,9 @@ fftrees_apply <- function(x,
 
             decisions_df$current_decision[ix_na_current_decision] <- cur_decisions
 
-            if (!x$params$quiet$mis) { # Provide user feedback:
+            if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Made {nr_NA} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Making {nr_NA} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
 
             }
 
@@ -441,12 +441,12 @@ fftrees_apply <- function(x,
 
           }
 
-          if (!x$params$quiet$mis) { # Provide user feedback:
+          if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
 
             sum_NA_fin <- sum(ix_na_current_decision)
             cur_dec_n1 <- decisions_df$current_decision[ix_na_current_decision][1]  # 1st decision
 
-            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_fin} NA value{?s} in terminal cue {cue_i}: Predict {finNA.pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
+            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_fin} NA value{?s} in final cue '{cue_i}': Predict {finNA.pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
 
           }
 
