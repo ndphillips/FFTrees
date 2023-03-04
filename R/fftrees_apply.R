@@ -24,7 +24,7 @@
 #' Options to implement include:
 #' - "noise"  (predict FALSE/0/left),
 #' - "signal" (predict TRUE/1/right),
-#' - "majority" (predict the more common baseline case, else noise),
+#' - "majority" (predict the more common baseline case, else predict noise),
 #' - "baseline" (flip a coin using the criterion baseline),
 #' - "dnk" (decide to 'do not know'/tertium datur).
 #'
@@ -45,7 +45,8 @@ fftrees_apply <- function(x,
                           newdata = NULL,
                           #
                           allNA.pred = FALSE,   # ToDo: deprecate, as "all" in name is misleading
-                          finNA.pred = "noise") {
+                          finNA.pred = "noise"  # Options available: c("noise", "signal")
+) {
 
   # Prepare: ------
 
@@ -297,7 +298,7 @@ fftrees_apply <- function(x,
       decisions_df$current_cue_values <- cue_values
 
 
-      # threshold_i:
+      # threshold_i: ----
 
       if (is.character(threshold_i)) {
         threshold_i <- unlist(strsplit(threshold_i, ","))
@@ -308,7 +309,7 @@ fftrees_apply <- function(x,
       }
 
 
-      # current_decision:
+      # current_decision: ----
 
       if (direction_i == "!=") {
         decisions_df$current_decision <- (decisions_df$current_cue_values %in% threshold_i) == FALSE
@@ -330,7 +331,7 @@ fftrees_apply <- function(x,
       }
 
 
-      # classify_now:
+      # classify_now: ----
 
       if (isTRUE(all.equal(exit_i, exit_types[1]))) { # exit_i 0:
         classify_now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
@@ -379,6 +380,14 @@ fftrees_apply <- function(x,
 
           }
 
+          if (!x$params$quiet$mis) { # Provide user feedback:
+
+            sum_NA_fin <- sum(ix_na_current_decision)
+            cur_dec_n1 <- decisions_df$current_decision[ix_na_current_decision][1]  # 1st decision
+
+            cli::cli_alert_warning("Found {sum_NA_fin} NA value{?s} in final node {cue_i}: Predict {finNA.pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
+
+          }
 
         }
 
