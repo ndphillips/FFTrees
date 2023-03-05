@@ -313,7 +313,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
     # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping the {sum(nr_pred_num_NA)} NA case{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
+      cli::cli_alert_warning("Keeping {sum(nr_pred_num_NA)} NA case{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
     }
 
   }
@@ -323,7 +323,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
     # ToDo: What to do about NA values in criterion?
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping the {sum(nr_crit_NA)} NA case{?s} in the criterion {nm_crit_NA}.")
+      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA case{?s} in the criterion {nm_crit_NA}.")
     }
 
   }
