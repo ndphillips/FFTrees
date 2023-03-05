@@ -13,6 +13,7 @@ classtable(
   cost_v = NULL,
   my.goal = NULL,
   my.goal.fun = NULL,
+  quiet_mis = FALSE,
   na_prediction_action = "ignore"
 )
 }
@@ -40,6 +41,10 @@ Default: \code{cost_v = NULL} (to ensure that values are passed by calling funct
 \item{my.goal}{Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.}
 
 \item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.}
+
+\item{quiet_mis}{A logical value passed to hide/show \code{NA} user feedback
+(usually \code{x$params$quiet$mis} of calling function).
+Default: \code{quiet_mis = FALSE} (i.e., show user feedback).}
 
 \item{na_prediction_action}{What happens when no prediction is possible? (experimental).}
 }

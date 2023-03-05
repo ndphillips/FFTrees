@@ -192,7 +192,7 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 # classtable (from 2 binary vectors of decisions/predictions): ------
 
 # Outcome statistics based on 2 binary vectors (of logical values)
-# [called by fftrees_grow_fan(), fftrees_apply(), and comp_pred() below]:
+# [called by fftrees_grow_fan(), fftrees_apply(), and comp_pred() utility function below]:
 
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
@@ -222,6 +222,9 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 #' @param my.goal Name of an optional, user-defined goal (as character string). Default: \code{my.goal = NULL}.
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
 #'
+#' @param quiet_mis A logical value passed to hide/show \code{NA} user feedback
+#' (usually \code{x$params$quiet$mis} of calling function).
+#' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
 #' @param na_prediction_action What happens when no prediction is possible? (experimental).
 #'
 #' @importFrom stats qnorm
@@ -240,6 +243,7 @@ classtable <- function(prediction_v = NULL,
                        my.goal = NULL,
                        my.goal.fun = NULL,
                        #
+                       quiet_mis = FALSE,               # logical arg passed to hide/show NA user feedback
                        na_prediction_action = "ignore"  # is NOT used anywhere?
 ){
 
@@ -269,8 +273,6 @@ classtable <- function(prediction_v = NULL,
 
   # Handle NA values: ------
 
-  # ToDo: Consider moving functionality to calling functions, BEFORE calling the classtable() utility function.
-
   # Note: As NA values in predictors of type character / factor / logical were handled in handle_NA(),
   #       only NA values in numeric predictors or the criterion variable appear here.
 
@@ -284,8 +286,6 @@ classtable <- function(prediction_v = NULL,
 
     # Report NA values (prior to removing them): ----
 
-    quiet_mis <- FALSE  # HACK: as local constant (as object x or quiet list are not passed)
-
     if (!quiet_mis) { # Provide user feedback:
 
       # 1. Report NA in prediction_v:
@@ -297,7 +297,7 @@ classtable <- function(prediction_v = NULL,
         rem_criterion_v <- criterion_v[ix_NA_pred]
         rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
-        cli::cli_alert_warning("Dropping {sum_NA_pred} NA value{?s} from 'prediction_v' and criterion_v = c({rem_criterion_s}).")
+        cli::cli_alert_warning("2x2: Ignoring {sum_NA_pred} NA value{?s} in prediction_v and corresponding criterion_v = c({rem_criterion_s}).")
 
       }
 
@@ -310,7 +310,7 @@ classtable <- function(prediction_v = NULL,
         rem_prediction_v <- prediction_v[ix_NA_crit]
         rem_prediction_s <- paste0(rem_prediction_v, collapse = ", ")
 
-        cli::cli_alert_warning("Dropping {sum_NA_crit} NA value{?s} from 'criterion_v' and prediction_v = c({rem_prediction_s}).")
+        cli::cli_alert_warning("2x2: Ignoring {sum_NA_crit} NA value{?s} in criterion_v and corresponding prediction_v = c({rem_prediction_s}).")
 
       }
 
@@ -401,13 +401,6 @@ classtable <- function(prediction_v = NULL,
              "and length of criterion_v is ", length(criterion_v))
       }
 
-
-      # if (!quiet_na_var){ # Provide user feedback:
-      #
-      #   msg_c1 <- ("\u2014 Computing stats by caret::confusionMatrix()")
-      #   cat(u_f_hig(msg_c1, "\n"))
-      #
-      # }
 
       # Use caret::confusionMatrix:
       cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
@@ -672,6 +665,9 @@ classtable <- function(prediction_v = NULL,
 #'   \item{\code{"base"}: predict the base rate of the criterion.}
 #' }
 #'
+#' @param quiet_mis A logical value passed to hide/show \code{NA} user feedback
+#' (usually \code{x$params$quiet$mis} of calling function).
+#' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom stats formula glm model.frame model.matrix
@@ -685,7 +681,9 @@ comp_pred <- function(formula,
                       algorithm = NULL,
                       model = NULL,
                       sens.w = NULL,
-                      new.factors = "exclude") {
+                      new.factors = "exclude",
+                      quiet_mis = FALSE         # logical arg passed to hide/show NA user feedback
+) {
 
   #   formula = x$formula
   #   data.train = x$data$train
@@ -698,8 +696,8 @@ comp_pred <- function(formula,
   }
 
   if (is.null(algorithm)) {
-    stop("Please specify one of the following models: 'lr', 'rlr', 'cart', 'svm', 'rf'")
-    # ToDo: 'rlr' does currently not seem to be implemented (see below).
+    stop("Please specify one of the following models: 'lr', 'cart', 'svm', 'rf'")
+    # Note: 'rlr' is currently not supported (see below).
   }
 
   if (inherits(algorithm, "character")) {
@@ -719,13 +717,13 @@ comp_pred <- function(formula,
     # data_all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
     data_all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
     train_cases <- 1:nrow(data.train)
-    test_cases <- (nrow(data.train) + 1):nrow(data_all)
+    test_cases  <- (nrow(data.train) + 1):nrow(data_all)
   }
 
-  if (is.null(data.train) & is.null(data.test) == FALSE) {
+  if (is.null(data.train) & (is.null(data.test) == FALSE)) {
     data_all <- data.test
     train_cases <- c()
-    test_cases <- 1:nrow(data_all)
+    test_cases  <- 1:nrow(data_all)
   }
 
   data_all <- model.frame(
@@ -776,24 +774,61 @@ comp_pred <- function(formula,
   } # if (do_test).
 
 
-  # Get data, cue, crit objects: ----
+  # print(data.train)  # 4debugging: NA cases are still present.
+
+
+  # Get training data (data.train): ----
 
   if (is.null(train_cases) == FALSE) {
 
     data.train <- data_all[train_cases,   ]
-    # cue_train  <- data_all[train_cases, -1]  # is NOT used anywhere?
+    # cues_train  <- data_all[train_cases, -1]  # is NOT used anywhere?
     crit_train <- data_all[train_cases,  1]
 
   } else {
 
     data.train <- NULL
-    # cue_train  <- NULL  # is NOT used anywhere?
+    # cues_train  <- NULL  # is NOT used anywhere?
     crit_train <- NULL
 
   }
 
+  # print(data.train)  # 4debugging: NA cases have been removed.
+
 
   # Build models for training data: ------
+
+
+  # Handle NA values: ----
+
+  if (any(is.na(data.train))){ # NAs in data.train:
+
+    if (!quiet_mis) { # Provide user feedback:
+
+      nr_NA <- sum(is.na(data.train))
+
+      cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.train' and using na.omit() to remove incomplete cases.")
+
+    }
+
+    # # Handle NA data (as for FFTs):
+    # data.train <- handle_NA_data(data = data.train,
+    #                              criterion_name = get_lhs_formula(formula),
+    #                              mydata = "train",
+    #                              quiet = list(ini = FALSE, fin = FALSE, mis = FALSE, set = FALSE))
+
+    # Remove incomplete cases:
+    data.train <- stats::na.omit(data.train)
+
+  }
+
+  # } else {
+  #
+  #   cli::cli_alert_info("Aiming to fit {toupper(algorithm)}: Found zero NA value{?s} in 'data.train'.")
+  #
+  #   print(data.train)
+  #
+  # }
 
 
   # 1. LR: binomial LR ----
@@ -932,17 +967,33 @@ comp_pred <- function(formula,
 
 
 
-  # Get testing data: ------
+  # Get testing data (data.test): ------
 
   pred_test <- NULL
 
   if (is.null(data.test) == FALSE) {
 
     data.test <- data_all[test_cases, ]
-    cue_test  <- data_all[test_cases, -1]
-    crit_test <- data_all[test_cases, 1]
+    # cues_test <- data_all[test_cases, -1]  # is NOT used anywhere?
+    crit_test <- data_all[test_cases,  1]
 
-    # Check for new factor values:
+
+    # Handle NA values: ----
+
+    if (any(is.na(data.test))){ # NAs in data.test:
+
+      if (!quiet_mis) { # Provide user feedback:
+
+        nr_NA <- sum(is.na(data.test))
+
+        cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.test'.")
+
+      }
+
+    }
+
+
+    # Check for new factor values: ----
     {
 
       if (is.null(train_cases) == FALSE) {
@@ -967,6 +1018,7 @@ comp_pred <- function(formula,
         })
       }
 
+
       cannot_pred_mtx <- matrix(0, nrow = nrow(data.test), ncol = ncol(data.test))
 
       for (i in 1:ncol(cannot_pred_mtx)) {
@@ -977,6 +1029,7 @@ comp_pred <- function(formula,
 
       } # for().
 
+
       cannot_pred_vec <- rowSums(cannot_pred_mtx) > 0
 
       if (any(cannot_pred_vec)) {
@@ -986,7 +1039,7 @@ comp_pred <- function(formula,
           warning(paste(sum(cannot_pred_vec), "cases in the test data could not be predicted by 'e' due to new factor values. These cases will be excluded"))
 
           data.test <- data.test[cannot_pred_vec == FALSE, ]
-          cue_test  <- cue_test[cannot_pred_vec == FALSE, ]
+          # cues_test <- cues_test[cannot_pred_vec == FALSE, ]  # is NOT used anywhere?
           crit_test <- crit_test[cannot_pred_vec == FALSE]
         }
 
@@ -996,7 +1049,9 @@ comp_pred <- function(formula,
         }
 
       }
-    }
+
+    } # Check for new factor values.
+
 
 
     # Get predictions (pred_test) from each model: ------
@@ -1128,7 +1183,7 @@ comp_pred <- function(formula,
   } # if (is.null(data.test) == FALSE)).
 
 
-  # Convert predictions to logical if necessary: ----
+  # Convert predictions to logical (if necessary): ----
 
   if (is.null(pred_train) == FALSE) {
 
@@ -1146,7 +1201,8 @@ comp_pred <- function(formula,
     acc_train <- classtable(
       prediction_v = as.logical(pred_train),
       criterion_v = as.logical(crit_train),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
   }
 
@@ -1155,7 +1211,8 @@ comp_pred <- function(formula,
     acc_train <- classtable(
       prediction_v = c(TRUE, TRUE, FALSE),
       criterion_v =  c(FALSE, FALSE, TRUE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_train[1, ] <- NA
@@ -1175,7 +1232,8 @@ comp_pred <- function(formula,
     acc_test <- classtable(
       prediction_v = as.logical(pred_test),
       criterion_v = as.logical(crit_test),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
   } else {
@@ -1183,7 +1241,8 @@ comp_pred <- function(formula,
     acc_test <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
       criterion_v = c(TRUE, TRUE, FALSE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_test[1, ] <- NA
@@ -1196,7 +1255,8 @@ comp_pred <- function(formula,
     acc_train <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
       criterion_v = c(FALSE, TRUE, TRUE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_train[1, ] <- NA
@@ -1204,7 +1264,8 @@ comp_pred <- function(formula,
     acc_test <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
       criterion_v = c(FALSE, TRUE, TRUE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_test[1, ] <- NA
@@ -1230,8 +1291,8 @@ comp_pred <- function(formula,
 # ToDo: ------
 
 # Reduce redundancy:
-# - Avoid repeated computation of stats in add_stats() and classtable().
-# - Consider re-using stats from add_stats() or classtable()
+# - Avoid repeated computation of same stats in add_stats() and classtable().
+# - Consider re-using the stats from add_stats() or classtable()
 #   when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
 
 # eof.

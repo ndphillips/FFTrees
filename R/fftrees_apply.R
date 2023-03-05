@@ -378,7 +378,7 @@ fftrees_apply <- function(x,
 
             sum_NA_cur <- sum(ix_na_classify_now)
 
-            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_cur} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
+            cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {sum_NA_cur} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
 
           }
 
@@ -410,7 +410,7 @@ fftrees_apply <- function(x,
 
             if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Making {nr_NA} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
 
             }
 
@@ -428,11 +428,11 @@ fftrees_apply <- function(x,
 
             if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Making {nr_NA} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
 
             }
 
-          } else {
+          } else { # unknown option (not in finNA_options):
 
             finNA_options <- c("noise", "signal", "baseline", "majority")
             finNA_opt_s <- paste0(finNA_options, collapse = ", ")
@@ -441,12 +441,18 @@ fftrees_apply <- function(x,
 
           }
 
-          if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
+          be_redundantly_explicit <- FALSE # TRUE  # allow hiding/showing redundant user feedback:
 
-            sum_NA_fin <- sum(ix_na_current_decision)
-            cur_dec_n1 <- decisions_df$current_decision[ix_na_current_decision][1]  # 1st decision
+          if (be_redundantly_explicit){ # Classification of final node is reported as "Making..." (above):
 
-            cli::cli_alert_warning("Tree {tree_i}, node {level_i}: Seeing {sum_NA_fin} NA value{?s} in final cue '{cue_i}': Predict {finNA.pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
+            if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
+
+              sum_NA_fin <- sum(ix_na_current_decision)
+              cur_dec_n1 <- decisions_df$current_decision[ix_na_current_decision][1]  # 1st decision
+
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {sum_NA_fin} NA value{?s} in final cue '{cue_i}': Predict {finNA.pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
+
+            }
 
           }
 
@@ -457,7 +463,7 @@ fftrees_apply <- function(x,
         # ToDo:
         # - Add user feedback
         # - Examine alternative policies for indecision / doxastic abstention:
-        #   - predict either TRUE or FALSE (according to allNA.pred or finNA.pred)
+        #   - predict either TRUE or FALSE (according to finNA.pred)
         #   - predict the most common category (overall baseline or baseline at this level)
         #   - predict a 3rd category (tertium datur: abstention / dnk: "do not know" / NA decision)
         #   Corresponding results will depend on the costs of errors.
@@ -511,11 +517,13 @@ fftrees_apply <- function(x,
         #
         sens.w = x$params$sens.w,
         #
-        cost.outcomes = x$params$cost.outcomes,              # outcome cost (per outcome type)
+        cost.outcomes = x$params$cost.outcomes,          # outcome cost (per outcome type)
         cost_v = decisions_df$cost_cue[ix_non_NA_deci],  # cue cost (per decision at level)
         #
         my.goal = x$params$my.goal,
-        my.goal.fun = x$params$my.goal.fun
+        my.goal.fun = x$params$my.goal.fun,
+        #
+        quiet_mis = x$params$quiet$mis  # passed to hide/show NA user feedback
       )
 
       # level_stats_i$costc <- sum(cost_cue[,tree_i], na.rm = TRUE)

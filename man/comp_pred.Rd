@@ -11,7 +11,8 @@ comp_pred(
   algorithm = NULL,
   model = NULL,
   sens.w = NULL,
-  new.factors = "exclude"
+  new.factors = "exclude",
+  quiet_mis = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,10 @@ Available options:
   \item{\code{"exclude"}: exclude case (i.e., remove these cases, used by default);}
   \item{\code{"base"}: predict the base rate of the criterion.}
 }}
+
+\item{quiet_mis}{A logical value passed to hide/show \code{NA} user feedback
+(usually \code{x$params$quiet$mis} of calling function).
+Default: \code{quiet_mis = FALSE} (i.e., show user feedback).}
 }
 \description{
 \code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),

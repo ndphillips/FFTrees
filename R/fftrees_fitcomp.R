@@ -86,7 +86,8 @@ fftrees_fitcomp <- function(x) {
         data.test = x$data$test,
         algorithm = "lr",
         model = NULL,
-        sens.w = sens.w
+        sens.w = sens.w,
+        quiet_mis = x$params$quiet$mis
       )
 
       lr_stats <- lr_acc$accuracy
@@ -120,7 +121,8 @@ fftrees_fitcomp <- function(x) {
         data.test = x$data$test,
         algorithm = "cart",
         model = NULL,
-        sens.w = sens.w
+        sens.w = sens.w,
+        quiet_mis = x$params$quiet$mis
       )
 
       cart_stats <- cart_acc$accuracy
@@ -154,7 +156,8 @@ fftrees_fitcomp <- function(x) {
         data.test = x$data$test,
         algorithm = "rf",
         model = NULL,
-        sens.w = sens.w
+        sens.w = sens.w,
+        quiet_mis = x$params$quiet$mis
       )
 
 
@@ -189,7 +192,8 @@ fftrees_fitcomp <- function(x) {
         data.test = x$data$test,
         algorithm = "svm",
         model = NULL,
-        sens.w = sens.w
+        sens.w = sens.w,
+        quiet_mis = x$params$quiet$mis
       )
 
       svm_stats <- svm_acc$accuracy
