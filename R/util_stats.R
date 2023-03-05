@@ -683,7 +683,7 @@ comp_pred <- function(formula,
                       sens.w = NULL,
                       new.factors = "exclude",
                       quiet_mis = FALSE         # logical arg passed to hide/show NA user feedback
-                      ) {
+) {
 
   #   formula = x$formula
   #   data.train = x$data$train
@@ -717,13 +717,13 @@ comp_pred <- function(formula,
     # data_all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
     data_all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
     train_cases <- 1:nrow(data.train)
-    test_cases <- (nrow(data.train) + 1):nrow(data_all)
+    test_cases  <- (nrow(data.train) + 1):nrow(data_all)
   }
 
-  if (is.null(data.train) & is.null(data.test) == FALSE) {
+  if (is.null(data.train) & (is.null(data.test) == FALSE)) {
     data_all <- data.test
     train_cases <- c()
-    test_cases <- 1:nrow(data_all)
+    test_cases  <- 1:nrow(data_all)
   }
 
   data_all <- model.frame(
@@ -774,7 +774,10 @@ comp_pred <- function(formula,
   } # if (do_test).
 
 
-  # Get data, cue, crit objects: ----
+  # print(data.train)  # 4debugging: NA cases are still present.
+
+
+  # Get training data (data.train): ----
 
   if (is.null(train_cases) == FALSE) {
 
@@ -790,6 +793,8 @@ comp_pred <- function(formula,
 
   }
 
+  # print(data.train)  # 4debugging: NA cases have been removed.
+
 
   # Build models for training data: ------
 
@@ -800,9 +805,9 @@ comp_pred <- function(formula,
 
     if (!quiet_mis) { # Provide user feedback:
 
-    nr_NA <- sum(is.na(data.train))
+      nr_NA <- sum(is.na(data.train))
 
-    cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.train' and using na.omit() to remove incomplete cases.")
+      cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.train' and using na.omit() to remove incomplete cases.")
 
     }
 
@@ -816,6 +821,14 @@ comp_pred <- function(formula,
     data.train <- stats::na.omit(data.train)
 
   }
+
+  # } else {
+  #
+  #   cli::cli_alert_info("Aiming to fit {toupper(algorithm)}: Found zero NA value{?s} in 'data.train'.")
+  #
+  #   print(data.train)
+  #
+  # }
 
 
   # 1. LR: binomial LR ----
@@ -954,7 +967,7 @@ comp_pred <- function(formula,
 
 
 
-  # Get testing data: ------
+  # Get testing data (data.test): ------
 
   pred_test <- NULL
 
@@ -971,9 +984,9 @@ comp_pred <- function(formula,
 
       if (!quiet_mis) { # Provide user feedback:
 
-      nr_NA <- sum(is.na(data.test))
+        nr_NA <- sum(is.na(data.test))
 
-      cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.test'.")
+        cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.test'.")
 
       }
 
