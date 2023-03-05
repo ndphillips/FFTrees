@@ -273,8 +273,6 @@ classtable <- function(prediction_v = NULL,
 
   # Handle NA values: ------
 
-  # ToDo: Consider moving functionality to calling functions, BEFORE calling the classtable() utility function.
-
   # Note: As NA values in predictors of type character / factor / logical were handled in handle_NA(),
   #       only NA values in numeric predictors or the criterion variable appear here.
 
@@ -1190,7 +1188,8 @@ comp_pred <- function(formula,
     acc_train <- classtable(
       prediction_v = as.logical(pred_train),
       criterion_v = as.logical(crit_train),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
   }
 
@@ -1199,7 +1198,8 @@ comp_pred <- function(formula,
     acc_train <- classtable(
       prediction_v = c(TRUE, TRUE, FALSE),
       criterion_v =  c(FALSE, FALSE, TRUE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_train[1, ] <- NA
@@ -1219,7 +1219,8 @@ comp_pred <- function(formula,
     acc_test <- classtable(
       prediction_v = as.logical(pred_test),
       criterion_v = as.logical(crit_test),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
   } else {
@@ -1227,7 +1228,8 @@ comp_pred <- function(formula,
     acc_test <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
       criterion_v = c(TRUE, TRUE, FALSE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_test[1, ] <- NA
@@ -1240,7 +1242,8 @@ comp_pred <- function(formula,
     acc_train <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
       criterion_v = c(FALSE, TRUE, TRUE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_train[1, ] <- NA
@@ -1248,7 +1251,8 @@ comp_pred <- function(formula,
     acc_test <- classtable(
       prediction_v = c(TRUE, FALSE, TRUE),
       criterion_v = c(FALSE, TRUE, TRUE),
-      sens.w = sens.w
+      sens.w = sens.w,
+      quiet_mis = quiet_mis
     )
 
     acc_test[1, ] <- NA
