@@ -299,7 +299,7 @@ classtable <- function(prediction_v = NULL,
         rem_criterion_v <- criterion_v[ix_NA_pred]
         rem_criterion_s <- paste0(rem_criterion_v, collapse = ", ")
 
-        cli::cli_alert_warning("2x2: Ignoring {sum_NA_pred} NA value{?s} in 'prediction_v' and corresponding criterion_v = c({rem_criterion_s}).")
+        cli::cli_alert_warning("2x2: Ignoring {sum_NA_pred} NA value{?s} in prediction_v and corresponding criterion_v = c({rem_criterion_s}).")
 
       }
 
@@ -312,7 +312,7 @@ classtable <- function(prediction_v = NULL,
         rem_prediction_v <- prediction_v[ix_NA_crit]
         rem_prediction_s <- paste0(rem_prediction_v, collapse = ", ")
 
-        cli::cli_alert_warning("2x2: Ignoring {sum_NA_crit} NA value{?s} in 'criterion_v' and corresponding prediction_v = c({rem_prediction_s}).")
+        cli::cli_alert_warning("2x2: Ignoring {sum_NA_crit} NA value{?s} in criterion_v and corresponding prediction_v = c({rem_prediction_s}).")
 
       }
 
