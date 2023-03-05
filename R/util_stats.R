@@ -192,7 +192,7 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 # classtable (from 2 binary vectors of decisions/predictions): ------
 
 # Outcome statistics based on 2 binary vectors (of logical values)
-# [called by fftrees_grow_fan(), fftrees_apply(), and comp_pred() below]:
+# [called by fftrees_grow_fan(), fftrees_apply(), and comp_pred() utility function below]:
 
 
 #' Compute classification statistics for binary prediction and criterion (e.g.; truth) vectors
@@ -403,13 +403,6 @@ classtable <- function(prediction_v = NULL,
              "and length of criterion_v is ", length(criterion_v))
       }
 
-
-      # if (!quiet_na_var){ # Provide user feedback:
-      #
-      #   msg_c1 <- ("\u2014 Computing stats by caret::confusionMatrix()")
-      #   cat(u_f_hig(msg_c1, "\n"))
-      #
-      # }
 
       # Use caret::confusionMatrix:
       cm <- caret::confusionMatrix(table(prediction_v, criterion_v),
@@ -674,6 +667,9 @@ classtable <- function(prediction_v = NULL,
 #'   \item{\code{"base"}: predict the base rate of the criterion.}
 #' }
 #'
+#' @param quiet_mis A logical value passed to hide/show \code{NA} user feedback
+#' (usually \code{x$params$quiet$mis} of calling function).
+#' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom stats formula glm model.frame model.matrix
@@ -687,7 +683,9 @@ comp_pred <- function(formula,
                       algorithm = NULL,
                       model = NULL,
                       sens.w = NULL,
-                      new.factors = "exclude") {
+                      new.factors = "exclude",
+                      quiet_mis = FALSE         # logical arg passed to hide/show NA user feedback
+                      ) {
 
   #   formula = x$formula
   #   data.train = x$data$train
@@ -700,8 +698,8 @@ comp_pred <- function(formula,
   }
 
   if (is.null(algorithm)) {
-    stop("Please specify one of the following models: 'lr', 'rlr', 'cart', 'svm', 'rf'")
-    # ToDo: 'rlr' does currently not seem to be implemented (see below).
+    stop("Please specify one of the following models: 'lr', 'cart', 'svm', 'rf'")
+    # Note: 'rlr' is currently not supported (see below).
   }
 
   if (inherits(algorithm, "character")) {
@@ -783,19 +781,43 @@ comp_pred <- function(formula,
   if (is.null(train_cases) == FALSE) {
 
     data.train <- data_all[train_cases,   ]
-    # cue_train  <- data_all[train_cases, -1]  # is NOT used anywhere?
+    # cues_train  <- data_all[train_cases, -1]  # is NOT used anywhere?
     crit_train <- data_all[train_cases,  1]
 
   } else {
 
     data.train <- NULL
-    # cue_train  <- NULL  # is NOT used anywhere?
+    # cues_train  <- NULL  # is NOT used anywhere?
     crit_train <- NULL
 
   }
 
 
   # Build models for training data: ------
+
+
+  # Handle NA values: ----
+
+  if (any(is.na(data.train))){ # NAs in data.train:
+
+    if (!quiet_mis) { # Provide user feedback:
+
+    nr_NA <- sum(is.na(data.train))
+
+    cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.train' and using na.omit() to remove incomplete cases.")
+
+    }
+
+    # # Handle NA data (as for FFTs):
+    # data.train <- handle_NA_data(data = data.train,
+    #                              criterion_name = get_lhs_formula(formula),
+    #                              mydata = "train",
+    #                              quiet = list(ini = FALSE, fin = FALSE, mis = FALSE, set = FALSE))
+
+    # Remove incomplete cases:
+    data.train <- stats::na.omit(data.train)
+
+  }
 
 
   # 1. LR: binomial LR ----
@@ -941,10 +963,26 @@ comp_pred <- function(formula,
   if (is.null(data.test) == FALSE) {
 
     data.test <- data_all[test_cases, ]
-    cue_test  <- data_all[test_cases, -1]
-    crit_test <- data_all[test_cases, 1]
+    # cues_test <- data_all[test_cases, -1]  # is NOT used anywhere?
+    crit_test <- data_all[test_cases,  1]
 
-    # Check for new factor values:
+
+    # Handle NA values: ----
+
+    if (any(is.na(data.test))){ # NAs in data.test:
+
+      if (!quiet_mis) { # Provide user feedback:
+
+      nr_NA <- sum(is.na(data.test))
+
+      cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.test'.")
+
+      }
+
+    }
+
+
+    # Check for new factor values: ----
     {
 
       if (is.null(train_cases) == FALSE) {
@@ -969,6 +1007,7 @@ comp_pred <- function(formula,
         })
       }
 
+
       cannot_pred_mtx <- matrix(0, nrow = nrow(data.test), ncol = ncol(data.test))
 
       for (i in 1:ncol(cannot_pred_mtx)) {
@@ -979,6 +1018,7 @@ comp_pred <- function(formula,
 
       } # for().
 
+
       cannot_pred_vec <- rowSums(cannot_pred_mtx) > 0
 
       if (any(cannot_pred_vec)) {
@@ -988,7 +1028,7 @@ comp_pred <- function(formula,
           warning(paste(sum(cannot_pred_vec), "cases in the test data could not be predicted by 'e' due to new factor values. These cases will be excluded"))
 
           data.test <- data.test[cannot_pred_vec == FALSE, ]
-          cue_test  <- cue_test[cannot_pred_vec == FALSE, ]
+          # cues_test <- cues_test[cannot_pred_vec == FALSE, ]  # is NOT used anywhere?
           crit_test <- crit_test[cannot_pred_vec == FALSE]
         }
 
@@ -998,7 +1038,9 @@ comp_pred <- function(formula,
         }
 
       }
-    }
+
+    } # Check for new factor values.
+
 
 
     # Get predictions (pred_test) from each model: ------
@@ -1130,7 +1172,7 @@ comp_pred <- function(formula,
   } # if (is.null(data.test) == FALSE)).
 
 
-  # Convert predictions to logical if necessary: ----
+  # Convert predictions to logical (if necessary): ----
 
   if (is.null(pred_train) == FALSE) {
 
@@ -1232,8 +1274,8 @@ comp_pred <- function(formula,
 # ToDo: ------
 
 # Reduce redundancy:
-# - Avoid repeated computation of stats in add_stats() and classtable().
-# - Consider re-using stats from add_stats() or classtable()
+# - Avoid repeated computation of same stats in add_stats() and classtable().
+# - Consider re-using the stats from add_stats() or classtable()
 #   when printing (by console_confusionmatrix()) or plotting (by plot.FFTrees()) FFTs.
 
 # eof.
