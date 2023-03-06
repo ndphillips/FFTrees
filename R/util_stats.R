@@ -223,9 +223,9 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 #' @param my.goal.fun User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.
 #'
 #' @param quiet_mis A logical value passed to hide/show \code{NA} user feedback
-#' (usually \code{x$params$quiet$mis} of calling function).
+#' (usually \code{x$params$quiet$mis} of the calling function).
 #' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
-#' @param na_prediction_action What happens when no prediction is possible? (experimental).
+#' @param na_prediction_action What happens when no prediction is possible? (Experimental and currently unused.)
 #'
 #' @importFrom stats qnorm
 #' @importFrom caret confusionMatrix
@@ -244,7 +244,7 @@ classtable <- function(prediction_v = NULL,
                        my.goal.fun = NULL,
                        #
                        quiet_mis = FALSE,               # logical arg passed to hide/show NA user feedback
-                       na_prediction_action = "ignore"  # is NOT used anywhere?
+                       na_prediction_action = "ignore"  # is NOT used anywhere?  (see fin_NA_pred for options)
 ){
 
   #   prediction_v <- sample(c(TRUE, FALSE), size = 20, replace = TRUE)
@@ -666,7 +666,7 @@ classtable <- function(prediction_v = NULL,
 #' }
 #'
 #' @param quiet_mis A logical value passed to hide/show \code{NA} user feedback
-#' (usually \code{x$params$quiet$mis} of calling function).
+#' (usually \code{x$params$quiet$mis} of the calling function).
 #' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
 #'
 #' @importFrom dplyr bind_rows
