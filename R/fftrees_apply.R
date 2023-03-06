@@ -13,17 +13,16 @@
 #' @param mydata The type of data to which the FFT should be applied (as character, either \code{"train"} or \code{"test"}).
 #' @param newdata New data to which an FFT should be applied (as a data frame).
 #'
-#' @param finNA.pred What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
-#' (as character)?
-#' Valid options are:
+#' @param fin_NA_pred What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
+#' (as character)? Valid options are:
 #' \describe{
 #'   \item{'noise'}{predict \code{FALSE} (0/left/signal) for all corresponding cases}
 #'   \item{'signal'}{predict \code{TRUE} (1/right/noise) for all corresponding cases}
-#'   \item{'majority'}{predict more common criterion (i.e., \code{TRUE} if base rate \code{p(TRUE) > .50} in 'train' data) for all corresponding cases}
-#'   \item{'baseline'}{flip a random coin that is biased by the criterion baseline of \code{p(TRUE)} (in 'train' data) for all corresponding cases}
-#'   \item{'dnk'}{yet ToDo: decide to 'do not know' / tertium datur}
+#'   \item{'majority'}{predict the more common criterion value (i.e., \code{TRUE} if base rate \code{p(TRUE) > .50} in 'train' data) for all corresponding cases}
+#'   \item{'baseline'}{flip a random coin that is biased by the criterion baseline \code{p(TRUE)} (in 'train' data) for all corresponding cases}
+#'   \item{'dnk'}{yet ToDo: abstain from classifying / decide to 'do not know' / defer (i.e., tertium datur)}
 #'   }
-#' Default: \code{finNA.pred = "majority"}.
+#' Default: \code{fin_NA_pred = "majority"}.
 #'
 #' @return A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).
 #'
@@ -41,7 +40,7 @@ fftrees_apply <- function(x,
                           mydata = NULL,   # data type (either "train" or "test")
                           newdata = NULL,
                           #
-                          finNA.pred = "majority"  # Options available: c("noise", "signal", "baseline", "majority")
+                          fin_NA_pred = "majority"  # Options available: c("noise", "signal", "baseline", "majority")
 ) {
 
   # Prepare: ------
@@ -171,7 +170,7 @@ fftrees_apply <- function(x,
 
   # Compute only ONCE (before loop):
 
-  if ( (finNA.pred == "baseline") | (finNA.pred == "majority") ){
+  if ( (fin_NA_pred == "baseline") | (fin_NA_pred == "majority") ){
 
     criterion_name <- x$criterion_name
 
@@ -384,22 +383,22 @@ fftrees_apply <- function(x,
 
         }
 
-        # 2. If this IS the final / terminal node, then classify all NA cases according to finNA.pred:
+        # 2. If this IS the final / terminal node, then classify all NA cases according to fin_NA_pred:
         if (exit_i %in% exit_types[3]) {  # exit_types = .5:
 
           ix_na_current_decision <- is.na(decisions_df$current_decision)
 
           # Classify NA cases (in final node):
 
-          if (finNA.pred == "noise"){
+          if (fin_NA_pred == "noise"){
 
             decisions_df$current_decision[ix_na_current_decision] <- FALSE
 
-          } else if (finNA.pred == "signal"){
+          } else if (fin_NA_pred == "signal"){
 
             decisions_df$current_decision[ix_na_current_decision] <- TRUE
 
-          } else if (finNA.pred == "baseline"){
+          } else if (fin_NA_pred == "baseline"){
 
             nr_NA <- sum(ix_na_current_decision)
 
@@ -414,7 +413,7 @@ fftrees_apply <- function(x,
 
             }
 
-          } else if (finNA.pred == "majority"){
+          } else if (fin_NA_pred == "majority"){
 
             nr_NA <- sum(ix_na_current_decision)
 
@@ -437,7 +436,7 @@ fftrees_apply <- function(x,
             finNA_options <- c("noise", "signal", "baseline", "majority")
             finNA_opt_s <- paste0(finNA_options, collapse = ", ")
 
-            stop(paste0("The value of finNA.pred must be in c('", finNA_opt_s, "')."))
+            stop(paste0("The value of fin_NA_pred must be in c('", finNA_opt_s, "')."))
 
           }
 
@@ -450,7 +449,7 @@ fftrees_apply <- function(x,
               sum_NA_fin <- sum(ix_na_current_decision)
               cur_dec_n1 <- decisions_df$current_decision[ix_na_current_decision][1]  # 1st decision
 
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {sum_NA_fin} NA value{?s} in final cue '{cue_i}': Predict {finNA.pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {sum_NA_fin} NA value{?s} in final cue '{cue_i}': Predict {fin_NA_pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
 
             }
 
@@ -463,7 +462,7 @@ fftrees_apply <- function(x,
         # ToDo:
         # - Add user feedback
         # - Examine alternative policies for indecision / doxastic abstention:
-        #   - predict either TRUE or FALSE (according to finNA.pred)
+        #   - predict either TRUE or FALSE (according to fin_NA_pred)
         #   - predict the most common category (overall baseline or baseline at this level)
         #   - predict a 3rd category (tertium datur: abstention / dnk: "do not know" / NA decision)
         #   Corresponding results will depend on the costs of errors.
