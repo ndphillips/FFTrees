@@ -43,10 +43,10 @@ Default: \code{cost_v = NULL} (to ensure that values are passed by calling funct
 \item{my.goal.fun}{User-defined goal function (with 4 arguments \code{hi fa mi cr}). Default: \code{my.goal.fun = NULL}.}
 
 \item{quiet_mis}{A logical value passed to hide/show \code{NA} user feedback
-(usually \code{x$params$quiet$mis} of calling function).
+(usually \code{x$params$quiet$mis} of the calling function).
 Default: \code{quiet_mis = FALSE} (i.e., show user feedback).}
 
-\item{na_prediction_action}{What happens when no prediction is possible? (experimental).}
+\item{na_prediction_action}{What happens when no prediction is possible? (Experimental and currently unused.)}
 }
 \description{
 The main input are 2 logical vectors of prediction and criterion values.

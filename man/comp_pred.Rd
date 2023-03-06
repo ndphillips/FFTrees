@@ -43,7 +43,7 @@ Available options:
 }}
 
 \item{quiet_mis}{A logical value passed to hide/show \code{NA} user feedback
-(usually \code{x$params$quiet$mis} of calling function).
+(usually \code{x$params$quiet$mis} of the calling function).
 Default: \code{quiet_mis = FALSE} (i.e., show user feedback).}
 }
 \description{
