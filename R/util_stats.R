@@ -636,10 +636,23 @@ classtable <- function(prediction_v = NULL,
 # comp_pred: ------
 
 
-#' A wrapper for competing classification algorithms
+#' Fit and predict competing classification algorithms
 #'
-#' \code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),
-#' logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
+#' \code{comp_pred} provides a wrapper for running (i.e., fit or predict)
+#' alternative classification algorithms to data
+#' (i.e., \code{data.train} or \code{data.test}, respectively).
+#'
+#' The range of competing algorithms currently available includes
+#' logistic regression (\code{stats::glm}),
+#' CART (\code{rpart::rpart}),
+#' support vector machines (\code{e1071::svm}), and
+#' random forests (\code{randomForest::randomForest}).
+#'
+#' The current support for handling missing data (or \code{NA} values) is only rudimentary.
+#' When enabled (via the global options \code{allow_NA_pred} or \code{allow_NA_crit}),
+#' any rows in \code{data.train} or \code{data.test} with incomplete cases are being removed
+#' prior to fitting or predicting a model (by using \code{na.omit} from \strong{stats}).
+#' See the specifications of each model for more sophisticated ways of handling missing data.
 #'
 #' @param formula A formula (usually \code{x$formula}, for an \code{FFTrees} object \code{x}).
 #' @param data.train A training dataset (as a data frame).
@@ -707,41 +720,52 @@ comp_pred <- function(formula,
 
   # SETUP: ----
 
-  if (is.null(data.test) & (is.null(data.train) == FALSE)) {
+  # Get data_all, train_cases, and test_cases:
+
+  if (is.null(data.test) & (is.null(data.train) == FALSE)) { # only train data:
     data_all <- data.train
     train_cases <- 1:nrow(data.train)
     test_cases <- c()
   }
 
-  if (is.null(data.test) == FALSE & (is.null(data.train) == FALSE)) {
+  if (is.null(data.test) == FALSE & (is.null(data.train) == FALSE)) { # both train + test data:
     # data_all <- rbind(data.train, data.test)  # Note: fails when both dfs have different variables!
     data_all <- dplyr::bind_rows(data.train, data.test)  # fills any non-matching columns with NAs.
     train_cases <- 1:nrow(data.train)
     test_cases  <- (nrow(data.train) + 1):nrow(data_all)
   }
 
-  if (is.null(data.train) & (is.null(data.test) == FALSE)) {
+  if (is.null(data.train) & (is.null(data.test) == FALSE)) { # only test data:
     data_all <- data.test
     train_cases <- c()
     test_cases  <- 1:nrow(data_all)
   }
 
+  # print(data_all)  # 4debugging
+
+  # Turn data_all into model.frame:
   data_all <- model.frame(
     formula = formula,
-    data = data_all
+    data = data_all,
+    na.action = NULL  # keeps NA cases
   )
+
+  # print(data_all)  # 4debugging
+
+
 
   train_crit <- data_all[train_cases, 1]
 
-  # Set flag:
+
+  # Set a flag:
   do_test <- TRUE  # default
 
   # Remove columns with no variance in training data:
-  if (is.null(data.train) == FALSE) {
+  if (!is.null(data.train)) {
 
     if (isTRUE(all.equal(length(unique(data_all[train_cases, 1])), 1))) { # no variance in train_cases:
 
-      do_test <- FALSE
+      do_test <- FALSE  # unflag
 
     }
   }
@@ -774,16 +798,17 @@ comp_pred <- function(formula,
   } # if (do_test).
 
 
+  # print(data_all)  # 4debugging: NA cases are still present?
   # print(data.train)  # 4debugging: NA cases are still present.
 
 
   # Get training data (data.train): ----
 
-  if (is.null(train_cases) == FALSE) {
+  if (!is.null(train_cases)) {
 
-    data.train <- data_all[train_cases,   ]
+    data.train <- data_all[train_cases, ]
     # cues_train  <- data_all[train_cases, -1]  # is NOT used anywhere?
-    crit_train <- data_all[train_cases,  1]
+    crit_train <- data_all[train_cases, 1]
 
   } else {
 
@@ -793,42 +818,47 @@ comp_pred <- function(formula,
 
   }
 
-  # print(data.train)  # 4debugging: NA cases have been removed.
-
 
   # Build models for training data: ------
 
 
-  # Handle NA values: ----
+  # Handle NA values (in data.train): ----
 
   if (any(is.na(data.train))){ # NAs in data.train:
 
-    if (!quiet_mis) { # Provide user feedback:
+    nr_NA <- sum(is.na(data.train))  # count (before removal)
+    # ix_NA_row <- rowSums(is.na(data.train)) > 0  # rows with NA values
 
-      nr_NA <- sum(is.na(data.train))
+    if ( allow_NA_pred | allow_NA_crit ){ # Only remove cases with NA values (rather than doing anything fancy):
 
-      cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.train' and using na.omit() to remove incomplete cases.")
+      # Remove incomplete cases:
+      data.train <- stats::na.omit(data.train)
 
+      # Adjust crit_train accordingly:
+      crit_train <- data.train[ , 1]  # 1st column
+
+      if (!quiet_mis) { # Provide user feedback:
+
+        n_train <- nrow(data.train)
+
+        cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.train': Using na.omit() to remove incomplete cases left {n_train} case{?s}.")
+
+      }
+
+    } else { # do nothing, but warn:
+
+      if (!quiet_mis) { # Provide user feedback:
+
+        n_train <- nrow(data.train)
+
+        cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.train': Keeping all {n_train} case{?s}, but applying default algorithms may yield errors.")
+
+      }
     }
-
-    # # Handle NA data (as for FFTs):
-    # data.train <- handle_NA_data(data = data.train,
-    #                              criterion_name = get_lhs_formula(formula),
-    #                              mydata = "train",
-    #                              quiet = list(ini = FALSE, fin = FALSE, mis = FALSE, set = FALSE))
-
-    # Remove incomplete cases:
-    data.train <- stats::na.omit(data.train)
-
   }
 
-  # } else {
-  #
-  #   cli::cli_alert_info("Aiming to fit {toupper(algorithm)}: Found zero NA value{?s} in 'data.train'.")
-  #
-  #   print(data.train)
-  #
-  # }
+  # print(data.train)  # 4debugging: Have NA cases been removed?
+  # print(crit_train)
 
 
   # 1. LR: binomial LR ----
@@ -971,32 +1001,54 @@ comp_pred <- function(formula,
 
   pred_test <- NULL
 
-  if (is.null(data.test) == FALSE) {
+  if (!is.null(data.test)) {
 
     data.test <- data_all[test_cases, ]
     # cues_test <- data_all[test_cases, -1]  # is NOT used anywhere?
     crit_test <- data_all[test_cases,  1]
 
 
-    # Handle NA values: ----
+    # Handle NA values (in data.test): ----
 
     if (any(is.na(data.test))){ # NAs in data.test:
 
-      if (!quiet_mis) { # Provide user feedback:
+      nr_NA <- sum(is.na(data.test))  # count (before removal)
 
-        nr_NA <- sum(is.na(data.test))
+      if ( allow_NA_pred | allow_NA_crit ){ # Only remove cases with NA values (rather than doing anything fancy):
 
-        cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA value{?s} in 'data.test'.")
+        # Remove incomplete cases:
+        data.test <- stats::na.omit(data.test)
 
+        # Adjust crit_test accordingly:
+        crit_test <- data.test[ , 1]  # 1st column
+
+        if (!quiet_mis) { # Provide user feedback:
+
+          n_test <- nrow(data.test)
+
+          cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.test': Using na.omit() to remove incomplete cases left {n_test} case{?s}.")
+
+        }
+
+      } else { # do nothing, but warn:
+
+        if (!quiet_mis) { # Provide user feedback:
+
+          n_test <- nrow(data.test)
+
+          cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.test': Keeping all {n_test} case{?s}, but applying default algorithms may yield errors.")
+
+        }
       }
-
     }
+
+    # print(data.test)  # 4debugging: Have NA cases been removed?
 
 
     # Check for new factor values: ----
     {
 
-      if (is.null(train_cases) == FALSE) {
+      if (!is.null(train_cases)) {
         factor_ls <- lapply(1:ncol(data.train), FUN = function(x) {
           unique(data.train[ , x])
         })
