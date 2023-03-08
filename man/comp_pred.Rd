@@ -2,7 +2,7 @@
 % Please edit documentation in R/util_stats.R
 \name{comp_pred}
 \alias{comp_pred}
-\title{A wrapper for competing classification algorithms}
+\title{Fit and predict competing classification algorithms}
 \usage{
 comp_pred(
   formula,
@@ -47,6 +47,20 @@ Available options:
 Default: \code{quiet_mis = FALSE} (i.e., show user feedback).}
 }
 \description{
-\code{comp_pred} provides the main wrapper for running alternative classification algorithms, such as CART (\code{rpart::rpart}),
-logistic regression (\code{glm}), support vector machines (\code{svm::svm}), and random forests (\code{randomForest::randomForest}).
+\code{comp_pred} provides a wrapper for running (i.e., fit or predict)
+alternative classification algorithms to data
+(i.e., \code{data.train} or \code{data.test}, respectively).
+}
+\details{
+The range of competing algorithms currently available includes
+logistic regression (\code{stats::glm}),
+CART (\code{rpart::rpart}),
+support vector machines (\code{e1071::svm}), and
+random forests (\code{randomForest::randomForest}).
+
+The current support for handling missing data (or \code{NA} values) is only rudimentary.
+When enabled (via the global options \code{allow_NA_pred} or \code{allow_NA_crit}),
+any rows in \code{data.train} or \code{data.test} with incomplete cases are being removed
+prior to fitting or predicting a model (by using \code{na.omit} from \strong{stats}).
+See the specifications of each model for more sophisticated ways of handling missing data.
 }

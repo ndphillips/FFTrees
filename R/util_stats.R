@@ -636,11 +636,15 @@ classtable <- function(prediction_v = NULL,
 # comp_pred: ------
 
 
-#' A wrapper for competing classification algorithms
+#' Fit and predict competing classification algorithms
 #'
-#' \code{comp_pred} provides the main wrapper for running alternative classification algorithms,
-#' such as CART (\code{rpart::rpart}),
+#' \code{comp_pred} provides a wrapper for running (i.e., fit or predict)
+#' alternative classification algorithms to data
+#' (i.e., \code{data.train} or \code{data.test}, respectively).
+#'
+#' The range of competing algorithms currently available includes
 #' logistic regression (\code{stats::glm}),
+#' CART (\code{rpart::rpart}),
 #' support vector machines (\code{e1071::svm}), and
 #' random forests (\code{randomForest::randomForest}).
 #'
