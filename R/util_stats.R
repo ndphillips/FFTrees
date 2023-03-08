@@ -827,11 +827,15 @@ comp_pred <- function(formula,
   if (any(is.na(data.train))){ # NAs in data.train:
 
     nr_NA <- sum(is.na(data.train))  # count (before removal)
+    # ix_NA_row <- rowSums(is.na(data.train)) > 0  # rows with NA values
 
     if ( allow_NA_pred | allow_NA_crit ){ # Only remove cases with NA values (rather than doing anything fancy):
 
       # Remove incomplete cases:
       data.train <- stats::na.omit(data.train)
+
+      # Adjust crit_train accordingly:
+      crit_train <- data.train[ , 1]  # 1st column
 
       if (!quiet_mis) { # Provide user feedback:
 
@@ -854,6 +858,7 @@ comp_pred <- function(formula,
   }
 
   # print(data.train)  # 4debugging: Have NA cases been removed?
+  # print(crit_train)
 
 
   # 1. LR: binomial LR ----
@@ -1013,6 +1018,9 @@ comp_pred <- function(formula,
 
         # Remove incomplete cases:
         data.test <- stats::na.omit(data.test)
+
+        # Adjust crit_test accordingly:
+        crit_test <- data.test[ , 1]  # 1st column
 
         if (!quiet_mis) { # Provide user feedback:
 
