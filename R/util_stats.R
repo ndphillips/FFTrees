@@ -640,14 +640,15 @@ classtable <- function(prediction_v = NULL,
 #'
 #' \code{comp_pred} provides the main wrapper for running alternative classification algorithms,
 #' such as CART (\code{rpart::rpart}),
-#' logistic regression (\code{glm}),
-#' support vector machines (\code{svm::svm}), and
+#' logistic regression (\code{stats::glm}),
+#' support vector machines (\code{e1071::svm}), and
 #' random forests (\code{randomForest::randomForest}).
 #'
 #' The current support for handling missing data (or \code{NA} values) is only rudimentary.
 #' When enabled (via the global options \code{allow_NA_pred} or \code{allow_NA_crit}),
 #' any rows in \code{data.train} or \code{data.test} with incomplete cases are being removed
-#' prior to fitting or predicting a model (by using \code{na.omit} of \strong{stats}).
+#' prior to fitting or predicting a model (by using \code{na.omit} from \strong{stats}).
+#' See the specifications of each model for more sophisticated ways of handling missing data.
 #'
 #' @param formula A formula (usually \code{x$formula}, for an \code{FFTrees} object \code{x}).
 #' @param data.train A training dataset (as a data frame).
