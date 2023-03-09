@@ -87,12 +87,13 @@ Default: \code{repeat.cues = TRUE}.}
 \item{stopping.rule}{A character string indicating the method to stop growing trees. Available options are:
 \code{"levels"} means the tree grows until a certain level;
 \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
-\code{"statdelta"} (currently not available) means the tree grows until the change in the criterion statistic is less than a specified level.
+\code{"statdelta"} means the tree grows until the change in the criterion statistic (\code{goal.chase}) is below a specified level.
 Default: \code{stopping.rule = "exemplars"}.}
 
 \item{stopping.par}{numeric. A numeric value indicating the parameter for the stopping rule.
 For stopping.rule \code{"levels"}, this is the number of levels (as an integer).
 For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
+For stopping.rule \code{"statdelta"}, this is the minimum required increase (in the \code{goal.chase} value) to include a level.
 Default: \code{stopping.par = .10}.}
 
 \item{sens.w}{A numeric value from \code{0} to \code{1} indicating how to weight

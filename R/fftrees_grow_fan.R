@@ -253,7 +253,7 @@ fftrees_grow_fan <- function(x,
 
       level_current <- level_current + 1
       exit_current  <- exits_i[level_current]
-      case_remaining_ix <- is.na(decision_v)
+      ix_case_remaining <- is.na(decision_v)
 
       # Step 1: Determine a cue for the current level: ------
       {
@@ -271,7 +271,7 @@ fftrees_grow_fan <- function(x,
 
         if (x$params$algorithm == "dfan") {
 
-          data_current <- x$data$train[case_remaining_ix, ]
+          data_current <- x$data$train[ix_case_remaining, ]
 
           # If cues may NOT be repeated, then remove old cues as well:
           if (repeat.cues == FALSE) {
@@ -351,9 +351,9 @@ fftrees_grow_fan <- function(x,
         asif_levelout_v <- levelout_v
         asif_cuecost_v  <- cuecost_v
 
-        asif_decision_v[case_remaining_ix] <- cue_decisions[case_remaining_ix]
-        asif_levelout_v[case_remaining_ix] <- level_current
-        asif_cuecost_v[case_remaining_ix]  <- cue_cost_new
+        asif_decision_v[ix_case_remaining] <- cue_decisions[ix_case_remaining]
+        asif_levelout_v[ix_case_remaining] <- level_current
+        asif_cuecost_v[ix_case_remaining]  <- cue_cost_new
 
         # ToDo: Pass level_current and cues_name_new to classtable() helper (to handle NA values in utility fn)
         #    OR move NA handling code to calling functions (to diagnose what happens here)?   +++ here now +++
@@ -539,13 +539,28 @@ fftrees_grow_fan <- function(x,
 
         # Calculate the goal_change value: ----
         {
-          if (level_current == 1) {
-            asif_stats$goal_change[1] <- asif_stats[[x$params$goal]][1]
+
+          if (level_current == 1) { # initialize:
+
+            goal_change <- asif_stats[[x$params$goal.chase]][1]  # changed from $goal to $goal.chase on 2023-03-09.
+
+          } else { # compute change:
+
+            goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
+
           }
 
-          if (level_current > 1) {
-            goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
-            asif_stats$goal_change[level_current] <- goal_change
+          asif_stats$goal_change[level_current] <- goal_change
+
+
+          debug <- FALSE  # 4debugging
+
+          if (debug){ # Provide user feedback:
+
+            goal_change_rnd <- round(asif_stats$goal_change[level_current], 3)
+
+            cli::cli_alert_info("Tree {tree_i}, level {level_current}: goal_change = {goal_change_rnd} (chasing '{x$params$goal.chase}').")
+
           }
 
         }
@@ -559,7 +574,7 @@ fftrees_grow_fan <- function(x,
         if (dplyr::near(exit_current, exit_types[2]) | dplyr::near(exit_current, exit_types[3])) {
           # if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
 
-          decide_1_index <- case_remaining_ix & cue_decisions == TRUE
+          decide_1_index <- ix_case_remaining & cue_decisions == TRUE
 
           decision_v[decide_1_index] <- TRUE
           levelout_v[decide_1_index] <- level_current
@@ -594,18 +609,18 @@ fftrees_grow_fan <- function(x,
 
       # Step 4: Update results: ------
       {
-        case_remaining_ix <- is.na(decision_v)
+        ix_case_remaining <- is.na(decision_v)
 
         # Get cumulative stats of exemplars currently classified:
 
         results_cum <- classtable(
-          prediction_v = decision_v[case_remaining_ix == FALSE],
-          criterion_v = criterion_v[case_remaining_ix == FALSE],
+          prediction_v = decision_v[ix_case_remaining  == FALSE],
+          criterion_v  = criterion_v[ix_case_remaining == FALSE],
           #
           sens.w = x$params$sens.w,
           #
           cost.outcomes = x$params$cost.outcomes,
-          cost_v = cuecost_v[case_remaining_ix == FALSE],
+          cost_v = cuecost_v[ix_case_remaining == FALSE],
           #
           my.goal = my_goal,
           my.goal.fun = my_goal_fun,
@@ -662,7 +677,7 @@ fftrees_grow_fan <- function(x,
 
         } # else:
 
-        n_case_remaining <- sum(case_remaining_ix)
+        n_case_remaining <- sum(ix_case_remaining)
         # print(n_case_remaining)  # 4debugging
 
         if ((n_case_remaining > 0) & (level_current != cues_n) & (exit_method == "fixed")) {
@@ -691,7 +706,17 @@ fftrees_grow_fan <- function(x,
           break
         }
 
-        if ((x$params$algorithm == "dfan") & sd(criterion_v[case_remaining_ix]) == 0) {
+        if ((x$params$stopping.rule == "statdelta") & (asif_stats$goal_change[level_current] < x$params$stopping.par)) {
+
+          # Limitation: Works only for measures to be MAXimized (e.g., not cost).
+          #             Currently still includes the current level, even though it did not yield the required increase.
+          # Also, many stats do not grow monotonically. Hence, hill-climbing heuristic here can prevent finding better solutions.
+
+          grow_tree <- FALSE
+          break
+        }
+
+        if ((x$params$algorithm == "dfan") & sd(criterion_v[ix_case_remaining]) == 0) {
           grow_tree <- FALSE
           break
         }
@@ -724,7 +749,8 @@ fftrees_grow_fan <- function(x,
 
         decision_index <- is.na(decision_v)
 
-        # Step B: Determine accuracy of negative and positive classification: ----
+
+        # Determine the accuracy of negative and positive classification: ----
 
         current_decisions <- apply_break(
           direction = last_cue_stats$direction,
@@ -784,6 +810,7 @@ fftrees_grow_fan <- function(x,
     level_stats_i$tree <- tree_i
 
     level_stats_ls[[tree_i]] <- level_stats_i
+
   }
 
 
@@ -869,7 +896,6 @@ fftrees_grow_fan <- function(x,
     cli::cli_alert_success("Created {n_trees} FFT{?s} with '{cur_algorithm}' algorithm (chasing '{cur_goal.chase}').")
 
   }
-
 
 
 

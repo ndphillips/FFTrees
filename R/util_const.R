@@ -134,7 +134,7 @@ exit_types <- c(0, 1, 0.5)  # (global constant)
 # - "levels"     # ToDo: implement by allowing stopping.par > 1
 # - "statdelta"  # ToDo: implement with stopping.par for goal.chase
 
-stopping_rules <- c("exemplars", "levels")  # (global constant)
+stopping_rules <- c("exemplars", "levels", "statdelta")  # (global constant)
 
 
 
