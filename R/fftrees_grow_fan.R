@@ -553,7 +553,7 @@ fftrees_grow_fan <- function(x,
           asif_stats$goal_change[level_current] <- goal_change
 
 
-          debug <- TRUE  # 4debugging
+          debug <- FALSE  # 4debugging
 
           if (debug){ # Provide user feedback:
 
@@ -706,7 +706,10 @@ fftrees_grow_fan <- function(x,
           break
         }
 
+
         if ((x$params$stopping.rule == "statdelta") & (asif_stats$goal_change[level_current] < x$params$stopping.par)) {
+          # Limitation: Works only for measures to be MAXimized (e.g., not cost).
+          # Also, many stats do not grow monotonically. Hence, hill-climbing heuristic here can prevent finding better solutions.
           grow_tree <- FALSE
           break
         }
