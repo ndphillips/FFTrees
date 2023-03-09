@@ -539,13 +539,28 @@ fftrees_grow_fan <- function(x,
 
         # Calculate the goal_change value: ----
         {
-          if (level_current == 1) {
-            asif_stats$goal_change[1] <- asif_stats[[x$params$goal]][1]
+
+          if (level_current == 1) { # initialize:
+
+            goal_change <- asif_stats[[x$params$goal.chase]][1]  # changed from $goal to $goal.chase on 2023-03-09.
+
+          } else { # compute change:
+
+            goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
+
           }
 
-          if (level_current > 1) {
-            goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
-            asif_stats$goal_change[level_current] <- goal_change
+          asif_stats$goal_change[level_current] <- goal_change
+
+
+          debug <- TRUE  # 4debugging
+
+          if (debug){ # Provide user feedback:
+
+            goal_change_rnd <- round(asif_stats$goal_change[level_current], 3)
+
+            cli::cli_alert_info("Tree {tree_i}, level {level_current}: goal_change = {goal_change_rnd} (chasing {x$params$goal.chase})")
+
           }
 
         }
@@ -687,6 +702,11 @@ fftrees_grow_fan <- function(x,
         }
 
         if ((x$params$stopping.rule == "levels") & (level_current == x$params$stopping.par)) {
+          grow_tree <- FALSE
+          break
+        }
+
+        if ((x$params$stopping.rule == "statdelta") & (asif_stats$goal_change[level_current] < x$params$stopping.par)) {
           grow_tree <- FALSE
           break
         }
