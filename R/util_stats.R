@@ -841,7 +841,7 @@ comp_pred <- function(formula,
 
         n_train <- nrow(data.train)
 
-        cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.train': Using na.omit() to remove incomplete cases left {n_train} case{?s}.")
+        cli::cli_alert_warning("Fitting {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.train'. Removing incomplete cases left {n_train} case{?s}.")
 
       }
 
@@ -851,7 +851,7 @@ comp_pred <- function(formula,
 
         n_train <- nrow(data.train)
 
-        cli::cli_alert_warning("Aiming to fit {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.train': Keeping all {n_train} case{?s}, but applying default algorithms may yield errors.")
+        cli::cli_alert_warning("Fitting {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.train': Keeping all {n_train} case{?s}, but applying default algorithms may yield errors.")
 
       }
     }
@@ -1026,7 +1026,7 @@ comp_pred <- function(formula,
 
           n_test <- nrow(data.test)
 
-          cli::cli_alert_warning("Aiming to predict {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.test': Using na.omit() to remove incomplete cases left {n_test} case{?s}.")
+          cli::cli_alert_warning("Predicting {toupper(algorithm)}: Found {nr_NA} NA{?s} in 'data.test'. Removing incomplete cases left {n_test} case{?s}.")
 
         }
 
