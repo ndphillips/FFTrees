@@ -559,7 +559,7 @@ fftrees_grow_fan <- function(x,
 
             goal_change_rnd <- round(asif_stats$goal_change[level_current], 3)
 
-            cli::cli_alert_info("Tree {tree_i}, level {level_current}: goal_change = {goal_change_rnd} (chasing {x$params$goal.chase})")
+            cli::cli_alert_info("Tree {tree_i}, level {level_current}: goal_change = {goal_change_rnd} (chasing '{x$params$goal.chase}').")
 
           }
 
