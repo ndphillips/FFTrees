@@ -94,10 +94,14 @@ summary.FFTrees <- function(object,
 
   # Parameter summary: ------
 
-  # General information: Current algorithm, goals, numerical parameters, etc.:
+  # General information: Current algorithm, max levels, stopping rule, goals:
 
-  params_txt <- paste0("algorithm = '", object$params$algorithm, "'")
-  params_num <- paste0("max.levels = ", object$params$max.levels)
+  params_algo <- paste0("algorithm = '", object$params$algorithm, "'")
+
+  params_mxlv <- paste0("max.levels = ", object$params$max.levels)
+
+  params_stop <- paste0("stopping.rule = '", object$params$stopping.rule,
+                        "', stopping.par = ", object$params$stopping.par)
 
   params_goal <- paste0("goal = '", object$params$goal,
                         "', goal.chase = '", object$params$goal.chase,
@@ -116,8 +120,9 @@ summary.FFTrees <- function(object,
 
   # General user feedback (in all settings): ----
   cat("- Parameters: ",
-      params_txt, ", ", # "              ",
-      params_num, ",\n",   "              ",
+      params_algo, ", ", # "              ",
+      params_mxlv, ",\n",   "              ",
+      params_stop, ",\n",   "              ",
       params_goal, ".",
       sep = "")
   cat("\n")
