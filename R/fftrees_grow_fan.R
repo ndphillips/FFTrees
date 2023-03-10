@@ -537,14 +537,14 @@ fftrees_grow_fan <- function(x,
         }
 
 
-        # Calculate the goal_change value: ----
+        # Calculate the current goal_change value: ----
         {
 
           if (level_current == 1) { # initialize:
 
             goal_change <- asif_stats[[x$params$goal.chase]][1]  # changed from $goal to $goal.chase on 2023-03-09.
 
-          } else { # compute change:
+          } else { # compute change (current level - previous level):
 
             goal_change <- asif_stats[[x$params$goal.chase]][level_current] - asif_stats[[x$params$goal.chase]][level_current - 1]  # difference
 
@@ -553,15 +553,14 @@ fftrees_grow_fan <- function(x,
           asif_stats$goal_change[level_current] <- goal_change
 
 
-          debug <- FALSE  # 4debugging
+          debug <- FALSE # TRUE # 4debugging
 
-          if (debug){ # Provide debugging feedback:
+          if (debug){ # Provide debugging feedback: Report goal_change value:
 
             goal_change_rnd <- round(asif_stats$goal_change[level_current], 3)
-
             cli::cli_alert_info("Tree {tree_i}, level {level_current}: goal_change = {goal_change_rnd} (chasing '{x$params$goal.chase}').")
 
-          }
+          } # if (debug).
 
         }
 
@@ -569,7 +568,7 @@ fftrees_grow_fan <- function(x,
 
 
       # Step 3: Classify exemplars at current level: ------
-      # ToDo: Use exit_types (global constant).
+
       {
         if (dplyr::near(exit_current, exit_types[2]) | dplyr::near(exit_current, exit_types[3])) {
           # if (dplyr::near(exit_current, 1) | dplyr::near(exit_current, .50)) {
@@ -706,15 +705,40 @@ fftrees_grow_fan <- function(x,
           break
         }
 
-        if ((x$params$stopping.rule == "statdelta") & (asif_stats$goal_change[level_current] < x$params$stopping.par)) {
+        if (x$params$stopping.rule == "statdelta") {
 
-          # Limitation: Works only for measures to be MAXimized (e.g., not cost).
-          #             Currently still includes the current level, even though it did not yield the required increase.
-          # Also, many stats do not grow monotonically. Hence, hill-climbing heuristic here can prevent finding better solutions.
+          if (x$params$goal.chase == "cost"){ # Special case of chasing COST:
 
-          grow_tree <- FALSE
-          break
-        }
+            # 1. only evaluate increments AFTER the 1st level (as 1st level usually incurs the largest increment in cost)
+            # 2. stop if cost increase EXCEEDS stopping.par (i.e., aim to MINimize cost increase):
+
+            if ((level_current > 1) & (asif_stats$goal_change[level_current] > x$params$stopping.par) ) { # stop when ABOVE:
+
+              # print("Stop by 'stopping.rule = statdelta' for 'goal.chase = cost': 'goal_change > stopping.par' in asif_stats")  # 4debugging
+
+              grow_tree <- FALSE
+              break
+
+            }
+
+          } else { # all ACC measures (i.e., x$params$goal.chase != "cost"):
+
+            if (asif_stats$goal_change[level_current] < x$params$stopping.par) { # stop when BELOW:
+
+              # print("Stop by 'stopping.rule = statdelta' for an ACC measure: 'goal_change < stopping.par' in asif_stats")  # 4debugging
+
+              grow_tree <- FALSE
+              break
+
+            }
+
+          }
+
+          # Limitation: Currently still keeps/includes the CURRENT level, i.e., the first level failing the criterion.
+          # Note that some stats do NOT grow monotonically. Hence, this hill-climbing heuristic may prevent finding better solutions!
+
+        } # if stopping.rule == "statdelta".
+
 
         if ((x$params$algorithm == "dfan") & sd(criterion_v[ix_case_remaining]) == 0) {
           grow_tree <- FALSE
