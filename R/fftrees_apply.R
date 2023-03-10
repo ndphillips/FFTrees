@@ -347,29 +347,27 @@ fftrees_apply <- function(x,
 
       # classify_now: ----
 
-      if (isTRUE(all.equal(exit_i, exit_types[1]))) { # exit_i 0:
-        classify_now <- (decisions_df$current_decision == FALSE) & is.na(decisions_df$decision)
+      if (isTRUE(all.equal(exit_i, exit_types[1]))) { # 1: exit_i 0:
+        classify_now <- (decisions_df$current_decision == FALSE) & is.na(decisions_df$decision) # FALSE or NA
       }
-      if (isTRUE(all.equal(exit_i, exit_types[2]))) { # exit_i 1:
-        classify_now <- (decisions_df$current_decision == TRUE) & is.na(decisions_df$decision)
+      if (isTRUE(all.equal(exit_i, exit_types[2]))) { # 2: exit_i 1:
+        classify_now <- (decisions_df$current_decision == TRUE) & is.na(decisions_df$decision)  # FALSE or NA
       }
-      if (isTRUE(all.equal(exit_i, exit_types[3]))) { # exit_i .5:
-        classify_now <- is.na(decisions_df$decision)
+      if (isTRUE(all.equal(exit_i, exit_types[3]))) { # 3: exit_i .5:
+        classify_now <- is.na(decisions_df$decision)  # TRUE for NA only
       }
 
 
       # Handle NA values: ------
 
-      # +++ here now +++
-
-      # What to DO with NA cases at a tree node?
-
       if ( allow_NA_pred | allow_NA_crit ){
+
+        # Goal: Deal with NA cases at a tree node.
 
         # 1. If this is an intermediate / NOT the final node, then don't classify NA cases:
         if (exit_i %in% exit_types[1:2]) {  # exit_types in c(0, 1)
 
-          # NAs on level (based on classify_now):
+          # NAs on current level (based on classify_now):
           ix_NA_classify_now <- is.na(classify_now)
           nr_NA_lvl <- sum(ix_NA_classify_now)
 
@@ -386,7 +384,7 @@ fftrees_apply <- function(x,
         # 2. If this IS the final / terminal node, then classify all NA cases according to fin_NA_pred:
         if (exit_i %in% exit_types[3]) {  # exit_types = .5:
 
-          # NAs on level (based on current_decision):
+          # NAs on current level (based on current_decision):
           ix_NA_current_decision <- is.na(decisions_df$current_decision)
           nr_NA_lvl <- sum(ix_NA_current_decision)
 
@@ -453,17 +451,15 @@ fftrees_apply <- function(x,
 
             }
 
-          }
+          } # if debug().
 
-        }
+        } # if final exit.
 
-        # [2. was:] If this IS the final node, then classify NA cases into the most common class [?: seems not done here]
+        # +++ here now +++
 
         # ToDo:
-        # - Add user feedback
-        # - Examine alternative policies for indecision / doxastic abstention:
-        #   - predict either TRUE or FALSE (according to fin_NA_pred)
-        #   - predict the most common category (overall baseline or baseline at this level)
+        # - Consider alternative policies for indecision / doxastic abstention:
+        #   - predict the most common category OF NA CASES in training data (rather than OVERALL baseline or baseline at this level)
         #   - predict a 3rd category (tertium datur: abstention / dnk: "do not know" / NA decision)
         #   Corresponding results will depend on the costs of errors.
 
@@ -551,7 +547,12 @@ fftrees_apply <- function(x,
         level_stats_i$cue_NA[level_i] <- nr_NA_lvl  # nr. of NA in cue values on current level_i
         level_stats_i$dec_NA[level_i] <- nr_NA_dec  # nr. of NA values in decisions / indecisions on level_i
 
-      } # +++ here now +++
+        # +++ here now +++
+
+        # ToDo:
+        # - Add number of TRUE vs. FALSE decisions for NAs in final node?
+
+      } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
 
 
     } # Loop 2: level_i.
