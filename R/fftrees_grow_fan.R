@@ -555,7 +555,7 @@ fftrees_grow_fan <- function(x,
 
           debug <- FALSE  # 4debugging
 
-          if (debug){ # Provide user feedback:
+          if (debug){ # Provide debugging feedback:
 
             goal_change_rnd <- round(asif_stats$goal_change[level_current], 3)
 
