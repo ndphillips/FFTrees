@@ -47,22 +47,30 @@
 #'
 #' @param max.levels integer. The maximum number of nodes (or levels) considered for an FFT.
 #' As all combinations of possible exit structures are considered, larger values of \code{max.levels} will create larger sets of FFTs.
-#' @param numthresh.method character. How should thresholds for numeric cues be determined?
-#' \code{"o"} will optimize thresholds (for \code{goal.threshold}), while \code{"m"} will always use the median.
+#'
+#' @param numthresh.method How should thresholds for numeric cues be determined (as character)?
+#' \code{"o"} will optimize thresholds (for \code{goal.threshold}), while \code{"m"} will use the median.
 #' Default: \code{numthresh.method = "o"}.
 #' @param numthresh.n The number of numeric thresholds to try (as integer).
 #' Default: \code{numthresh.n = 10}.
+#'
 #' @param repeat.cues May cues occur multiple times within a tree (as logical)?
 #' Default: \code{repeat.cues = TRUE}.
-#' @param stopping.rule A character string indicating the method to stop growing trees. Available options are:
-#' \code{"levels"} means the tree grows until a certain level;
-#' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
-#' \code{"statdelta"} means the tree grows until the change in the criterion statistic (\code{goal.chase}) is below a specified level.
+#'
+#' @param stopping.rule A character string indicating the method to stop growing trees.
+#' Available options are:
+#' \itemize{
+#'   \item{\code{"exemplars"}: A tree grows until only a small proportion of unclassified exemplars remain;}
+#'   \item{\code{"levels"}: A tree grows until a certain level is reached;}
+#'   \item{\code{"statdelta"} (experimental): A tree grows until the change in the criterion statistic \code{goal.chase}
+#'   reaches some specified level.}
+#'   }
+#' All stopping methods use \code{stopping.par} to define a numeric threshold.
 #' Default: \code{stopping.rule = "exemplars"}.
-#' @param stopping.par numeric. A numeric value indicating the parameter for the stopping rule.
-#' For stopping.rule \code{"levels"}, this is the number of levels (as an integer).
+#' @param stopping.par numeric. A numeric parameter indicating the criterion value for the current \code{stopping.rule}.
+#' For stopping.rule \code{"levels"}, this is the number of desired levels (as an integer).
 #' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
-#' For stopping.rule \code{"statdelta"}, this is the minimum required increase (in the \code{goal.chase} value) to include a level.
+#' For stopping.rule \code{"statdelta"}, this is the minimum required change (in the \code{goal.chase} value) to include a level.
 #' Default: \code{stopping.par = .10}.
 #'
 #' @param sens.w A numeric value from \code{0} to \code{1} indicating how to weight
