@@ -47,22 +47,31 @@
 #'
 #' @param max.levels integer. The maximum number of nodes (or levels) considered for an FFT.
 #' As all combinations of possible exit structures are considered, larger values of \code{max.levels} will create larger sets of FFTs.
-#' @param numthresh.method character. How should thresholds for numeric cues be determined?
-#' \code{"o"} will optimize thresholds (for \code{goal.threshold}), while \code{"m"} will always use the median.
+#'
+#' @param numthresh.method How should thresholds for numeric cues be determined (as character)?
+#' \code{"o"} will optimize thresholds (for \code{goal.threshold}), while \code{"m"} will use the median.
 #' Default: \code{numthresh.method = "o"}.
 #' @param numthresh.n The number of numeric thresholds to try (as integer).
 #' Default: \code{numthresh.n = 10}.
+#'
 #' @param repeat.cues May cues occur multiple times within a tree (as logical)?
 #' Default: \code{repeat.cues = TRUE}.
-#' @param stopping.rule A character string indicating the method to stop growing trees. Available options are:
-#' \code{"levels"} means the tree grows until a certain level;
-#' \code{"exemplars"} means the tree grows until a certain number of unclassified exemplars remain;
-#' \code{"statdelta"} means the tree grows until the change in the criterion statistic (\code{goal.chase}) is below a specified level.
+#'
+#' @param stopping.rule A character string indicating the method to stop growing trees.
+#' Available options are:
+#' \itemize{
+#'   \item{\code{"exemplars"}: A tree grows until only a small proportion of unclassified exemplars remain;}
+#'   \item{\code{"levels"}: A tree grows until a certain level is reached;}
+#'   \item{\code{"statdelta"}: A tree grows until the change in the criterion statistic \code{goal.chase} exceeds some threshold level.
+#'   (This setting is currently experimental and includes the first level beyond threshold.
+#'   As tree statistics can be non-monotonic, this option may yield inconsistent results.)}
+#'   }
+#' All stopping methods use \code{stopping.par} to set a numeric threshold value.
 #' Default: \code{stopping.rule = "exemplars"}.
-#' @param stopping.par numeric. A numeric value indicating the parameter for the stopping rule.
-#' For stopping.rule \code{"levels"}, this is the number of levels (as an integer).
-#' For stopping rule \code{"exemplars"}, this is the smallest percentage of exemplars allowed in the last level.
-#' For stopping.rule \code{"statdelta"}, this is the minimum required increase (in the \code{goal.chase} value) to include a level.
+#' @param stopping.par numeric. A numeric parameter indicating the criterion value for the current \code{stopping.rule}.
+#' For stopping.rule \code{"levels"}, this is the number of desired levels (as an integer).
+#' For stopping rule \code{"exemplars"}, this is the smallest proportion of exemplars allowed in the last level.
+#' For stopping.rule \code{"statdelta"}, this is the minimum required change (in the \code{goal.chase} value) to include a level.
 #' Default: \code{stopping.par = .10}.
 #'
 #' @param sens.w A numeric value from \code{0} to \code{1} indicating how to weight
@@ -102,12 +111,12 @@
 #' Instead, the tree definitions provided are used to re-evaluate the current \code{FFTrees} object on current data.
 #'
 #' @param do.comp,do.lr,do.cart,do.svm,do.rf Should alternative algorithms be used for comparison (as logical)?
-#' All options set to \code{TRUE} by default. Available options correspond to:
+#' All options are set to \code{TRUE} by default. Available options correspond to:
 #' \itemize{
-#'   \item{\code{do.lr}: Logistic regression (using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
-#'   \item{\code{do.cart}: Decision trees (using \code{rpart} from \strong{rpart});}
-#'   \item{\code{do.svm}: Support vector machines (using \code{svm} from \strong{e1071});}
-#'   \item{\code{do.rf}: Random forests (using \code{randomForest} from \strong{randomForest}.}
+#'   \item{\code{do.lr}: Logistic regression (LR, using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
+#'   \item{\code{do.cart}: Classification and regression trees (CART, using \code{rpart} from \strong{rpart});}
+#'   \item{\code{do.svm}: Support vector machines (SVM, using \code{svm} from \strong{e1071});}
+#'   \item{\code{do.rf}: Random forests (RF, using \code{randomForest} from \strong{randomForest}.}
 #' }
 #' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
 #'
@@ -127,7 +136,8 @@
 #'   \item{trees}{A list of FFTs created, with further details contained in \code{n}, \code{best}, \code{definitions}, \code{inwords}, \code{stats}, \code{level_stats}, and \code{decisions}.}
 #'   \item{data}{The original training and test data (if available).}
 #'   \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}, \code{sens.w}, as well as various thresholds, stopping rule, and cost parameters).}
-#'   \item{competition}{Models and classification statistics for competitive classification algorithms: Logistic regression, CART, random forests RF, and SVM.}
+#'   \item{competition}{Models and classification statistics for competitive classification algorithms:
+#'   Logistic regression (\code{lr}), classification and regression trees (\code{cart}), random forests (\code{rf}), and support vector machines (\code{svm}).}
 #'   \item{cues}{A list of cue information, with further details contained in \code{thresholds} and \code{stats}.}
 #' }
 #'

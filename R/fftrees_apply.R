@@ -347,36 +347,35 @@ fftrees_apply <- function(x,
 
       # classify_now: ----
 
-      if (isTRUE(all.equal(exit_i, exit_types[1]))) { # exit_i 0:
-        classify_now <- decisions_df$current_decision == FALSE & is.na(decisions_df$decision)
+      if (isTRUE(all.equal(exit_i, exit_types[1]))) { # 1: exit_i 0:
+        classify_now <- (decisions_df$current_decision == FALSE) & is.na(decisions_df$decision) # FALSE or NA
       }
-      if (isTRUE(all.equal(exit_i, exit_types[2]))) { # exit_i 1:
-        classify_now <- decisions_df$current_decision == TRUE & is.na(decisions_df$decision)
+      if (isTRUE(all.equal(exit_i, exit_types[2]))) { # 2: exit_i 1:
+        classify_now <- (decisions_df$current_decision == TRUE) & is.na(decisions_df$decision)  # FALSE or NA
       }
-      if (isTRUE(all.equal(exit_i, exit_types[3]))) { # exit_i .5:
-        classify_now <- is.na(decisions_df$decision)
+      if (isTRUE(all.equal(exit_i, exit_types[3]))) { # 3: exit_i .5:
+        classify_now <- is.na(decisions_df$decision)  # TRUE for NA only
       }
 
 
       # Handle NA values: ------
 
-      # +++ here now +++
-
-      # What to DO with NA cases at a tree node?
-
       if ( allow_NA_pred | allow_NA_crit ){
+
+        # Goal: Deal with NA cases at a tree node.
 
         # 1. If this is an intermediate / NOT the final node, then don't classify NA cases:
         if (exit_i %in% exit_types[1:2]) {  # exit_types in c(0, 1)
 
-          ix_na_classify_now <- is.na(classify_now)
-          nr_NA_level <- sum(ix_na_classify_now)
+          # NAs on current level (based on classify_now):
+          ix_NA_classify_now <- is.na(classify_now)
+          nr_NA_lvl <- sum(ix_NA_classify_now)
 
-          classify_now[ix_na_classify_now] <- FALSE  # Do NOT classify NA cases (which is NOT "classify as FALSE")!
+          classify_now[ix_NA_classify_now] <- FALSE  # Do NOT classify NA cases (which is NOT "classify as FALSE")!
 
-          if (!x$params$quiet$mis & any(ix_na_classify_now)) { # Provide user feedback:
+          if (!x$params$quiet$mis & any(ix_NA_classify_now)) { # Provide user feedback:
 
-            cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_level} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
+            cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
 
           }
 
@@ -385,45 +384,46 @@ fftrees_apply <- function(x,
         # 2. If this IS the final / terminal node, then classify all NA cases according to fin_NA_pred:
         if (exit_i %in% exit_types[3]) {  # exit_types = .5:
 
-          ix_na_current_decision <- is.na(decisions_df$current_decision)
-          nr_NA_level <- sum(ix_na_current_decision)
+          # NAs on current level (based on current_decision):
+          ix_NA_current_decision <- is.na(decisions_df$current_decision)
+          nr_NA_lvl <- sum(ix_NA_current_decision)
 
           # Classify NA cases (in final node):
 
           if (fin_NA_pred == "noise"){
 
-            decisions_df$current_decision[ix_na_current_decision] <- FALSE
+            decisions_df$current_decision[ix_NA_current_decision] <- FALSE
 
           } else if (fin_NA_pred == "signal"){
 
-            decisions_df$current_decision[ix_na_current_decision] <- TRUE
+            decisions_df$current_decision[ix_NA_current_decision] <- TRUE
 
           } else if (fin_NA_pred == "baseline"){
 
             # Flip baseline coin:
-            cur_decisions <- sample(x = c(TRUE, FALSE), size = nr_NA_level, replace = TRUE, prob = c(crit_br, 1 - crit_br))
+            cur_decisions <- sample(x = c(TRUE, FALSE), size = nr_NA_lvl, replace = TRUE, prob = c(crit_br, 1 - crit_br))
 
-            decisions_df$current_decision[ix_na_current_decision] <- cur_decisions
+            decisions_df$current_decision[ix_NA_current_decision] <- cur_decisions
 
-            if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
+            if (!x$params$quiet$mis & any(ix_NA_current_decision)) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA_level} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA_lvl} baseline prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
 
             }
 
           } else if (fin_NA_pred == "majority"){
 
             if (crit_br > .50){
-              cur_decisions <- rep(TRUE, nr_NA_level)
+              cur_decisions <- rep(TRUE, nr_NA_lvl)
             } else {
-              cur_decisions <- rep(FALSE, nr_NA_level)
+              cur_decisions <- rep(FALSE, nr_NA_lvl)
             }
 
-            decisions_df$current_decision[ix_na_current_decision] <- cur_decisions
+            decisions_df$current_decision[ix_NA_current_decision] <- cur_decisions
 
-            if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
+            if (!x$params$quiet$mis & any(ix_NA_current_decision)) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA_level} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA_lvl} majority prediction{?s} (with a 'train' base rate p(TRUE) = {crit_br}): {cur_decisions}.")
 
             }
 
@@ -436,30 +436,30 @@ fftrees_apply <- function(x,
 
           }
 
-          be_redundantly_explicit <- FALSE # TRUE  # allow hiding/showing redundant user feedback:
+          debug <- FALSE # TRUE  # 4debugging
 
-          if (be_redundantly_explicit){ # Classification of final node is reported as "Making..." (above):
+          if (debug){ # Provide debugging feedback:
 
-            if (!x$params$quiet$mis & any(ix_na_current_decision)) { # Provide user feedback:
+            if (!x$params$quiet$mis & any(ix_NA_current_decision)) { # Provide user feedback:
 
-              nr_NA_level <- sum(ix_na_current_decision)
-              cur_dec_n1 <- decisions_df$current_decision[ix_na_current_decision][1]  # 1st decision
+              # Note: Redundant, as classification of final node is reported as "Making..." (above):
 
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_level} NA value{?s} in final cue '{cue_i}': Predict {fin_NA_pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
+              nr_NA_lvl <- sum(ix_NA_current_decision)
+              cur_dec_n1 <- decisions_df$current_decision[ix_NA_current_decision][1]  # 1st decision
+
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in final cue '{cue_i}': Predict {fin_NA_pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
 
             }
 
-          }
+          } # if debug().
 
-        }
+        } # if final exit.
 
-        # [2. was:] If this IS the final node, then classify NA cases into the most common class [?: seems not done here]
+        # +++ here now +++
 
         # ToDo:
-        # - Add user feedback
-        # - Examine alternative policies for indecision / doxastic abstention:
-        #   - predict either TRUE or FALSE (according to fin_NA_pred)
-        #   - predict the most common category (overall baseline or baseline at this level)
+        # - Consider alternative policies for indecision / doxastic abstention:
+        #   - predict the most common category OF NA CASES in training data (rather than OVERALL baseline or baseline at this level)
         #   - predict a 3rd category (tertium datur: abstention / dnk: "do not know" / NA decision)
         #   Corresponding results will depend on the costs of errors.
 
@@ -484,13 +484,15 @@ fftrees_apply <- function(x,
 
       if ( allow_NA_pred | allow_NA_crit ){
 
+        # Goal: Create index vector ix_non_NA_deci (to constrain the call to classtable() below).
+
         # Detect NA values: ----
 
         ix_NA_deci <- is.na(decisions_df$decision)   # 1. NA in decision
         # ix_NA_crit <- is.na(decisions_df$criterion)  # 2. NA in criterion
 
-        nr_NA_deci <- sum(ix_NA_deci)
-        # cli::cli_alert_info("Tree {tree_i}, level {level_i}: nr_NA_deci = {nr_NA_deci}, decision = {decisions_df$decision}")
+        nr_NA_dec <- sum(ix_NA_deci)
+        # cli::cli_alert_info("Tree {tree_i}, level {level_i}: nr_NA_dec = {nr_NA_dec}, decision = {decisions_df$decision}")
 
         # Non-NA values:
         ix_non_NA_deci <- !ix_NA_deci
@@ -498,11 +500,10 @@ fftrees_apply <- function(x,
         # ToDo:
         # - Add user feedback
         # - Handle NA in criterion?
-        # - Make both vectors consistent to each other?
 
       } else { # no NA handling:
 
-        nr_NA_deci <- NA  # or 0?
+        nr_NA_dec <- NA  # (as NA handling not enabled)
 
         ix_non_NA_deci <- rep(TRUE, length(decisions_df$decision))  # use ALL elements
 
@@ -540,11 +541,18 @@ fftrees_apply <- function(x,
 
       if ( allow_NA_pred | allow_NA_crit ){
 
-        # Add sums of NA cases to level_stats_i:
-        level_stats_i$cue_NA[level_i] <- nr_NA_level  # nr. of NA cue values on level_i
-        level_stats_i$dec_NA[level_i] <- nr_NA_deci   # nr. of NA values in decisions / indecisions on level_i
+        # Goal: Add NA values to level stats:
 
-      } # +++ here now +++
+        # Add sums of NA cases to level_stats_i:
+        level_stats_i$cue_NA[level_i] <- nr_NA_lvl  # nr. of NA in cue values on current level_i
+        level_stats_i$dec_NA[level_i] <- nr_NA_dec  # nr. of NA values in decisions / indecisions on level_i
+
+        # +++ here now +++
+
+        # ToDo:
+        # - Add number of TRUE vs. FALSE decisions for NAs in final node?
+
+      } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
 
 
     } # Loop 2: level_i.
