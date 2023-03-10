@@ -604,17 +604,27 @@ fftrees_create <- function(formula = NULL,
 
   # stopping.par: ----
 
-  if (stopping.rule == "levels"){ # stopping.par must be a positive integer:
+  if (stopping.rule == "exemplars"){ # default: 0 < stopping.par < 1:
+
+    testthat::expect_gt(stopping.par, expected = 0)
+    testthat::expect_lt(stopping.par, expected = 1)
+
+  } else if (stopping.rule == "levels"){ # stopping.par must be a positive integer:
 
     stopping.par <- as.integer(stopping.par)  # aim to coerce to integer
 
     testthat::expect_true(is.integer(stopping.par))
     testthat::expect_gt(stopping.par, expected = 0)
 
-  } else { # e.g., stopping.rule == "exemplars": 0 < stopping.par < 1:
+  } else if (stopping.rule == "statdelta"){ # stopping.par must numeric:
 
-    testthat::expect_gt(stopping.par, expected = 0)
-    testthat::expect_lt(stopping.par, expected = 1)
+    stopping.par <- as.numeric(stopping.par)  # aim to coerce to numeric
+
+    testthat::expect_true(is.numeric(stopping.par))
+
+  } else { # unknown stopping.rule:
+
+    warning(paste0("Unknown stopping.par constraints for 'stopping.rule = ", stopping.rule, "'"))
 
   }
 
@@ -627,12 +637,12 @@ fftrees_create <- function(formula = NULL,
 
   }
 
-  # Disallow some combination:
-  if (stopping.rule == "statdelta" & goal.chase == "cost"){
-
-    stop("The stopping.rule 'statdelta' requires an accuracy measure as its 'goal.chase' value (e.g., 'bacc')")
-
-  }
+  # # Disallow some combination:
+  # if (stopping.rule == "statdelta" & goal.chase == "cost"){
+  #
+  #   stop("The stopping.rule 'statdelta' requires an accuracy measure as its 'goal.chase' value (e.g., 'bacc')")
+  #
+  # }
 
 
   # decision.labels: ----
