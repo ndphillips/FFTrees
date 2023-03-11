@@ -22,7 +22,7 @@
 # Details:
 #
 # 2 FFT translation functions:
-# - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (with 1 row per node),
+# - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (in "tidy" format: with 1 row per node),
 # - write: back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
 #
 # 1 FFT collection function:
@@ -43,12 +43,14 @@
 
 # Goal: Extract 1 FFT (as df) from multi-line FFT definitions (as df).
 #
+# This creates a "tidy" representation of 1 FFT.
+#
 # Inputs:
 # ffts_df: A set of FFT definitions (as df, usually from an FFTrees object,
 #       with suitable variable names to pass verify_ffts_df()).
 # tree: A tree ID (corresponding to tree in ffts_df).
 #
-# Output: A definition of 1 FFT with 1 row per node (as df).
+# Output: A definition of 1 FFT with 1 row per node (in "tidy" format, as df).
 #
 # Note: Currently used to extract individual trees in
 # - fftrees_apply()
@@ -137,12 +139,12 @@ read_fft_df <- function(ffts_df, tree = 1){
 # write_fft_df: ------
 
 
-# Goal: Turn 1 FFT (as df) into a line of multi-line FFT definitions (as df).
+# Goal: Turn 1 FFT (in "tidy" format, as df) into a line of multi-line FFT definitions (as df).
 # Inputs:
-# - fft: A definition of 1 FFT (as df, with 1 row per node,
+# - fft: A definition of 1 FFT (as "tidy" df, with 1 row per node,
 #        and suitable variable names to pass verify_fft_as_df()).
 # - tree: tree ID (as integer).
-# Output: FFT definition in 1 line (as df).
+# Output: FFT definition in 1 line (as non-tidy df).
 #
 # Note: Code is currently used at the end of
 # - fftrees_grow_fan()         +++ here now +++
@@ -291,7 +293,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
 # (B) Tree editing/trimming functions: --------
 
-# Goal: Functions for editing, manipulating, and trimming individual FFTs (in df format).
+# Goal: Functions for editing, manipulating, and trimming individual FFTs (in "tidy" df format).
 
 # Note: These functions assume 1 FFT (in multi-line format, as df) as their 1-st input argument (for piping)
 #       and return a modified version of 1 FFT (in the same format) as output.
@@ -303,7 +305,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # Goal: Add some node(s) (or cues) to a given FFT.
 #
 # Inputs:
-#   fft = 1 FFT (as df)
+#   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of added node positions (as integer from 1 to nrow(fft) + length(nodes))
 #   class = class of cue to add
 #   cue = cue to add
@@ -541,7 +543,7 @@ add_nodes <- function(fft,
 # Goal: Delete/drop some nodes (or cues) of a given FFT.
 #
 # Inputs:
-#   fft = 1 FFT (as df)
+#   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of nodes to drop (as integer in 1:nrow(fft))
 #
 # Output: Modified version of fft (as df, with fewer nodes).
@@ -684,7 +686,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #       Note: select_nodes() is the complement of drop_nodes().
 #
 # Inputs:
-#   fft = 1 FFT (as df)
+#   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of nodes to select (as integer in 1:nrow(fft))
 #
 # Output: Modified version of fft (as df, with fewer nodes).
@@ -834,7 +836,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 # Goal: Change (some parameters of) existing nodes.
 #
 # Inputs:
-#   fft = 1 FFT (as df)
+#   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of nodes to change (as integer in 1:nrow(fft))
 #   class = class of cue to add
 #   cue = cue to change
@@ -1063,7 +1065,7 @@ edit_nodes <- function(fft,
 # Goal: Flip the exits (i.e., cue direction and exit type) of some FFT's (non-final) nodes.
 #
 # Inputs:
-#   fft = 1 FFT (as df)
+#   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of nodes to swap (as integer in 1:nrow(fft))
 #
 # Output: Modified version of fft (as df, with flipped cue directions/exits)
@@ -1187,7 +1189,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 # Goal: Re-order the nodes of an existing FFT.
 #
 # Inputs:
-#  fft: 1 FFT (in multi-line format, as df)
+#  fft: 1 FFT (in multi-line format, as "tidy" df)
 #  order: desired order of cues (as a numeric vector of 1:n_cues)
 #
 # Output:
