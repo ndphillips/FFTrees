@@ -14,22 +14,6 @@ algorithm_options <- c("ifan", "dfan")  # (global constant)
 
 
 
-# - allow_NA_pred: ----
-
-# Allow NA cases in predictors (as logical)?
-
-allow_NA_pred <- TRUE # FALSE  # (global constant)
-
-
-
-# - allow_NA_crit: ----
-
-# Allow NA cases in criterion (as logical)?
-
-allow_NA_crit <- FALSE  # (global constant)
-
-
-
 # - goal_options: ----
 
 # A set of default goals (for FFT selection):
@@ -135,6 +119,32 @@ exit_types <- c(0, 1, 0.5)  # (global constant)
 # - "statdelta"  # ToDo: implement with stopping.par for goal.chase
 
 stopping_rules <- c("exemplars", "levels", "statdelta")  # (global constant)
+
+
+# Handling NA values: ------
+
+
+# - allow_NA_pred: ----
+
+# Allow NA cases in predictors (as logical)?
+
+allow_NA_pred <- TRUE # FALSE  # (global constant)
+
+
+
+# - allow_NA_crit: ----
+
+# Allow NA cases in criterion (as logical)?
+
+allow_NA_crit <- FALSE  # (global constant)
+
+
+
+# - fin_NA_options: ----
+
+# Options for dealing with NA values in final nodes / leaf cues:
+
+fin_NA_options <- c("noise", "signal", "baseline", "majority")  # (global constant)
 
 
 
