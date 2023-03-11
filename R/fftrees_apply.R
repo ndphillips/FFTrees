@@ -168,22 +168,40 @@ fftrees_apply <- function(x,
   }
 
 
-  # Compute only ONCE (before loop):
+  # Handle NA values: ------
 
-  if ( (fin_NA_pred == "baseline") | (fin_NA_pred == "majority") ){
+  if ( allow_NA_pred | allow_NA_crit ){
 
-    criterion_name <- x$criterion_name
+    if (any(is.na(data))){ # IFF there are NA cases in data:
 
-    # Compute criterion baseline/base rate (for "train" data ONLY):
-    if (allow_NA_crit){
-      crit_br <- mean(x$data[["train"]][[criterion_name]], na.rm = TRUE)
-    } else { # default:
-      crit_br <- mean(x$data[["train"]][[criterion_name]])  # (from logical, i.e., proportion of TRUE values)
-    }
+      # Compute only ONCE (before loop):
+      if ( (fin_NA_pred == "baseline") | (fin_NA_pred == "majority") ){
 
-    crit_br <- round(crit_br, 3)  # rounding
+        criterion_name <- x$criterion_name
 
-  }
+        # Compute criterion baseline/base rate (for "train" data ONLY):
+        if (allow_NA_crit){
+          crit_br <- mean(x$data[["train"]][[criterion_name]], na.rm = TRUE)
+        } else { # default:
+          crit_br <- mean(x$data[["train"]][[criterion_name]])  # (from logical, i.e., proportion of TRUE values)
+        }
+
+        crit_br <- round(crit_br, 3)  # rounding
+
+      } # if fin_NA_pred().
+
+    } # if (any(is.na(data))).
+
+    # Initialize some counters:
+    nr_NA_lvl <- 0
+
+    NA_hi <- 0
+    NA_fa <- 0
+    NA_mi <- 0
+    NA_cr <- 0
+
+  } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
+
 
 
   # LOOPs: ------
@@ -390,7 +408,8 @@ fftrees_apply <- function(x,
 
           } # if any(ix_NA_classify_now).
 
-        }
+        } # if (intermediate exit).
+
 
         # 2. If this IS the final / terminal node, then classify all NA cases according to fin_NA_pred:
         if (exit_i %in% exit_types[3]) {  # exit_types = .5:
@@ -432,7 +451,7 @@ fftrees_apply <- function(x,
 
               stop(paste0("The value of fin_NA_pred must be in c('", fin_NA_opt_s, "')."))
 
-            }
+            } # if fin_NA_pred.
 
             # Assign final NA decisions (only ONCE):
             decisions_df$current_decision[ix_NA_current_decision] <- fin_NA_decisions
@@ -472,7 +491,7 @@ fftrees_apply <- function(x,
 
           } # if (any(ix_NA_current_decision)).
 
-        } # if final exit.
+        } # if (final exit).
 
         # +++ here now +++
 
@@ -589,15 +608,15 @@ fftrees_apply <- function(x,
         # Goal: Add NA values to level stats:
 
         # Add sums of NA cases to level_stats_i:
-        level_stats_i$cue_NA[level_i] <- nr_NA_lvl  # nr. of NA in cue values on current level_i
+        level_stats_i$NA_cue[level_i] <- nr_NA_lvl  # nr. of NA in cue values on the current level_i
 
-        # Details:
+        # Details: Decision outcomes for NA cases:
         level_stats_i$NA_hi[level_i] <- NA_hi
         level_stats_i$NA_fa[level_i] <- NA_fa
         level_stats_i$NA_mi[level_i] <- NA_mi
         level_stats_i$NA_cr[level_i] <- NA_cr
 
-        level_stats_i$dec_NA[level_i] <- nr_NA_dec  # nr. of NA values in decisions / indecisions on level_i
+        level_stats_i$NA_dec[level_i] <- nr_NA_dec  # nr. of NA values in decisions / indecisions on level_i
 
         # +++ here now +++
 
