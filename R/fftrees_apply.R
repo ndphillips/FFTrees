@@ -423,6 +423,18 @@ fftrees_apply <- function(x,
 
             }
 
+            # Assign final NA decisions (only ONCE):
+            decisions_df$current_decision[ix_NA_current_decision] <- fin_NA_decisions
+
+            # Get corresponding criterion values:
+            fin_NA_criteria <- decisions_df$criterion[ix_NA_current_decision]
+
+            # Classify and count outcomes for NA cases (i.e., sub-2x2 matrix for NA cases):
+            NA_hi <- sum((fin_NA_criteria == TRUE)  & (fin_NA_decisions == TRUE))
+            NA_fa <- sum((fin_NA_criteria == FALSE) & (fin_NA_decisions == TRUE))
+            NA_mi <- sum((fin_NA_criteria == TRUE)  & (fin_NA_decisions == FALSE))
+            NA_cr <- sum((fin_NA_criteria == FALSE) & (fin_NA_decisions == FALSE))
+
             if (!x$params$quiet$mis) { # Provide user feedback:
 
               if ( (fin_NA_pred == "baseline") | (fin_NA_pred == "majority") ){ # crit_br is relevant:
@@ -434,36 +446,24 @@ fftrees_apply <- function(x,
                 cli::cli_alert_warning("Tree {tree_i} node {level_i}: Making {nr_NA_lvl} {fin_NA_pred} prediction{?s}: {fin_NA_decisions}.")
 
               }
-            }
 
-            # Assign final NA decisions (only ONCE):
-            decisions_df$current_decision[ix_NA_current_decision] <- fin_NA_decisions
+              debug <- TRUE # FALSE # TRUE  # 4debugging
+
+              if (debug) { # Provide debugging feedback:
+
+                NA_mx <- paste0(c(NA_hi, NA_fa, NA_mi, NA_cr), collapse = ", ")
+
+                cli::cli_alert_info("Tree {tree_i} node {level_i}: {nr_NA_lvl} corresponding criterion value{?s}: {fin_NA_criteria} => (hi fa mi cr) for NA cases is ({NA_mx})")
+
+              } # if (debug).
+
+            } # if (!x$params$quiet$mis).
 
           } # if (any(ix_NA_current_decision)).
 
-          # +++ here now +++
-
-
-          debug <- FALSE # TRUE  # 4debugging
-
-          if (debug){ # Provide debugging feedback:
-
-            if (!x$params$quiet$mis & any(ix_NA_current_decision)) { # Provide user feedback:
-
-              # Note: Redundant, as classification of final node is reported as "Making..." (above):
-
-              nr_NA_lvl <- sum(ix_NA_current_decision)
-              cur_dec_n1 <- decisions_df$current_decision[ix_NA_current_decision][1]  # 1st decision
-
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in final cue '{cue_i}': Predict {fin_NA_pred} (e.g., {x$criterion_name} = {cur_dec_n1}).")
-
-            }
-
-          } # if debug().
-
         } # if final exit.
 
-
+        # +++ here now +++
 
         # ToDo:
         #
@@ -595,7 +595,7 @@ fftrees_apply <- function(x,
 
     level_stats_ls[[tree_i]] <- level_stats_i
 
-    decisions_ls[[tree_i]] <- decisions_df[, names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
+    decisions_ls[[tree_i]] <- decisions_df[ , names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
 
   } # Loop 1: tree_i.
 
