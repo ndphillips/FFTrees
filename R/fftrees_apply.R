@@ -371,13 +371,24 @@ fftrees_apply <- function(x,
           ix_NA_classify_now <- is.na(classify_now)
           nr_NA_lvl <- sum(ix_NA_classify_now)
 
-          classify_now[ix_NA_classify_now] <- FALSE  # Do NOT classify NA cases (which is NOT "classify as FALSE")!
+          if (any(ix_NA_classify_now)){ # IFF there ARE NA cases:
 
-          if (!x$params$quiet$mis & any(ix_NA_classify_now)) { # Provide user feedback:
+            # Assign:
+            classify_now[ix_NA_classify_now] <- FALSE  # Do NOT classify NA cases (which differs from "classify as FALSE")!
 
-            cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
+            # Classify and count outcomes for NA cases (i.e., sub-2x2 matrix for NA cases):
+            NA_hi <- NA  # not classified = no outcome
+            NA_fa <- NA  # not classified = no outcome
+            NA_mi <- NA  # not classified = no outcome
+            NA_cr <- NA  # not classified = no outcome
 
-          }
+            if (!x$params$quiet$mis) { # Provide user feedback:
+
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
+
+            }
+
+          } # if any(ix_NA_classify_now).
 
         }
 
@@ -388,7 +399,7 @@ fftrees_apply <- function(x,
           ix_NA_current_decision <- is.na(decisions_df$current_decision)
           nr_NA_lvl <- sum(ix_NA_current_decision)
 
-          if (any(ix_NA_current_decision)){ # IFF there are NA cases:
+          if (any(ix_NA_current_decision)){ # IFF there ARE NA cases:
 
             # Classify NA cases (in final node):
 
@@ -465,7 +476,7 @@ fftrees_apply <- function(x,
 
         # +++ here now +++
 
-        # ToDo:
+        # Done:
         #
         # - When a final cue is NA: Create the 2x2 matrix for NA cases (true criterion values x decisions made):
         #   1. hi among NA cases
@@ -478,7 +489,8 @@ fftrees_apply <- function(x,
         # Decision      TRUE      FALSE
         # 'true'        hi        fa
         # 'false'       mi        cr
-        #
+
+        # ToDo:
         #
         # - When allowing for a 3rd category ("dnk" / abstention / suspension):
         #   2 new errors (as criterion still IS binary / non-contingent / knowable in principle):
@@ -487,9 +499,9 @@ fftrees_apply <- function(x,
         #
         #               Criterion
         # Decision      TRUE      FALSE
-        #   'true'      hi        fa
+        #   'true'       hi        fa
         #   'dnk'       (mi)      (fa)
-        #   'false'     mi        cr
+        #   'false'      mi        cr
 
         # - Consider alternative policies for indecision / doxastic abstention:
         #   - predict the most common category OF NA CASES in training data (rather than OVERALL baseline or baseline at this level)
@@ -578,6 +590,13 @@ fftrees_apply <- function(x,
 
         # Add sums of NA cases to level_stats_i:
         level_stats_i$cue_NA[level_i] <- nr_NA_lvl  # nr. of NA in cue values on current level_i
+
+        # Details:
+        level_stats_i$NA_hi[level_i] <- NA_hi
+        level_stats_i$NA_fa[level_i] <- NA_fa
+        level_stats_i$NA_mi[level_i] <- NA_mi
+        level_stats_i$NA_cr[level_i] <- NA_cr
+
         level_stats_i$dec_NA[level_i] <- nr_NA_dec  # nr. of NA values in decisions / indecisions on level_i
 
         # +++ here now +++
