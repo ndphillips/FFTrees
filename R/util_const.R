@@ -152,9 +152,9 @@ fin_NA_options <- c("noise", "signal", "baseline", "majority")  # (global consta
 
 # - debug: ----
 
-# Provide additional details as debugging feedback:
+# Provide additional details (as debugging feedback):
 
-debug <- TRUE  # FALSE  # (global constant)
+debug <- TRUE # FALSE  # (global constant)
 
 
 # The following are now obsolete, as handled by the FFTrees() argument:
