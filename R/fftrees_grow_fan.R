@@ -502,9 +502,12 @@ fftrees_grow_fan <- function(x,
 
           # ToDo: What if goal.chase == my_goal?
 
-          if (any(sapply(x$params$quiet, isFALSE))) {
-            msg <- paste0("\u2014 A limit for growing FFTs with goal.chase = '", x$params$goal.chase, "' is unknown.\n")
-            cat(u_f_hig(msg))
+          if (any(sapply(x$params$quiet, isFALSE))) { # Provide user feedback:
+
+            msg <- paste0("A limit for growing FFTs with goal.chase = '", x$params$goal.chase, "' is unknown.")
+            cat(u_f_hig("\u2014 ", msg, "\n"))
+
+            # OR: cli::cli_alert_warning(msg)
           }
 
 
@@ -528,11 +531,12 @@ fftrees_grow_fan <- function(x,
 
         if (!grow_tree){ # A perfect/ideal tree_i (based on current goal.chase) was found:
 
-          # Provide user feedback: ----
+          # if (any(sapply(x$params$quiet, isFALSE))) { # Provide user feedback:
+          if (debug){ # Provide debugging feedback:
 
-          if (any(sapply(x$params$quiet, isFALSE))) {
             cli::cli_alert_info("Found a perfect tree (i = {tree_i}): {x$params$goal.chase} = {asif_goal_chase_value}")
-          }
+
+          } # if (debug).
 
         }
 
@@ -552,11 +556,9 @@ fftrees_grow_fan <- function(x,
 
           asif_stats$goal_change[level_current] <- goal_change
 
+          if (debug){ # Provide debugging feedback:
 
-          debug <- FALSE # TRUE # 4debugging
-
-          if (debug){ # Provide debugging feedback: Report goal_change value:
-
+            # Report goal_change value:
             goal_change_rnd <- round(asif_stats$goal_change[level_current], 3)
             cli::cli_alert_info("Tree {tree_i}, level {level_current}: goal_change = {goal_change_rnd} (chasing '{x$params$goal.chase}').")
 
