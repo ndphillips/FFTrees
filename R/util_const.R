@@ -149,8 +149,15 @@ fin_NA_options <- c("noise", "signal", "baseline", "majority")  # (global consta
 
 
 # User feedback: ------
-#
-# Now obsolete, as handled by FFTrees() argument:
+
+# - debug: ----
+
+# Provide additional details as debugging feedback:
+
+debug <- TRUE  # FALSE  # (global constant)
+
+
+# The following are now obsolete, as handled by the FFTrees() argument:
 # quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)
 #
 # # - quiet.ini: ----
