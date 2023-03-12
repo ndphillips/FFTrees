@@ -477,8 +477,6 @@ fftrees_apply <- function(x,
 
               }
 
-              debug <- TRUE # FALSE # TRUE  # 4debugging
-
               if (debug) { # Provide debugging feedback:
 
                 NA_mx <- paste0(c(NA_hi, NA_fa, NA_mi, NA_cr), collapse = ", ")
@@ -605,9 +603,9 @@ fftrees_apply <- function(x,
 
       if ( allow_NA_pred | allow_NA_crit ){
 
-        # Goal: Add NA values to level stats:
+        # Goal: Add NA values to level stats.
 
-        # Add sums of NA cases to level_stats_i:
+        # Total NA cases in level_stats_i:
         level_stats_i$NA_cue[level_i] <- nr_NA_lvl  # nr. of NA in cue values on the current level_i
 
         # Details: Decision outcomes for NA cases:
@@ -616,12 +614,8 @@ fftrees_apply <- function(x,
         level_stats_i$NA_mi[level_i] <- NA_mi
         level_stats_i$NA_cr[level_i] <- NA_cr
 
+        # Total of undecided cases (= data N - n):
         level_stats_i$NA_dec[level_i] <- nr_NA_dec  # nr. of NA values in decisions / indecisions on level_i
-
-        # +++ here now +++
-
-        # ToDo:
-        # - Add number of TRUE vs. FALSE decisions for NAs in final node?
 
       } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
 
