@@ -145,7 +145,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   testthat::expect_true(is.list(quiet))
 
 
-  # Identify roles & NA data types: ----
+  # Identify columns/variables with NA values (by roles & data types): ----
 
   # NA values (in data):
   nr_NA <- colSums(is.na(data))  # Note: per column in data
@@ -305,7 +305,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   }
 
 
-  # +++ here now +++
+  # +++ here now +++ : Allow to replace NA-values in numeric predictors by mean/median?
 
 
   if (any(ix_pred_num_NA)){ # NA values in numeric predictors: ----
@@ -338,6 +338,60 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
 } # handle_NA_data().
 
+
+# replace_NA_vec: ------
+
+# Goal: Replace NA-values in a vector by mean() of existing values.
+#       df$x_1[is.na(df$x_1)] <- mean(df$x_1, na.rm = TRUE)
+
+replace_NA_vec <- function(v){
+
+  # by data type:
+  if (is.numeric(v)){
+
+    v[is.na(v)] <- mean(v, na.rm = TRUE)
+
+  } else {
+
+    stop("Cannot handle data type of v")
+
+  }
+
+  return(v)
+
+} # replace_NA_vec().
+
+# # Check:
+# v <- c(4, 2, NA, 9, 4)
+# replace_NA_vec(v)
+
+
+# replace_NA_num: ------
+
+# Goal: Replace NA-values of numeric variables (in df) by mean().
+
+replace_NA_num <- function(df){
+
+  # Apply replace_NA_vec() ONLY to numeric columns of df:
+
+  ix_num <- sapply(X = df, FUN = is.numeric)  # ix of numeric columns
+
+  df[ix_num] <- apply(X = df[ix_num], MARGIN = 2, FUN = replace_NA_vec)
+
+  return(df)
+
+} # replace_NA_num().
+
+# # Check:
+# df <- data.frame(a_0 = letters[1:5],
+#                  x_1 = c(4, 2, NA, 9, 4),
+#                  x_2 = c(-2, -1, NA, 2, 1),
+#                  x_3 = c(1, NA, 3, 4, 5))
+#
+# replace_NA_num(df)
+
+# Note: See some tidyverse solutions at
+# <https://www.codingprof.com/how-to-replace-nas-with-the-mean-in-r-examples/>
 
 
 # ToDo: ------
