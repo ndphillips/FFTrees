@@ -386,6 +386,7 @@ replace_NA_vec <- function(v){
 # replace_NA_vec(v)
 
 
+
 # replace_NA_num: ------
 
 # Goal: Replace NA-values in all numeric variables (in df) by mean().
@@ -410,14 +411,45 @@ replace_NA_num <- function(df){
 #                  x_3 = c(1, NA, 3, 4, 5))
 #
 # replace_NA_num(df)
+# class(df$x_3)
 
 # Note: See some tidyverse solutions at
 # <https://www.codingprof.com/how-to-replace-nas-with-the-mean-in-r-examples/>
 
 
+
+# cue_class_of_matrix: ------
+
+# # Handle special case:
+# # Numeric cues have been turned into class c("matrix", "array").
+# # Goal: If data type is "double" or "integer", then set class to "numeric".
+#
+# cue_class_of_matrix <- function(cue, cue_class){
+#
+#   if ("matrix" %in% cue_class){
+#
+#     cue_type <- typeof(cue)
+#
+#     if (cue_type %in% c("double", "integer")){
+#       return("numeric")
+#     } else {
+#       return(cue_type)
+#     }
+#
+#   } else {
+#
+#     return(cue_class)  # unchanged
+#
+#   }
+#
+# } # cue_class_of_matrix().
+
+# Note: Obsolete/Fixed by adding as.vector() when determining cue class.
+
+
 # ToDo: ------
 
-# - Handle consequences of allowing NAs in numeric predictors.
-# - Handle NAs in criterion variable.
+# - Handle the consequences of allowing NAs in numeric predictors.
+# - Handle NAs in the criterion variable.
 
 # eof.
