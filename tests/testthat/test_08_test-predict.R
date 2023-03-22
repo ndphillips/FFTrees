@@ -1,20 +1,17 @@
-context("test-predictFFTrees")
+context("Predict FFT results for new data")
 
 test_that("predict.FFTrees() works", {
 
   data_train <- heart.train
   data_test <- heart.test
 
-
   x <- FFTrees(diagnosis ~ .,
     data = data_train
   )
 
-
   class_test_pred <- predict(x, newdata = data_test)
   prob_test_pred <- predict(x, newdata = data_test, type = "prob")
   both_test_pred <- predict(x, newdata = data_test, type = "both")
-
 
   # Raw predictions are a logical vector:
   testthat::expect_type(class_test_pred, type = "logical")

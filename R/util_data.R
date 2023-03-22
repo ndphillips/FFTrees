@@ -145,7 +145,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   testthat::expect_true(is.list(quiet))
 
 
-  # Identify roles & NA data types: ----
+  # Identify columns/variables with NA values (by roles & data types): ----
 
   # NA values (in data):
   nr_NA <- colSums(is.na(data))  # Note: per column in data
@@ -268,65 +268,85 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   #  dplyr::mutate_if(is.factor, addNA) %>%
   #  dplyr::mutate_if(is.character, addNA)
 
-  if (any(ix_pred_chr_NA)){ # NA values in character predictors: ----
+  if (any(ix_pred_chr_NA)){ # 1. NA values in character predictors: ----
 
     # Replace NA values:
     data[ix_pred_chr] <- data[ix_pred_chr] %>%
       dplyr::mutate_if(is.character, addNA)  # add NA as a new factor level
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA case{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
+      cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA value{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
     }
 
-  }
+  } # 1. character NA.
 
-  if (any(ix_pred_fct_NA)){ # NA values in factor predictors: ----
+
+  if (any(ix_pred_fct_NA)){ # 2. NA values in factor predictors: ----
 
     # Replace NA values:
     data[ix_pred_fct] <- data[ix_pred_fct] %>%
       dplyr::mutate_if(is.factor, addNA)  # add NA as a new factor level
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA case{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
+      cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA value{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
     }
 
-  }
+  } # 2. factor NA.
 
-  if (any(ix_pred_log_NA)){ # NA values in logical predictors: ----
+
+  if (any(ix_pred_log_NA)){ # 3. NA values in logical predictors: ----
 
     # Replace NA values:
     data[ix_pred_log] <- data[ix_pred_log] %>%
       dplyr::mutate_if(is.logical, addNA)  # add NA as a new factor level
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA case{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
+      cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA value{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
     }
 
-  }
+  } # 3. logical NA.
 
 
-  # +++ here now +++
 
-
-  if (any(ix_pred_num_NA)){ # NA values in numeric predictors: ----
+  if (any(ix_pred_num_NA)){ # 4. NA values in numeric predictors: ----
 
     # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
+    # +++ here now +++ : OR: Allow to replace NA-values in numeric predictors by mean/median?
 
-    if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping {sum(nr_pred_num_NA)} NA case{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
+    replace_num_NA <- TRUE  # TRUE replaces NA in numeric predictors by their mean / FALSE keeps (but handles them later)
+
+    if (replace_num_NA){
+
+      # Replace NAs in numeric predictors:
+      data[ix_pred_num_NA] <- replace_NA_num(df = data[ix_pred_num_NA])
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Replaced {sum(nr_pred_num_NA)} NA value{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s} of '{mydata}' data.")
+      }
+
+    } else {
+
+      # Do nothing / keep NA values.
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Keeping {sum(nr_pred_num_NA)} NA value{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
+      }
+
     }
 
-  }
+  } # 4. numeric NA.
 
-  if (any(ix_crit_NA)){ # NA values in criterion: ----
+
+
+  if (any(ix_crit_NA)){ # 5. NA values in criterion variable: ----
 
     # ToDo: What to do about NA values in criterion?
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA case{?s} in the criterion {nm_crit_NA}.")
+      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA value{?s} in the criterion {nm_crit_NA}.")
     }
 
-  }
+  } # 5. criterion NA.
 
 
   # print(data)  # 4debugging
@@ -339,10 +359,97 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 } # handle_NA_data().
 
 
+# replace_NA_vec: ------
+
+# Goal: Replace NA-values in a vector by mean() of existing values.
+#       df$x_1[is.na(df$x_1)] <- mean(df$x_1, na.rm = TRUE)
+
+replace_NA_vec <- function(v){
+
+  # by data type:
+  if (is.numeric(v)){
+
+    v[is.na(v)] <- mean(v, na.rm = TRUE)
+
+  } else {
+
+    stop("Cannot handle data type of v")
+
+  }
+
+  return(v)
+
+} # replace_NA_vec().
+
+# # Check:
+# v <- c(4, 2, NA, 9, 4)
+# replace_NA_vec(v)
+
+
+
+# replace_NA_num: ------
+
+# Goal: Replace NA-values in all numeric variables (in df) by mean().
+
+replace_NA_num <- function(df){
+
+  # Apply replace_NA_vec() ONLY to numeric columns of df:
+
+  ix_num <- sapply(X = df, FUN = is.numeric)  # ix of numeric columns
+
+  df[ix_num] <- apply(X = df[ix_num], MARGIN = 2, FUN = replace_NA_vec)  # replace
+
+  # Output:
+  return(df)
+
+} # replace_NA_num().
+
+# # Check:
+# df <- data.frame(a_0 = letters[1:5],
+#                  x_1 = c(4, 2, NA, 9, 4),
+#                  x_2 = c(-2, -1, NA, 2, 1),
+#                  x_3 = c(1, NA, 3, 4, 5))
+#
+# replace_NA_num(df)
+# class(df$x_3)
+
+# Note: See some tidyverse solutions at
+# <https://www.codingprof.com/how-to-replace-nas-with-the-mean-in-r-examples/>
+
+
+
+# cue_class_of_matrix: ------
+
+# # Handle special case:
+# # Numeric cues have been turned into class c("matrix", "array").
+# # Goal: If data type is "double" or "integer", then set class to "numeric".
+#
+# cue_class_of_matrix <- function(cue, cue_class){
+#
+#   if ("matrix" %in% cue_class){
+#
+#     cue_type <- typeof(cue)
+#
+#     if (cue_type %in% c("double", "integer")){
+#       return("numeric")
+#     } else {
+#       return(cue_type)
+#     }
+#
+#   } else {
+#
+#     return(cue_class)  # unchanged
+#
+#   }
+#
+# } # cue_class_of_matrix().
+
+# Note: Obsolete/Fixed by adding as.vector() when determining cue class.
+
 
 # ToDo: ------
 
-# - Handle consequences of allowing NAs in numeric predictors.
-# - Handle NAs in criterion variable.
+# - Handle the consequences of allowing NAs in numeric predictors.
+# - Handle NAs in the criterion variable.
 
 # eof.

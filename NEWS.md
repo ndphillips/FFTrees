@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9018
+## 1.9.0.9022
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -49,7 +49,7 @@ Changes since last release:
 - Added progress bar of **cli** package (removing dependency on **progress**). 
 - Added `exit_types` as global constant. 
 - Improved data cleaning (consistent for training and test data). 
-- Revised documentation and vignettes. 
+- Revised documentation, vignettes, and tests. 
 
 
 <!-- Development version: --> 
@@ -462,6 +462,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-03-10.]
+[File `NEWS.md` last updated on 2023-03-22.]
 
 <!-- eof. -->
