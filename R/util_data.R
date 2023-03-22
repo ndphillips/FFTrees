@@ -280,6 +280,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
   } # 1. character NA.
 
+
   if (any(ix_pred_fct_NA)){ # 2. NA values in factor predictors: ----
 
     # Replace NA values:
@@ -291,6 +292,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
     }
 
   } # 2. factor NA.
+
 
   if (any(ix_pred_log_NA)){ # 3. NA values in logical predictors: ----
 
@@ -311,7 +313,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
     # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
     # +++ here now +++ : OR: Allow to replace NA-values in numeric predictors by mean/median?
 
-    replace_num_NA <- TRUE  # flag
+    replace_num_NA <- TRUE  # TRUE replaces NA in numeric predictors by their mean / FALSE keeps (but handles them later)
 
     if (replace_num_NA){
 
@@ -333,6 +335,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
     }
 
   } # 4. numeric NA.
+
 
 
   if (any(ix_crit_NA)){ # 5. NA values in criterion variable: ----
