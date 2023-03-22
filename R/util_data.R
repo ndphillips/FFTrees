@@ -268,65 +268,82 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   #  dplyr::mutate_if(is.factor, addNA) %>%
   #  dplyr::mutate_if(is.character, addNA)
 
-  if (any(ix_pred_chr_NA)){ # NA values in character predictors: ----
+  if (any(ix_pred_chr_NA)){ # 1. NA values in character predictors: ----
 
     # Replace NA values:
     data[ix_pred_chr] <- data[ix_pred_chr] %>%
       dplyr::mutate_if(is.character, addNA)  # add NA as a new factor level
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA case{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
+      cli::cli_alert_success("Converted {sum(nr_pred_chr_NA)} NA value{?s} in {sum(ix_pred_chr_NA)} character predictor{?s} to <NA>.")
     }
 
-  }
+  } # 1. character NA.
 
-  if (any(ix_pred_fct_NA)){ # NA values in factor predictors: ----
+  if (any(ix_pred_fct_NA)){ # 2. NA values in factor predictors: ----
 
     # Replace NA values:
     data[ix_pred_fct] <- data[ix_pred_fct] %>%
       dplyr::mutate_if(is.factor, addNA)  # add NA as a new factor level
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA case{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
+      cli::cli_alert_success("Converted {sum(nr_pred_fct_NA)} NA value{?s} in {sum(ix_pred_fct_NA)} factor predictor{?s} to <NA>.")
     }
 
-  }
+  } # 2. factor NA.
 
-  if (any(ix_pred_log_NA)){ # NA values in logical predictors: ----
+  if (any(ix_pred_log_NA)){ # 3. NA values in logical predictors: ----
 
     # Replace NA values:
     data[ix_pred_log] <- data[ix_pred_log] %>%
       dplyr::mutate_if(is.logical, addNA)  # add NA as a new factor level
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA case{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
+      cli::cli_alert_success("Converted {sum(nr_pred_log_NA)} NA value{?s} in {sum(ix_pred_log_NA)} logical predictor{?s} to <NA>.")
     }
 
-  }
+  } # 3. logical NA.
 
 
-  # +++ here now +++ : Allow to replace NA-values in numeric predictors by mean/median?
 
-
-  if (any(ix_pred_num_NA)){ # NA values in numeric predictors: ----
+  if (any(ix_pred_num_NA)){ # 4. NA values in numeric predictors: ----
 
     # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
+    # +++ here now +++ : OR: Allow to replace NA-values in numeric predictors by mean/median?
 
-    if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping {sum(nr_pred_num_NA)} NA case{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
+    replace_num_NA <- TRUE  # flag
+
+    if (replace_num_NA){
+
+      # Replace NAs in numeric predictors:
+      data[ix_pred_num_NA] <- replace_NA_num(df = data[ix_pred_num_NA])
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Replaced {sum(nr_pred_num_NA)} NA value{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s} of '{mydata}' data.")
+      }
+
+    } else {
+
+      # Do nothing / keep NA values.
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Keeping {sum(nr_pred_num_NA)} NA value{?s} in {sum(ix_pred_num_NA)} numeric predictor{?s}.")
+      }
+
     }
 
-  }
+  } # 4. numeric NA.
 
-  if (any(ix_crit_NA)){ # NA values in criterion: ----
+
+  if (any(ix_crit_NA)){ # 5. NA values in criterion variable: ----
 
     # ToDo: What to do about NA values in criterion?
 
     if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA case{?s} in the criterion {nm_crit_NA}.")
+      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA value{?s} in the criterion {nm_crit_NA}.")
     }
 
-  }
+  } # 5. criterion NA.
 
 
   # print(data)  # 4debugging
@@ -368,7 +385,7 @@ replace_NA_vec <- function(v){
 
 # replace_NA_num: ------
 
-# Goal: Replace NA-values of numeric variables (in df) by mean().
+# Goal: Replace NA-values in all numeric variables (in df) by mean().
 
 replace_NA_num <- function(df){
 
@@ -376,8 +393,9 @@ replace_NA_num <- function(df){
 
   ix_num <- sapply(X = df, FUN = is.numeric)  # ix of numeric columns
 
-  df[ix_num] <- apply(X = df[ix_num], MARGIN = 2, FUN = replace_NA_vec)
+  df[ix_num] <- apply(X = df[ix_num], MARGIN = 2, FUN = replace_NA_vec)  # replace
 
+  # Output:
   return(df)
 
 } # replace_NA_num().
