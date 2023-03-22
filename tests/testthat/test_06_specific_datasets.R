@@ -1,6 +1,7 @@
-context("test-specific_datasets")
+context("Replicate FFTs of Phillips et al. (2017)")
 
 test_that("Can replicate Phillips et al.2017 heartdisease trees", {
+
   phillips_trees <- FFTrees(diagnosis ~ .,
     data = heart.train,
     data.test = heart.test,
@@ -24,3 +25,5 @@ test_that("Can replicate Phillips et al.2017 heartdisease trees", {
     )
   ))
 })
+
+# eof.

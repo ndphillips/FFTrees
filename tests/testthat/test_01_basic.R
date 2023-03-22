@@ -1,4 +1,4 @@
-context("Creating basic FFTrees objects")
+context("Create basic FFTrees objects")
 
 test_that("Can create FFTrees object", {
 

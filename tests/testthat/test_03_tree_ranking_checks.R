@@ -1,4 +1,7 @@
-test_that("train summary statistics are correct", {
+context("Verify level/summary statistics")
+
+test_that("Train summary statistics are correct", {
+
   x <- FFTrees(diagnosis ~ .,
     data = heart.train,
     data.test = heart.test
@@ -25,3 +28,5 @@ test_that("train summary statistics are correct", {
 
   testthat::expect_equal(levelstats_cost, results_cost)
 })
+
+# eof.

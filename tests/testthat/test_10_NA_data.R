@@ -1,4 +1,4 @@
-# Handle NA data:
+context("Handle NA data")
 
 test_that("FFTrees works with NA values in categorical predictors", {
 

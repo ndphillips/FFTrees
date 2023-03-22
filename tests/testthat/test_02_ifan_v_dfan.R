@@ -1,4 +1,5 @@
-context("ifan vs dfan")
+context("Check tree algorithms: ifan vs dfan")
+
 
 test_that("Can create FFTrees object with dfan", {
 
@@ -6,6 +7,7 @@ test_that("Can create FFTrees object with dfan", {
 
   expect_s3_class(object = object, class = "FFTrees")
 })
+
 
 test_that("Different results with ifan and dfan", {
 
