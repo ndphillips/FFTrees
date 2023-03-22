@@ -126,10 +126,22 @@ fftrees_cuerank <- function(x = NULL,
 
     # Get key information of the current cue:
     cue_i_name  <- names(cue_df)[cue_i]
-    cue_i_class <- class(cue_df %>% dplyr::pull(cue_i))
-    cue_i_v     <- unlist(cue_df[, cue_i])
+    cue_i_class <- class(as.vector(cue_df %>% dplyr::pull(cue_i))) # dplyr/tidyverse
+    # cue_i_class <- class(as.vector(cue_df[[cue_i_name]]))  # base R
+    cue_i_v     <- unlist(cue_df[ , cue_i])
     cue_i_cost  <- x$params$cost.cues[[cue_i_name]]
 
+    # Problem: cue_i_class can be c("matrix", "array")
+    # print(cue_i_class)   # 4debugging: 1. before
+    #
+    # if ("matrix" %in% cue_i_class){
+    #
+    #   cue_i_class <- cue_class_of_matrix(cue_i_v, cue_i_class)
+    #   print(cue_i_class)   # 4debugging: 2. after
+    #
+    # }
+    #
+    # FIXED: Added as.vector() when determining cue_i_class() above.
 
     if (all(is.na(cue_i_v)) == FALSE) { # (A) Some non-missing values:
 

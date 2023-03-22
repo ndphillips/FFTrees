@@ -317,11 +317,11 @@ fftrees_apply <- function(x,
       threshold_i <- threshold_v[level_i]
 
       # Current cue values from data (as df):
-      cue_values <- data[[cue_i]]
+      cue_values <- as.vector(data[[cue_i]])  # as.vector() turns "matrix" "array" into (numeric) vector
+      cur_class  <- substr(class(cue_values), 1, 1)
 
-      cur_class <- substr(class(cue_values), 1, 1)
-
-      # print(paste0("class_i = ", class_i, "; cur_class = ", cur_class)) # 4debugging
+      # print(paste0("class_i = ", class_i))  # 4debugging
+      # print(paste0("cur_class = ", cur_class))
 
       if (cur_class != class_i){
         warning(paste0("Mismatch: class_i = ", class_i, "; cur_class = ", cur_class))
