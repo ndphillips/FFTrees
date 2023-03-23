@@ -15,6 +15,9 @@ or one FFT (as a data frame in tidy format, with one row per node).}
 usually from an \code{FFTrees} object,
 with suitable variable names to pass \code{verify_ffts_df}.
 Default: \code{ffts_df = NULL}.}
+
+\item{quiet}{Hide feedback messages (as logical)?
+Default: \code{quiet = FALSE}.}
 }
 \value{
 A (set of) FFT definition(s) in the one line
