@@ -402,7 +402,6 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
 # add_nodes: ------
 
-
 # Goal: Add some node(s) (or cues) to a given FFT.
 #
 # Inputs:
@@ -425,11 +424,16 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # 4. If nodes contain a new exit, it needs to have a valid final type (i.e., exit_types[3]).
 #    The exit of the former exit is re-set to signal (i.e., exit_types[2]).
 
-
 add_nodes <- function(fft,
                       nodes = NA,  # as vector (1 integer or multiple nodes)
-                      class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
+                      class = NA,  # variables of fft nodes (as df rows)
+                      cue = NA,
+                      direction = NA,
+                      threshold = NA,
+                      exit = NA,
+                      #
                       my.node = NA,
+                      #
                       quiet = FALSE){
 
   # Prepare: ----
