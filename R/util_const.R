@@ -141,13 +141,14 @@ allow_NA_crit <- FALSE  # (global constant)
 
 
 
-# - replace_NA_num: ----
+# - replace_NA_num_pred: ----
 
 # Replace NA values in numeric predictors (by mean of predictor)?
 # - TRUE replaces NA in numeric predictors by their mean;
 # - FALSE keeps (but handles them later)
 
-replace_NA_num <- TRUE  # (global constant)
+replace_NA_num_pred <- TRUE  # (global constant)
+
 
 
 # - fin_NA_options: ----

@@ -313,7 +313,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
     # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
     # +++ here now +++ : OR: Allow to replace NA-values in numeric predictors by mean/median?
 
-    if (replace_NA_num){ # use global constant:
+    if (replace_NA_num_pred){ # use global constant:
 
       # Replace NAs in numeric predictors:
       data[ix_pred_num_NA] <- replace_NA_num(df = data[ix_pred_num_NA])
