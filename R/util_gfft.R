@@ -57,11 +57,16 @@
 # - fftrees_ffttowords()
 
 
-#' Read an FFT definition from tree definitions.
+#' Read an FFT definition from tree definitions
 #'
 #' @description \code{read_fft_df} reads and returns
-#' the definition of one FFT (as a tidy data frame) from
-#' the multi-line FFT definitions of an \code{FFTrees} object.
+#' the definition of a single FFT (as a tidy data frame)
+#' from the multi-line FFT definitions of an \code{FFTrees} object.
+#'
+#' \code{read_fft_df} allows reading individual tree definitions
+#' to manipulate them with other tree trimming functions.
+#'
+#' \code{\link{write_fft_df}} provides the inverse functionality.
 #'
 #' @param ffts_df A set of FFT definitions (as a data frame,
 #' usually from an \code{FFTrees} object,
@@ -69,9 +74,10 @@
 #'
 #' @param tree The ID of the to-be-selected FFT (as an integer),
 #' corresponding to a tree in \code{ffts_df}.
+#' Default: \code{tree = 1}.
 #'
-#' @return A definition of one FFT (as a data frame)
-#' in tidy format (with one row per node).
+#' @return A definition of one FFT
+#' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree trimming functions
 #'
@@ -172,9 +178,40 @@ read_fft_df <- function(ffts_df, tree = 1){
 # Output: FFT definition in 1 line (as non-tidy df).
 #
 # Note: Code is currently used at the end of
-# - fftrees_grow_fan()         +++ here now +++
-# - fftrees_wordstofftrees()   +++ here now +++
+# - fftrees_grow_fan()
+# - fftrees_wordstofftrees()
 
+
+#' Write an FFT definition to tree definitions
+#'
+#' @description \code{write_fft_df} writes the definition
+#' of a single FFT (as a tidy data frame)
+#' into the one-line FFT definition used by an \code{FFTrees} object.
+#'
+#' \code{write_fft_df} allows turning individual tree definitions
+#' into the one-line FFT definition format
+#' used by an \code{FFTrees} object.
+#'
+#' \code{\link{read_fft_df}} provides the inverse functionality.
+#'
+#' @param fft A definition of one FFT
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param tree The ID of the to-be-written FFT (as an integer).
+#' Default: \code{tree = -99L}.
+#'
+#' @return An FFT definition in the one line
+#' FFT definition format used by an \code{FFTrees} object
+#' (as a data frame).
+#'
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 write_fft_df <- function(fft, tree = -99L){
 
