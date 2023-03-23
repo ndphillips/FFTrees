@@ -316,7 +316,7 @@ write_fft_df <- function(fft, tree = -99L){
 #' with suitable variable names to pass \code{verify_ffts_df}.
 #' Default: \code{ffts_df = NULL}.
 #'
-#' @quiet Hide feedback messages (as logical)?
+#' @param quiet Hide feedback messages (as logical)?
 #' Default: \code{quiet = FALSE}.
 #'
 #' @return A (set of) FFT definition(s) in the one line
@@ -332,7 +332,6 @@ write_fft_df <- function(fft, tree = -99L){
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export
-
 
 add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
