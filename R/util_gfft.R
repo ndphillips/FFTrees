@@ -79,6 +79,7 @@
 #' @return A definition of one FFT
 #' (as a data frame in tidy format, with one row per node).
 #'
+#' @family tree conversion functions
 #' @family tree trimming functions
 #'
 #' @seealso
@@ -184,8 +185,8 @@ read_fft_df <- function(ffts_df, tree = 1){
 
 #' Write an FFT definition to tree definitions
 #'
-#' @description \code{write_fft_df} writes the definition
-#' of a single FFT (as a tidy data frame)
+#' @description \code{write_fft_df} writes
+#' the definition of a single FFT (as a tidy data frame)
 #' into the one-line FFT definition used by an \code{FFTrees} object.
 #'
 #' \code{write_fft_df} allows turning individual tree definitions
@@ -204,6 +205,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 #' FFT definition format used by an \code{FFTrees} object
 #' (as a data frame).
 #'
+#' @family tree conversion functions
 #' @family tree trimming functions
 #'
 #' @seealso
@@ -292,6 +294,44 @@ write_fft_df <- function(fft, tree = -99L){
 # Goal: Add an FFT definition (Case 1) or 1 FFT as df (Case 2) to an existing set of FFT definitions.
 #
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
+
+
+#' Add an FFT definition to tree definitions
+#'
+#' @description \code{add_fft_df} adds the definition(s) of
+#' one or more FFT(s) (in the multi-line format of an \code{FFTrees} object)
+#' or a single FFT (as a tidy data frame)
+#' to the multi-line FFT definitions of an \code{FFTrees} object.
+#'
+#' \code{add_fft_df} allows for collecting and combining
+#' (sets of) tree definitions after
+#' manipulating them with other tree trimming functions.
+#'
+#' @param fft A (set of) FFT definition(s)
+#' (in the multi-line format of an \code{FFTrees} object)
+#' or one FFT (as a data frame in tidy format, with one row per node).
+#'
+#' @param ffts_df A set of FFT definitions (as a data frame,
+#' usually from an \code{FFTrees} object,
+#' with suitable variable names to pass \code{verify_ffts_df}.
+#' Default: \code{ffts_df = NULL}.
+#'
+#' @quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return A (set of) FFT definition(s) in the one line
+#' FFT definition format used by an \code{FFTrees} object
+#' (as a data frame).
+#'
+#' @family tree conversion functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 
 add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
