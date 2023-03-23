@@ -22,8 +22,8 @@
 # Details:
 #
 # 2 FFT translation functions:
-# - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (in "tidy" format: with 1 row per node),
-# - write: back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
+# - read_fft_df: From multi-FFT df (with 1 row per tree) to 1 FFT df (in "tidy" format: with 1 row per node),
+# - write_fft_df: Back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
 #
 # 1 FFT collection function:
 # - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
@@ -46,7 +46,7 @@
 # This creates a "tidy" representation of 1 FFT.
 #
 # Inputs:
-# ffts_df: A set of FFT definitions (as df, usually from an FFTrees object,
+# : A set of FFT definitions (as df, usually from an FFTrees object,
 #       with suitable variable names to pass verify_ffts_df()).
 # tree: A tree ID (corresponding to tree in ffts_df).
 #
@@ -56,6 +56,31 @@
 # - fftrees_apply()
 # - fftrees_ffttowords()
 
+
+#' Read an FFT definition from tree definitions.
+#'
+#' @description \code{read_fft_df} reads and returns
+#' the definition of one FFT (as a tidy data frame) from
+#' the multi-line FFT definitions of an \code{FFTrees} object.
+#'
+#' @param ffts_df A set of FFT definitions (as a data frame,
+#' usually from an \code{FFTrees} object,
+#' with suitable variable names to pass \code{verify_ffts_df}.
+#'
+#' @param tree The ID of the to-be-selected FFT (as an integer),
+#' corresponding to a tree in \code{ffts_df}.
+#'
+#' @return A definition of one FFT (as a data frame)
+#' in tidy format (with one row per node).
+#'
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 read_fft_df <- function(ffts_df, tree = 1){
 
