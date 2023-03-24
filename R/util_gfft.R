@@ -79,10 +79,11 @@
 #' @return A definition of one FFT
 #' (as a data frame in tidy format, with one row per node).
 #'
-#' @family tree conversion functions
+#' @family tree definition and conversion functions
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
@@ -205,10 +206,11 @@ read_fft_df <- function(ffts_df, tree = 1){
 #' FFT definition format used by an \code{FFTrees} object
 #' (as a data frame).
 #'
-#' @family tree conversion functions
+#' @family tree definition and conversion functions
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
@@ -323,10 +325,11 @@ write_fft_df <- function(fft, tree = -99L){
 #' FFT definition format used by an \code{FFTrees} object
 #' (as a data frame).
 #'
-#' @family tree conversion functions
+#' @family tree definition and conversion functions
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
