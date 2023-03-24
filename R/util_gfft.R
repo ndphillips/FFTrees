@@ -22,8 +22,8 @@
 # Details:
 #
 # 2 FFT translation functions:
-# - read: From multi-FFT df (with 1 row per tree) to 1 FFT df (in "tidy" format: with 1 row per node),
-# - write: back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
+# - read_fft_df: From multi-FFT df (with 1 row per tree) to 1 FFT df (in "tidy" format: with 1 row per node),
+# - write_fft_df: Back from to 1 FFT df (with 1 row per node) to multi-tree df (with 1 row per tree).
 #
 # 1 FFT collection function:
 # - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
@@ -46,7 +46,7 @@
 # This creates a "tidy" representation of 1 FFT.
 #
 # Inputs:
-# ffts_df: A set of FFT definitions (as df, usually from an FFTrees object,
+# : A set of FFT definitions (as df, usually from an FFTrees object,
 #       with suitable variable names to pass verify_ffts_df()).
 # tree: A tree ID (corresponding to tree in ffts_df).
 #
@@ -56,6 +56,39 @@
 # - fftrees_apply()
 # - fftrees_ffttowords()
 
+
+#' Read an FFT definition from tree definitions
+#'
+#' @description \code{read_fft_df} reads and returns
+#' the definition of a single FFT (as a tidy data frame)
+#' from the multi-line FFT definitions of an \code{FFTrees} object.
+#'
+#' \code{read_fft_df} allows reading individual tree definitions
+#' to manipulate them with other tree trimming functions.
+#'
+#' \code{\link{write_fft_df}} provides the inverse functionality.
+#'
+#' @param ffts_df A set of FFT definitions (as a data frame,
+#' usually from an \code{FFTrees} object,
+#' with suitable variable names to pass \code{verify_ffts_df}.
+#'
+#' @param tree The ID of the to-be-selected FFT (as an integer),
+#' corresponding to a tree in \code{ffts_df}.
+#' Default: \code{tree = 1}.
+#'
+#' @return A definition of one FFT
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @family tree definition and conversion functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 read_fft_df <- function(ffts_df, tree = 1){
 
@@ -147,9 +180,42 @@ read_fft_df <- function(ffts_df, tree = 1){
 # Output: FFT definition in 1 line (as non-tidy df).
 #
 # Note: Code is currently used at the end of
-# - fftrees_grow_fan()         +++ here now +++
-# - fftrees_wordstofftrees()   +++ here now +++
+# - fftrees_grow_fan()
+# - fftrees_wordstofftrees()
 
+
+#' Write an FFT definition to tree definitions
+#'
+#' @description \code{write_fft_df} writes
+#' the definition of a single FFT (as a tidy data frame)
+#' into the one-line FFT definition used by an \code{FFTrees} object.
+#'
+#' \code{write_fft_df} allows turning individual tree definitions
+#' into the one-line FFT definition format
+#' used by an \code{FFTrees} object.
+#'
+#' \code{\link{read_fft_df}} provides the inverse functionality.
+#'
+#' @param fft A definition of one FFT
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param tree The ID of the to-be-written FFT (as an integer).
+#' Default: \code{tree = -99L}.
+#'
+#' @return An FFT definition in the one line
+#' FFT definition format used by an \code{FFTrees} object
+#' (as a data frame).
+#'
+#' @family tree definition and conversion functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 write_fft_df <- function(fft, tree = -99L){
 
@@ -232,6 +298,44 @@ write_fft_df <- function(fft, tree = -99L){
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
 
 
+#' Add an FFT definition to tree definitions
+#'
+#' @description \code{add_fft_df} adds the definition(s) of
+#' one or more FFT(s) (in the multi-line format of an \code{FFTrees} object)
+#' or a single FFT (as a tidy data frame)
+#' to the multi-line FFT definitions of an \code{FFTrees} object.
+#'
+#' \code{add_fft_df} allows for collecting and combining
+#' (sets of) tree definitions after
+#' manipulating them with other tree trimming functions.
+#'
+#' @param fft A (set of) FFT definition(s)
+#' (in the multi-line format of an \code{FFTrees} object)
+#' or one FFT (as a data frame in tidy format, with one row per node).
+#'
+#' @param ffts_df A set of FFT definitions (as a data frame,
+#' usually from an \code{FFTrees} object,
+#' with suitable variable names to pass \code{verify_ffts_df}.
+#' Default: \code{ffts_df = NULL}.
+#'
+#' @param quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return A (set of) FFT definition(s) in the one line
+#' FFT definition format used by an \code{FFTrees} object
+#' (as a data frame).
+#'
+#' @family tree definition and conversion functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
+
 add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
   if (verify_ffts_df(fft)){   # Case 1: fft is a (set of) FFT-definitions (in 1 row per tree, as df) ----
@@ -301,7 +405,6 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
 # add_nodes: ------
 
-
 # Goal: Add some node(s) (or cues) to a given FFT.
 #
 # Inputs:
@@ -324,11 +427,16 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # 4. If nodes contain a new exit, it needs to have a valid final type (i.e., exit_types[3]).
 #    The exit of the former exit is re-set to signal (i.e., exit_types[2]).
 
-
 add_nodes <- function(fft,
                       nodes = NA,  # as vector (1 integer or multiple nodes)
-                      class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
+                      class = NA,  # variables of fft nodes (as df rows)
+                      cue = NA,
+                      direction = NA,
+                      threshold = NA,
+                      exit = NA,
+                      #
                       my.node = NA,
+                      #
                       quiet = FALSE){
 
   # Prepare: ----

@@ -450,17 +450,26 @@ get_exit_word <- function(data){
 #' of an \code{FFTrees} object \code{x}
 #' (as a \code{data.frame}).
 #'
+#' The FFTs in the \code{data.frame} returned
+#' are represented in the one-line per FFT definition format
+#' used by an \code{FFTrees} object.
+#'
 #' In addition to looking up \code{x$trees$definitions},
 #' \code{get_fft_df} verifies that the FFT definitions
 #' are valid (given current settings).
 #'
 #' @param x An \code{FFTrees} object.
 #'
-#' @return A set of FFT definitions (as a \code{data.frame}/\code{tibble}).
+#' @return A set of FFT definitions (as a \code{data.frame}/\code{tibble},
+#' in the one-line per FFT definition format used by an \code{FFTrees} object).
 #'
 #' @family utility functions
+#' @family tree definition and conversion functions
 #'
 #' @seealso
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{write_fft_df}} for writing one FFT to tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export

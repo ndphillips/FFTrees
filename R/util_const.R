@@ -121,6 +121,7 @@ exit_types <- c(0, 1, 0.5)  # (global constant)
 stopping_rules <- c("exemplars", "levels", "statdelta")  # (global constant)
 
 
+
 # Handling NA values: ------
 
 
@@ -137,6 +138,16 @@ allow_NA_pred <- TRUE # FALSE  # (global constant)
 # Allow NA cases in criterion (as logical)?
 
 allow_NA_crit <- FALSE  # (global constant)
+
+
+
+# - replace_NA_num_pred: ----
+
+# Replace NA values in numeric predictors (by mean of predictor)?
+# - TRUE replaces NA in numeric predictors by their mean;
+# - FALSE keeps (but handles them later)
+
+replace_NA_num_pred <- TRUE  # (global constant)
 
 
 
