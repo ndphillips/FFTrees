@@ -30,17 +30,19 @@ to manipulate them with other tree trimming functions.
 \code{\link{write_fft_df}} provides the inverse functionality.
 }
 \seealso{
+\code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 \code{\link{write_fft_df}} for writing one FFT to tree definitions;
 \code{\link{add_fft_df}} for adding FFTs to tree definitions;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other tree conversion functions: 
+Other tree definition and conversion functions: 
 \code{\link{add_fft_df}()},
+\code{\link{get_fft_df}()},
 \code{\link{write_fft_df}()}
 
 Other tree trimming functions: 
 \code{\link{add_fft_df}()},
 \code{\link{write_fft_df}()}
 }
-\concept{tree conversion functions}
+\concept{tree definition and conversion functions}
 \concept{tree trimming functions}

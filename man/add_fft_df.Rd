@@ -35,11 +35,13 @@ to the multi-line FFT definitions of an \code{FFTrees} object.
 manipulating them with other tree trimming functions.
 }
 \seealso{
+\code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 \code{\link{write_fft_df}} for writing one FFT to tree definitions;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other tree conversion functions: 
+Other tree definition and conversion functions: 
+\code{\link{get_fft_df}()},
 \code{\link{read_fft_df}()},
 \code{\link{write_fft_df}()}
 
@@ -47,5 +49,5 @@ Other tree trimming functions:
 \code{\link{read_fft_df}()},
 \code{\link{write_fft_df}()}
 }
-\concept{tree conversion functions}
+\concept{tree definition and conversion functions}
 \concept{tree trimming functions}
