@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9022
+## 1.9.0.9025
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -15,16 +15,27 @@ Changes since last release:
 
 ### Major changes 
 
+<!-- gfft: Manipulating FFTs --> 
+
+- Enabling conversions between tree definition formats and manipulating individual FFTs:
+    - tree definition and conversion functions: `get_fft_df`, `read_fft_df`, `write_fft_df`, `add_fft_df` 
+    - tree trimming functions: ...
+
+
+<!-- NA handling: --> 
+
 - Allowing for missing inputs (`NA` values) in data:
-    - `NA` values in character/factor/logical predictors are treated as `<NA>` factor levels. 
-    - `NA` values in numeric predictors are ignored when using FFTs to decide/predict (if possible). 
+    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels. 
+    - `NA` values in numeric predictors are either _imputed_ (as the mean of the corresponding predictor) or 
+    _ignored_ when creating and using FFTs to decide/predict (if possible). 
     - `NA` values in criterion are yet to be dealt with.  
     
-<!-- Blank line. --> 
 
-- Enabled `stopping.rule = "statdelta"`. 
+<!-- Stopping rule: --> 
 
-- Fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given current `goal.chase` parameter). 
+- Growing FFTs:
+   - enabled `stopping.rule = "statdelta"`. 
+   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given the current `goal.chase` parameter). 
 
 
 <!-- Minor: --> 
@@ -462,6 +473,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-03-22.]
+[File `NEWS.md` last updated on 2023-03-25.]
 
 <!-- eof. -->
