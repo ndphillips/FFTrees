@@ -358,7 +358,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
     } # if else fft.
 
-  } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as df, 1 row per node) ----
+  } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as tidy df, 1 row per node) ----
 
     cur_fft <- write_fft_df(fft = fft, tree = 1)
 
