@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.9.0.9024 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 1.9.0.9025 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
 
@@ -203,8 +203,8 @@ heart_fft$competition$test
     #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
     #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
     #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    #> # ℹ 6 more variables: bacc <dbl>, wacc <dbl>, dprime <dbl>, cost_dec <dbl>,
-    #> #   cost_cue <dbl>, cost <dbl>
+    #> # … with 6 more variables: bacc <dbl>, wacc <dbl>, dprime <dbl>,
+    #> #   cost_dec <dbl>, cost_cue <dbl>, cost <dbl>
 
 <!-- FFTs by verbal description: -->
 
@@ -333,6 +333,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-03-24.\]
+\[File `README.Rmd` last updated on 2023-03-26.\]
 
 <!-- eof. -->

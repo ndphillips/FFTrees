@@ -378,7 +378,7 @@ verify_ffts_df <- function(ffts_df){
   # verify nrow(ffts_df) > 0:
   if (nrow(ffts_df) < 1){
 
-    message("Input 'ffts_df' is empty: nrow(ffts_df) = ", nrow(ffts_df))
+    message("Input to verify_ffts_df is empty: nrow(ffts_df) = ", nrow(ffts_df))
 
     return(FALSE)
 
@@ -434,7 +434,7 @@ verify_ffts_df <- function(ffts_df){
 
     missing_vars <- setdiff(req_tdef_vars, provided_vars)
 
-    message("Input 'ffts_df' is not a valid (set of) FFT definition(s).\nMissing variables: ", paste(missing_vars, collapse = ", "))
+    message("Input to verify_ffts_df is not a valid (set of) FFT definition(s).\nMissing variables: ", paste(missing_vars, collapse = ", "))
 
 
     # Output 2:
@@ -450,8 +450,10 @@ verify_ffts_df <- function(ffts_df){
 # verify_fft_as_df: ------
 
 # Goal: Verify the components (as df) to-be-turned into a tree definition (for an FFTrees object).
-# Inputs: fft_df: Definition of 1 FFT (as df) with tree elements as separate vectors (e.g., from get_fft_df(x)).
-# Output: Boolean.
+# Inputs: fft_df: Definition of 1 FFT (as tidy df, 1 row per node)
+#         with tree elements (class, cue, direction, threshold, exit) as separate vectors
+#         (e.g., from get_fft_df(x)).
+# Output: Boolean/logical value.
 
 verify_fft_as_df <- function(fft_df){
 
@@ -461,7 +463,7 @@ verify_fft_as_df <- function(fft_df){
   # verify nrow(fft_df) > 0:
   if (nrow(fft_df) < 1){
 
-    message("Input 'fft_df' is empty: nrow(fft_df) = ", nrow(fft_df))
+    message("Input to verify_fft_as_df is empty: nrow(fft_df) = ", nrow(fft_df))
 
     return(FALSE)
 
@@ -487,7 +489,7 @@ verify_fft_as_df <- function(fft_df){
 
     missing_vars <- setdiff(req_tree_vars, provided_vars)
 
-    message("Input 'fft_df' is not a valid FFT (as df, with 1 row per cue). Missing variables: ", paste(missing_vars, collapse = ", "))
+    message("Input to verify_fft_as_df is not a valid FFT (as tidy df, 1 row per node). Missing variables: ", paste(missing_vars, collapse = ", "))
 
     return(FALSE)
 

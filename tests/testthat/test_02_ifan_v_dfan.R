@@ -1,24 +1,33 @@
 context("Check tree algorithms: ifan vs dfan")
 
 
-test_that("Can create FFTrees object with dfan", {
+test_that("Can create an FFTrees object with 'dfan' algorithm", {
 
-  object <- FFTrees(diagnosis ~ ., data = heartdisease, algorithm = "dfan")
+  hd_dfan <- FFTrees(diagnosis ~ .,
+                     data = heartdisease,  # full set
+                     algorithm = "dfan",
+                     quiet = TRUE)
 
-  expect_s3_class(object = object, class = "FFTrees")
+  expect_s3_class(object = hd_dfan, class = "FFTrees")
+
 })
 
 
-test_that("Different results with ifan and dfan", {
+
+test_that("Different results by 'ifan' vs. 'dfan' algorithms", {
 
   trees_ifan <- FFTrees(diagnosis ~ .,
-    data = heartdisease,
-    algorithm = "ifan"
+                        # data = heartdisease,  # full set
+                        data = utils::head(heartdisease, 100),  # reduced set
+                        algorithm = "ifan",
+                        quiet = TRUE
   )
 
   trees_dfan <- FFTrees(diagnosis ~ .,
-    data = heartdisease,
-    algorithm = "dfan"
+                        # data = heartdisease,  # full set
+                        data = utils::head(heartdisease, 100),  # reduced set
+                        algorithm = "dfan",
+                        quiet = TRUE
   )
 
   expect_false(identical(
@@ -27,5 +36,6 @@ test_that("Different results with ifan and dfan", {
   ))
 
 })
+
 
 # eof.

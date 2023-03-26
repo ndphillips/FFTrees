@@ -1,8 +1,9 @@
-context("Create FFTs with my.tree")
+context("Create FFTs from verbal descriptions with my.tree")
 
 
 test_that("Can build tree based on best auto-generated tree in words (v1)", {
 
+  # Create FFTs basic:
   x <- FFTrees(diagnosis ~ .,
                data = heartdisease,
                quiet = TRUE
@@ -10,12 +11,15 @@ test_that("Can build tree based on best auto-generated tree in words (v1)", {
 
   best_tree_in_words <- x$trees$inwords[[1]]
 
+  # Create FFTs from verbal description:
   x <- FFTrees(diagnosis ~ .,
                data = heart.train,
                data.test = heart.test,
-               my.tree = best_tree_in_words
+               my.tree = best_tree_in_words,
+               quiet = TRUE
   )
 
+  # Verify:
   expect_s3_class(object = x, class = "FFTrees")
 
 })
@@ -31,16 +35,19 @@ test_that("Can build tree (with last exit FALSE), based on custom tree in words 
   x <- FFTrees(diagnosis ~ .,
                data = heart.train,
                data.test = heart.test,
-               my.tree = my_tree_in_words
+               my.tree = my_tree_in_words,
+               quiet = TRUE
   )
 
-  expect_s3_class(object = x, class = "FFTrees")
+  # Verify:
+  testthat::expect_s3_class(object = x, class = "FFTrees")
 
   my_exits <- get_exit_type(c("signal", "noise", "final"))
 
   # x$trees$definitions
 
-  expect_identical(
+  # Compare:
+  testthat::expect_identical(
     object = x$trees$definitions,
     expected = structure(list(
       tree = 1L,
@@ -68,14 +75,17 @@ test_that("Can build tree (with all exits FALSE) based on custom tree in words (
   x <- FFTrees(diagnosis ~ .,
                data = heart.train,
                data.test = heart.test,
-               my.tree = my_tree_2
+               my.tree = my_tree_2,
+               quiet = TRUE
   )
 
-  expect_s3_class(object = x, class = "FFTrees")
+  # Verify:
+  testthat::expect_s3_class(object = x, class = "FFTrees")
 
   my_exits <- get_exit_type(c(FALSE, "left", "both"))
 
-  expect_identical(
+  # Compare:
+  testthat::expect_identical(
     object = x$trees$definitions,
     expected = structure(list(
       tree = 1L,
@@ -107,12 +117,14 @@ test_that("A custom tree in my.tree is built successfully (v4)", {
     my.tree = "If sex = 1, predict Disease.
                If age < 45, predict Healthy.
                If thal = {fd, normal}, predict Healthy,
-               (and ignore the rest of this sentence)."
+               (and ignore the rest of this sentence).",
+    quiet = TRUE
   )
 
   my_exits <- get_exit_type(c("right", "left", "both"))
 
-  expect_identical(
+  # Compare:
+  testthat::expect_identical(
     object = my_fft$trees$definitions,
     expected = structure(list(
       tree = 1L,
