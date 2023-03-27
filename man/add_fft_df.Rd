@@ -9,7 +9,8 @@ add_fft_df(fft, ffts_df = NULL, quiet = FALSE)
 \arguments{
 \item{fft}{A (set of) FFT definition(s)
 (in the multi-line format of an \code{FFTrees} object)
-or one FFT (as a data frame in tidy format, with one row per node).}
+or one FFT definition
+(as a data frame in tidy format, with one row per node).}
 
 \item{ffts_df}{A set of FFT definitions (as a data frame,
 usually from an \code{FFTrees} object,
@@ -40,14 +41,16 @@ manipulating them with other tree trimming functions.
 \code{\link{write_fft_df}} for writing one FFT to tree definitions;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other tree definition and conversion functions: 
+Other tree definition and manipulation functions: 
+\code{\link{drop_nodes}()},
 \code{\link{get_fft_df}()},
 \code{\link{read_fft_df}()},
 \code{\link{write_fft_df}()}
 
-Other tree trimming functions: 
+Other tree selection, conversion, and collection functions: 
+\code{\link{get_fft_df}()},
 \code{\link{read_fft_df}()},
 \code{\link{write_fft_df}()}
 }
-\concept{tree definition and conversion functions}
-\concept{tree trimming functions}
+\concept{tree definition and manipulation functions}
+\concept{tree selection, conversion, and collection functions}

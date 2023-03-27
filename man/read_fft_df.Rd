@@ -16,7 +16,7 @@ corresponding to a tree in \code{ffts_df}.
 Default: \code{tree = 1}.}
 }
 \value{
-A definition of one FFT
+One FFT definition
 (as a data frame in tidy format, with one row per node).
 }
 \description{
@@ -35,14 +35,16 @@ to manipulate them with other tree trimming functions.
 \code{\link{add_fft_df}} for adding FFTs to tree definitions;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other tree definition and conversion functions: 
+Other tree definition and manipulation functions: 
 \code{\link{add_fft_df}()},
+\code{\link{drop_nodes}()},
 \code{\link{get_fft_df}()},
 \code{\link{write_fft_df}()}
 
-Other tree trimming functions: 
+Other tree selection, conversion, and collection functions: 
 \code{\link{add_fft_df}()},
+\code{\link{get_fft_df}()},
 \code{\link{write_fft_df}()}
 }
-\concept{tree definition and conversion functions}
-\concept{tree trimming functions}
+\concept{tree definition and manipulation functions}
+\concept{tree selection, conversion, and collection functions}
