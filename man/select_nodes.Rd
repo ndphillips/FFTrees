@@ -35,7 +35,7 @@ Duplicates in \code{nodes} are selected only once
 the range \code{1:nrow(fft)} are ignored.
 
 \code{select_nodes} is the inverse function
-of \link{\code{drop_nodes}}.
+of \code{\link{drop_nodes}}.
 }
 \seealso{
 \code{\link{drop_nodes}} for deleting nodes from an FFT definition;

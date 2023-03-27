@@ -36,7 +36,7 @@ the range \code{1:nrow(fft)} are ignored.
 Dropping all nodes yields an error.
 
 \code{drop_nodes} is the inverse function
-of \link{\code{select_nodes}}.
+of \code{\link{select_nodes}}.
 }
 \seealso{
 \code{\link{select_nodes}} for selecting nodes of an FFT definition;
