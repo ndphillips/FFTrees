@@ -76,11 +76,11 @@
 #' corresponding to a tree in \code{ffts_df}.
 #' Default: \code{tree = 1}.
 #'
-#' @return A definition of one FFT
+#' @return One FFT definition
 #' (as a data frame in tidy format, with one row per node).
 #'
-#' @family tree definition and conversion functions
-#' @family tree trimming functions
+#' @family tree definition and manipulation functions
+#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -196,7 +196,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 #'
 #' \code{\link{read_fft_df}} provides the inverse functionality.
 #'
-#' @param fft A definition of one FFT
+#' @param fft One FFT definition
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @param tree The ID of the to-be-written FFT (as an integer).
@@ -206,8 +206,8 @@ read_fft_df <- function(ffts_df, tree = 1){
 #' FFT definition format used by an \code{FFTrees} object
 #' (as a data frame).
 #'
-#' @family tree definition and conversion functions
-#' @family tree trimming functions
+#' @family tree definition and manipulation functions
+#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -311,7 +311,8 @@ write_fft_df <- function(fft, tree = -99L){
 #'
 #' @param fft A (set of) FFT definition(s)
 #' (in the multi-line format of an \code{FFTrees} object)
-#' or one FFT (as a data frame in tidy format, with one row per node).
+#' or one FFT definition
+#' (as a data frame in tidy format, with one row per node).
 #'
 #' @param ffts_df A set of FFT definitions (as a data frame,
 #' usually from an \code{FFTrees} object,
@@ -325,8 +326,8 @@ write_fft_df <- function(fft, tree = -99L){
 #' FFT definition format used by an \code{FFTrees} object
 #' (as a data frame).
 #'
-#' @family tree definition and conversion functions
-#' @family tree trimming functions
+#' @family tree definition and manipulation functions
+#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -344,11 +345,11 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 
       return(fft)  # Output (as is)
 
-    } else { # add to existing FFT definitions of ffts_df:
+    } else { # add fft to a set of existing FFT definitions ffts_df:
 
       if (verify_ffts_df(ffts_df)){
 
-        out_ffts_df <- rbind(ffts_df, fft)  # add to existing definitions
+        out_ffts_df <- rbind(ffts_df, fft)  # add below existing definitions
 
         out_ffts_df$tree <- 1:nrow(out_ffts_df)  # re-set tree numbers
 
@@ -357,6 +358,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
       } # if ffts_df.
 
     } # if else fft.
+
 
   } else if (verify_fft_as_df(fft)){ # Case 2: fft is 1 FFT (as tidy df, 1 row per node) ----
 
@@ -656,6 +658,44 @@ add_nodes <- function(fft,
 #
 # Output: Modified version of fft (as df, with fewer nodes).
 
+
+#' Drop a node from an FFT definition
+#'
+#' @description \code{drop_nodes} drops or removes
+#' a node from an existing FFT (by deleting the
+#' corresponding row in its definition in
+#' the tidy data frame format).
+#'
+#' When dropping the final node,
+#' the last remaining node gets a second exit.
+#'
+#' Duplicates in \code{nodes} are dropped only once
+#' (i.e., not incrementally) and \code{nodes} not in
+#' the range \code{1:nrow(fft)} are ignored.
+#' Dropping all nodes yields an error.
+#'
+#' @param fft One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param nodes The FFT nodes to drop (as an integer vector).
+#' Default: \code{nodes = NA}.
+#'
+#' @param quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @family tree definition and manipulation functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
