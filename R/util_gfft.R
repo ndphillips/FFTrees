@@ -928,6 +928,16 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
   } # if sc 1.
 
 
+  if (all(is.na(nodes))) { # catch case 0b (after removing missing_nodes):
+
+    # Error message:
+    stop("select_nodes: Nothing left of fft")
+
+    # return(NA)
+
+  } # if case 0b.
+
+
   # Special case 2:
   if (any(duplicated(nodes))){
 
