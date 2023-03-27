@@ -661,18 +661,22 @@ add_nodes <- function(fft,
 
 #' Drop a node from an FFT definition
 #'
-#' @description \code{drop_nodes} drops or removes
-#' a node from an existing FFT (by deleting the
-#' corresponding row in its definition in
-#' the tidy data frame format).
+#' @description \code{drop_nodes} deletes
+#' one or more \code{nodes} from an existing FFT definition
+#' (by removing the corresponding rows from the FFT definition
+#' in the tidy data frame format).
 #'
 #' When dropping the final node,
-#' the last remaining node gets a second exit.
+#' the last remaining node becomes the new final node
+#' (i.e., gains a second exit).
 #'
 #' Duplicates in \code{nodes} are dropped only once
-#' (i.e., not incrementally) and \code{nodes} not in
+#' (rather than incrementally) and \code{nodes} not in
 #' the range \code{1:nrow(fft)} are ignored.
 #' Dropping all nodes yields an error.
+#'
+#' \code{drop_nodes} is the inverse function
+#' of \link{\code{select_nodes}}.
 #'
 #' @param fft One FFT definition
 #' (as a data frame in tidy format, with one row per node).
@@ -690,6 +694,7 @@ add_nodes <- function(fft,
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
@@ -839,6 +844,48 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #
 # Output: Modified version of fft (as df, with fewer nodes).
 
+
+#' Select nodes from an FFT definition
+#'
+#' @description \code{select_nodes} selects
+#' one or more \code{nodes} from an existing FFT definition
+#' (by filtering the corresponding row(s) from the FFT definition
+#' in the tidy data frame format).
+#'
+#' When not selecting the final node,
+#' the last selected node becomes the new final node
+#' (i.e., gains a second exit).
+#'
+#' Duplicates in \code{nodes} are selected only once
+#' (rather than incrementally) and \code{nodes} not in
+#' the range \code{1:nrow(fft)} are ignored.
+#'
+#' \code{select_nodes} is the inverse function
+#' of \link{\code{drop_nodes}}.
+#'
+#' @param fft One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param nodes The FFT nodes to select (as an integer vector).
+#' Default: \code{nodes = NA}.
+#'
+#' @param quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @family tree definition and manipulation functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
