@@ -464,7 +464,8 @@ get_exit_word <- function(data){
 #' in the one-line per FFT definition format used by an \code{FFTrees} object).
 #'
 #' @family utility functions
-#' @family tree definition and conversion functions
+#' @family tree definition and manipulation functions
+#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
@@ -473,7 +474,6 @@ get_exit_word <- function(data){
 #' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 #'
 #' @export
-
 
 get_fft_df <- function(x){
 
