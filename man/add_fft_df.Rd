@@ -45,6 +45,7 @@ Other tree definition and manipulation functions:
 \code{\link{drop_nodes}()},
 \code{\link{get_fft_df}()},
 \code{\link{read_fft_df}()},
+\code{\link{select_nodes}()},
 \code{\link{write_fft_df}()}
 
 Other tree selection, conversion, and collection functions: 
