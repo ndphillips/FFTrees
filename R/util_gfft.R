@@ -676,7 +676,7 @@ add_nodes <- function(fft,
 #' Dropping all nodes yields an error.
 #'
 #' \code{drop_nodes} is the inverse function
-#' of \link{\code{select_nodes}}.
+#' of \code{\link{select_nodes}}.
 #'
 #' @param fft One FFT definition
 #' (as a data frame in tidy format, with one row per node).
@@ -861,7 +861,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' the range \code{1:nrow(fft)} are ignored.
 #'
 #' \code{select_nodes} is the inverse function
-#' of \link{\code{drop_nodes}}.
+#' of \code{\link{drop_nodes}}.
 #'
 #' @param fft One FFT definition
 #' (as a data frame in tidy format, with one row per node).
