@@ -35,10 +35,12 @@ Duplicates in \code{nodes} are dropped only once
 the range \code{1:nrow(fft)} are ignored.
 Dropping all nodes yields an error.
 
-\code{drop_nodes} is the inverse function
-of \code{\link{select_nodes}}.
+\code{drop_nodes} is the inverse function of \code{\link{select_nodes}}.
+Inserting new nodes is possible by \code{\link{add_nodes}}.
 }
 \seealso{
+\code{\link{add_nodes}} for adding nodes to an FFT definition;
+\code{\link{edit_nodes}} for editing nodes in an FFT definition;
 \code{\link{select_nodes}} for selecting nodes of an FFT definition;
 \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
@@ -47,6 +49,7 @@ of \code{\link{select_nodes}}.
 
 Other tree definition and manipulation functions: 
 \code{\link{add_fft_df}()},
+\code{\link{add_nodes}()},
 \code{\link{edit_nodes}()},
 \code{\link{flip_exits}()},
 \code{\link{get_fft_df}()},
@@ -55,6 +58,7 @@ Other tree definition and manipulation functions:
 \code{\link{write_fft_df}()}
 
 Other tree trimming functions: 
+\code{\link{add_nodes}()},
 \code{\link{edit_nodes}()},
 \code{\link{flip_exits}()},
 \code{\link{select_nodes}()}

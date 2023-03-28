@@ -47,6 +47,7 @@ than \code{\link{edit_nodes}}.
 
 Other tree definition and manipulation functions: 
 \code{\link{add_fft_df}()},
+\code{\link{add_nodes}()},
 \code{\link{drop_nodes}()},
 \code{\link{edit_nodes}()},
 \code{\link{get_fft_df}()},
@@ -55,6 +56,7 @@ Other tree definition and manipulation functions:
 \code{\link{write_fft_df}()}
 
 Other tree trimming functions: 
+\code{\link{add_nodes}()},
 \code{\link{drop_nodes}()},
 \code{\link{edit_nodes}()},
 \code{\link{select_nodes}()}

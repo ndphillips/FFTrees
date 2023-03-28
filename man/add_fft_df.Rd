@@ -42,6 +42,7 @@ manipulating them with other tree trimming functions.
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
 Other tree definition and manipulation functions: 
+\code{\link{add_nodes}()},
 \code{\link{drop_nodes}()},
 \code{\link{edit_nodes}()},
 \code{\link{flip_exits}()},

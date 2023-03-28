@@ -37,6 +37,7 @@ used by an \code{FFTrees} object.
 
 Other tree definition and manipulation functions: 
 \code{\link{add_fft_df}()},
+\code{\link{add_nodes}()},
 \code{\link{drop_nodes}()},
 \code{\link{edit_nodes}()},
 \code{\link{flip_exits}()},
