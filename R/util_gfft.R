@@ -408,7 +408,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # add_nodes: ------
 
 
-# Goal: Add some node(s) (or cues) to a given FFT.
+# Goal: Add some node(s) (or cues) to a given FFT definition.
 #
 # Inputs:
 #   fft = 1 FFT (as "tidy" df)
@@ -428,9 +428,64 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # 1. As add_nodes() is ignorant of data, the values of class, cue, and threshold
 #    are currently NOT validated for a specific set of data.
 # 2. The values of nodes refer to their position in NEW fft (after inserting new nodes).
-# 3. Duplicate values of nodes are ignored and only the last entry is used.
+# 3. Duplicate values of nodes are ignored and only the last (rightmost) entry is used.
 # 4. If nodes contain a new exit, it needs to have a valid final type (i.e., exit_types[3]).
 #    The exit of the former exit is re-set to signal (i.e., exit_types[2]).
+
+#' Add nodes to an FFT definition
+#'
+#' @description \code{add_nodes} allows adding
+#' one or more \code{nodes} to an existing FFT definition
+#' (in the tidy data frame format).
+#'
+#' \code{add_nodes} allows to directly set and change the value(s) of
+#' \code{class}, \code{cue}, \code{direction}, \code{threshold}, and \code{exit},
+#' of an FFT definition for the specified \code{nodes}.
+#'
+#' There is only rudimentary verification for plausible entries.
+#' Importantly, however, as \code{add_nodes} is ignorant of \code{data},
+#' the values of its variables are not validated for a specific set of data.
+#'
+#' Values in \code{nodes} refer to their new position in the final FFT.
+#' Duplicate values of \code{nodes} are ignored (and only the last
+#' entry is used).
+#'
+#' When a new exit node is added, the exit type of a former final node
+#' is set to the signal value (i.e., \code{exit_types[2]}).
+#'
+#' @param fft One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param nodes The FFT nodes to be added (as an integer vector).
+#' Values refer to their new position in the final FFT
+#' (i.e., after adding all \code{nodes} to \code{fft}).
+#' Default: \code{nodes = NA}.
+#'
+#' @param class The class values of \code{nodes} (as character).
+#' @param cue The cue names of \code{nodes} (as character).
+#' @param direction The direction values of \code{nodes} (as character).
+#' @param threshold The threshold values of \code{nodes} (as character).
+#' @param exit The exit values of \code{nodes} (as values from \code{exit_types}).
+#'
+#' @param quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @family tree definition and manipulation functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
+#' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 
 add_nodes <- function(fft,
@@ -680,8 +735,8 @@ add_nodes <- function(fft,
 #' the range \code{1:nrow(fft)} are ignored.
 #' Dropping all nodes yields an error.
 #'
-#' \code{drop_nodes} is the inverse function
-#' of \code{\link{select_nodes}}.
+#' \code{drop_nodes} is the inverse function of \code{\link{select_nodes}}.
+#' Inserting new nodes is possible by \code{\link{add_nodes}}.
 #'
 #' @param fft One FFT definition
 #' (as a data frame in tidy format, with one row per node).
@@ -699,6 +754,8 @@ add_nodes <- function(fft,
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{add_nodes}} for adding nodes to an FFT definition;
+#' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
 #' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
@@ -1074,8 +1131,8 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' \code{class}, \code{cue}, \code{direction}, \code{threshold}, and \code{exit},
 #' of an FFT definition for the specified \code{nodes}.
 #'
-#' The level of verification for plausible entries is minimal.
-#' Importantly, as \code{edit_nodes} is ignorant of \code{data},
+#' There is only rudimentary verification for plausible entries.
+#' Importantly, however, as \code{edit_nodes} is ignorant of \code{data},
 #' the values of its variables are not validated for a specific set of data.
 #'
 #' Repeated changes of a node are possible
