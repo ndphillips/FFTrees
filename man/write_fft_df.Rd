@@ -38,6 +38,8 @@ used by an \code{FFTrees} object.
 Other tree definition and manipulation functions: 
 \code{\link{add_fft_df}()},
 \code{\link{drop_nodes}()},
+\code{\link{edit_nodes}()},
+\code{\link{flip_exits}()},
 \code{\link{get_fft_df}()},
 \code{\link{read_fft_df}()},
 \code{\link{select_nodes}()}
