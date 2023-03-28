@@ -43,6 +43,7 @@ Other tree definition and manipulation functions:
 \code{\link{flip_exits}()},
 \code{\link{get_fft_df}()},
 \code{\link{read_fft_df}()},
+\code{\link{reorder_nodes}()},
 \code{\link{select_nodes}()}
 
 Other tree selection, conversion, and collection functions: 
