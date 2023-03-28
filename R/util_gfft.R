@@ -432,6 +432,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # 4. If nodes contain a new exit, it needs to have a valid final type (i.e., exit_types[3]).
 #    The exit of the former exit is re-set to signal (i.e., exit_types[2]).
 
+
 #' Add nodes to an FFT definition
 #'
 #' @description \code{add_nodes} allows adding
@@ -440,7 +441,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 #'
 #' \code{add_nodes} allows to directly set and change the value(s) of
 #' \code{class}, \code{cue}, \code{direction}, \code{threshold}, and \code{exit},
-#' of an FFT definition for the specified \code{nodes}.
+#' in an FFT definition for the specified \code{nodes}.
 #'
 #' There is only rudimentary verification for plausible entries.
 #' Importantly, however, as \code{add_nodes} is ignorant of \code{data},
@@ -477,9 +478,11 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 #' @family tree trimming functions
 #'
 #' @seealso
-#' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
 #' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
-#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
+#' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
+#' \code{\link{flip_exits}} for reversing exits in an FFT definition;
+#' \code{\link{reorder_nodes}} for reordering nodes of an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes in an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
@@ -756,7 +759,7 @@ add_nodes <- function(fft,
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
 #' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
-#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes in an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
@@ -942,7 +945,11 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{add_nodes}} for adding nodes to an FFT definition;
 #' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
+#' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
+#' \code{\link{flip_exits}} for reversing exits in an FFT definition;
+#' \code{\link{reorder_nodes}} for reordering nodes of an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
@@ -1129,7 +1136,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #'
 #' \code{edit_nodes} allows to directly set and change the value(s) of
 #' \code{class}, \code{cue}, \code{direction}, \code{threshold}, and \code{exit},
-#' of an FFT definition for the specified \code{nodes}.
+#' in an FFT definition for the specified \code{nodes}.
 #'
 #' There is only rudimentary verification for plausible entries.
 #' Importantly, however, as \code{edit_nodes} is ignorant of \code{data},
@@ -1160,8 +1167,11 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{add_nodes}} for adding nodes to an FFT definition;
 #' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
-#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
+#' \code{\link{flip_exits}} for reversing exits in an FFT definition;
+#' \code{\link{reorder_nodes}} for reordering nodes of an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes in an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
@@ -1430,9 +1440,11 @@ edit_nodes <- function(fft,
 #' @family tree trimming functions
 #'
 #' @seealso
+#' \code{\link{add_nodes}} for adding nodes to an FFT definition;
 #' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
 #' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
-#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
+#' \code{\link{reorder_nodes}} for reordering nodes of an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes in an FFT definition;
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
 #' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
@@ -1569,6 +1581,50 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 # fft_mod: modified FFT (in multi-line format, as df)
 
 
+#' Reorder nodes in an FFT definition
+#'
+#' @description \code{reorder_nodes} allows reordering
+#' the \code{nodes} in an existing FFT definition
+#' (in the tidy data frame format).
+#'
+#' \code{reorder_nodes} allows to directly set and change the node
+#' order in an FFT definition by specifying \code{nodes}.
+#'
+#' When a former non-final node becomes a final node,
+#' the exit type of the former final node
+#' is set to the signal value (i.e., \code{exit_types[2]}).
+#'
+#' @param fft One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param order The desired node order (as an integer vector).
+#' The values of \code{order} must be a permutation of \code{1:nrow(fft)}.
+#' Default: \code{order = NA}.
+#'
+#'
+#' @param quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @family tree definition and manipulation functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{add_nodes}} for adding nodes to an FFT definition;
+#' \code{\link{edit_nodes}} for editing nodes in an FFT definition;
+#' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
+#' \code{\link{flip_exits}} for reversing exits in an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes in an FFT definition;
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
+
+
 reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 
   # Prepare: ----
@@ -1621,10 +1677,10 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
     # Option 1:
     # Current direction and threshold settings always predict Signal (1):
 
-    # a. previous exit cue: Decide/predict 1 (signal)
+    # a. previous exit cue: Decide/predict 1 (signal/TRUE/right):
     fft_mod$exit[exit_cue_pos] <- exit_types[2]  # (as by cue threshold definition)
 
-    # b. final cue: Make final exit bi-directional (0.5)
+    # b. final cue: Make the final exit bi-directional (0.5):
     fft_mod$exit[n_cues] <- exit_types[3]
 
     # Option 2:
