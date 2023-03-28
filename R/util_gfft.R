@@ -412,14 +412,16 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 # Inputs:
 #   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of added node positions (as integer from 1 to nrow(fft) + length(nodes))
-#   class = class of cue to add
-#   cue = cue to add
-#   direction = direction to change
-#   threshold = threshold values to change
-#   exit = exit to change
-#   my.node = a vector of verbal node descriptions (dominates all other arguments).
+#   #
+#   class = class of cue(s) to add
+#   cue = cue(s) to add
+#   direction = direction(s) to change
+#   threshold = threshold value(s) to change
+#   exit = exit(s) to change
+#   #
+#   my.node = a vector of verbal node descriptions (dominates other arguments).
 #
-# Output: Modified version of fft (as df, but with modified nodes).
+# Output: A modified version of fft (as df, but with modified nodes).
 #
 # Notes:
 # 1. As add_nodes() is ignorant of data, the values of class, cue, and threshold
@@ -437,7 +439,7 @@ add_nodes <- function(fft,
                       threshold = NA,
                       exit = NA,
                       #
-                      my.node = NA,
+                      # my.node = NA,
                       #
                       quiet = FALSE){
 
@@ -702,6 +704,7 @@ add_nodes <- function(fft,
 #'
 #' @export
 
+
 drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
   # Prepare: ----
@@ -887,6 +890,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #'
 #' @export
 
+
 select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
   # Prepare: ----
@@ -1042,24 +1046,26 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #
 # Inputs:
 #   fft = 1 FFT (as "tidy" df)
-#   nodes = vector of nodes to change (as integer in 1:nrow(fft))
-#   class = class of cue to add
-#   cue = cue to change
-#   direction = direction to change
-#   threshold = threshold values to change
-#   exit = exit value to change
-#   my.node = a vector of verbal node descriptions (dominates all other arguments).
+#   nodes = vector of node(s) to change (as integer in 1:nrow(fft))
+#   #
+#   class = class of cue(s) to add
+#   cue = cue(s) to change
+#   direction = direction(s) to change
+#   threshold = threshold value(s) to change
+#   exit = exit value(s) to change
+#   my.node = a vector of verbal node descriptions (dominates other arguments).
 #
-# Output: Modified version of fft (as df, but with modified nodes).
+# Output: A modified version of fft (as df, but with modified nodes).
 #
-# Note: As edit_nodes() is ignorant of data, the values of class, cue, and threshold
-#       are currently NOT validated for a specific set of data.
+# Note: As edit_nodes() currently is ignorant of data, the values of class, cue, and threshold
+#       are NOT validated for a specific set of data.
 
 
 edit_nodes <- function(fft,
                        nodes = NA,  # as vector (1 or multiple nodes)
+                       #
                        class = NA, cue = NA, direction = NA, threshold = NA, exit = NA,  # variables of fft nodes (as df rows)
-                       my.node = NA,
+                       # my.node = NA,
                        quiet = FALSE){
 
   # Prepare: ----
@@ -1273,7 +1279,50 @@ edit_nodes <- function(fft,
 #   fft = 1 FFT (as "tidy" df)
 #   nodes = vector of nodes to swap (as integer in 1:nrow(fft))
 #
-# Output: Modified version of fft (as df, with flipped cue directions/exits)
+# Output: A modified version of fft (as df, with flipped cue directions/exits)
+
+
+#' Flip exits in an FFT definition
+#'
+#' @description \code{flip_exits} reverses the exits of
+#' one or more \code{nodes} from an existing FFT definition
+#' (in the tidy data frame format).
+#'
+#' \code{flip_exits} alters the value(s) of the non-final
+#' exits specified in \code{nodes} (from 0 to 1, or from 1 to 0).
+#' By contrast, exits of final \code{nodes} remain unchanged.
+#'
+#' Duplicates in \code{nodes} are flipped only once
+#' (rather than repeatedly) and \code{nodes} not in
+#' the range \code{1:nrow(fft)} are ignored.
+#'
+#' \code{flip_exits} is a more specialized function
+#' than \code{\link{edit_nodes}}.
+#'
+#' @param fft One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @param nodes The FFT nodes whose exits are to be flipped (as an integer vector).
+#' Default: \code{nodes = NA}.
+#'
+#' @param quiet Hide feedback messages (as logical)?
+#' Default: \code{quiet = FALSE}.
+#'
+#' @return One FFT definition
+#' (as a data frame in tidy format, with one row per node).
+#'
+#' @family tree definition and manipulation functions
+#' @family tree trimming functions
+#'
+#' @seealso
+#' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
+#' \code{\link{select_nodes}} for selecting nodes of an FFT definition;
+#' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
+#' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
+#' \code{\link{add_fft_df}} for adding FFTs to tree definitions;
+#' \code{\link{FFTrees}} for creating FFTs from and applying them to data.
+#'
+#' @export
 
 
 flip_exits <- function(fft, nodes = NA, quiet = FALSE){
@@ -1322,7 +1371,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 
     }
 
-    nodes <- setdiff(nodes, missing_nodes)
+    nodes <- setdiff(nodes, missing_nodes)  # removes duplicate nodes
 
   } # if sc 1.
 
@@ -1377,14 +1426,17 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 # flip_exits(fft, nodes = c(3, 1))
 # flip_exits(fft, 3:1)
 #
+# # Flipping duplicates:
+# flip_exits(fft, nodes = c(1, 1, 1))  # ignore duplicates (flip once)
+#
 # # Flipping missing nodes and exit node:
 # flip_exits(fft, nodes = 6:9)  # message & no change
 # flip_exits(fft, nodes = 4)    # message & no change
-# flip_exits(fft, nodes = 1:4)  # message & others change
+# flip_exits(fft, nodes = 1:4)  # message & non-final nodes change
 # flip_exits(fft, nodes = 1:10) # 2 messages & others change
 #
 # # Flipping all and back:
-# all.equal(fft, flip_exits(flip_exits(fft, nodes = 3:1), nodes = 1:3))
+# all.equal(fft, flip_exits(flip_exits(fft, nodes = 5:1, quiet = FALSE), nodes = 1:5, quiet = FALSE))
 
 
 
