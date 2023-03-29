@@ -1,7 +1,7 @@
 
 # FFTrees 1.9
 
-## 1.9.0.9025
+## 1.9.0.9026
 
 This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
 
@@ -17,9 +17,9 @@ Changes since last release:
 
 <!-- gfft: Manipulating FFTs --> 
 
-- Enabling conversions between tree definition formats and manipulating individual FFTs:
+- Enabled conversions between tree definition formats and manipulating individual FFTs:
     - tree definition and conversion functions: `get_fft_df`, `read_fft_df`, `write_fft_df`, `add_fft_df` 
-    - tree trimming functions: ...
+    - tree trimming functions: `add_nodes`, `drop_nodes`, `edit_nodes`, `flip_exits`, `reorder_nodes`, `select_nodes`
 
 
 <!-- NA handling: --> 
@@ -28,7 +28,7 @@ Changes since last release:
     - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels. 
     - `NA` values in numeric predictors are either _imputed_ (as the mean of the corresponding predictor) or 
     _ignored_ when creating and using FFTs to decide/predict (if possible). 
-    - `NA` values in criterion are yet to be dealt with.  
+    - `NA` values in the criterion variable are yet to be dealt with.  
     
 
 <!-- Stopping rule: --> 
@@ -473,6 +473,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-03-25.]
+[File `NEWS.md` last updated on 2023-03-29.]
 
 <!-- eof. -->
