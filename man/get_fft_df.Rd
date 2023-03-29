@@ -37,10 +37,22 @@ Other utility functions:
 \code{\link{get_best_tree}()},
 \code{\link{get_exit_type}()}
 
-Other tree definition and conversion functions: 
+Other tree definition and manipulation functions: 
+\code{\link{add_fft_df}()},
+\code{\link{add_nodes}()},
+\code{\link{drop_nodes}()},
+\code{\link{edit_nodes}()},
+\code{\link{flip_exits}()},
+\code{\link{read_fft_df}()},
+\code{\link{reorder_nodes}()},
+\code{\link{select_nodes}()},
+\code{\link{write_fft_df}()}
+
+Other tree selection, conversion, and collection functions: 
 \code{\link{add_fft_df}()},
 \code{\link{read_fft_df}()},
 \code{\link{write_fft_df}()}
 }
-\concept{tree definition and conversion functions}
+\concept{tree definition and manipulation functions}
+\concept{tree selection, conversion, and collection functions}
 \concept{utility functions}

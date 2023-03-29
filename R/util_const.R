@@ -47,7 +47,7 @@ cost_cues_default <- 0  # (global constant)
 # - numerical (integer / double )
 # See clean_data() and handle_NA_data() in util_data.R for conversions.
 
-cue_classes <- c(            #  (global constant)
+cue_classes <- c( #  (global constant)
   "c",  # categorical: character, factor, logical
   "n")  # numeric: integer, double
 
@@ -116,7 +116,7 @@ exit_types <- c(0, 1, 0.5)  # (global constant)
 # Stopping rules for (as character string):
 # - "exemplars"  #
 # - "levels"     # ToDo: implement by allowing stopping.par > 1
-# - "statdelta"  # ToDo: implement with stopping.par for goal.chase
+# - "statdelta"  # ToDo: stop 1 level earlier (when criterion satisfied)
 
 stopping_rules <- c("exemplars", "levels", "statdelta")  # (global constant)
 
@@ -153,7 +153,7 @@ replace_NA_num_pred <- TRUE  # (global constant)
 
 # - fin_NA_options: ----
 
-# Options for dealing with NA values in final nodes / leaf cues:
+# Options/policy for dealing with NA values in final nodes / leaf cues:
 
 fin_NA_options <- c("noise", "signal", "baseline", "majority")  # (global constant)
 
