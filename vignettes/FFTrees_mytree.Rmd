@@ -375,7 +375,7 @@ We can evaluate this set by running the `FFTrees()` function with
 the previous `FFTrees` object\ `x` (i.e., with its `formula` and `data` settings) and 
 specifying `tree_df` in the `tree.definitions` argument:
 
-```{r fft-treedef-05, message = TRUE, results = 'hide'}
+```{r fft-treedef-05, message = FALSE, results = 'hide'}
 # Create a modified FFTrees object y:
 y <- FFTrees(object = x,                  # use previous FFTrees object x
              tree.definitions = tree_df,  # but with new tree definitions
