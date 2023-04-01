@@ -312,15 +312,23 @@ In this case, the parameters (e.g., regarding the `formula`, `data` and goals to
 We can distinguish between three cycles: 
 
 - **Cycle\ 1**: Obtaining and collecting sets of FFT definitions. 
-The main `FFTrees()` function creates an `FFTrees` object\ `x` with its tree definitions. 
-    1. `get_fft_df()` extracts the set of current FFT definitions.
-    2. `add_fft_df()` adds one or more FFT definitions to an existing set (i.e., collecting sets of FFT definitions). 
+The main `FFTrees()` function creates an `FFTrees` object\ `x` with corresponding tree definitions. 
+The following two functions get and collect FFT definitions:  
+    1. `get_fft_df()` extracts the set of current FFT definitions (from `x$trees$definitions`).  
+    2. `add_fft_df()` adds one or more FFT\ definitions to an existing set of FFT definitions. Thus, the function allows collecting sets of FFT definitions.  
   
-- **Cycle\ 2**: Converting between two tree definition formats (both data frames):
+- **Cycle\ 2**: Converting between two tree definition formats (both data frames):  
     1. `read_fft_df()` selects a single FFT from a set of FFT definitions and converts it into a tidy data format (as a data frame in which each row represents a node).
     2. `write_fft_df()` converts a single FFT from the tidy data frame (with 1-row-per-node) into the 1-row-per FFT format used by `FFTrees()` and `tree.definitions()`. 
 
-- **Cycle\ 3**: Manipulating an individual tree definition by 6\ tree trimming functions.
+- **Cycle\ 3**: Manipulating an individual tree definition by 6\ tree editing and trimming functions:  
+    1. `add_nodes()` allows adding new nodes to an FFT; 
+    2. `drop_nodes()` allows deleting nodes of an FFT;  
+    3. `edit_nodes()` allows changing existing nodes of an FFT; 
+    4. `flip_exits()` allows changing the exit direction of existing nodes; 
+    5. `reorder_nodes()` allows changing the order of FFT nodes; 
+    6. `select_nodes()` allows filtering existing nodes of an FFT.  
+
 
 <!-- +++ here now +++  -->
 
