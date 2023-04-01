@@ -302,6 +302,28 @@ However, as questions regarding specific trees usually arise late in an explorat
 In this case, the parameters (e.g., regarding the `formula`, `data` and goals to be used) from\ `x` are being used, but its tree definitions (stored in `x$trees$definitions`) are replaced by those in `tree.definitions` and the object is re-evaluated for those FFTs.
 
 
+#### Overview: Manipulating FFT definitions 
+
+```{r fft-gfft, echo = FALSE, fig.cap = "**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)<br>and 6 tree trimming functions (in blue)."}
+  knitr::include_graphics("../inst/gFFTs.png")
+```
+
+**Figure 3** provides an overview of the functions provided for converting and manipulating FFT definitions. 
+We can distinguish between three cycles: 
+
+- **Cycle\ 1**: The main `FFTrees()` function creates `FFTrees` objects `x` with tree definitions. We can obtain them by `get_fft_df(x)` or use alternative FFT definitions by providing them as inputs to its `tree.definitions` argument.
+
+- **Cycle\ 2**: Conversion between two tree definition formats (both data frames):
+    1. `read_fft_df()`
+    2. `write_fft_df()`
+
+- **Cycle\ 3**: Manipulating individual tree definitions by 6\ tree trimming functions.
+
+<!-- +++ here now +++  -->
+
+ToDo: Illustrate a typical workflow in an example.
+
+
 #### Example
 
 We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
