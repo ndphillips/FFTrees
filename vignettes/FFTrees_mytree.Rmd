@@ -311,13 +311,16 @@ In this case, the parameters (e.g., regarding the `formula`, `data` and goals to
 **Figure 3** provides an overview of the functions provided for converting and manipulating FFT definitions. 
 We can distinguish between three cycles: 
 
-- **Cycle\ 1**: The main `FFTrees()` function creates `FFTrees` objects `x` with tree definitions. We can obtain them by `get_fft_df(x)` or use alternative FFT definitions by providing them as inputs to its `tree.definitions` argument.
+- **Cycle\ 1**: Obtaining and collecting sets of FFT definitions. 
+The main `FFTrees()` function creates an `FFTrees` object\ `x` with its tree definitions. 
+    1. `get_fft_df()` extracts the set of current FFT definitions.
+    2. `add_fft_df()` adds one or more FFT definitions to an existing set (i.e., collecting sets of FFT definitions). 
+  
+- **Cycle\ 2**: Converting between two tree definition formats (both data frames):
+    1. `read_fft_df()` selects a single FFT from a set of FFT definitions and converts it into a tidy data format (as a data frame in which each row represents a node).
+    2. `write_fft_df()` converts a single FFT from the tidy data frame (with 1-row-per-node) into the 1-row-per FFT format used by `FFTrees()` and `tree.definitions()`. 
 
-- **Cycle\ 2**: Conversion between two tree definition formats (both data frames):
-    1. `read_fft_df()`
-    2. `write_fft_df()`
-
-- **Cycle\ 3**: Manipulating individual tree definitions by 6\ tree trimming functions.
+- **Cycle\ 3**: Manipulating an individual tree definition by 6\ tree trimming functions.
 
 <!-- +++ here now +++  -->
 
