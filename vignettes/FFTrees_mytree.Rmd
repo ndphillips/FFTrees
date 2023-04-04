@@ -1,6 +1,6 @@
 ---
 title: "Manually specifying FFTs"
-author: "Nathaniel Phillips and Hansjörg Neth"
+author: "Hansjörg Neth and Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -180,8 +180,8 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
                                Else, we give up and go away.") 
 ```
 
-However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Unambiguous `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
-To verify that **FFTrees** interpreted our `my.tree` description, let's check whether the FFT of `inwords(my_fft_2)` yields a description that corresponds to our intended\ FFT:
+However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Interpretable `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
+To verify that **FFTrees** interpreted our `my.tree` description as intended, let's check whether the FFT of `inwords(my_fft_2)` yields a description that corresponds to our intended\ FFT:
 
 ```{r my-tree-fft-2-inwords}
 inwords(my_fft_2)
@@ -296,15 +296,35 @@ plot(fft_4, n.per.icon = 50, what = "all", show.iconguide = TRUE)
 
 ### 2. Using `tree.definitions`
 
-More experienced users may want to define and evaluate more than one FFTs at a time. 
+More experienced users may want to define and evaluate more than one FFT at a time. 
 To achieve this, the `FFTrees()` function allows providing sets of `tree.definitions` (as a data frame). 
-However, as questions regarding specific trees usually arise late in an exploration of FFTs, the `tree.definitions` argument is mostly used in combination with an existing `FFTrees` object\ `x`. 
-In this case, the parameters (e.g., regarding the `formula`, `data` and goals to be used) from\ `x` are being used, but its tree definitions (stored in `x$trees$definitions`) are replaced by those in `tree.definitions` and the object is re-evaluated for those FFTs.
+However, as questions regarding specific trees usually arise later in the exploration of FFTs, the `tree.definitions` argument is mostly used in combination with an existing `FFTrees` object\ `x`. 
+In this case, most parameters (e.g., regarding the `formula`, `data` and various goals) from the `FFTrees` object\ `x` are being kept, but the object is re-evaluated for a new set of `tree.definitions`.
+
+As FFTs are simple and transparent rules for solving binary classification problems, it would be neat to directly manipulate and evaluate these rules. 
+For this purpose, **FFTrees** provides a set of tree manipulation functions (see **Figure\ 3** below). 
+Some of these functions extract sets of existing FFT definitions (from `x`) and convert individual FFT definitions into a more manageable ("tidy") format. 
+Other functions allow to edit and trim these FFT definitions (e.g., by adding, changing, reordering or removing nodes). 
+Finally, further functions allow to re-convert individual FFT definitions into sets of definitions, and to collect and re-evaluate them on data. 
+
+<!-- Steps of workflow: -->
+
+The basic workflow to get, change, and use FFT definitions contains five steps: 
+
+1. Get (sets of) FFT definitions
+2. Select and convert an individual FFT into a tidy data format 
+3. Manipulate the FFT (e.g., by changing nodes) 
+4. Re-convert the new definition into the original data format 
+5. Collect sets of changed FFT definitions and/or evaluate them on data  
+
+
+Conceptually, this workflow boils down to first creating an FFT model for some data, then manipulating the model and re-evaluating it on the data. 
+The tools involved in this workflow allow editing the grammar of FFTs. 
 
 
 #### Overview: Manipulating FFT definitions 
 
-```{r fft-gfft, echo = FALSE, fig.cap = "**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)<br>and 6 tree trimming functions (in blue)."}
+```{r fft-gfft, echo = FALSE, out.width = "500px", fig.cap = "**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)<br>and 6 tree trimming functions (in blue)."}
   knitr::include_graphics("../inst/gFFTs.png")
 ```
 
