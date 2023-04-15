@@ -359,7 +359,7 @@ ToDo: Illustrate a typical workflow in an example.
 
 We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
 
-First, we use our default algorithms to create an `FFTrees` object `heart.fft`:
+First, we use our default algorithms to create an `FFTrees` object\ `x`:
 
 ```{r fft-treedef-01, message = FALSE}
 # Create an FFTrees object x:
@@ -371,18 +371,35 @@ x <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
              quiet = TRUE)                      # hide user feedback
 ```
 
+<!-- Get tree definitions: -->
+
+```{r fft-treedef-01b, echo = FALSE, eval = FALSE, message = FALSE}
+# 3 ways to get tree definitions of x:
+
+# Get tree definitions of x:
+df_1 <- summary(x)$definitions   # using summary()
+df_2 <- x$trees$definitions      # part of FFTrees object x
+df_3 <- get_fft_df(x)            # using get_fft_df() 
+
+# Verify equality:
+all.equal(df_1, df_2)
+all.equal(df_2, df_3)
+```
+
 As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
-Rather than evaluating them individually (by issuing `print(x)` or `plot(x)` commands to inspect specific trees), we can obtain both their definitions and their performance characteristics on a variety of measures either by running `summary(x)` or by inspecting corresponding parts of the `FFTrees` object. 
-For instance, the following alternatives would both show the current definitions of the generated FFTs: 
+Rather than evaluating them individually (e.g., by using `print(x)` or `plot(x)` commands to inspect specific trees), we now get the set of tree definitions to select and modify individual FFTs.
+This could be done by evaluating `x$trees$definitions` or `summary(x)$definitions`. 
+Alternatively, we can use the `get_fft_df()` utility function to extract the set of generated tree definitions:
 
 ```{r fft-treedef-02, message = FALSE}
-# Tree definitions of x:
-# summary(x)$definitions   # from summary()
-x$trees$definitions        # from FFTrees object x
+# Get tree definitions of x:
+tree_dfs <- get_fft_df(x)
 ```
 
 Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
 As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to examine alternative versions for these trees. 
+
+<!-- +++ here now +++  -->
 
 
 #### Modifying tree definitions 
@@ -391,18 +408,18 @@ To demonstrate how to create and evaluate manual FFT definitions, we copy the ex
 
 ```{r fft-treedef-03, message = FALSE}
 # 0. Copy and choose some existing FFT definitions:
-tree_df <- x$trees$definitions    # get FFT definitions (as df)
-tree_df <- tree_df[c(1, 3, 5), ]  # filter 3 particular FFTs
+tree_dfs <- x$trees$definitions     # get FFT definitions (as df)
+tree_dfs <- tree_dfs[c(1, 3, 5), ]  # filter 3 particular FFTs
 
 # 1. Add a tree with 1;1;0.5 exit structure (a "rake" tree with Signal bias):
-tree_df[4, ] <- tree_df[1, ]      # initialize new FFT #4 (as copy of FFT #1)
+tree_dfs[4, ] <- tree_dfs[1, ]      # initialize new FFT #4 (as copy of FFT #1)
 
 my_exits <- paste(get_exit_type(c(1, 1, .5)), collapse = "; ")  # OR: 
 # my_exits <- paste(get_exit_type(c("signal", "signal", "final")), collapse = "; ")
-tree_df$exits[4] <- my_exits      # set exits of FFT #4
+tree_dfs$exits[4] <- my_exits       # set exits of FFT #4
 
-tree_df$tree <- 1:nrow(tree_df)   # adjust tree numbers
-# tree_df
+tree_dfs$tree <- 1:nrow(tree_dfs)   # adjust tree numbers
+# tree_dfs
 ```
 
 Moreover, let's define four additional FFTs that reverse the order of the 1st and 2nd cues. 
@@ -410,15 +427,15 @@ As both cues are categorical (i.e., of class\ `c`) and have the same direction (
 
 ```{r fft-treedef-04, message = FALSE}
 # 2. Change cue orders:
-tree_df[5:8, ] <- tree_df[1:4, ]          # add 4 FFTs (as copies of existing ones)
-tree_df$cues[5:8] <- "cp; thal; ca"       # modify order of cues
-tree_df$thresholds[5:8] <- "a; rd,fd; 0"  # modify order of thresholds accordingly
+tree_dfs[5:8, ] <- tree_dfs[1:4, ]         # add 4 FFTs (as copies of existing ones)
+tree_dfs$cues[5:8] <- "cp; thal; ca"       # modify order of cues
+tree_dfs$thresholds[5:8] <- "a; rd,fd; 0"  # modify order of thresholds accordingly
 
-tree_df$tree <- 1:nrow(tree_df)           # adjust tree numbers
-# tree_df
+tree_dfs$tree <- 1:nrow(tree_dfs)          # adjust tree numbers
+# tree_dfs
 ```
 
-The resulting data frame `tree_df` contains the definitions of eight FFTs. 
+The resulting data frame `tree_dfs` contains the definitions of eight FFTs. 
 The first three are copies of trees in\ `x`, but the other five are new. 
 
 
@@ -426,13 +443,13 @@ The first three are copies of trees in\ `x`, but the other five are new.
 
 We can evaluate this set by running the `FFTrees()` function with 
 the previous `FFTrees` object\ `x` (i.e., with its `formula` and `data` settings) and 
-specifying `tree_df` in the `tree.definitions` argument:
+specifying `tree_dfs` in the `tree.definitions` argument:
 
 ```{r fft-treedef-05, message = FALSE, results = 'hide'}
 # Create a modified FFTrees object y:
-y <- FFTrees(object = x,                  # use previous FFTrees object x
-             tree.definitions = tree_df,  # but with new tree definitions
-             main = "Heart Disease 2"     # revised label
+y <- FFTrees(object = x,                   # use previous FFTrees object x
+             tree.definitions = tree_dfs,  # but with new tree definitions
+             main = "Heart Disease 2"      # revised label
 )
 ```
 
