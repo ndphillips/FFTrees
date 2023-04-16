@@ -359,7 +359,7 @@ ToDo: Illustrate a typical workflow in an example.
 
 We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
 
-First, we use our default algorithms to create an `FFTrees` object\ `x`:
+To obtain a set of existing tree definitions, we use our default algorithms to create an `FFTrees` object\ `x`:
 
 ```{r fft-treedef-01, message = FALSE}
 # Create an FFTrees object x:
@@ -387,16 +387,17 @@ all.equal(df_2, df_3)
 ```
 
 As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
-Rather than evaluating them individually (e.g., by using `print(x)` or `plot(x)` commands to inspect specific trees), we now get the set of tree definitions to select and modify individual FFTs.
-This could be done by evaluating `x$trees$definitions` or `summary(x)$definitions`. 
-Alternatively, we can use the `get_fft_df()` utility function to extract the set of generated tree definitions:
+Rather than evaluating them individually (e.g., by using `print(x)` or `plot(x)` commands to inspect specific trees), we now extract the tree definitions to select and modify individual FFTs. 
+As the definitions are stored as part of the `FFTrees` object\ `x`, this could be achieved by evaluating `x$trees$definitions` or by `summary(x)$definitions`. 
+Alternatively, we can use the `get_fft_df()` utility function on\ `x` to obtain the set of generated tree definitions: 
 
 ```{r fft-treedef-02, message = FALSE}
 # Get tree definitions of x:
 tree_dfs <- get_fft_df(x)
 ```
 
-Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
+The `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
+Each row defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
 As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to examine alternative versions for these trees. 
 
 <!-- +++ here now +++  -->
