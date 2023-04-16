@@ -350,9 +350,7 @@ The following two functions get and collect FFT definitions:
     6. `select_nodes()` allows filtering existing nodes of an FFT.  
 
 
-<!-- +++ here now +++  -->
-
-ToDo: Illustrate a typical workflow in an example.
+The following example illustrates the interplay of these functions a typical workflow. 
 
 
 #### Example
@@ -397,8 +395,8 @@ tree_dfs <- get_fft_df(x)
 ```
 
 The `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
-Each row defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
-As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to examine alternative versions for these trees. 
+Each of its `r nrow(tree_dfs)` rows defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
+As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to explore alternative versions for these trees. 
 
 <!-- +++ here now +++  -->
 
