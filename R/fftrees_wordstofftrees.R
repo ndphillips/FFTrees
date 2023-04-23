@@ -149,7 +149,7 @@ fftrees_wordstofftrees <- function(x,
     cues_v <- x$cue_names[sapply(cues_v, FUN = function(c_name) {
       which(cue_names_l == c_name)
     })]
-  }
+  } # 1. cues_v.
 
 
   # 2. classes_v: ----
@@ -161,7 +161,8 @@ fftrees_wordstofftrees <- function(x,
     classes_v[ in_brackets] <- "c"  # categorical (character, factor, logical)
     classes_v[!in_brackets] <- "n"  # numeric (integer, numeric)
 
-  }
+  } # 2. classes_v.
+
 
   # 3. exits_v: ----
   {
@@ -195,7 +196,8 @@ fftrees_wordstofftrees <- function(x,
     }))
 
     # print(exits_v)  # 4debugging
-  }
+  } # 3. exits_v.
+
 
   # 4. thresholds_v: ----
   {
@@ -226,7 +228,7 @@ fftrees_wordstofftrees <- function(x,
       return(threshold_i)
 
     })
-  }
+  } # 4. thresholds_v.
 
 
   # 5. directions_v: ----
@@ -284,7 +286,7 @@ fftrees_wordstofftrees <- function(x,
 
     directions_v[flip_direction_ix] <- directions_df$negation[match(directions_v[flip_direction_ix], table = directions_df$direction)]
 
-  }
+  } # 5. directions_v.
 
 
   # Set final exit (to .5): ----

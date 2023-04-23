@@ -1,6 +1,6 @@
 ---
 title: "Manually specifying FFTs"
-author: "Nathaniel Phillips and Hansjörg Neth"
+author: "Hansjörg Neth and Nathaniel Phillips"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: fft.bib
@@ -180,8 +180,8 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
                                Else, we give up and go away.") 
 ```
 
-However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Unambiguous `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
-To verify that **FFTrees** interpreted our `my.tree` description, let's check whether the FFT of `inwords(my_fft_2)` yields a description that corresponds to our intended\ FFT:
+However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Interpretable `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
+To verify that **FFTrees** interpreted our `my.tree` description as intended, let's check whether the FFT of `inwords(my_fft_2)` yields a description that corresponds to what we wanted:
 
 ```{r my-tree-fft-2-inwords}
 inwords(my_fft_2)
@@ -296,17 +296,71 @@ plot(fft_4, n.per.icon = 50, what = "all", show.iconguide = TRUE)
 
 ### 2. Using `tree.definitions`
 
-More experienced users may want to define and evaluate more than one FFTs at a time. 
+More experienced users may want to define and evaluate more than one FFT at a time. 
 To achieve this, the `FFTrees()` function allows providing sets of `tree.definitions` (as a data frame). 
-However, as questions regarding specific trees usually arise late in an exploration of FFTs, the `tree.definitions` argument is mostly used in combination with an existing `FFTrees` object\ `x`. 
-In this case, the parameters (e.g., regarding the `formula`, `data` and goals to be used) from\ `x` are being used, but its tree definitions (stored in `x$trees$definitions`) are replaced by those in `tree.definitions` and the object is re-evaluated for those FFTs.
+However, as questions regarding specific trees usually arise later in the exploration of FFTs, the `tree.definitions` argument is mostly used in combination with an existing `FFTrees` object\ `x`. 
+In this case, most parameters (e.g., regarding the `formula`, `data` and various goals) from the `FFTrees` object\ `x` are being kept, but the object is re-evaluated for a new set of `tree.definitions`.
+
+As FFTs are simple and transparent rules for solving binary classification problems, it would be neat to directly manipulate and evaluate these rules. 
+For this purpose, **FFTrees** provides a set of tree manipulation functions (see **Figure\ 3** below). 
+Some of these functions extract sets of existing FFT definitions (from `x`) and convert individual FFT definitions into a more manageable ("tidy") format. 
+Other functions allow to edit and trim these FFT definitions (e.g., by adding, changing, reordering or removing nodes). 
+Finally, further functions allow to re-convert individual FFT definitions into sets of definitions, and to collect and re-evaluate them on data. 
+
+<!-- Steps of workflow: -->
+
+The basic workflow to get, change, and use FFT definitions contains five steps: 
+
+1. Get (sets of) FFT definitions
+2. Select and convert an individual FFT into a tidy data format 
+3. Manipulate the FFT (e.g., by changing nodes) 
+4. Re-convert the new definition into the original data format 
+5. Collect sets of changed FFT definitions and/or evaluate them on data  
+
+
+Conceptually, this workflow boils down to first creating an FFT model for some data, then manipulating the model and re-evaluating it on the data. 
+The tools involved in this workflow allow editing the grammar of FFTs. 
+
+
+#### Overview: Manipulating FFT definitions 
+
+```{r fft-gfft, echo = FALSE, out.width = "500px", fig.cap = "**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)<br>and 6 tree trimming functions (in blue)."}
+  knitr::include_graphics("../inst/gFFTs.png")
+```
+
+**Figure 3** provides an overview of the functions provided for converting and manipulating FFT definitions. 
+We can distinguish between three cycles: 
+
+- **Cycle\ 1**: Obtaining and collecting sets of FFT definitions. 
+The main `FFTrees()` function creates an `FFTrees` object\ `x` with corresponding tree definitions. 
+The following two functions get and collect FFT definitions:  
+    1. `get_fft_df()` extracts the set of current FFT definitions (from `x$trees$definitions`).  
+    2. `add_fft_df()` adds one or more FFT\ definitions to an existing set of FFT definitions. Thus, the function allows collecting sets of FFT definitions.  
+  
+  
+- **Cycle\ 2**: Converting between two tree definition formats (both data frames):  
+    1. `read_fft_df()` selects a single FFT from a set of FFT definitions and converts it into a tidy data format (as a data frame in which each row represents a node).
+    2. `write_fft_df()` converts a single FFT from the tidy data frame (with 1-row-per-node) into the 1-row-per FFT format used by `add_fft_df()` and the `tree.definitions` argument of `FFTrees()`.  
+
+
+- **Cycle\ 3**: Manipulating an individual tree definition by a set of tree editing and trimming functions:  
+    - `add_nodes()` allows adding new nodes to an FFT; 
+    - `drop_nodes()` allows deleting nodes of an FFT; 
+    - `edit_nodes()` allows changing existing nodes of an FFT; 
+    - `flip_exits()` allows changing the exit direction of existing nodes; 
+    - `reorder_nodes()` allows changing the order of FFT nodes; 
+    - `select_nodes()` allows filtering existing nodes of an FFT. 
+
+
+The following example illustrates the interplay of these functions in a typical workflow. 
+When looking at **Figure 3**, we first move down on the right (from retrieving sets of FFT definitions to manipulating individual FFTs) and then move up on the left (to re-convert individual FFTs into sets of FFT definitions). 
 
 
 #### Example
 
 We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
 
-First, we use our default algorithms to create an `FFTrees` object `heart.fft`:
+To obtain a set of existing tree definitions, we use our default algorithms to create an `FFTrees` object\ `x`:
 
 ```{r fft-treedef-01, message = FALSE}
 # Create an FFTrees object x:
@@ -318,18 +372,59 @@ x <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
              quiet = TRUE)                      # hide user feedback
 ```
 
-As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
-Rather than evaluating them individually (by issuing `print(x)` or `plot(x)` commands to inspect specific trees), we can obtain both their definitions and their performance characteristics on a variety of measures either by running `summary(x)` or by inspecting corresponding parts of the `FFTrees` object. 
-For instance, the following alternatives would both show the current definitions of the generated FFTs: 
+<!-- Get tree definitions: -->
 
-```{r fft-treedef-02, message = FALSE}
-# Tree definitions of x:
-# summary(x)$definitions   # from summary()
-x$trees$definitions        # from FFTrees object x
+```{r fft-treedef-01b, echo = FALSE, eval = FALSE, message = FALSE}
+# 3 ways to get tree definitions of x:
+
+# Get tree definitions of x:
+df_1 <- summary(x)$definitions   # using summary()
+df_2 <- x$trees$definitions      # part of FFTrees object x
+df_3 <- get_fft_df(x)            # using get_fft_df() 
+
+# Verify equality:
+all.equal(df_1, df_2)
+all.equal(df_2, df_3)
 ```
 
-Each line in these tree definitions defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
-As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to examine alternative versions for these trees. 
+As we have seen in the [Tutorial](FFTrees_heart.html), evaluating this expression yields a set of `r x$trees$n`\ FFTs. 
+Rather than evaluating them individually (e.g., by using `print(x)` or `plot(x)` commands to inspect specific trees), we now extract the tree definitions to select and modify individual FFTs. 
+As the definitions are stored as part of the `FFTrees` object\ `x`, this could be achieved by evaluating `x$trees$definitions` or by `summary(x)$definitions`. 
+Alternatively, we can use the `get_fft_df()` utility function on\ `x` to obtain the set of generated tree definitions: 
+
+```{r fft-treedef-02, message = FALSE}
+# Get tree definitions of x:
+tree_dfs <- get_fft_df(x)
+```
+
+The R object\ `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
+Each of its `r nrow(tree_dfs)` rows defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
+As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to explore alternative versions of these trees. 
+
+<!-- +++ here now +++  -->
+
+#### Obtaining individual tree definitions
+
+- `read_fft_df()` selects an FFT definition and converts it into a tidy data frame.
+
+
+#### Manipulating individual tree definitions
+
+Use the set of tree trimming and editing functions to manipulate the definitions of individual FFTs:
+
+- Editing an individual FFT.
+
+- Using pipes to combine steps.
+
+
+#### Re-converting and collecting tree definitions
+
+- `write_fft_df()` converts a single FFT from the tidy data frame (with 1-row-per-node) into the 1-row-per FFT format used by `add_fft_df()`.
+
+#### Applying sets of tree definitions to data 
+
+- Provide sets of FFT definitions to the `tree.definitions` argument of `FFTrees()` to evaluate FFTs on data. 
+
 
 
 #### Modifying tree definitions 
@@ -338,18 +433,18 @@ To demonstrate how to create and evaluate manual FFT definitions, we copy the ex
 
 ```{r fft-treedef-03, message = FALSE}
 # 0. Copy and choose some existing FFT definitions:
-tree_df <- x$trees$definitions    # get FFT definitions (as df)
-tree_df <- tree_df[c(1, 3, 5), ]  # filter 3 particular FFTs
+tree_dfs <- x$trees$definitions     # get FFT definitions (as df)
+tree_dfs <- tree_dfs[c(1, 3, 5), ]  # filter 3 particular FFTs
 
 # 1. Add a tree with 1;1;0.5 exit structure (a "rake" tree with Signal bias):
-tree_df[4, ] <- tree_df[1, ]      # initialize new FFT #4 (as copy of FFT #1)
+tree_dfs[4, ] <- tree_dfs[1, ]      # initialize new FFT #4 (as copy of FFT #1)
 
 my_exits <- paste(get_exit_type(c(1, 1, .5)), collapse = "; ")  # OR: 
 # my_exits <- paste(get_exit_type(c("signal", "signal", "final")), collapse = "; ")
-tree_df$exits[4] <- my_exits      # set exits of FFT #4
+tree_dfs$exits[4] <- my_exits       # set exits of FFT #4
 
-tree_df$tree <- 1:nrow(tree_df)   # adjust tree numbers
-# tree_df
+tree_dfs$tree <- 1:nrow(tree_dfs)   # adjust tree numbers
+# tree_dfs
 ```
 
 Moreover, let's define four additional FFTs that reverse the order of the 1st and 2nd cues. 
@@ -357,15 +452,15 @@ As both cues are categorical (i.e., of class\ `c`) and have the same direction (
 
 ```{r fft-treedef-04, message = FALSE}
 # 2. Change cue orders:
-tree_df[5:8, ] <- tree_df[1:4, ]          # add 4 FFTs (as copies of existing ones)
-tree_df$cues[5:8] <- "cp; thal; ca"       # modify order of cues
-tree_df$thresholds[5:8] <- "a; rd,fd; 0"  # modify order of thresholds accordingly
+tree_dfs[5:8, ] <- tree_dfs[1:4, ]         # add 4 FFTs (as copies of existing ones)
+tree_dfs$cues[5:8] <- "cp; thal; ca"       # modify order of cues
+tree_dfs$thresholds[5:8] <- "a; rd,fd; 0"  # modify order of thresholds accordingly
 
-tree_df$tree <- 1:nrow(tree_df)           # adjust tree numbers
-# tree_df
+tree_dfs$tree <- 1:nrow(tree_dfs)          # adjust tree numbers
+# tree_dfs
 ```
 
-The resulting data frame `tree_df` contains the definitions of eight FFTs. 
+The resulting data frame `tree_dfs` contains the definitions of eight FFTs. 
 The first three are copies of trees in\ `x`, but the other five are new. 
 
 
@@ -373,13 +468,13 @@ The first three are copies of trees in\ `x`, but the other five are new.
 
 We can evaluate this set by running the `FFTrees()` function with 
 the previous `FFTrees` object\ `x` (i.e., with its `formula` and `data` settings) and 
-specifying `tree_df` in the `tree.definitions` argument:
+specifying `tree_dfs` in the `tree.definitions` argument:
 
-```{r fft-treedef-05, message = TRUE, results = 'hide'}
+```{r fft-treedef-05, message = FALSE, results = 'hide'}
 # Create a modified FFTrees object y:
-y <- FFTrees(object = x,                  # use previous FFTrees object x
-             tree.definitions = tree_df,  # but with new tree definitions
-             main = "Heart Disease 2"     # revised label
+y <- FFTrees(object = x,                   # use previous FFTrees object x
+             tree.definitions = tree_dfs,  # but with new tree definitions
+             main = "Heart Disease 2"      # revised label
 )
 ```
 
