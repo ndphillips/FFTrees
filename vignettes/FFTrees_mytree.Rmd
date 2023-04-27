@@ -397,17 +397,17 @@ Alternatively, we can use the `get_fft_df()` utility function on\ `x` to obtain 
 (tree_dfs <- get_fft_df(x))
 ```
 
-The R object\ `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
+The resulting R object\ `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
 Each of its `r nrow(tree_dfs)` rows defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
 As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (which vary only by their exits, and may truncate some cues), we may want to explore alternative versions of these trees. 
 
-<!-- +++ here now +++  -->
+All `r nrow(tree_dfs)` FFTs defined in `tree_dfs` share the three cues `thal`, `cp`, and\ `ca`, in this order. 
+Let's assume we had reasons to explore the cue order `thal`, `ca`, and\ `cp`. 
 
 #### Obtaining individual tree definitions
 
-All `r nrow(tree_dfs)` FFTs defined in `tree_dfs` share the three cues `thal`, `cp`, and\ `ca`, in this order. 
-Let's assume we had reasons to explore the cue order `thal`, `ca`, and\ `cp`. 
-To do so, we first select an initial FFT that we can then manipulate further: 
+Before we can apply our tree editing functions, we first select an initial FFT that we want to manipulate further. 
+This is the job of `read_fft_df()`: 
 
 - `read_fft_df()` selects an FFT definition and converts it into a tidy data frame.
 
@@ -417,29 +417,50 @@ In our present case, we select and convert tree\ `1`:
 (fft_1 <- read_fft_df(tree_dfs, tree = 1))
 ```
 
-The resulting R object\ `fft_1` selected the definition of tree\ 1
+The resulting R object\ `fft_1` selected the definition of tree\ 1 and converted it into a tidy data frame. 
+Each of its `r nrow(fft_1)` rows defines a node of this FFT. 
+This format can be understood and manipulated more easily than the more compact format used in row\ 1 of `tree_dfs` (but both formats can be converted into each other by the complementary functions `read_fft_df()` and `write_fft_df()`). 
 
 
 #### Manipulating individual tree definitions
 
+<!-- +++ here now +++  -->
+
 Use the set of tree trimming and editing functions to manipulate the definitions of individual FFTs:
 
-- Editing an individual FFT.
+Editing an individual FFT:
 
+- `reorder_nodes()`
+
+```{r fft-reorder-nodes}
+(my_fft_1 <- reorder_nodes(fft_1, order = c(1, 3, 2)))
+```
+
+- `flip_exits()`
+
+As every non-final node allows for two alternative exits, a tree containing $n$\ nodes has `2^{(n-1)}`\ exit structures. 
+The $3$\ alternative exit structures to `my_fft_1` can be obtained by flipping the exit directions of the first, second, or both non-final nodes:
+
+```{r fft-flip-exits}
+(my_fft_2 <- flip_exits(my_fft_1, nodes = 1))
+(my_fft_3 <- flip_exits(my_fft_1, nodes = 2))
+(my_fft_4 <- flip_exits(my_fft_1, nodes = c(1, 2)))
+```
 
 #### Using **magrittr** pipes to combine steps
 
 The tree conversion and editing functions do not need to be used separately. 
 As their first argument represents the data object to be manipulated, they can be viewed as verbs in a tree manipulation language and chained into longer command sequences by using the **magrittr** pipe operator. 
-For instance, the above sequence of steps could be combined into: 
+For instance, the sequence of four steps leading to `my_fft_2` (above) can be combined into: 
 
 ```{r fft-pipes, message = FALSE}
 library(magrittr)
 
 x %>% 
   get_fft_df() %>%
-  read_fft_df(tree = 1)
-
+  read_fft_df(tree = 1) %>%
+  reorder_nodes(order = c(1, 3, 2)) %>%
+  flip_exits(nodes = 1)
 ```
 
 
