@@ -394,18 +394,30 @@ Alternatively, we can use the `get_fft_df()` utility function on\ `x` to obtain 
 
 ```{r fft-treedef-02, message = FALSE}
 # Get tree definitions of x:
-tree_dfs <- get_fft_df(x)
+(tree_dfs <- get_fft_df(x))
 ```
 
 The R object\ `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
 Each of its `r nrow(tree_dfs)` rows defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
-As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (as the FFTs vary only by their exits, and some truncate the last cue), we may want to explore alternative versions of these trees. 
+As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (which vary only by their exits, and may truncate some cues), we may want to explore alternative versions of these trees. 
 
 <!-- +++ here now +++  -->
 
 #### Obtaining individual tree definitions
 
+All `r nrow(tree_dfs)` FFTs defined in `tree_dfs` share the three cues `thal`, `cp`, and\ `ca`, in this order. 
+Let's assume we had reasons to explore the cue order `thal`, `ca`, and\ `cp`. 
+To do so, we first select an initial FFT that we can then manipulate further: 
+
 - `read_fft_df()` selects an FFT definition and converts it into a tidy data frame.
+
+In our present case, we select and convert tree\ `1`:    
+
+```{r fft-read-fft}
+(fft_1 <- read_fft_df(tree_dfs, tree = 1))
+```
+
+The resulting R object\ `fft_1` selected the definition of tree\ 1
 
 
 #### Manipulating individual tree definitions
@@ -414,7 +426,22 @@ Use the set of tree trimming and editing functions to manipulate the definitions
 
 - Editing an individual FFT.
 
-- Using pipes to combine steps.
+
+#### Using **magrittr** pipes to combine steps
+
+The tree conversion and editing functions do not need to be used separately. 
+As their first argument represents the data object to be manipulated, they can be viewed as verbs in a tree manipulation language and chained into longer command sequences by using the **magrittr** pipe operator. 
+For instance, the above sequence of steps could be combined into: 
+
+```{r fft-pipes, message = FALSE}
+library(magrittr)
+
+x %>% 
+  get_fft_df() %>%
+  read_fft_df(tree = 1)
+
+```
+
 
 
 #### Re-converting and collecting tree definitions
@@ -499,7 +526,7 @@ plot(y,  tree = 6, data = "test")
 we see that it has a balanced accuracy\ `bacc` of\ 70%. 
 More precisely, its bias for predicting `disease` (i.e., signal or True) yields near-perfect sensitivity (96%), but very poor specificity (44%). 
 
-If we wanted to change more aspects of\ `x` (e.g., use different `data` or `goal` settings), we could have created a new `FFTrees` object without supplying the previous object\ `x`, as long as the FFTs defined in `tree.definitions` fit to the settings of `formula` and `data`. 
+If we wanted to change more aspects of\ `x` (e.g., use different `data` or `goal` settings), we could create a new `FFTrees` object without supplying the previous object\ `x`, as long as the FFTs defined in `tree.definitions` correspond to the settings of `formula` and `data`. 
 
 <!-- +++ here now +++  -->
 
