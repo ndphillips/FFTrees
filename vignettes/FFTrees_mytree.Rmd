@@ -322,13 +322,13 @@ Conceptually, this workflow boils down to first creating an FFT model for some d
 The tools involved in this workflow allow editing the grammar of FFTs. 
 
 
-#### Overview: Manipulating FFT definitions 
+#### Overview: Retrieving, manipulating, and using FFT definitions 
 
 ```{r fft-gfft, echo = FALSE, out.width = "500px", fig.cap = "**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)<br>and 6 tree trimming functions (in blue)."}
   knitr::include_graphics("../inst/gFFTs.png")
 ```
 
-**Figure 3** provides an overview of the functions provided for converting and manipulating FFT definitions. 
+**Figure\ 3** provides an overview of the functions provided for converting and manipulating FFT definitions. 
 We can distinguish between three cycles: 
 
 - **Cycle\ 1**: Obtaining and collecting sets of FFT definitions. 
@@ -353,7 +353,7 @@ The following two functions get and collect FFT definitions:
 
 
 The following example illustrates the interplay of these functions in a typical workflow. 
-When looking at **Figure 3**, we first move down on the right (from retrieving sets of FFT definitions to manipulating individual FFTs) and then move up on the left (to re-convert individual FFTs into sets of FFT definitions). 
+When looking at **Figure\ 3**, we first move down on the right (from retrieving sets of FFT definitions to manipulating individual FFTs) and then move up on the left (to re-convert individual FFTs into sets of FFT definitions). 
 
 
 #### Example
@@ -404,10 +404,11 @@ As the "ifan" algorithm responsible for creating these trees yields a family of 
 All `r nrow(tree_dfs)` FFTs defined in `tree_dfs` share the three cues `thal`, `cp`, and\ `ca`, in this order. 
 Let's assume we had reasons to explore the cue order `thal`, `ca`, and\ `cp`. 
 
+
 #### Obtaining individual tree definitions
 
 Before we can apply our tree editing functions, we first select an initial FFT that we want to manipulate further. 
-This is the job of `read_fft_df()` (see Cycle\ 2 of **Figure 3**): 
+This is the job of `read_fft_df()` (see **Cycle\ 2** of **Figure\ 3**): 
 
 - `read_fft_df()` selects an FFT definition and converts it into a tidy data frame.
 
@@ -425,26 +426,31 @@ This format can be understood and manipulated more easily than the more compact 
 #### Manipulating individual tree definitions
 
 Having selected one FFT and converted it into a tidy data frame\ `fft_1`, 
-we can use various tree trimming functions to edit or manipulate the definition of an individual tree (see Cycle\ 3 of **Figure 3**). 
+we can use various tree trimming functions to edit or manipulate the definition of an individual tree (see **Cycle\ 3** of **Figure\ 3**). 
 
 <!-- Editing an individual FFT: -->
 
-In our example, our selected FFT use the cues `thal`, `cp`, and\ `ca`, but we wanted to explore the alternative cue order `thal`, `ca`, and\ `cp`. In other words, we need to swap the order of the 2nd and 3rd\ cues of `fft_1`. 
+In our example, our selected FFT uses the cues `thal`, `cp`, and\ `ca`, but we wanted to explore the alternative cue order `thal`, `ca`, and\ `cp`. 
+In other words, we need to swap the order of the 2nd and 3rd\ cues of `fft_1`. 
 This is the purpose of the `reorder_nodes()` function:
 
-- `reorder_nodes()` allows changing the order of FFT nodes.
+- `reorder_nodes()` allows changing the order of FFT nodes. 
 
-In contrast to the `read_fft_df()` function above, the tree editing functions of Cycle\ 3 all require an individual FFT-definition (as a tidy data frame) as their first argument\ `fft`. 
+In contrast to the `read_fft_df()` function above, the tree editing functions of **Cycle\ 3** all require an individual FFT-definition (as a tidy data frame) as their first argument\ `fft`. 
 In the case of `reorder_nodes()`, the second argument `order` specifies a numeric vector for the desired node positions (i.e., the integers from\ 1 to `nrow(fft)` in any order). 
-For instance, to swap the order of the 2nd and 3rd nodes of `fft_1`, we use: 
+Thus, swapping the order of the 2nd and 3rd nodes of `fft_1` is achieved as follows: 
 
 ```{r fft-reorder-nodes}
 (my_fft_1 <- reorder_nodes(fft = fft_1, order = c(1, 3, 2)))
 ```
 
+Swapping the final two nodes implies that the final node of `fft_1` (using the numerical cue\ `ca`) becomes a non-final cue, 
+whereas the previous middle node (using a categorical cue\ `cp`) becomes a final cue (see the corresponding feedback message). 
+By default, the previous exit cue becomes a signal exit (here: exit\ 1, i.e., predicting signal). 
 Saving the resulting tree definition (stored in the same tidy data frame format as `fft_1`) as an\ R object `my_fft_1` will allow us to collect our modified FFTs later. 
 
 <!-- +++ here now +++  -->
+
 
 - `flip_exits()`
 
