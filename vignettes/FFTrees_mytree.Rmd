@@ -338,7 +338,7 @@ The following two functions get and collect FFT definitions:
     2. `add_fft_df()` adds one or more FFT\ definitions to an existing set of FFT definitions. Thus, the function allows collecting sets of FFT definitions.  
   
   
-- **Cycle\ 2**: Converting between two tree definition formats (both data frames):  
+- **Cycle\ 2**: Converting between two tree definition formats (both stored as data frames):  
     1. `read_fft_df()` selects a single FFT from a set of FFT definitions and converts it into a tidy data format (as a data frame in which each row represents a node).
     2. `write_fft_df()` converts a single FFT from the tidy data frame (with 1-row-per-node) into the 1-row-per FFT format used by `add_fft_df()` and the `tree.definitions` argument of `FFTrees()`.  
 
@@ -407,14 +407,14 @@ Let's assume we had reasons to explore the cue order `thal`, `ca`, and\ `cp`.
 #### Obtaining individual tree definitions
 
 Before we can apply our tree editing functions, we first select an initial FFT that we want to manipulate further. 
-This is the job of `read_fft_df()`: 
+This is the job of `read_fft_df()` (see Cycle\ 2 of **Figure 3**): 
 
 - `read_fft_df()` selects an FFT definition and converts it into a tidy data frame.
 
 In our present case, we select and convert tree\ `1`:    
 
 ```{r fft-read-fft}
-(fft_1 <- read_fft_df(tree_dfs, tree = 1))
+(fft_1 <- read_fft_df(ffts_df = tree_dfs, tree = 1))
 ```
 
 The resulting R object\ `fft_1` selected the definition of tree\ 1 and converted it into a tidy data frame. 
@@ -424,17 +424,27 @@ This format can be understood and manipulated more easily than the more compact 
 
 #### Manipulating individual tree definitions
 
-<!-- +++ here now +++  -->
+Having selected one FFT and converted it into a tidy data frame\ `fft_1`, 
+we can use various tree trimming functions to edit or manipulate the definition of an individual tree (see Cycle\ 3 of **Figure 3**). 
 
-Use the set of tree trimming and editing functions to manipulate the definitions of individual FFTs:
+<!-- Editing an individual FFT: -->
 
-Editing an individual FFT:
+In our example, our selected FFT use the cues `thal`, `cp`, and\ `ca`, but we wanted to explore the alternative cue order `thal`, `ca`, and\ `cp`. In other words, we need to swap the order of the 2nd and 3rd\ cues of `fft_1`. 
+This is the purpose of the `reorder_nodes()` function:
 
-- `reorder_nodes()`
+- `reorder_nodes()` allows changing the order of FFT nodes.
+
+In contrast to the `read_fft_df()` function above, the tree editing functions of Cycle\ 3 all require an individual FFT-definition (as a tidy data frame) as their first argument\ `fft`. 
+In the case of `reorder_nodes()`, the second argument `order` specifies a numeric vector for the desired node positions (i.e., the integers from\ 1 to `nrow(fft)` in any order). 
+For instance, to swap the order of the 2nd and 3rd nodes of `fft_1`, we use: 
 
 ```{r fft-reorder-nodes}
-(my_fft_1 <- reorder_nodes(fft_1, order = c(1, 3, 2)))
+(my_fft_1 <- reorder_nodes(fft = fft_1, order = c(1, 3, 2)))
 ```
+
+Saving the resulting tree definition (stored in the same tidy data frame format as `fft_1`) as an\ R object `my_fft_1` will allow us to collect our modified FFTs later. 
+
+<!-- +++ here now +++  -->
 
 - `flip_exits()`
 
