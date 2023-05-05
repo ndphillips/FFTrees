@@ -446,8 +446,9 @@ Thus, swapping the order of the 2nd and 3rd nodes of `fft_1` is achieved as foll
 
 Swapping the final two nodes implies that the final node of `fft_1` (using the numerical cue\ `ca`) becomes a non-final cue, 
 whereas the previous middle node (using a categorical cue\ `cp`) becomes a final cue (see the corresponding feedback message). 
-By default, the previous exit cue becomes a signal exit (here: exit\ 1, i.e., predicting signal). 
+By default, the previous exit cue becomes a signal exit (here: exit\ 1, i.e., predicting a TRUE value for the `diagnosis` criterion). 
 Saving the resulting tree definition (stored in the same tidy data frame format as `fft_1`) as an\ R object `my_fft_1` will allow us to collect our modified FFTs later. 
+
 
 <!-- +++ here now +++  -->
 
@@ -565,7 +566,6 @@ More precisely, its bias for predicting `disease` (i.e., signal or True) yields 
 
 If we wanted to change more aspects of\ `x` (e.g., use different `data` or `goal` settings), we could create a new `FFTrees` object without supplying the previous object\ `x`, as long as the FFTs defined in `tree.definitions` correspond to the settings of `formula` and `data`. 
 
-<!-- +++ here now +++  -->
 
 <!-- For experienced users: Method for manually or computationally defining sets of FFTs. -->
 <!-- Start from existing definitions of FFTs (in an `FFTrees` object). -->
