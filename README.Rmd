@@ -41,10 +41,12 @@ url_JDM_doi <- "https://doi.org/10.1017/S1930297500006239"
 <!-- Devel badges end. -->
 
 
+
 <!-- Release badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
 <!-- Release badges end. -->
+
 
 
 <!-- ALL badges start: --> 
