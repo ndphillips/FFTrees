@@ -356,6 +356,8 @@ The following example illustrates the interplay of these functions in a typical 
 When looking at **Figure\ 3**, we first move down on the right side (from retrieving sets of FFT definitions to manipulating individual FFTs) and then move up on the left side (to re-convert individual FFTs into sets of FFT definitions). 
 
 
+
+
 #### Example
 
 We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
@@ -551,11 +553,13 @@ my_tree_dfs
 The resulting data frame `my_tree_dfs` contains `r nrow(my_tree_dfs)`\ FFT definitions in its `r nrow(my_tree_dfs)`\ rows. 
 Per our design (above), they only differ in the values of their `tree`\ ID and the structures of their `exits`. 
 
-
 <!-- +++ here now +++  -->
 
-
 #### Applying sets of tree definitions to data 
+
+Having edited and collected a set of tree definitions (in a data frame `my_tree_dfs`), we now can evaluate the corresponding FFTs on data. 
+We can do this by providing our set of tree definitions (`my_tree_dfs`) to the `tree.definitions` of the main `FFTrees()` function. 
+
 
 - Provide sets of FFT definitions to the `tree.definitions` argument of `FFTrees()` to evaluate FFTs on data.   
     
