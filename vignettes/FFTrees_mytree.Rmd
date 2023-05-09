@@ -460,7 +460,8 @@ As we had no specific exit structure in mind when deciding to explore the cue or
 we will explore all possible exit directions. 
 As every non-final node allows for two alternative exits, a tree containing $n$\ nodes has `2^{(n-1)}`\ exit structures 
 (i.e., $2^2 = 4$ for 3\ cues). 
-The $3$\ exit structures in addition to `my_fft_1` can be obtained by flipping the exit directions of the first, second, or both non-final nodes. Each alternative can be achieved by applying the `flip_exits()` function to `my_fft_1`:
+The $3$\ exit structures in addition to `my_fft_1` can be obtained by flipping the exit directions of the first, second, or both non-final nodes. 
+Each alternative can be achieved by applying the `flip_exits()` function to `my_fft_1`:
 
 - `flip_exits()` allows changing the exit direction of existing nodes. 
 
@@ -606,6 +607,25 @@ summary(z)
 
 plot(z, tree = 1)
 ```
+
+Comparing our new with the set of old (or automatically created) FFTs:
+
+```{r eval-FFTs-03, eval = FALSE}
+(all_fft_dfs <- add_fft_df(my_tree_dfs, tree_dfs))
+
+# Create a new FFTrees object a:
+a <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
+             data = heartdisease,               # using full dataset
+             #
+             tree.definitions = all_fft_dfs,    # provide set of FFT definitions !!!
+             #
+             main = "Heart Disease 4",          # new label
+             decision.labels = c("low", "high") # exit labels
+             )
+
+summary(a)
+```
+
 
 
 #### Modifying tree definitions 
