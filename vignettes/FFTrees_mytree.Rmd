@@ -333,9 +333,11 @@ We can distinguish between three cycles:
 
 - **Cycle\ 1**: Obtaining and collecting sets of FFT definitions. 
 The main `FFTrees()` function creates an `FFTrees` object\ `x` with and from corresponding tree definitions. 
-The following two functions get and collect FFT\ definitions:  
+The following functions get, collect, and evaluate FFT\ definitions:  
     1. `get_fft_df()` extracts the set of current FFT definitions (from `x$trees$definitions`).  
     2. `add_fft_df()` adds one or more FFT\ definitions to an existing set of FFT definitions. Thus, the function allows collecting sets of FFT\ definitions.  
+    3. the `tree.definitions` argument of the main `FFTrees()` function allows evaluating sets of FFT definitions for some data.  
+    
   
   
 - **Cycle\ 2**: Converting between two tree definition formats (both stored as data frames):  
@@ -553,40 +555,49 @@ my_tree_dfs
 The resulting data frame `my_tree_dfs` contains `r nrow(my_tree_dfs)`\ FFT definitions in its `r nrow(my_tree_dfs)`\ rows. 
 Per our design (above), they only differ in the values of their `tree`\ ID and the structures of their `exits`. 
 
-<!-- +++ here now +++  -->
+
 
 #### Applying sets of tree definitions to data 
 
-Having edited and collected a set of tree definitions (in a data frame `my_tree_dfs`), we now can evaluate the corresponding FFTs on data. 
-We can do this by providing our set of tree definitions (`my_tree_dfs`) to the `tree.definitions` of the main `FFTrees()` function. 
+Having edited and collected a set of tree definitions, we now can evaluate the corresponding FFTs on some data. 
+We can do this by providing our set of tree definitions (stored in the `my_tree_dfs` data frame) to the `tree.definitions` argument of the main `FFTrees()` function: 
+
+- The `tree.definitions` argument of the main `FFTrees()` function allows evaluating sets of FFT definitions for some data.  
 
 
-- Provide sets of FFT definitions to the `tree.definitions` argument of `FFTrees()` to evaluate FFTs on data.   
-    
+When using the main `FFTrees()` function with a set of `tree.definitions` (as a data frame in which each line contains the definition of one FFT), we can provide an existing `FFTrees` object (e.g., `x` from above). 
+Importantly, however, the input of `tree.definitions` prevents the generation of new FFTs (via the "ifan" or "dfan" algorithms) and instead evaluates the FFT definitions provided on the data specified:^[If the `tree.definitions` contain cue variables or values that cannot be found in the data, this will result in errors.] 
 
 ```{r use-tree-definitions-01}
-# Create a new FFTrees object y:
-y <- FFTrees(object = x, 
-             #
-             tree.definitions = my_tree_dfs,    # provide set of FFT definitions !!!
-             #
-             main = "Heart Disease 2"           # new label
+# Evaluate tree.definitions for an existing FFTrees object y:
+y <- FFTrees(object = x,                      # an existing FFTrees object
+             tree.definitions = my_tree_dfs,  # new set of FFT definitions
+             main = "Heart Disease 2"         # new label
              )
 ```
 
-Evaluate FFT performance:
+As we can see from the feedback messages, providing an `FFTrees` object (here `x`) re-uses its datasets, parameters, and labels, unless they are overwritten by new values. 
+The resulting `FFTrees` object\ `y` contains the summary statistics resulting from applying the `r nrow(my_tree_dfs)`\ FFT definitions of `my_tree_dfs` to the datasets that were used to create `x` (i.e., `data = heart.train` and `data.test = heart.test`). 
 
-```{r eval-FFTs-01}
-# summary(x)
+We now can assess and visualize the performance of the FFTs in the usual ways, e.g., by the `summary()`, `print()` and `plot()` functions for `y` or its trees:
+
+```{r eval-FFTs-01, eval = FALSE}
 summary(y)
 
-# plot(x, tree = 1)
-plot(y, tree = 1)
+# Visualize individual FFTs:
+# plot(y, tree = 1)
 ```
 
-Differences are small --- accuracy even identical. 
-Not surprising, as changing the order of the 2nd and the 3rd cue has no effects on most cases. 
+Comparing the accuracy statistics of our new FFTs (in object\ `y`) to our original FFTs (in object\ `x`) shows that swapping the 2nd and 3rd cue had hardly an effect. 
+Upon reflection, this is not surprising: Most people are still classified into the same categories as before. 
+However, if we were to evaluate the costs of classification (e.g., by considering the\ `pci` and\ `mcu` measures or the `cost` measures for cue usage), we could still detect differences between FFTs that show the same accuracy. 
 
+
+<!-- +++ here now +++  -->
+
+Two final remarks:
+
+1. The distinction between training vs. test data makes no sense when evaluating pre-defined FFTs.
 
 Note that we do not use training vs. test data, as no model is being fitted. 
 
@@ -611,6 +622,8 @@ summary(z)
 
 plot(z, tree = 1)
 ```
+
+2. Comparing old vs. new sets 
 
 Comparing our new with the set of old (or automatically created) FFTs:
 
