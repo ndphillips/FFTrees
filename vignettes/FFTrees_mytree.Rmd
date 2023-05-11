@@ -581,7 +581,7 @@ The resulting `FFTrees` object\ `y` contains the summary statistics resulting fr
 
 We now can assess and visualize the performance of the FFTs in the usual ways, e.g., by the `summary()`, `print()` and `plot()` functions for `y` or its trees:
 
-```{r eval-FFTs-01, eval = FALSE}
+```{r eval-FFTs-01, eval = TRUE}
 summary(y)
 
 # Visualize individual FFTs:
@@ -593,59 +593,64 @@ Upon reflection, this is not surprising: Most people are still classified into t
 However, if we were to evaluate the costs of classification (e.g., by considering the\ `pci` and\ `mcu` measures or the `cost` measures for cue usage), we could still detect differences between FFTs that show the same accuracy. 
 
 
-<!-- +++ here now +++  -->
+#### Details 
 
-Two final remarks:
-
-1. The distinction between training vs. test data makes no sense when evaluating pre-defined FFTs.
-
-Note that we do not use training vs. test data, as no model is being fitted. 
+We just created a new `FFTrees` object\ `y` by using `FFTrees` object\ `x` for a set of customized FFTs defined by the `tree.definitions` argument. 
+This circumvented the FFT building algorithms and used the provided FFT definitions instead. 
+Thus, the ordinary distinction between training and test data no longer applies in this context: As no model is being fitted here, both sets were used to evaluate the FFTs in `tree.definitions` on these data. 
+<!-- 1. Using only data, as train vs. data.test not used here:  -->
+Acknowledging this, we may use the full dataset of `heartdisease`, rather than splitting it into two distinct subsets: 
 
 ```{r use-tree-definitions-02, eval = FALSE}
 # Create a new FFTrees object z:
-z <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
-             data = heartdisease,               # using full dataset
-             #
-             tree.definitions = my_tree_dfs,    # provide set of FFT definitions !!!
-             #
-             main = "Heart Disease 3",          # new label
-             decision.labels = c("low risk", "high risk")  # exit labels
+z <- FFTrees(formula = diagnosis ~ .,
+             data = heartdisease,             # using full dataset
+             tree.definitions = my_tree_dfs,  # new set of FFT definitions
+             main = "Heart Disease 3"         # new label
              )
-
-
 ```
 
-Evaluate FFT performance:
+As before, we can evaluate the performance of our FFTs by obtaining a 
+summary, or printing or plotting individual FFTs from the `FFTrees` object\ `z`: 
 
 ```{r eval-FFTs-02, eval = FALSE}
+# Summarize results: 
 summary(z)
 
+# Visualize an FFT:
 plot(z, tree = 1)
 ```
 
-2. Comparing old vs. new sets 
+<!-- 2. Comparing old vs. new sets  -->
 
-Comparing our new with the set of old (or automatically created) FFTs:
+Finally, if we mostly care about comparing our new FFTs with the automatically created ones, we could have added our new set `my_tree_dfs` to the old set (`tree_dfs`, obtained from\ `x` above). 
 
-```{r eval-FFTs-03, eval = FALSE}
+```{r eval-FFTs-03, eval = TRUE}
 (all_fft_dfs <- add_fft_df(my_tree_dfs, tree_dfs))
-
-# Create a new FFTrees object a:
-a <- FFTrees(formula = diagnosis ~ .,           # criterion and (all) predictors
-             data = heartdisease,               # using full dataset
-             #
-             tree.definitions = all_fft_dfs,    # provide set of FFT definitions !!!
-             #
-             main = "Heart Disease 4",          # new label
-             decision.labels = c("low", "high") # exit labels
-             )
-
-summary(a)
 ```
 
+Doing so (e.g., by using the `add_fft_df()` function) creates a superset of `r nrow(all_fft_dfs)` tree definitions, which can be evaluated together on the `heartdisease` data: 
+
+```{r eval-FFTs-04, eval = FALSE}
+# Create a new FFTrees object a:
+all <- FFTrees(formula = diagnosis ~ .,       
+               data = heartdisease,             # using full dataset
+               tree.definitions = all_fft_dfs,  # new set of FFT definitions
+               main = "Heart Disease 4",        # new label
+)
+
+# Summarize results: 
+summary(all)
+```
+
+Evaluating the performance of the corresponding FFTs (e.g., by `summary(all)`) shows that reversing the final two cues had little to no effects on accuracy (but note minor differences in costs, e.g., `mcu`).^[Note that applying FFT definitions to data resulted in re-sorting the tree IDs according to the current `goal`.] 
+
+<!-- +++ here now +++  -->
 
 
-#### Modifying tree definitions 
+<!-- OLDER parts: -->
+
+#### Manually editing tree definitions 
 
 To demonstrate how to create and evaluate manual FFT definitions, we copy the existing tree definitions (as a data frame), select three FFTs (rows), and then create a 4th definition (with a different exit structure):
 
