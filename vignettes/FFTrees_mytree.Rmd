@@ -647,14 +647,16 @@ Evaluating the performance of the corresponding FFTs (e.g., by `summary(all)`) s
 
 <!-- +++ here now +++  -->
 
-
 <!-- OLDER parts: -->
 
-#### Manually editing tree definitions 
+<!-- #### Manually editing tree definitions  -->
 
-To demonstrate how to create and evaluate manual FFT definitions, we copy the existing tree definitions (as a data frame), select three FFTs (rows), and then create a 4th definition (with a different exit structure):
+```{r OLD-my-fft-part-01, echo = FALSE, eval = FALSE}
 
-```{r fft-treedef-03, message = FALSE}
+# To demonstrate creating and evaluating manual FFT definitions, we copy the existing tree definitions 
+# (as a data frame), select three FFTs (rows), and then create a 4th definition (with a different exit structure):
+
+# ```{r fft-treedef-03, message = FALSE}
 # 0. Copy and choose some existing FFT definitions:
 tree_dfs <- x$trees$definitions     # get FFT definitions (as df)
 tree_dfs <- tree_dfs[c(1, 3, 5), ]  # filter 3 particular FFTs
@@ -668,12 +670,13 @@ tree_dfs$exits[4] <- my_exits       # set exits of FFT #4
 
 tree_dfs$tree <- 1:nrow(tree_dfs)   # adjust tree numbers
 # tree_dfs
-```
+# ```
 
-Moreover, let's define four additional FFTs that reverse the order of the 1st and 2nd cues. 
-As both cues are categorical (i.e., of class\ `c`) and have the same direction (i.e., `=`), we only need to reverse the `thresholds` (so that they correspond to the new cue order):
+# Moreover, let's define four additional FFTs that reverse the order of the 1st and 2nd cues. 
+# As both cues are categorical (i.e., of class\ `c`) and have the same direction (i.e., `=`), 
+# we only need to reverse the `thresholds` (so that they correspond to the new cue order):
 
-```{r fft-treedef-04, message = FALSE}
+# ```{r fft-treedef-04, message = FALSE}
 # 2. Change cue orders:
 tree_dfs[5:8, ] <- tree_dfs[1:4, ]         # add 4 FFTs (as copies of existing ones)
 tree_dfs$cues[5:8] <- "cp; thal; ca"       # modify order of cues
@@ -681,49 +684,53 @@ tree_dfs$thresholds[5:8] <- "a; rd,fd; 0"  # modify order of thresholds accordin
 
 tree_dfs$tree <- 1:nrow(tree_dfs)          # adjust tree numbers
 # tree_dfs
+# ```
+
+# The resulting data frame `tree_dfs` contains the definitions of eight FFTs. 
+# The first three are copies of trees in\ `x`, but the other five are new. 
 ```
 
-The resulting data frame `tree_dfs` contains the definitions of eight FFTs. 
-The first three are copies of trees in\ `x`, but the other five are new. 
+<!-- #### Evaluating `tree.definitions`  -->
 
+```{r OLD-my-fft-part-02, echo = FALSE, eval = FALSE}
 
-#### Evaluating `tree.definitions` 
+# We can evaluate this set by running the `FFTrees()` function with 
+# the previous `FFTrees` object\ `x` (i.e., with its `formula` and `data` settings) and 
+# specifying `tree_dfs` in the `tree.definitions` argument:
 
-We can evaluate this set by running the `FFTrees()` function with 
-the previous `FFTrees` object\ `x` (i.e., with its `formula` and `data` settings) and 
-specifying `tree_dfs` in the `tree.definitions` argument:
-
-```{r fft-treedef-05, message = FALSE, results = 'hide'}
+# ```{r fft-treedef-05, message = FALSE, results = 'hide'}
 # Create a modified FFTrees object y:
 y <- FFTrees(object = x,                   # use previous FFTrees object x
              tree.definitions = tree_dfs,  # but with new tree definitions
              main = "Heart Disease 2"      # revised label
 )
-```
+# ```
 
-The resulting `FFTrees` object\ `y` contains the decisions and summary statistics of all eight FFTs for the data specified in\ `x`. 
-Although it is unlikely that one of the newly created trees beats the automatically created FFTs, we find that reversing the order of the first cues has only minimal effects on training accuracy (as measured by `bacc`):
+# The resulting `FFTrees` object\ `y` contains the decisions and summary statistics of all eight FFTs for the data specified in\ `x`. 
+# Although it is unlikely that one of the newly created trees beats the automatically created FFTs, we find that reversing the order of the first cues has only minimal effects on training accuracy (as measured by `bacc`):
 
-```{r fft-treedef-06, message = TRUE}
+# ```{r fft-treedef-06, message = TRUE}
 y$trees$definitions  # tree definitions
 y$trees$stats$train  # training statistics
-```
+# ```
 
-Note that the trees in\ `y` were sorted by their performance on the current `goal` (here `bacc`). 
-For instance, the new rake tree with cue order `cp; thal; ca` and exits `1; 1; 0.5` is now FFT\ #6. 
-When examining its performance on `"test"` data (i.e., for prediction):
+# Note that the trees in\ `y` were sorted by their performance on the current `goal` (here `bacc`). 
+# For instance, the new rake tree with cue order `cp; thal; ca` and exits `1; 1; 0.5` is now FFT\ #6. 
+# When examining its performance on `"test"` data (i.e., for prediction):
 
-```{r fft-treedef-07, eval = FALSE}
+# ```{r fft-treedef-07, eval = FALSE}
 # Print and plot FFT #6:
 print(y, tree = 6, data = "test")
 plot(y,  tree = 6, data = "test")
+# ```
+
+# we see that it has a balanced accuracy\ `bacc` of\ 70%. 
+# More precisely, its bias for predicting `disease` (i.e., signal or True) yields near-perfect sensitivity (96%), but very poor specificity (44%). 
+
+# If we wanted to change more aspects of\ `x` (e.g., use different `data` or `goal` settings), 
+# we could create a new `FFTrees` object without supplying the previous object\ `x`, 
+# as long as the FFTs defined in `tree.definitions` correspond to the settings of `formula` and `data`. 
 ```
-
-we see that it has a balanced accuracy\ `bacc` of\ 70%. 
-More precisely, its bias for predicting `disease` (i.e., signal or True) yields near-perfect sensitivity (96%), but very poor specificity (44%). 
-
-If we wanted to change more aspects of\ `x` (e.g., use different `data` or `goal` settings), we could create a new `FFTrees` object without supplying the previous object\ `x`, as long as the FFTs defined in `tree.definitions` correspond to the settings of `formula` and `data`. 
-
 
 <!-- For experienced users: Method for manually or computationally defining sets of FFTs. -->
 <!-- Start from existing definitions of FFTs (in an `FFTrees` object). -->
@@ -881,7 +888,6 @@ plot(fft_5, data = "test", tree = "best.test")    # FFT #4
 
 print(fft_5, data = "test", tree = "best.test")
 ```
-
 
 <!-- Demo: Create all permutations of cues (i.e., orders of a given tree): -->
 
