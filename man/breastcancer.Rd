@@ -17,7 +17,7 @@ A data frame containing 699 patients (rows) and 9 variables (columns).
   \item{chromatin}{Bland Chromatin}
   \item{nucleoli}{Normal Nucleoli}
   \item{mitoses}{Mitoses}
-  \item{diagnosis}{Is cancer present? TRUE or FALSE}
+  \item{diagnosis}{\emph{Criterion}: Presence of cancer?}
 
   ...
 }

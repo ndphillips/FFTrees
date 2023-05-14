@@ -17,7 +17,7 @@ A data frame containing 1473 rows and 10 columns.
   \item{hus.occ}{Factor}
   \item{sol}{Factor}
   \item{media}{Numeric}
-  \item{cont.crit}{numeric}
+  \item{cont.crit}{\emph{Criterion}: Using contraception (as logical)}
 
   ...
 }
@@ -32,9 +32,11 @@ contraceptive
 A subset of the 1987 National Indonesia Contraceptive Prevalence Survey.
 }
 \details{
-The samples describe married women who were either not pregnant or do not know if they were at the time of interview.
+The samples describe married women who were either not pregnant
+or do not know if they were pregnant at the time of the interview.
 
-The problem consists in predicting a woman's current contraceptive method choice (here: binarized \code{cont.crit})
+The problem consists in predicting a woman's current contraceptive method choice
+(here: binarized \code{cont.crit})
 based on her demographic and socio-economic characteristics.
 }
 \seealso{
