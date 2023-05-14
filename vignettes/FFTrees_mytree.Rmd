@@ -647,6 +647,9 @@ Evaluating the performance of the corresponding FFTs (e.g., by `summary(all)`) s
 
 <!-- +++ here now +++  -->
 
+<!-- Mention macros / Combinations of tree editing functions? -->
+
+
 <!-- OLDER parts: -->
 
 <!-- #### Manually editing tree definitions  -->
