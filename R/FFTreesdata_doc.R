@@ -52,9 +52,8 @@
 #'   \item{chromatin}{Bland Chromatin}
 #'   \item{nucleoli}{Normal Nucleoli}
 #'   \item{mitoses}{Mitoses}
-#'   \item{diagnosis}{\emph{Criterion}: Presence of cancer?}
-#'
-#'   ...
+#'   \item{diagnosis}{\emph{Criterion}: Presence of cancer?
+#'   Values: \code{FALSE} vs. \code{TRUE} (65.0% vs.\ 35.0%).}
 #' }
 #'
 #' @family datasets
@@ -82,9 +81,8 @@
 #'   \item{persons}{Numeric}
 #'   \item{luggage}{Numeric}
 #'   \item{safety}{Factor}
-#'   \item{acceptability}{\emph{Criterion}: Acceptable or unacceptable (as factor)}
-#'
-#'   ...
+#'   \item{acceptability}{\emph{Criterion}: Acceptable or unacceptable (as factor).
+#'   Values: \code{unacc}/\code{\code{acc}/\code{good}/\code{vgood} (70.0%/22.2%/4.0%/3.8%).}
 #' }
 #'
 #' @family datasets
@@ -113,7 +111,7 @@
 #' (here: binarized \code{cont.crit})
 #' based on her demographic and socio-economic characteristics.
 #'
-#' @format A data frame containing 1473 rows and 10 columns.
+#' @format A data frame containing 1473 cases (rows) and 10 variables (columns).
 #'
 #' \describe{
 #'   \item{wife.age}{Numeric}
@@ -125,9 +123,8 @@
 #'   \item{hus.occ}{Factor}
 #'   \item{sol}{Factor}
 #'   \item{media}{Numeric}
-#'   \item{cont.crit}{\emph{Criterion}: Using contraception (as logical)}
-#'
-#'   ...
+#'   \item{cont.crit}{\emph{Criterion}: Using contraception (as logical).
+#'   Values: \code{FALSE} vs. \code{TRUE} (42.7% vs.\ 57.3%).}
 #' }
 #'
 #' @family datasets
@@ -137,6 +134,8 @@
 
 "contraceptive"
 
+
+# +++ here now +++
 
 
 #  5. creditapproval: ------
