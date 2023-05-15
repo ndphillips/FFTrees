@@ -10,21 +10,25 @@ A data frame containing 748 rows and 5 columns.
 \describe{
   \item{recency}{Months since last donation}
   \item{frequency}{Total number of donations}
-  \item{total}{Total blood donated in c.c.}
+  \item{total}{Total blood donated (in c.c.)}
   \item{time}{Months since first donation}
-  \item{donation.crit}{\emph{Criterion}: Did the person donate blood (in March 2007)?}
-
-  ...
+  \item{donation.crit}{\emph{Criterion}: Did the person donate blood (in March 2007)?
+  Values: \code{0}/no vs. \code{1}/yes (76.2\% vs.\ 23.8\%).}
 }
 }
 \source{
 https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center
+
+Original Owner and Donor:
+Prof. I-Cheng Yeh
+Department of Information Management
+Chung-Hua University
 }
 \usage{
 blood
 }
 \description{
-Blood donation data
+Data taken from the Blood Transfusion Service Center in Hsin-Chu City in Taiwan
 }
 \seealso{
 Other datasets: 

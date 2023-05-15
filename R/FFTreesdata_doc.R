@@ -17,9 +17,7 @@
 #'   \item{total}{Total blood donated (in c.c.)}
 #'   \item{time}{Months since first donation}
 #'   \item{donation.crit}{\emph{Criterion}: Did the person donate blood (in March 2007)?
-#'   Values: \code{0}/no vs. \code{1}/yes (76.2% vs.\ 23.8%).}
-#'
-#'   ...
+#'   Values: \code{0}/no vs. \code{1}/yes (76.2\% vs.\ 23.8\%).}
 #' }
 #'
 #' @family datasets
@@ -53,7 +51,7 @@
 #'   \item{nucleoli}{Normal Nucleoli}
 #'   \item{mitoses}{Mitoses}
 #'   \item{diagnosis}{\emph{Criterion}: Presence of cancer?
-#'   Values: \code{FALSE} vs. \code{TRUE} (65.0% vs.\ 35.0%).}
+#'   Values: \code{FALSE} vs. \code{TRUE} (65.0\% vs.\ 35.0\%).}
 #' }
 #'
 #' @family datasets
@@ -82,7 +80,7 @@
 #'   \item{luggage}{Numeric}
 #'   \item{safety}{Factor}
 #'   \item{acceptability}{\emph{Criterion}: Acceptable or unacceptable (as factor).
-#'   Values: \code{unacc}/\code{\code{acc}/\code{good}/\code{vgood} (70.0%/22.2%/4.0%/3.8%).}
+#'   Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
 #' }
 #'
 #' @family datasets
@@ -124,7 +122,7 @@
 #'   \item{sol}{Factor}
 #'   \item{media}{Numeric}
 #'   \item{cont.crit}{\emph{Criterion}: Using contraception (as logical).
-#'   Values: \code{FALSE} vs. \code{TRUE} (42.7% vs.\ 57.3%).}
+#'   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs.\ 57.3\%).}
 #' }
 #'
 #' @family datasets

@@ -5,7 +5,7 @@
 \alias{contraceptive}
 \title{Contraceptive use data}
 \format{
-A data frame containing 1473 rows and 10 columns.
+A data frame containing 1473 cases (rows) and 10 variables (columns).
 
 \describe{
   \item{wife.age}{Numeric}
@@ -17,9 +17,8 @@ A data frame containing 1473 rows and 10 columns.
   \item{hus.occ}{Factor}
   \item{sol}{Factor}
   \item{media}{Numeric}
-  \item{cont.crit}{\emph{Criterion}: Using contraception (as logical)}
-
-  ...
+  \item{cont.crit}{\emph{Criterion}: Using contraception (as logical).
+  Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs.\ 57.3\%).}
 }
 }
 \source{

@@ -14,9 +14,8 @@ A data frame containing 1728 cars (rows) and 7 variables (columns).
   \item{persons}{Numeric}
   \item{luggage}{Numeric}
   \item{safety}{Factor}
-  \item{acceptability}{\emph{Criterion}: Acceptable or unacceptable (as factor)}
-
-  ...
+  \item{acceptability}{\emph{Criterion}: Acceptable or unacceptable (as factor).
+  Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
 }
 }
 \source{
