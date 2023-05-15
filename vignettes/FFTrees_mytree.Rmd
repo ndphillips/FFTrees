@@ -462,7 +462,7 @@ Saving the resulting tree definition (stored in the same tidy data frame format 
 **Flipping exits** 
 As we had no specific exit structure in mind when deciding to explore the cue order `thal`, `ca`, and\ `cp`, 
 we will explore all possible exit directions. 
-As every non-final node allows for two alternative exits, a tree containing $n$\ nodes has `2^{(n-1)}`\ exit structures 
+As every non-final node allows for two alternative exits, a tree containing $n$\ nodes has $2^{(n-1)}$\ exit structures 
 (i.e., $2^2 = 4$ for 3\ cues). 
 The $3$\ exit structures in addition to `my_fft_1` can be obtained by flipping the exit directions of the first, second, or both non-final nodes. 
 Each alternative can be achieved by applying the `flip_exits()` function to `my_fft_1`:
