@@ -450,7 +450,10 @@ replace_NA_num <- function(df){
 
 # ToDo: ------
 
+# - Create describe_data() analogous to handle_NA_data():
+#   dims / criterion / predictors (by type) / NA values (by type)
 # - Handle the consequences of allowing NAs in numeric predictors.
 # - Handle NAs in the criterion variable.
+
 
 # eof.
