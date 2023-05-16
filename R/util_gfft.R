@@ -1757,7 +1757,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 # Goal: Apply reorder_nodes(fft) to get all possible permutations of cues for a fft.
 #
 # Input:
-#   fft: 1 FFT (as df, 1 row per cue)
+#   fft: 1 FFT (as tidy df, 1 row per cue)
 #
 # Output:
 #   A set of FFT definitions in all possible cue orders (predicting 1/Signal/TRUE for all changed cues, as reorder_nodes())
@@ -1840,7 +1840,7 @@ all_node_orders <- function(fft, quiet = FALSE){
 #
 # Method: Use flip_exits() on nodes = `all_combinations()` for all length values of 1:(n_cues - 1).
 #
-# Input: fft: 1 FFT (as df, 1 row per cue).
+# Input: fft: 1 FFT (as tidy df, 1 row per cue).
 # Output: A set of FFT definitions (ffts_df).
 
 
@@ -1919,8 +1919,9 @@ all_exit_structures <- function(fft, quiet = FALSE){
 
 # Goal: Get all subtrees of an FFT.
 #
-# Input: fft: 1 FFT (as df, 1 row per cue).
+# Input: fft: 1 FFT (as tidy df, 1 row per cue).
 # Output: A set of FFT definitions (ffts_df).
+
 
 all_node_subsets <- function(fft, quiet = FALSE){
 
@@ -1994,7 +1995,7 @@ all_node_subsets <- function(fft, quiet = FALSE){
 #       3. all_exit_structures()
 #       to get ALL possible variants of a given FFT.
 #
-# Input: fft: 1 FFT (as df, 1 row per cue).
+# Input: fft: 1 FFT (as tidy df, 1 row per cue).
 # Output: A set of FFT definitions (ffts_df).
 
 

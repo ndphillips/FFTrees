@@ -5,7 +5,27 @@
 \alias{creditapproval}
 \title{Credit approval data}
 \format{
-A data frame containing 690 rows and 15 columns
+A data frame containing 690 cases (rows) and 15 variables (columns).
+
+\describe{
+ \item{c.1}{categorical: b, a}
+ \item{c.2}{continuous}
+ \item{c.3}{continuous}
+ \item{c.4}{categorical: u, y, l, t}
+ \item{c.5}{categorical: g, p, gg}
+ \item{c.6}{categorical: c, d, cc, i, j, k, m, r, q, w, x, e, aa, ff}
+ \item{c.7}{categorical: v, h, bb, j, n, z, dd, ff, o}
+ \item{c.8}{continuous}
+ \item{c.9}{categorical: t, f}
+ \item{c.10}{categorical: t, f}
+ \item{c.11}{continuous}
+ \item{c.12}{categorical: t, f}
+ \item{c.13}{categorical: g, p, s}
+ \item{c.14}{continuous}
+ \item{c.15}{continuous}
+ \item{crit}{\emph{Criterion}: Credit approval.
+ Values: \code{TRUE}/$+$ vs. \code{FALSE}/$-$ (44.5\% vs. 55.5\%).}
+ }
 }
 \source{
 \url{https://archive.ics.uci.edu/ml/datasets/Credit+Approval}
@@ -14,7 +34,12 @@ A data frame containing 690 rows and 15 columns
 creditapproval
 }
 \description{
-Credit approval data
+This data reports predictors and the result of credit card applications.
+Its attribute names and values have been changed to symbols to protect confidentiality.
+}
+\details{
+This dataset contains a mix of attributes -- continuous, nominal with small Ns,
+and nominal with larger Ns. There are also a few missing values.
 }
 \seealso{
 Other datasets: 

@@ -7,21 +7,28 @@
 
 #' Blood donation data
 #'
+#' Data taken from the Blood Transfusion Service Center in Hsin-Chu City in Taiwan
+#'
 #' @format A data frame containing 748 rows and 5 columns.
 #'
 #' \describe{
 #'   \item{recency}{Months since last donation}
 #'   \item{frequency}{Total number of donations}
-#'   \item{total}{Total blood donated in c.c.}
+#'   \item{total}{Total blood donated (in c.c.)}
 #'   \item{time}{Months since first donation}
-#'   \item{donation.crit}{Did he/she donated blood in March 2007?}
-#'
-#'   ...
+#'   \item{donation.crit}{\emph{Criterion}: Did the person donate blood (in March 2007)?
+#'   Values: \code{0}/no vs. \code{1}/yes (76.2\% vs.\ 23.8\%).}
 #' }
 #'
 #' @family datasets
 #'
 #' @source https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center
+#'
+#' Original owner and donor:
+#' Prof. I-Cheng Yeh
+#' Department of Information Management
+#' Chung-Hua University
+#'
 
 "blood"
 
@@ -43,14 +50,18 @@
 #'   \item{chromatin}{Bland Chromatin}
 #'   \item{nucleoli}{Normal Nucleoli}
 #'   \item{mitoses}{Mitoses}
-#'   \item{diagnosis}{Is cancer present? TRUE or FALSE}
-#'
-#'   ...
+#'   \item{diagnosis}{\emph{Criterion}: Absence/presence of breast cancer.
+#'   Values: \code{FALSE} vs. \code{TRUE} (65.0\% vs.\ 35.0\%).}
 #' }
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)}
+#'
+#' Original creator:
+#' Dr. William H. Wolberg (physician)
+#' University of Wisconsin Hospitals
+#' Madison, Wisconsin, USA
 
 "breastcancer"
 
@@ -73,15 +84,15 @@
 #'   \item{persons}{Numeric}
 #'   \item{luggage}{Numeric}
 #'   \item{safety}{Factor}
-#'   \item{acceptability}{Factor}
-#'
-#'   ...
+#'   \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
+#'   Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
 #' }
 #'
 #' @family datasets
 #'
 #' @references
-#' Bohanec, M., Rajkovic, V. (1990): Expert system for decision making. Sistemica 1 (1), pp. 145-157.
+#' Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.
+#' \emph{Sistemica}, \emph{1} (1), 145--157.
 #'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 #'
@@ -96,12 +107,14 @@
 #'
 #' A subset of the 1987 National Indonesia Contraceptive Prevalence Survey.
 #'
-#' The samples describe married women who were either not pregnant or do not know if they were at the time of interview.
+#' The samples describe married women who were either not pregnant
+#' or do not know if they were pregnant at the time of the interview.
 #'
-#' The problem consists in predicting a woman's current contraceptive method choice (here: binarized \code{cont.crit})
+#' The problem consists in predicting a woman's current contraceptive method choice
+#' (here: binarized \code{cont.crit})
 #' based on her demographic and socio-economic characteristics.
 #'
-#' @format A data frame containing 1473 rows and 10 columns.
+#' @format A data frame containing 1473 cases (rows) and 10 variables (columns).
 #'
 #' \describe{
 #'   \item{wife.age}{Numeric}
@@ -113,9 +126,8 @@
 #'   \item{hus.occ}{Factor}
 #'   \item{sol}{Factor}
 #'   \item{media}{Numeric}
-#'   \item{cont.crit}{numeric}
-#'
-#'   ...
+#'   \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
+#'   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs.\ 57.3\%).}
 #' }
 #'
 #' @family datasets
@@ -126,12 +138,37 @@
 "contraceptive"
 
 
-
 #  5. creditapproval: ------
 
 #' Credit approval data
 #'
-#' @format A data frame containing 690 rows and 15 columns
+#' This data reports predictors and the result of credit card applications.
+#' Its attribute names and values have been changed to symbols to protect confidentiality.
+#'
+#' This dataset contains a mix of attributes -- continuous, nominal with small Ns,
+#' and nominal with larger Ns. There are also a few missing values.
+#'
+#' @format A data frame containing 690 cases (rows) and 15 variables (columns).
+#'
+#' \describe{
+#'  \item{c.1}{categorical: b, a}
+#'  \item{c.2}{continuous}
+#'  \item{c.3}{continuous}
+#'  \item{c.4}{categorical: u, y, l, t}
+#'  \item{c.5}{categorical: g, p, gg}
+#'  \item{c.6}{categorical: c, d, cc, i, j, k, m, r, q, w, x, e, aa, ff}
+#'  \item{c.7}{categorical: v, h, bb, j, n, z, dd, ff, o}
+#'  \item{c.8}{continuous}
+#'  \item{c.9}{categorical: t, f}
+#'  \item{c.10}{categorical: t, f}
+#'  \item{c.11}{continuous}
+#'  \item{c.12}{categorical: t, f}
+#'  \item{c.13}{categorical: g, p, s}
+#'  \item{c.14}{continuous}
+#'  \item{c.15}{continuous}
+#'  \item{crit}{\emph{Criterion}: Credit approval.
+#'  Values: \code{TRUE}/$+$ vs. \code{FALSE}/$-$ (44.5\% vs. 55.5\%).}
+#'  }
 #'
 #' @family datasets
 #'
@@ -139,6 +176,8 @@
 
 "creditapproval"
 
+
+# +++ here now +++
 
 
 #  6. fertility: ------

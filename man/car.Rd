@@ -14,9 +14,8 @@ A data frame containing 1728 cars (rows) and 7 variables (columns).
   \item{persons}{Numeric}
   \item{luggage}{Numeric}
   \item{safety}{Factor}
-  \item{acceptability}{Factor}
-
-  ...
+  \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
+  Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
 }
 }
 \source{
@@ -32,7 +31,8 @@ A dataset on car evaluations based on basic features, derived from a simple hier
 The (yet to be binarized) criterion variable is a car's \code{acceptability} rating.
 }
 \references{
-Bohanec, M., Rajkovic, V. (1990): Expert system for decision making. Sistemica 1 (1), pp. 145-157.
+Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.
+\emph{Sistemica}, \emph{1} (1), 145--157.
 }
 \seealso{
 Other datasets: 
