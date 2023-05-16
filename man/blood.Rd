@@ -19,7 +19,7 @@ A data frame containing 748 rows and 5 columns.
 \source{
 https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center
 
-Original Owner and Donor:
+Original owner and donor:
 Prof. I-Cheng Yeh
 Department of Information Management
 Chung-Hua University

@@ -17,12 +17,17 @@ A data frame containing 699 patients (rows) and 9 variables (columns).
   \item{chromatin}{Bland Chromatin}
   \item{nucleoli}{Normal Nucleoli}
   \item{mitoses}{Mitoses}
-  \item{diagnosis}{\emph{Criterion}: Presence of cancer?
+  \item{diagnosis}{\emph{Criterion}: Absence/presence of breast cancer.
   Values: \code{FALSE} vs. \code{TRUE} (65.0\% vs.\ 35.0\%).}
 }
 }
 \source{
-https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
+\url{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)}
+
+Original creator:
+Dr. William H. Wolberg (physician)
+University of Wisconsin Hospitals
+Madison, Wisconsin, USA
 }
 \usage{
 breastcancer

@@ -17,7 +17,7 @@ A data frame containing 1473 cases (rows) and 10 variables (columns).
   \item{hus.occ}{Factor}
   \item{sol}{Factor}
   \item{media}{Numeric}
-  \item{cont.crit}{\emph{Criterion}: Using contraception (as logical).
+  \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs.\ 57.3\%).}
 }
 }
