@@ -257,7 +257,7 @@ To understand how to read these definitions, let's start by understanding Tree\ 
     
     - The decision _thresholds_ are `rd` and `fd` for the first cue, `a` for the second cue, and\ `0` for the third cue. 
     
-    - The cue _directions_ for predicting the criterion variable are are\ 
+    - The cue _directions_ for predicting the criterion variable are\ 
     `=` for the first cue, 
     `=` for the second cue, and\ 
     `>` for the third cue, respectively. 

@@ -275,7 +275,7 @@ plot(titanic.pred.fft, tree = 1)
 ```
 
 Tree\ #1 is the best training tree --- and could also be visualized by `plot(titanic.pred.fft, tree = "best.train")`. 
-This tree has a high specificity of\ 92%, but a much lower sensitivity of just\ 53%. 
+This tree has a high specificity of\ 92%, but a much lower sensitivity of just\ 51%. 
 The overall accuracy of the tree's classifications is at\ 79%, which exceeds the baseline, but is far from perfect. 
 However, as we can see in the ROC\ table, a logistic regression\ (LR) would not perform much better, and CART performed even worse than Tree\ #1.
 
