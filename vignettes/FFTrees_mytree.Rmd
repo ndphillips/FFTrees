@@ -76,7 +76,7 @@ in_words <- "If sex = 1, predict True.
              Otherwise, predict False."
 ```
 
-As we will see shortly, the `FFTrees()` function accepts such descriptions (assigned here to a character string `in_words`) as its `my.tree` argument, create a corresponding FFT, and evaluate it on a corresponding dataset. 
+As we will see shortly, the `FFTrees()` function accepts such descriptions (assigned here to a character string `in_words`) as its `my.tree` argument, creates a corresponding FFT, and evaluates it on a corresponding dataset. 
 
 
 #### Verbally defining FFTs 
