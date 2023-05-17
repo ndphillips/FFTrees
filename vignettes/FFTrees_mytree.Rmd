@@ -53,7 +53,7 @@ Although we can still use two sets of 'train' vs.\ 'test' data, a manually defin
 
 ### 1. Using `my.tree`
 
-The first method for manually defining a FFT is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
+The first method for manually defining an FFT is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
 When this argument is specified in `FFTrees()`, the function ---\ or rather its auxiliary `fftrees_wordstofftrees()` function\ --- attempts to interpret the verbal description and convert it into a valid definition of an FFT (as part of an `FFTrees` object). 
 
 For example, let's use the `heartdisease` data to find out how some predictor variables (e.g., `sex`, `age`, etc.) predict the criterion variable (`diagnosis`):
