@@ -359,71 +359,133 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
 
 # describe_data:  ------
+#
+# # Goal: Describe key features of a dataset (criterion vs. predictors).
+#
+#
+# describe_data <- function(data, criterion_name){
+#
+#   # Prepare: ------
+#
+#   # Verify inputs: ----
+#
+#   testthat::expect_true(is.data.frame(data))
+#   testthat::expect_true(is.character(criterion_name))
+#
+#
+#   # Main: ------
+#
+#   # Names:
+#   data_names <- names(data)
+#
+#   # Indices:
+#   ix_crit <- (data_names == criterion_name)
+#   ix_pred <- (data_names != criterion_name)
+#
+#   # Dimensions:
+#   dims <- dim(data)
+#   dims_names <- c("rows", "cols")
+#
+#   # +++ here now +++
+#
+#   # Criterion:
+#   crit <- data[ , ix_crit]  # 1 criterion variable
+#   # type
+#   # values / ranges?
+#   # frequency/baseline
+#
+#   # Predictors:
+#   pred <- data[ , ix_pred]  # ALL predictor variables
+#   pred_nr <- ncol(pred)
+#   # types
+#   # values / ranges?
+#
+#   # NA values:
+#   nr_NA_data <- sum(is.na(data))  # sum of NA in data
+#
+#   # print(data)  # 4debugging
+#
+#
+#   # Combine results: ----
+#   out <- list(dims,
+#               criterion_name,
+#               pred_nr,
+#               nr_NA_data)
+#
+#   names(out) <- c("dim",
+#                   "crit",
+#                   "pred_nr",
+#                   "NA_nr")
+#
+#   # Output: ------
+#
+#   return(out)
+#
+# } # describe_data().
+#
+#
 
-# Goal: Describe key features of a dataset (criterion vs. predictors).
 
 
-describe_data <- function(data, criterion_name){
+# describe_data: (Jelena) -----------------
 
-  # Prepare: ------
+#  Goal: Describe key features of a dataset to show gist of data in vignettes.
 
-  # Verify inputs: ----
 
+#' Describe data
+#'
+#' This function calculates various descriptive statistics for a given dataset.
+#'
+#' @param data A data frame.
+#' @param data_name A character string specifying the name of the data.
+#' @param criterion_name A character string specifying the criterion name.
+#' @param baseline_value The value used as a baseline.
+#'
+#' @return A data frame with the descriptive statistics.
+#' @export
+#'
+#' @examples
+#' data(heartdisease)
+#' describe_data(heartdisease, "heartdisease", "diagnosis", TRUE)
+
+
+# Define the function
+describe_data <- function(data, data_name, criterion_name, baseline_value) {
+
+  # Verify inputs ------------------
   testthat::expect_true(is.data.frame(data))
   testthat::expect_true(is.character(criterion_name))
+  testthat::expect_true(criterion_name %in% names(data))
+  testthat::expect_true(baseline_value %in% data[[criterion_name]])
 
+  # Number of cases (or rows) ---------
+  n_cases <- nrow(data)
 
-  # Main: ------
+  # Baseline (how many of the cases have the defined outcome) ---------
+  baseline_percent <- round(mean(data[[criterion_name]] == baseline_value, na.rm = TRUE) * 100, digits = 2)
 
-  # Names:
-  data_names <- names(data)
+  # Number of predicting variables ------------
+  n_predictors <- ncol(data) - 1
 
-  # Indices:
-  ix_crit <- (data_names == criterion_name)
-  ix_pred <- (data_names != criterion_name)
+  # Number of NAs in total in the data frame -------------
+  n_NA <- sum(is.na(data))
 
-  # Dimensions:
-  dims <- dim(data)
-  dims_names <- c("rows", "cols")
+  # Percentage of NAs in data frame -------------
+  percent_NA <- (n_NA / (nrow(data) * ncol(data))) * 100
 
-  # +++ here now +++
+  # Create a dataframe to store the results --------------
+  result_df <- data.frame(
+    "Name" = data_name,
+    "Cases_n" = n_cases,
+    "Criterion" = criterion_name,
+    "Baseline_pct" = baseline_percent,
+    "Predictors_n" = n_predictors,
+    "NAs_n" = n_NA,
+    "NAs_pct" = percent_NA
+  )
 
-  # Criterion:
-  crit <- data[ , ix_crit]  # 1 criterion variable
-  # type
-  # values / ranges?
-  # frequency/baseline
-
-  # Predictors:
-  pred <- data[ , ix_pred]  # ALL predictor variables
-  pred_nr <- ncol(pred)
-  # types
-  # values / ranges?
-
-  # NA values:
-  nr_NA_data <- sum(is.na(data))  # sum of NA in data
-
-  # print(data)  # 4debugging
-
-
-  # Combine results: ----
-  out <- list(dims,
-              criterion_name,
-              pred_nr,
-              nr_NA_data)
-
-  names(out) <- c("dim",
-                  "crit",
-                  "pred_nr",
-                  "NA_nr")
-
-  # Output: ------
-
-  return(out)
-
-} # describe_data().
-
-
+  return(result_df)
+}
 
 # replace_NA_vec: ------
 
