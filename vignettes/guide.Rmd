@@ -33,7 +33,8 @@ library(dplyr)
 library(testthat)
 library(tidyselect)
 library(magrittr)
-library(DT)
+library(knitr)
+library(kableExtra)
 ```
 
 ```{r urls, echo = FALSE, message = FALSE, results = 'hide'}
@@ -183,16 +184,34 @@ result_list <- mapply(describe_data, data = data_list, data_name = data_names, c
 combined_result <- do.call(rbind, result_list)
 
 
-# render the table from the dataframe
-# use as many items per side as we have datasets
-# redefine coloumn names as we like them
-DT::datatable(combined_result, options = list(pageLength = 14),
-              colnames = c(
-    "Number of Cases" = "Cases_n",
-    "Baseline in Percent" = "Baseline_pct",
-    "Number of Predictors" = "Predictors_n",
-    "Number of NAs" = "NAs_n",
-    "NAs in Percent" = "NAs_pct" ))
+# round baseline values for briefity
+combined_result$Baseline_pct<- round(combined_result$Baseline_pct, 1)
+
+# rename columns for better interpretability
+colnames(combined_result) <- c("Name", 
+                                 "Number of Cases",
+                                 "Criterion", 
+                                 "Baseline (TRUE) in Percent",
+                                 "Number of Predictors",
+                                 "Number of NAs", 
+                                 "NAs in Percent")
+
+
+# render the table from the data frame
+# use as many items per page as we have data sets
+# redefine column names as we like them
+
+kable(combined_result, "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+
+# DT::datatable(combined_result, options = list(pageLength = 14),
+#               colnames = c(
+#     "Number of Cases" = "Cases_n",
+#     "Baseline (TRUE) in Percent" = "Baseline_pct",
+#     "Number of Predictors" = "Predictors_n",
+#     "Number of NAs" = "NAs_n",
+#     "NAs in Percent" = "NAs_pct" ))
 
 ```
 
