@@ -452,29 +452,30 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 # Define the function
 describe_data <- function(data, data_name, criterion_name, baseline_value) {
 
-  # Verify inputs ------------------
+  # Verify inputs ----
   testthat::expect_true(is.data.frame(data))
   testthat::expect_true(is.character(criterion_name))
   testthat::expect_true(criterion_name %in% names(data))
   testthat::expect_true(baseline_value %in% data[[criterion_name]])
 
-  # Number of cases (or rows) ---------
+  # Main: ------
+  # Number of cases (or rows)
   n_cases <- nrow(data)
 
-  # Baseline (how many of the cases have the defined outcome) ---------
-  baseline_percent <- round(mean(data[[criterion_name]] == baseline_value, na.rm = TRUE) * 100, digits = 2)
+  # Baseline (how many of the cases have the defined outcome)
+  baseline_percent <- (mean(data[[criterion_name]] == baseline_value, na.rm = TRUE) * 100)
 
-  # Number of predicting variables ------------
+  # Number of predicting variables
   n_predictors <- ncol(data) - 1
 
-  # Number of NAs in total in the data frame -------------
+  # Number of NAs in total in the data frame
   n_NA <- sum(is.na(data))
 
-  # Percentage of NAs in data frame -------------
-  percent_NA <- (n_NA / (nrow(data) * ncol(data))) * 100
+  # Percentage of NAs in data frame
+  percent_NA <- (n_NA / (n_cases * ncol(data))) * 100
 
-  # Create a dataframe to store the results --------------
-  result_df <- data.frame(
+  # Create a dataframe to store the results ----
+  result_df <- tibble(
     "Name" = data_name,
     "Cases_n" = n_cases,
     "Criterion" = criterion_name,
