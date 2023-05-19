@@ -159,16 +159,16 @@ The **FFTrees** package contains several datasets ---\ mostly from the [UCI Mach
 
 
 # list all data sets 
-data_list <- list(blood, breastcancer, car, contraceptive, creditapproval, fertility, heartdisease, iris.v, mushrooms, sonar, titanic, voting, wine) 
+data_list <- list(blood, breastcancer, car, contraceptive, creditapproval, fertility, forestfires, heartdisease, iris.v, mushrooms, sonar, titanic, voting, wine) 
 
 # vector with all names of the data sets
-data_names <- c("blood", "breastcancer", "car", "contraceptive", "creditapproval", "fertility", "heartdisease", "iris.v", "mushrooms", "sonar", "titanic", "voting", "wine")
+data_names <- c("blood", "breastcancer", "car", "contraceptive", "creditapproval", "fertility", "forestfires", "heartdisease", "iris.v", "mushrooms", "sonar", "titanic", "voting", "wine")
 
 # vector with all criterion names
-criterion_names <- c("donation.crit", "diagnosis", "acceptability", "cont.crit", "crit", "diagnosis", "diagnosis", "virginica", "poisonous", "mine.crit", "survived", "party.crit", "type") 
+criterion_names <- c("donation.crit", "diagnosis", "acceptability", "cont.crit", "crit", "diagnosis","fire.crit", "diagnosis", "virginica", "poisonous", "mine.crit", "survived", "party.crit", "type") 
 
 # vector with all criterion values that we are interested in 
-baseline_values <- c(1, TRUE, "acc", TRUE, TRUE,"O", TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, "red")
+baseline_values <- c(1, TRUE, "acc", TRUE, TRUE,"O", TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, "red")
 
 
 
