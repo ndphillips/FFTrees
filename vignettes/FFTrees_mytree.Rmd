@@ -187,7 +187,7 @@ To verify that **FFTrees** interpreted our `my.tree` description as intended, le
 inwords(my_fft_2)
 ```
 
-As this seems (a more prosaic version of) what we wanted, let's visualize the best training tree (to evaluate its performance) and briefly inspect its tree definition:
+As this seems (a more prosaic version of) what we wanted, let's visualize this tree (to evaluate its performance) and briefly inspect its tree definition:
 
 ```{r my-tree-plot-fft-2, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold', collapse = TRUE}
 # Visualize FFT:
