@@ -311,7 +311,7 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   if (any(ix_pred_num_NA)){ # 4. NA values in numeric predictors: ----
 
     # Keep NA values in numeric predictors (but remove in classtable() of 'util_stats.R').
-    # +++ here now +++ : OR: Allow to replace NA-values in numeric predictors by mean/median?
+    # OR: Allow to replace NA-values in numeric predictors by mean/median?
 
     if (replace_NA_num_pred){ # use global constant:
 
@@ -355,6 +355,73 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
   return(data)
 
 } # handle_NA_data().
+
+
+
+# describe_data:  ------
+
+# Goal: Describe key features of a dataset (criterion vs. predictors).
+
+
+describe_data <- function(data, criterion_name){
+
+  # Prepare: ------
+
+  # Verify inputs: ----
+
+  testthat::expect_true(is.data.frame(data))
+  testthat::expect_true(is.character(criterion_name))
+
+
+  # Main: ------
+
+  # Names:
+  data_names <- names(data)
+
+  # Indices:
+  ix_crit <- (data_names == criterion_name)
+  ix_pred <- (data_names != criterion_name)
+
+  # Dimensions:
+  dims <- dim(data)
+  dims_names <- c("rows", "cols")
+
+  # +++ here now +++
+
+  # Criterion:
+  crit <- data[ , ix_crit]  # 1 criterion variable
+  # type
+  # values / ranges?
+  # frequency/baseline
+
+  # Predictors:
+  pred <- data[ , ix_pred]  # ALL predictor variables
+  pred_nr <- ncol(pred)
+  # types
+  # values / ranges?
+
+  # NA values:
+  nr_NA_data <- sum(is.na(data))  # sum of NA in data
+
+  # print(data)  # 4debugging
+
+
+  # Combine results: ----
+  out <- list(dims,
+              criterion_name,
+              pred_nr,
+              nr_NA_data)
+
+  names(out) <- c("dim",
+                  "crit",
+                  "pred_nr",
+                  "NA_nr")
+
+  # Output: ------
+
+  return(out)
+
+} # describe_data().
 
 
 

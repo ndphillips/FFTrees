@@ -73,7 +73,7 @@ FFTrees.guide()
 ### Step\ 2: Create FFTs from training data (and test on testing data)
 
 In this example, we will create FFTs from a heart disease data set. 
-The training data are in an object called `heart.train`, and the testing data are in an object called `heart.test`. For these data, we will predict `diagnosis`, a binary criterion that indicates whether each patent has or does not have heart disease (i.e., is at high-risk or low-risk).
+The training data are in an object called `heart.train`, and the testing data are in an object called `heart.test`. For these data, we will predict `diagnosis`, a binary criterion that indicates whether each patient has or does not have heart disease (i.e., is at high-risk or low-risk).
 
 To create an `FFTrees` object, we use the function `FFTrees()` with two main arguments: 
 
