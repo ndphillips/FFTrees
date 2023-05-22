@@ -171,12 +171,6 @@ criterion_names <- c("donation.crit", "diagnosis", "acceptability", "cont.crit",
 baseline_values <- c(1, TRUE, "acc", TRUE, TRUE,"O", TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, "red")
 
 
-
-### QUESTIONS:
-# diagnosis in fertility are N and O, what does that mean?
-# what is the criterion at forestfires???
-
-
 # use combined lists/vectors and apply describe_data function
 result_list <- mapply(describe_data, data = data_list, data_name = data_names, criterion_name = criterion_names, baseline_value = baseline_values, SIMPLIFY = FALSE)
 
