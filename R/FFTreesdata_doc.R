@@ -225,12 +225,16 @@
 #'   \item{fire.crit}{\emph{Criterion}: Was there a fire (greater than 1.00 ha)?
 #'   Values: \code{FALSE}/no vs. \code{TRUE}/yes (53.0\% vs.\ 47.0\%).} # we recoded the "area" variable (<1 == TRUE) to get a logical criterion.
 #'
-#'   ...
 #' }
 #'
 #' @family datasets
 #'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
+#'
+#' Original creator:
+#' Prof. Paulo Cortez and Aníbal Morais
+#' Department of Information Systems
+#' University of Minho, Portugal
 
 "forestfires"
 
