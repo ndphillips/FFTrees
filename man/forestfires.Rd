@@ -20,13 +20,18 @@ A data frame containing 517 rows and 13 columns.
   \item{RH}{Numeric - relative humidity in percent: 15.0 to 100 }
   \item{wind}{Numeric - wind speed in km/h: 0.40 to 9.40 }
   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
-  \item{area}{Numeric - the burned area of the forest (in ha): 0.00 to 1090.84 }
+  \item{fire.crit}{\emph{Criterion}: Was there a fire (greater than 1.00 ha)?
+  Values: \code{FALSE}/no vs. \code{TRUE}/yes (53.0\% vs.\ 47.0\%).} % we recoded the "area" variable (<1 == TRUE) to get a logical criterion.
 
-  ...
 }
 }
 \source{
 \url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
+
+Original creator:
+Prof. Paulo Cortez and Aníbal Morais
+Department of Information Systems
+University of Minho, Portugal
 }
 \usage{
 forestfires
