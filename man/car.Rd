@@ -9,17 +9,21 @@ A data frame containing 1728 cars (rows) and 7 variables (columns).
 
 \describe{
   \item{buying.price}{Numeric}
-  \item{maint.price}{Factor}
-  \item{doors}{Factor}
-  \item{persons}{Numeric}
-  \item{luggage}{Numeric}
-  \item{safety}{Factor}
+  \item{maint.price}{price of the maintenance, Factor}
+  \item{doors}{number of doors, Factor}
+  \item{persons}{capacity in terms of persons to carry, Numeric}
+  \item{luggage}{the size of luggage boot, Numeric}
+  \item{safety}{estimated safety of the car, Factor}
   \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
-  Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
+  Values: \code{unacc}/\code{acc}(77.78\% vs. 22.2\%)}
 }
 }
 \source{
 \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
+
+Original creator and donor:
+
+Marko Bohanec and Blaz Zupan
 }
 \usage{
 car
@@ -28,7 +32,14 @@ car
 A dataset on car evaluations based on basic features, derived from a simple hierarchical decision model.
 }
 \details{
-The (yet to be binarized) criterion variable is a car's \code{acceptability} rating.
+The criterion variable is a car's \code{acceptability} rating.
+
+
+We made the following enhancements to the original data for improved usability:
+
+ - The criterion was binarized from a factor variable with four levels (\code{unacc}/\code{acc}/\code{good}/\code{vgood} , into a factor variable with two levels (\code{unacc}/\code{acc}).
+
+ Other than that, the data remains consistent with the original dataset.
 }
 \references{
 Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.

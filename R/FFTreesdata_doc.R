@@ -22,11 +22,16 @@
 #'
 #' @family datasets
 #'
-#' @source https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center
+#' @source  \url{https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center}
+#'
+#'
 #'
 #' Original owner and donor:
+#'
 #' Prof. I-Cheng Yeh
+#'
 #' Department of Information Management
+#'
 #' Chung-Hua University
 #'
 
@@ -56,12 +61,30 @@
 #'
 #' @family datasets
 #'
+#'
+#'
+#' @details
+#' We made the following enhancements to the original data for improved usability:
+#'
+#'  - The ID number of the cases was excluded.
+#'
+#'  - The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.
+#'
+#'  Other than that, the data remains consistent with the original dataset. ??? Bzw NAs weg!!!
+#'
+#'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)}
 #'
 #' Original creator:
+#'
 #' Dr. William H. Wolberg (physician)
+#'
 #' University of Wisconsin Hospitals
+#'
 #' Madison, Wisconsin, USA
+#'
+#'
+#'
 
 "breastcancer"
 
@@ -73,28 +96,41 @@
 #'
 #' A dataset on car evaluations based on basic features, derived from a simple hierarchical decision model.
 #'
-#' The (yet to be binarized) criterion variable is a car's \code{acceptability} rating.
+#' The criterion variable is a car's \code{acceptability} rating.
 #'
 #' @format A data frame containing 1728 cars (rows) and 7 variables (columns).
 #'
 #' \describe{
 #'   \item{buying.price}{Numeric}
-#'   \item{maint.price}{Factor}
-#'   \item{doors}{Factor}
-#'   \item{persons}{Numeric}
-#'   \item{luggage}{Numeric}
-#'   \item{safety}{Factor}
+#'   \item{maint.price}{price of the maintenance, Factor}
+#'   \item{doors}{number of doors, Factor}
+#'   \item{persons}{capacity in terms of persons to carry, Numeric}
+#'   \item{luggage}{the size of luggage boot, Numeric}
+#'   \item{safety}{estimated safety of the car, Factor}
 #'   \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
-#'   Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
+#'   Values: \code{unacc}/\code{acc}(77.78\% vs. 22.2\%)}
 #' }
 #'
 #' @family datasets
+#'
+#'
+#'@details
+#'We made the following enhancements to the original data for improved usability:
+#'
+#'  - The criterion was binarized from a factor variable with four levels (\code{unacc}/\code{acc}/\code{good}/\code{vgood} , into a factor variable with two levels (\code{unacc}/\code{acc}).
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
+#' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
+#'
+#' Original creator and donor:
+#'
+#' Marko Bohanec and Blaz Zupan
 #'
 #' @references
 #' Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.
 #' \emph{Sistemica}, \emph{1} (1), 145--157.
 #'
-#' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 #'
 
 "car"
@@ -117,22 +153,35 @@
 #' @format A data frame containing 1473 cases (rows) and 10 variables (columns).
 #'
 #' \describe{
-#'   \item{wife.age}{Numeric}
-#'   \item{wife.edu}{Factor}
-#'   \item{hus.ed}{Factor}
-#'   \item{children}{Numeric}
-#'   \item{wife.rel}{Numeric}
-#'   \item{wife.work}{Factor}
-#'   \item{hus.occ}{Factor}
-#'   \item{sol}{Factor}
-#'   \item{media}{Numeric}
+#'   \item{wife.age}{Wife's age, Numeric}
+#'   \item{wife.edu}{Wife's education, Factor, (1=low, 2, 3, 4=high)}
+#'   \item{hus.ed}{Husband's education, Factor, (1=low, 2, 3, 4=high)}
+#'   \item{children}{Number of children ever born, Numeric}
+#'   \item{wife.rel}{Wife's religion, Numeric, (0=Non-Islam, 1=Islam)}
+#'   \item{wife.work}{Wife's now working?, Factor, (0=Yes, 1=No)}
+#'   \item{hus.occ}{Husband's occupation, Factor, (1, 2, 3, 4)}
+#'   \item{sol}{Standard-of-living index, Factor, (1=low, 2, 3, 4=high)}
+#'   \item{media}{Media exposure, Numeric, (0=Good, 1=Not good)}
 #'   \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
-#'   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs.\ 57.3\%).}
+#'   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs. 57.3\%).}
 #' }
 #'
 #' @family datasets
 #'
+#'@details
+#'We made the following enhancements to the original data for improved usability:
+#'
+#'  - The criterion was binarized from a class attribute variable with three levels (\code{1=No-use}, \code{2=Long-term}, \code{3=Short-term}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
+#'
+#'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice}
+#'
+#' Original creator and donor:
+#'
+#' Tjen-Sien Lim
 #'
 
 "contraceptive"
@@ -167,18 +216,24 @@
 #'  \item{c.14}{continuous}
 #'  \item{c.15}{continuous}
 #'  \item{crit}{\emph{Criterion}: Credit approval.
-#'  Values: \code{TRUE}/$+$ vs. \code{FALSE}/$-$ (44.5\% vs. 55.5\%).}
+#'  Values: \code{TRUE}(+)  vs. \code{FALSE}(-) (44.5\% vs. 55.5\%).}
 #'  }
 #'
 #' @family datasets
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Credit+Approval}
+#'
+#' @details
+#'  We made the following enhancements to the original data for improved usability:
+#'
+#'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
+#'
+#'  - Binary factor variables with exclusive "t" and "f" values were converted to logical TRUE/FALSE vectors.
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
 
 "creditapproval"
-
-
-# +++ here now +++
-
 
 #  6. fertility: ------
 
@@ -192,9 +247,44 @@
 #'
 #' @format A data frame containing 100 rows and 10 columns.
 #'
+#'
+#' \describe{
+#'   \item{season}{Season in which the analysis was performed. (winter, spring, summer, fall)}
+#'   \item{age}{Age at the time of analysis}
+#'   \item{child.dis}{Childish diseases (ie , chicken pox, measles, mumps, polio) (yes(1), no(0)) }
+#'   \item{trauma}{Accident or serious trauma (yes(1), no(0))}
+#'   \item{surgery}{Surgical intervention (yes(1), no(0))}
+#'   \item{fevers}{High fevers in the last year (less than three months ago(-1), more than three months ago (0), no. (1))}
+#'   \item{alcohol}{Frequency of alcohol consumption (several times a day, every day, several times a week, once a week, hardly ever or never)}
+#'   \item{smoking}{Smoking habit (never(-1), occasional (0)) daily (1))}
+#'   \item{sitting}{Number of hours spent sitting per day}
+#'   \item{diagnosis}{\emph{Criterion}: Diagnosis normal (TRUE) vs. altered (FALSE) (88.0\% vs.\ 22.0\%).}
+#' }
+#'
 #' @family datasets
 #'
+#' @details
+#'  We made the following enhancements to the original data for improved usability:
+#'
+#'  - The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Fertility}
+#'
+#'Original contributers:
+#'
+#'David Gil,
+#'
+#'Lucentia Research Group,
+#'
+#'Department of Computer Technology,
+#'
+#' University of Alicante
+#'
+#' Jose Luis Girela,
+#'
+#' Department of Biotechnology, University of Alicante
 #'
 
 "fertility"
@@ -223,17 +313,28 @@
 #'   \item{wind}{Numeric - wind speed in km/h: 0.40 to 9.40 }
 #'   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
 #'   \item{fire.crit}{\emph{Criterion}: Was there a fire (greater than 1.00 ha)?
-#'   Values: \code{FALSE}/no vs. \code{TRUE}/yes (53.0\% vs.\ 47.0\%).} # we recoded the "area" variable (<1 == TRUE) to get a logical criterion.
+#'   Values: \code{FALSE}(no) vs. \code{TRUE}(yes) (53.0\% vs. 47.0\%).}
 #'
 #' }
 #'
 #' @family datasets
 #'
+#'
+#' @details
+#'  We made the following enhancements to the original data for improved usability:
+#'
+#'  - The criterion was redefined from a numeric variable that indicated the number of hectares that burned in a fire into a logical variable with two levels (\code{TRUE} (for values >=1) vs. \code{FALSE} (for values <1)).
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
 #'
 #' Original creator:
+#'
 #' Prof. Paulo Cortez and Aníbal Morais
+#'
 #' Department of Information Systems
+#'
 #' University of Minho, Portugal
 
 "forestfires"
@@ -482,6 +583,16 @@
 #' @format A data frame containing 435 rows and 16 columns.
 #'
 #' @family datasets
+#'
+#' @details
+#'  We made the following enhancements to the original data for improved usability:
+#'
+#'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
+#'
+#'  - Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
 #'
 #' @references
 #' Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
