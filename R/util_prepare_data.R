@@ -73,6 +73,23 @@ convert_binary_to_logical_2 <- function(data) {
 }
 
 
+
+## create function for N,O
+convert_binary_to_logical_3 <- function(data) {
+  data[] <- lapply(data, function(x) {
+    if (is.factor(x) && length(levels(x)) == 2 && all(levels(x) %in% c("N", "O"))) {
+      x <- as.character(x)
+      x[x == "N"] <- TRUE
+      x[x == "O"] <- FALSE
+      x <- as.logical(x)
+    }
+    return(x)
+  })
+  return(data)
+}
+
+
+
 # Apply functions to each dataset
 for (name in dataset_names) {
   # Get the dataset
@@ -82,16 +99,18 @@ for (name in dataset_names) {
   data <- find_NAs(data)
   data <- convert_binary_to_logical_1(data)
   data <- convert_binary_to_logical_2(data)
+  data <- convert_binary_to_logical_3(data)
+
 
   # Assign back to the original variable
   assign(name, data)
 }
 
 
-# # Overwrite the original datasets and save them to .Rdata files
-# for (i in seq_along(dataset_names)) {
-#   save(list = dataset_names[i], file = paste0("C:/Users/jelen/R_WD/FFTrees/data/", dataset_names[i], ".RData"))
-# }
+# Overwrite the original datasets and save them to .Rdata files
+for (i in seq_along(dataset_names)) {
+  save(list = dataset_names[i], file = paste0("C:/Users/jelen/R_WD/FFTrees/data/", dataset_names[i], ".RData"))
+}
 
 
 
