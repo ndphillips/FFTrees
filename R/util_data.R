@@ -469,7 +469,7 @@ describe_data <- function(data, data_name, criterion_name, baseline_value) {
   n_predictors <- ncol(data) - 1
 
   # Number of NAs in total in the data frame
-  n_NA <- sum(sapply(data, function(col) sum(is.na(col) | col == "?")))
+  n_NA <- sum(sapply(data, function(col) sum(is.na(col))))
 
   # Percentage of NAs in data frame
   percent_NA <- (n_NA / (n_cases * ncol(data))) * 100
