@@ -391,7 +391,7 @@
 #'   \item{ca}{Number of major vessels (0-3) colored by flourosopy }
 #'   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversible defect}
 #'
-#'   ...
+#'
 #' }
 #'
 #' @family datasets
@@ -453,7 +453,24 @@
 #'
 #' @format A data frame containing 150 rows and 4 columns.
 #'
+#' \describe{
+#'   \item{sep.len}{sepal length in cm}
+#'   \item{sep.wid}{sepal width in cm}
+#'   \item{pet.len}{petal length in cm}
+#'   \item{pet.wid}{petal width in cm}
+#'   \item{virginica}{\emph{Criterion}: Does an iris belong to the class "virginica"?
+#'   Values: \code{TRUE} vs. \code{FALSE} (33.33\% vs.66.67\%).}
+#' }
+#'
 #' @family datasets
+#'
+#'@details
+#'We made the following enhancements to the original data for improved usability:
+#'
+#'  - The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Iris}
 #'
@@ -480,35 +497,48 @@
 #'
 #' See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names} for column descriptions.
 #'
-#' \describe{
-#'  \item{poisonous}{logical criterion variable}
-#'  \item{cshape}{character}
-#'  \item{csurface}{character}
-#'  \item{ccolor}{character}
-#'  \item{bruises}{character}
-#'  \item{odor}{numeric}
-#'  \item{gattach}{character}
-#'  \item{gspace}{characte}
-#'  \item{gsize}{character}
-#'  \item{gcolor}{character}
-#'  \item{sshape}{character}
-#'  \item{sroot}{character}
-#'  \item{ssaring}{character}
-#'  \item{ssbring}{character}
-#'  \item{scaring}{character}
-#'  \item{scbring}{character}
-#'  \item{vtype}{character}
-#'  \item{vcolor}{character}
-#'  \item{ringnum}{character}
-#'  \item{ringtype}{character}
-#'  \item{sporepc}{character}
-#'  \item{population}{character}
-#'  \item{habitat}{character}
+#'  \describe{
+#'  \item{poisonous}{\emph{Criterion}: Is the mushroom poisonous?
+#'   Values: \code{TRUE}(poisonous) vs. \code{FALSE} (eatable) (48.2\% vs.\ 52.8\%).}
+#'  \item{cshape}{cap-shape, character (bell=b,conical=c,convex=x,flat=f,knobbed=k,sunken=s)}
+#'  \item{csurface}{cap-surface, character (fibrous=f,grooves=g,scaly=y,smooth=s)}
+#'  \item{ccolor}{cap-color, character (brown=n,buff=b,cinnamon=c,gray=g,green=r,pink=p,purple=u,red=e,white=w,yellow=y)}
+#'  \item{bruises}{Are there bruises? logical (TRUE/FALSE)}
+#'  \item{odor}{character (almond=a,anise=l,creosote=c,fishy=y,foul=f,musty=m,none=n,pungent=p,spicy=s) }
+#'  \item{gattach}{gill-attachment, character (attached=a,descending=d,free=f,notched=n)}
+#'  \item{gspace}{gill-spacing, character (close=c,crowded=w,distant=d)}
+#'  \item{gsize}{gill-size, character (broad=b,narrow=n)}
+#'  \item{gcolor}{gill-color, character (black=k,brown=n,buff=b,chocolate=h,gray=g,green=r,orange=o,pink=p,purple=u,red=e,white=w,yellow=y)}
+#'  \item{sshape}{stalk-shape, character (enlarging=e,tapering=t)}
+#'  \item{sroot}{stalk-root, character (bulbous=b,club=c,cup=u,equal=e,rhizomorphs=z,rooted=r)}
+#'  \item{ssaring}{stalk-surface-above-ring, character (fibrous=f,scaly=y,silky=k,smooth=s)}
+#'  \item{ssbring}{stalk-surface-below-ring, character (fibrous=f,scaly=y,silky=k,smooth=s)}
+#'  \item{scaring}{stalk-color-above-ring, character (brown=n,buff=b,cinnamon=c,gray=g,orange=o,pink=p,red=e,white=w,yellow=y)}
+#'  \item{scbring}{stalk-color-below-ring, character (brown=n,buff=b,cinnamon=c,gray=g,orange=o,pink=p,red=e,white=w,yellow=y)}
+#'  \item{vtype}{veil-type, character (partial=p,universal=u)}
+#'  \item{vcolor}{veil-color, character (brown=n,orange=o,white=w,yellow=y)}
+#'  \item{ringnum}{character (none=n,one=o,two=t)}
+#'  \item{ringtype}{character (cobwebby=c,evanescent=e,flaring=f,large=l,none=n,pendant=p,sheathing=s,zone=z)}
+#'  \item{sporepc}{spore-print-color, character (black=k,brown=n,buff=b,chocolate=h,green=r,orange=o,purple=u,white=w,yellow=y)}
+#'  \item{population}{character(abundant=a,clustered=c,numerous=n,scattered=s,several=v,solitary=y)}
+#'  \item{habitat}{character (grasses=g,leaves=l,meadows=m,paths=p,urban=u,waste=w,woods=d)}
 #'
 #'   ...
 #' }
 #'
 #' @family datasets
+#'
+#' @details
+#' We made the following enhancements to the original data for improved usability:
+#'
+#'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
+#'
+#'  - Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.
+#'
+#'  - The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
 #'
 #' @references
 #' Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981).

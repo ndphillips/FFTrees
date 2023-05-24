@@ -23,7 +23,7 @@ A data frame containing 303 rows and 14 columns, with the following variables:
   \item{ca}{Number of major vessels (0-3) colored by flourosopy }
   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversible defect}
 
-  ...
+
 }
 }
 \source{
