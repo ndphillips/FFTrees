@@ -34,7 +34,6 @@ library(testthat)
 library(tidyselect)
 library(magrittr)
 library(knitr)
-library(kableExtra)
 ```
 
 ```{r urls, echo = FALSE, message = FALSE, results = 'hide'}
@@ -134,7 +133,7 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 
 The **FFTrees** package contains several datasets ---\ mostly from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/)\ --- that allow you to address interesting questions when exploring FFTs: 
 
-- `blood` -- Which patients donate blood? [source](https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center)
+- `blood` -- Which people donate blood? [source](https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center)
 - `breastcancer` -- Which patients suffer from breast cancer? [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
 - `car` -- Which cars are acceptable? [source](http://archive.ics.uci.edu/ml/datasets/Car+Evaluation)
 - `contraceptive` -- Which factors determine whether women use contraceptives? [source](https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice)
@@ -168,7 +167,7 @@ data_names <- c("blood", "breastcancer", "car", "contraceptive", "creditapproval
 criterion_names <- c("donation.crit", "diagnosis", "acceptability", "cont.crit", "crit", "diagnosis","fire.crit", "diagnosis", "virginica", "poisonous", "mine.crit", "survived", "party.crit", "type") 
 
 # vector with all criterion values that we are interested in 
-baseline_values <- c(1, TRUE, "acc", TRUE, TRUE,"O", TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, "red")
+baseline_values <- c(1, TRUE, "acc", TRUE, TRUE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, "red")
 
 
 # use combined lists/vectors and apply describe_data function
@@ -195,17 +194,7 @@ colnames(combined_result) <- c("Name",
 # use as many items per page as we have data sets
 # redefine column names as we like them
 
-kable(combined_result, "html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-
-
-# DT::datatable(combined_result, options = list(pageLength = 14),
-#               colnames = c(
-#     "Number of Cases" = "Cases_n",
-#     "Baseline (TRUE) in Percent" = "Baseline_pct",
-#     "Number of Predictors" = "Predictors_n",
-#     "Number of NAs" = "NAs_n",
-#     "NAs in Percent" = "NAs_pct" ))
+kable(combined_result, "html") 
 
 ```
 
