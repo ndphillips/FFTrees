@@ -525,11 +525,34 @@
 
 #' Sonar data
 #'
+#'The file contains patterns of sonar signals bounced off a metal cylinder or bounced off a roughly cylindrical rock at various angles and under various conditions.
+#'The transmitted sonar signal is a frequency-modulated chirp, rising in frequency.
+#'
 #' @format A data frame containing 208 rows and 60 columns.
+#'
+#'
+#'' \describe{
+#'   \item{V1 - V60}{Each pattern is a set of 60 numbers in the range 0.0 to 1.0. Each number represents the energy within a particular frequency band, integrated over a certain period of time. }
+#'   \item{mine.crit}{\emph{Criterion}: Did a sonar signal bounce off a metal cylinder (or a rock)?
+#'   Values: \code{TRUE}(metal cylinder) vs. \code{FALSE}(rock) (53.37\% vs.\ 46.63\%).}
+#' }
+#'
 #'
 #' @family datasets
 #'
+#' @details
+#'  We made the following enhancements to the original data for improved usability:
+#'
+#'  - The inary factor variable with exclusive "m" and "r" values was converted to a logical TRUE/FALSE vector.
+#'
+#'  Other than that, the data remains consistent with the original dataset.
+#'
+#'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)}
+#'
+#'  @references
+#'Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
+#'
 
 "sonar"
 
@@ -550,12 +573,17 @@
 #'   \item{class}{Factor - Class (first, second, third, or crew)}
 #'   \item{age}{Factor - Age group (child or adult)}
 #'   \item{sex}{Factor - Sex (male or female)}
-#'   \item{survived}{Factor - Whether the passenger survived (1) or not (0)}
+#'   \item{survived}{Logical - Whether the passenger survived (TRUE) or not (FALSE)}
 #'
-#'   ...
 #' }
 #'
 #' @family datasets
+#'
+#'@details
+#' MANY CHANGES TO ORIGINAL!!!?!?!?
+#' Wo findet man all die Umwandlungen?
+#'
+#'
 #'
 #' @references
 #' Dawson, Robert J. MacG. (1995), The ‘Unusual Episode’ Data Revisited. Journal of Statistics Education, 3.
@@ -578,9 +606,28 @@
 #' voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
 #' (these three simplified to an unknown disposition).
 #'
-#' The binary criterion variable used here is \code{party.crit}.
-#'
 #' @format A data frame containing 435 rows and 16 columns.
+#'
+#'  \describe{
+#'   \item{handicapped}{handicapped-infants, logical (TRUE, FALSE)}
+#'   \item{water}{water-project-cost-sharing, logical (TRUE, FALSE)}
+#'   \item{adoption}{adoption-of-the-budget-resolution, logical (TRUE, FALSE)}
+#'   \item{physician}{physician-fee-freeze, logical (TRUE, FALSE)}
+#'   \item{elsalvador}{el-salvador-aid, logical (TRUE, FALSE)}
+#'   \item{religionschool}{religious-groups-in-schools, logical (TRUE, FALSE)}
+#'   \item{satellite}{anti-satellite-test-ban, logical (TRUE, FALSE)}
+#'   \item{nicaraguan}{aid-to-nicaraguan-contras, logical (TRUE, FALSE)}
+#'   \item{mxmissile}{mxmissile, logical (TRUE, FALSE)}
+#'   \item{immigration}{immigration, logical (TRUE, FALSE)}
+#'   \item{synfuels}{synfuels-corporation-cutback, logical (TRUE, FALSE)}
+#'   \item{education}{education-spending, logical (TRUE, FALSE)}
+#'   \item{superfund}{superfund-right-to-sue, logical (TRUE, FALSE)}
+#'   \item{crime}{crime, logical (TRUE, FALSE)}
+#'   \item{dutyfree}{duty-free-exports, logical (TRUE, FALSE)}
+#'   \item{southafrica}{export-administration-act-south-africa, logical (TRUE, FALSE)}
+#'   \item{party.crit}{\emph{Criterion}: Where the voters democratic or republican congressmen?
+#'   Values: \code{TRUE}/\code{FALSE}( WIE VIELE WO? UD WAS IST WAS? 77.78\% vs. 22.2\%)}
+#' }
 #'
 #' @family datasets
 #'
@@ -595,6 +642,7 @@
 #'
 #'
 #' @references
+#'
 #' Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
 #' Washington, D.C., 1985.
 #'
@@ -613,9 +661,33 @@
 #'
 #' @format A data frame containing 6497 rows and 13 columns.
 #'
+#'  \describe{
+#'   \item{fixed.acidity}{fixed acidity}
+#'   \item{volatile.acidity}{volatile acidity}
+#'   \item{citric.acid}{citric acid}
+#'   \item{residual.sugar}{residual sugar}
+#'   \item{chlorides}{chlorides}
+#'   \item{free.sulfur.dioxide}{free sulfur dioxide}
+#'   \item{total.sulfur.dioxide}{total sulfur dioxide}
+#'   \item{density}{density}
+#'   \item{pH}{PH Value}
+#'   \item{sulphates}{Sulphates}
+#'   \item{alcohol}{Alcohol}
+#'   \item{quality}{Quality}
+#'   \item{type}{\emph{Criterion}: Is the wine \code{red} or \code{white}? (24.61\% vs.75.39\%)}
+#' }
+#'
+#'
 #' @family datasets
 #'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Wine+Quality}
+#'
+#' @references
+#'  P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.
+#'  Modeling wine preferences by data mining from physicochemical properties.
+#'  In Decision Support Systems, \emph{Elsevier}, 47(4):547-553. ISSN: 0167-9236.
+#'
+#'
 
 "wine"
 

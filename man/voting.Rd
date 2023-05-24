@@ -6,6 +6,27 @@
 \title{Voting data}
 \format{
 A data frame containing 435 rows and 16 columns.
+
+ \describe{
+  \item{handicapped}{handicapped-infants, logical (TRUE, FALSE)}
+  \item{water}{water-project-cost-sharing, logical (TRUE, FALSE)}
+  \item{adoption}{adoption-of-the-budget-resolution, logical (TRUE, FALSE)}
+  \item{physician}{physician-fee-freeze, logical (TRUE, FALSE)}
+  \item{elsalvador}{el-salvador-aid, logical (TRUE, FALSE)}
+  \item{religionschool}{religious-groups-in-schools, logical (TRUE, FALSE)}
+  \item{satellite}{anti-satellite-test-ban, logical (TRUE, FALSE)}
+  \item{nicaraguan}{aid-to-nicaraguan-contras, logical (TRUE, FALSE)}
+  \item{mxmissile}{mxmissile, logical (TRUE, FALSE)}
+  \item{immigration}{immigration, logical (TRUE, FALSE)}
+  \item{synfuels}{synfuels-corporation-cutback, logical (TRUE, FALSE)}
+  \item{education}{education-spending, logical (TRUE, FALSE)}
+  \item{superfund}{superfund-right-to-sue, logical (TRUE, FALSE)}
+  \item{crime}{crime, logical (TRUE, FALSE)}
+  \item{dutyfree}{duty-free-exports, logical (TRUE, FALSE)}
+  \item{southafrica}{export-administration-act-south-africa, logical (TRUE, FALSE)}
+  \item{party.crit}{\emph{Criterion}: Where the voters democratic or republican congressmen?
+  Values: \code{TRUE}/\code{FALSE}( WIE VIELE WO? UD WAS IST WAS? 77.78\% vs. 22.2\%)}
+}
 }
 \source{
 \url{https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records}
@@ -21,8 +42,6 @@ The CQA lists nine different types of votes: voted for, paired for, and announce
 voted against, paired against, and announced against (these three simplified to nay),
 voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
 (these three simplified to an unknown disposition).
-
-The binary criterion variable used here is \code{party.crit}.
 
 
  We made the following enhancements to the original data for improved usability:
