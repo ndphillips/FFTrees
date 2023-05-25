@@ -62,9 +62,20 @@ fftrees_threshold_factor_grid <- function(thresholds = NULL,
   # Note: Any NA values in categorical variables have been turned into an <NA> level (if allow_NA_pred).
 
 
+  # Feedback:
+
+  # if (debug){ # Provide debugging feedback:
+  #
+  #   # Report thresholds:
+  #   cur_thresholds <- paste(thresholds, collapse = ", ")
+  #   cli::cli_alert_info("\u2014 fftrees_threshold_factor_grid() with thresholds = {cur_thresholds}.")
+  #
+  # } # if (debug).
+
+
   # Main: ------
 
-  if (!is.null(thresholds)) {
+  if (!is.null(thresholds)) { # if thresholds exist:
 
     thresholds_n <- length(thresholds)
     case_n <- length(cue_v)
