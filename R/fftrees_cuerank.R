@@ -336,6 +336,7 @@ fftrees_cuerank <- function(x = NULL,
         } # if a. numeric/integer cue.
 
         # b. Factor, character, or logical cue: ----
+
         if (substr(cue_i_class, 1, 1) %in% c("f", "c", "l")) {
 
           # Compute stats for factor cue:
