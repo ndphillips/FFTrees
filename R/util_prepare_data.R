@@ -63,8 +63,8 @@ convert_binary_to_logical_2 <- function(data) {
   data[] <- lapply(data, function(x) {
     if (is.factor(x) && length(levels(x)) == 2 && all(levels(x) %in% c("f", "t"))) {
       x <- as.character(x)
-      x[x == "f"] <- TRUE
-      x[x == "t"] <- FALSE
+      x[x == "t"] <- TRUE
+      x[x == "f"] <- FALSE
       x <- as.logical(x)
     }
     return(x)

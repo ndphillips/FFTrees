@@ -70,7 +70,9 @@
 #'
 #'  - The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.
 #'
-#'  Other than that, the data remains consistent with the original dataset. ??? Bzw NAs weg!!!
+#'  - 16 cases were excluded because they contained NAs.
+#'
+#'  Other than that, the data remains consistent with the original dataset.
 #'
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)}
@@ -101,25 +103,21 @@
 #' @format A data frame containing 1728 cars (rows) and 7 variables (columns).
 #'
 #' \describe{
-#'   \item{buying.price}{Numeric}
-#'   \item{maint.price}{price of the maintenance, Factor}
-#'   \item{doors}{number of doors, Factor}
-#'   \item{persons}{capacity in terms of persons to carry, Numeric}
-#'   \item{luggage}{the size of luggage boot, Numeric}
-#'   \item{safety}{estimated safety of the car, Factor}
-#'   \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
-#'   Values: \code{unacc}/\code{acc}(77.78\% vs. 22.2\%)}
+#'   \item{buying.price}{price for buying the car, Factor (high, low, med, vhigh)}
+#'   \item{maint.price}{price of the maintenance, Factor (high, low, med, vhigh)}
+#'   \item{doors}{number of doors, Factor (2, 3, 4, 5more)}
+#'   \item{persons}{capacity in terms of persons to carry, Factor (2, 4, more)}
+#'   \item{luggage}{the size of luggage boot, Factor (big, med, small)}
+#'   \item{safety}{estimated safety of the car, Factor (high, low, med)}
+#'   \item{acceptability}{\emph{Criterion}: Category of acceptability rating.
+#'   Values: \code{unacc}/ \code{vgood}/ \code{good}/ \code{acc}}
 #' }
 #'
 #' @family datasets
 #'
 #'
 #'@details
-#'We made the following enhancements to the original data for improved usability:
-#'
-#'  - The criterion was binarized from a factor variable with four levels (\code{unacc}/\code{acc}/\code{good}/\code{vgood} , into a factor variable with two levels (\code{unacc}/\code{acc}).
-#'
-#'  Other than that, the data remains consistent with the original dataset.
+#' The \emph{criterion} for this dataset has not yet binarized.Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
 #'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 #'
@@ -573,7 +571,7 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  - The inary factor variable with exclusive "m" and "r" values was converted to a logical TRUE/FALSE vector.
+#'  -  The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -655,8 +653,8 @@
 #'   \item{crime}{crime, logical (TRUE, FALSE)}
 #'   \item{dutyfree}{duty-free-exports, logical (TRUE, FALSE)}
 #'   \item{southafrica}{export-administration-act-south-africa, logical (TRUE, FALSE)}
-#'   \item{party.crit}{\emph{Criterion}: Where the voters democratic or republican congressmen?
-#'   Values: \code{TRUE}/\code{FALSE}( WIE VIELE WO? UD WAS IST WAS? 77.78\% vs. 22.2\%)}
+#'   \item{party.crit}{\emph{Criterion}: Where the voters democratic (or republican) congressmen?
+#'   Values: \code{TRUE} (democrat) / \code{FALSE} (republican) (61.52\% vs. 38.48\%)}
 #' }
 #'
 #' @family datasets
@@ -667,6 +665,8 @@
 #'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
 #'
 #'  - Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.
+#'
+#'  -  The binary character \emph{criterion} variable with exclusive "democrat" and "republican" values was converted to a logical \code{TRUE/FALSE} vector.
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'

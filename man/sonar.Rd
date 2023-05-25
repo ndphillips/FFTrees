@@ -30,7 +30,7 @@ The transmitted sonar signal is a frequency-modulated chirp, rising in frequency
 \details{
 We made the following enhancements to the original data for improved usability:
 
- - The inary factor variable with exclusive "m" and "r" values was converted to a logical TRUE/FALSE vector.
+ -  The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.
 
  Other than that, the data remains consistent with the original dataset.
 }

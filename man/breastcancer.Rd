@@ -45,7 +45,9 @@ We made the following enhancements to the original data for improved usability:
 
  - The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.
 
- Other than that, the data remains consistent with the original dataset. ??? Bzw NAs weg!!!
+ - 16 cases were excluded because they contained NAs.
+
+ Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
 Other datasets: 
