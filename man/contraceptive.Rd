@@ -9,13 +9,13 @@ A data frame containing 1473 cases (rows) and 10 variables (columns).
 
 \describe{
   \item{wife.age}{Wife's age, Numeric}
-  \item{wife.edu}{Wife's education, Factor, (1=low, 2, 3, 4=high)}
-  \item{hus.ed}{Husband's education, Factor, (1=low, 2, 3, 4=high)}
+  \item{wife.edu}{Wife's education, Nummeric, (1=low, 2, 3, 4=high)}
+  \item{hus.ed}{Husband's education, Nummeric, (1=low, 2, 3, 4=high)}
   \item{children}{Number of children ever born, Numeric}
   \item{wife.rel}{Wife's religion, Numeric, (0=Non-Islam, 1=Islam)}
-  \item{wife.work}{Wife's now working?, Factor, (0=Yes, 1=No)}
-  \item{hus.occ}{Husband's occupation, Factor, (1, 2, 3, 4)}
-  \item{sol}{Standard-of-living index, Factor, (1=low, 2, 3, 4=high)}
+  \item{wife.work}{Wife's now working?, Nummeric, (0=Yes, 1=No)}
+  \item{hus.occ}{Husband's occupation, Nummeric, (1, 2, 3, 4)}
+  \item{sol}{Standard-of-living index, Nummeric, (1=low, 2, 3, 4=high)}
   \item{media}{Media exposure, Numeric, (0=Good, 1=Not good)}
   \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs. 57.3\%).}

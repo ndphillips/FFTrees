@@ -117,7 +117,7 @@
 #'
 #'
 #'@details
-#' The \emph{criterion} for this dataset has not yet binarized.Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
+#' The \emph{criterion} for this dataset has not yet been binarized. Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
 #'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 #'
@@ -152,13 +152,13 @@
 #'
 #' \describe{
 #'   \item{wife.age}{Wife's age, Numeric}
-#'   \item{wife.edu}{Wife's education, Factor, (1=low, 2, 3, 4=high)}
-#'   \item{hus.ed}{Husband's education, Factor, (1=low, 2, 3, 4=high)}
+#'   \item{wife.edu}{Wife's education, Nummeric, (1=low, 2, 3, 4=high)}
+#'   \item{hus.ed}{Husband's education, Nummeric, (1=low, 2, 3, 4=high)}
 #'   \item{children}{Number of children ever born, Numeric}
 #'   \item{wife.rel}{Wife's religion, Numeric, (0=Non-Islam, 1=Islam)}
-#'   \item{wife.work}{Wife's now working?, Factor, (0=Yes, 1=No)}
-#'   \item{hus.occ}{Husband's occupation, Factor, (1, 2, 3, 4)}
-#'   \item{sol}{Standard-of-living index, Factor, (1=low, 2, 3, 4=high)}
+#'   \item{wife.work}{Wife's now working?, Nummeric, (0=Yes, 1=No)}
+#'   \item{hus.occ}{Husband's occupation, Nummeric, (1, 2, 3, 4)}
+#'   \item{sol}{Standard-of-living index, Nummeric, (1=low, 2, 3, 4=high)}
 #'   \item{media}{Media exposure, Numeric, (0=Good, 1=Not good)}
 #'   \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
 #'   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs. 57.3\%).}
@@ -241,8 +241,6 @@
 #'
 #' Sperm concentration are related to socio-demographic data, environmental factors, health status, and life habits.
 #'
-#' The binary criterion variable is \code{diagnosis}: Normal (N) vs. altered (O).
-#'
 #' @format A data frame containing 100 rows and 10 columns.
 #'
 #'
@@ -264,7 +262,7 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  - The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).
+#'  - The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) , into a logical variable (\code{TRUE} vs. \code{FALSE}).
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -498,28 +496,28 @@
 #'  \describe{
 #'  \item{poisonous}{\emph{Criterion}: Is the mushroom poisonous?
 #'   Values: \code{TRUE}(poisonous) vs. \code{FALSE} (eatable) (48.2\% vs.\ 52.8\%).}
-#'  \item{cshape}{cap-shape, character (bell=b,conical=c,convex=x,flat=f,knobbed=k,sunken=s)}
-#'  \item{csurface}{cap-surface, character (fibrous=f,grooves=g,scaly=y,smooth=s)}
-#'  \item{ccolor}{cap-color, character (brown=n,buff=b,cinnamon=c,gray=g,green=r,pink=p,purple=u,red=e,white=w,yellow=y)}
+#'  \item{cshape}{cap-shape, character (bell=b, conical=c,convex=x, flat=f, knobbed=k, sunken=s)}
+#'  \item{csurface}{cap-surface, character (fibrous=f, grooves=g, scaly=y, smooth=s)}
+#'  \item{ccolor}{cap-color, character (brown=n, buff=b, cinnamon=c, gray=g, green=r, pink=p, purple=u, red=e, white=w, yellow=y)}
 #'  \item{bruises}{Are there bruises? logical (TRUE/FALSE)}
-#'  \item{odor}{character (almond=a,anise=l,creosote=c,fishy=y,foul=f,musty=m,none=n,pungent=p,spicy=s) }
-#'  \item{gattach}{gill-attachment, character (attached=a,descending=d,free=f,notched=n)}
-#'  \item{gspace}{gill-spacing, character (close=c,crowded=w,distant=d)}
-#'  \item{gsize}{gill-size, character (broad=b,narrow=n)}
-#'  \item{gcolor}{gill-color, character (black=k,brown=n,buff=b,chocolate=h,gray=g,green=r,orange=o,pink=p,purple=u,red=e,white=w,yellow=y)}
-#'  \item{sshape}{stalk-shape, character (enlarging=e,tapering=t)}
-#'  \item{sroot}{stalk-root, character (bulbous=b,club=c,cup=u,equal=e,rhizomorphs=z,rooted=r)}
-#'  \item{ssaring}{stalk-surface-above-ring, character (fibrous=f,scaly=y,silky=k,smooth=s)}
-#'  \item{ssbring}{stalk-surface-below-ring, character (fibrous=f,scaly=y,silky=k,smooth=s)}
-#'  \item{scaring}{stalk-color-above-ring, character (brown=n,buff=b,cinnamon=c,gray=g,orange=o,pink=p,red=e,white=w,yellow=y)}
-#'  \item{scbring}{stalk-color-below-ring, character (brown=n,buff=b,cinnamon=c,gray=g,orange=o,pink=p,red=e,white=w,yellow=y)}
-#'  \item{vtype}{veil-type, character (partial=p,universal=u)}
-#'  \item{vcolor}{veil-color, character (brown=n,orange=o,white=w,yellow=y)}
-#'  \item{ringnum}{character (none=n,one=o,two=t)}
-#'  \item{ringtype}{character (cobwebby=c,evanescent=e,flaring=f,large=l,none=n,pendant=p,sheathing=s,zone=z)}
-#'  \item{sporepc}{spore-print-color, character (black=k,brown=n,buff=b,chocolate=h,green=r,orange=o,purple=u,white=w,yellow=y)}
-#'  \item{population}{character(abundant=a,clustered=c,numerous=n,scattered=s,several=v,solitary=y)}
-#'  \item{habitat}{character (grasses=g,leaves=l,meadows=m,paths=p,urban=u,waste=w,woods=d)}
+#'  \item{odor}{character (almond=a, anise=l, creosote=c, fishy=y, foul=f, musty=m, none=n, pungent=p, spicy=s) }
+#'  \item{gattach}{gill-attachment, character (attached=a, descending=d, free=f, notched=n)}
+#'  \item{gspace}{gill-spacing, character (close=c, crowded=w, distant=d)}
+#'  \item{gsize}{gill-size, character (broad=b, narrow=n)}
+#'  \item{gcolor}{gill-color, character (black=k, brown=n, buff=b, chocolate=h, gray=g, green=r, orange=o, pink=p, purple=u, red=e, white=w, yellow=y)}
+#'  \item{sshape}{stalk-shape, character (enlarging=e, tapering=t)}
+#'  \item{sroot}{stalk-root, character (bulbous=b ,club=c, cup=u, equal=e, rhizomorphs=z, rooted=r)}
+#'  \item{ssaring}{stalk-surface-above-ring, character (fibrous=f, scaly=y, silky=k, smooth=s)}
+#'  \item{ssbring}{stalk-surface-below-ring, character (fibrous=f, scaly=y, silky=k, smooth=s)}
+#'  \item{scaring}{stalk-color-above-ring, character (brown=n,buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
+#'  \item{scbring}{stalk-color-below-ring, character (brown=n,buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
+#'  \item{vtype}{veil-type, character (partial=p, universal=u)}
+#'  \item{vcolor}{veil-color, character (brown=n, orange=o, white=w, yellow=y)}
+#'  \item{ringnum}{character (none=n, one=o, two=t)}
+#'  \item{ringtype}{character (cobwebby=c, evanescent=e, flaring=f, large=l, none=n, pendant=p, sheathing=s, zone=z)}
+#'  \item{sporepc}{spore-print-color, character (black=k, brown=n, buff=b, chocolate=h, green=r, orange=o, purple=u, white=w, yellow=y)}
+#'  \item{population}{character(abundant=a, clustered=c, numerous=n, scattered=s, several=v, solitary=y)}
+#'  \item{habitat}{character (grasses=g, leaves=l, meadows=m, paths=p, urban=u, waste=w, woods=d)}
 #'
 #'   ...
 #' }

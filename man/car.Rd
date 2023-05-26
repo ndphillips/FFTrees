@@ -35,7 +35,7 @@ A dataset on car evaluations based on basic features, derived from a simple hier
 The criterion variable is a car's \code{acceptability} rating.
 
 
-The \emph{criterion} for this dataset has not yet binarized.Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
+The \emph{criterion} for this dataset has not yet been binarized. Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
 }
 \references{
 Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.

@@ -177,8 +177,10 @@ result_list <- mapply(describe_data, data = data_list, data_name = data_names, c
 combined_result <- do.call(rbind, result_list)
 
 
-# round baseline values for briefity
+# round baseline and NA pct values for briefity
 combined_result$Baseline_pct<- round(combined_result$Baseline_pct, 1)
+combined_result$NAs_pct<- round(combined_result$NAs_pct, 2)
+
 
 # rename columns for better interpretability
 colnames(combined_result) <- c("Name", 
