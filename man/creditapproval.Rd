@@ -24,7 +24,8 @@ A data frame containing 690 cases (rows) and 15 variables (columns).
  \item{c.14}{continuous}
  \item{c.15}{continuous}
  \item{crit}{\emph{Criterion}: Credit approval.
- Values: \code{TRUE}(+)  vs. \code{FALSE}(-) (44.5\% vs. 55.5\%).}
+
+ Values: \code{TRUE} (+)  vs. \code{FALSE} (-) (44.5\% vs. 55.5\%).}
  }
 }
 \source{
@@ -44,9 +45,10 @@ and nominal with larger Ns. There are also a few missing values.
 
  We made the following enhancements to the original data for improved usability:
 
- - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
-
- - Binary factor variables with exclusive "t" and "f" values were converted to logical TRUE/FALSE vectors.
+\itemize{
+ \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
+ \item{Binary factor variables with exclusive "t" and "f" values were converted to logical TRUE/FALSE vectors.}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }

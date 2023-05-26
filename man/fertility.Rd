@@ -50,7 +50,9 @@ Sperm concentration are related to socio-demographic data, environmental factors
 
  We made the following enhancements to the original data for improved usability:
 
- - The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) , into a logical variable (\code{TRUE} vs. \code{FALSE}).
+\itemize{
+ \item{The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }

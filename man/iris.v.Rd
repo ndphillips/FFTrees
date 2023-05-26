@@ -13,6 +13,7 @@ A data frame containing 150 rows and 4 columns.
   \item{pet.len}{petal length in cm}
   \item{pet.wid}{petal width in cm}
   \item{virginica}{\emph{Criterion}: Does an iris belong to the class "virginica"?
+
   Values: \code{TRUE} vs. \code{FALSE} (33.33\% vs.66.67\%).}
 }
 }
@@ -28,7 +29,9 @@ A famous dataset from R.A. Fisher (1936) simplified to predict only the virginic
 \details{
 We made the following enhancements to the original data for improved usability:
 
- - The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).
+\itemize{
+ \item{The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }

@@ -186,10 +186,10 @@ combined_result$NAs_pct<- round(combined_result$NAs_pct, 2)
 colnames(combined_result) <- c("Name", 
                                  "Number of Cases",
                                  "Criterion", 
-                                 "Baseline (TRUE) in Percent",
+                                 "Baseline (TRUE,\\ in\\ %)",
                                  "Number of Predictors",
                                  "Number of NAs", 
-                                 "NAs in Percent")
+                                 "NAs (in\\ %)")
 
 
 # render the table from the data frame

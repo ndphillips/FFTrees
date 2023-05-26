@@ -15,6 +15,7 @@ A data frame containing 1728 cars (rows) and 7 variables (columns).
   \item{luggage}{the size of luggage boot, Factor (big, med, small)}
   \item{safety}{estimated safety of the car, Factor (high, low, med)}
   \item{acceptability}{\emph{Criterion}: Category of acceptability rating.
+
   Values: \code{unacc}/ \code{vgood}/ \code{good}/ \code{acc}}
 }
 }

@@ -17,6 +17,7 @@
 #'   \item{total}{Total blood donated (in c.c.)}
 #'   \item{time}{Months since first donation}
 #'   \item{donation.crit}{\emph{Criterion}: Did the person donate blood (in March 2007)?
+#'
 #'   Values: \code{0}/no vs. \code{1}/yes (76.2\% vs.\ 23.8\%).}
 #' }
 #'
@@ -56,6 +57,7 @@
 #'   \item{nucleoli}{Normal Nucleoli}
 #'   \item{mitoses}{Mitoses}
 #'   \item{diagnosis}{\emph{Criterion}: Absence/presence of breast cancer.
+#'
 #'   Values: \code{FALSE} vs. \code{TRUE} (65.0\% vs.\ 35.0\%).}
 #' }
 #'
@@ -64,13 +66,14 @@
 #'
 #'
 #' @details
+#'
 #' We made the following enhancements to the original data for improved usability:
 #'
-#'  - The ID number of the cases was excluded.
-#'
-#'  - The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.
-#'
-#'  - 16 cases were excluded because they contained NAs.
+#' \itemize{
+#'  \item{The ID number of the cases was excluded.}
+#'  \item{The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.}
+#'  \item{16 cases were excluded because they contained NAs.}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -110,6 +113,7 @@
 #'   \item{luggage}{the size of luggage boot, Factor (big, med, small)}
 #'   \item{safety}{estimated safety of the car, Factor (high, low, med)}
 #'   \item{acceptability}{\emph{Criterion}: Category of acceptability rating.
+#'
 #'   Values: \code{unacc}/ \code{vgood}/ \code{good}/ \code{acc}}
 #' }
 #'
@@ -161,6 +165,7 @@
 #'   \item{sol}{Standard-of-living index, Nummeric, (1=low, 2, 3, 4=high)}
 #'   \item{media}{Media exposure, Numeric, (0=Good, 1=Not good)}
 #'   \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
+#'
 #'   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs. 57.3\%).}
 #' }
 #'
@@ -169,7 +174,9 @@
 #'@details
 #'We made the following enhancements to the original data for improved usability:
 #'
-#'  - The criterion was binarized from a class attribute variable with three levels (\code{1=No-use}, \code{2=Long-term}, \code{3=Short-term}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).
+#'\itemize{
+#'  \item{The criterion was binarized from a class attribute variable with three levels (\code{1=No-use}, \code{2=Long-term}, \code{3=Short-term}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -214,7 +221,8 @@
 #'  \item{c.14}{continuous}
 #'  \item{c.15}{continuous}
 #'  \item{crit}{\emph{Criterion}: Credit approval.
-#'  Values: \code{TRUE}(+)  vs. \code{FALSE}(-) (44.5\% vs. 55.5\%).}
+#'
+#'  Values: \code{TRUE} (+)  vs. \code{FALSE} (-) (44.5\% vs. 55.5\%).}
 #'  }
 #'
 #' @family datasets
@@ -224,9 +232,10 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
-#'
-#'  - Binary factor variables with exclusive "t" and "f" values were converted to logical TRUE/FALSE vectors.
+#'\itemize{
+#'  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
+#'  \item{Binary factor variables with exclusive "t" and "f" values were converted to logical TRUE/FALSE vectors.}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -262,7 +271,9 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  - The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) , into a logical variable (\code{TRUE} vs. \code{FALSE}).
+#'\itemize{
+#'  \item{The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -309,7 +320,8 @@
 #'   \item{wind}{Numeric - wind speed in km/h: 0.40 to 9.40 }
 #'   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
 #'   \item{fire.crit}{\emph{Criterion}: Was there a fire (greater than 1.00 ha)?
-#'   Values: \code{FALSE}(no) vs. \code{TRUE}(yes) (53.0\% vs. 47.0\%).}
+#'
+#'   Values: \code{TRUE} (yes) vs. \code{FALSE} (no) (47.0\% vs. 53.0\%).}
 #'
 #' }
 #'
@@ -319,7 +331,9 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  - The criterion was redefined from a numeric variable that indicated the number of hectares that burned in a fire into a logical variable with two levels (\code{TRUE} (for values >=1) vs. \code{FALSE} (for values <1)).
+#'\itemize{
+#'  \item{The criterion was redefined from a numeric variable that indicated the number of hectares that burned in a fire into a logical variable (\code{TRUE} (for values >1) vs. \code{FALSE} (for values <=1)).}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -343,14 +357,9 @@
 #'
 #' This data further characterizes the variables (cues) in the \code{\link{heartdisease}} dataset.
 #'
-#' @format A data frame containing 153 rows and 14 columns.
+#' @format A list of length 13 containing the cost of each cue in the \code{\link{heartdisease}} dataset (in dollars).
+#' Each list element is a single (positive numeric) value.
 #'
-#' \describe{
-#'   \item{cue}{The name of the cue}
-#'   \item{cost}{The cost of the cue}
-#'
-#'   ...
-#' }
 #'
 #' @family datasets
 #'
@@ -455,6 +464,7 @@
 #'   \item{pet.len}{petal length in cm}
 #'   \item{pet.wid}{petal width in cm}
 #'   \item{virginica}{\emph{Criterion}: Does an iris belong to the class "virginica"?
+#'
 #'   Values: \code{TRUE} vs. \code{FALSE} (33.33\% vs.66.67\%).}
 #' }
 #'
@@ -463,7 +473,9 @@
 #'@details
 #'We made the following enhancements to the original data for improved usability:
 #'
-#'  - The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).
+#'\itemize{
+#'  \item{The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -495,8 +507,9 @@
 #'
 #'  \describe{
 #'  \item{poisonous}{\emph{Criterion}: Is the mushroom poisonous?
-#'   Values: \code{TRUE}(poisonous) vs. \code{FALSE} (eatable) (48.2\% vs.\ 52.8\%).}
-#'  \item{cshape}{cap-shape, character (bell=b, conical=c,convex=x, flat=f, knobbed=k, sunken=s)}
+#'
+#'   Values: \code{TRUE} (poisonous) vs. \code{FALSE} (eatable) (48.2\% vs.\ 52.8\%).}
+#'  \item{cshape}{cap-shape, character (bell=b, conical=c, convex=x, flat=f, knobbed=k, sunken=s)}
 #'  \item{csurface}{cap-surface, character (fibrous=f, grooves=g, scaly=y, smooth=s)}
 #'  \item{ccolor}{cap-color, character (brown=n, buff=b, cinnamon=c, gray=g, green=r, pink=p, purple=u, red=e, white=w, yellow=y)}
 #'  \item{bruises}{Are there bruises? logical (TRUE/FALSE)}
@@ -509,8 +522,8 @@
 #'  \item{sroot}{stalk-root, character (bulbous=b ,club=c, cup=u, equal=e, rhizomorphs=z, rooted=r)}
 #'  \item{ssaring}{stalk-surface-above-ring, character (fibrous=f, scaly=y, silky=k, smooth=s)}
 #'  \item{ssbring}{stalk-surface-below-ring, character (fibrous=f, scaly=y, silky=k, smooth=s)}
-#'  \item{scaring}{stalk-color-above-ring, character (brown=n,buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
-#'  \item{scbring}{stalk-color-below-ring, character (brown=n,buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
+#'  \item{scaring}{stalk-color-above-ring, character (brown=n, buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
+#'  \item{scbring}{stalk-color-below-ring, character (brown=n, buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
 #'  \item{vtype}{veil-type, character (partial=p, universal=u)}
 #'  \item{vcolor}{veil-color, character (brown=n, orange=o, white=w, yellow=y)}
 #'  \item{ringnum}{character (none=n, one=o, two=t)}
@@ -519,7 +532,6 @@
 #'  \item{population}{character(abundant=a, clustered=c, numerous=n, scattered=s, several=v, solitary=y)}
 #'  \item{habitat}{character (grasses=g, leaves=l, meadows=m, paths=p, urban=u, waste=w, woods=d)}
 #'
-#'   ...
 #' }
 #'
 #' @family datasets
@@ -527,11 +539,13 @@
 #' @details
 #' We made the following enhancements to the original data for improved usability:
 #'
-#'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
+#'\itemize{
+#'  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
 #'
-#'  - Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.
+#'  \item{Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.}
 #'
-#'  - The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.
+#'  \item{The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -557,10 +571,11 @@
 #' @format A data frame containing 208 rows and 60 columns.
 #'
 #'
-#'' \describe{
+#' \describe{
 #'   \item{V1 - V60}{Each pattern is a set of 60 numbers in the range 0.0 to 1.0. Each number represents the energy within a particular frequency band, integrated over a certain period of time. }
 #'   \item{mine.crit}{\emph{Criterion}: Did a sonar signal bounce off a metal cylinder (or a rock)?
-#'   Values: \code{TRUE}(metal cylinder) vs. \code{FALSE}(rock) (53.37\% vs.\ 46.63\%).}
+#'
+#'   Values: \code{TRUE} (metal cylinder) vs. \code{FALSE} (rock) (53.37\% vs.\ 46.63\%).}
 #' }
 #'
 #'
@@ -569,15 +584,18 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  -  The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.
+#'\itemize{
+#'  \item{The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)}
 #'
-#'  @references
-#'Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
+#' @references
+#'
+#'  Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
 #'
 
 "sonar"
@@ -604,11 +622,6 @@
 #' }
 #'
 #' @family datasets
-#'
-#'@details
-#' MANY CHANGES TO ORIGINAL!!!?!?!?
-#' Wo findet man all die Umwandlungen?
-#'
 #'
 #'
 #' @references
@@ -652,7 +665,8 @@
 #'   \item{dutyfree}{duty-free-exports, logical (TRUE, FALSE)}
 #'   \item{southafrica}{export-administration-act-south-africa, logical (TRUE, FALSE)}
 #'   \item{party.crit}{\emph{Criterion}: Where the voters democratic (or republican) congressmen?
-#'   Values: \code{TRUE} (democrat) / \code{FALSE} (republican) (61.52\% vs. 38.48\%)}
+#'
+#'   Values: \code{TRUE} (democrat) / \code{FALSE} (republican) (61.52\% vs. 38.48\%).}
 #' }
 #'
 #' @family datasets
@@ -660,11 +674,11 @@
 #' @details
 #'  We made the following enhancements to the original data for improved usability:
 #'
-#'  - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
-#'
-#'  - Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.
-#'
-#'  -  The binary character \emph{criterion} variable with exclusive "democrat" and "republican" values was converted to a logical \code{TRUE/FALSE} vector.
+#'\itemize{
+#'  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
+#'  \item{Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.}
+#'  \item{The binary character \emph{criterion} variable with exclusive "democrat" and "republican" values was converted to a logical \code{TRUE/FALSE} vector.}
+#'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
@@ -690,18 +704,18 @@
 #' @format A data frame containing 6497 rows and 13 columns.
 #'
 #'  \describe{
-#'   \item{fixed.acidity}{fixed acidity}
-#'   \item{volatile.acidity}{volatile acidity}
-#'   \item{citric.acid}{citric acid}
-#'   \item{residual.sugar}{residual sugar}
-#'   \item{chlorides}{chlorides}
-#'   \item{free.sulfur.dioxide}{free sulfur dioxide}
-#'   \item{total.sulfur.dioxide}{total sulfur dioxide}
-#'   \item{density}{density}
-#'   \item{pH}{PH Value}
-#'   \item{sulphates}{Sulphates}
-#'   \item{alcohol}{Alcohol}
-#'   \item{quality}{Quality}
+#'   \item{fixed.acidity}{fixed acidity (nummeric)}
+#'   \item{volatile.acidity}{volatile acidity (nummeric)}
+#'   \item{citric.acid}{citric acid (nummeric)}
+#'   \item{residual.sugar}{residual sugar (nummeric)}
+#'   \item{chlorides}{chlorides (nummeric)}
+#'   \item{free.sulfur.dioxide}{free sulfur dioxide (nummeric)}
+#'   \item{total.sulfur.dioxide}{total sulfur dioxide (nummeric)}
+#'   \item{density}{density (nummeric)}
+#'   \item{pH}{PH Value (nummeric)}
+#'   \item{sulphates}{Sulphates (nummeric)}
+#'   \item{alcohol}{Alcohol (nummeric)}
+#'   \item{quality}{Quality (nummeric, score between 0 and 10)}
 #'   \item{type}{\emph{Criterion}: Is the wine \code{red} or \code{white}? (24.61\% vs.75.39\%)}
 #' }
 #'

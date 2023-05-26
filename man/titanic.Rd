@@ -27,10 +27,6 @@ Data indicating who survived on the Titanic.
 \details{
 See \code{\link{Titanic}} of the R \strong{datasets} package for details and
 the same data (in a 4-dimensional \code{table}).
-
-
-MANY CHANGES TO ORIGINAL!!!?!?!?
-Wo findet man all die Umwandlungen?
 }
 \references{
 Dawson, Robert J. MacG. (1995), The ‘Unusual Episode’ Data Revisited. Journal of Statistics Education, 3.

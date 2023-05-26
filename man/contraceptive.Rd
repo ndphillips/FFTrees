@@ -18,6 +18,7 @@ A data frame containing 1473 cases (rows) and 10 variables (columns).
   \item{sol}{Standard-of-living index, Nummeric, (1=low, 2, 3, 4=high)}
   \item{media}{Media exposure, Numeric, (0=Good, 1=Not good)}
   \item{cont.crit}{\emph{Criterion}: Use of a contraceptive (as logical).
+
   Values: \code{FALSE} vs. \code{TRUE} (42.7\% vs. 57.3\%).}
 }
 }
@@ -45,7 +46,9 @@ based on her demographic and socio-economic characteristics.
 
 We made the following enhancements to the original data for improved usability:
 
- - The criterion was binarized from a class attribute variable with three levels (\code{1=No-use}, \code{2=Long-term}, \code{3=Short-term}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).
+\itemize{
+ \item{The criterion was binarized from a class attribute variable with three levels (\code{1=No-use}, \code{2=Long-term}, \code{3=Short-term}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }

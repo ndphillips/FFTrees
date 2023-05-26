@@ -11,8 +11,9 @@ See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agari
 
  \describe{
  \item{poisonous}{\emph{Criterion}: Is the mushroom poisonous?
-  Values: \code{TRUE}(poisonous) vs. \code{FALSE} (eatable) (48.2\% vs.\ 52.8\%).}
- \item{cshape}{cap-shape, character (bell=b, conical=c,convex=x, flat=f, knobbed=k, sunken=s)}
+
+  Values: \code{TRUE} (poisonous) vs. \code{FALSE} (eatable) (48.2\% vs.\ 52.8\%).}
+ \item{cshape}{cap-shape, character (bell=b, conical=c, convex=x, flat=f, knobbed=k, sunken=s)}
  \item{csurface}{cap-surface, character (fibrous=f, grooves=g, scaly=y, smooth=s)}
  \item{ccolor}{cap-color, character (brown=n, buff=b, cinnamon=c, gray=g, green=r, pink=p, purple=u, red=e, white=w, yellow=y)}
  \item{bruises}{Are there bruises? logical (TRUE/FALSE)}
@@ -25,8 +26,8 @@ See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agari
  \item{sroot}{stalk-root, character (bulbous=b ,club=c, cup=u, equal=e, rhizomorphs=z, rooted=r)}
  \item{ssaring}{stalk-surface-above-ring, character (fibrous=f, scaly=y, silky=k, smooth=s)}
  \item{ssbring}{stalk-surface-below-ring, character (fibrous=f, scaly=y, silky=k, smooth=s)}
- \item{scaring}{stalk-color-above-ring, character (brown=n,buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
- \item{scbring}{stalk-color-below-ring, character (brown=n,buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
+ \item{scaring}{stalk-color-above-ring, character (brown=n, buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
+ \item{scbring}{stalk-color-below-ring, character (brown=n, buff=b, cinnamon=c, gray=g, orange=o, pink=p, red=e, white=w, yellow=y)}
  \item{vtype}{veil-type, character (partial=p, universal=u)}
  \item{vcolor}{veil-color, character (brown=n, orange=o, white=w, yellow=y)}
  \item{ringnum}{character (none=n, one=o, two=t)}
@@ -35,7 +36,6 @@ See \url{http://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agari
  \item{population}{character(abundant=a, clustered=c, numerous=n, scattered=s, several=v, solitary=y)}
  \item{habitat}{character (grasses=g, leaves=l, meadows=m, paths=p, urban=u, waste=w, woods=d)}
 
-  ...
 }
 }
 \source{
@@ -56,11 +56,13 @@ no rule like ``leaflets three, let it be'' for Poisonous Oak and Ivy.
 
 We made the following enhancements to the original data for improved usability:
 
- - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
+\itemize{
+ \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
 
- - Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.
+ \item{Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.}
 
- - The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.
+ \item{The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }
