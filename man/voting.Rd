@@ -24,8 +24,9 @@ A data frame containing 435 rows and 16 columns.
   \item{crime}{crime, logical (TRUE, FALSE)}
   \item{dutyfree}{duty-free-exports, logical (TRUE, FALSE)}
   \item{southafrica}{export-administration-act-south-africa, logical (TRUE, FALSE)}
-  \item{party.crit}{\emph{Criterion}: Where the voters democratic or republican congressmen?
-  Values: \code{TRUE}/\code{FALSE}( WIE VIELE WO? UD WAS IST WAS? 77.78\% vs. 22.2\%)}
+  \item{party.crit}{\emph{Criterion}: Where the voters democratic (or republican) congressmen?
+
+  Values: \code{TRUE} (democrat) / \code{FALSE} (republican) (61.52\% vs. 38.48\%).}
 }
 }
 \source{
@@ -46,9 +47,11 @@ voted present, voted present to avoid conflict of interest, and did not vote or 
 
  We made the following enhancements to the original data for improved usability:
 
- - Any missing values, denoted as "?" in the dataset, were transformed into NAs.
-
- - Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.
+\itemize{
+ \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
+ \item{Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.}
+ \item{The binary character \emph{criterion} variable with exclusive "democrat" and "republican" values was converted to a logical \code{TRUE/FALSE} vector.}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }

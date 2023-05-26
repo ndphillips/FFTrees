@@ -5,14 +5,8 @@
 \alias{heart.cost}
 \title{Cue costs for the heartdisease data}
 \format{
-A data frame containing 153 rows and 14 columns.
-
-\describe{
-  \item{cue}{The name of the cue}
-  \item{cost}{The cost of the cue}
-
-  ...
-}
+A list of length 13 containing the cost of each cue in the \code{\link{heartdisease}} dataset (in dollars).
+Each list element is a single (positive numeric) value.
 }
 \source{
 \url{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}

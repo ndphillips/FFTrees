@@ -18,6 +18,7 @@ A data frame containing 699 patients (rows) and 9 variables (columns).
   \item{nucleoli}{Normal Nucleoli}
   \item{mitoses}{Mitoses}
   \item{diagnosis}{\emph{Criterion}: Absence/presence of breast cancer.
+
   Values: \code{FALSE} vs. \code{TRUE} (65.0\% vs.\ 35.0\%).}
 }
 }
@@ -41,11 +42,13 @@ Physiological data of patients tested for breast cancer
 \details{
 We made the following enhancements to the original data for improved usability:
 
- - The ID number of the cases was excluded.
+\itemize{
+ \item{The ID number of the cases was excluded.}
+ \item{The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.}
+ \item{16 cases were excluded because they contained NAs.}
+ }
 
- - The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.
-
- Other than that, the data remains consistent with the original dataset. ??? Bzw NAs weg!!!
+ Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
 Other datasets: 

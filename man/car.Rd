@@ -8,14 +8,15 @@
 A data frame containing 1728 cars (rows) and 7 variables (columns).
 
 \describe{
-  \item{buying.price}{Numeric}
-  \item{maint.price}{price of the maintenance, Factor}
-  \item{doors}{number of doors, Factor}
-  \item{persons}{capacity in terms of persons to carry, Numeric}
-  \item{luggage}{the size of luggage boot, Numeric}
-  \item{safety}{estimated safety of the car, Factor}
-  \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
-  Values: \code{unacc}/\code{acc}(77.78\% vs. 22.2\%)}
+  \item{buying.price}{price for buying the car, Factor (high, low, med, vhigh)}
+  \item{maint.price}{price of the maintenance, Factor (high, low, med, vhigh)}
+  \item{doors}{number of doors, Factor (2, 3, 4, 5more)}
+  \item{persons}{capacity in terms of persons to carry, Factor (2, 4, more)}
+  \item{luggage}{the size of luggage boot, Factor (big, med, small)}
+  \item{safety}{estimated safety of the car, Factor (high, low, med)}
+  \item{acceptability}{\emph{Criterion}: Category of acceptability rating.
+
+  Values: \code{unacc}/ \code{vgood}/ \code{good}/ \code{acc}}
 }
 }
 \source{
@@ -35,11 +36,7 @@ A dataset on car evaluations based on basic features, derived from a simple hier
 The criterion variable is a car's \code{acceptability} rating.
 
 
-We made the following enhancements to the original data for improved usability:
-
- - The criterion was binarized from a factor variable with four levels (\code{unacc}/\code{acc}/\code{good}/\code{vgood} , into a factor variable with two levels (\code{unacc}/\code{acc}).
-
- Other than that, the data remains consistent with the original dataset.
+The \emph{criterion} for this dataset has not yet been binarized. Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
 }
 \references{
 Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.

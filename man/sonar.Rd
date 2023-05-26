@@ -8,17 +8,15 @@
 A data frame containing 208 rows and 60 columns.
 
 
-' \describe{
+\describe{
   \item{V1 - V60}{Each pattern is a set of 60 numbers in the range 0.0 to 1.0. Each number represents the energy within a particular frequency band, integrated over a certain period of time. }
   \item{mine.crit}{\emph{Criterion}: Did a sonar signal bounce off a metal cylinder (or a rock)?
-  Values: \code{TRUE}(metal cylinder) vs. \code{FALSE}(rock) (53.37\% vs.\ 46.63\%).}
+
+  Values: \code{TRUE} (metal cylinder) vs. \code{FALSE} (rock) (53.37\% vs.\ 46.63\%).}
 }
 }
 \source{
 \url{https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)}
-
- @references
-Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
 }
 \usage{
 sonar
@@ -30,9 +28,14 @@ The transmitted sonar signal is a frequency-modulated chirp, rising in frequency
 \details{
 We made the following enhancements to the original data for improved usability:
 
- - The inary factor variable with exclusive "m" and "r" values was converted to a logical TRUE/FALSE vector.
+\itemize{
+ \item{The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.}
+ }
 
  Other than that, the data remains consistent with the original dataset.
+}
+\references{
+Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
 }
 \seealso{
 Other datasets: 

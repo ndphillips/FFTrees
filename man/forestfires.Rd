@@ -21,7 +21,8 @@ A data frame containing 517 rows and 13 columns.
   \item{wind}{Numeric - wind speed in km/h: 0.40 to 9.40 }
   \item{rain}{Numeric - outside rain in mm/m2 : 0.0 to 6.4 }
   \item{fire.crit}{\emph{Criterion}: Was there a fire (greater than 1.00 ha)?
-  Values: \code{FALSE}(no) vs. \code{TRUE}(yes) (53.0\% vs. 47.0\%).}
+
+  Values: \code{TRUE} (yes) vs. \code{FALSE} (no) (47.0\% vs. 53.0\%).}
 
 }
 }
@@ -45,7 +46,9 @@ A dataset of forest fire statistics.
 \details{
 We made the following enhancements to the original data for improved usability:
 
- - The criterion was redefined from a numeric variable that indicated the number of hectares that burned in a fire into a logical variable with two levels (\code{TRUE} (for values >=1) vs. \code{FALSE} (for values <1)).
+\itemize{
+ \item{The criterion was redefined from a numeric variable that indicated the number of hectares that burned in a fire into a logical variable (\code{TRUE} (for values >1) vs. \code{FALSE} (for values <=1)).}
+ }
 
  Other than that, the data remains consistent with the original dataset.
 }

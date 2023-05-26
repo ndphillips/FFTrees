@@ -13,6 +13,7 @@ A data frame containing 748 rows and 5 columns.
   \item{total}{Total blood donated (in c.c.)}
   \item{time}{Months since first donation}
   \item{donation.crit}{\emph{Criterion}: Did the person donate blood (in March 2007)?
+
   Values: \code{0}/no vs. \code{1}/yes (76.2\% vs.\ 23.8\%).}
 }
 }

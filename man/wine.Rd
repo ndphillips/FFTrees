@@ -8,18 +8,18 @@
 A data frame containing 6497 rows and 13 columns.
 
  \describe{
-  \item{fixed.acidity}{fixed acidity}
-  \item{volatile.acidity}{volatile acidity}
-  \item{citric.acid}{citric acid}
-  \item{residual.sugar}{residual sugar}
-  \item{chlorides}{chlorides}
-  \item{free.sulfur.dioxide}{free sulfur dioxide}
-  \item{total.sulfur.dioxide}{total sulfur dioxide}
-  \item{density}{density}
-  \item{pH}{PH Value}
-  \item{sulphates}{Sulphates}
-  \item{alcohol}{Alcohol}
-  \item{quality}{Quality}
+  \item{fixed.acidity}{fixed acidity (nummeric)}
+  \item{volatile.acidity}{volatile acidity (nummeric)}
+  \item{citric.acid}{citric acid (nummeric)}
+  \item{residual.sugar}{residual sugar (nummeric)}
+  \item{chlorides}{chlorides (nummeric)}
+  \item{free.sulfur.dioxide}{free sulfur dioxide (nummeric)}
+  \item{total.sulfur.dioxide}{total sulfur dioxide (nummeric)}
+  \item{density}{density (nummeric)}
+  \item{pH}{PH Value (nummeric)}
+  \item{sulphates}{Sulphates (nummeric)}
+  \item{alcohol}{Alcohol (nummeric)}
+  \item{quality}{Quality (nummeric, score between 0 and 10)}
   \item{type}{\emph{Criterion}: Is the wine \code{red} or \code{white}? (24.61\% vs.75.39\%)}
 }
 }
