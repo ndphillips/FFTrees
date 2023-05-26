@@ -44,8 +44,7 @@ voted against, paired against, and announced against (these three simplified to 
 voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
 (these three simplified to an unknown disposition).
 
-
- We made the following enhancements to the original data for improved usability:
+We made the following enhancements to the original data for improved usability:
 
 \itemize{
  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
@@ -56,7 +55,8 @@ voted present, voted present to avoid conflict of interest, and did not vote or 
  Other than that, the data remains consistent with the original dataset.
 }
 \references{
-Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
+Congressional Quarterly Almanac, 98th Congress, 2nd session 1984,
+Volume XL: Congressional Quarterly Inc.
 Washington, D.C., 1985.
 }
 \seealso{

@@ -242,6 +242,7 @@
 
 "creditapproval"
 
+
 #  6. fertility: ------
 
 #' Fertility data
@@ -268,30 +269,29 @@
 #'
 #' @family datasets
 #'
-#' @details
-#'  We made the following enhancements to the original data for improved usability:
+#' @details We made the following enhancements to the original data for improved usability:
 #'
 #'\itemize{
-#'  \item{The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+#'
+#'  \item{The criterion was redefined from a factor variable with two levels
+#'  (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+#'
 #'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Fertility}
 #'
-#'Original contributers:
+#' Original contributors:
 #'
-#'David Gil,
-#'
-#'Lucentia Research Group,
-#'
-#'Department of Computer Technology,
-#'
+#' David Gil
+#' Lucentia Research Group
+#' Department of Computer Technology
 #' University of Alicante
 #'
-#' Jose Luis Girela,
-#'
-#' Department of Biotechnology, University of Alicante
+#' Jose Luis Girela
+#' Department of Biotechnology
+#' University of Alicante
 #'
 
 "fertility"
@@ -340,12 +340,10 @@
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
 #'
 #' Original creator:
-#'
 #' Prof. Paulo Cortez and Aníbal Morais
-#'
 #' Department of Information Systems
-#'
 #' University of Minho, Portugal
+#'
 
 "forestfires"
 
@@ -404,6 +402,7 @@
 #' @seealso \code{\link{heart.cost}} dataset for cost information.
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
+#'
 
 "heartdisease"
 
@@ -424,6 +423,7 @@
 #' @seealso \code{\link{heartdisease}} dataset.
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}
+#'
 
 "heart.test"
 
@@ -470,11 +470,15 @@
 #'
 #' @family datasets
 #'
-#'@details
-#'We made the following enhancements to the original data for improved usability:
+#' @details To improve usability, we made the following changes:
 #'
 #'\itemize{
-#'  \item{The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).}
+#'
+#'  \item{The criterion was binarized from a factor variable with three levels
+#'  (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}),
+#'  into a logical variable (i.e., \code{TRUE} for all instances of \code{Iris-virginica}
+#'  and \code{FALSE} for the two other levels).}
+#'
 #'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
@@ -485,6 +489,7 @@
 #' @references
 #' Fisher, R.A. (1936): The use of multiple measurements in taxonomic problems.
 #' Annual Eugenics, 7, Part II, pp. 179--188.
+#'
 
 "iris.v"
 
@@ -540,21 +545,22 @@
 #' We made the following enhancements to the original data for improved usability:
 #'
 #'\itemize{
+#'
 #'  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
 #'
 #'  \item{Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.}
 #'
 #'  \item{The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.}
+#'
 #'  }
 #'
 #'  Other than that, the data remains consistent with the original dataset.
 #'
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Mushroom}
 #'
 #' @references
 #' Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981).
 #' G.H. Lincoff (Pres.), New York: A.A. Knopf.
-#'
-#' @source \url{https://archive.ics.uci.edu/ml/datasets/Mushroom}
 #'
 
 "mushrooms"
@@ -581,8 +587,7 @@
 #'
 #' @family datasets
 #'
-#' @details
-#'  We made the following enhancements to the original data for improved usability:
+#' @details We made the following enhancements to the original data for improved usability:
 #'
 #'\itemize{
 #'  \item{The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.}
@@ -594,7 +599,6 @@
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)}
 #'
 #' @references
-#'
 #'  Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
 #'
 
@@ -629,6 +633,7 @@
 #' doi: 10.1080/10691898.1995.11910499.
 #'
 #' @source \url{https://www.encyclopedia-titanica.org}
+#'
 
 "titanic"
 
@@ -671,8 +676,7 @@
 #'
 #' @family datasets
 #'
-#' @details
-#'  We made the following enhancements to the original data for improved usability:
+#' @details We made the following enhancements to the original data for improved usability:
 #'
 #'\itemize{
 #'  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
@@ -684,8 +688,8 @@
 #'
 #'
 #' @references
-#'
-#' Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
+#' Congressional Quarterly Almanac, 98th Congress, 2nd session 1984,
+#' Volume XL: Congressional Quarterly Inc.
 #' Washington, D.C., 1985.
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records}
@@ -728,7 +732,6 @@
 #'  P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.
 #'  Modeling wine preferences by data mining from physicochemical properties.
 #'  In Decision Support Systems, \emph{Elsevier}, 47(4):547-553. ISSN: 0167-9236.
-#'
 #'
 
 "wine"

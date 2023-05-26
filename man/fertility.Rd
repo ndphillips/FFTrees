@@ -24,19 +24,16 @@ A data frame containing 100 rows and 10 columns.
 \source{
 \url{https://archive.ics.uci.edu/ml/datasets/Fertility}
 
-Original contributers:
+Original contributors:
 
-David Gil,
-
-Lucentia Research Group,
-
-Department of Computer Technology,
-
+David Gil
+Lucentia Research Group
+Department of Computer Technology
 University of Alicante
 
-Jose Luis Girela,
-
-Department of Biotechnology, University of Alicante
+Jose Luis Girela
+Department of Biotechnology
+University of Alicante
 }
 \usage{
 fertility
@@ -47,11 +44,13 @@ This dataset describes a sample of 100 volunteers providing a semen sample that 
 \details{
 Sperm concentration are related to socio-demographic data, environmental factors, health status, and life habits.
 
-
- We made the following enhancements to the original data for improved usability:
+We made the following enhancements to the original data for improved usability:
 
 \itemize{
- \item{The criterion was redefined from a factor variable with two levels (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+
+ \item{The criterion was redefined from a factor variable with two levels
+ (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+
  }
 
  Other than that, the data remains consistent with the original dataset.

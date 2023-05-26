@@ -30,11 +30,8 @@ A data frame containing 517 rows and 13 columns.
 \url{http://archive.ics.uci.edu/ml/datasets/Forest+Fires}
 
 Original creator:
-
 Prof. Paulo Cortez and Aníbal Morais
-
 Department of Information Systems
-
 University of Minho, Portugal
 }
 \usage{
