@@ -24,7 +24,7 @@ converting_data <- function(data, vec1, vec2, convert_to_logical = TRUE, convert
   for (i in seq_along(data)){
 
     ## Check the unique values in the column (ignoring NA):
-    unique_values <- unique(na.omit(data[[i]]))
+    unique_values <- unique(stats::na.omit(data[[i]]))
 
     ## check if strict_logical_conversion is TRUE and if the column has only the values to be replaced:
     if (strict_logical_conversion && !all(unique_values %in% vec1)) {
@@ -48,15 +48,13 @@ converting_data <- function(data, vec1, vec2, convert_to_logical = TRUE, convert
     ## if only TRUE/FALSE AND convert_to_logical is TRUE, then covert into logical
     ### therefore check if the column contains only "TRUE" and "FALSE" (allowing for NAs to still be there) -> !when applying, first change unknowns into NAs and than factors into logical variables for both to work!
 
-    if (convert_to_logical && all(na.omit(data[[i]]) %in% c("TRUE", "FALSE"))) {
+    if (convert_to_logical && all(stats::na.omit(data[[i]]) %in% c("TRUE", "FALSE"))) {
 
-      ### then Convert the column to logical
-      data[[i]] <- as.logical(data[[i]])
+      data[[i]] <- as.logical(data[[i]])  # convert to logical
 
-      ## if it was a factor AND convert_back_to_factor is TRUE change back
-    } else if (convert_back_to_factor && was_factor[i]) {
+    } else if (convert_back_to_factor && was_factor[i]) { # if it was a factor AND convert_back_to_factor is TRUE:
 
-      data[[i]] <- as.factor(data[[i]])
+      data[[i]] <- as.factor(data[[i]])   # change back
 
     }
 
