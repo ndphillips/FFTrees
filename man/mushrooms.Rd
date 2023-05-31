@@ -57,11 +57,13 @@ no rule like ``leaflets three, let it be'' for Poisonous Oak and Ivy.
 We made the following enhancements to the original data for improved usability:
 
 \itemize{
+
  \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
 
  \item{Binary factor variables with exclusive "t" and "f" values were converted to logical \code{TRUE/FALSE} vectors.}
 
  \item{The binary factor \emph{criterion} variable with exclusive "p" and "e" values was converted to a logical \code{TRUE/FALSE} vector.}
+
  }
 
  Other than that, the data remains consistent with the original dataset.

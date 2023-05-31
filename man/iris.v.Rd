@@ -27,10 +27,15 @@ iris.v
 A famous dataset from R.A. Fisher (1936) simplified to predict only the virginica class (i.e., as a binary classification problem).
 }
 \details{
-We made the following enhancements to the original data for improved usability:
+To improve usability, we made the following changes:
 
 \itemize{
- \item{The criterion was binarized from a factor variable with three levels (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}) , into a logical variable (\code{TRUE} for all  \code{Iris-virginica} and \code{FALSE} for the other species).}
+
+ \item{The criterion was binarized from a factor variable with three levels
+ (\code{Iris-setosa}, \code{Iris-versicolor}, \code{Iris-virginica}),
+ into a logical variable (i.e., \code{TRUE} for all instances of \code{Iris-virginica}
+ and \code{FALSE} for the two other levels).}
+
  }
 
  Other than that, the data remains consistent with the original dataset.
