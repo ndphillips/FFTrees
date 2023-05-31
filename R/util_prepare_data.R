@@ -90,7 +90,7 @@ if (prepare_data){
   load(paste0(wd, "/data/forestfires.RData"))
   load(paste0(wd, "/data/heartcost.RData"))
   load(paste0(wd, "/data/heartdisease.RData"))
-  load(paste0(wd, "/data/irisv.RData"))
+  load(paste0(wd, "/data/iris.v.RData"))
   load(paste0(wd, "/data/mushrooms.RData"))
   load(paste0(wd, "/data/sonar.RData"))
   load(paste0(wd, "/data/titanic.RData"))
