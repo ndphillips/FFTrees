@@ -6,6 +6,22 @@
 \title{Wine tasting data}
 \format{
 A data frame containing 6497 rows and 13 columns.
+
+ \describe{
+  \item{fixed.acidity}{fixed acidity (nummeric)}
+  \item{volatile.acidity}{volatile acidity (nummeric)}
+  \item{citric.acid}{citric acid (nummeric)}
+  \item{residual.sugar}{residual sugar (nummeric)}
+  \item{chlorides}{chlorides (nummeric)}
+  \item{free.sulfur.dioxide}{free sulfur dioxide (nummeric)}
+  \item{total.sulfur.dioxide}{total sulfur dioxide (nummeric)}
+  \item{density}{density (nummeric)}
+  \item{pH}{PH Value (nummeric)}
+  \item{sulphates}{Sulphates (nummeric)}
+  \item{alcohol}{Alcohol (nummeric)}
+  \item{quality}{Quality (nummeric, score between 0 and 10)}
+  \item{type}{\emph{Criterion}: Is the wine \code{red} or \code{white}? (24.61\% vs.75.39\%)}
+}
 }
 \source{
 \url{http://archive.ics.uci.edu/ml/datasets/Wine+Quality}
@@ -15,6 +31,11 @@ wine
 }
 \description{
 Chemical and tasting data from wines in North Portugal.
+}
+\references{
+P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.
+ Modeling wine preferences by data mining from physicochemical properties.
+ In Decision Support Systems, \emph{Elsevier}, 47(4):547-553. ISSN: 0167-9236.
 }
 \seealso{
 Other datasets: 

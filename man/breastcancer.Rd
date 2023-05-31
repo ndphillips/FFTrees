@@ -18,6 +18,7 @@ A data frame containing 699 patients (rows) and 9 variables (columns).
   \item{nucleoli}{Normal Nucleoli}
   \item{mitoses}{Mitoses}
   \item{diagnosis}{\emph{Criterion}: Absence/presence of breast cancer.
+
   Values: \code{FALSE} vs. \code{TRUE} (65.0\% vs.\ 35.0\%).}
 }
 }
@@ -25,8 +26,11 @@ A data frame containing 699 patients (rows) and 9 variables (columns).
 \url{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)}
 
 Original creator:
+
 Dr. William H. Wolberg (physician)
+
 University of Wisconsin Hospitals
+
 Madison, Wisconsin, USA
 }
 \usage{
@@ -34,6 +38,17 @@ breastcancer
 }
 \description{
 Physiological data of patients tested for breast cancer
+}
+\details{
+We made the following enhancements to the original data for improved usability:
+
+\itemize{
+ \item{The ID number of the cases was excluded.}
+ \item{The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.}
+ \item{16 cases were excluded because they contained NAs.}
+ }
+
+ Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
 Other datasets: 

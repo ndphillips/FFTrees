@@ -6,6 +6,28 @@
 \title{Voting data}
 \format{
 A data frame containing 435 rows and 16 columns.
+
+ \describe{
+  \item{handicapped}{handicapped-infants, logical (TRUE, FALSE)}
+  \item{water}{water-project-cost-sharing, logical (TRUE, FALSE)}
+  \item{adoption}{adoption-of-the-budget-resolution, logical (TRUE, FALSE)}
+  \item{physician}{physician-fee-freeze, logical (TRUE, FALSE)}
+  \item{elsalvador}{el-salvador-aid, logical (TRUE, FALSE)}
+  \item{religionschool}{religious-groups-in-schools, logical (TRUE, FALSE)}
+  \item{satellite}{anti-satellite-test-ban, logical (TRUE, FALSE)}
+  \item{nicaraguan}{aid-to-nicaraguan-contras, logical (TRUE, FALSE)}
+  \item{mxmissile}{mxmissile, logical (TRUE, FALSE)}
+  \item{immigration}{immigration, logical (TRUE, FALSE)}
+  \item{synfuels}{synfuels-corporation-cutback, logical (TRUE, FALSE)}
+  \item{education}{education-spending, logical (TRUE, FALSE)}
+  \item{superfund}{superfund-right-to-sue, logical (TRUE, FALSE)}
+  \item{crime}{crime, logical (TRUE, FALSE)}
+  \item{dutyfree}{duty-free-exports, logical (TRUE, FALSE)}
+  \item{southafrica}{export-administration-act-south-africa, logical (TRUE, FALSE)}
+  \item{party.crit}{\emph{Criterion}: Where the voters democratic (or republican) congressmen?
+
+  Values: \code{TRUE} (democrat) / \code{FALSE} (republican) (61.52\% vs. 38.48\%).}
+}
 }
 \source{
 \url{https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records}
@@ -22,10 +44,19 @@ voted against, paired against, and announced against (these three simplified to 
 voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
 (these three simplified to an unknown disposition).
 
-The binary criterion variable used here is \code{party.crit}.
+We made the following enhancements to the original data for improved usability:
+
+\itemize{
+ \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
+ \item{Binary factor variables with exclusive "y" and "n" values were converted to logical TRUE/FALSE vectors.}
+ \item{The binary character \emph{criterion} variable with exclusive "democrat" and "republican" values was converted to a logical \code{TRUE/FALSE} vector.}
+ }
+
+ Other than that, the data remains consistent with the original dataset.
 }
 \references{
-Congressional Quarterly Almanac, 98th Congress, 2nd session 1984, Volume XL: Congressional Quarterly Inc.
+Congressional Quarterly Almanac, 98th Congress, 2nd session 1984,
+Volume XL: Congressional Quarterly Inc.
 Washington, D.C., 1985.
 }
 \seealso{

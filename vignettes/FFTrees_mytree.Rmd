@@ -23,8 +23,8 @@ knitr::opts_chunk$set(collapse = FALSE,
                       dpi = 100,
                       fig.align = 'center',
                       fig.height = 6.0, 
-                      fig.width  = 6.5, 
-                      out.width = "600px")
+                      fig.width  = 6.5,
+                      out.width = "580px")
 ```
 
 
@@ -53,7 +53,7 @@ Although we can still use two sets of 'train' vs.\ 'test' data, a manually defin
 
 ### 1. Using `my.tree`
 
-The first method for manually defining a FFT is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
+The first method for manually defining an FFT is to use the `my.tree` argument, where `my.tree` is a sentence describing a (single) FFT. 
 When this argument is specified in `FFTrees()`, the function ---\ or rather its auxiliary `fftrees_wordstofftrees()` function\ --- attempts to interpret the verbal description and convert it into a valid definition of an FFT (as part of an `FFTrees` object). 
 
 For example, let's use the `heartdisease` data to find out how some predictor variables (e.g., `sex`, `age`, etc.) predict the criterion variable (`diagnosis`):
@@ -76,7 +76,7 @@ in_words <- "If sex = 1, predict True.
              Otherwise, predict False."
 ```
 
-As we will see shortly, the `FFTrees()` function accepts such descriptions (assigned here to a character string `in_words`) as its `my.tree` argument, create a corresponding FFT, and evaluate it on a corresponding dataset. 
+As we will see shortly, the `FFTrees()` function accepts such descriptions (assigned here to a character string `in_words`) as its `my.tree` argument, creates a corresponding FFT, and evaluates it on a corresponding dataset. 
 
 
 #### Verbally defining FFTs 
@@ -187,7 +187,7 @@ To verify that **FFTrees** interpreted our `my.tree` description as intended, le
 inwords(my_fft_2)
 ```
 
-As this seems (a more prosaic version of) what we wanted, let's visualize the best training tree (to evaluate its performance) and briefly inspect its tree definition:
+As this seems (a more prosaic version of) what we wanted, let's visualize this tree (to evaluate its performance) and briefly inspect its tree definition:
 
 ```{r my-tree-plot-fft-2, fig.cap = "**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`.", fig.show = 'hold', collapse = TRUE}
 # Visualize FFT:
@@ -655,7 +655,6 @@ Evaluating the performance of the corresponding FFTs (e.g., by `summary(all)`) s
 <!-- #### Manually editing tree definitions  -->
 
 ```{r OLD-my-fft-part-01, echo = FALSE, eval = FALSE}
-
 # To demonstrate creating and evaluating manual FFT definitions, we copy the existing tree definitions 
 # (as a data frame), select three FFTs (rows), and then create a 4th definition (with a different exit structure):
 

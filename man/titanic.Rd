@@ -11,9 +11,8 @@ A data frame containing 2,201 rows and 4 columns.
   \item{class}{Factor - Class (first, second, third, or crew)}
   \item{age}{Factor - Age group (child or adult)}
   \item{sex}{Factor - Sex (male or female)}
-  \item{survived}{Factor - Whether the passenger survived (1) or not (0)}
+  \item{survived}{Logical - Whether the passenger survived (TRUE) or not (FALSE)}
 
-  ...
 }
 }
 \source{

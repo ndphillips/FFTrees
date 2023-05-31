@@ -8,18 +8,23 @@
 A data frame containing 1728 cars (rows) and 7 variables (columns).
 
 \describe{
-  \item{buying.price}{Numeric}
-  \item{maint.price}{Factor}
-  \item{doors}{Factor}
-  \item{persons}{Numeric}
-  \item{luggage}{Numeric}
-  \item{safety}{Factor}
-  \item{acceptability}{\emph{Criterion}: Category of acceptability rating (as factor).
-  Values: \code{unacc}/\code{acc}/\code{good}/\code{vgood} (70.0\%/22.2\%/4.0\%/3.8\%).}
+  \item{buying.price}{price for buying the car, Factor (high, low, med, vhigh)}
+  \item{maint.price}{price of the maintenance, Factor (high, low, med, vhigh)}
+  \item{doors}{number of doors, Factor (2, 3, 4, 5more)}
+  \item{persons}{capacity in terms of persons to carry, Factor (2, 4, more)}
+  \item{luggage}{the size of luggage boot, Factor (big, med, small)}
+  \item{safety}{estimated safety of the car, Factor (high, low, med)}
+  \item{acceptability}{\emph{Criterion}: Category of acceptability rating.
+
+  Values: \code{unacc}/ \code{vgood}/ \code{good}/ \code{acc}}
 }
 }
 \source{
 \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
+
+Original creator and donor:
+
+Marko Bohanec and Blaz Zupan
 }
 \usage{
 car
@@ -28,7 +33,10 @@ car
 A dataset on car evaluations based on basic features, derived from a simple hierarchical decision model.
 }
 \details{
-The (yet to be binarized) criterion variable is a car's \code{acceptability} rating.
+The criterion variable is a car's \code{acceptability} rating.
+
+
+The \emph{criterion} for this dataset has not yet been binarized. Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
 }
 \references{
 Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.

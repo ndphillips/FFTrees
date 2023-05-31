@@ -6,9 +6,34 @@
 \title{Fertility data}
 \format{
 A data frame containing 100 rows and 10 columns.
+
+
+\describe{
+  \item{season}{Season in which the analysis was performed. (winter, spring, summer, fall)}
+  \item{age}{Age at the time of analysis}
+  \item{child.dis}{Childish diseases (ie , chicken pox, measles, mumps, polio) (yes(1), no(0)) }
+  \item{trauma}{Accident or serious trauma (yes(1), no(0))}
+  \item{surgery}{Surgical intervention (yes(1), no(0))}
+  \item{fevers}{High fevers in the last year (less than three months ago(-1), more than three months ago (0), no. (1))}
+  \item{alcohol}{Frequency of alcohol consumption (several times a day, every day, several times a week, once a week, hardly ever or never)}
+  \item{smoking}{Smoking habit (never(-1), occasional (0)) daily (1))}
+  \item{sitting}{Number of hours spent sitting per day}
+  \item{diagnosis}{\emph{Criterion}: Diagnosis normal (TRUE) vs. altered (FALSE) (88.0\% vs.\ 22.0\%).}
+}
 }
 \source{
 \url{https://archive.ics.uci.edu/ml/datasets/Fertility}
+
+Original contributors:
+
+David Gil
+Lucentia Research Group
+Department of Computer Technology
+University of Alicante
+
+Jose Luis Girela
+Department of Biotechnology
+University of Alicante
 }
 \usage{
 fertility
@@ -19,7 +44,16 @@ This dataset describes a sample of 100 volunteers providing a semen sample that 
 \details{
 Sperm concentration are related to socio-demographic data, environmental factors, health status, and life habits.
 
-The binary criterion variable is \code{diagnosis}: Normal (N) vs. altered (O).
+We made the following enhancements to the original data for improved usability:
+
+\itemize{
+
+ \item{The criterion was redefined from a factor variable with two levels
+ (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
+
+ }
+
+ Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
 Other datasets: 

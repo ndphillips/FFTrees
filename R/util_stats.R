@@ -683,7 +683,7 @@ classtable <- function(prediction_v = NULL,
 #' Default: \code{quiet_mis = FALSE} (i.e., show user feedback).
 #'
 #' @importFrom dplyr bind_rows
-#' @importFrom stats formula glm model.frame model.matrix
+#' @importFrom stats formula glm model.frame model.matrix na.omit
 #' @importFrom e1071 svm
 #' @importFrom rpart rpart
 #' @importFrom randomForest randomForest

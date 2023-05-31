@@ -24,11 +24,16 @@ knitr::opts_chunk$set(collapse = FALSE,
                       fig.align = 'center',
                       fig.height = 6.0,
                       fig.width  = 6.5, 
-                      out.width = "600px")
+                      out.width = "580px")
 ```
 
 ```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
 library(FFTrees)
+library(dplyr)
+library(testthat)
+library(tidyselect)
+library(magrittr)
+library(knitr)
 ```
 
 ```{r urls, echo = FALSE, message = FALSE, results = 'hide'}
@@ -50,7 +55,7 @@ url_contact   <- "https://www.linkedin.com/in/nathanieldphillips/"
 <!-- Brief intro: -->
 
 The R package **FFTrees** [@phillips2017FFTrees; @FFTrees-pkg] makes it easy to create, visualize, and evaluate fast-and-frugal decision trees\ (FFTs). 
-FFTs are simple and transparent decision algorithms for solving binary classification problems in an efficient and effective fashion. 
+FFTs are simple and transparent decision algorithms for solving binary classification problems in an\ effective and efficient fashion. 
 
 
 ## Fast-and-Frugal Trees (FFTs) 
@@ -128,14 +133,76 @@ Here is a complete list of the vignettes available in the **FFTrees** package:
 
 The **FFTrees** package contains several datasets ---\ mostly from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/)\ --- that allow you to address interesting questions when exploring FFTs: 
 
-- `heartdisease` -- Which patients suffer from heart disease? [source](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)
+- `blood` -- Which people donate blood? [source](https://archive.ics.uci.edu/ml/datasets/Blood+Transfusion+Service+Center)
 - `breastcancer` -- Which patients suffer from breast cancer? [source](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
+- `car` -- Which cars are acceptable? [source](http://archive.ics.uci.edu/ml/datasets/Car+Evaluation)
+- `contraceptive` -- Which factors determine whether women use contraceptives? [source](https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice)
+- `creditapproval` -- Which factors determine a creditcard approval? [source](https://archive.ics.uci.edu/ml/datasets/Credit+Approval)
 - `fertility` -- Which factors predict a fertile sperm concentration? [source](https://archive.ics.uci.edu/ml/datasets/Fertility)
 - `forestfires` -- Which environmental conditions predict forest fires? [source](https://archive.ics.uci.edu/ml/datasets/Forest+Fires)
+- `heartdisease` -- Which patients suffer from heart disease? [source](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)
+- `iris.v` -- Which iris belongs to the class "virginica"? [source](https://archive.ics.uci.edu/ml/datasets/Forest+Fires)
 - `mushrooms` -- Which features predict poisonous mushrooms? [source](https://archive.ics.uci.edu/ml/datasets/Mushroom)
+- `sonar` -- Did a sonar signal bounce off a metal cylinder (or a rock)? [source](https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Sonar,+Mines+vs.+Rocks)) 
 - `titanic` -- Which passengers survived the Titanic? [source](https://www.encyclopedia-titanica.org) 
 - `voting` -- How did U.S. congressmen vote in 1984? [source](https://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records)
 - `wine` -- What determines ratings of wine quality? [source](https://archive.ics.uci.edu/ml/datasets/Wine)
+
+
+#### Details about the datasets {-}
+
+When preparing data to be predicted by FFTs, we usually distinguish between several (categorical or numeric) predictors and a (binary) criterion variable. 
+**Table\ 1** provides basic information on the datasets included in the **FFTrees** package (see their documentation for additional details). 
+
+**Table\ 1:** Key information on the datasets included in **FFTrees**. 
+
+```{r dataframe for overview data, echo = FALSE}
+## Preparations for applying the describe_data() function to all data sets
+## When new data sets are included, add their info so that they will also be shown in the vignette-table!
+
+# List all data sets: 
+data_list <- list(blood, breastcancer, car, contraceptive, creditapproval, fertility, forestfires, 
+                  heartdisease, iris.v, mushrooms, sonar, titanic, voting, wine) 
+
+# Vector with all names of the data sets:
+data_names <- c("blood", "breastcancer", "car", "contraceptive", "creditapproval", "fertility", "forestfires", 
+                "heartdisease", "iris.v", "mushrooms", "sonar", "titanic", "voting", "wine")
+
+# Vector with all criterion names:
+criterion_names <- c("donation.crit", "diagnosis", "acceptability", "cont.crit", "crit", 
+                     "diagnosis","fire.crit", "diagnosis", "virginica", "poisonous", "mine.crit", "survived", "party.crit", "type") 
+
+# Vector with criterion values of interest: 
+baseline_values <- c(1, TRUE, "acc", TRUE, TRUE, TRUE, TRUE, 
+                     TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, "red")
+
+# Use combined lists/vectors and apply describe_data() to each:
+result_list <- mapply(describe_data, data = data_list, 
+                      data_name = data_names, criterion_name = criterion_names, 
+                      baseline_value = baseline_values, SIMPLIFY = FALSE)
+
+# Combine results in df:
+combined_result <- do.call(rbind, result_list)
+
+# Round baseline and NA pct values for brevity:
+combined_result$Baseline_pct<- round(combined_result$Baseline_pct, 1)
+combined_result$NAs_pct<- round(combined_result$NAs_pct, 2)
+
+# Rename columns:
+colnames(combined_result) <- c("Dataset name", 
+                               "Number of cases",
+                               "Criterion name", 
+                               "Baseline (`TRUE`,\\ in\\ %)",
+                               "Number of predictors",
+                               "Number of NAs", 
+                               "NAs (in\\ %)")
+
+# Render the table from the data frame
+# use as many items per page as we have data sets
+# redefine column names as we like them:
+
+knitr::kable(combined_result, format = "html") 
+```
 
 
 ## Citing **FFTrees** 
