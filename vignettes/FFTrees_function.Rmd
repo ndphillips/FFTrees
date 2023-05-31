@@ -24,7 +24,7 @@ knitr::opts_chunk$set(collapse = FALSE,
                       fig.align = 'center',
                       fig.height = 6.0,
                       fig.width  = 6.5, 
-                      out.width = "600px")
+                      out.width = "580px")
 ```
 
 
@@ -379,7 +379,8 @@ See the [Plotting FFTrees objects](FFTrees_plot.html) vignette for more details 
 ### Manually defining an FFT 
 
 We can also design a specific FFT and apply it to a dataset by using the `my.tree` argument of `FFTrees()`. 
-To do so, we specify the FFT as a sentence, making sure to correctly spell the cue names as they appear in the data. Sets of factor cues can be specified using (curly) brackets. 
+To do so, we specify the FFT as a sentence, making sure to correctly spell the cue names as they appear in the data. 
+Sets of factor cues can be specified using (curly) brackets. 
 
 For example, we can manually define an FFT by using the sentence: 
 
@@ -387,7 +388,7 @@ For example, we can manually define an FFT by using the sentence:
 
 ```{r fft-my-tree-def, results = 'hide'}
 # Manually define a tree using the my.tree argument:
-myheart.fft <- FFTrees(diagnosis ~., 
+myheart_fft <- FFTrees(diagnosis ~., 
                        data = heartdisease, 
                        my.tree = "If chol > 300, predict True. 
                                   If thal = {fd,rd}, predict False. 
@@ -397,15 +398,16 @@ myheart.fft <- FFTrees(diagnosis ~.,
 Here is a plot of the resulting FFT:
 
 ```{r fft-my-tree-plot}
-plot(myheart.fft, 
-     main = "Specifying an FFT manually")
+plot(myheart_fft, 
+     main = "Specifying a manual FFT")
 ```
 
 As we can see, the performance of this particular tree is pretty terrible ---\ but this should motivate you to build better FFTs yourself! 
 
 <!-- Hint: Defining mytree vignette -->
 
-See the [Manually specifying FFTs](FFTrees_mytree.html) vignette for more details on designing FFTs from verbal or abstract descriptions. 
+In addition to defining an FFT from its verbal description, we can edit and define sets of FFT definitions and evaluate them on data. 
+See the [Manually specifying FFTs](FFTrees_mytree.html) vignette for details on editing, modifying, and evaluating specific FFTs. 
 
 
 ## Vignettes

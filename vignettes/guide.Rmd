@@ -24,7 +24,7 @@ knitr::opts_chunk$set(collapse = FALSE,
                       fig.align = 'center',
                       fig.height = 6.0,
                       fig.width  = 6.5, 
-                      out.width = "600px")
+                      out.width = "580px")
 ```
 
 ```{r pkgs, echo = FALSE, message = FALSE, results = 'hide'}
@@ -189,14 +189,13 @@ combined_result$Baseline_pct<- round(combined_result$Baseline_pct, 1)
 combined_result$NAs_pct<- round(combined_result$NAs_pct, 2)
 
 # Rename columns:
-colnames(combined_result) <- c("Name", 
-                               "Number of Cases",
-                               "Criterion", 
-                               "Baseline (TRUE,\\ in\\ %)",
-                               "Number of Predictors",
+colnames(combined_result) <- c("Dataset name", 
+                               "Number of cases",
+                               "Criterion name", 
+                               "Baseline (`TRUE`,\\ in\\ %)",
+                               "Number of predictors",
                                "Number of NAs", 
                                "NAs (in\\ %)")
-
 
 # Render the table from the data frame
 # use as many items per page as we have data sets

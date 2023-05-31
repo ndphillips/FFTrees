@@ -24,7 +24,7 @@ knitr::opts_chunk$set(collapse = FALSE,
                       fig.align = 'center', 
                       fig.height = 6.0, 
                       fig.width  = 6.5, 
-                      out.width = "600px")
+                      out.width = "580px")
 ```
 
 
