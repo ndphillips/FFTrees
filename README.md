@@ -211,8 +211,7 @@ heart_fft$competition$test
 ### Building FFTs from verbal descriptions
 
 FFTs are so simple that we even can create them ‘from words’ and then
-apply them to data!
-
+apply them to data.  
 For example, let’s create a tree with the following three nodes and
 evaluate its performance on the `heart.test` data:
 
@@ -247,15 +246,15 @@ plot(my_fft,
 description.](man/figures/README-example-heart-verbal-1.png)
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
-description.
-
-As we can see, this particular tree is somewhat biased: It has nearly
-perfect *sensitivity* (i.e., is good at identifying cases of *Disease*)
-but suffers from low *specificity* (i.e., performs poorly in identifying
+description.  
+The performance measures (in the bottom panel of **Figure 2**) show that
+this particular tree is somewhat biased: It has nearly perfect
+*sensitivity* (i.e., is good at identifying cases of *Disease*) but
+suffers from low *specificity* (i.e., performs poorly in identifying
 *Healthy* cases). Expressed in terms of its errors, `my_fft` incurs few
 misses at the expense of many false alarms. Although the *accuracy* of
 our custom tree still exceeds the data’s baseline by a fair amount, the
-FFTs in `heart_fft` (from above) strike a better balance.
+FFTs in `heart_fft` (created above) strike a better balance.
 
 <!-- A range of options, rather than 1 optimum: -->
 
@@ -267,12 +266,12 @@ package enables us to design and evaluate a range of FFTs.
 
 ## References
 
-We had a lot of fun creating **FFTrees** and hope you like it too! As a
-comprehensive, yet accessible introduction to FFTs, we recommend reading
-our article in the journal *Judgment and Decision Making*
-([2017](https://doi.org/10.1017/S1930297500006239)), entitled *FFTrees:
-A toolbox to create, visualize,and evaluate fast-and-frugal decision
-trees* (available in
+We had a lot of fun creating the **FFTrees** package and hope you like
+it too! As a comprehensive, yet accessible introduction to FFTs, we
+recommend reading our article in the journal *Judgment and Decision
+Making* ([2017](https://doi.org/10.1017/S1930297500006239)), entitled
+*FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal
+decision trees* (available in
 [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf) ).
 
@@ -333,6 +332,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-05-31.\]
+\[File `README.Rmd` last updated on 2023-06-01.\]
 
 <!-- eof. -->
