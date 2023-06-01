@@ -171,8 +171,8 @@ plot(heart.fft, what = "tree")
 - `comp`: Should statistics from competitive algorithms be shown in the ROC curve? To remove the performance statistics of competitive algorithms (e.g.; regression, random forests), include the argument `comp = FALSE`. 
 
 - `what`: Which parts of an `FFTrees` object should be visualized (e.g., `all`, `icontree` and `tree`). 
-Using `what = "roc"` plots tree performance as an ROC curve. 
-To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
+Using `what = "roc"` plots tree performance as an ROC\ curve. 
+To show individual cue accuracies (in ROC space), specify `what = "cues"`:
 
 ```{r fft-cues, fig.width = 6, fig.height = 6, out.width = "500px"}
 # Plot cue accuracies (for training data) in ROC space:
@@ -182,21 +182,28 @@ plot(heart.fft, what = "cues")
 See the [Plotting FFTrees](FFTrees_plot.html) vignette for details on plotting FFTs. 
 
 
-### Additional steps
+### Advanced functions
 
-#### Accessing outputs
+Creating sets of FFTs and evaluating them on data by printing and plotting individual FFTs provides the core functionality of **FFTrees**. 
+However, the package also provides more advanced functions for accessing, defining, using and evaluating FFTs. 
 
-An `FFTrees` object contains many different outputs, to see them all, run `names()`
+#### Accessing outputs 
+
+An `FFTrees` object contains many different outputs. 
+Basic performance information on the current data and set of FFTs is available by the `summary()` function. 
+To see and access parts of an `FFTrees` object, use `str()` or `names()`: 
 
 ```{r fft-names}
-# Show the names of all of the outputs in heart.fft:
+# Show the names of all outputs in heart.fft:
 names(heart.fft)
 ```
+
+Key elements of an `FFTrees` object are explained in the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html). 
 
 
 #### Predicting for new data
 
-To predict classifications for a new dataset, use the standard `predict()` function. 
+To predict classification outcomes for new data, use the standard `predict()` function. 
 For example, here's how to predict the classifications for data in the `heartdisease` object (which actually is just a combination of `heart.train` and `heart.test`): 
 
 ```{r fft-predict, eval = FALSE}
@@ -211,7 +218,8 @@ predict(heart.fft,
 To define a specific FFT and apply it to data, we can define a tree by providing its verbal description to the `my.tree` argument. 
 Similarly, we can define sets of FFT definitions (as a data frame) and evaluate them on data by using the `tree.definitions` argument of `FFTrees()`. 
 As we often start from an existing set of FFTs, **FFTrees** provides a set of functions for extracting, converting, and modifying tree definitions. 
-(See the vignette on [Manually specifying FFTs](FFTrees_mytree.html) for defining FFTs from descriptions and modifying tree definitions.) 
+
+See the vignette on [Manually specifying FFTs](FFTrees_mytree.html) for defining FFTs from descriptions and modifying tree definitions. 
 
 
 ## Vignettes
