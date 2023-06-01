@@ -45,7 +45,7 @@
  }
 By default, \code{data = 'train'} (as \code{x} may not contain test data).}
 
-\item{what}{What should be plotted (as a string)? Valid options are:
+\item{what}{What should be plotted (as a character string)? Valid options are:
 \describe{
   \item{'all'}{Plot the tree diagram with all corresponding guides and performance statistics, but excluding cue accuracies.}
   \item{'cues'}{Plot only the marginal accuracy of cues in ROC space.
