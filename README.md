@@ -2,20 +2,21 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 1.9.0.9033 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 2.0.0 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
-<!-- Devel badges start: -->
+<!-- Release badges start: -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
-[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
-<!-- Devel badges end. -->
-
-<!-- Release badges start: -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+[![Total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Release badges end. -->
+
+<!-- Devel badges start: -->
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+<!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
+<!-- Devel badges end. -->
 <!-- ALL badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
@@ -246,7 +247,8 @@ plot(my_fft,
 description.](man/figures/README-example-heart-verbal-1.png)
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
-description.  
+description.
+
 The performance measures (in the bottom panel of **Figure 2**) show that
 this particular tree is somewhat biased: It has nearly perfect
 *sensitivity* (i.e., is good at identifying cases of *Disease*) but
@@ -266,12 +268,12 @@ package enables us to design and evaluate a range of FFTs.
 
 ## References
 
-We had a lot of fun creating the **FFTrees** package and hope you like
-it too! As a comprehensive, yet accessible introduction to FFTs, we
-recommend reading our article in the journal *Judgment and Decision
-Making* ([2017](https://doi.org/10.1017/S1930297500006239)), entitled
-*FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal
-decision trees* (available in
+We had fun creating the **FFTrees** package and hope you like it too! As
+a comprehensive, yet accessible introduction to FFTs, we recommend our
+article in the journal *Judgment and Decision Making*
+([2017](https://doi.org/10.1017/S1930297500006239)), entitled *FFTrees:
+A toolbox to create, visualize,and evaluate fast-and-frugal decision
+trees* (available in
 [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
 [PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf) ).
 
@@ -332,6 +334,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-06-02.\]
+\[File `README.Rmd` last updated on 2023-06-03.\]
 
 <!-- eof. -->

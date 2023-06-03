@@ -34,18 +34,16 @@ url_JDM_doi <- "https://doi.org/10.1017/S1930297500006239"
 # FFTrees `r packageVersion("FFTrees")` <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 
-<!-- Devel badges start: --> 
-[![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
-[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
-<!-- Devel badges end. -->
-
-
 <!-- Release badges start: -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+[![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
+[![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Release badges end. -->
 
+<!-- Devel badges start: --> 
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+<!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
+<!-- Devel badges end. -->
 
 <!-- ALL badges start: --> 
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
@@ -234,6 +232,7 @@ plot(my_fft,
 ![An FFT created from a verbal description.](man/figures/README-example-heart-verbal-1.png)
 
 **Figure\ 2**: An FFT predicting heart disease created from a verbal description.  
+
 The performance measures (in the bottom panel of **Figure\ 2**) show that this particular tree is somewhat biased: 
 It has nearly perfect _sensitivity_ (i.e., is good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., performs poorly in identifying _Healthy_ cases). 
 Expressed in terms of its errors, `my_fft` incurs few misses at the expense of many false alarms. 
@@ -247,8 +246,8 @@ To explore this range of options, the **FFTrees** package enables us to design a
 
 ## References
 
-We had a lot of fun creating the **FFTrees** package and hope you like it too! 
-As a comprehensive, yet accessible introduction to FFTs, we recommend reading our article in the journal _Judgment and Decision Making_ ([2017](`r url_JDM_doi`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
+We had fun creating the **FFTrees** package and hope you like it too! 
+As a comprehensive, yet accessible introduction to FFTs, we recommend our article in the journal _Judgment and Decision Making_ ([2017](`r url_JDM_doi`)), entitled _FFTrees: A toolbox to create, visualize,and evaluate fast-and-frugal decision trees_ (available in [html](`r url_JDM_html`) | [PDF](`r url_JDM_pdf`)\ ).  
 
 
 **Citation** (in APA format): 
