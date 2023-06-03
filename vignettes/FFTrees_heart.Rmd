@@ -142,7 +142,8 @@ For definitions of all accuracy statistics, see the [accuracy statistics](FFTree
 
 ### Step\ 4: Visualise the final FFT
 
-Use `plot()` to visualize an FFT (an `FFTrees` object):
+We use `plot(x)` to visualize an FFT (from an\ `FFTrees` object\ `x`). 
+Using `data = "train"` evaluates an\ FFT for training data (fitting), whereas `data = "test"` predicts the performance of an\ FFT for a different dataset: 
 
 ```{r fft-plot, fig.width = 6.5, fig.height = 6}
 # Plot predictions of the best FFT when applied to test data:
@@ -152,9 +153,12 @@ plot(heart.fft,      # An FFTrees object
 
 #### Other arguments
 
+The `plot()` function for `FFTrees` object 
+
 - `tree`: Which tree in the object should beplotted? To plot a tree other than the best fitting tree (FFT \#1), just specify another tree as an integer (e.g.; `plot(heart.fft, tree = 2)`).
 
-- `data`: For which dataset should statistics be shown? Either `data = "train"` (showing fitting or "Training" performance by default), or `data = "test"` (showing prediction or "Testing" performance).
+- `data`: For which dataset should statistics be shown? 
+Either `data = "train"` (showing fitting or "Training" performance by default), or `data = "test"` (showing prediction or "Testing" performance).
 
 - `stats`: Should accuracy statistics be shown with the tree? To show only the tree, without any performance statistics, include the argument `stats = FALSE`. 
 
@@ -166,7 +170,9 @@ plot(heart.fft, what = "tree")
 
 - `comp`: Should statistics from competitive algorithms be shown in the ROC curve? To remove the performance statistics of competitive algorithms (e.g.; regression, random forests), include the argument `comp = FALSE`. 
 
-- `what`: To show individual cue accuracies (in ROC space), include the argument `what = "cues"`:
+- `what`: Which parts of an `FFTrees` object should be visualized (e.g., `all`, `icontree` and `tree`). 
+Using `what = "roc"` plots tree performance as an ROC\ curve. 
+To show individual cue accuracies (in ROC space), specify `what = "cues"`:
 
 ```{r fft-cues, fig.width = 6, fig.height = 6, out.width = "500px"}
 # Plot cue accuracies (for training data) in ROC space:
@@ -176,20 +182,28 @@ plot(heart.fft, what = "cues")
 See the [Plotting FFTrees](FFTrees_plot.html) vignette for details on plotting FFTs. 
 
 
-### Additional steps
+### Advanced functions
 
-#### Accessing outputs
+Creating sets of FFTs and evaluating them on data by printing and plotting individual FFTs provides the core functionality of **FFTrees**. 
+However, the package also provides more advanced functions for accessing, defining, using and evaluating FFTs. 
 
-An `FFTrees` object contains many different outputs, to see them all, run `names()`
+#### Accessing outputs 
+
+An `FFTrees` object contains many different outputs. 
+Basic performance information on the current data and set of FFTs is available by the `summary()` function. 
+To see and access parts of an `FFTrees` object, use `str()` or `names()`: 
 
 ```{r fft-names}
-# Show the names of all of the outputs in heart.fft:
+# Show the names of all outputs in heart.fft:
 names(heart.fft)
 ```
 
+Key elements of an `FFTrees` object are explained in the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html). 
+
+
 #### Predicting for new data
 
-To predict classifications for a new dataset, use the standard `predict()` function. 
+To predict classification outcomes for new data, use the standard `predict()` function. 
 For example, here's how to predict the classifications for data in the `heartdisease` object (which actually is just a combination of `heart.train` and `heart.test`): 
 
 ```{r fft-predict, eval = FALSE}
@@ -198,32 +212,14 @@ predict(heart.fft,
         newdata = heartdisease)
 ```
 
-#### Defining FFTs in words
 
-To define a specific FFT and apply it to data, we can define a tree by providing its verbal description to the `my.tree` argument: 
+#### Directly defining FFTs
 
-```{r fft-my-tree, results = 'hide'}
-# Create an FFT manually (from description):
-my.heart.fft <- FFTrees(formula = diagnosis ~.,
-                        data = heart.train,
-                        data.test = heart.test,
-                        main = "My Heart FFT",
-                        my.tree = "If chol > 350, predict True. 
-                                   If cp != {a}, predict False. 
-                                   If age <= 35, predict False, otherwise, predict True.")
-```
+To define a specific FFT and apply it to data, we can define a tree by providing its verbal description to the `my.tree` argument. 
+Similarly, we can define sets of FFT definitions (as a data frame) and evaluate them on data by using the `tree.definitions` argument of `FFTrees()`. 
+As we often start from an existing set of FFTs, **FFTrees** provides a set of functions for extracting, converting, and modifying tree definitions. 
 
-Running this code evaluates `my.tree` for the specified sets of data. 
-A visualization of the resulting tree shows its performance summary 
-(for the training data): 
-
-```{r plot-my-fft, fig.width = 6.5, fig.height = 6}
-plot(my.heart.fft, data = "train")
-```
-
-The resulting tree is actually not too bad, although its first node is pretty useless (as it only classifies 3\ cases, all as false alarms). 
-Thus, omitting the first node will result in an even simpler FFT that cannot be worse. 
-Feel free to verify this ---\ and see the [Manually specifying FFTs](FFTrees_mytree.html) vignette for additional details on defining FFTs from verbal or abstract descriptions. 
+See the vignette on [Manually specifying FFTs](FFTrees_mytree.html) for defining FFTs from descriptions and modifying tree definitions. 
 
 
 ## Vignettes
