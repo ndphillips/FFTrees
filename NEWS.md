@@ -1,16 +1,9 @@
 
-# Upcoming release {-}
+# FFTrees 2.0
 
-Please note:
+## 2.0.0 
 
-- **FFTrees** version 2.0.0 will be released in **June 2023**.
-
-
-# FFTrees 1.9
-
-## 1.9.0.9031
-
-This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
+**FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. 
 
 <!-- Log of changes: --> 
 
@@ -54,10 +47,10 @@ Changes since last release:
     - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`).
     - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object.  
     
-- Added detailed cost information when printing FFTs (with `print.FFTrees()`). 
-- Improved user feedback (by making `quiet` a list with four distinct options). 
+- Added cost information when printing FFTs (with `print.FFTrees()`). 
+- Improved user feedback (by making `quiet` a list with four options). 
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`). 
-
+- Improved documentation of datasets. 
 
 <!-- Details: --> 
 
@@ -74,10 +67,11 @@ Changes since last release:
 
 The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
-
-<!-- Released versions: --> 
+<!-- Older versions: --> 
 
 ------ 
+
+# FFTrees 1.9
 
 ## 1.9.0
 
@@ -480,6 +474,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-05-31.]
+[File `NEWS.md` last updated on 2023-06-06.]
 
 <!-- eof. -->
