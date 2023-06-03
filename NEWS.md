@@ -1,7 +1,7 @@
 
 # FFTrees 2.0
 
-## 2.0.0 
+## 2.0.0
 
 **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. 
 
@@ -15,7 +15,7 @@ Changes since last release:
 
 ### Major changes 
 
-<!-- gfft: Manipulating FFTs --> 
+<!-- gfft: Converting and manipulating FFTs --> 
 
 - Enabled conversions between tree definition formats and manipulating individual FFTs:
     - tree definition and conversion functions: `get_fft_df`, `read_fft_df`, `write_fft_df`, `add_fft_df` 
@@ -25,17 +25,17 @@ Changes since last release:
 <!-- NA handling: --> 
 
 - Allowing for missing inputs (`NA` values) in data:
-    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels. 
+    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels  
     - `NA` values in numeric predictors are either _imputed_ (as the mean of the corresponding predictor) or 
-    _ignored_ when creating and using FFTs to decide/predict (if possible). 
-    - `NA` values in the criterion variable are yet to be dealt with.  
+    _ignored_ when creating and using FFTs to decide/predict (if possible) 
+    - `NA` values in the criterion variable are yet to be dealt with 
     
 
-<!-- Stopping rule: --> 
+<!-- Growing FFTs: Stopping rules: --> 
 
-- Growing FFTs:
-   - enabled `stopping.rule = "statdelta"`. 
-   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given the current `goal.chase` parameter). 
+- Growing FFTs: 
+   - enabled `stopping.rule = "statdelta"` 
+   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given the current `goal.chase` parameter) 
 
 
 <!-- Minor: --> 
@@ -43,14 +43,15 @@ Changes since last release:
 ### Minor changes 
 
 - Added utility functions (and corresponding verification functions): 
-    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`).
-    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`).
-    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object.  
+    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`) 
+    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`) 
+    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object 
     
 - Added cost information when printing FFTs (with `print.FFTrees()`). 
 - Improved user feedback (by making `quiet` a list with four options). 
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`). 
 - Improved documentation of datasets. 
+
 
 <!-- Details: --> 
 

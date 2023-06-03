@@ -12,7 +12,7 @@ bibentry(bibtype = "article",
          number       = "4",
          pages        = "344--368",
          address      = "PDF at <https://journal.sjdm.org/17/17217/jdm17217.pdf>",
-         note         = "R package (version 1.9.0, February 8, 2023)",
+         note         = "R package (version 2.0.0, June 6, 2023)",
          url          = "https://CRAN.R-project.org/package=FFTrees",
          doi          = "10.1017/S1930297500006239",
 
