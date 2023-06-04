@@ -37,7 +37,7 @@ verify_data_and_criterion <- function(data, criterion_name, mydata){
 
     # Verify that criterion does NOT contain NA values:
     testthat::expect_true(all(!is.na(data[[criterion_name]])),
-                          info = "At least one of the criterion values are NA. Please remove missing cases and try again")
+                          info = "At least one of the criterion values are missing. Please remove NA values and try again")
 
     # Verify that criterion is binary:
     testthat::expect_equal(length(unique(data[[criterion_name]])),
