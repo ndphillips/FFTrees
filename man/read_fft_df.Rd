@@ -45,11 +45,6 @@ Other tree definition and manipulation functions:
 \code{\link{reorder_nodes}()},
 \code{\link{select_nodes}()},
 \code{\link{write_fft_df}()}
-
-Other tree selection, conversion, and collection functions: 
-\code{\link{add_fft_df}()},
-\code{\link{get_fft_df}()},
-\code{\link{write_fft_df}()}
 }
 \concept{tree definition and manipulation functions}
 \concept{tree selection, conversion, and collection functions}
