@@ -3,7 +3,6 @@
 # ------------------------------------------
 
 
-
 # clean_data: ------
 
 # Goal: Pre-process data (using the same steps for both train AND test data).
@@ -203,6 +202,8 @@ describe_data <- function(data, data_name, criterion_name, baseline_value) {
 # - modified data (as df)
 #
 # Side-effect: Report on NA cases and corresponding conversions.
+#
+# @importFrom stats na.omit
 
 
 handle_NA_data <- function(data, criterion_name, mydata, quiet){
@@ -412,8 +413,30 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
     # ToDo: What to do about NA values in criterion?
 
-    if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA value{?s} in the criterion {nm_crit_NA}.")
+    crit_v <- data[ , ix_crit]
+    print(crit_v)  # 4debugging
+
+    if (allow_NA_crit){ # Handle NA values in criterion:
+
+      # Remove incomplete cases:
+
+      # # (a) radical:
+      # data <- stats::na.omit(data)  # filter cases containing NA values in ANY variable
+
+      # (b) nuanced:
+      ix_crit_v_NA <- is.na(crit_v)
+      data <- data[!ix_crit_v_NA, ]  # filter cases in which crit_v contains NA values
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Found {nr_crit_NA} NA value{?s} in the criterion '{nm_crit_NA}' of '{mydata}' data. Removing corresponding cases left {nrow(data)} case{?s}.")
+      }
+
+    } else { # do nothing, but report status:
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Keeping {nr_crit_NA} NA value{?s} in the criterion '{nm_crit_NA}' of '{mydata}' data, retaining {nrow(data)} case{?s}.")
+      }
+
     }
 
   } # 5. criterion NA.
