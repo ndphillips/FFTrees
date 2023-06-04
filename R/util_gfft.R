@@ -79,7 +79,7 @@
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
+#' @concept tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -206,7 +206,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 #' (as a data frame).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
+#' @concept tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -326,7 +326,7 @@ write_fft_df <- function(fft, tree = -99L){
 #' (as a data frame).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
+#' @concept tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -474,7 +474,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
+#' @concept tree trimming functions
 #'
 #' @seealso
 #' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
@@ -753,7 +753,7 @@ add_nodes <- function(fft,
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
+#' @concept tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -941,7 +941,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
+#' @concept tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1163,7 +1163,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
+#' @concept tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1436,7 +1436,7 @@ edit_nodes <- function(fft,
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
+#' @concept tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1608,7 +1608,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
+#' @concept tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
