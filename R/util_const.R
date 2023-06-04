@@ -34,7 +34,7 @@ cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global constan
 # - cost_cues_default: ----
 
 # Cue cost = graded mcu / "graded frugality":
-# Note: A value of 1 for all cues in data corresponds to mcu.
+# Note: A value of 1 (for all cues in data) corresponds to mcu.
 
 cost_cues_default <- 0  # (global constant)
 
@@ -129,7 +129,7 @@ stopping_rules <- c("exemplars", "levels", "statdelta")  # (global constant)
 
 # Allow NA cases in predictors (as logical)?
 
-allow_NA_pred <- TRUE # FALSE  # (global constant)
+allow_NA_pred <- TRUE  # (global constant)
 
 
 
@@ -144,10 +144,10 @@ allow_NA_crit <- FALSE  # (global constant)
 # - replace_NA_num_pred: ----
 
 # Replace NA values in numeric predictors (by mean of predictor)?
-# - TRUE replaces NA in numeric predictors by their mean;
-# - FALSE keeps (but handles them later)
+# - TRUE replaces NA in numeric predictors (currently by their mean);
+# - FALSE (by default) keeps NA values (but tries handling them later)
 
-replace_NA_num_pred <- TRUE  # (global constant)
+replace_NA_num_pred <- FALSE  # (global constant)
 
 
 
