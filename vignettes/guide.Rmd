@@ -252,4 +252,8 @@ When using **FFTrees** in your own work, please cite our article and spread the 
 knitr::include_graphics("../inst/FFTrees_Logo.jpg")
 ```
 
+<!-- Automatic references: -->
+
 ## Bibliography
+
+<!-- eof. -->
