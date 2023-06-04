@@ -22,21 +22,22 @@ Changes since last release:
     - tree trimming functions: `add_nodes`, `drop_nodes`, `edit_nodes`, `flip_exits`, `reorder_nodes`, `select_nodes`
 
 
-<!-- NA handling: --> 
-
-- Allowing for missing inputs (`NA` values) in data:
-    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels  
-    - `NA` values in numeric predictors are either _imputed_ (as the mean of the corresponding predictor) or 
-    _ignored_ when creating and using FFTs to decide/predict (if possible) 
-    - `NA` values in the criterion variable are yet to be dealt with 
-    
-
 <!-- Growing FFTs: Stopping rules: --> 
 
 - Growing FFTs: 
    - enabled `stopping.rule = "statdelta"` 
-   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given the current `goal.chase` parameter) 
+   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping 
+   when finding a perfect FFT (given the current `goal.chase` parameter) 
+   
 
+<!-- NA handling: --> 
+
+- Handling missing inputs (`NA` values) in data:
+    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels  
+    - `NA` values in numeric predictors are either _ignored_ (by default) or 
+    _imputed_ (as the mean of the corresponding predictor) when creating and using FFTs to decide/predict (if possible) 
+    - `NA` values in the criterion variable are yet to be dealt with 
+    
 
 <!-- Minor: --> 
 
