@@ -47,4 +47,3 @@ Other tree definition and manipulation functions:
 \code{\link{select_nodes}()}
 }
 \concept{tree definition and manipulation functions}
-\concept{tree selection, conversion, and collection functions}

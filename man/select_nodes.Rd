@@ -60,4 +60,3 @@ Other tree definition and manipulation functions:
 \code{\link{write_fft_df}()}
 }
 \concept{tree definition and manipulation functions}
-\concept{tree trimming functions}
