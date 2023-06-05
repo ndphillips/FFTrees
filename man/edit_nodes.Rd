@@ -76,13 +76,5 @@ Other tree definition and manipulation functions:
 \code{\link{reorder_nodes}()},
 \code{\link{select_nodes}()},
 \code{\link{write_fft_df}()}
-
-Other tree trimming functions: 
-\code{\link{add_nodes}()},
-\code{\link{drop_nodes}()},
-\code{\link{flip_exits}()},
-\code{\link{reorder_nodes}()},
-\code{\link{select_nodes}()}
 }
 \concept{tree definition and manipulation functions}
-\concept{tree trimming functions}

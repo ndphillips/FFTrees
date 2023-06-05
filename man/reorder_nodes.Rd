@@ -54,13 +54,5 @@ Other tree definition and manipulation functions:
 \code{\link{read_fft_df}()},
 \code{\link{select_nodes}()},
 \code{\link{write_fft_df}()}
-
-Other tree trimming functions: 
-\code{\link{add_nodes}()},
-\code{\link{drop_nodes}()},
-\code{\link{edit_nodes}()},
-\code{\link{flip_exits}()},
-\code{\link{select_nodes}()}
 }
 \concept{tree definition and manipulation functions}
-\concept{tree trimming functions}

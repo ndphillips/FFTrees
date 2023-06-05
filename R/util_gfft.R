@@ -11,12 +11,11 @@
 # C. Macros / combinations (e.g., for creating sets of variants of a given FFT)
 
 
-# (A) Tree conversion/translation functions: --------
+# (A) Tree selection/conversion/collection functions: --------
 
 # Goal: Convert/translate FFT descriptions (definitions as df, with 1 row per tree)
 # into a more modular format of individual FFTs (as df with 1 row per node), and back.
 # Reason: The latter can be manipulated more easily by tree editing/manipulation/trimming functions (B).
-
 
 # Details:
 #
@@ -27,8 +26,6 @@
 # 1 FFT collection function:
 # - add_fft_df: Adds definitions (as df) of individual FFTs (as df) to (a set of existing) definitions.
 
-
-
 # # Create example data/object x:
 # hd <- FFTrees(formula = diagnosis ~ .,
 #               data = heart.train,
@@ -36,8 +33,7 @@
 # x <- hd  # copy object (with 7 FFTs)
 
 
-
-# read_fft_df: ------
+# - read_fft_df: ------
 
 
 # Goal: Extract 1 FFT (as df) from multi-line FFT definitions (as df).
@@ -79,7 +75,6 @@
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -168,7 +163,7 @@ read_fft_df <- function(ffts_df, tree = 1){
 
 
 
-# write_fft_df: ------
+# - write_fft_df: ------
 
 
 # Goal: Turn 1 FFT (in "tidy" format, as df) into a line of multi-line FFT definitions (as df).
@@ -206,7 +201,6 @@ read_fft_df <- function(ffts_df, tree = 1){
 #' (as a data frame).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -289,7 +283,7 @@ write_fft_df <- function(fft, tree = -99L){
 
 
 
-# add_fft_df: ------
+# - add_fft_df: ------
 
 
 # Goal: Add an FFT definition (Case 1) or 1 FFT as df (Case 2) to an existing set of FFT definitions.
@@ -326,7 +320,6 @@ write_fft_df <- function(fft, tree = -99L){
 #' (as a data frame).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{get_fft_df}} for getting the FFT definitions of an \code{FFTrees} object;
@@ -404,7 +397,7 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 #       and return a modified version of 1 FFT (in the same format) as output.
 
 
-# add_nodes: ------
+# - add_nodes: ------
 
 
 # Goal: Add some node(s) (or cues) to a given FFT definition.
@@ -474,7 +467,6 @@ add_fft_df <- function(fft, ffts_df = NULL, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
 #'
 #' @seealso
 #' \code{\link{drop_nodes}} for deleting nodes from an FFT definition;
@@ -709,7 +701,7 @@ add_nodes <- function(fft,
 
 
 
-# drop_nodes: ------
+# - drop_nodes: ------
 
 
 # Goal: Delete/drop some nodes (or cues) of a given FFT.
@@ -753,7 +745,6 @@ add_nodes <- function(fft,
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -897,7 +888,7 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 
 
-# select_nodes: ------
+# - select_nodes: ------
 
 
 # Goal: Select some nodes (or cues) of a given FFT.
@@ -941,7 +932,6 @@ drop_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1105,7 +1095,7 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 
 
 
-# edit_nodes: ------
+# - edit_nodes: ------
 
 
 # Goal: Change (some parameters of) existing nodes.
@@ -1163,7 +1153,6 @@ select_nodes <- function(fft, nodes = NA, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1394,7 +1383,7 @@ edit_nodes <- function(fft,
 
 
 
-# flip_exits: ------
+# - flip_exits: ------
 
 
 # Goal: Flip the exits (i.e., cue direction and exit type) of some FFT's (non-final) nodes.
@@ -1436,7 +1425,6 @@ edit_nodes <- function(fft,
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1567,7 +1555,7 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 
 
 
-# reorder_nodes: ------
+# - reorder_nodes: ------
 
 
 # Goal: Re-order the nodes of an existing FFT.
@@ -1608,7 +1596,6 @@ flip_exits <- function(fft, nodes = NA, quiet = FALSE){
 #' (as a data frame in tidy format, with one row per node).
 #'
 #' @family tree definition and manipulation functions
-#' @family tree trimming functions
 #'
 #' @seealso
 #' \code{\link{add_nodes}} for adding nodes to an FFT definition;
@@ -1751,7 +1738,7 @@ reorder_nodes <- function(fft, order = NA, quiet = FALSE){
 
 
 
-# all_node_orders: ------
+# - all_node_orders: ------
 
 
 # Goal: Apply reorder_nodes(fft) to get all possible permutations of cues for a fft.
@@ -1833,7 +1820,7 @@ all_node_orders <- function(fft, quiet = FALSE){
 
 
 
-# all_exit_structures: ------
+# - all_exit_structures: ------
 
 
 # Goal: Get all 2^(n-1) possible exit structures for an FFT with n cues.
@@ -1915,7 +1902,7 @@ all_exit_structures <- function(fft, quiet = FALSE){
 
 
 
-# all_node_subsets: ------
+# - all_node_subsets: ------
 
 # Goal: Get all subtrees of an FFT.
 #
@@ -1986,7 +1973,7 @@ all_node_subsets <- function(fft, quiet = FALSE){
 
 
 
-# all_fft_variants: ------
+# - all_fft_variants: ------
 
 # Goal: Get all node subsets, node orders, and exit structures of a given fft.
 #       Combine 3 macro-functions:

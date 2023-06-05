@@ -113,6 +113,77 @@ clean_data <- function(data, criterion_name, formula,
 
 
 
+# describe_data: ------
+
+#  Goal: Describe key features of a dataset
+#        (e.g. to show gist of data in vignettes).
+
+#' Describe data
+#'
+#' Calculate key descriptive statistics for a given set of data.
+#'
+#' @param data A data frame with a criterion variable \code{criterion_name}.
+#' @param data_name A character string specifying a name for the data.
+#' @param criterion_name A character string specifying the criterion name.
+#' @param baseline_value The value in \code{criterion_name} denoting the baseline
+#' (e.g., \code{TRUE} or \code{FALSE}).
+#'
+#' @return A data frame with the descriptive statistics.
+#'
+#' @examples
+#' data(heartdisease)
+#' describe_data(heartdisease, "heartdisease",
+#'               criterion_name = "diagnosis",
+#'               baseline_value = TRUE)
+#'
+#' @export
+
+describe_data <- function(data, data_name, criterion_name, baseline_value) {
+
+  # Prepare: ----
+
+  # Verify inputs:
+  testthat::expect_true(is.data.frame(data))
+  testthat::expect_true(is.character(criterion_name))
+  testthat::expect_true(criterion_name %in% names(data))
+  testthat::expect_true(baseline_value %in% data[[criterion_name]])
+
+
+  # Main: ----
+
+  # Number of cases/rows:
+  n_cases <- nrow(data)
+
+  # Baseline (proportion of values with baseline_value):
+  baseline_percent <- (mean(data[[criterion_name]] == baseline_value, na.rm = TRUE) * 100)
+
+  # Number of predictors:
+  n_predictors <- ncol(data) - 1
+
+  # Number of NAs:
+  n_NA <- sum(sapply(data, function(col) sum(is.na(col))))
+
+  # Percentage of NAs:
+  percent_NA <- (n_NA / (n_cases * ncol(data))) * 100
+
+  # As df:
+  result_df <- tibble(
+    "Name" = data_name,
+    "Cases_n" = n_cases,
+    "Criterion" = criterion_name,
+    "Baseline_pct" = baseline_percent,
+    "Predictors_n" = n_predictors,
+    "NAs_n" = n_NA,
+    "NAs_pct" = percent_NA
+  )
+
+
+  # Output: ----
+
+  return(result_df)
+
+} # describe_data().
+
 
 
 # handle_NA_data: ------
@@ -131,6 +202,8 @@ clean_data <- function(data, criterion_name, formula,
 # - modified data (as df)
 #
 # Side-effect: Report on NA cases and corresponding conversions.
+#
+# @importFrom stats na.omit
 
 
 handle_NA_data <- function(data, criterion_name, mydata, quiet){
@@ -340,8 +413,30 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
     # ToDo: What to do about NA values in criterion?
 
-    if (!quiet$mis) { # Provide user feedback:
-      cli::cli_alert_warning("Keeping {sum(nr_crit_NA)} NA value{?s} in the criterion {nm_crit_NA}.")
+    crit_v <- data[ , ix_crit]
+    print(crit_v)  # 4debugging
+
+    if (allow_NA_crit){ # Handle NA values in criterion:
+
+      # Remove incomplete cases:
+
+      # # (a) radical:
+      # data <- stats::na.omit(data)  # filter cases containing NA values in ANY variable
+
+      # (b) nuanced:
+      ix_crit_v_NA <- is.na(crit_v)
+      data <- data[!ix_crit_v_NA, ]  # filter cases in which crit_v contains NA values
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Found {nr_crit_NA} NA value{?s} in the criterion '{nm_crit_NA}' of '{mydata}' data. Removing corresponding cases left {nrow(data)} case{?s}.")
+      }
+
+    } else { # do nothing, but report status:
+
+      if (!quiet$mis) { # Provide user feedback:
+        cli::cli_alert_warning("Keeping {nr_crit_NA} NA value{?s} in the criterion '{nm_crit_NA}' of '{mydata}' data, retaining {nrow(data)} case{?s}.")
+      }
+
     }
 
   } # 5. criterion NA.
@@ -358,135 +453,6 @@ handle_NA_data <- function(data, criterion_name, mydata, quiet){
 
 
 
-# describe_data:  ------
-#
-# # Goal: Describe key features of a dataset (criterion vs. predictors).
-#
-#
-# describe_data <- function(data, criterion_name){
-#
-#   # Prepare: ------
-#
-#   # Verify inputs: ----
-#
-#   testthat::expect_true(is.data.frame(data))
-#   testthat::expect_true(is.character(criterion_name))
-#
-#
-#   # Main: ------
-#
-#   # Names:
-#   data_names <- names(data)
-#
-#   # Indices:
-#   ix_crit <- (data_names == criterion_name)
-#   ix_pred <- (data_names != criterion_name)
-#
-#   # Dimensions:
-#   dims <- dim(data)
-#   dims_names <- c("rows", "cols")
-#
-#   # +++ here now +++
-#
-#   # Criterion:
-#   crit <- data[ , ix_crit]  # 1 criterion variable
-#   # type
-#   # values / ranges?
-#   # frequency/baseline
-#
-#   # Predictors:
-#   pred <- data[ , ix_pred]  # ALL predictor variables
-#   pred_nr <- ncol(pred)
-#   # types
-#   # values / ranges?
-#
-#   # NA values:
-#   nr_NA_data <- sum(is.na(data))  # sum of NA in data
-#
-#   # print(data)  # 4debugging
-#
-#
-#   # Combine results: ----
-#   out <- list(dims,
-#               criterion_name,
-#               pred_nr,
-#               nr_NA_data)
-#
-#   names(out) <- c("dim",
-#                   "crit",
-#                   "pred_nr",
-#                   "NA_nr")
-#
-#   # Output: ------
-#
-#   return(out)
-#
-# } # describe_data().
-#
-#
-
-
-
-# describe_data: (Jelena) -----------------
-
-#  Goal: Describe key features of a dataset to show gist of data in vignettes.
-
-
-#' Describe data
-#'
-#' This function calculates various descriptive statistics for a given dataset.
-#'
-#' @param data A data frame.
-#' @param data_name A character string specifying the name of the data.
-#' @param criterion_name A character string specifying the criterion name.
-#' @param baseline_value The value used as a baseline.
-#'
-#' @return A data frame with the descriptive statistics.
-#' @export
-#'
-#' @examples
-#' data(heartdisease)
-#' describe_data(heartdisease, "heartdisease", "diagnosis", TRUE)
-
-
-# Define the function
-describe_data <- function(data, data_name, criterion_name, baseline_value) {
-
-  # Verify inputs ----
-  testthat::expect_true(is.data.frame(data))
-  testthat::expect_true(is.character(criterion_name))
-  testthat::expect_true(criterion_name %in% names(data))
-  testthat::expect_true(baseline_value %in% data[[criterion_name]])
-
-  # Main: ------
-  # Number of cases (or rows)
-  n_cases <- nrow(data)
-
-  # Baseline (how many of the cases have the defined outcome)
-  baseline_percent <- (mean(data[[criterion_name]] == baseline_value, na.rm = TRUE) * 100)
-
-  # Number of predicting variables
-  n_predictors <- ncol(data) - 1
-
-  # Number of NAs in total in the data frame
-  n_NA <- sum(sapply(data, function(col) sum(is.na(col))))
-
-  # Percentage of NAs in data frame
-  percent_NA <- (n_NA / (n_cases * ncol(data))) * 100
-
-  # Create a dataframe to store the results ----
-  result_df <- tibble(
-    "Name" = data_name,
-    "Cases_n" = n_cases,
-    "Criterion" = criterion_name,
-    "Baseline_pct" = baseline_percent,
-    "Predictors_n" = n_predictors,
-    "NAs_n" = n_NA,
-    "NAs_pct" = percent_NA
-  )
-
-  return(result_df)
-}
 
 # replace_NA_vec: ------
 

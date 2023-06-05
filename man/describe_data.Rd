@@ -7,21 +7,25 @@
 describe_data(data, data_name, criterion_name, baseline_value)
 }
 \arguments{
-\item{data}{A data frame.}
+\item{data}{A data frame with a criterion variable \code{criterion_name}.}
 
-\item{data_name}{A character string specifying the name of the data.}
+\item{data_name}{A character string specifying a name for the data.}
 
 \item{criterion_name}{A character string specifying the criterion name.}
 
-\item{baseline_value}{The value used as a baseline.}
+\item{baseline_value}{The value in \code{criterion_name} denoting the baseline
+(e.g., \code{TRUE} or \code{FALSE}).}
 }
 \value{
 A data frame with the descriptive statistics.
 }
 \description{
-This function calculates various descriptive statistics for a given dataset.
+Calculate key descriptive statistics for a given set of data.
 }
 \examples{
 data(heartdisease)
-describe_data(heartdisease, "heartdisease", "diagnosis", TRUE)
+describe_data(heartdisease, "heartdisease",
+              criterion_name = "diagnosis",
+              baseline_value = TRUE)
+
 }

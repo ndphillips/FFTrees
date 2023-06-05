@@ -1,16 +1,9 @@
 
-# Upcoming release {-}
+# FFTrees 2.0
 
-Please note:
+## 2.0.0
 
-- **FFTrees** version 2.0.0 will be released in **June 2023**.
-
-
-# FFTrees 1.9
-
-## 1.9.0.9031
-
-This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>.
+**FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. 
 
 <!-- Log of changes: --> 
 
@@ -22,41 +15,43 @@ Changes since last release:
 
 ### Major changes 
 
-<!-- gfft: Manipulating FFTs --> 
+<!-- gfft: Converting and manipulating FFTs --> 
 
-- Enabled conversions between tree definition formats and manipulating individual FFTs:
+- Enabled conversions between tree definition formats and manipulating FFT definitions:
     - tree definition and conversion functions: `get_fft_df`, `read_fft_df`, `write_fft_df`, `add_fft_df` 
     - tree trimming functions: `add_nodes`, `drop_nodes`, `edit_nodes`, `flip_exits`, `reorder_nodes`, `select_nodes`
 
 
+<!-- Growing FFTs: Stopping rules: --> 
+
+- Growing FFTs: 
+   - enabled `stopping.rule = "statdelta"` 
+   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping 
+   when finding a perfect FFT (given the current `goal.chase` parameter)  
+
+
 <!-- NA handling: --> 
 
-- Allowing for missing inputs (`NA` values) in data:
-    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels. 
-    - `NA` values in numeric predictors are either _imputed_ (as the mean of the corresponding predictor) or 
-    _ignored_ when creating and using FFTs to decide/predict (if possible). 
-    - `NA` values in the criterion variable are yet to be dealt with.  
+- Handling missing inputs (`NA` values) in data:
+    - `NA` values in categorical (i.e., character/factor/logical) predictors are treated as `<NA>` factor levels  
+    - `NA` values in numeric predictors are either _ignored_ (by default) or 
+    _imputed_ (as the mean of the corresponding predictor) when creating and using FFTs to decide/predict (if possible) 
+    - `NA` values in the criterion variable are yet to be dealt with 
     
-
-<!-- Stopping rule: --> 
-
-- Growing FFTs:
-   - enabled `stopping.rule = "statdelta"`. 
-   - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping when finding a perfect FFT (given the current `goal.chase` parameter). 
-
 
 <!-- Minor: --> 
 
 ### Minor changes 
 
 - Added utility functions (and corresponding verification functions): 
-    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`).
-    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`).
-    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object.  
+    - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`) 
+    - `get_exit_type()` converts a vector of exit descriptions into FFT exits (given `exit_types`) 
+    - `get_fft_df()` retrieves the tree definitions of an `FFTrees` object 
     
-- Added detailed cost information when printing FFTs (with `print.FFTrees()`). 
-- Improved user feedback (by making `quiet` a list with four distinct options). 
+- Added cost information when printing FFTs (with `print.FFTrees()`). 
+- Improved user feedback (by making `quiet` a list with four options). 
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`). 
+- Improved documentation of included data (e.g., in `FFTrees.guide()`). 
 
 
 <!-- Details: --> 
@@ -74,10 +69,11 @@ Changes since last release:
 
 The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
-
-<!-- Released versions: --> 
+<!-- Older versions: --> 
 
 ------ 
+
+# FFTrees 1.9
 
 ## 1.9.0
 
@@ -480,6 +476,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-05-31.]
+[File `NEWS.md` last updated on 2023-06-06.]
 
 <!-- eof. -->

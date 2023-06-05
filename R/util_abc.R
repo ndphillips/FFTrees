@@ -9,7 +9,7 @@
 # (A) Applying or computing stuff: ------
 
 
-# apply_break: ------
+# - apply_break: ------
 
 # Takes a direction, threshold value, and cue vector, and returns a vector of decisions.
 
@@ -64,7 +64,7 @@ apply_break <- function(direction,
 
 
 
-# fact_clean: ------
+# - fact_clean: ------
 
 #' Clean factor variables in prediction data
 #'
@@ -127,7 +127,7 @@ fact_clean <- function(data.train,
 # (B) Enabling stuff: ------
 
 
-# enable_wacc: ------
+# - enable_wacc: ------
 
 # Test whether wacc makes sense (iff sens.w differs from its default of 0.50).
 
@@ -154,7 +154,7 @@ enable_wacc <- function(sens.w, sens.w_epsilon = 10^-4){
 # (C) Getting stuff: ------
 
 
-# get_bacc_wacc: ------
+# - get_bacc_wacc: ------
 
 # Obtain either bacc or wacc (for displays in print and plot functions).
 # Output: Named vector (with name specifying the current type of measure).
@@ -184,7 +184,7 @@ get_bacc_wacc <- function(sens, spec,  sens.w){
 
 
 
-# get_best_tree: ------
+# - get_best_tree: ------
 
 #' Select the best tree (from current set of FFTs)
 #'
@@ -328,7 +328,7 @@ get_best_tree <- function(x,
 
 
 
-# get_exit_type: ------
+# - get_exit_type: ------
 
 # Goal: Convert/get various exit type descriptions (from a vector x)
 #       given current exit_types (given by global constant).
@@ -425,7 +425,7 @@ get_exit_type <- function(x, verify = TRUE){
 
 
 
-# get_exit_word: ------
+# - get_exit_word: ------
 
 # Goal: Get "Decide" for 'train' data vs. "Predict" for 'test' data.
 
@@ -438,7 +438,7 @@ get_exit_word <- function(data){
 
 
 
-# get_fft_df: ------
+# - get_fft_df: ------
 
 # Goal: Extract (and verify) ALL definitions from an FFTrees object (as 1 df).
 # Output: Verified tree definitions of x$trees$definitions (as 1 df); else NA.
@@ -465,7 +465,6 @@ get_exit_word <- function(data){
 #'
 #' @family utility functions
 #' @family tree definition and manipulation functions
-#' @family tree selection, conversion, and collection functions
 #'
 #' @seealso
 #' \code{\link{read_fft_df}} for reading one FFT definition from tree definitions;
@@ -498,7 +497,7 @@ get_fft_df <- function(x){
 
 
 
-# get_lhs_formula: ------
+# - get_lhs_formula: ------
 
 # Goal: Get the (name of the) criterion variable from (LHS of) a formula (and verify formula).
 
@@ -523,7 +522,7 @@ get_lhs_formula <- function(formula){
 # (D) Handling strings or quotes: ------
 
 
-# add_quotes: ------
+# - add_quotes: ------
 
 add_quotes <- function(x) {
 
@@ -537,7 +536,7 @@ add_quotes <- function(x) {
 # (E) Combinatorics: Number of combinations and permutations: --------
 
 
-# all_permutations: List all permutations of a vector/set x / permute a set/vector x: ------
+# - all_permutations: List all permutations of a vector/set x / permute a set/vector x: ------
 
 # See also: library(combinat)
 # set <- c("a", "b", "c")
@@ -576,7 +575,7 @@ all_permutations <- function(x) {
 # all_permutations(c("A", "B", "b", "a"))
 
 
-# all_combinations: List all combinations of a length n of a set x: ------
+# - all_combinations: List all combinations of a length n of a set x: ------
 
 # # (a) Using utils::combn:
 # m <- utils::combn(x = 1:4, m = 2)
@@ -635,7 +634,7 @@ all_combinations <- function(x, length){
 
 
 
-# all_subsets: List all combinations of all sub-lengths 0 < n < length(x) of a set x: ------
+# - all_subsets: List all combinations of all sub-lengths 0 < n < length(x) of a set x: ------
 
 # Goal: Get all subsets of x (i.e., all possible combinations of all possible lengths 0 < n < length(x)).
 #       Note: The extreme NULL (an empty set) is NOT, but the full set (all of x) can be included/returned.
@@ -702,16 +701,15 @@ all_subsets <- function(x, include_x = TRUE){
 NULL
 
 
-# R version check: ------
+# - R version check: ------
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines:
 if (getRversion() >= "2.15.1") utils::globalVariables(c(".", "tree", "tree_new", "tree", "level"))
 
 
 
-
 # ToDo: ------
 
-# - Get all_subsets() based on all_combinations().
+# - Get all_subsets() based on all_combinations()?
 
 # eof.
