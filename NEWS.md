@@ -17,7 +17,7 @@ Changes since last release:
 
 <!-- gfft: Converting and manipulating FFTs --> 
 
-- Enabled conversions between tree definition formats and manipulating individual FFTs:
+- Enabled conversions between tree definition formats and manipulating FFT definitions:
     - tree definition and conversion functions: `get_fft_df`, `read_fft_df`, `write_fft_df`, `add_fft_df` 
     - tree trimming functions: `add_nodes`, `drop_nodes`, `edit_nodes`, `flip_exits`, `reorder_nodes`, `select_nodes`
 
@@ -27,8 +27,8 @@ Changes since last release:
 - Growing FFTs: 
    - enabled `stopping.rule = "statdelta"` 
    - fixed a bug in `fftrees_grow_fan()` that prevented `ifan` algorithm from stopping 
-   when finding a perfect FFT (given the current `goal.chase` parameter) 
-   
+   when finding a perfect FFT (given the current `goal.chase` parameter)  
+
 
 <!-- NA handling: --> 
 
@@ -51,7 +51,7 @@ Changes since last release:
 - Added cost information when printing FFTs (with `print.FFTrees()`). 
 - Improved user feedback (by making `quiet` a list with four options). 
 - Increased vocabulary for interpreting verbal FFT descriptions (using `my.tree`). 
-- Improved documentation of datasets. 
+- Improved documentation of included data (e.g., in `FFTrees.guide()`). 
 
 
 <!-- Details: --> 
