@@ -1,13 +1,59 @@
 
 # FFTrees 2.0
 
-## 2.0.0
+## 2.0.0.9001
 
-**FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. 
+<!-- **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. -->
+
+<!-- Development version: --> 
+
+This the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
+This version adds features and fixes bugs. 
 
 <!-- Log of changes: --> 
 
+Changes since last release: 
+
+<!-- Major: --> 
+
+### Major changes 
+
+<!-- Topic --> 
+
+- None yet.
+    
+
+<!-- Minor: --> 
+
+### Minor changes 
+
+<!-- Topic --> 
+
+- None yet.
+
+
+<!-- Details: --> 
+
+### Details 
+
+<!-- Topic --> 
+
+- None yet.
+
+
+<!-- Development version: --> 
+
+The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
+
+
+<!-- Older versions: --> 
+
+## 2.0.0
+
+**FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. 
 This version adds functionality, improves consistency, and increases robustness.
+
+<!-- Log of changes: --> 
 
 Changes since last release: 
 
