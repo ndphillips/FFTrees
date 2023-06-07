@@ -5,16 +5,17 @@
 # Statistical calculations (based on classification outcomes in 2x2 matrix and models): ------
 
 
-# add_stats (from frequency of 4 classification outcomes): ------
+# add_stats (from frequency counts of 4 classification outcomes): ------
 
 # Outcome statistics based on frequency counts (of 4 classification outcomes)
 # [used to set cue thresholds in fftrees_threshold_factor_grid() and fftrees_threshold_numeric_grid()]:
 
 
-#' Add decision statistics to data (based on frequency counts of a 2x2 classification outcomes)
+#' Add decision statistics to data (based on frequency counts of a 2x2 matrix of classification outcomes)
 #'
 #' \code{add_stats} assumes the input of the 4 essential classification outcomes
-#' (as frequency counts in a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+#' (as frequency counts in a data frame \code{"data"}
+#' with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
 #' and uses them to compute various decision accuracy measures.
 #'
 #' Providing numeric values for \code{cost.each} (as a vector) and \code{cost.outcomes} (as a named list)
