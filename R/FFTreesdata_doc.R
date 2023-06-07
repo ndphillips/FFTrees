@@ -115,7 +115,7 @@
 #'
 #' @details
 #' The \emph{criterion} for this dataset has not yet been binarized.
-#' Before using it with \stong{FFTrees}, this prerequisite step should be completed based on individual preferences.
+#' Before using it with \strong{FFTrees}, this prerequisite step should be completed based on individual preferences.
 #'
 #' @source \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 #'
