@@ -7,7 +7,6 @@
 \format{
 A data frame containing 100 rows and 10 columns.
 
-
 \describe{
   \item{season}{Season in which the analysis was performed. (winter, spring, summer, fall)}
   \item{age}{Age at the time of analysis}
@@ -47,10 +46,8 @@ Sperm concentration are related to socio-demographic data, environmental factors
 We made the following enhancements to the original data for improved usability:
 
 \itemize{
-
  \item{The criterion was redefined from a factor variable with two levels
- (\code{N=Normal}, \code{O=Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
-
+ (\code{N = Normal}, \code{O = Altered}) into a logical variable (\code{TRUE} vs. \code{FALSE}).}
  }
 
  Other than that, the data remains consistent with the original dataset.

@@ -34,7 +34,7 @@ Chung-Hua University
 blood
 }
 \description{
-Data taken from the Blood Transfusion Service Center in Hsin-Chu City in Taiwan
+Data from the Blood Transfusion Service Center in Hsin-Chu City in Taiwan.
 }
 \seealso{
 Other datasets: 

@@ -24,7 +24,8 @@ A data frame containing 150 rows and 4 columns.
 iris.v
 }
 \description{
-A famous dataset from R.A. Fisher (1936) simplified to predict only the virginica class (i.e., as a binary classification problem).
+A famous dataset from R.A. Fisher (1936) simplified to predict only the
+virginica class (i.e., as a binary classification problem).
 }
 \details{
 To improve usability, we made the following changes:
@@ -38,7 +39,7 @@ To improve usability, we made the following changes:
 
  }
 
- Other than that, the data remains consistent with the original dataset.
+Other than that, the data remains consistent with the original dataset.
 }
 \references{
 Fisher, R.A. (1936): The use of multiple measurements in taxonomic problems.

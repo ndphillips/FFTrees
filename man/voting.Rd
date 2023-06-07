@@ -39,7 +39,8 @@ voting
 A dataset of votes for each of the U.S. House of Representatives Congressmen on the 16 key votes identified by the CQA.
 }
 \details{
-The CQA lists nine different types of votes: voted for, paired for, and announced for (these three simplified to yea),
+The CQA lists nine different types of votes:
+Voted for, paired for, and announced for (these three simplified to yea),
 voted against, paired against, and announced against (these three simplified to nay),
 voted present, voted present to avoid conflict of interest, and did not vote or otherwise make a position known
 (these three simplified to an unknown disposition).
@@ -52,11 +53,11 @@ We made the following enhancements to the original data for improved usability:
  \item{The binary character \emph{criterion} variable with exclusive "democrat" and "republican" values was converted to a logical \code{TRUE/FALSE} vector.}
  }
 
- Other than that, the data remains consistent with the original dataset.
+Other than that, the data remains consistent with the original dataset.
 }
 \references{
 Congressional Quarterly Almanac, 98th Congress, 2nd session 1984,
-Volume XL: Congressional Quarterly Inc.
+\emph{Congressional Quarterly Inc.}, Volume XL.
 Washington, D.C., 1985.
 }
 \seealso{

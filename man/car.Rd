@@ -22,8 +22,7 @@ A data frame containing 1728 cars (rows) and 7 variables (columns).
 \source{
 \url{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}
 
-Original creator and donor:
-
+Original creators and donors:
 Marko Bohanec and Blaz Zupan
 }
 \usage{
@@ -36,7 +35,8 @@ A dataset on car evaluations based on basic features, derived from a simple hier
 The criterion variable is a car's \code{acceptability} rating.
 
 
-The \emph{criterion} for this dataset has not yet been binarized. Before using it with an \emph{FFTree}, this necessary prerequisite step should be completed based on individual preferences.
+The \emph{criterion} for this dataset has not yet been binarized.
+Before using it with \stong{FFTrees}, this prerequisite step should be completed based on individual preferences.
 }
 \references{
 Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.

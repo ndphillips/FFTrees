@@ -3,7 +3,7 @@
 \docType{data}
 \name{breastcancer}
 \alias{breastcancer}
-\title{Physiological data of patients tested for breast cancer}
+\title{Breast cancer data}
 \format{
 A data frame containing 699 patients (rows) and 9 variables (columns).
 
@@ -28,24 +28,22 @@ A data frame containing 699 patients (rows) and 9 variables (columns).
 Original creator:
 
 Dr. William H. Wolberg (physician)
-
 University of Wisconsin Hospitals
-
 Madison, Wisconsin, USA
 }
 \usage{
 breastcancer
 }
 \description{
-Physiological data of patients tested for breast cancer
+Physiological data of patients tested for breast cancer.
 }
 \details{
 We made the following enhancements to the original data for improved usability:
 
 \itemize{
  \item{The ID number of the cases was excluded.}
- \item{The numeric criterion with value "2" for benign and "4" for malignant was converted to logical TRUE/FALSE.}
- \item{16 cases were excluded because they contained NAs.}
+ \item{The numeric criterion with value \code{2} for benign and \code{4} for malignant was converted to logical (i.e., \code{TRUE}/\code{FALSE}).}
+ \item{16 cases were excluded because they contained \code{NA} values.}
  }
 
  Other than that, the data remains consistent with the original dataset.

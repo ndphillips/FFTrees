@@ -3,7 +3,7 @@
 \docType{data}
 \name{heart.cost}
 \alias{heart.cost}
-\title{Cue costs for the heartdisease data}
+\title{Cue costs for the \code{heartdisease} data}
 \format{
 A list of length 13 containing the cost of each cue in the \code{\link{heartdisease}} dataset (in dollars).
 Each list element is a single (positive numeric) value.
@@ -18,7 +18,7 @@ heart.cost
 This data further characterizes the variables (cues) in the \code{\link{heartdisease}} dataset.
 }
 \seealso{
-\code{\link{heartdisease}} dataset.
+\code{\link{heartdisease}} data.
 
 Other datasets: 
 \code{\link{blood}},
