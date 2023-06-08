@@ -66,7 +66,7 @@ We made the following enhancements to the original data for improved usability:
 
  }
 
- Other than that, the data remains consistent with the original dataset.
+Other than that, the data remains consistent with the original dataset.
 }
 \references{
 Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981).

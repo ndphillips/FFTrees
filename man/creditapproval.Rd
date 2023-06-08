@@ -39,18 +39,18 @@ This data reports predictors and the result of credit card applications.
 Its attribute names and values have been changed to symbols to protect confidentiality.
 }
 \details{
-This dataset contains a mix of attributes -- continuous, nominal with small Ns,
-and nominal with larger Ns. There are also a few missing values.
+This dataset contains a mix of attributes -- continuous, nominal with small sample sizes,
+and nominal with larger sample sizes. There are also a few missing values.
 
 
- We made the following enhancements to the original data for improved usability:
+We made the following enhancements to the original data for improved usability:
 
 \itemize{
- \item{Any missing values, denoted as "?" in the dataset, were transformed into NAs.}
- \item{Binary factor variables with exclusive "t" and "f" values were converted to logical TRUE/FALSE vectors.}
+ \item{Any missing values, denoted as "?" in the dataset, were transformed into \code{NA} values.}
+ \item{Binary factor variables with exclusive "t" and "f" values were converted to logical vectors (\code{TRUE}/\code{FALSE}).}
  }
 
- Other than that, the data remains consistent with the original dataset.
+Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
 Other datasets: 

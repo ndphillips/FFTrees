@@ -30,12 +30,13 @@ A data frame containing 6497 rows and 13 columns.
 wine
 }
 \description{
-Chemical and tasting data from wines in North Portugal.
+Chemical and tasting data from wines in Northern Portugal.
 }
 \references{
-P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.
+P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis (2009).
  Modeling wine preferences by data mining from physicochemical properties.
- In Decision Support Systems, \emph{Elsevier}, 47(4):547-553. ISSN: 0167-9236.
+ \emph{Decision Support Systems}, \emph{47} (4), 547--553.
+ \url{https://doi.org/10.1016/j.dss.2009.05.016}
 }
 \seealso{
 Other datasets: 

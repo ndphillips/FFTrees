@@ -2,7 +2,7 @@
 % Please edit documentation in R/util_stats.R
 \name{add_stats}
 \alias{add_stats}
-\title{Add decision statistics to data (based on frequency counts of a 2x2 classification outcomes)}
+\title{Add decision statistics to data (based on frequency counts of a 2x2 matrix of classification outcomes)}
 \usage{
 add_stats(
   data,
@@ -43,7 +43,8 @@ A data frame with variables of computed accuracy and cost measures (but dropping
 }
 \description{
 \code{add_stats} assumes the input of the 4 essential classification outcomes
-(as frequency counts in a data frame \code{"data"} with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
+(as frequency counts in a data frame \code{"data"}
+with variable names \code{"hi"}, \code{"fa"}, \code{"mi"}, and \code{"cr"})
 and uses them to compute various decision accuracy measures.
 }
 \details{

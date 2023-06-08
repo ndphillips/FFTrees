@@ -26,7 +26,6 @@ A data frame containing 1473 cases (rows) and 10 variables (columns).
 \url{https://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice}
 
 Original creator and donor:
-
 Tjen-Sien Lim
 }
 \usage{
@@ -47,7 +46,9 @@ based on her demographic and socio-economic characteristics.
 We made the following enhancements to the original data for improved usability:
 
 \itemize{
- \item{The criterion was binarized from a class attribute variable with three levels (\code{1=No-use}, \code{2=Long-term}, \code{3=Short-term}) , into a logical variable with two levels (\code{TRUE} vs. \code{FALSE}).}
+ \item{The criterion was binarized from a class attribute variable with three levels
+ (\code{1 = No-use}, \code{2 = Long-term}, \code{3 = Short-term}),
+ into a logical variable (\code{TRUE} vs. \code{FALSE}).}
  }
 
  Other than that, the data remains consistent with the original dataset.

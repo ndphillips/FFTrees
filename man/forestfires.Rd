@@ -47,7 +47,7 @@ We made the following enhancements to the original data for improved usability:
  \item{The criterion was redefined from a numeric variable that indicated the number of hectares that burned in a fire into a logical variable (\code{TRUE} (for values >1) vs. \code{FALSE} (for values <=1)).}
  }
 
- Other than that, the data remains consistent with the original dataset.
+Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
 Other datasets: 

@@ -7,68 +7,67 @@
 \format{
 A data frame containing 208 rows and 60 columns.
 
-
 \describe{
   \item{V1}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V2}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V3}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V4}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V5}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V6}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V7}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V8}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V9}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V10}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V11}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V12}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V13}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V14}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V15}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V16}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V17}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V18}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V19}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V20}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V21}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V22}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V23}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V24}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V25}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V26}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V27}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V28}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V29}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V30}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V31}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V32}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V33}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V34}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V35}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V36}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V37}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V38}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V39}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V40}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V41}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V42}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V43}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V44}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V45}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V46}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V47}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V48}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V49}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V50}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V51}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V52}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V53}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V54}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V55}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V56}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V57}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V58}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V59}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
-  \item{V60}{Number in the range 0.0 to 1.0 that represents the energy within a particular frequency band, integrated over a certain period of time.}
+  \item{V2}{(see \code{V1})}
+  \item{V3}{(see \code{V1})}
+  \item{V4}{(see \code{V1})}
+  \item{V5}{(see \code{V1})}
+  \item{V6}{(see \code{V1})}
+  \item{V7}{(see \code{V1})}
+  \item{V8}{(see \code{V1})}
+  \item{V9}{(see \code{V1})}
+  \item{V10}{(see \code{V1})}
+  \item{V11}{(see \code{V1})}
+  \item{V12}{(see \code{V1})}
+  \item{V13}{(see \code{V1})}
+  \item{V14}{(see \code{V1})}
+  \item{V15}{(see \code{V1})}
+  \item{V16}{(see \code{V1})}
+  \item{V17}{(see \code{V1})}
+  \item{V18}{(see \code{V1})}
+  \item{V19}{(see \code{V1})}
+  \item{V20}{(see \code{V1})}
+  \item{V21}{(see \code{V1})}
+  \item{V22}{(see \code{V1})}
+  \item{V23}{(see \code{V1})}
+  \item{V24}{(see \code{V1})}
+  \item{V25}{(see \code{V1})}
+  \item{V26}{(see \code{V1})}
+  \item{V27}{(see \code{V1})}
+  \item{V28}{(see \code{V1})}
+  \item{V29}{(see \code{V1})}
+  \item{V30}{(see \code{V1})}
+  \item{V31}{(see \code{V1})}
+  \item{V32}{(see \code{V1})}
+  \item{V33}{(see \code{V1})}
+  \item{V34}{(see \code{V1})}
+  \item{V35}{(see \code{V1})}
+  \item{V36}{(see \code{V1})}
+  \item{V37}{(see \code{V1})}
+  \item{V38}{(see \code{V1})}
+  \item{V39}{(see \code{V1})}
+  \item{V40}{(see \code{V1})}
+  \item{V41}{(see \code{V1})}
+  \item{V42}{(see \code{V1})}
+  \item{V43}{(see \code{V1})}
+  \item{V44}{(see \code{V1})}
+  \item{V45}{(see \code{V1})}
+  \item{V46}{(see \code{V1})}
+  \item{V47}{(see \code{V1})}
+  \item{V48}{(see \code{V1})}
+  \item{V49}{(see \code{V1})}
+  \item{V50}{(see \code{V1})}
+  \item{V51}{(see \code{V1})}
+  \item{V52}{(see \code{V1})}
+  \item{V53}{(see \code{V1})}
+  \item{V54}{(see \code{V1})}
+  \item{V55}{(see \code{V1})}
+  \item{V56}{(see \code{V1})}
+  \item{V57}{(see \code{V1})}
+  \item{V58}{(see \code{V1})}
+  \item{V59}{(see \code{V1})}
+  \item{V60}{(see \code{V1})}
   \item{mine.crit}{\emph{Criterion}: Did a sonar signal bounce off a metal cylinder (or a rock)?
 
   Values: \code{TRUE} (metal cylinder) vs. \code{FALSE} (rock) (53.37\% vs.\ 46.63\%).}
@@ -81,7 +80,8 @@ A data frame containing 208 rows and 60 columns.
 sonar
 }
 \description{
-The file contains patterns of sonar signals bounced off a metal cylinder or bounced off a roughly cylindrical rock at various angles and under various conditions.
+The file contains patterns of sonar signals bounced off a metal cylinder
+or bounced off a roughly cylindrical rock at various angles and under various conditions.
 The transmitted sonar signal is a frequency-modulated chirp, rising in frequency.
 }
 \details{
@@ -91,10 +91,12 @@ We made the following enhancements to the original data for improved usability:
  \item{The binary factor \emph{criterion} variable with exclusive "m" and "r" values was converted to a logical \code{TRUE/FALSE} vector.}
  }
 
- Other than that, the data remains consistent with the original dataset.
+Other than that, the data remains consistent with the original dataset.
 }
 \references{
-Gorman, R. P., and Sejnowski, T. J. (1988). "Analysis of Hidden Units in a Layered Network Trained to Classify Sonar Targets" in Neural Networks, Vol. 1, pp. 75-89.
+Gorman, R. P., and Sejnowski, T. J. (1988).
+Analysis of hidden units in a layered network trained to classify sonar targets.
+\emph{Neural Networks}, \emph{1}, pp. 75--89.
 }
 \seealso{
 Other datasets: 
