@@ -32,7 +32,7 @@ replace_values <- function(data, cols, amount, replacement = NA, levels_amount =
   testthat::expect_true(is.data.frame(data), info = "Data should be a dataframe.") # check that data is a dataframe.
   testthat::expect_true(all(cols %in% names(data)), info = "All column names should be present in the data.") # check that columns is/are all variables in the dataframe.
   testthat::expect_true(length(cols) == length(amount), info = "Number of columns and percentages have to match.") # check if columns and percentages are of the same length.
-  testthat::expect_true(all(is.numeric(amount) && (amount >= 0) ), info = "All amounts should be numeric values.") # check that percentages are all numbers between 0 and 1, or higher (than treat as number of to be replaced values.
+  testthat::expect_true(all(is.numeric(amount) & (amount >= 0) ), info = "All amounts should be numeric values.") # check that percentages are all numbers between 0 and 1, or higher (than treat as number of to be replaced values.
   testthat::expect_true(is.character(replacement) | is.numeric(replacement) | is.logical(replacement) | is.na(replacement), info = "Replacement value should be of a valid data type (character, nummeric, logical or NA).") # check that replacement is a valid data type.
   testthat::expect_true(is.null(levels_amount) | is.list(levels_amount), info = "levels_amount should be a list") # check that levels_amount is a list if it's not NULL.
   if (!is.null(levels_amount)) {

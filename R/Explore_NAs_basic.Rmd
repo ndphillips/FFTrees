@@ -9,10 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 
 # load packages
-library(FFTrees)
+# library(FFTrees)
 
 # load replace_values function
-replace_values <- function(data, cols, amount, replacement = NA, levels_amount = NULL) {
+replace_values_copy <- function(data, cols, amount, replacement = NA, levels_amount = NULL) {
 
 
   # Verify inputs ----
@@ -104,7 +104,6 @@ replace_values <- function(data, cols, amount, replacement = NA, levels_amount =
 
 heart.fft <- FFTrees(formula = diagnosis ~.,
                      data = heart.train,
-                     data.test = heart.train,
                      main = "Heart Disease",
                      decision.labels = c("Healthy", "Diseased"))
 
@@ -116,14 +115,14 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 # Preparations:
 
 # get all names of variables but exclude criterion: 
-column_names_heart<- colnames(heart.train)
+column_names_heart <- colnames(heart.train)
 column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
 
 # in total 25%/50%/75% should be NAs in the end, split equally over all variables: 
-num_columns<- length(column_names_heart)
-pc_per_row_25<- 0.25
-pc_per_row_50<- 0.5
-pc_per_row_75<- 0.75
+num_columns <- length(column_names_heart)
+pc_per_row_25 <- 0.25
+pc_per_row_50 <- 0.5
+pc_per_row_75 <- 0.75
 
 # create vector with that pc for number of rows:
 pc_vector_25 <- rep(pc_per_row_25, times = num_columns)
@@ -141,8 +140,6 @@ heart_NA_25 <- replace_values(data = heart.train, cols = column_names_heart, amo
 heart_NA_50 <- replace_values(data = heart.train, cols = column_names_heart, amount = pc_vector_50)
 # 75% NAs in data set:
 heart_NA_75 <- replace_values(data = heart.train, cols = column_names_heart, amount = pc_vector_75)
-
-
 ```
 
 # Applying the FFTrees function to all manipulated data sets.
@@ -151,15 +148,15 @@ heart_NA_75 <- replace_values(data = heart.train, cols = column_names_heart, amo
 
 # build best tree. 25% NAs (standard function)
 heart.fft_NA_25 <- FFTrees(formula = diagnosis ~.,
-                     data = heart_NA_25,
-                     main = "Heart Disease",
-                     decision.labels = c("Healthy", "Diseased"))
+                           data = heart_NA_25,
+                           main = "Heart Disease",
+                           decision.labels = c("Healthy", "Diseased"))
 
 
 # Report on NA cases: 
 tree_level_outcome_vars <- c(1:3, 7:12, 25:30)
 heart.fft_NA_25$trees$level_stats$train[ , tree_level_outcome_vars]
-  
+
 #plot(heart.fft_NA_25)
 
 
