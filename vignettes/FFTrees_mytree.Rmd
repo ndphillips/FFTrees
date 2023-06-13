@@ -214,8 +214,8 @@ Nevertheless, it is still far from perfect ---\ so check out whether you can cre
 fft_1 <- FFTrees(diagnosis ~.,
                  data = heartdisease, 
                  my.tree = "If age < 45, predict False. 
-                               If thal = {fd, normal}, predict True.
-                               Otherwise, predict the opposite.", 
+                            If thal = {fd, normal}, predict True.
+                            Otherwise, predict the opposite.", 
                  main = "My test 1")
 
 # inspect:
