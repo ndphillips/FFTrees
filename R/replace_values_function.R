@@ -29,8 +29,8 @@ replace_values <- function(data, cols, amount, replacement = NA, levels_amount =
 
 
   # Verify inputs ----
-  testthat::expect_true(is.data.frame(data), info = "Data should be a dataframe.") # check that data is a dataframe.
-  testthat::expect_true(all(cols %in% names(data)), info = "All column names should be present in the data.") # check that columns is/are all variables in the dataframe.
+  testthat::expect_true(is.data.frame(data), info = "Data should be a dataframe.") # check that data is a data frame.
+  testthat::expect_true(all(cols %in% names(data)), info = "All column names should be present in the data.") # check that columns is/are all variables in the data frame.
   testthat::expect_true(length(cols) == length(amount), info = "Number of columns and percentages have to match.") # check if columns and percentages are of the same length.
   testthat::expect_true(all(is.numeric(amount) & (amount >= 0) ), info = "All amounts should be numeric values.") # check that percentages are all numbers between 0 and 1, or higher (than treat as number of to be replaced values.
   testthat::expect_true(is.character(replacement) | is.numeric(replacement) | is.logical(replacement) | is.na(replacement), info = "Replacement value should be of a valid data type (character, nummeric, logical or NA).") # check that replacement is a valid data type.
@@ -51,7 +51,7 @@ replace_values <- function(data, cols, amount, replacement = NA, levels_amount =
      }
 
   }
-
+  # main: ----
 
   # loop function over all columns that are inserted in form of a vector and corresponding percentages:
   for (i in seq_along(cols)) {
@@ -77,8 +77,7 @@ replace_values <- function(data, cols, amount, replacement = NA, levels_amount =
         rows <- which(data[[col]] == cat)
 
         # Calculate how many values should be replaced in category:
-        num_replace <-  ifelse(amount < 1, round(replace_perc * length(rows), 0), amount)
-
+        num_replace <-  ifelse(replace_perc <= 1, round(replace_perc * length(rows), 0), replace_perc)
 
         # Use sample to replace specified percentage of category with replacement input:
         replace_rows <- sample(rows, size = num_replace[1],  replace = FALSE)
@@ -90,7 +89,7 @@ replace_values <- function(data, cols, amount, replacement = NA, levels_amount =
 
       # Calculate how many values should be replaced:
       num_values <- nrow(data)
-      num_replace <-  ifelse(amount < 1, round(amount * num_values, 0), amount)
+      num_replace <-  ifelse(amount <= 1, round(amount * num_values, 0), amount)
 
       # Use sample to replace specified percentage with replacement input:
       replace_rows <- sample(1:num_values,size = num_replace[1],  replace = FALSE)
