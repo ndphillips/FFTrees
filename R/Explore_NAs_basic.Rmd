@@ -6,7 +6,7 @@ output: html_document
 ---
 
 
-```{r setup, include=FALSE}
+```{r setup, eval = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
 # load packages
@@ -17,6 +17,7 @@ replace_values_copy <- function(data, cols, amount, replacement = NA, levels_amo
 
 
   # Verify inputs ----
+  
   testthat::expect_true(is.data.frame(data), info = "Data should be a dataframe.") # check that data is a dataframe.
   testthat::expect_true(all(cols %in% names(data)), info = "All column names should be present in the data.") # check that columns is/are all variables in the dataframe.
   testthat::expect_true(length(cols) == length(amount), info = "Number of columns and percentages have to match.") # check if columns and percentages are of the same length.
@@ -107,7 +108,7 @@ heart.fft <- FFTrees(formula = diagnosis ~.,
 
 ```
 
-```{r Data with 25% NAs}
+```{r Data-with-25pc-NAs}
 
 # Preparations:
 
@@ -119,8 +120,6 @@ column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
 # in total 25%/50%/75% should be NAs in the end, split equally over all variables: 
 num_columns <- length(column_names_heart)
 pc_per_row_25 <- 0.25
-pc_per_row_50 <- 0.50
-pc_per_row_75 <- 0.75
 
 # create vector with that pc for number of rows:
 pc_vector_25 <- rep(pc_per_row_25, times = num_columns)
@@ -132,14 +131,6 @@ set.seed(13)
 
 # 25% NAs in data set:
 heart_NA_25 <- replace_values(data = heart.train, cols = column_names_heart, amount = pc_vector_25)
-
-# 50% NAs in data set:
-heart_NA_50 <- replace_values(data = heart.train, cols = column_names_heart, amount = pc_vector_50)
-
-# 75% NAs in data set:
-heart_NA_75 <- replace_values(data = heart.train, cols = column_names_heart, amount = pc_vector_75)
-
-
 
 # build best tree. 25% NAs (standard function)
 heart.fft_NA_25 <- FFTrees(formula = diagnosis ~.,
@@ -153,13 +144,9 @@ tree_level_outcome_vars <- c(1:3, 7:12, 25:30)
 heart.fft_NA_25$trees$level_stats$train[ , tree_level_outcome_vars]
   
 plot(heart.fft_NA_25)
-
-
-
 ```
 
-
-```{r  Data with 50% NAs}
+```{r Data-with-50pc-NAs}
 
 # Preparations:
 
@@ -169,7 +156,7 @@ column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
 
 # in total 50% should be NAs in the end, split equally over all variables: 
 num_columns <- length(column_names_heart)
-pc_per_row_50 <- 0.5
+pc_per_row_50 <- 0.50 
 
 # create vector with that pc for number of rows:
 pc_vector_50 <- rep(pc_per_row_50, times = num_columns)
@@ -204,7 +191,7 @@ plot(heart.fft_NA_50)
 ```
 
 
-```{r  Data with 75% NAs}
+```{r  Data-with-75pc-NAs}
 
 # Preparations:
 
@@ -248,7 +235,7 @@ plot(heart.fft_NA_75)
 ```
 
 
-```{r  Data with 100% NAs}
+```{r  Data-with-100pc-NAs}
 
 # Preparations:
 
@@ -272,14 +259,16 @@ set.seed(13333)
 # 100% NAs in data set:
 heart_NA_100 <- replace_values(data = heart.train, cols = column_names_heart, amount = vector_100)
 
-
+# Check: 
+sum(is.na(heart_NA_100)) == (ncol(heart_NA_100) - 1) * nrow(heart_NA_100)
 
 # build best tree, 100% NAs (standard function)
 heart.fft_NA_100 <- FFTrees(formula = diagnosis ~.,
-                     data = heart_NA_100,
-                     main = "Heart Disease",
-                     decision.labels = c("Healthy", "Diseased"),
-                     do.comp = FALSE)
+                    data = heart_NA_100,
+                    main = "Heart Disease",
+                    decision.labels = c("Healthy", "Diseased"),
+                    quiet = list(ini = FALSE, fin = FALSE, mis = FALSE, set = TRUE), 
+                    do.comp = FALSE)
 
 
 
