@@ -13,17 +13,21 @@ library(tidyverse)
 
 # ONLY NUMERIC VARIABLES
 
-```{r build data set with only nummeric predictors}
+```{r build-data-set-with-only-numeric-predictors, echo = FALSE}
 # Preparations:
-# Build subset of data with only numeric variables and criterion 
+# Build subset of data with only numeric variables and criterion: 
 heart.num <- heart.train %>%
+  select(where(is.numeric), diagnosis)
+
+# For NA = 100% also build numeric subset for test data: 
+heart.num.test <- heart.test %>%
   select(where(is.numeric), diagnosis)
  
 ```
 
 
 
-```{r Baseline, only NUMERIC predictors}
+```{Baseline-only-numeric-predictors}
 
 #Build tree for normal data set:
 heart.fft.num <- FFTrees(formula = diagnosis ~.,
@@ -35,7 +39,7 @@ plot(heart.fft.num)
 
 ```
 
-```{r Data with 25% NAs, NUMERIC}
+```{r Data-with-25pc-NAs-NUMERIC}
 
 # Preparations:
 
@@ -79,7 +83,7 @@ plot(heart.fft_NA_25)
 
 
 
-```{r  Data with 50% NAs, NUMERIC}
+```{r  Data-with-50pc-NAs-NUMERIC}
 
 # Preparations:
 
@@ -125,7 +129,7 @@ plot(heart.fft_NA_50)
 
 
 
-```{r  Data with 75% NAs}
+```{r  Data-with-75pc-NAs-NAs}
 
 # Preparations:
 
@@ -169,6 +173,46 @@ plot(heart.fft_NA_75)
 ```
 
 
+
+```{r Data-with-100pc-NAs-in-TESTDATA-numeric}
+
+# Preparations:
+
+# get all names of variables but exclude criterion: 
+column_names_heart <- colnames(heart.num.test)
+column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
+
+# in total 100% per row should be NAs in the end: 
+per_row_100 <- nrow(heart.num.test)
+
+
+# create vector with number of rows:
+num_columns <- length(column_names_heart)
+vector_100 <- rep(per_row_100, times = num_columns)
+
+# apply replace_values function and thereby create a new data frame for test data:
+
+# set seed for being able to replicate results:
+set.seed(13333)
+
+# 100% NAs in data set:
+heart_NA_100 <- replace_values(data = heart.num.test, cols = column_names_heart, amount = vector_100)
+
+
+
+# build best tree, 100% NAs (standard function)
+heart.fft_NA_100 <- FFTrees(formula = diagnosis ~.,
+                     data = heart.num,
+                     data.test = heart_NA_100,
+                     main = "Heart Disease",
+                     decision.labels = c("Healthy", "Diseased"),
+                     do.comp = FALSE)
+
+
+plot(heart.fft_NA_100, data = "test") # it shows the expected behaviour.
+
+
+```
 
 
 

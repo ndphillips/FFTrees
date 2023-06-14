@@ -13,17 +13,21 @@ library(tidyverse)
 
 # ONLY CHARACTER VARIABLES, NAs added at RANDOM
 
-```{r build data set with only numeric predictors, echo = FALSE}
+```{r build-data-set-with-only-character-predictors, echo = FALSE}
 # Preparations:
-# Build subset of data with only character variables and criterion 
+# Build subset of data with only character variables and criterion: 
 heart.cat <- heart.train %>%
   select(where(is.character), diagnosis)
  
+# For NA = 100% also build character subset for test data: 
+heart.cat.test <- heart.test %>%
+  select(where(is.character), diagnosis)
+
 ```
 
 
 
-```{r Baseline, only character predictors}
+```{r Baseline-only-character-predictors}
 
 #Build tree for normal data set:
 heart.fft.cat <- FFTrees(formula = diagnosis ~.,
@@ -35,7 +39,7 @@ plot(heart.fft.cat)
 
 ```
 
-```{r Data with 25% NAs, character}
+```{r Data-with-25pc-NAs-character}
 
 # Preparations:
 
@@ -75,7 +79,7 @@ plot(heart.fft_NA_25)
 
 
 
-```{r  Data with 50% NAs, character}
+```{r  Data-with-50pc-NAs-character}
 
 # Preparations:
 
@@ -85,7 +89,7 @@ column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
 
 # in total 50% should be NAs in the end, split equally over all variables: 
 num_columns <- length(column_names_heart)
-pc_per_row_50 <- 0.5
+pc_per_row_50 <- 0.50
 
 # create vector with that pc for number of rows:
 pc_vector_50 <- rep(pc_per_row_50, times = num_columns)
@@ -117,7 +121,7 @@ plot(heart.fft_NA_50)
 
 
 
-```{r  Data with 75% NAs}
+```{r Data-with-75pc-NAs-character}
 
 # Preparations:
 
@@ -156,13 +160,53 @@ plot(heart.fft_NA_75)
 ```
 
 
+```{r Data-with-100pc-NAs-in-TESTDATA-character}
+
+# Preparations:
+
+# get all names of variables but exclude criterion: 
+column_names_heart <- colnames(heart.cat.test)
+column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
+
+# in total 100% per row should be NAs in the end: 
+per_row_100 <- nrow(heart.cat.test)
+
+
+# create vector with number of rows:
+num_columns <- length(column_names_heart)
+vector_100 <- rep(per_row_100, times = num_columns)
+
+# apply replace_values function and thereby create new data frames:
+
+# set seed for being able to replicate results:
+set.seed(13333)
+
+# 100% NAs in data set:
+heart_NA_100 <- replace_values(data = heart.cat.test, cols = column_names_heart, amount = vector_100)
+
+
+
+# build best tree, 100% NAs (standard function)
+heart.fft_NA_100 <- FFTrees(formula = diagnosis ~.,
+                     data = heart.cat,
+                     data.test = heart_NA_100,
+                     main = "Heart Disease",
+                     decision.labels = c("Healthy", "Diseased"),
+                     do.comp = FALSE)
+
+
+plot(heart.fft_NA_100, data = "test") # it shows the expected behaviour.
+
+
+```
+
 
 # ONLY CHARACTER VARIABLES, NAs added SYSTEMATICALLY
 
 
-```{r Data with 25% NAs, character, SYSTEMATICALLY}
+```{r Data-with-25pc-NAs-character-SYSTEMATICALLY}
 
-# Preparations: # does not work yet! <have to fix the function!
+# Preparations: 
 
 # get all names of variables but exclude criterion: 
 column_names_heart <- colnames(heart.cat)
@@ -206,9 +250,7 @@ plot(heart.fft_NA_25) # presumably correct hypothesis, stays as good as without 
 ```
 
 
-
-
-```{r  Data with 50% NAs, character, SYSTEMATICALLY}
+```{r Data-with-50pc-NAs-character-SYSTEMATICALLY}
 
 # Preparations:
 
@@ -249,7 +291,7 @@ heart.fft_NA_50 <- FFTrees(formula = diagnosis ~.,
 
 
 
-plot(heart.fft_NA_50) # against predictions, worsens!
+plot(heart.fft_NA_50) # against predictions, worsens! So far no idea why it constructs another tree and therefore shows a weaker performance!
 
 
 
