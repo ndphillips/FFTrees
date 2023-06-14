@@ -1,7 +1,7 @@
 
 # FFTrees 2.0
 
-## 2.0.0.9001
+## 2.0.0.9003
 
 <!-- **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. -->
 
@@ -20,8 +20,7 @@ Changes since last release:
 
 <!-- Topic --> 
 
-- None yet.
-    
+- Adding support for handling NA values. 
 
 <!-- Minor: --> 
 
@@ -522,6 +521,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-06-06.]
+[File `NEWS.md` last updated on 2023-06-14.]
 
 <!-- eof. -->
