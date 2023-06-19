@@ -1,0 +1,163 @@
+---
+title: "NA_heartdisease"
+author: "Jelena Meyer"
+date: "2023-06-19"
+output: html_document
+---
+
+
+
+```{r Get-tree-for-original-data}
+
+#Build tree for normal data set:
+heart.fft <- FFTrees(formula = diagnosis ~.,
+                     data = heartdisease,
+                     main = "Heart Disease",
+                     decision.labels = c("Healthy", "Diseased"))
+
+
+# get definition of best train.tree:      ### FRAGE: best train oder test als Grundlage für weitere Bäume???
+def_best <- inwords(heart.fft, tree = 1)
+
+```
+
+
+```{r build-loop-function}
+
+# input will be the data sets 
+# Input will be how many percent should be replaced with NAs (25%. 50% and 75% NAs in each variable).
+# input will also be the number of loops
+
+# output will be a table where the performance and metadata of each tree. which was built in the function, is displayed in one vector. 
+
+
+
+# function 
+
+loop_trees <- function(data, cols, amount, replacement = NA, levels_amount = NULL,  n_loop){
+  
+  # replace wished percentage by NAs
+  data_na <- replace_values(data, cols, amount, replacement = NA, levels_amount = NULL)
+  
+  # built tree with every data set
+  heart.fft_na <- FFTrees(formula = diagnosis ~.,
+                                   data = data_na,
+                                   my.tree = def_best,
+                                   main = "Heart Disease",
+                                   decision.labels = c("Healthy", "Diseased"))
+  
+  # get interesting values in vector:
+  
+  vec_na <- c(name(data), # name of data set.
+              amount,     # number of nas
+              
+              )
+  
+  # built table with all vectors: 
+  table_na <- 
+    
+    
+  # Output: ----
+  
+  return(table_na)  # use table as output.
+  
+  } # loop_trees.
+
+
+
+
+
+```
+
+
+```{r apply-loop-function 25-na}
+
+# use loop-function, input = 25% nas:
+
+# preparations:
+
+# get all names of variables but exclude criterion: 
+column_names_heart <- colnames(heartdisease)
+column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
+
+
+# in total 25% should be NAs in the end, split equally over all variables: 
+num_columns <- length(column_names_heart)
+pc_per_row_25 <- 0.25
+
+# create vector with that pc for number of rows:
+pc_vector_25 <- rep(pc_per_row_25, times = num_columns)
+
+
+# Use loop-function 
+table_na_25 <- loop_trees(data = heartdisease, cols = column_names_heart, amount = pc_vector_25,  n_loop = 10)
+  
+```
+
+
+
+
+
+```{r apply-loop-function 50-na}
+
+# use loop-function, input = 50% nas:
+
+# preparations:
+
+# get all names of variables but exclude criterion: 
+column_names_heart <- colnames(heartdisease)
+column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
+
+
+# in total 50% should be NAs in the end, split equally over all variables: 
+num_columns <- length(column_names_heart)
+pc_per_row_50 <- 0.50
+
+# create vector with that pc for number of rows:
+pc_vector_50 <- rep(pc_per_row_50, times = num_columns)
+
+
+# Use loop-function 
+table_na_50 <- loop_trees(data = heartdisease, cols = column_names_heart, amount = pc_vector_50,  n_loop = 10)
+  
+```
+
+
+
+
+
+```{r apply-loop-function 75-na}
+
+# use loop-function, input = 75% nas:
+
+# preparations:
+
+# get all names of variables but exclude criterion: 
+column_names_heart <- colnames(heartdisease)
+column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
+
+
+# in total 75% should be NAs in the end, split equally over all variables: 
+num_columns <- length(column_names_heart)
+pc_per_row_75 <- 0.75
+
+# create vector with that pc for number of rows:
+pc_vector_75 <- rep(pc_per_row_75, times = num_columns)
+
+
+# Use loop-function 
+table_na_75 <- loop_trees(data = heartdisease, cols = column_names_heart, amount = pc_vector_75,  n_loop = 10)
+  
+```
+
+
+```{r build-graph-example}
+
+# take gist from different tables (e.g. mean bacc) and % nas and make plot:
+
+
+```
+
+
+
+
