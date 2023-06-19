@@ -5,13 +5,15 @@ date: "2023-06-19"
 output: html_document
 ---
 
-```{r}
+```{r Preparations}
+
+# get name of data set:
 get_object_name <- function(x){
   deparse(substitute(x))
 }
 
 # Check:
-get_object_name(heartdisease)
+#get_object_name(heartdisease)
 ```
 
 
@@ -24,10 +26,6 @@ x <- FFTrees(formula = diagnosis ~.,
              goal = "bacc",
              goal.chase = "bacc",
              goal.threshold = "bacc")
-
-
-# get definition of best train.tree:      ### FRAGE: best train oder test als Grundlage für weitere Bäume???
-# def_best <- inwords(x, tree = 1)
 
 # Performance:
 x_summary <- summary(x)
@@ -42,38 +40,52 @@ fft_df <- x_fft_df[1, ]  # best training tree
 
 ```{r build-loop-function}
 
-# input will be the data sets 
-# Input will be how many percent should be replaced with NAs (25%. 50% and 75% NAs in each variable).
-# input will also be the number of loops
+loop_NA <- function(data, criterion, pc){
 
-# output will be a table where the performance and metadata of each tree. which was built in the function, is displayed in one vector. 
-
-# Parameters:
-n_per_NA <- 10
-n_sims <- n_per_NA
+  
+# Prepare for loop:
+  # Parameters:
+  n_per_NA <- 10
+  n_sims <- n_per_NA
 
 # initialize data structure to collect results:
 results <- data.frame(matrix(NA, nrow = 1 + n_sims, ncol = 26))
 
-
+# results:
 n_col <- ncol(x_stats_1)
 results[1, 1:n_col] <- x_stats_1
-# results
 
+  
+# Prepare vectors as input for replace_values function:  
+   # get all names of variables but exclude criterion: 
+   col_names <- names(data)
+   col_names <- col_names[col_names != criterion ]
+  
+   # build vector with NA percentage: 
+   num_cols <- length(col_names)
+   pc_per_row <- pc
+
+   # create vector with that pc for number of rows:
+   pc_vec <- rep(pc_per_row, times = num_cols)
+
+  
 # Loop 1: ---- 
 for (i in 1:n_sims){
 
 # Add NAs to data:
-# data_NA <- replace_values(heartdisease, cols, amount, replacement = NA, levels_amount = NULL)
-data_NA <- heart.test
+data_NA <- replace_values(data = data, 
+                          cols = col_names, 
+                          amount = pc_vec, 
+                          replacement = NA, 
+                          levels_amount = NULL)
 
   
 # Apply tree definition to (OLD/NBW) data:
 y <- FFTrees(object = x,
              tree.definitions = fft_df,
              data = data_NA, 
-             quiet = TRUE)
-
+             quiet = TRUE, 
+             do.comp = FALSE)
 
 # Collect results:
 
@@ -93,148 +105,53 @@ all_data_df <- cbind(y_stats, NA_stats)
 # Collect results:
 results[(1 + i), ] <- all_data_df
 
-
 } # for loop. 
 
+  
 # After loop:
 
-# Add column names:
+# Add column names to data frame:
 names(results) <- names(all_data_df)
 
-# Inspect results:
-results
+       
+# Output: ----
+return(results) # as data frame.
+
+} # loop_NA().
 ```
 
 
-# OLDER code
-
-```{r older-build-loop-function}
-# function 
-
-loop_trees <- function(data, cols, amount, replacement = NA, levels_amount = NULL,  n_loop){
-  
-  # replace wished percentage by NAs
-  data_na <- replace_values(data, cols, amount, replacement = NA, levels_amount = NULL)
-  
-  # built tree with every data set
-  heart.fft_na <- FFTrees(formula = diagnosis ~.,
-                                   data = data_na,
-                                   my.tree = def_best,
-                                   main = "Heart Disease",
-                                   decision.labels = c("Healthy", "Diseased"))
-  
-  # get interesting values in vector:
-  
-  vec_na <- c(name(data), # name of data set.
-              amount,     # number of nas
-              
-              )
-  
-  # built table with all vectors: 
-  table_na <- 
-    
-    
-  # Output: ----
-  
-  return(table_na)  # use table as output.
-  
-  } # loop_trees.
-
-
-
-
-
-```
-
-
-```{r apply-loop-function 25-na}
-
+```{r apply-loop-function-25-na}
 # use loop-function, input = 25% nas:
-
-# preparations:
-
-# get all names of variables but exclude criterion: 
-column_names_heart <- colnames(heartdisease)
-column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
-
-
-# in total 25% should be NAs in the end, split equally over all variables: 
-num_columns <- length(column_names_heart)
-pc_per_row_25 <- 0.25
-
-# create vector with that pc for number of rows:
-pc_vector_25 <- rep(pc_per_row_25, times = num_columns)
-
-
-# Use loop-function 
-table_na_25 <- loop_trees(data = heartdisease, cols = column_names_heart, amount = pc_vector_25,  n_loop = 10)
-  
+heart_NA_25 <- loop_NA(heartdisease, "diagnosis", 0.25)
 ```
 
 
 
 
 
-```{r apply-loop-function 50-na}
-
+```{r apply-loop-function-50-na}
 # use loop-function, input = 50% nas:
-
-# preparations:
-
-# get all names of variables but exclude criterion: 
-column_names_heart <- colnames(heartdisease)
-column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
-
-
-# in total 50% should be NAs in the end, split equally over all variables: 
-num_columns <- length(column_names_heart)
-pc_per_row_50 <- 0.50
-
-# create vector with that pc for number of rows:
-pc_vector_50 <- rep(pc_per_row_50, times = num_columns)
-
-
-# Use loop-function 
-table_na_50 <- loop_trees(data = heartdisease, cols = column_names_heart, amount = pc_vector_50,  n_loop = 10)
-  
+heart_NA_50 <- loop_NA(heartdisease, "diagnosis", 0.50)
 ```
 
 
 
 
-
-```{r apply-loop-function 75-na}
-
+```{r apply-loop-function-75-na}
 # use loop-function, input = 75% nas:
-
-# preparations:
-
-# get all names of variables but exclude criterion: 
-column_names_heart <- colnames(heartdisease)
-column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
-
-
-# in total 75% should be NAs in the end, split equally over all variables: 
-num_columns <- length(column_names_heart)
-pc_per_row_75 <- 0.75
-
-# create vector with that pc for number of rows:
-pc_vector_75 <- rep(pc_per_row_75, times = num_columns)
-
-
-# Use loop-function 
-table_na_75 <- loop_trees(data = heartdisease, cols = column_names_heart, amount = pc_vector_75,  n_loop = 10)
-  
+heart_NA_75 <- loop_NA(heartdisease, "diagnosis", 0.75)
 ```
 
 
-```{r build-graph-example}
 
-# take gist from different tables (e.g. mean bacc) and % nas and make plot:
+```{r apply-loop-function-100-na}
+# how many rows are in the data set:
+n <- nrow(heartdisease)
 
-
+# use loop-function, input = 100% nas:
+heart_NA_100 <- loop_NA(heartdisease, "diagnosis", n)
 ```
-
 
 
 
