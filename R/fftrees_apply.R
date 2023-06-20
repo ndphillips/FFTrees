@@ -40,7 +40,7 @@ fftrees_apply <- function(x,
                           mydata = NULL,   # data type (either "train" or "test")
                           newdata = NULL,
                           #
-                          fin_NA_pred = "majority"  # Options available: c("noise", "signal", "baseline", "majority")
+                          fin_NA_pred = "baseline"  # Options available: c("noise", "signal", "majority", "baseline")
 ) {
 
   # Prepare: ------
