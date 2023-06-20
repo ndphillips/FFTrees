@@ -1,7 +1,7 @@
 ---
 title: "NA_heartdisease"
-author: "Jelena Meyer"
-date: "2023-06-19"
+author: "jm and hn"
+date: "2023-06-20"
 output: html_document
 ---
 
@@ -16,36 +16,61 @@ get_object_name <- function(x){
 #get_object_name(heartdisease)
 ```
 
+## Data
+
+Describe current data:
+
+```{r describe-data}
+dd <- describe_data(heartdisease, 
+                    data_name = "heartdisease", 
+                    criterion_name = "diagnosis", 
+                    baseline_value = TRUE)
+
+# Baseline:
+bl <- dd$Baseline_pct
+
+# Minimum prediction performance (i.e., majority of criterion):
+pred_benchmark <- max(bl, 100 - bl)/100
+pred_benchmark
+```
+
+Create 1 FFT for current data (and criteria): 
 
 ```{r Get-tree-for-original-data}
 
-#Build tree for normal data set:
+# Build tree for normal data set (without NA values):
 x <- FFTrees(formula = diagnosis ~.,
              data = heartdisease,
              main = get_object_name(heartdisease),
              goal = "bacc",
              goal.chase = "bacc",
-             goal.threshold = "bacc")
+             goal.threshold = "bacc",
+             quiet = list(ini = FALSE, fin = FALSE, mis = FALSE, set = FALSE)
+)
 
 # Performance:
+# print(x)
+# plot(x, what = "all")
+
 x_summary <- summary(x)
 x_stats_1 <- x_summary$stats$train[1, ]
 # x_stats_1
 
 # get tree definitions;
 x_fft_df <- get_fft_df(x)
-fft_df <- x_fft_df[1, ]  # best training tree
+fft_df <- x_fft_df[1, ]  # definition of best training tree
+# fft_df
 ```
 
+Loop function (for multiple simulations): 
 
-```{r build-loop-function}
+```{r define-loop-function}
 
 loop_NA <- function(data, criterion, pc){
 
-  
 # Prepare for loop:
   # Parameters:
-  n_per_NA <- 10
+  n_per_NA <- 100
   n_sims <- n_per_NA
 
 # initialize data structure to collect results:
@@ -120,30 +145,106 @@ return(results) # as data frame.
 } # loop_NA().
 ```
 
+## Run simulations
+
+### Run 25% NA
 
 ```{r apply-loop-function-25-na}
 # use loop-function, input = 25% nas:
-heart_NA_25 <- loop_NA(heartdisease, "diagnosis", 0.25)
+heart_NA_25 <- loop_NA(data = heartdisease, 
+                       criterion = "diagnosis", 
+                       pc = 0.25)
 ```
 
+### Results 25% NA
 
+```{r results-25-na}
+heart_NA_25
+```
 
+Collect key results (in df): 
 
+```{r key-results-25}
+key_results <- data.frame(matrix(NA, nrow = 5, ncol = 4))
+names(key_results) <- c("pc_NA", "mn_acc", "mn_bacc", "mn_mcu")
+
+# Baseline performance:
+key_results[1, "pc_NA"]   <- 0
+key_results[1, "mn_acc"]  <- heart_NA_25$acc[1]
+key_results[1, "mn_bacc"] <- heart_NA_25$bacc[1]
+key_results[1, "mn_mcu"]  <- heart_NA_25$mcu[1]
+
+# Row 2: 25% NA values:
+key_results[2, "pc_NA"]   <- 25
+key_results[2, "mn_acc"]  <- mean(heart_NA_25$acc[-1])
+key_results[2, "mn_bacc"] <- mean(heart_NA_25$bacc[-1])
+key_results[2, "mn_mcu"]  <- mean(heart_NA_25$mcu[-1])
+
+key_results
+```
+
+### Run 50% NA
 
 ```{r apply-loop-function-50-na}
 # use loop-function, input = 50% nas:
 heart_NA_50 <- loop_NA(heartdisease, "diagnosis", 0.50)
 ```
 
+### Results 50% NA
+
+```{r results-50-na}
+heart_NA_50
+```
+
+Collect key results (in df): 
+
+```{r key-results-50}
+# key_results <- data.frame(matrix(NA, nrow = 4, ncol = 3))
+# names(key_results) <- c("pc_NA", "mn_bacc", "mn_mcu")
+
+# Row 3: 50% NA values:
+key_results[3, "pc_NA"]   <- 50
+key_results[3, "mn_acc"]  <- mean(heart_NA_50$acc[-1])
+key_results[3, "mn_bacc"] <- mean(heart_NA_50$bacc[-1])
+key_results[3, "mn_mcu"]  <- mean(heart_NA_50$mcu[-1])
+
+key_results
+```
 
 
+### Run 75% NA
 
 ```{r apply-loop-function-75-na}
 # use loop-function, input = 75% nas:
 heart_NA_75 <- loop_NA(heartdisease, "diagnosis", 0.75)
 ```
 
+### Results 75% NA
 
+```{r results-75-na}
+heart_NA_75
+```
+
+Collect key results (in df): 
+
+```{r key-results-75}
+# key_results <- data.frame(matrix(NA, nrow = 4, ncol = 3))
+# names(key_results) <- c("pc_NA", "mn_bacc", "mn_mcu")
+
+# Row 4: 75% NA values:
+key_results[4, "pc_NA"]   <- 75
+key_results[4, "mn_acc"]  <- mean(heart_NA_75$acc[-1])
+key_results[4, "mn_bacc"] <- mean(heart_NA_75$bacc[-1])
+key_results[4, "mn_mcu"]  <- mean(heart_NA_75$mcu[-1])
+
+key_results
+```
+
+
+
+### Run 100% NA
+
+Basically a sanity check: 
 
 ```{r apply-loop-function-100-na}
 # how many rows are in the data set:
@@ -153,5 +254,94 @@ n <- nrow(heartdisease)
 heart_NA_100 <- loop_NA(heartdisease, "diagnosis", n)
 ```
 
+### Results 100% NA
+
+```{r results-100-na}
+heart_NA_100
+```
+
+Collect key results (in df): 
+
+```{r key-results-100}
+# key_results <- data.frame(matrix(NA, nrow = 4, ncol = 3))
+# names(key_results) <- c("pc_NA", "mn_bacc", "mn_mcu")
+
+# Row 4: 75% NA values:
+key_results[5, "pc_NA"]   <- 100
+key_results[5, "mn_acc"]  <- mean(heart_NA_100$acc[-1])
+key_results[5, "mn_bacc"] <- mean(heart_NA_100$bacc[-1])
+key_results[5, "mn_mcu"]  <- mean(heart_NA_100$mcu[-1])
+
+key_results
+```
+
+Plot key results:
+
+```{r plot-key-results}
+# Upper benchmark: Best FFT without missing data: 
+plot(x = key_results$pc_NA, 
+     y = rep(key_results$mn_acc[1], nrow(key_results)), 
+     type = "l", 
+     col = unikn::Seegruen, lwd = 1, lty = 2, 
+     ylim = c(0, 1),
+     xlab = "Percent NA values", 
+     ylab = "Mean accuracy"
+     )
+
+grid()
+
+# Lower benchmark pred_benchmark (i.e., majority of criterion):
+lines(x = key_results$pc_NA, 
+      y = rep(pred_benchmark, nrow(key_results)), 
+      type = "l", 
+      col = unikn::Bordeaux, lwd = 1, lty = 2 
+      # ylim = c(0, 1),
+      # xlab = "Percent NA values", 
+      # ylab = "Mean accuracy"
+)
+
+# Actual accuracy:
+lines(x = key_results$pc_NA, 
+      y = key_results$mn_acc, 
+      type = "b", 
+      col = unikn::Seeblau, lwd = 2
+      # ylim = c(0, 1),
+      # xlab = "Percent NA values", 
+      # ylab = "Mean accuracy"
+)
+
+title(main = "Mean accuracy given missing values")
+```
 
 
+
+## Issues and potential problems 
+
++++ here now +++ 
+
+
+### 1. Using <NA> in categorical predictors
+
+- When creating the basic FFT _without_ any `NA` values, 
+the mechanism for _categorical_ predictors (i.e., treating `NA` as a separate `<NA>` category) is not being used or tested.  
+Thus, we should create the initial FFT (and corresponding performance baselines) for datasets with _some_ `NA` values (e.g., 10%).
+
+
+### 2. Dealing with NA in final predictors
+
+- The current default for coping with `NA` values in final node 
+appears to be to assign all cases 
+to the _majority_ class (as only 2 types of errors occur): 
+`fin_NA_pred = "majority"` (in **FFTrees** v2.0.0). 
+
+- Done: Switched default to `fin_NA_pred = "baseline"` in `fftrees_apply()` (i.e., biased coin flip with both outcomes).
+
+
+### 3. Value of mcu?
+
+- Why is the final `mcu` value (for simulations with 100% NA values) 
+a value of\ 2, rather than\ 3 (for FFT `fft_df` with 3\ nodes)? 
+
+
+
+<!-- eof. -->
