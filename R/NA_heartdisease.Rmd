@@ -1,7 +1,7 @@
 ---
 title: "NA_heartdisease"
 author: "jm and hn"
-date: "2023-06-20"
+date: "2023-06-21"
 output: html_document
 ---
 
@@ -9,11 +9,13 @@ output: html_document
 
 # get name of data set:
 get_object_name <- function(x){
+  
   deparse(substitute(x))
-}
+  
+} # get_object_name(). 
 
 # Check:
-#get_object_name(heartdisease)
+# get_object_name(heartdisease)
 ```
 
 ## Data
@@ -30,8 +32,8 @@ dd <- describe_data(heartdisease,
 bl <- dd$Baseline_pct
 
 # Minimum prediction performance (i.e., majority of criterion):
-pred_benchmark <- max(bl, 100 - bl)/100
-pred_benchmark
+pred_benchmark <- max(bl, 100 - bl)/100  # percentage in [0:1]
+# pred_benchmark
 ```
 
 Create 1 FFT for current data (and criteria): 
@@ -62,40 +64,26 @@ fft_df <- x_fft_df[1, ]  # definition of best training tree
 # fft_df
 ```
 
-Loop function (for multiple simulations): 
+Get NA data:
 
-```{r define-loop-function}
+```{r get-NA-data}
+# Select dataset:
+data <- heartdisease
+criterion <- "diagnosis"
 
-loop_NA <- function(data, criterion, pc){
+pc <- .75
 
-# Prepare for loop:
-  # Parameters:
-  n_per_NA <- 100
-  n_sims <- n_per_NA
-
-# initialize data structure to collect results:
-results <- data.frame(matrix(NA, nrow = 1 + n_sims, ncol = 26))
-
-# results:
-n_col <- ncol(x_stats_1)
-results[1, 1:n_col] <- x_stats_1
-
-  
 # Prepare vectors as input for replace_values function:  
-   # get all names of variables but exclude criterion: 
-   col_names <- names(data)
-   col_names <- col_names[col_names != criterion ]
-  
-   # build vector with NA percentage: 
-   num_cols <- length(col_names)
-   pc_per_row <- pc
+# get all names of variables but exclude criterion: 
+col_names <- names(data)
+col_names <- col_names[col_names != criterion ]
 
-   # create vector with that pc for number of rows:
-   pc_vec <- rep(pc_per_row, times = num_cols)
+# build vector with NA percentage: 
+num_cols <- length(col_names)
+pc_per_row <- pc
 
-  
-# Loop 1: ---- 
-for (i in 1:n_sims){
+# create vector with that pc for number of rows:
+pc_vec <- rep(pc_per_row, times = num_cols)
 
 # Add NAs to data:
 data_NA <- replace_values(data = data, 
@@ -104,44 +92,111 @@ data_NA <- replace_values(data = data,
                           replacement = NA, 
                           levels_amount = NULL)
 
-  
-# Apply tree definition to (OLD/NBW) data:
+# data_NA
+```
+
+Apply FFT to NA data:
+
+```{r apply-FFT-to-NA-data}
+# Apply tree definition to (OLD/NEW NA) data:
 y <- FFTrees(object = x,
              tree.definitions = fft_df,
              data = data_NA, 
              quiet = TRUE, 
              do.comp = FALSE)
 
-# Collect results:
+# FFT:
+fft_df
 
-# a) tree performance: 
-y_summary <- summary(y)
-y_stats <- y_summary$stats$train
+# Data:
+cur_cols <- names(data_NA) %in% c("diagnosis", "thal", "cp", "ca")
+data_NA[cur_cols]
 
-# b) level stats:
-y_level_stats <- y$trees$level_stats$train
-NA_stats <- y_level_stats[nrow(y_level_stats) , c(25 :30)]
+# Decisions:
+y$trees$decisions$train$tree_1
+```
 
-# Combine:
-all_data_df <- cbind(y_stats, NA_stats)
-# dim(all_data_df)
+Loop function (for multiple simulations): 
 
-
-# Collect results:
-results[(1 + i), ] <- all_data_df
-
-} # for loop. 
-
+```{r define-loop-function}
+# Simulation loops:
+loop_NA <- function(data, criterion, pc){
   
-# After loop:
-
-# Add column names to data frame:
-names(results) <- names(all_data_df)
-
-       
-# Output: ----
-return(results) # as data frame.
-
+  # Prepare for loop:
+  # Parameters:
+  n_per_NA <- 100
+  n_sims <- n_per_NA
+  
+  # initialize data structure to collect results:
+  results <- data.frame(matrix(NA, nrow = 1 + n_sims, ncol = 26))
+  
+  # results:
+  n_col <- ncol(x_stats_1)
+  results[1, 1:n_col] <- x_stats_1
+  
+  
+  # Prepare vectors as input for replace_values function:  
+  # get all names of variables but exclude criterion: 
+  col_names <- names(data)
+  col_names <- col_names[col_names != criterion ]
+  
+  # build vector with NA percentage: 
+  num_cols <- length(col_names)
+  pc_per_row <- pc
+  
+  # create vector with that pc for number of rows:
+  pc_vec <- rep(pc_per_row, times = num_cols)
+  
+  
+  # Loop 1: Simulations ---- 
+  
+  for (i in 1:n_sims){
+    
+    # Add NAs to data:
+    data_NA <- replace_values(data = data, 
+                              cols = col_names, 
+                              amount = pc_vec, 
+                              replacement = NA, 
+                              levels_amount = NULL)
+    
+    
+    # Apply tree definition to (OLD/NEW NA) data:
+    y <- FFTrees(object = x,
+                 tree.definitions = fft_df,
+                 data = data_NA, 
+                 quiet = TRUE, 
+                 do.comp = FALSE)
+    
+    # Collect results:
+    
+    # a) tree performance: 
+    y_summary <- summary(y)
+    y_stats <- y_summary$stats$train
+    
+    # b) level stats:
+    y_level_stats <- y$trees$level_stats$train
+    NA_stats <- y_level_stats[nrow(y_level_stats) , c(25 :30)]
+    
+    # Combine:
+    all_data_df <- cbind(y_stats, NA_stats)
+    # dim(all_data_df)
+    
+    
+    # Collect results:
+    results[(1 + i), ] <- all_data_df
+    
+  } # for loop 1. 
+  
+  
+  # After loop:
+  
+  # Add column names to data frame:
+  names(results) <- names(all_data_df)
+  
+  
+  # Output: ----
+  return(results) # as data frame.
+  
 } # loop_NA().
 ```
 
@@ -277,7 +332,9 @@ key_results
 
 Plot key results:
 
-```{r plot-key-results}
+1. Accuracy (mean `acc`)
+
+```{r plot-key-results-accuracy}
 # Upper benchmark: Best FFT without missing data: 
 plot(x = key_results$pc_NA, 
      y = rep(key_results$mn_acc[1], nrow(key_results)), 
@@ -310,8 +367,50 @@ lines(x = key_results$pc_NA,
       # ylab = "Mean accuracy"
 )
 
-title(main = "Mean accuracy given missing values")
+title(main = "Mean accuracy (acc) given missing values")
 ```
+
+2. Frugality (mean `mcu`)
+
+```{r plot-key-results-frugality}
+
+n_nodes <- nrow(read_fft_df(fft_df))
+
+# Upper benchmark: Best FFT without missing data: 
+plot(x = key_results$pc_NA, 
+     y = rep(1, nrow(key_results)), 
+     type = "l", 
+     col = unikn::Seegruen, lwd = 1, lty = 2, 
+     ylim = c(0, n_nodes + 1),
+     xlab = "Percent NA values", 
+     ylab = "Mean frugality (mcu)"
+     )
+
+grid()
+
+# Lower benchmark pred_benchmark (i.e., majority of criterion):
+lines(x = key_results$pc_NA, 
+      y = rep(n_nodes, nrow(key_results)), 
+      type = "l", 
+      col = unikn::Bordeaux, lwd = 1, lty = 2 
+      # ylim = c(0, 1),
+      # xlab = "Percent NA values", 
+      # ylab = "Mean accuracy"
+)
+
+# Actual frugality:
+lines(x = key_results$pc_NA, 
+      y = key_results$mn_mcu, 
+      type = "b", 
+      col = unikn::Seeblau, lwd = 2
+      # ylim = c(0, 1),
+      # xlab = "Percent NA values", 
+      # ylab = "Mean accuracy"
+)
+
+title(main = "Mean frugality given missing values")
+```
+
 
 
 
