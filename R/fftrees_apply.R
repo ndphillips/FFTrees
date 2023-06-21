@@ -418,6 +418,9 @@ fftrees_apply <- function(x,
           ix_NA_current_decision <- is.na(decisions_df$current_decision)
           nr_NA_lvl <- sum(ix_NA_current_decision)
 
+          # Assign: +++ here now +++
+          classify_now[ix_NA_current_decision] <- TRUE  # Do classify NA cases (which differs from "classify as TRUE")!
+
           if (any(ix_NA_current_decision)){ # IFF there ARE NA cases:
 
             # Classify NA cases (in final node):
