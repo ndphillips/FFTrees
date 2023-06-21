@@ -164,6 +164,13 @@ heart_fft <- FFTrees(formula = diagnosis ~.,
                      decision.labels = c("Healthy", "Disease"))
 ```
 
+```{r example-2-simple, echo = FALSE, eval = FALSE}
+# Create FFTs for the heartdisease data:
+x <- FFTrees(formula = diagnosis ~.,
+             data = heartdisease,
+             decision.labels = c("Healthy", "Disease"))
+```
+
 Evaluating `FFTrees()` analyzes the training data, creates several FFTs, and applies them to the test data. 
 The results are stored in an object `heart_fft`, which can be printed, plotted and summarized (with options for selecting specific data or trees). 
 
