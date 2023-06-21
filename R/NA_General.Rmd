@@ -167,7 +167,7 @@ loop_datasets <- function(several_data, data_names, several_criterion, several_p
 
 
 
-    # use function loop_NA
+    # use function loop_pc
     results_list_dataframes[[data_names[k]]] <-loop_pc(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
 
     
@@ -196,6 +196,9 @@ loop_datasets <- function(several_data, data_names, several_criterion, several_p
 } # loop_datasets.
 
 ```
+
+
+
 
 
 # Run simulations, make graph: ----
@@ -473,12 +476,14 @@ title(main = "Mean accuracy given missing values - breastcancer data")
 ```
 
 
+# for combination: ---- +++ here now +++ 
+
+```{r}
+
+```
 
 
 
-
-
-+++ here now +++ 
 
 
 # Issues and potential problems ----
@@ -488,7 +493,7 @@ title(main = "Mean accuracy given missing values - breastcancer data")
 
 - When creating the basic FFT _without_ any `NA` values, 
 the mechanism for _categorical_ predictors (i.e., treating `NA` as a separate `<NA>` category) is not being used or tested.  
-Thus, we should create the initial FFT (and corresponding performance baselines) for datasets with _some_ `NA` values (e.g., 10%).
+Thus, we should create the initial FFT (and corresponding performance baselines) for datasets with _some_ `NA` values (e.g., 10%). DONE!
 
 
 ### 2. Dealing with NA in final predictors
