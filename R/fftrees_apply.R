@@ -443,9 +443,13 @@ fftrees_apply <- function(x,
             } else if (fin_NA_pred == "majority"){
 
               if (crit_br > .50){
+
                 fin_NA_decisions <- rep(TRUE, nr_NA_lvl)
+
               } else {
+
                 fin_NA_decisions <- rep(FALSE, nr_NA_lvl)
+
               }
 
             } else { # note unknown option:
@@ -494,7 +498,6 @@ fftrees_apply <- function(x,
 
         } # if (final exit).
 
-        # +++ here now +++
 
         # Done:
         #
