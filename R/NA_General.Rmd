@@ -8,7 +8,7 @@ output: html_document
 # Define Loop functions (for multiple simulations) ----
 
 
-```{r define-loop-function}
+```{r define-loop-NA-function}
 
 loop_NA <- function(data, criterion, pc, x, fft_df, x_stats_1){
 
@@ -39,7 +39,7 @@ results[1, 1:n_col] <- x_stats_1
    pc_vec <- rep(pc_per_row, times = num_cols)
 
    # set seed for reproducability
-   set.seed(113)
+   set.seed(13)
   
 # Loop 1: ---- 
 for (i in 1:n_sims){
@@ -107,7 +107,7 @@ loop_pc <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stats_
   # Loop 2:
   for (j in 1:n) {
 
-    # use function loop_NA
+    # use function loop_NA and give name to each data frame
     result_name <- paste0(data_name, "_", several_pcs[j]*100, "pc")
     results_dataframes[[result_name]] <-loop_NA(data, criterion, several_pcs[j], x, fft_df, x_stats_1)
 
@@ -201,7 +201,7 @@ loop_datasets <- function(several_data, data_names, several_criterion, several_p
 
 
 
-# Run simulations, make graph: ----
+# Run simulations: ----
 
 ```{r run-simulation}
 
@@ -234,7 +234,7 @@ breastcancer_NA_100 <- dfs$results$breastcancer[["breastcancer_100pc"]]
 
 
 # dfs$baseline => 0.5412541 0.6769650 0.6500732
- 
+ dfs$baseline
 
 ```
 
@@ -456,7 +456,7 @@ plot(x = key_results$pc_NA,
 grid()
 # Lower benchmark pred_benchmark (i.e., majority of criterion):
 lines(x = key_results$pc_NA, 
-      y = rep(dfs$baseline[2], nrow(key_results)), 
+      y = rep(dfs$baseline[3], nrow(key_results)), 
       type = "l", 
       col = unikn::Bordeaux, lwd = 1, lty = 2 
       # ylim = c(0, 1),
@@ -474,16 +474,6 @@ lines(x = key_results$pc_NA,
 )
 title(main = "Mean accuracy given missing values - breastcancer data")
 ```
-
-
-# for combination: ---- +++ here now +++ 
-
-```{r}
-
-```
-
-
-
 
 
 # Issues and potential problems ----
