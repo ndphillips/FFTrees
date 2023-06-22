@@ -195,6 +195,7 @@ loop_datasets_T <- function(several_data, data_names, several_criterion, several
 
 ```
 
+# Apply 
 
 ```{r apply}
 
@@ -204,12 +205,18 @@ loop_datasets_T <- function(several_data, data_names, several_criterion, several
 try <- loop_datasets_T(several_data = list(heartdisease),
                 data_names =  c("heartdisease"),
                 several_criterion = c("diagnosis"),
-                several_pcs = c(0.05, 0.1))
+                several_pcs = c(0.05, 0.1, 1))
 
 
 # heartdisease:
 heart_NA_05 <- try$results$heartdisease[["heartdisease_5pc"]]
 heart_NA_10 <- try$results$heartdisease[["heartdisease_10pc"]]
+heart_NA_100 <- try$results$heartdisease[["heartdisease_100pc"]]
+
+try$baseline
+
+0.4587459 + 0.5412541
+
 ```
 
 
@@ -217,7 +224,7 @@ heart_NA_10 <- try$results$heartdisease[["heartdisease_10pc"]]
 
 # Collect key results (in df): 
   
-key_results <- data.frame(matrix(NA, nrow = 3, ncol = 4))
+key_results <- data.frame(matrix(NA, nrow = 4, ncol = 4))
 names(key_results) <- c("pc_NA", "mn_acc", "mn_bacc", "mn_mcu")
 
 # Baseline performance:
@@ -227,17 +234,23 @@ key_results[1, "mn_bacc"] <- heart_NA_05$bacc[1]
 key_results[1, "mn_mcu"]  <- heart_NA_05$mcu[1]
 
 # Row 2: 5% NA values:
-key_results[2, "pc_NA"]   <- 25
+key_results[2, "pc_NA"]   <- 5
 key_results[2, "mn_acc"]  <- mean(heart_NA_05$acc[-1])
 key_results[2, "mn_bacc"] <- mean(heart_NA_05$bacc[-1])
 key_results[2, "mn_mcu"]  <- mean(heart_NA_05$mcu[-1])
 
 
 # Row 3: 10% NA values:
-key_results[3, "pc_NA"]   <- 50
+key_results[3, "pc_NA"]   <- 10
 key_results[3, "mn_acc"]  <- mean(heart_NA_10$acc[-1])
 key_results[3, "mn_bacc"] <- mean(heart_NA_10$bacc[-1])
 key_results[3, "mn_mcu"]  <- mean(heart_NA_10$mcu[-1])
+
+# Row 4: 100% NA values:
+key_results[4, "pc_NA"]   <- 100
+key_results[4, "mn_acc"]  <- mean(heart_NA_100$acc[-1])
+key_results[4, "mn_bacc"] <- mean(heart_NA_100$bacc[-1])
+key_results[4, "mn_mcu"]  <- mean(heart_NA_100$mcu[-1])
 
 key_results
 ```

@@ -39,7 +39,7 @@ results[1, 1:n_col] <- x_stats_1
    pc_vec <- rep(pc_per_row, times = num_cols)
 
    # set seed for reproducability
-   set.seed(13)
+   set.seed(113)
   
 # Loop 1: ---- 
 for (i in 1:n_sims){
