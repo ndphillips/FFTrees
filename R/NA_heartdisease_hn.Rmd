@@ -30,10 +30,11 @@ dd <- describe_data(heartdisease,
 
 # Baseline:
 bl <- dd$Baseline_pct
+bl
 
 # Minimum prediction performance (i.e., majority of criterion):
 pred_benchmark <- max(bl, 100 - bl)/100  # percentage in [0:1]
-# pred_benchmark
+pred_benchmark
 ```
 
 Create 1 FFT for current data (and criteria): 

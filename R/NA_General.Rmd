@@ -109,11 +109,13 @@ loop_pc <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stats_
 
     # use function loop_NA
     result_name <- paste0(data_name, "_", several_pcs[j]*100, "pc")
-    results_dataframes[[result_name]] <-loop_NA(data, criterion, several_pcs[j], x, fft_df, x_stats_1)
+    results_dataframes[[result_name]] <- loop_NA(data, criterion, several_pcs[j], x, fft_df, x_stats_1)
 
   } # for loop.
 
+  
   # Output: ----
+  
   return(results_dataframes)# as list.
 
 } # loop_pc.
@@ -168,7 +170,7 @@ loop_datasets <- function(several_data, data_names, several_criterion, several_p
 
 
     # use function loop_pc
-    results_list_dataframes[[data_names[k]]] <-loop_pc(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
+    results_list_dataframes[[data_names[k]]] <- loop_pc(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
 
     
     
@@ -190,14 +192,13 @@ loop_datasets <- function(several_data, data_names, several_criterion, several_p
     
   } # for loop.
 
+  
   # Output: ----
+  
   return(list(results = results_list_dataframes, baseline = baseline_pc)) # as list.
 
 } # loop_datasets.
-
 ```
-
-
 
 
 
