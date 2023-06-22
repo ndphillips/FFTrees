@@ -108,7 +108,7 @@ loop_pc_T <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stat
     
     # use function loop_NA and give name to each data frame
     result_name <- paste0(data_name, "_", several_pcs[j]*100, "pc")
-    results_dataframes[[result_name]] <-loop_NA_T(data, data_name, criterion, several_pcs[j], x, fft_df, x_stats_1)
+    results_dataframes[[result_name]] <- loop_NA_T(data, data_name, criterion, several_pcs[j], x, fft_df, x_stats_1)
     
   } # for loop.
   
@@ -163,11 +163,9 @@ loop_datasets_T <- function(several_data, data_names, several_criterion, several
     x_fft_df <- get_fft_df(x)
     fft_df <- x_fft_df[1, ]  # best training tree
     
-    
-    
+  
     # use function loop_pc
     results_list_dataframes[[data_names[k]]] <-loop_pc_T(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
-    
     
     
     # describe data for further table:
@@ -198,15 +196,13 @@ loop_datasets_T <- function(several_data, data_names, several_criterion, several
 # Apply
 
 ```{r apply}
-
 # original dataset, compare to datsets who built trees individually (with 5, 10% NAs)
 
-
 try <- loop_datasets_T(several_data = list(heartdisease),
-                data_names =  c("heartdisease"),
-                several_criterion = c("diagnosis"),
-                several_pcs = c(0.05, 0.1))
-
+                       data_names =  c("heartdisease"),
+                       several_criterion = c("diagnosis"),
+                       several_pcs = c(0.05, 0.10)
+                       )
 
 # heartdisease:
 heart_NA_05 <- try$results$heartdisease[["heartdisease_5pc"]]
@@ -266,6 +262,7 @@ lines(x = key_results$pc_NA,
       # xlab = "Percent NA values", 
       # ylab = "Mean accuracy"
 )
+
 # Actual accuracy:
 lines(x = key_results$pc_NA, 
       y = key_results$mn_acc, 
@@ -275,6 +272,7 @@ lines(x = key_results$pc_NA,
       # xlab = "Percent NA values", 
       # ylab = "Mean accuracy"
 )
+
 title(main = "Mean accuracy given missing values - heartdisease data")
 ```
 
