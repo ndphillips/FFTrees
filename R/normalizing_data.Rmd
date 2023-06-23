@@ -1,0 +1,487 @@
+---
+title: "normalizing_data"
+author: "JM and HN"
+date: "2023-06-23"
+output: html_document
+---
+
+
+# Define Loop functions (for multiple simulations) ----
+
+
+```{r define-loop-NA-function}
+
+loop_NA <- function(data, criterion, pc, x, fft_df, x_stats_1){
+
+
+# Prepare for loop:
+  # Parameters:
+  n_per_NA <- 10
+  n_sims <- n_per_NA
+
+# initialize data structure to collect results:
+results <- data.frame(matrix(NA, nrow = 1 + n_sims, ncol = 26))
+
+# results:
+n_col <- ncol(x_stats_1)
+results[1, 1:n_col] <- x_stats_1
+
+  
+# Prepare vectors as input for replace_values function:  
+   # get all names of variables but exclude criterion: 
+   col_names <- names(data)
+   col_names <- col_names[col_names != criterion ]
+  
+   # build vector with NA percentage: 
+   num_cols <- length(col_names)
+   pc_per_row <- pc
+
+   # create vector with that pc for number of rows:
+   pc_vec <- rep(pc_per_row, times = num_cols)
+
+   # set seed for reproducability:
+   set.seed(13)
+  
+# Loop 1: ---- 
+for (i in 1:n_sims){
+
+# Add NAs to data:
+data_NA <- replace_values(data = data, 
+                          cols = col_names, 
+                          amount = pc_vec, 
+                          replacement = NA, 
+                          levels_amount = NULL)
+
+  
+# Apply tree definition to (OLD/NBW) data:
+y <- FFTrees(object = x,
+             tree.definitions = fft_df,
+             data = data_NA, 
+             quiet = TRUE, 
+             do.comp = FALSE)
+
+# Collect results:
+
+# a) tree performance: 
+y_summary <- summary(y)
+y_stats <- y_summary$stats$train
+
+# b) level stats:
+y_level_stats <- y$trees$level_stats$train
+NA_stats <- y_level_stats[nrow(y_level_stats) , c(25 :30)]
+
+# Combine:
+all_data_df <- cbind(y_stats, NA_stats)
+# dim(all_data_df)
+
+
+# Collect results:
+results[(1 + i), ] <- all_data_df
+
+} # for loop. 
+
+  
+# After loop:
+
+# Add column names to data frame:
+names(results) <- names(all_data_df)
+
+       
+# Output: ----
+return(results) # as data frame.
+
+} # loop_NA().
+```
+
+```{r define-loop-pc-function}
+
+# as input a vector with different pcs for which you want data:
+
+loop_pc <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stats_1){
+
+  # Initialize list to store results:
+  results_dataframes <-  list()
+
+  # length of vector, to know when to stop:
+  n <- length(several_pcs)
+
+  # Loop 2:
+  for (j in 1:n) {
+
+    # use function loop_NA and give name to each data frame:
+    result_name <- paste0(data_name, "_", several_pcs[j]*100, "pc")
+    results_dataframes[[result_name]] <- loop_NA(data, criterion, several_pcs[j], x, fft_df, x_stats_1)
+
+  } # for loop.
+  
+  # Output: ----
+  
+  return(results_dataframes)# as list.
+
+} # loop_pc.
+
+```
+
+```{r define-loop-datasets-function}
+
+# as input a vector with different data sets for which you want data:
+
+loop_datasets <- function(several_data, data_names, several_criterion, several_pcs){
+
+  # Preparations:
+  # length of vector, to know when to stop:
+  n <- length(several_data)
+
+
+  # Initialize list to store results:
+  results_list_dataframes <-  list()
+  
+  # Initialize list to store results of Baseline-pc:
+  baseline_pc <- numeric(n)
+
+  
+  # Initialize two nummeric vectors to store results of Baseline-pc:
+  bl <- numeric(n)
+  pred_benchmark <- numeric(n)
+  
+  # Loop 3:
+  for (k in 1:n) {
+
+    # build tree with original data for each dataset:
+    # get name of data set:
+    name <- data_names[k]
+
+    #Build tree for normal data set:
+    x <- FFTrees(formula = as.formula(paste(several_criterion[k],"~.")),
+                 data = several_data[[k]],
+                 main = name,
+                 goal = "bacc",
+                 goal.chase = "bacc",
+                 goal.threshold = "bacc")
+
+    # Performance:
+    x_summary <- summary(x)
+    x_stats_1 <- x_summary$stats$train[1, ]
+
+    # get tree definitions:
+    x_fft_df <- get_fft_df(x)
+    fft_df <- x_fft_df[1, ]  # best training tree
+
+
+
+    # use function loop_pc:
+    results_list_dataframes[[data_names[k]]] <- loop_pc(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
+
+    
+    
+    # describe data for further table:
+    dd <- describe_data(several_data[[k]], 
+                    data_name = name, 
+                    criterion_name = several_criterion[k], 
+                    baseline_value = TRUE)
+
+    # Baseline:
+    bl[k] <- dd$Baseline_pct
+
+    # Minimum prediction performance (i.e., majority of criterion):
+    pred_benchmark[k] <- max(bl[k], 100 - bl[k])/100
+    
+    # store baseline_pc:
+    baseline_pc[k] <- pred_benchmark[k]
+
+    
+  } # for loop.
+  
+  # Output: ----
+  
+  return(list(results = results_list_dataframes, baseline = baseline_pc)) # as list.
+
+} # loop_datasets.
+```
+
+
+
+
+
+
+# Run simulations: ----
+
+```{r run-simulation}
+
+# apply function to multiple datasets and percentanges:
+dfs <- loop_datasets(several_data = list(heartdisease, titanic, breastcancer),
+                      data_names = c("heartdisease", "titanic", "breastcancer"),
+                      several_criterion = c("diagnosis", "survived", "diagnosis"),
+                      several_pcs = c(0.25, 0.50, 0.75, 1))
+
+
+# assign names to output dfs:
+# heartdisease:
+heart_NA_25 <- dfs$results$heartdisease[["heartdisease_25pc"]]
+heart_NA_50 <- dfs$results$heartdisease[["heartdisease_50pc"]]
+heart_NA_75 <- dfs$results$heartdisease[["heartdisease_75pc"]]
+heart_NA_100 <- dfs$results$heartdisease[["heartdisease_100pc"]]
+
+
+# titanic:
+titanic_NA_25 <- dfs$results$titanic[["titanic_25pc"]]
+titanic_NA_50 <- dfs$results$titanic[["titanic_50pc"]]
+titanic_NA_75 <- dfs$results$titanic[["titanic_75pc"]]
+titanic_NA_100 <- dfs$results$titanic[["titanic_100pc"]]
+
+
+# breastcancer:
+breastcancer_NA_25 <- dfs$results$breastcancer[["breastcancer_25pc"]]
+breastcancer_NA_50 <- dfs$results$breastcancer[["breastcancer_50pc"]]
+breastcancer_NA_75 <- dfs$results$breastcancer[["breastcancer_75pc"]]
+breastcancer_NA_100 <- dfs$results$breastcancer[["breastcancer_100pc"]]
+```
+
+
+# general function to normalize data: ----
+
+```{r normalize-function}
+# normalize data:
+normalize <- function(data){
+  
+  # determine how many times
+  n <- nrow(key_results)
+  
+  min_acc <- key_results$mn_acc[5]
+  max_acc <- key_results$mn_acc[1]
+  
+   min_bacc <- key_results$mn_bacc[5]
+  max_bacc <- key_results$mn_bacc[1]
+  
+   min_mcu <- key_results$mn_mcu[1]
+  max_mcu <- key_results$mn_mcu[5]
+  
+  # Create a copy of the data to store normalized values
+  normalized <- data  
+
+   # loop over each row
+   for (l in 1:n) {
+    
+    # normalize each acc value
+    normalized$mn_acc[l] <- (data$mn_acc[l] - min_acc) / (max_acc - min_acc)
+    
+    # normalize each bacc value
+    normalized$mn_bacc[l] <- (data$mn_bacc[l] - min_bacc) / (max_bacc - min_bacc)
+    
+    # normalize each mcu value
+    normalized$mn_mcu[l] <- (data$mn_mcu[l] - min_mcu) / (max_mcu - min_mcu)
+    
+  } # for loop.
+  
+  
+    # Output: ----
+  
+  return(normalized)# as list.
+  
+}# normalize.
+```
+
+# prepare all datasets (as normalized key results)
+
+# heartdisease
+```{r key-results}
+key_results <- data.frame(matrix(NA, nrow = 5, ncol = 4))
+names(key_results) <- c("pc_NA", "mn_acc", "mn_bacc", "mn_mcu")
+
+# Baseline performance:
+key_results[1, "pc_NA"]   <- 0
+key_results[1, "mn_acc"]  <- heart_NA_25$acc[1]
+key_results[1, "mn_bacc"] <- heart_NA_25$bacc[1]
+key_results[1, "mn_mcu"]  <- heart_NA_25$mcu[1]
+
+# Row 2: 25% NA values:
+key_results[2, "pc_NA"]   <- 25
+key_results[2, "mn_acc"]  <- mean(heart_NA_25$acc[-1])
+key_results[2, "mn_bacc"] <- mean(heart_NA_25$bacc[-1])
+key_results[2, "mn_mcu"]  <- mean(heart_NA_25$mcu[-1])
+
+
+# Row 3: 50% NA values:
+key_results[3, "pc_NA"]   <- 50
+key_results[3, "mn_acc"]  <- mean(heart_NA_50$acc[-1])
+key_results[3, "mn_bacc"] <- mean(heart_NA_50$bacc[-1])
+key_results[3, "mn_mcu"]  <- mean(heart_NA_50$mcu[-1])
+
+# Row 4: 75% NA values:
+key_results[4, "pc_NA"]   <- 75
+key_results[4, "mn_acc"]  <- mean(heart_NA_75$acc[-1])
+key_results[4, "mn_bacc"] <- mean(heart_NA_75$bacc[-1])
+key_results[4, "mn_mcu"]  <- mean(heart_NA_75$mcu[-1])
+
+# Basically a sanity check: 
+# Row 5: 100% NA values:
+key_results[5, "pc_NA"]   <- 100
+key_results[5, "mn_acc"]  <- mean(heart_NA_100$acc[-1])
+key_results[5, "mn_bacc"] <- mean(heart_NA_100$bacc[-1])
+key_results[5, "mn_mcu"]  <- mean(heart_NA_100$mcu[-1])
+
+# normalize key results
+key_results_normalized_1 <- normalize(key_results)
+```
+
+# titanic
+```{r key-results}
+key_results <- data.frame(matrix(NA, nrow = 5, ncol = 4))
+names(key_results) <- c("pc_NA", "mn_acc", "mn_bacc", "mn_mcu")
+
+# Baseline performance:
+key_results[1, "pc_NA"]   <- 0
+key_results[1, "mn_acc"]  <- titanic_NA_25$acc[1]
+key_results[1, "mn_bacc"] <- titanic_NA_25$bacc[1]
+key_results[1, "mn_mcu"]  <- titanic_NA_25$mcu[1]
+
+# Row 2: 25% NA values:
+key_results[2, "pc_NA"]   <- 25
+key_results[2, "mn_acc"]  <- mean(titanic_NA_25$acc[-1])
+key_results[2, "mn_bacc"] <- mean(titanic_NA_25$bacc[-1])
+key_results[2, "mn_mcu"]  <- mean(titanic_NA_25$mcu[-1])
+
+
+# Row 3: 50% NA values:
+key_results[3, "pc_NA"]   <- 50
+key_results[3, "mn_acc"]  <- mean(titanic_NA_50$acc[-1])
+key_results[3, "mn_bacc"] <- mean(titanic_NA_50$bacc[-1])
+key_results[3, "mn_mcu"]  <- mean(titanic_NA_50$mcu[-1])
+
+# Row 4: 75% NA values:
+key_results[4, "pc_NA"]   <- 75
+key_results[4, "mn_acc"]  <- mean(titanic_NA_75$acc[-1])
+key_results[4, "mn_bacc"] <- mean(titanic_NA_75$bacc[-1])
+key_results[4, "mn_mcu"]  <- mean(titanic_NA_75$mcu[-1])
+
+# Basically a sanity check: 
+# Row 5: 100% NA values:
+key_results[5, "pc_NA"]   <- 100
+key_results[5, "mn_acc"]  <- mean(titanic_NA_100$acc[-1])
+key_results[5, "mn_bacc"] <- mean(titanic_NA_100$bacc[-1])
+key_results[5, "mn_mcu"]  <- mean(titanic_NA_100$mcu[-1])
+
+# normalize key results
+key_results_normalized_2 <- normalize(key_results)
+```
+
+# breastcancer
+```{r key-results}
+key_results <- data.frame(matrix(NA, nrow = 5, ncol = 4))
+names(key_results) <- c("pc_NA", "mn_acc", "mn_bacc", "mn_mcu")
+
+# Baseline performance:
+key_results[1, "pc_NA"]   <- 0
+key_results[1, "mn_acc"]  <- breastcancer_NA_25$acc[1]
+key_results[1, "mn_bacc"] <- breastcancer_NA_25$bacc[1]
+key_results[1, "mn_mcu"]  <- breastcancer_NA_25$mcu[1]
+
+# Row 2: 25% NA values:
+key_results[2, "pc_NA"]   <- 25
+key_results[2, "mn_acc"]  <- mean(breastcancer_NA_25$acc[-1])
+key_results[2, "mn_bacc"] <- mean(breastcancer_NA_25$bacc[-1])
+key_results[2, "mn_mcu"]  <- mean(breastcancer_NA_25$mcu[-1])
+
+
+# Row 3: 50% NA values:
+key_results[3, "pc_NA"]   <- 50
+key_results[3, "mn_acc"]  <- mean(breastcancer_NA_50$acc[-1])
+key_results[3, "mn_bacc"] <- mean(breastcancer_NA_50$bacc[-1])
+key_results[3, "mn_mcu"]  <- mean(breastcancer_NA_50$mcu[-1])
+
+# Row 4: 75% NA values:
+key_results[4, "pc_NA"]   <- 75
+key_results[4, "mn_acc"]  <- mean(breastcancer_NA_75$acc[-1])
+key_results[4, "mn_bacc"] <- mean(breastcancer_NA_75$bacc[-1])
+key_results[4, "mn_mcu"]  <- mean(breastcancer_NA_75$mcu[-1])
+
+# Basically a sanity check: 
+# Row 5: 100% NA values:
+key_results[5, "pc_NA"]   <- 100
+key_results[5, "mn_acc"]  <- mean(breastcancer_NA_100$acc[-1])
+key_results[5, "mn_bacc"] <- mean(breastcancer_NA_100$bacc[-1])
+key_results[5, "mn_mcu"]  <- mean(breastcancer_NA_100$mcu[-1])
+
+# normalize key results
+key_results_normalized_3 <- normalize(key_results)
+```
+
+```{r combine-into-one-dataset}
+
+no_rows <- nrow(key_results_normalized_1)
+no_cols <- ncol(key_results_normalized_1)
+
+# Define results dataframe that contains the mean for each cell:
+key_results_normalized_mean <- data.frame(matrix(NA, nrow = no_rows, ncol = no_cols))
+names(key_results_normalized_mean) <- names(key_results_normalized_1)
+
+# calculate mean values:
+for (row in 1:no_rows) {
+  for (col in 1:no_cols) {
+    key_results_normalized_mean[row, col] <- mean(c(key_results_normalized_1[row, col], key_results_normalized_2[row, col], key_results_normalized_3[row, col]))
+  }
+}
+
+key_results_normalized_mean
+
+```
+
+
+
+
+Plot mean results (all used data sets):
+
+```{r plot-key-results_normalized}
+# Upper benchmark: Best FFT without missing data: 
+plot(x = key_results_normalized_mean$pc_NA, 
+     y = rep(key_results_normalized_mean$mn_acc[1], nrow(key_results_normalized_mean)), 
+     type = "l", 
+     col = unikn::Seegruen, lwd = 1, lty = 2, 
+     ylim = c(0, 1),
+     xlab = "Percent NA values", 
+     ylab = "Mean accuracy"
+     )
+grid()
+
+# Actual accuracy:
+lines(x = key_results_normalized_mean$pc_NA, 
+      y = key_results_normalized_mean$mn_acc, 
+      type = "b", 
+      col = unikn::Seeblau, lwd = 2
+      # ylim = c(0, 1),
+      # xlab = "Percent NA values", 
+      # ylab = "Mean accuracy"
+)
+title(main = "Mean accuracy given missing values - heartdisease data")
+```
+
+2. Frugality (mean `mcu`)
+
+```{r plot-key-results-normalized-frugality}
+
+
+# Upper benchmark: Best FFT without missing data: 
+plot(x = key_results_normalized_mean$pc_NA, 
+     y = rep(1, nrow(key_results_normalized_mean)), 
+     type = "l", 
+     col = unikn::Seegruen, lwd = 1, lty = 2, 
+     ylim = c(0, 1),
+     xlab = "Percent NA values", 
+     ylab = "Mean frugality (mcu)"
+     )
+
+grid()
+
+# Actual frugality:
+lines(x = key_results_normalized_mean$pc_NA, 
+      y = key_results_normalized_mean$mn_mcu, 
+      type = "b", 
+      col = unikn::Seeblau, lwd = 2
+      # ylim = c(0, 1),
+      # xlab = "Percent NA values", 
+      # ylab = "Mean accuracy"
+)
+
+title(main = "Mean frugality given missing values")
+```
+<!-- eof. -->
