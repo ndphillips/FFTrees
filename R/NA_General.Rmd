@@ -38,7 +38,7 @@ results[1, 1:n_col] <- x_stats_1
    # create vector with that pc for number of rows:
    pc_vec <- rep(pc_per_row, times = num_cols)
 
-   # set seed for reproducability
+   # set seed for reproducability:
    set.seed(13)
   
 # Loop 1: ---- 
@@ -98,16 +98,16 @@ return(results) # as data frame.
 
 loop_pc <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stats_1){
 
-  # Initialize list to store results
+  # Initialize list to store results:
   results_dataframes <-  list()
 
-  # length of vector, to know when to stop
+  # length of vector, to know when to stop:
   n <- length(several_pcs)
 
   # Loop 2:
   for (j in 1:n) {
 
-    # use function loop_NA and give name to each data frame
+    # use function loop_NA and give name to each data frame:
     result_name <- paste0(data_name, "_", several_pcs[j]*100, "pc")
     results_dataframes[[result_name]] <- loop_NA(data, criterion, several_pcs[j], x, fft_df, x_stats_1)
 
@@ -128,11 +128,11 @@ loop_pc <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stats_
 loop_datasets <- function(several_data, data_names, several_criterion, several_pcs){
 
   # Preparations:
-  # length of vector, to know when to stop
+  # length of vector, to know when to stop:
   n <- length(several_data)
 
 
-  # Initialize list to store results
+  # Initialize list to store results:
   results_list_dataframes <-  list()
   
   # Initialize list to store results of Baseline-pc:
@@ -162,13 +162,13 @@ loop_datasets <- function(several_data, data_names, several_criterion, several_p
     x_summary <- summary(x)
     x_stats_1 <- x_summary$stats$train[1, ]
 
-    # get tree definitions;
+    # get tree definitions:
     x_fft_df <- get_fft_df(x)
     fft_df <- x_fft_df[1, ]  # best training tree
 
 
 
-    # use function loop_pc
+    # use function loop_pc:
     results_list_dataframes[[data_names[k]]] <- loop_pc(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
 
     
@@ -500,6 +500,6 @@ to the _majority_ class (as only 2 types of errors occur):
 ### 3. Value of mcu?
 
 - Why is the final `mcu` value (for simulations with 100% NA values) 
-a value of\ 2, rather than\ 3 (for FFT `fft_df` with 3\ nodes)? 
+a value of\ 2, rather than\ 3 (for FFT `fft_df` with 3\ nodes)?  DONE! (hn)
 
 <!-- eof. -->
