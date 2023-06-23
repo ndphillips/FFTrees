@@ -1,7 +1,7 @@
 ---
 title: "NA_heartdisease"
 author: "jm and hn"
-date: "2023-06-21"
+date: "2023-06-23"
 output: html_document
 ---
 
