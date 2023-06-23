@@ -37,6 +37,18 @@ pred_benchmark <- max(bl, 100 - bl)/100  # percentage in [0:1]
 pred_benchmark
 ```
 
+Probability of being correct:
+
+```{r randomly-correct-cases}
+p <- seq(0, 1, by = .10)  # p of signal/TRUE
+
+p_cum <- (p * p) + ((1 - p) * (1 - p))
+
+plot(x = p, y = p_cum, type = "b", col = unikn::Seegruen)
+```
+
+
+
 Create 1 FFT for current data (and criteria): 
 
 ```{r Get-tree-for-original-data}
