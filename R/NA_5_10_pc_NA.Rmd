@@ -7,6 +7,8 @@ output: html_document
 
 # Define Loop functions (for multiple simulations) ----
 
+"_T" because here, the functions are defined differently: A tree is always built with the new data set. New combinations are therefore possible, (e.g. NA can be used as category in character variables). We thereby allow for compensation and hence have slightly better outcomes than when applying the original tree to data with a certain percentage of missings. 
+
 ```{r define-loop-NA-T-function }
 
 loop_NA_T <- function(data, data_name, criterion, pc, x, fft_df, x_stats_1){
@@ -37,7 +39,7 @@ loop_NA_T <- function(data, data_name, criterion, pc, x, fft_df, x_stats_1){
   # create vector with that pc for number of rows:
   pc_vec <- rep(pc_per_row, times = num_cols)
   
-  # set seed for reproducability
+  # set seed for reproducability:
   set.seed(13)
   
   # Loop 1: ---- 
@@ -62,10 +64,10 @@ loop_NA_T <- function(data, data_name, criterion, pc, x, fft_df, x_stats_1){
     
     # a) tree performance: 
     y_summary <- summary(y)
-    y_stats <- y_summary$stats$train
+    y_stats <- y_summary$stats$train[1, ]
     
     # b) level stats:
-    y_level_stats <- y$trees$level_stats$train
+    y_level_stats <- y$trees$level_stats$train[1,]
     NA_stats <- y_level_stats[nrow(y_level_stats) , c(25 :30)]
     
     # Combine:
@@ -97,16 +99,16 @@ loop_NA_T <- function(data, data_name, criterion, pc, x, fft_df, x_stats_1){
 
 loop_pc_T <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stats_1){
   
-  # Initialize list to store results
+  # Initialize list to store results:
   results_dataframes <-  list()
   
-  # length of vector, to know when to stop
+  # length of vector, to know when to stop:
   n <- length(several_pcs)
   
   # Loop 2:
   for (j in 1:n) {
     
-    # use function loop_NA
+    # use function loop_NA and give name to each data frame:
     result_name <- paste0(data_name, "_", several_pcs[j]*100, "pc")
     results_dataframes[[result_name]] <- loop_NA_T(data, data_name, criterion, several_pcs[j], x, fft_df, x_stats_1)
     
@@ -125,18 +127,18 @@ loop_pc_T <- function(data, data_name, criterion, several_pcs, x, fft_df, x_stat
 loop_datasets_T <- function(several_data, data_names, several_criterion, several_pcs){
   
   # Preparations:
-  # length of vector, to know when to stop
+  # length of vector, to know when to stop:
   n <- length(several_data)
   
   
-  # Initialize list to store results
+  # Initialize list to store results:
   results_list_dataframes <-  list()
   
   # Initialize list to store results of Baseline-pc:
   baseline_pc <- numeric(n)
   
   
-  # Initialize two nummeric vectors to store results of Baseline-pc:
+  # Initialize two numeric vectors to store results of Baseline-pc:
   bl <- numeric(n)
   pred_benchmark <- numeric(n)
   
@@ -164,7 +166,7 @@ loop_datasets_T <- function(several_data, data_names, several_criterion, several
     fft_df <- x_fft_df[1, ]  # best training tree
     
   
-    # use function loop_pc
+    # use function loop_pc:
     results_list_dataframes[[data_names[k]]] <-loop_pc_T(several_data[[k]], data_names[k], several_criterion[k], several_pcs, x, fft_df, x_stats_1)
     
     
@@ -193,9 +195,10 @@ loop_datasets_T <- function(several_data, data_names, several_criterion, several
 
 ```
 
+# Apply
 
 ```{r apply}
-# original dataset, compare to datsets who built trees individually (with 5, 10% NAs)
+# original data set, compare to data sets who built trees individually (with 5, 10% NAs):
 
 try <- loop_datasets_T(several_data = list(heartdisease),
                        data_names =  c("heartdisease"),

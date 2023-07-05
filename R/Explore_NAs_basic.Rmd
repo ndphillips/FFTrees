@@ -165,7 +165,7 @@ vector_100 <- rep(per_row_100, times = num_columns)
 # apply replace_values function and thereby create new data frames:
 
 # set seed for being able to replicate results:
-set.seed(13333)
+set.seed(13)
 
 # 100% NAs in test data set:
 heart_NA_100 <- replace_values(data = heart.test, cols = column_names_heart, amount = vector_100)
@@ -194,3 +194,53 @@ plot(heart.fft_NA_100, data = "test") # it shows the expected behaviour.
 
 ```
 
+
+
+```{r Data-with-100pc-NAs-in-heartdisease}
+
+
+# Preparations:
+
+# get all names of variables but exclude criterion: 
+column_names_heart <- colnames(heart.test)
+column_names_heart <- column_names_heart[column_names_heart != 'diagnosis']
+
+# in total 100% per row should be NAs in the end: 
+per_row_100 <- nrow(heart.test)
+
+
+# create vector with number of rows:
+num_columns <- length(column_names_heart)
+vector_100 <- rep(per_row_100, times = num_columns)
+
+# apply replace_values function and thereby create new data frames:
+
+# set seed for being able to replicate results:
+set.seed(13)
+
+# 100% NAs in test data set:
+heart_NA_100 <- replace_values(data = heart.test, cols = column_names_heart, amount = vector_100)
+
+
+# Check: 
+sum(is.na(heart_NA_100)) == (ncol(heart_NA_100) - 1) * nrow(heart_NA_100)
+
+# build best tree, 100% NAs (standard function)
+heart.fft_NA_100 <- FFTrees(formula = diagnosis ~.,
+                     data = heart.train,
+                     data.test = heart_NA_100,
+                     main = "Heart Disease",
+                     decision.labels = c("Healthy", "Diseased"),
+                     do.comp = FALSE)
+
+
+
+
+# Report on NA cases: 
+tree_level_outcome_vars <- c(1:3, 7:12, 25:30)
+heart.fft_NA_100$trees$level_stats$test[ , tree_level_outcome_vars]
+  
+plot(heart.fft_NA_100, data = "test") # it shows the expected behaviour.
+
+
+```
