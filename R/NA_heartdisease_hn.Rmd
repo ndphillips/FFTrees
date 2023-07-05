@@ -1,7 +1,7 @@
 ---
 title: "NA_heartdisease"
 author: "jm and hn"
-date: "2023-06-29"
+date: "2023-07-05"
 output: html_document
 ---
 
@@ -9,10 +9,10 @@ output: html_document
 
 # get name of data set:
 get_object_name <- function(x){
-  
+
   deparse(substitute(x))
-  
-} # get_object_name(). 
+
+} # get_object_name().
 
 # Check:
 # get_object_name(heartdisease)
