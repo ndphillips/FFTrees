@@ -1,7 +1,7 @@
 ---
 title: "NA_heartdisease"
 author: "jm and hn"
-date: "2023-06-23"
+date: "2023-06-29"
 output: html_document
 ---
 
@@ -84,7 +84,7 @@ Get NA data:
 data <- heartdisease
 criterion <- "diagnosis"
 
-pc <- .75
+pc <- .50
 
 # Prepare vectors as input for replace_values function:  
 # get all names of variables but exclude criterion: 
@@ -172,7 +172,6 @@ loop_NA <- function(data, criterion, pc){
                               replacement = NA, 
                               levels_amount = NULL)
     
-    
     # Apply tree definition to (OLD/NEW NA) data:
     y <- FFTrees(object = x,
                  tree.definitions = fft_df,
@@ -188,12 +187,11 @@ loop_NA <- function(data, criterion, pc){
     
     # b) level stats:
     y_level_stats <- y$trees$level_stats$train
-    NA_stats <- y_level_stats[nrow(y_level_stats) , c(25 :30)]
+    NA_stats <- y_level_stats[nrow(y_level_stats), c(25:30)]
     
     # Combine:
     all_data_df <- cbind(y_stats, NA_stats)
     # dim(all_data_df)
-    
     
     # Collect results:
     results[(1 + i), ] <- all_data_df
