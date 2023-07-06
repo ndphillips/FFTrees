@@ -516,6 +516,15 @@ get_lhs_formula <- function(formula){
 } # get_lhs_formula().
 
 
+# - get_object_name: ------
+
+# Goal: Get the name of an R object (e.g., data frame).
+
+get_object_name <- function(x){
+
+  deparse(substitute(x))
+
+} # get_object_name().
 
 
 

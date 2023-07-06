@@ -40,7 +40,7 @@ fftrees_apply <- function(x,
                           mydata = NULL,   # data type (either "train" or "test")
                           newdata = NULL,
                           #
-                          fin_NA_pred = "majority"  # Options available: c("noise", "signal", "baseline", "majority")
+                          fin_NA_pred = "majority"  # Options available: c("noise", "signal", "majority", "baseline")
 ) {
 
   # Prepare: ------
@@ -418,6 +418,9 @@ fftrees_apply <- function(x,
           ix_NA_current_decision <- is.na(decisions_df$current_decision)
           nr_NA_lvl <- sum(ix_NA_current_decision)
 
+          # Assign: +++ here now +++
+          classify_now[ix_NA_current_decision] <- TRUE  # Do classify NA cases (which differs from "classify as TRUE")!
+
           if (any(ix_NA_current_decision)){ # IFF there ARE NA cases:
 
             # Classify NA cases (in final node):
@@ -440,9 +443,13 @@ fftrees_apply <- function(x,
             } else if (fin_NA_pred == "majority"){
 
               if (crit_br > .50){
+
                 fin_NA_decisions <- rep(TRUE, nr_NA_lvl)
+
               } else {
+
                 fin_NA_decisions <- rep(FALSE, nr_NA_lvl)
+
               }
 
             } else { # note unknown option:
@@ -491,7 +498,6 @@ fftrees_apply <- function(x,
 
         } # if (final exit).
 
-        # +++ here now +++
 
         # Done:
         #
