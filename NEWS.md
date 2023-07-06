@@ -1,7 +1,7 @@
 
 # FFTrees 2.0
 
-## 2.0.0.9003
+## 2.0.0.9006
 
 <!-- **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. -->
 
@@ -521,6 +521,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-06-14.]
+[File `NEWS.md` last updated on 2023-07-06.]
 
 <!-- eof. -->
