@@ -1,7 +1,7 @@
 
 # FFTrees 2.0
 
-## 2.0.0.9006
+## 2.0.0.9007
 
 <!-- **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. -->
 
@@ -22,13 +22,14 @@ Changes since last release:
 
 - Adding support for handling NA values. 
 
+
 <!-- Minor: --> 
 
 ### Minor changes 
 
-<!-- Topic --> 
+<!-- Costs: --> 
 
-- None yet.
+- Increased default value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
 
 
 <!-- Details: --> 
@@ -521,6 +522,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-07-06.]
+[File `NEWS.md` last updated on 2023-07-07.]
 
 <!-- eof. -->
