@@ -36,7 +36,9 @@ cost_outcomes_default <- list(hi = 0, fa = 1, mi = 1, cr = 0)  # (global constan
 # Cue cost = graded mcu / "graded frugality":
 # Note: A value of 1 (for all cues in data) corresponds to mcu.
 
-cost_cues_default <- 0  # (global constant)
+# cost_cues_default <- 0  # used up to FFTrees v2.0.0
+
+cost_cues_default <- 1    # (global constant)
 
 
 
