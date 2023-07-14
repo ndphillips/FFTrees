@@ -180,8 +180,12 @@ plot(heart_fft,
      main = "Heart Disease")
 ```
 
-![An FFT predicting heart disease for `test`
-data.](man/figures/README-example-heart-plot-1.png)
+<figure>
+<img src="man/figures/README-example-heart-plot-1.png"
+alt="An FFT predicting heart disease for test data." />
+<figcaption aria-hidden="true">An FFT predicting heart disease for
+<code>test</code> data.</figcaption>
+</figure>
 
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
@@ -244,8 +248,12 @@ plot(my_fft,
      main = "My custom FFT")
 ```
 
-![An FFT created from a verbal
-description.](man/figures/README-example-heart-verbal-1.png)
+<figure>
+<img src="man/figures/README-example-heart-verbal-1.png"
+alt="An FFT created from a verbal description." />
+<figcaption aria-hidden="true">An FFT created from a verbal
+description.</figcaption>
+</figure>
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
 description.
@@ -335,6 +343,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-07-07.\]
+\[File `README.Rmd` last updated on 2023-07-14.\]
 
 <!-- eof. -->
