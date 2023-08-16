@@ -2,13 +2,15 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 2.0.0.9006 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 2.0.0.9008 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
 
 <!-- Devel badges start: -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
 [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
+[![Total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
 [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
 <!-- Devel badges end. -->
 
@@ -178,8 +180,12 @@ plot(heart_fft,
      main = "Heart Disease")
 ```
 
-![An FFT predicting heart disease for `test`
-data.](man/figures/README-example-heart-plot-1.png)
+<figure>
+<img src="man/figures/README-example-heart-plot-1.png"
+alt="An FFT predicting heart disease for test data." />
+<figcaption aria-hidden="true">An FFT predicting heart disease for
+<code>test</code> data.</figcaption>
+</figure>
 
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
@@ -242,8 +248,12 @@ plot(my_fft,
      main = "My custom FFT")
 ```
 
-![An FFT created from a verbal
-description.](man/figures/README-example-heart-verbal-1.png)
+<figure>
+<img src="man/figures/README-example-heart-verbal-1.png"
+alt="An FFT created from a verbal description." />
+<figcaption aria-hidden="true">An FFT created from a verbal
+description.</figcaption>
+</figure>
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
 description.
@@ -333,6 +343,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-07-06.\]
+\[File `README.Rmd` last updated on 2023-08-15.\]
 
 <!-- eof. -->
