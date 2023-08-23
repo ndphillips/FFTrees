@@ -1,7 +1,7 @@
 
 # FFTrees 2.0
 
-## 2.0.0.9007
+## 2.0.0.9009
 
 <!-- **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. -->
 
@@ -20,7 +20,7 @@ Changes since last release:
 
 <!-- Topic --> 
 
-- Adding support for handling NA values. 
+- Added support for handling NA values. 
 
 
 <!-- Minor: --> 
@@ -38,13 +38,15 @@ Changes since last release:
 
 <!-- Topic --> 
 
-- None yet.
+- Added `@aliases FFTrees-package` to documentation main `FFTrees()` function. <!-- due to <https://github.com/r-lib/roxygen2/issues/1491> --> 
 
 
 <!-- Development version: --> 
 
 The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
+
+------ 
 
 <!-- Older versions: --> 
 
@@ -522,6 +524,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-07-07.]
+[File `NEWS.md` last updated on 2023-08-23.]
 
 <!-- eof. -->
