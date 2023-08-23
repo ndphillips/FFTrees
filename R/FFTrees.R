@@ -179,6 +179,8 @@
 #' # Plot the (pretty bad) custom tree:
 #' plot(custom.fft)
 #'
+#' @aliases FFTrees-package
+#'
 #' @seealso
 #' \code{\link{print.FFTrees}} for printing FFTs;
 #' \code{\link{plot.FFTrees}} for plotting FFTs;
