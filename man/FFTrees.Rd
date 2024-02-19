@@ -2,7 +2,7 @@
 % Please edit documentation in R/FFTrees.R
 \name{FFTrees}
 \alias{FFTrees}
-\alias{FFTrees-package}
+\alias{FFTrees-function}
 \title{Main function to create and apply fast-and-frugal trees (FFTs)}
 \usage{
 FFTrees(
