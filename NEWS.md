@@ -29,7 +29,7 @@ Changes since last release:
 
 <!-- Costs: --> 
 
-- Increased default value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
+- Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
 
 
 <!-- Details: --> 
@@ -524,6 +524,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-08-23.]
+[File `NEWS.md` last updated on 2023-09-05.]
 
 <!-- eof. -->

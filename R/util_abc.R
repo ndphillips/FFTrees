@@ -698,14 +698,35 @@ all_subsets <- function(x, include_x = TRUE){
 
 # (F) FFTrees package: ------
 
+# OLD (up to v2.0.0): ----
 
-#' \code{FFTrees} package.
-#'
-#' Create and evaluate fast-and-frugal trees (FFTs).
-#'
-#' @docType package
-#' @name FFTrees
+#
+# #' \code{FFTrees} package.
+# #'
+# #' Create and evaluate fast-and-frugal trees (FFTs).
+# #'
+# #' @docType package
+# #' @name FFTrees
+# #' @importFrom dplyr %>%
+# #'
+# #' @aliases FFTrees-package
+#
+# NULL
+
+
+# NEW: Fix Warning by Roxygen v7.3.1: ----
+
+# See <https://github.com/r-lib/roxygen2/issues/1491>
+# and <https://r-pkgs.org/man.html#sec-man-package-doc>
+# for new _PACKAGE feature:
+
+
+#' @keywords internal
+"_PACKAGE"
+
+## usethis namespace: start
 #' @importFrom dplyr %>%
+## usethis namespace: end
 
 NULL
 
