@@ -179,7 +179,7 @@
 #' # Plot the (pretty bad) custom tree:
 #' plot(custom.fft)
 #'
-#' @aliases FFTrees-package
+#' @aliases FFTrees-function
 #'
 #' @seealso
 #' \code{\link{print.FFTrees}} for printing FFTs;
