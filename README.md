@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 2.0.0.9007 <img src = "./inst/FFTrees_Logo.jpg" align = "right" alt = "FFTrees" width = "225" />
+# FFTrees 2.0.0.9010 <img src = "./inst/logo.png" align = "right" alt = "FFTrees" width = "160" />
 
 <!-- Devel badges start: -->
 
@@ -343,6 +343,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2023-09-05.\]
+\[File `README.Rmd` last updated on 2024-02-19.\]
 
 <!-- eof. -->
