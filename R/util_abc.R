@@ -703,7 +703,7 @@ all_subsets <- function(x, include_x = TRUE){
 #'
 #' Create and evaluate fast-and-frugal trees (FFTs).
 #'
-#' @docType package
+#' @docType "_PACKAGE"
 #' @name FFTrees
 #' @importFrom dplyr %>%
 
