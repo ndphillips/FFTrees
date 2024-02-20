@@ -31,9 +31,7 @@ The R package **FFTrees** creates, visualizes and evaluates
 *fast-and-frugal decision trees* (FFTs) for solving binary
 classification tasks, using the algorithms and methods described in
 Phillips, Neth, Woike & Gaissmaier (2017,
-doi [10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239)
-\| [html](https://journal.sjdm.org/17/17217/jdm17217.html) \|
-[PDF](https://journal.sjdm.org/17/17217/jdm17217.pdf)).
+[10.1017/S1930297500006239](https://doi.org/10.1017/S1930297500006239)).
 
 ## What are fast-and-frugal trees (FFTs)?
 
@@ -302,11 +300,10 @@ continue developing the package.
 
 <!-- Examples uses/publications (with links): -->
 
-By 2023, over 100 scientific publications have used or cited **FFTrees**
+By 2024, over 120 scientific publications have used or cited **FFTrees**
 (see [Google
 Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)
-for the full list).  
-Examples include:
+for the full list). Examples include:
 
 - Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived
   rules set excludes risk of Parkinson’s disease in patients with
@@ -343,6 +340,6 @@ Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2024-02-19.\]
+\[File `README.Rmd` last updated on 2024-02-20.\]
 
 <!-- eof. -->
