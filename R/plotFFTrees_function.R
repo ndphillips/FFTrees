@@ -733,10 +733,10 @@ plot.FFTrees <- function(x = NULL,
 
       # Grayscale colors
 
-      col_error_bg <- "#000000CC"
-      col_error_border <- "#000000E6"
-      col_correct_bg <- "#000000CC"
-      col_correct_border <- "#000000E6"
+      col_error_bg <- gray(.1)
+      col_error_border <- gray(0)
+      col_correct_bg <- gray(.9)
+      col_correct_border <- gray(0)
 
     }
 
@@ -2055,12 +2055,23 @@ plot.FFTrees <- function(x = NULL,
 
               # COMPETITIVE ALGORITHMS: ------
 
+              col_comp_gray_point_col <- scales::alpha("black", .1)
+              col_comp_gray_point_bg <- scales::alpha("black", .3)
+
+
               if (comp == TRUE) {
 
                 # CART: ----
+                if (!grayscale) {
 
-                col_cart_point_col <- scales::alpha("red", .5)
-                col_cart_point_bg <- scales::alpha("red", .3)
+                  col_cart_point_col <- scales::alpha("red", .5)
+                  col_cart_point_bg <- scales::alpha("red", .3)
+
+                } else {
+
+                  col_cart_point_col <- col_comp_gray_point_col
+                  col_cart_point_bg <- col_comp_gray_point_bg
+                }
 
                 if ("cart" %in% x$competition[[data]]$algorithm) {
 
@@ -2110,8 +2121,16 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("lr" %in% x$competition[[data]]$algorithm) {
 
-                  col_lr_point_col <- scales::alpha("blue", .1)
-                  col_lr_point_bg <- scales::alpha("blue", .2)
+                  if (!grayscale) {
+
+                    col_lr_point_col <- scales::alpha("blue", .5)
+                    col_lr_point_bg <- scales::alpha("blue", .3)
+
+                  } else {
+
+                    col_lr_point_col <- col_comp_gray_point_col
+                    col_lr_point_bg <- col_comp_gray_point_bg
+                  }
 
                   lr_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "lr"]
                   lr_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "lr"]
@@ -2158,8 +2177,17 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("rf" %in% x$competition[[data]]$algorithm) {
 
+                  if (!grayscale) {
+
                   col_rf_point_col <- scales::alpha("purple", .1)
                   col_rf_point_bg <- scales::alpha("purple", .3)
+
+                  } else {
+
+                    col_rf_point_col <- col_comp_gray_point_col
+                    col_rf_point_bg <- col_comp_gray_point_bg
+
+                  }
 
                   rf_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "rf"]
                   rf_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "rf"]
@@ -2213,8 +2241,16 @@ plot.FFTrees <- function(x = NULL,
 
                 if ("svm" %in% x$competition[[data]]$algorithm) {
 
+                  if (!grayscale) {
+
                   col_svm_point_col <- scales::alpha("orange", .1)
                   col_svm_point_bg <- scales::alpha("orange", .3)
+
+                  } else {
+
+                    col_svm_point_col <- col_comp_gray_point_col
+                    col_svm_point_bg <- col_comp_gray_point_bg
+                  }
 
                   svm_spec <- x$competition[[data]]$spec[x$competition[[data]]$algorithm == "svm"]
                   svm_sens <- x$competition[[data]]$sens[x$competition[[data]]$algorithm == "svm"]
@@ -2264,9 +2300,18 @@ plot.FFTrees <- function(x = NULL,
 
               {
 
-                col_fft_point_col <- scales::alpha("green", .1)
-                col_fft_point_bg <- scales::alpha("green", .3)
-                col_fft_point_col_2 <- scales::alpha("green", .6)
+                if (!grayscale) {
+
+                  col_fft_point_col <- scales::alpha("green", .1)
+                  col_fft_point_bg <- scales::alpha("green", .3)
+                  col_fft_point_col_2 <- scales::alpha("green", .6)
+
+                } else {
+
+                  col_fft_point_col <- gray(.9)
+                  col_fft_point_bg <- gray(.5)
+                  col_fft_point_col_2 <- gray(.1)
+                }
 
                 roc_order <- order(fft_spec_vec, decreasing = TRUE)  # from highest to lowest spec
                 # roc_order <- 1:x$trees$n
@@ -2289,7 +2334,7 @@ plot.FFTrees <- function(x = NULL,
                   points(final_roc_x[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
                          final_roc_y[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5, col = col_fft_point_col_2,
-                         bg = scales::alpha("white", .90)
+                         bg = col_fft_point_col
                   )
 
                   text(final_roc_x[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
