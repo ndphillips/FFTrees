@@ -2309,7 +2309,7 @@ plot.FFTrees <- function(x = NULL,
                 } else {
 
                   col_fft_point_col <- gray(.9)
-                  col_fft_point_bg <- gray(.5)
+                  col_fft_point_bg <- gray(.9)
                   col_fft_point_col_2 <- gray(.1)
                 }
 
@@ -2380,7 +2380,7 @@ plot.FFTrees <- function(x = NULL,
                   points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                          final_roc_y[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5, col = col_fft_point_bg,
-                         bg = col_fft_point_col_2
+                         bg = col_fft_point_col
                   )
 
                   points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
