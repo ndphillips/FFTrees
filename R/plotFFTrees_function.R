@@ -735,7 +735,7 @@ plot.FFTrees <- function(x = NULL,
 
       col_error_bg <- gray(.1)
       col_error_border <- gray(0)
-      col_correct_bg <- gray(.9)
+      col_correct_bg <- gray(1)
       col_correct_border <- gray(0)
 
     }
@@ -2303,14 +2303,16 @@ plot.FFTrees <- function(x = NULL,
                 if (!grayscale) {
 
                   col_fft_point_col <- scales::alpha("green", .1)
-                  col_fft_point_bg <- scales::alpha("green", .3)
+                  col_fft_point_bg <- scales::alpha("white", .9)
+                  col_fft_point_bg_2 <- scales::alpha("green", .2)
                   col_fft_point_col_2 <- scales::alpha("green", .6)
 
                 } else {
 
-                  col_fft_point_col <- gray(.9)
-                  col_fft_point_bg <- gray(.9)
-                  col_fft_point_col_2 <- gray(.1)
+                  col_fft_point_col <- gray(0)
+                  col_fft_point_bg <- gray(1)
+                  col_fft_point_bg_2 <- gray(1)
+                  col_fft_point_col_2 <- gray(0)
                 }
 
                 roc_order <- order(fft_spec_vec, decreasing = TRUE)  # from highest to lowest spec
@@ -2334,12 +2336,12 @@ plot.FFTrees <- function(x = NULL,
                   points(final_roc_x[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
                          final_roc_y[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
                          pch = 21, cex = 2.5, col = col_fft_point_col_2,
-                         bg = col_fft_point_col
+                         bg = col_fft_point_bg
                   )
 
                   text(final_roc_x[1] + ((1 - fft_spec_vec_ord[-(which(roc_order == tree))]) * lloc$width[lloc$element == "roc"]),
                        final_roc_y[1] + (fft_sens_vec_ord[-(which(roc_order == tree))] * lloc$height[lloc$element == "roc"]),
-                       labels = roc_order[which(roc_order != tree)], cex = 1, col = gray(.20)
+                       labels = roc_order[which(roc_order != tree)], cex = 1, col = gray(.50)
                   )
 
                 }
@@ -2349,15 +2351,15 @@ plot.FFTrees <- function(x = NULL,
                 # white point (to hide point from above):
                 points(final_roc_x[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
                        final_roc_y[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
-                       pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
+                       pch = 21, cex = 3, col = col_fft_point_col_2, # col = scales::alpha("green", .30),
                        bg = scales::alpha("white", 1), lwd = 1
                 )
 
                 # green point:
                 points(final_roc_x[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
                        final_roc_y[1] + (fft_sens_vec[tree] * lloc$height[lloc$element == "roc"]),
-                       pch = 21, cex = 3, col = gray(1), # col = scales::alpha("green", .30),
-                       bg = col_fft_point_bg, lwd = 1
+                       pch = 21, cex = 3, col = col_fft_point_col_2, # col = scales::alpha("green", .30),
+                       bg = col_fft_point_bg_2, lwd = 1
                 )
 
                 text(final_roc_x[1] + ((1 - fft_spec_vec[tree]) * lloc$width[lloc$element == "roc"]),
@@ -2379,8 +2381,8 @@ plot.FFTrees <- function(x = NULL,
 
                   points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
                          final_roc_y[1] + (roc_lbl_y[5] * lloc$height[lloc$element == "roc"]),
-                         pch = 21, cex = 2.5, col = col_fft_point_bg,
-                         bg = col_fft_point_col
+                         pch = 21, cex = 2.5, col = col_fft_point_col,
+                         bg = col_fft_point_bg
                   )
 
                   points(final_roc_x[1] + (1.10 * lloc$width[lloc$element == "roc"]),
