@@ -1,54 +1,9 @@
+# FFTrees (development version)
 
-# FFTrees 2.0
-
-## 2.0.0.9009
-
-<!-- **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. -->
-
-<!-- Development version: --> 
-
-This the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
-This version adds features and fixes bugs. 
-
-<!-- Log of changes: --> 
-
-Changes since last release: 
-
-<!-- Major: --> 
-
-### Major changes 
-
-<!-- Topic --> 
-
+- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot
 - Added support for handling NA values. 
-
-
-<!-- Minor: --> 
-
-### Minor changes 
-
-<!-- Costs: --> 
-
 - Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
-
-
-<!-- Details: --> 
-
-### Details 
-
-<!-- Topic --> 
-
-- Added `@aliases FFTrees-package` to documentation main `FFTrees()` function. <!-- due to <https://github.com/r-lib/roxygen2/issues/1491> --> 
-
-
-<!-- Development version: --> 
-
-The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
-
-
------- 
-
-<!-- Older versions: --> 
+- Added `@aliases FFTrees-package` to documentation main `FFTrees()` function. 
 
 ## 2.0.0
 
