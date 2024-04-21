@@ -31,6 +31,7 @@
   which.tree = NULL,
   decision.names = NULL,
   stats = NULL,
+  grayscale = FALSE,
   ...
 )
 }
@@ -110,6 +111,8 @@ Default: \code{level.type = "bar"}.}
 \item{stats}{Deprecated argument. Should statistical information be plotted (as logical)?
 Use \code{what = "all"} to include performance statistics
 and \code{what = "tree"} to plot only a tree diagram.}
+
+\item{grayscale}{logical. If \code{TRUE}, the plot is shown in grayscale.}
 
 \item{...}{Graphical parameters (passed to text of panel titles,
 to \code{\link{showcues}} when \code{what = 'cues'}, or
