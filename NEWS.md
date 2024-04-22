@@ -3,7 +3,8 @@
 - `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot
 - Added support for handling NA values. 
 - Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
-- Added `@aliases FFTrees-package` to documentation main `FFTrees()` function. 
+- Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
+- Removed redundant `data_old` folder.  
 
 ## 2.0.0
 
