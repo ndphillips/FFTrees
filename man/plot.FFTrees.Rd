@@ -12,6 +12,7 @@
   main = NULL,
   cue.labels = NULL,
   decision.labels = NULL,
+  truth.labels = NULL,
   cue.cex = NULL,
   threshold.cex = NULL,
   decision.cex = 1,
@@ -67,7 +68,10 @@ use \code{'best.train'} or \code{'best.test'}, respectively.}
 
 \item{cue.labels}{An optional string of labels for the cues / nodes (as character vector).}
 
-\item{decision.labels}{A character vector of length 2 indicating the content-specific names for noise and signal predictions/exits.}
+\item{decision.labels}{A character vector of length 2 indicating the content-specific names for noise vs. signal predictions/exits.}
+
+\item{truth.labels}{A character vector of length 2 indicating the content-specific names for true noise vs. signal cases
+(using `decision.labels` if unspecified).}
 
 \item{cue.cex}{The size of the cue labels (as numeric).}
 
@@ -164,8 +168,9 @@ plot(heart_fft, what = "roc", main = "Performance comparison for heart disease d
 plot(heart_fft, tree = 2, data = heart.test,
      main = "Predicting heart disease",
      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-     decision.labels = c("ok", "sick"), n.per.icon = 2,
-     show.header = TRUE, show.confusion = FALSE, show.levels = FALSE, show.roc = FALSE,
+     decision.labels = c("ok", "treat"), truth.labels = c("Healthy", "Sick"),
+     n.per.icon = 2,
+     show.header = TRUE, show.confusion = TRUE, show.levels = TRUE, show.roc = TRUE,
      hlines = FALSE, font = 3, col = "steelblue")
 
 # # For details, see
