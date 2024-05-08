@@ -48,7 +48,9 @@
 #' @param main The main plot label (as a character string).
 #'
 #' @param cue.labels An optional string of labels for the cues / nodes (as character vector).
-#' @param decision.labels A character vector of length 2 indicating the content-specific names for noise and signal predictions/exits.
+#' @param decision.labels A character vector of length 2 indicating the content-specific names for noise vs. signal predictions/exits.
+#' @param truth.labels A character vector of length 2 indicating the content-specific names for true noise vs. signal cases
+#' (using `decision.labels` if unspecified).
 #' @param cue.cex The size of the cue labels (as numeric).
 #' @param threshold.cex The size of the threshold labels (as numeric).
 #' @param decision.cex The size of the decision labels (as numeric).
@@ -117,8 +119,9 @@
 #' plot(heart_fft, tree = 2, data = heart.test,
 #'      main = "Predicting heart disease",
 #'      cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
-#'      decision.labels = c("ok", "sick"), n.per.icon = 2,
-#'      show.header = TRUE, show.confusion = FALSE, show.levels = FALSE, show.roc = FALSE,
+#'      decision.labels = c("ok", "treat"), truth.labels = c("Healthy", "Sick"),
+#'      n.per.icon = 2,
+#'      show.header = TRUE, show.confusion = TRUE, show.levels = TRUE, show.roc = TRUE,
 #'      hlines = FALSE, font = 3, col = "steelblue")
 #'
 #' # # For details, see
@@ -148,6 +151,7 @@ plot.FFTrees <- function(x = NULL,
                          main = NULL,
                          cue.labels = NULL,
                          decision.labels = NULL,
+                         truth.labels = NULL,
                          #
                          cue.cex = NULL,
                          threshold.cex = NULL,
@@ -449,6 +453,15 @@ plot.FFTrees <- function(x = NULL,
       } else {
         decision.labels <- c(0, 1)
       }
+
+    }
+
+    # truth.labels:
+    if (is.null(truth.labels)) {
+
+      truth.labels <- decision.labels
+
+      # ToDo: Check for 2 cases, else use a default of c(0, 1).
 
     }
 
@@ -848,8 +861,8 @@ plot.FFTrees <- function(x = NULL,
 
             # (a) N and labels:
             text(x = .50, y = .78, paste("N = ", prettyNum(n_exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
-            text(.50, .63, paste(decision.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
-            text(.50, .63, paste(decision.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
+            text(.50, .63, paste(truth.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1)  # 1: False
+            text(.50, .63, paste(truth.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0)  # 2: True
 
             # (b) Show balls:
             n_true_pos <- with(final_stats, hi + mi)
@@ -895,7 +908,7 @@ plot.FFTrees <- function(x = NULL,
 
             text(
               x = .80, y = p_rect_ylim[2],
-              labels = paste("p(", decision.labels[2], ")", sep = ""),
+              labels = paste("p(", truth.labels[2], ")", sep = ""),
               pos = 3, cex = 1.2
             )
 
@@ -933,7 +946,7 @@ plot.FFTrees <- function(x = NULL,
 
             text(
               x = .20, y = p_rect_ylim[2],
-              labels = paste("p(", decision.labels[1], ")", sep = ""),
+              labels = paste("p(", truth.labels[1], ")", sep = ""),
               pos = 3, cex = 1.2
             )
 
@@ -1658,13 +1671,13 @@ plot.FFTrees <- function(x = NULL,
               text(
                 x = final_classtable_x[1] + .25 * diff(final_classtable_x),
                 y = subheader_y, pos = 1, cex = subheader_cex,
-                decision.labels[2]
+                truth.labels[2]
               )
 
               text(
                 x = final_classtable_x[1] + .75 * diff(final_classtable_x),
                 y = subheader_y, pos = 1, cex = subheader_cex,
-                decision.labels[1]
+                truth.labels[1]
               )
 
 

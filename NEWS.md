@@ -1,10 +1,12 @@
 # FFTrees (development version)
 
-- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot
+- `plot.FFTrees()` now has a `truth.labels` argument which, if set, distinguishes labels of true (signal vs. noise) cases from decision outcomes. 
+- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot. 
 - Added support for handling NA values. 
 - Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
 - Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
 - Removed redundant `data_old` folder.  
+
 
 ## 2.0.0
 
@@ -480,6 +482,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2023-09-05.]
+[File `NEWS.md` last updated on 2024-05-08.]
 
 <!-- eof. -->
