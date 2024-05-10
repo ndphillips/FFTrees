@@ -67,7 +67,7 @@ In the following, we illustrate both ways by creating FFTs based on the `titanic
 ### The Titanic data 
 
 ```{r titanic-image, fig.align = "center", out.width="50%", echo = FALSE}
-knitr::include_graphics("../inst/titanic.jpg")
+knitr::include_graphics("titanic.jpg")
 ```
 
 The `titanic` dataset contains basic survival statistics of _Titanic_ passengers. 

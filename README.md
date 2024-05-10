@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 2.0.0.9000 <img src = "./inst/logo.png" align = "right" alt = "FFTrees" width = "160" />
+# FFTrees 2.0.0.9000 <img src = "man/figures/logo.png" align = "right" alt = "FFTrees" width = "160" />
 
 <!-- Devel badges start: -->
 

@@ -134,7 +134,7 @@ The output tells us several pieces of information:
 All statistics to evaluate each tree can be derived from a 2\ x\ 2 confusion table:  
 
 ```{r fft-confusion-table, out.width="50%", echo = FALSE, fig.cap = "**Table 1**: A 2x2 confusion table illustrating the types of frequency counts for 4 possible outcomes."}
-knitr::include_graphics("../inst/confusiontable.jpg")
+knitr::include_graphics("confusiontable.jpg")
 ```
 
 For definitions of all accuracy statistics, see the [accuracy statistics](FFTrees_accuracy_statistics.html) vignette.

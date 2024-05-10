@@ -43,7 +43,7 @@ This vignette illustrates how to construct fast-and-frugal trees (FFTs) for addi
 ### Mushrooms data
 
 ```{r image-mushrooms, fig.align = "center", out.width = "225px", echo = FALSE}
-knitr::include_graphics("../inst/mushrooms.jpg")
+knitr::include_graphics("mushrooms.jpg")
 ```
 
 The `mushrooms` dataset contains data about mushrooms (see `?mushrooms` for details). 
@@ -156,12 +156,10 @@ plot(mushrooms_ring_fft, data = "test")
 As we can see, this tree (in `mushrooms_ring_fft`) has both sensitivity and specificity values of around\ $80$%, but does not perform as well as our earlier one (in `mushrooms_fft`). 
 This suggests that we should discard the expert's advice and primarily rely on the\ `odor` and\ `sporepc` cues. 
 
-
-
 ### Iris.v data 
 
 ```{r iris-image, fig.align = "center", out.width = "225px", echo = FALSE}
-knitr::include_graphics("../inst/virginica.jpg")
+knitr::include_graphics("virginica.jpg")
 ```
 
 The `iris.v` dataset contains data about 150\ flowers (see `?iris.v`). 
