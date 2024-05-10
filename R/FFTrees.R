@@ -236,27 +236,27 @@ FFTrees <- function(formula = NULL,
   # A. Handle deprecated arguments and options: ------
 
   if (!is.null(comp)) {
-    .Defunct("comp", package = "FFTrees")
+    stop("comp is hard deprecated and no longer supported as of FFTrees 2.1.0")
   }
 
   if (!is.null(do.comp)) {
-    .Defunct("do.comp", package = "FFTrees")
+    stop("do.comp is hard deprecated and no longer supported as of FFTrees 2.1.0")
   }
 
   if (!is.null(do.cart)) {
-    .Defunct("do.cart", package = "FFTrees")
+    stop("do.cart is hard deprecated and no longer supported as of FFTrees 2.1.0")
   }
 
   if (!is.null(do.lr)) {
-    .Defunct("do.lr", package = "FFTrees")
+    stop("do.lr is hard deprecated and no longer supported as of FFTrees 2.1.0")
   }
 
   if (!is.null(do.rf)) {
-    .Defunct("do.rf", package = "FFTrees")
+    stop("do.rf is hard deprecated and no longer supported as of FFTrees 2.1.0")
   }
 
   if (!is.null(do.svm)) {
-    .Defunct("do.svm", package = "FFTrees")
+    stop("do.csvm is hard deprecated and no longer supported as of FFTrees 2.1.0")
   }
 
   if (!is.null(force)){
