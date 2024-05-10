@@ -43,12 +43,6 @@
 #' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
-#' @param do.comp logical.
-#' @param do.lr logical.
-#' @param do.cart logical.
-#' @param do.svm logical.
-#' @param do.rf logical.
-#'
 #' @param quiet A list of logical elements.
 #'
 #'
@@ -93,12 +87,6 @@ fftrees_create <- function(formula = NULL,
                            my.goal = NULL,      # e.g., "my_acc",  # name of my.goal (as character)
                            my.goal.fun = NULL,  # e.g., function(hi, fa, mi, cr){(hi + cr)/(hi + fa + mi + cr)},  # a function of (hi, fa, mi, cr)
                            my.tree = NULL,
-                           #
-                           do.comp = TRUE,
-                           do.lr = TRUE,
-                           do.svm = TRUE,
-                           do.cart = TRUE,
-                           do.rf = TRUE,
                            #
                            quiet = NULL) {
 
@@ -830,12 +818,6 @@ fftrees_create <- function(formula = NULL,
       my.goal = my.goal,
       my.goal.fun = my.goal.fun,
       my.tree = my.tree,
-      #
-      do.comp = do.comp,
-      do.lr = do.lr,
-      do.cart = do.cart,
-      do.svm = do.svm,
-      do.rf = do.rf,
       #
       quiet = quiet
     ),

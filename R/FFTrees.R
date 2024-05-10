@@ -110,23 +110,13 @@
 #' If specified, no new FFTs are being fitted (i.e., \code{algorithm} and functions for evaluating cues and creating FFTs are skipped).
 #' Instead, the tree definitions provided are used to re-evaluate the current \code{FFTrees} object on current data.
 #'
-#' @param do.comp,do.lr,do.cart,do.svm,do.rf Should alternative algorithms be used for comparison (as logical)?
-#' All options are set to \code{TRUE} by default. Available options correspond to:
-#' \itemize{
-#'   \item{\code{do.lr}: Logistic regression (LR, using \code{\link{glm}} from \strong{stats} with \code{family = "binomial"});}
-#'   \item{\code{do.cart}: Classification and regression trees (CART, using \code{rpart} from \strong{rpart});}
-#'   \item{\code{do.svm}: Support vector machines (SVM, using \code{svm} from \strong{e1071});}
-#'   \item{\code{do.rf}: Random forests (RF, using \code{randomForest} from \strong{randomForest}.}
-#' }
-#' Specifying \code{do.comp = FALSE} sets all available options to \code{FALSE}.
-#'
 #' @param quiet A list of 4 logical arguments: Should detailed progress reports be suppressed?
 #' Setting list elements to \code{FALSE} is helpful when diagnosing errors.
 #' Default: \code{quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)},
 #' for initial vs. final steps, missing cases, and parameter settings, respectively.
 #' Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.
 #'
-#' @param comp,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
+#' @param comp,do.comp,do.lr,do.cart,do.svm,do.rf,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #'
 #' @return An \code{FFTrees} object with the following elements:
 #' \describe{
@@ -136,8 +126,6 @@
 #'   \item{trees}{A list of FFTs created, with further details contained in \code{n}, \code{best}, \code{definitions}, \code{inwords}, \code{stats}, \code{level_stats}, and \code{decisions}.}
 #'   \item{data}{The original training and test data (if available).}
 #'   \item{params}{A list of defined control parameters (e.g.; \code{algorithm}, \code{goal}, \code{sens.w}, as well as various thresholds, stopping rule, and cost parameters).}
-#'   \item{competition}{Models and classification statistics for competitive classification algorithms:
-#'   Logistic regression (\code{lr}), classification and regression trees (\code{cart}), random forests (\code{rf}), and support vector machines (\code{svm}).}
 #'   \item{cues}{A list of cue information, with further details contained in \code{thresholds} and \code{stats}.}
 #' }
 #'
@@ -224,12 +212,7 @@ FFTrees <- function(formula = NULL,
                     #
                     object = NULL,
                     tree.definitions = NULL,
-                    #
-                    do.comp = TRUE,
-                    do.cart = TRUE,
-                    do.lr = TRUE,
-                    do.rf = TRUE,
-                    do.svm = TRUE,
+
                     #
                     quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE),  # a list of 4 Boolean args
                     # ufeed = 2L,        # ToDo: user feedback level (from feed_types 0:3)
@@ -240,7 +223,12 @@ FFTrees <- function(formula = NULL,
                     rank.method = NULL,  # algorithm
                     rounding = NULL,     # in fftrees_cuerank()
                     store.data = NULL,   # (none)
-                    verbose = NULL       # progress
+                    verbose = NULL,       # progress
+                    do.comp = NULL,
+                    do.cart = NULL,
+                    do.lr = NULL,
+                    do.rf = NULL,
+                    do.svm = NULL
 ) {
 
   # Prepare: ------
@@ -248,9 +236,27 @@ FFTrees <- function(formula = NULL,
   # A. Handle deprecated arguments and options: ------
 
   if (!is.null(comp)) {
-    warning("The argument 'comp' is deprecated. Use 'do.comp' instead.")
+    .Defunct("comp", package = "FFTrees")
+  }
 
-    do.comp <- comp
+  if (!is.null(do.comp)) {
+    .Defunct("do.comp", package = "FFTrees")
+  }
+
+  if (!is.null(do.cart)) {
+    .Defunct("do.cart", package = "FFTrees")
+  }
+
+  if (!is.null(do.lr)) {
+    .Defunct("do.lr", package = "FFTrees")
+  }
+
+  if (!is.null(do.rf)) {
+    .Defunct("do.rf", package = "FFTrees")
+  }
+
+  if (!is.null(do.svm)) {
+    .Defunct("do.svm", package = "FFTrees")
   }
 
   if (!is.null(force)){
@@ -433,12 +439,6 @@ FFTrees <- function(formula = NULL,
                       my.goal.fun = my.goal.fun,
                       my.tree = my.tree,
                       #
-                      do.lr   = do.lr,
-                      do.cart = do.cart,
-                      do.svm  = do.svm,
-                      do.rf   = do.rf,
-                      do.comp = do.comp,
-                      #
                       quiet = quiet # as list, stored in x$params$quiet
   )
 
@@ -473,10 +473,6 @@ FFTrees <- function(formula = NULL,
                           mydata = "train",  # data type: 'train'->'decide' or 'test'->'predict'
                           digits = 2)
 
-
-  # 7. Fit competitive algorithms: ----
-
-  x <- fftrees_fitcomp(x)
 
 
   # Provide user feedback: ----
