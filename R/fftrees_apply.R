@@ -402,7 +402,7 @@ fftrees_apply <- function(x,
 
             if (!x$params$quiet$mis) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} at intermediate cue '{cue_i}' and proceed.")
 
             }
 
@@ -418,7 +418,7 @@ fftrees_apply <- function(x,
           ix_NA_current_decision <- is.na(decisions_df$current_decision)
           nr_NA_lvl <- sum(ix_NA_current_decision)
 
-          # Assign: +++ here now +++
+          # Assign NA cases: +++ here now +++
           classify_now[ix_NA_current_decision] <- TRUE  # Do classify NA cases (which differs from "classify as TRUE")!
 
           if (any(ix_NA_current_decision)){ # IFF there ARE NA cases:
@@ -515,7 +515,7 @@ fftrees_apply <- function(x,
 
         # ToDo:
         #
-        # - When allowing for a 3rd category ("dnk" / abstention / suspension):
+        # - When allowing for a 3rd category ("dnk" / abstention / suspension / SoJ):
         #   2 new errors (as criterion still IS binary / non-contingent / knowable in principle):
         #   5. (fa): deciding for "dnk" when criterion is FALSE / missing a true FALSE
         #   6. (mi): deciding for "dnk" when criterion is TRUE
@@ -523,7 +523,7 @@ fftrees_apply <- function(x,
         #               Criterion
         # Decision      TRUE      FALSE
         #   'true'       hi        fa
-        #   'dnk'       (mi)      (fa)
+        #   'dnk/SoJ'   (mi)      (fa)
         #   'false'      mi        cr
 
         # - Consider alternative policies for indecision / doxastic abstention:
