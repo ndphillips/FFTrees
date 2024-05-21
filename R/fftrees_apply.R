@@ -369,12 +369,14 @@ fftrees_apply <- function(x,
         classify_now <- (decisions_df$current_decision == FALSE) & is.na(decisions_df$decision) # FALSE or NA
       }
       if (isTRUE(all.equal(exit_i, exit_types[2]))) { # 2: exit_i 1:
-        classify_now <- (decisions_df$current_decision == TRUE) & is.na(decisions_df$decision)  # FALSE or NA
+        classify_now <- (decisions_df$current_decision == TRUE) & is.na(decisions_df$decision)  # TRUE or NA
       }
       if (isTRUE(all.equal(exit_i, exit_types[3]))) { # 3: exit_i .5:
-        classify_now <- is.na(decisions_df$decision)  # TRUE for NA only
+        classify_now <- is.na(decisions_df$decision)  # TRUE only for NA cases
       }
 
+      # ToDo: +++ here now +++
+      # Verify that classify_now contains the correct cases (when applying existing FFTs to data sets with NA values).
 
       # Handle NA values: ------
 
@@ -392,7 +394,7 @@ fftrees_apply <- function(x,
           if (any(ix_NA_classify_now)){ # IFF there ARE NA cases:
 
             # Assign:
-            classify_now[ix_NA_classify_now] <- FALSE  # Do NOT classify NA cases (which differs from "classify as FALSE")!
+            classify_now[ix_NA_classify_now] <- FALSE  # Do NOT classify NA cases (which is NOT "classify as FALSE")!
 
             # Classify and count outcomes for NA cases (i.e., sub-2x2 matrix for NA cases):
             NA_hi <- NA  # not classified = no outcome
@@ -400,9 +402,11 @@ fftrees_apply <- function(x,
             NA_mi <- NA  # not classified = no outcome
             NA_cr <- NA  # not classified = no outcome
 
+            # ToDo: Write out nr_NA_lvl into level stats (of current tree and level)!
+
             if (!x$params$quiet$mis) { # Provide user feedback:
 
-              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} in intermediate cue '{cue_i}' and proceed.")
+              cli::cli_alert_warning("Tree {tree_i} node {level_i}: Seeing {nr_NA_lvl} NA value{?s} at intermediate cue '{cue_i}' and proceed.")
 
             }
 
@@ -418,7 +422,7 @@ fftrees_apply <- function(x,
           ix_NA_current_decision <- is.na(decisions_df$current_decision)
           nr_NA_lvl <- sum(ix_NA_current_decision)
 
-          # Assign: +++ here now +++
+          # Assign NA cases: +++ here now +++
           classify_now[ix_NA_current_decision] <- TRUE  # Do classify NA cases (which differs from "classify as TRUE")!
 
           if (any(ix_NA_current_decision)){ # IFF there ARE NA cases:
@@ -515,7 +519,7 @@ fftrees_apply <- function(x,
 
         # ToDo:
         #
-        # - When allowing for a 3rd category ("dnk" / abstention / suspension):
+        # - When allowing for a 3rd category ("dnk" / abstention / suspension / SoJ):
         #   2 new errors (as criterion still IS binary / non-contingent / knowable in principle):
         #   5. (fa): deciding for "dnk" when criterion is FALSE / missing a true FALSE
         #   6. (mi): deciding for "dnk" when criterion is TRUE
@@ -523,12 +527,12 @@ fftrees_apply <- function(x,
         #               Criterion
         # Decision      TRUE      FALSE
         #   'true'       hi        fa
-        #   'dnk'       (mi)      (fa)
+        #   'dnk/SoJ'   (mi)      (fa)
         #   'false'      mi        cr
 
         # - Consider alternative policies for indecision / doxastic abstention:
         #   - predict the most common category OF NA CASES in training data (rather than OVERALL baseline or baseline at this level)
-        #   - predict a 3rd category (tertium datur: abstention / dnk: "do not know" / NA decision)
+        #   - predict a 3rd category (tertium datur: abstention / dnk: "do not know" / NA decision / SoJ)
         #   Corresponding results will depend on the costs of errors.
 
       } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
@@ -578,6 +582,7 @@ fftrees_apply <- function(x,
       } # Handle NA: if ( allow_NA_pred | allow_NA_crit ).
 
 
+
       # Get cumulative level stats: ------
 
       my_level_stats_i <- classtable(
@@ -609,7 +614,7 @@ fftrees_apply <- function(x,
 
       if ( allow_NA_pred | allow_NA_crit ){
 
-        # Goal: Add NA values to level stats.
+        # Add NA values to level stats:
 
         # Total NA cases in level_stats_i:
         level_stats_i$NA_cue[level_i] <- nr_NA_lvl  # nr. of NA in cue values on the current level_i
