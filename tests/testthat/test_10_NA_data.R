@@ -13,7 +13,6 @@ test_that("FFTrees works with NA values in categorical predictors", {
   # Main: Create an FFTrees object:
   fft_NA_1 <- FFTrees(crit ~ .,
                  data = data_NA_categorical,
-                 do.comp = TRUE,
                  quiet = TRUE)
 
   testthat::expect_is(fft_NA_1, "FFTrees")
@@ -33,7 +32,6 @@ test_that("FFTrees works with NA values in 2 numeric predictors", {
   # Create an FFTrees object:
   fft_NA_2 <- FFTrees(crit ~ .,
                  data = data_NA_numeric,
-                 do.comp = TRUE,
                  quiet = TRUE)
 
   testthat::expect_is(fft_NA_2, "FFTrees")

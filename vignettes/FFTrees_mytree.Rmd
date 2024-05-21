@@ -325,7 +325,7 @@ The tools involved in this workflow allow editing the grammar of FFTs.
 #### Overview: Retrieving, manipulating, and using FFT definitions 
 
 ```{r fft-gfft, echo = FALSE, out.width = "500px", fig.cap = "**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)<br>and 6 tree trimming functions (in blue)."}
-  knitr::include_graphics("../inst/gFFTs.png")
+knitr::include_graphics("gFFTs.png")
 ```
 
 **Figure\ 3** provides an overview of the functions provided for converting and manipulating FFT definitions. 

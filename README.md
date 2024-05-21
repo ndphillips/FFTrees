@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
 <!-- Title, version and logo: -->
 
-# FFTrees 2.0.0.9000 <img src = "./inst/logo.png" align = "right" alt = "FFTrees" width = "160" />
+# FFTrees 2.0.0.9000 <img src = "man/figures/logo.png" align = "right" alt = "FFTrees" width = "160" />
 
 <!-- Devel badges start: -->
 
@@ -136,13 +136,10 @@ questions:
 Once we have created some FFTs, additional questions include:
 
 - How accurate are the predictions of a specific FFT?
-- How does its performance compare with alternative machine-learning
-  algorithms?
 - How costly are the predictions of each algorithm?
 
-The **FFTrees** package answers these questions by creating FFTs and
-allowing to evaluate, visualize, and compare them to alternative
-algorithms.
+The **FFTrees** package answers these questions by creating, evaluating,
+and visualizing FFTs.
 
 ### Creating fast-and-frugal trees (FFTs)
 
@@ -178,37 +175,13 @@ plot(heart_fft,
      main = "Heart Disease")
 ```
 
-<figure>
-<img src="man/figures/README-example-heart-plot-1.png"
-alt="An FFT predicting heart disease for test data." />
-<figcaption aria-hidden="true">An FFT predicting heart disease for
-<code>test</code> data.</figcaption>
-</figure>
+<img src="man/figures/README-example-heart-plot-1.png" width="650" style="display: block; margin: auto;" />
 
 **Figure 1**: A fast-and-frugal tree (FFT) predicting heart disease for
 `test` data and its performance characteristics.
 
 - A summary of the trees in our `FFTrees` object and their key
   performance statistics can be obtained by `summary(heart_fft)`.
-
-- Additionally, we can compare the predictive performance of different
-  machine learning algorithms on a range of metrics:
-
-``` r
-# Compare predictive performance across algorithms: 
-heart_fft$competition$test
-```
-
-    #> # A tibble: 5 × 18
-    #>   algorithm     n    hi    fa    mi    cr  sens  spec    far   ppv   npv   acc
-    #>   <chr>     <int> <int> <int> <int> <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
-    #> 1 fftrees     153    64    19     9    61 0.877 0.762 0.238  0.771 0.871 0.817
-    #> 2 lr          153    55    13    18    67 0.753 0.838 0.162  0.809 0.788 0.797
-    #> 3 cart        153    50    19    23    61 0.685 0.762 0.238  0.725 0.726 0.725
-    #> 4 rf          153    59     8    14    72 0.808 0.9   0.1    0.881 0.837 0.856
-    #> 5 svm         153    55     7    18    73 0.753 0.912 0.0875 0.887 0.802 0.837
-    #> # ℹ 6 more variables: bacc <dbl>, wacc <dbl>, dprime <dbl>, cost_dec <dbl>,
-    #> #   cost_cue <dbl>, cost <dbl>
 
 <!-- FFTs by verbal description: -->
 
@@ -246,12 +219,7 @@ plot(my_fft,
      main = "My custom FFT")
 ```
 
-<figure>
-<img src="man/figures/README-example-heart-verbal-1.png"
-alt="An FFT created from a verbal description." />
-<figcaption aria-hidden="true">An FFT created from a verbal
-description.</figcaption>
-</figure>
+<img src="man/figures/README-example-heart-verbal-1.png" width="650" style="display: block; margin: auto;" />
 
 **Figure 2**: An FFT predicting heart disease created from a verbal
 description.
@@ -340,6 +308,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2024-05-08.\]
+\[File `README.Rmd` last updated on 2024-05-10.\]
 
 <!-- eof. -->

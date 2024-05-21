@@ -7,6 +7,9 @@
 - Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
 - Removed redundant `data_old` folder.  
 
+## Breaking Changes
+
+- Deprecated all applications of non-FFT competitive algorithms (i.e.; LR, SVM, RF) in FFT creation. From now on, use other packages such as `parsnip` and `tidymodels` to create and evaluate these models.
 
 ## 2.0.0
 

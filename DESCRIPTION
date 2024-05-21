@@ -16,9 +16,6 @@ Encoding: UTF-8
 Depends: R(>= 3.5.0)
 Imports:
     caret,
-    rpart,
-    randomForest,
-    e1071,
     cli,
     dplyr,
     knitr,
@@ -26,11 +23,11 @@ Imports:
     scales,
     stringr,
     testthat,
-    tibble,
-    tidyselect
+    tibble
 Suggests: 
     rmarkdown,
-    spelling
+    spelling,
+    tidyselect
 License: CC0
 URL: https://CRAN.R-project.org/package=FFTrees, https://github.com/ndphillips/FFTrees/
 BugReports: https://github.com/ndphillips/FFTrees/issues

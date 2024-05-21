@@ -26,11 +26,6 @@ fftrees_create(
   my.goal = NULL,
   my.goal.fun = NULL,
   my.tree = NULL,
-  do.comp = TRUE,
-  do.lr = TRUE,
-  do.svm = TRUE,
-  do.cart = TRUE,
-  do.rf = TRUE,
   quiet = NULL
 )
 }
@@ -83,16 +78,6 @@ Default: \code{my.goal.fun = NULL}.}
 
 \item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.}
-
-\item{do.comp}{logical.}
-
-\item{do.lr}{logical.}
-
-\item{do.svm}{logical.}
-
-\item{do.cart}{logical.}
-
-\item{do.rf}{logical.}
 
 \item{quiet}{A list of logical elements.}
 }

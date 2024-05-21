@@ -255,7 +255,7 @@ When using **FFTrees** in your own work, please cite our article and spread the 
 <!-- Logo: -->
 
 ```{r logo, echo = FALSE, fig.align = "center", out.width="40%"}
-knitr::include_graphics("../inst/FFTrees_Logo.jpg")
+knitr::include_graphics("logo.png")
 ```
 
 <!-- Automatic references: -->

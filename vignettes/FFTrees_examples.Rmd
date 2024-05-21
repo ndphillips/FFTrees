@@ -43,7 +43,7 @@ This vignette illustrates how to construct fast-and-frugal trees (FFTs) for addi
 ### Mushrooms data
 
 ```{r image-mushrooms, fig.align = "center", out.width = "225px", echo = FALSE}
-knitr::include_graphics("../inst/mushrooms.jpg")
+knitr::include_graphics("mushrooms.jpg")
 ```
 
 The `mushrooms` dataset contains data about mushrooms (see `?mushrooms` for details). 
@@ -76,12 +76,8 @@ mushrooms_fft <- FFTrees(formula = poisonous ~.,
                          data = mushrooms,
                          train.p = .50,   # split data into 50:50 training/test subsets
                          main = "Mushrooms",
-                         decision.labels = c("Safe", "Poison"),
-                         do.comp = FALSE)
+                         decision.labels = c("Safe", "Poison"))
 ```
-
-Setting the `do.comp = FALSE` argument prevents the evaluation of alternative algorithms (beyond those needed for FFTs). 
-This can save time, but also avoid error messages stemming from alternative prediction methods (e.g., rank-deficient fits of linear models). 
 
 Here's basic information about the best performing FFT (Tree\ #1): 
 
@@ -145,8 +141,7 @@ mushrooms_ring_fft <- FFTrees(formula = poisonous ~ ringtype + ringnum,
                               data = mushrooms,
                               train.p = .50,
                               main = "Mushrooms (ring cues)",
-                              decision.labels = c("Safe", "Poison"),
-                              do.comp = FALSE)
+                              decision.labels = c("Safe", "Poison"))
 ```
 
 Again, we plot the best training tree, when predicting the cases in the test dataset:
@@ -161,12 +156,10 @@ plot(mushrooms_ring_fft, data = "test")
 As we can see, this tree (in `mushrooms_ring_fft`) has both sensitivity and specificity values of around\ $80$%, but does not perform as well as our earlier one (in `mushrooms_fft`). 
 This suggests that we should discard the expert's advice and primarily rely on the\ `odor` and\ `sporepc` cues. 
 
-
-
 ### Iris.v data 
 
 ```{r iris-image, fig.align = "center", out.width = "225px", echo = FALSE}
-knitr::include_graphics("../inst/virginica.jpg")
+knitr::include_graphics("virginica.jpg")
 ```
 
 The `iris.v` dataset contains data about 150\ flowers (see `?iris.v`). 

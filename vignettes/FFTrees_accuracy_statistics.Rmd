@@ -60,7 +60,7 @@ A wide range of accuracy measures can be derived from this seemingly simple matr
 Here is a generic version of a confusion table: 
 
 ```{r confusion-table, fig.align = "center", out.width="50%", echo = FALSE, fig.cap = "**Figure 2**: A 2x2 matrix illustrating the frequency counts of 4 possible outcomes."}
-knitr::include_graphics("../inst/confusiontable.jpg")
+knitr::include_graphics("confusiontable.jpg")
 ```
 
 A 2\ x\ 2 matrix cross-tabulates the decisions of the algorithm (rows) with actual criterion values (columns) and contains counts of observations for all four resulting cells. 

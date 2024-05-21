@@ -5,6 +5,8 @@
 \alias{FFTrees-package}
 \title{FFTrees: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Create, visualize, and test fast-and-frugal decision trees (FFTs) using the algorithms and methods described by Phillips, Neth, Woike & Gaissmaier (2017), \doi{10.1017/S1930297500006239}. FFTs are simple and transparent decision trees for solving binary classification problems. FFTs can be preferable to more complex algorithms because they require very little information, are easy to understand and communicate, and are robust against overfitting.
 }
 \seealso{
