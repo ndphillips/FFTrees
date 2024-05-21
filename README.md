@@ -268,7 +268,7 @@ continue developing the package.
 
 <!-- Examples uses/publications (with links): -->
 
-By 2024, over 120 scientific publications have used or cited **FFTrees**
+By 2024, over 130 scientific publications have used or cited **FFTrees**
 (see [Google
 Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)
 for the full list). Examples include:
@@ -308,6 +308,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2024-05-10.\]
+\[File `README.Rmd` last updated on 2024-05-21.\]
 
 <!-- eof. -->
