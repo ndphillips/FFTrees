@@ -1,15 +1,34 @@
-# FFTrees (development version)
+## FFTrees 2.0.0.9000 
+
+This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
+
+
+### Breaking Changes
+
+- Deprecated all applications of non-FFT competitive algorithms (i.e., LR, SVM, RF) in FFT creation. 
+From now on, consider using other packages such as **parsnip** or **tidymodels** to create and evaluate these models.
+
+### Major changes
+
+- Added support for handling NA values. 
+
+
+### Minor changes
 
 - `plot.FFTrees()` now has a `truth.labels` argument which, if set, distinguishes labels of true (signal vs. noise) cases from decision outcomes. 
 - `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot. 
-- Added support for handling NA values. 
 - Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
+
+
+### Details
+
 - Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
-- Removed redundant `data_old` folder.  
+- Removed redundant `data_old` folder. 
 
-## Breaking Changes
 
-- Deprecated all applications of non-FFT competitive algorithms (i.e.; LR, SVM, RF) in FFT creation. From now on, use other packages such as `parsnip` and `tidymodels` to create and evaluate these models.
+<!-- Older versions: --> 
+
+------ 
 
 ## 2.0.0
 
@@ -73,12 +92,6 @@ Changes since last release:
 - Improved data cleaning (consistent for training and test data). 
 - Revised documentation, vignettes, and tests. 
 
-
-<!-- Development version: --> 
-
-The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
-
-<!-- Older versions: --> 
 
 ------ 
 
@@ -485,6 +498,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2024-05-08.]
+[File `NEWS.md` last updated on 2024-05-21.]
 
 <!-- eof. -->
