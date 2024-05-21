@@ -1,0 +1,37 @@
+## _pkgdown.yml FFTrees | 2024 05 21
+## ---------------------------------
+
+url: https://ndphillips.github.io/FFTrees/
+
+development:
+  mode: devel # devel OR release
+
+template:
+  bootstrap: 5
+  # bootswatch: litera # release
+  bootswatch: spacelab # devel
+
+toc:
+  depth: 3
+
+navbar:
+  structure:
+    left:  [intro, articles, reference, news]
+    right: [search, github]
+
+
+## figure settings: ----------
+
+figures:
+  dev: grDevices::png
+  dpi: 96
+  dev.args: []
+  fig.ext: png
+  fig.width: 7.5  # default: 7.292
+  fig.height: ~
+  fig.asp: 0.80
+  fig.retina: 2
+
+
+## eof. ----------
+

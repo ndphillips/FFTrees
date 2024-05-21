@@ -1,17 +1,36 @@
-# FFTrees (development version)
+# FFTrees 2.0.0.9000 
 
-- `plot.FFTrees()` now has a `truth.labels` argument which, if set, distinguishes labels of true (signal vs. noise) cases from decision outcomes. 
-- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot. 
-- Added support for handling NA values. 
-- Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
-- Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
-- Removed redundant `data_old` folder.  
+This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
+
 
 ## Breaking Changes
 
-- Deprecated all applications of non-FFT competitive algorithms (i.e.; LR, SVM, RF) in FFT creation. From now on, use other packages such as `parsnip` and `tidymodels` to create and evaluate these models.
+- Deprecated all applications of non-FFT competitive algorithms (i.e., LR, SVM, RF) in FFT creation. 
+From now on, consider using other packages such as **parsnip** or **tidymodels** to create and evaluate these models.
 
-## 2.0.0
+## Major changes
+
+- Added support for handling NA values. 
+
+
+## Minor changes
+
+- `plot.FFTrees()` now has a `truth.labels` argument which, if set, distinguishes labels of true (signal vs. noise) cases from decision outcomes. 
+- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot. 
+- Increased value of `cost_cues_default` from 0 to 1, so that default cue costs correspond to `mcu`. 
+
+
+## Details
+
+- Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
+- Removed redundant `data_old` folder. 
+
+
+<!-- Older versions: --> 
+
+------ 
+
+# FFTrees 2.0.0
 
 **FFTrees** version 2.0.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2023-06-06]. 
 This version adds functionality, improves consistency, and increases robustness.
@@ -22,7 +41,7 @@ Changes since last release:
 
 <!-- Major: --> 
 
-### Major changes 
+## Major changes 
 
 <!-- gfft: Converting and manipulating FFTs --> 
 
@@ -50,7 +69,7 @@ Changes since last release:
 
 <!-- Minor: --> 
 
-### Minor changes 
+## Minor changes 
 
 - Added utility functions (and corresponding verification functions): 
     - `get_best_tree()` retrieves the ID of the best tree in an `FFTrees` object (given `goal`) 
@@ -65,7 +84,7 @@ Changes since last release:
 
 <!-- Details: --> 
 
-### Details 
+## Details 
 
 - Added global constants and utility functions. 
 - Added progress bar of **cli** package (removing dependency on **progress**). 
@@ -73,12 +92,6 @@ Changes since last release:
 - Improved data cleaning (consistent for training and test data). 
 - Revised documentation, vignettes, and tests. 
 
-
-<!-- Development version: --> 
-
-The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
-
-<!-- Older versions: --> 
 
 ------ 
 
@@ -485,6 +498,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2024-05-08.]
+[File `NEWS.md` last updated on 2024-05-21.]
 
 <!-- eof. -->
