@@ -2,7 +2,7 @@ Package: FFTrees
 Type: Package
 Title: Generate, Visualise, and Evaluate Fast-and-Frugal Decision Trees
 Version: 2.0.0.9000
-Date: 2024-04-21
+Date: 2024-04-22
 Authors@R: c(person("Nathaniel", "Phillips", role = c("aut"), email = "Nathaniel.D.Phillips.is@gmail.com", comment = c(ORCID = "0000-0002-8969-7013")),
              person("Hansjoerg", "Neth", role = c("aut", "cre"), email = "h.neth@uni.kn", comment = c(ORCID = "0000-0001-5427-3141")),
              person("Jan", "Woike", role = "aut", comment = c(ORCID = "0000-0002-6816-121X")),
@@ -29,7 +29,7 @@ Suggests:
     spelling,
     tidyselect
 License: CC0
-URL: https://CRAN.R-project.org/package=FFTrees, https://github.com/ndphillips/FFTrees/
+URL: https://CRAN.R-project.org/package=FFTrees, https://ndphillips.github.io/FFTrees/
 BugReports: https://github.com/ndphillips/FFTrees/issues
 VignetteBuilder: knitr
 RoxygenNote: 7.3.1
