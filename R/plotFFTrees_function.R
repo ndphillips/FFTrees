@@ -191,9 +191,6 @@ plot.FFTrees <- function(x = NULL,
   par0 <- par(no.readonly = TRUE)
   on.exit(par(par0), add = TRUE)
 
-
-  # Deprecated arguments: ----
-
   if (is.null(which.tree) == FALSE) {
     warning("plot.FFTrees: 'which.tree' is deprecated. Use 'tree' instead.")
 
@@ -217,7 +214,6 @@ plot.FFTrees <- function(x = NULL,
   }
 
 
-  # Verify what: ----
 
   valid_what <- c(
     "all", "default",
@@ -233,9 +229,6 @@ plot.FFTrees <- function(x = NULL,
     stop(paste0("what must be a string in c(", valid_string_q, ").", sep = ""))
   }
 
-
-  # Handle what: ----
-
   if (what == "cue") { # handle special case:
 
     showcues(x = x, main = main, ...) # pass key inputs + graphical parameters
@@ -244,10 +237,7 @@ plot.FFTrees <- function(x = NULL,
     #       as currently no cue accuracy statistics exist in x.
   }
 
-
   if (what != "cue") { # ALL else in function: what in c("all", "tree", "roc")
-
-    # Set show.parts parameters: ----
 
     if (what == "all" | what == "def") { # default:
 
@@ -340,13 +330,8 @@ plot.FFTrees <- function(x = NULL,
       hlines <- FALSE
     } # if (what == "roc").
 
-
-    # Determine layout: ----
-
-    # Constants (currently fixed parameters):
     show_icon_guide_legend <- FALSE
 
-    # Top, middle, and bottom:
     if (show.header & show.tree & (show.confusion | show.levels | show.roc)) {
       show.top <- TRUE
       show.middle <- TRUE
@@ -408,9 +393,6 @@ plot.FFTrees <- function(x = NULL,
       )
     }
 
-
-    # data: ----
-
     # Note: data can be either a string "train"/"test"
     #       OR an entire data frame (of new test data):
 
@@ -434,14 +416,8 @@ plot.FFTrees <- function(x = NULL,
       data <- "test" # in rest of this function
     }
 
-
-    # Extract key parameters from x: ------
-
-    # goal: ----
-
     goal <- x$params$goal
 
-    # decision.labels:
     if (is.null(decision.labels)) {
       if (("decision.labels" %in% names(x$params))) {
         decision.labels <- x$params$decision.labels
@@ -450,14 +426,9 @@ plot.FFTrees <- function(x = NULL,
       }
     }
 
-    # truth.labels:
     if (is.null(truth.labels)) {
       truth.labels <- decision.labels
-
-      # ToDo: Check for 2 cases, else use a default of c(0, 1).
     }
-
-    # main: ----
 
     if (is.null(main)) {
       if (("main" %in% names(x$params))) {
@@ -487,15 +458,8 @@ plot.FFTrees <- function(x = NULL,
       } # if (("main" %in% names(x$params))).
     } # if (is.null(main)).
 
-
-    # tree: ----
-
-    # Verify tree input: ----
-
     tree <- verify_tree_arg(x = x, data = data, tree = tree) # use helper (for plotting AND printing)
 
-
-    # Get "best" tree: ----
 
     if (tree == "best.train") {
       if (data == "test") {
@@ -523,9 +487,6 @@ plot.FFTrees <- function(x = NULL,
       tree <- get_best_tree(x, data = "test", goal = x$params$goal) # using helper
     }
 
-
-    # Define critical objects: ------
-
     # decision_v  <- x$trees$decisions[[data]][[tree]]$decision
     tree_stats <- x$trees$stats[[data]]
     level_stats <- x$trees$level_stats[[data]][x$trees$level_stats[[data]]$tree == tree, ]
@@ -546,9 +507,6 @@ plot.FFTrees <- function(x = NULL,
     mcu <- x$trees$stats[[data]]$mcu[tree]
 
     final_stats <- tree_stats[tree, ]
-
-
-    # Add level statistics: ----
 
     n_levels <- nrow(level_stats)
 
@@ -578,22 +536,14 @@ plot.FFTrees <- function(x = NULL,
     # print(level_stats)  # tree with marginal frequency values (for each level)
 
 
-    # Set plotting parameters: ----
+    ## Set plotting parameters: ----
 
-    # Label sizes:
-
-    # print(paste0("par('cex') = ", par("cex")))  # Note: Value varies from .66 to 1
-
-    # Sizes not set by user:
     f_cex <- 1 # cex scaling factor
 
     decision_node_cex <- 4 * f_cex
     exit_node_cex <- 4 * f_cex
     panel_title_cex <- 2 * f_cex
 
-    # Set by user arguments:
-
-    # Cue label size:
     if (is.null(cue.cex)) {
       cue.cex <- c(1.50, 1.50, 1.25, 1, 1, 1)
     } else {
@@ -601,9 +551,7 @@ plot.FFTrees <- function(x = NULL,
         cue.cex <- rep(cue.cex, length.out = 6)
       }
     }
-    # print(cue.cex)  # 4debugging
 
-    # Break label size:
     if (is.null(threshold.cex)) {
       threshold.cex <- c(1.50, 1.50, 1.25, 1, 1, 1)
     } else {
@@ -697,9 +645,6 @@ plot.FFTrees <- function(x = NULL,
       plot_width <- plotting_parameters_df$plot_width[6]
     }
 
-
-    # Colors: ----
-
     col_exit_node_bg <- "white"
 
     # error.colfun <- circlize::colorRamp2(c(0, 50, 100),
@@ -733,9 +678,6 @@ plot.FFTrees <- function(x = NULL,
     exit_node_pch <- 21
 
     decision_node_pch <- NA_integer_
-
-
-    # Balls: ----
 
     ball_loc <- "variable"
 
@@ -772,17 +714,11 @@ plot.FFTrees <- function(x = NULL,
     noise_ball_bg <- ball_bg[1]
     signal_ball_bg <- ball_bg[2]
 
-
-    # Arrows: ----
-
     arrow_lty <- 1
     arrow_lwd <- 1
     arrow_length <- 2.50
     arrow_head_length <- .08
     arrow_col <- gray(0) # = black
-
-
-    # Final stats: ----
 
     # spec_circle_x   <- .40  # is NOT used anywhere?
     # dprime_circle_x <- .50  # is NOT used anywhere?
@@ -794,11 +730,6 @@ plot.FFTrees <- function(x = NULL,
     # spec_circle_col   <- "red"    # is NOT used anywhere?
     # dprime_circle_col <- "blue"   # is NOT used anywhere?
     # stat_outer_circle_col <- gray(.50)  # is NOT used anywhere?
-
-
-    # 1: Initial Frequencies: ------
-
-    # Parameters:
 
     if (show.top) {
       par(mar = c(0, 0, 1, 0))
@@ -826,7 +757,6 @@ plot.FFTrees <- function(x = NULL,
       text(x = .50, y = .96, main, cex = panel_title_cex, ...) # title 1 (top): main
 
 
-      # 2. Data info: ----
 
       # (a) N and labels:
       text(x = .50, y = .78, paste("N = ", prettyNum(n_exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
@@ -862,89 +792,31 @@ plot.FFTrees <- function(x = NULL,
 
       par(xpd = FALSE)
 
-
-      # 3. Add p_signal and p_noise levels: -----
-
-      signal_p <- crit_br # criterion baseline/base rate (from above)
-      noise_p <- (1 - signal_p)
-
-      p_rect_ylim <- c(.10, .60)
-
-
       # (a) p_signal level (on right): ----
 
-      text(
-        x = .80, y = p_rect_ylim[2],
-        labels = paste("p(", truth.labels[2], ")", sep = ""),
-        pos = 3, cex = 1.2
-      )
-
-      # Filling:
-      rect(.775, p_rect_ylim[1],
-        .825, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
-        col = gray(.50, .25), border = NA
-      )
-
-      # Filltop:
-      segments(.775, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
-        .825, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
-        lwd = 1
-      )
-
-      # Outline:
-      rect(.775, p_rect_ylim[1],
-        .825, p_rect_ylim[2],
-        lwd = 1
-      )
-
-      if (signal_p < .0001) {
-        signal_p_text <- "<1%"
-      } else {
-        signal_p_text <- paste(round(signal_p * 100, 0), "%", sep = "")
-      }
-
-      text(.825, p_rect_ylim[1] + signal_p * diff(p_rect_ylim),
-        labels = signal_p_text,
-        pos = 4, cex = 1.2
-      )
-
+      plot_level_bar(title = paste("p(", truth.labels[2], ")", sep = ""),
+                     value = crit_br,
+                     value_label = scales::percent(crit_br),
+                     max_value = 1,
+                     rect_max_y = .6,
+                     rect_min_y = .1,
+                     rect_min_x = .775,
+                     rect_max_x = .825,
+                     label_pos = "right")
 
       # (b) p_noise level (on left): ----
 
-      text(
-        x = .20, y = p_rect_ylim[2],
-        labels = paste("p(", truth.labels[1], ")", sep = ""),
-        pos = 3, cex = 1.2
-      )
+      plot_level_bar(title = paste("p(", truth.labels[1], ")", sep = ""),
+                     value = 1 - crit_br,
+                     value_label = scales::percent(1 - crit_br),
+                     max_value = 1,
+                     rect_max_y = .6,
+                     rect_min_y = .1,
+                     rect_min_x = .175,
+                     rect_max_x = .225,
+                     label_pos = "left")
 
-
-      rect(.175, p_rect_ylim[1], .225, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
-        col = gray(.50, .25), border = NA
-      )
-
-      # Filltop:
-      segments(.175, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
-        .225, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
-        lwd = 1
-      )
-
-      # Outline:
-      rect(.175, p_rect_ylim[1], .225, p_rect_ylim[2],
-        lwd = 1
-      )
-
-      if (noise_p < .0001) {
-        noise_p_text <- "<0.01%"
-      } else {
-        noise_p_text <- paste(round(noise_p * 100, 0), "%", sep = "")
-      }
-
-      text(.175, p_rect_ylim[1] + noise_p * diff(p_rect_ylim),
-        labels = noise_p_text,
-        pos = 2, cex = 1.2
-      )
-    } # if (show.top).
-
+    }
 
     # 2. Main TREE: ------
 
@@ -965,9 +837,6 @@ plot.FFTrees <- function(x = NULL,
         xaxt = "n", yaxt = "n",
         ylab = "", xlab = ""
       )
-
-
-      # Middle title: ----
 
       if (show.top | show.bottom) {
         if (hlines) {
@@ -991,8 +860,6 @@ plot.FFTrees <- function(x = NULL,
         mtext(text = main, side = 3, cex = panel_title_cex, ...) # title 2 (middle): (b) main label
       } # if (show.top == FALSE & show.bottom == FALSE).
 
-
-      # Icon guide: ------
 
       if (show.iconguide) {
         # Parameters:
@@ -1462,7 +1329,6 @@ plot.FFTrees <- function(x = NULL,
     } # if (show.middle).
 
 
-    # 3. Cumulative performance: ----
 
     if (show.bottom == TRUE) { # obtain tree statistics:
 
@@ -2066,6 +1932,95 @@ plot.FFTrees <- function(x = NULL,
   # Output x may differ from input x when applying new 'test' data (as df):
   return(invisible(x))
 } # plot.FFTrees().
+
+plot_level_bar <- function(title = "",
+                           value = NULL,
+                           value_label = value,
+                           max_value = 1,
+                           rect_max_y = 1,
+                           rect_min_y = 0,
+                           rect_min_x = 0,
+                           rect_max_x = 1,
+                           title_cex = 1.2,
+                           cex_label = 1.2,
+                           col_outline = "black",
+                           fill = "gray",
+                           label_pos = "top",
+                           reference_val = NULL,
+                           reference_label = NULL,
+                           outline = TRUE) {
+  rect_x_center <- (rect_max_x + rect_min_x) / 2
+  rect_y_center <- (rect_max_y + rect_min_y) / 2
+
+  ## Title ================================================================
+
+  text(
+    x = rect_x_center,
+    y = rect_max_y,
+    labels = title,
+    pos = 3,
+    cex = title_cex
+  )
+
+  ## Filling ==============================================================
+
+  rect(
+    xleft = rect_min_x,
+    xright = rect_max_x,
+    ybottom = rect_min_y,
+    ytop = rect_min_y + value / max_value * (rect_max_y - rect_min_y),
+    col = fill,
+    border = NA
+  )
+
+  ## Top of filling =======================================================
+
+  segments(
+    x0 = rect_min_x,
+    x1 = rect_max_x,
+    y0 = rect_min_y + value / max_value * (rect_max_y - rect_min_y),
+    y1 = rect_min_y + value / max_value * (rect_max_y - rect_min_y),
+    lwd = 1
+  )
+
+  ## Outline ==============================================================
+
+  if (outline) {
+    rect(
+      xleft = rect_min_x,
+      xright = rect_max_x,
+      ybottom = rect_min_y,
+      ytop = rect_max_y,
+      lwd = 1,
+      border = col_outline,
+      col = NULL
+    )
+  }
+
+  ## Value Text ===========================================================
+
+  if (label_pos == "top") {
+    x_text <- rect_x_center
+    y_text <- rect_max_y
+    pos_label <- 3
+  } else if (label_pos == "left") {
+    x_text <- rect_min_x
+    y_text <- rect_min_y + value / max_value * (rect_max_y - rect_min_y)
+    pos_label <- 2
+  } else if (label_pos == "right") {
+    x_text <- rect_max_x
+    y_text <- rect_min_y + value / max_value * (rect_max_y - rect_min_y)
+    pos_label <- 4
+  }
+
+  text(
+    x = x_text,
+    y = y_text,
+    labels = value_label,
+    pos = pos_label,
+    cex = cex_label
+  )
+}
 
 
 
