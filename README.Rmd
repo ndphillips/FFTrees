@@ -197,6 +197,7 @@ plot(heart_fft,
 
 - A summary of the trees in our `FFTrees` object and their key performance statistics can be obtained by `summary(heart_fft)`.
 
+
 <!-- FFTs by verbal description: -->
 
 ### Building FFTs from verbal descriptions 
@@ -232,6 +233,7 @@ plot(my_fft,
 
 **Figure\ 2**: An FFT predicting heart disease created from a verbal description.  
 
+
 The performance measures (in the bottom panel of **Figure\ 2**) show that this particular tree is somewhat biased: 
 It has nearly perfect _sensitivity_ (i.e., is good at identifying cases of _Disease_) but suffers from low _specificity_ (i.e., performs poorly in identifying _Healthy_ cases). 
 Expressed in terms of its errors, `my_fft` incurs few misses at the expense of many false alarms. 
@@ -243,17 +245,21 @@ Overall, what counts as the "best" tree for a particular problem depends on many
 To explore this range of options, the **FFTrees** package enables us to design and evaluate a range of FFTs. 
 
 
+<!-- Available resources: -->
+
 ## Resources
 
 The following versions of **FFTrees** and corresponding resources are available: 
 
-Type:                         | Version:        | URL:                           | 
-:-----------------------------|:----------------|:-------------------------------| 
+Type:                       | Version:        | URL:                           | 
+:---------------------------|:----------------|:-------------------------------| 
 A. **FFTrees** (R package): | [Release version](`r url_pkg_CRAN`)        | <`r url_pkg_CRAN`>   |
     &nbsp;                  | [Development version](`r url_pkg_GitHub`)  | <`r url_pkg_GitHub`> | 
 B. Other resources:         | [Online documentation](`r url_doc_GitHub`) | <`r url_doc_GitHub`> | 
     &nbsp;                  | [Online demo](`r url_app_shiny`) (running v1.3.3) | <`r url_app_shiny`> | 
 
+
+<!-- Citation and references: -->
 
 ## References
 

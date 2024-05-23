@@ -241,6 +241,8 @@ trade-offs between maximizing accuracy vs. incorporating the costs of
 cues or errors). To explore this range of options, the **FFTrees**
 package enables us to design and evaluate a range of FFTs.
 
+<!-- Available resources: -->
+
 ## Resources
 
 The following versions of **FFTrees** and corresponding resources are
@@ -252,6 +254,8 @@ available:
 |                             | [Development version](https://github.com/ndphillips/FFTrees)                      | <https://github.com/ndphillips/FFTrees>             |
 | B. Other resources:         | [Online documentation](https://ndphillips.github.io/FFTrees/)                     | <https://ndphillips.github.io/FFTrees/>             |
 |                             | [Online demo](https://econpsychbasel.shinyapps.io/shinyfftrees/) (running v1.3.3) | <https://econpsychbasel.shinyapps.io/shinyfftrees/> |
+
+<!-- Citation and references: -->
 
 ## References
 
