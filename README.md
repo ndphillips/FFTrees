@@ -241,6 +241,18 @@ trade-offs between maximizing accuracy vs. incorporating the costs of
 cues or errors). To explore this range of options, the **FFTrees**
 package enables us to design and evaluate a range of FFTs.
 
+## Resources
+
+The following versions of **FFTrees** and corresponding resources are
+available:
+
+| Type:                       | Version:                                                                          | URL:                                                |
+|:----------------------------|:----------------------------------------------------------------------------------|:----------------------------------------------------|
+| A. **FFTrees** (R package): | [Release version](https://CRAN.R-project.org/package=FFTrees)                     | <https://CRAN.R-project.org/package=FFTrees>        |
+|                             | [Development version](https://github.com/ndphillips/FFTrees)                      | <https://github.com/ndphillips/FFTrees>             |
+| B. Other resources:         | [Online documentation](https://ndphillips.github.io/FFTrees/)                     | <https://ndphillips.github.io/FFTrees/>             |
+|                             | [Online demo](https://econpsychbasel.shinyapps.io/shinyfftrees/) (running v1.3.3) | <https://econpsychbasel.shinyapps.io/shinyfftrees/> |
+
 ## References
 
 We had fun creating the **FFTrees** package and hope you like it too! As
@@ -308,6 +320,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2024-05-21.\]
+\[File `README.Rmd` last updated on 2024-05-23.\]
 
 <!-- eof. -->
