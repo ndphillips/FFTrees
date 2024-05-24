@@ -1072,146 +1072,17 @@ plot.FFTrees <- function(x = NULL,
 
       # Classification table: ----
 
-      if (show.confusion) {
-        # Parameters:
-        classtable_lwd <- 1
-
-        # x/y coordinates:
-        final_classtable_x <- c(lloc$center_x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center_x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
-        final_classtable_y <- c(lloc$center_y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center_y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
-
-        rect(final_classtable_x[1], final_classtable_y[1],
-          final_classtable_x[2], final_classtable_y[2],
-          lwd = classtable_lwd
-        )
-
-        segments(mean(final_classtable_x), final_classtable_y[1], mean(final_classtable_x), final_classtable_y[2], col = gray(0), lwd = classtable_lwd)
-        segments(final_classtable_x[1], mean(final_classtable_y), final_classtable_x[2], mean(final_classtable_y), col = gray(0), lwd = classtable_lwd)
-
-
-        # Column titles: ----
-
-        text(
-          x = mean(mean(final_classtable_x)),
-          y = header_y,
-          "Truth", pos = 1, cex = header_cex
-        )
-
-        text(
-          x = final_classtable_x[1] + .25 * diff(final_classtable_x),
-          y = subheader_y, pos = 1, cex = subheader_cex,
-          truth.labels[2]
-        )
-
-        text(
-          x = final_classtable_x[1] + .75 * diff(final_classtable_x),
-          y = subheader_y, pos = 1, cex = subheader_cex,
-          truth.labels[1]
-        )
-
-
-        # Row titles: ----
-
-        text(
-          x = final_classtable_x[1] - .01,
-          y = final_classtable_y[1] + .75 * diff(final_classtable_y), cex = subheader_cex,
-          decision.labels[2], adj = 1
-        )
-
-        text(
-          x = final_classtable_x[1] - .01,
-          y = final_classtable_y[1] + .25 * diff(final_classtable_y), cex = subheader_cex,
-          decision.labels[1], adj = 1
-        )
-
-        text(
-          x = final_classtable_x[1] - .065,
-          y = mean(final_classtable_y), cex = header_cex,
-          "Decision"
-        )
-
-        # text(x = final_classtable_x[1] - .05,
-        #      y = mean(final_classtable_y), cex = header_cex,
-        #      "Decision", srt = 90, pos = 3)
-
-
-        # Add final frequencies: ----
-
-        text(final_classtable_x[1] + .75 * diff(final_classtable_x),
-          final_classtable_y[1] + .25 * diff(final_classtable_y),
-          prettyNum(final_stats$cr, big.mark = ","),
-          cex = 1.5
-        )
-
-        text(final_classtable_x[1] + .25 * diff(final_classtable_x),
-          final_classtable_y[1] + .25 * diff(final_classtable_y),
-          prettyNum(final_stats$mi, big.mark = ","),
-          cex = 1.5
-        )
-
-        text(final_classtable_x[1] + .75 * diff(final_classtable_x),
-          final_classtable_y[1] + .75 * diff(final_classtable_y),
-          prettyNum(final_stats$fa, big.mark = ","),
-          cex = 1.5
-        )
-
-        text(final_classtable_x[1] + .25 * diff(final_classtable_x),
-          final_classtable_y[1] + .75 * diff(final_classtable_y),
-          prettyNum(final_stats$hi, big.mark = ","),
-          cex = 1.5
-        )
-
-
-        # Add symbols: ----
-
-        points(final_classtable_x[1] + .55 * diff(final_classtable_x),
-          final_classtable_y[1] + .05 * diff(final_classtable_y),
-          pch = noise_ball_pch, bg = col_correct_bg, col = col_correct_border, cex = ball_cex
-        )
-
-        points(final_classtable_x[1] + .05 * diff(final_classtable_x),
-          final_classtable_y[1] + .55 * diff(final_classtable_y),
-          pch = signal_ball_pch, bg = col_correct_bg, cex = ball_cex, col = col_correct_border
-        )
-
-        points(final_classtable_x[1] + .55 * diff(final_classtable_x),
-          final_classtable_y[1] + .55 * diff(final_classtable_y),
-          pch = noise_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
-        )
-
-        points(final_classtable_x[1] + .05 * diff(final_classtable_x),
-          final_classtable_y[1] + .05 * diff(final_classtable_y),
-          pch = signal_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
-        )
-
-
-        # Add labels: ----
-
-        text(final_classtable_x[1] + .62 * diff(final_classtable_x),
-          final_classtable_y[1] + .07 * diff(final_classtable_y),
-          "cr",
-          cex = 1, font = 3, adj = 0
-        )
-
-        text(final_classtable_x[1] + .12 * diff(final_classtable_x),
-          final_classtable_y[1] + .07 * diff(final_classtable_y),
-          "mi",
-          cex = 1, font = 3, adj = 0
-        )
-
-        text(final_classtable_x[1] + .62 * diff(final_classtable_x),
-          final_classtable_y[1] + .57 * diff(final_classtable_y),
-          "fa",
-          cex = 1, font = 3, adj = 0
-        )
-
-        text(final_classtable_x[1] + .12 * diff(final_classtable_x),
-          final_classtable_y[1] + .57 * diff(final_classtable_y),
-          "hi",
-          cex = 1, font = 3, adj = 0
-        )
-      } # if (show.confusion).
-
+      plot_confusion(
+        lloc = lloc,
+        header_y = header_y,
+        subheader_y = subheader_y,
+        header_cex = header_cex,
+        subheader_cex = subheader_cex,
+        truth.labels = truth.labels,
+        decision.labels = decision.labels,
+        final_stats = final_stats,
+        ball_cex = ball_cex
+      )
 
       # Levels: ----
 
@@ -2134,4 +2005,157 @@ plot_fft <- function(level_stats,
       )
     } # if (identical exit 1 / right etc.
   } # for (level_i etc. loop.
+}
+
+plot_confusion <- function(lloc,
+                           header_y = 1,
+                           header_cex = 1.1,
+                           subheader_y = .925,
+                           subheader_cex = .9,
+                           final_stats = NULL,
+                           noise_ball_pch = 21,
+                           signal_ball_pch = 24,
+                           grayscale = FALSE,
+                           ball_cex = c(1, 1),
+                           classtable_lwd = 1,
+                           truth.labels = c("FALSE", "TRUE"),
+                           decision.labels = c("FALSE", "TRUE")) {
+  if (!grayscale) {
+    col_error_bg <- "#FF7352CC"
+    col_error_border <- "#AD1A0AE6"
+    col_correct_bg <- "#89FF6FCC"
+    col_correct_border <- "#24AB18E6"
+  } else {
+    # Grayscale colors
+
+    col_error_bg <- gray(.1)
+    col_error_border <- gray(0)
+    col_correct_bg <- gray(1)
+    col_correct_border <- gray(0)
+  }
+
+  # x/y coordinates:
+  final_classtable_x <- c(lloc$center_x[lloc$element == "classtable"] - lloc$width[lloc$element == "classtable"] / 2, lloc$center_x[lloc$element == "classtable"] + lloc$width[lloc$element == "classtable"] / 2)
+  final_classtable_y <- c(lloc$center_y[lloc$element == "classtable"] - lloc$height[lloc$element == "classtable"] / 2, lloc$center_y[lloc$element == "classtable"] + lloc$height[lloc$element == "classtable"] / 2)
+
+  rect(final_classtable_x[1], final_classtable_y[1],
+    final_classtable_x[2], final_classtable_y[2],
+    lwd = classtable_lwd
+  )
+
+  segments(mean(final_classtable_x), final_classtable_y[1], mean(final_classtable_x), final_classtable_y[2], col = gray(0), lwd = classtable_lwd)
+  segments(final_classtable_x[1], mean(final_classtable_y), final_classtable_x[2], mean(final_classtable_y), col = gray(0), lwd = classtable_lwd)
+
+  # Column titles: ----
+
+  text(
+    x = mean(mean(final_classtable_x)),
+    y = header_y,
+    "Truth", pos = 1, cex = header_cex
+  )
+
+  text(
+    x = final_classtable_x[1] + .25 * diff(final_classtable_x),
+    y = subheader_y, pos = 1, cex = subheader_cex,
+    truth.labels[2]
+  )
+
+  text(
+    x = final_classtable_x[1] + .75 * diff(final_classtable_x),
+    y = subheader_y, pos = 1, cex = subheader_cex,
+    truth.labels[1]
+  )
+
+
+  # Row titles: ----
+
+  text(
+    x = final_classtable_x[1] - .01,
+    y = final_classtable_y[1] + .75 * diff(final_classtable_y), cex = subheader_cex,
+    decision.labels[2], adj = 1
+  )
+
+  text(
+    x = final_classtable_x[1] - .01,
+    y = final_classtable_y[1] + .25 * diff(final_classtable_y), cex = subheader_cex,
+    decision.labels[1], adj = 1
+  )
+
+  text(
+    x = final_classtable_x[1] - .065,
+    y = mean(final_classtable_y), cex = header_cex,
+    "Decision"
+  )
+
+  text(final_classtable_x[1] + .75 * diff(final_classtable_x),
+    final_classtable_y[1] + .25 * diff(final_classtable_y),
+    prettyNum(final_stats$cr, big.mark = ","),
+    cex = 1.5
+  )
+
+  text(final_classtable_x[1] + .25 * diff(final_classtable_x),
+    final_classtable_y[1] + .25 * diff(final_classtable_y),
+    prettyNum(final_stats$mi, big.mark = ","),
+    cex = 1.5
+  )
+
+  text(final_classtable_x[1] + .75 * diff(final_classtable_x),
+    final_classtable_y[1] + .75 * diff(final_classtable_y),
+    prettyNum(final_stats$fa, big.mark = ","),
+    cex = 1.5
+  )
+
+  text(final_classtable_x[1] + .25 * diff(final_classtable_x),
+    final_classtable_y[1] + .75 * diff(final_classtable_y),
+    prettyNum(final_stats$hi, big.mark = ","),
+    cex = 1.5
+  )
+
+  # Add symbols: ----
+
+  points(final_classtable_x[1] + .55 * diff(final_classtable_x),
+    final_classtable_y[1] + .05 * diff(final_classtable_y),
+    pch = noise_ball_pch, bg = col_correct_bg, col = col_correct_border, cex = ball_cex
+  )
+
+  points(final_classtable_x[1] + .05 * diff(final_classtable_x),
+    final_classtable_y[1] + .55 * diff(final_classtable_y),
+    pch = signal_ball_pch, bg = col_correct_bg, cex = ball_cex, col = col_correct_border
+  )
+
+  points(final_classtable_x[1] + .55 * diff(final_classtable_x),
+    final_classtable_y[1] + .55 * diff(final_classtable_y),
+    pch = noise_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
+  )
+
+  points(final_classtable_x[1] + .05 * diff(final_classtable_x),
+    final_classtable_y[1] + .05 * diff(final_classtable_y),
+    pch = signal_ball_pch, bg = col_error_bg, col = col_error_border, cex = ball_cex
+  )
+
+  # Add labels: ----
+
+  text(final_classtable_x[1] + .62 * diff(final_classtable_x),
+    final_classtable_y[1] + .07 * diff(final_classtable_y),
+    "cr",
+    cex = 1, font = 3, adj = 0
+  )
+
+  text(final_classtable_x[1] + .12 * diff(final_classtable_x),
+    final_classtable_y[1] + .07 * diff(final_classtable_y),
+    "mi",
+    cex = 1, font = 3, adj = 0
+  )
+
+  text(final_classtable_x[1] + .62 * diff(final_classtable_x),
+    final_classtable_y[1] + .57 * diff(final_classtable_y),
+    "fa",
+    cex = 1, font = 3, adj = 0
+  )
+
+  text(final_classtable_x[1] + .12 * diff(final_classtable_x),
+    final_classtable_y[1] + .57 * diff(final_classtable_y),
+    "hi",
+    cex = 1, font = 3, adj = 0
+  )
 }
