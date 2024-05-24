@@ -1923,6 +1923,9 @@ plot_icon_guide <- function(what = NULL,
                             col_error_bg = NULL,
                             ball_cex = NULL,
                             show_icon_guide_legend = TRUE) {
+
+  col_panel_line <- "black"
+
   # Parameters:
   if (what == "ico") {
     f_x <- 1.2 # scaling factor (to stretch in x-dim)
