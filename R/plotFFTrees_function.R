@@ -756,18 +756,11 @@ plot.FFTrees <- function(x = NULL,
       # (b) label:
       text(x = .50, y = .96, main, cex = panel_title_cex, ...) # title 1 (top): main
 
-
-
-      # (a) N and labels:
-      text(x = .50, y = .78, paste("N = ", prettyNum(n_exemplars, big.mark = ","), "", sep = ""), cex = 1.25) # N
-      text(.50, .63, paste(truth.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
-      text(.50, .63, paste(truth.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
-
       # (b) Show balls:
       n_true_pos <- with(final_stats, hi + mi)
       n_true_neg <- with(final_stats, fa + cr)
 
-      add_balls(
+      plot_icon_array(
         x_lim = c(.33, .67),
         y_lim = c(.12, .52),
         n_vec = c(n_true_neg, n_true_pos),
@@ -775,20 +768,11 @@ plot.FFTrees <- function(x = NULL,
         bg_vec = c(noise_ball_bg, signal_ball_bg),
         col_vec = c(noise_ball_col, signal_ball_col),
         ball_cex = ball_cex,
-        upper_text_adj = 2,
-        n_per_icon = n.per.icon
+        n_per_icon = n.per.icon,
+        truth.labels = truth.labels,
+        show_truth_labels = TRUE,
+        show_exemplar_total = TRUE
       )
-
-      # (c) n.per.icon legend 1 (top):
-
-      # show_icon_guide_legend <- TRUE  # 4debugging
-
-      if (show_icon_guide_legend) {
-        text(.98, 0, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2)
-        points(.98, 0, pch = noise_ball_pch, cex = ball_cex)
-        points(.99, 0, pch = signal_ball_pch, cex = ball_cex)
-      } # if (show_icon_guide_legend).
-
 
       par(xpd = FALSE)
 
@@ -1023,7 +1007,6 @@ plot.FFTrees <- function(x = NULL,
           )
         } # if (level_i == 1).
 
-
         # Left (Noise) classification / New level: ----
 
         # Exit node on 0 / FALSE / noise / left: ----
@@ -1081,8 +1064,9 @@ plot.FFTrees <- function(x = NULL,
             )
           }
 
+
           if ((max(c(cr_i, mi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
-            add_balls(
+            plot_icon_array(
               x_lim = ball_x_lim,
               y_lim = ball_y_lim,
               n_vec = c(cr_i, mi_i),
@@ -1092,7 +1076,9 @@ plot.FFTrees <- function(x = NULL,
               bg_vec = c(col_correct_bg, col_error_bg),
               col_vec = c(col_correct_border, col_error_border),
               freq_text = TRUE,
-              n_per_icon = n.per.icon
+              n_per_icon = n.per.icon,
+              show_truth_labels = FALSE,
+              show_exemplar_total = FALSE
             )
           }
 
@@ -1221,7 +1207,7 @@ plot.FFTrees <- function(x = NULL,
           }
 
           if ((max(c(fa_i, hi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
-            add_balls(
+            plot_icon_array(
               x_lim = ball_x_lim,
               y_lim = ball_y_lim,
               n_vec = c(fa_i, hi_i),
@@ -1231,7 +1217,8 @@ plot.FFTrees <- function(x = NULL,
               bg_vec = c(col_error_bg, col_correct_bg),
               col_vec = c(col_error_border, col_correct_border),
               freq_text = TRUE,
-              n_per_icon = n.per.icon
+              n_per_icon = n.per.icon,
+              show_truth_labels = FALSE, show_exemplar_total = FALSE
             )
           }
 
@@ -1262,7 +1249,6 @@ plot.FFTrees <- function(x = NULL,
             labels = substr(decision.labels[2], 1, 1)
           )
         } # if (exit node on right).
-
 
         # New level on 0 / FALSE / noise / left: ----
 
@@ -1330,8 +1316,6 @@ plot.FFTrees <- function(x = NULL,
         } # if (identical exit 1 / right etc.
       } # for (level_i etc. loop.
     } # if (show.middle).
-
-
 
     if (show.bottom == TRUE) { # obtain tree statistics:
 
@@ -1959,6 +1943,139 @@ plot_level_bar <- function(title = "",
     cex = cex_label
   )
 }
+
+plot_icon_array <- function(x_lim = c(-10, 0),
+                            y_lim = c(-2, 0),
+                            n_vec = c(20, 10),
+                            pch_vec = c(21, 21),
+                            ball_cex = 1,
+                            bg_vec = "white",
+                            col_vec = "black",
+                            ball_lwd = .70,
+                            freq_text = TRUE,
+                            freq_text_cex = 1.2,
+                            # rev_order = FALSE,  # is NOT used anywhere?
+                            box_col = NULL,
+                            box_bg = NULL,
+                            n_per_icon = NULL,
+                            show_legend = FALSE,
+                            truth.labels = c("FALSE", "TRUE"),
+                            show_truth_labels = TRUE,
+                            show_exemplar_total = TRUE) {
+  par(xpd = TRUE)
+
+  if (show_exemplar_total) {
+    text(
+      x = .50, y = .78,
+      paste("N = ", prettyNum(sum(n_vec), big.mark = ","), "", sep = ""),
+      cex = 1.25
+    ) # N
+  }
+
+  if (show_truth_labels) {
+    text(.50, .63, paste(truth.labels[1], sep = ""), pos = 2, cex = 1.2, adj = 1) # 1: False
+    text(.50, .63, paste(truth.labels[2], sep = ""), pos = 4, cex = 1.2, adj = 0) # 2: True
+  }
+
+  # Add box:
+  if (is.null(box_col) == FALSE | is.null(box_bg) == FALSE) {
+    rect(x_lim[1],
+      y_lim[1],
+      x_lim[2],
+      y_lim[2],
+      col = box_bg,
+      border = box_col
+    )
+  }
+
+  a_n <- n_vec[1]
+  b_n <- n_vec[2]
+
+  # a_p <- n_vec[1] / sum(n_vec)  # is NOT used anywhere?
+
+  box_x_center <- sum(x_lim) / 2
+  # box_y_center <- sum(y_lim) / 2      # is NOT used anywhere?
+  # box_x_width <- x_lim[2] - x_lim[1]  # is NOT used anywhere?
+
+
+  if (is.null(n_per_icon)) { # determine cases per ball/icon:
+
+    max_n_side <- max(c(a_n, b_n))
+
+    i <- max_n_side / c(1, 5, 10, 50, 100, 1000, 10000)
+    i[i > 50] <- 0
+
+    n_per_icon <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
+  }
+
+  # Determine general ball/icon locations:
+
+  a_balls <- ceiling(a_n / n_per_icon)
+  b_balls <- ceiling(b_n / n_per_icon)
+  # n_balls <- a_balls + b_balls  # is NOT used anywhere?
+
+  a_ball_x <- 0
+  a_ball_y <- 0
+  b_ball_x <- 0
+  b_ball_y <- 0
+
+  if (a_balls > 0) {
+    a_ball_x <- rep(-1:-10, each = 5, length.out = 50)[1:a_balls]
+    a_ball_y <- rep(1:5, times = 10, length.out = 50)[1:a_balls]
+    a_ball_x <- a_ball_x * (x_lim[2] - box_x_center) / 10 + box_x_center
+    a_ball_y <- a_ball_y * (y_lim[2] - y_lim[1]) / 5 + y_lim[1]
+  }
+
+  if (b_balls > 0) {
+    b_ball_x <- rep(1:10, each = 5, length.out = 50)[1:b_balls]
+    b_ball_y <- rep(1:5, times = 10, length.out = 50)[1:b_balls]
+    b_ball_x <- b_ball_x * (x_lim[2] - box_x_center) / 10 + box_x_center
+    b_ball_y <- b_ball_y * (y_lim[2] - y_lim[1]) / 5 + y_lim[1]
+  }
+
+  # Add frequency text: ----
+
+  if (freq_text) {
+    text(box_x_center, y_lim[1] - 1 * (y_lim[2] - y_lim[1]) / 5, prettyNum(b_n, big.mark = ","), pos = 4, cex = freq_text_cex)
+    text(box_x_center, y_lim[1] - 1 * (y_lim[2] - y_lim[1]) / 5, prettyNum(a_n, big.mark = ","), pos = 2, cex = freq_text_cex)
+  }
+
+  # Draw balls: ----
+
+  # Noise:
+  suppressWarnings(if (a_balls > 0) {
+    points(
+      x = a_ball_x,
+      y = a_ball_y,
+      pch = pch_vec[1],
+      bg = bg_vec[1],
+      col = col_vec[1],
+      cex = ball_cex,
+      lwd = ball_lwd
+    )
+  })
+
+  # Signal:
+  suppressWarnings(if (b_balls > 0) {
+    points(
+      x = b_ball_x,
+      y = b_ball_y,
+      pch = pch_vec[2],
+      bg = bg_vec[2],
+      col = col_vec[2],
+      cex = ball_cex,
+      lwd = ball_lwd
+    )
+  })
+
+  if (show_legend) {
+    text(.98, 0, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2)
+    points(.98, 0, pch = noise_ball_pch, cex = ball_cex)
+    points(.99, 0, pch = signal_ball_pch, cex = ball_cex)
+  }
+
+  par(xpd = FALSE)
+} # plot_icon_array().
 
 
 
