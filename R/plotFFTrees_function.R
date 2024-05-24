@@ -794,28 +794,31 @@ plot.FFTrees <- function(x = NULL,
 
       # (a) p_signal level (on right): ----
 
-      plot_level_bar(title = paste("p(", truth.labels[2], ")", sep = ""),
-                     value = crit_br,
-                     value_label = scales::percent(crit_br),
-                     max_value = 1,
-                     rect_max_y = .6,
-                     rect_min_y = .1,
-                     rect_min_x = .775,
-                     rect_max_x = .825,
-                     label_pos = "right")
+      plot_level_bar(
+        title = paste("p(", truth.labels[2], ")", sep = ""),
+        value = crit_br,
+        value_label = scales::percent(crit_br),
+        max_value = 1,
+        rect_min_y = .1,
+        rect_max_y = .6,
+        rect_min_x = .775,
+        rect_max_x = .825,
+        label_pos = "right"
+      )
 
       # (b) p_noise level (on left): ----
 
-      plot_level_bar(title = paste("p(", truth.labels[1], ")", sep = ""),
-                     value = 1 - crit_br,
-                     value_label = scales::percent(1 - crit_br),
-                     max_value = 1,
-                     rect_max_y = .6,
-                     rect_min_y = .1,
-                     rect_min_x = .175,
-                     rect_max_x = .225,
-                     label_pos = "left")
-
+      plot_level_bar(
+        title = paste("p(", truth.labels[1], ")", sep = ""),
+        value = 1 - crit_br,
+        value_label = scales::percent(1 - crit_br),
+        max_value = 1,
+        rect_min_y = .1,
+        rect_max_y = .6,
+        rect_min_x = .175,
+        rect_max_x = .225,
+        label_pos = "left"
+      )
     }
 
     # 2. Main TREE: ------
@@ -1418,8 +1421,11 @@ plot.FFTrees <- function(x = NULL,
           pretty_dec(final_stats$acc), pretty_dec(bacc_wacc), NA
         )
       )
-      # print(lloc)  # 4debugging
 
+      lloc$reference_val[lloc$element == "acc"] <- max(crit_br, 1 - crit_br)
+      lloc$reference_label[lloc$element == "acc"] <- "BL"
+
+      # print(lloc)  # 4debugging
 
       # Classification table: ----
 
@@ -1567,125 +1573,26 @@ plot.FFTrees <- function(x = NULL,
       # Levels: ----
 
       if (show.levels) {
-        if (level.type %in% c("line", "bar")) {
-          # Color function (taken from colorRamp2 function in circlize package)
-          # col.fun <- circlize::colorRamp2(c(0, .75, 1),
-          #                                 c("red", "yellow", "green"),
-          #                                 transparency = .5)
-
-          paste(final_stats$cr, "/", 1, collapse = "")
-
-          # Add 100% reference line: ----
-
-          # segments(x0 = lloc$center_x[lloc$element == "mcu"] - lloc$width[lloc$element == "mcu"] * .8,
-          #          y0 = level_top,
-          #          x1 = lloc$center_x[lloc$element == "bacc"] + lloc$width[lloc$element == "bacc"] * .8,
-          #          y1 = level_top,
-          #          lty = 3, lwd = .75)
-
-
-          # mcu level: ----
-
-          add_level("mcu",
-            ok_val = .75, min_val = 0, max_val = 1,
-            level_type = level.type, lloc_row = lloc[lloc$element == "mcu", ],
-            header_y = header_y, header_cex = header_cex
-          ) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
-
-
-          # pci level: ----
-
-          add_level("pci",
-            ok_val = .75, min_val = 0, max_val = 1,
-            level_type = level.type, lloc_row = lloc[lloc$element == "pci", ],
-            header_y = header_y, header_cex = header_cex
-          ) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
-
-          # text(lloc$center_x[lloc$element == "pci"],
-          #      lloc$center_y[lloc$element == "pci"],
-          #      labels = paste0("mcu\n", round(mcu, 2)))
-
-
-          # spec level: ----
-
-          add_level("spec",
-            ok_val = .75, min_val = 0, max_val = 1,
-            level_type = level.type, lloc_row = lloc[lloc$element == "spec", ],
-            header_y = header_y, header_cex = header_cex
-          ) # , sub = paste(c(final_stats$cr, "/", final_stats$cr + final_stats$fa), collapse = ""))
-
-
-          # sens level: ----
-
-          add_level("sens",
-            ok_val = .75, min_val = 0, max_val = 1,
-            level_type = level.type, lloc_row = lloc[lloc$element == "sens", ],
-            header_y = header_y, header_cex = header_cex
-          ) # , sub = paste(c(final_stats$hi, "/", final_stats$hi + final_stats$mi), collapse = ""))
-
-
-          # acc level: ----
-
-          min_acc <- max(crit_br, 1 - crit_br) # accuracy baseline
-
-          add_level("acc",
-            ok_val = .50, min_val = 0, max_val = 1,
-            level_type = level.type, lloc_row = lloc[lloc$element == "acc", ],
-            header_y = header_y, header_cex = header_cex
-          ) # , sub = paste(c(final_stats$hi + final_stats$cr, "/", final_stats$n), collapse = ""))
-
-          # Add baseline to acc level:
-          segments(
-            x0 = (lloc$center_x[lloc$element == "acc"] - lloc$width[lloc$element == "acc"] / 2),
-            y0 = (lloc$center_y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + (lloc$height[lloc$element == "acc"] * min_acc),
-            x1 = (lloc$center_x[lloc$element == "acc"] + lloc$width[lloc$element == "acc"] / 2),
-            y1 = (lloc$center_y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + (lloc$height[lloc$element == "acc"] * min_acc),
-            lty = 3
+        for (element_i in c("mcu", "pci", "sens", "spec", "acc", "bacc")) {
+          plot_level_bar(
+            title = element_i,
+            value = lloc$value[lloc$element == element_i],
+            value_label = lloc$value_name[lloc$element == element_i],
+            max_value = 1,
+            y_title = .88,
+            cex_label = 1.5,
+            rect_min_y = .12,
+            rect_max_y = .78,
+            fill = "white",
+            y_reference = lloc$reference_val[lloc$element == element_i],
+            y_reference_label = lloc$reference_label[lloc$element == element_i],
+            rect_min_x = lloc$center_x[lloc$element == element_i] - lloc$width[lloc$element == element_i] / 2,
+            rect_max_x = lloc$center_x[lloc$element == element_i] + lloc$width[lloc$element == element_i] / 2,
+            label_pos = "top",
+            outline = FALSE
           )
-
-          text(
-            x = lloc$center_x[lloc$element == "acc"],
-            y = (lloc$center_y[lloc$element == "acc"] - lloc$height[lloc$element == "acc"] / 2) + lloc$height[lloc$element == "acc"] * min_acc,
-            labels = "BL", pos = 1
-          )
-
-          # paste("BL = ", pretty_dec(min_acc), sep = ""), pos = 1)
-
-
-          # bacc OR wacc level: ----
-
-          if (names(bacc_wacc) == "bacc") { # show bacc level:
-
-            add_level("bacc",
-              ok_val = .50, min_val = 0, max_val = 1,
-              level_type = level.type, lloc_row = lloc[lloc$element == "bacc", ],
-              header_y = header_y, header_cex = header_cex
-            )
-          } else { # show wacc level (and sens.w value):
-
-            sens.w_lbl <- paste0("sens.w = .", pretty_dec(sens.w))
-
-            add_level("wacc",
-              ok_val = .50, min_val = 0, max_val = 1,
-              level_type = level.type, lloc_row = lloc[lloc$element == "wacc", ],
-              header_y = header_y,
-              bottom_text = sens.w_lbl, # (only here)
-              header_cex = header_cex
-            )
-          } # if (bacc_wacc).
-
-
-          # Add baseline (at bottom?):
-          #
-          # segments(x0 = mean(lloc$center_x[2]),
-          #          y0 = lloc$center_y[1] - lloc$height[1] / 2,
-          #          x1 = mean(lloc$center_x[7]),
-          #          y1 = lloc$center_y[1] - lloc$height[1] / 2, lend = 1,
-          #          lwd = .5,
-          #          col = gray(0))
-        } # if (level.type %in% c("line", "bar")).
-      } # if (show.levels).
-
+        }
+      }
 
       # ROC curve: -----
 
@@ -1937,12 +1844,16 @@ plot_level_bar <- function(title = "",
                            value = NULL,
                            value_label = value,
                            max_value = 1,
+                           y_reference = NA,
+                           y_reference_label = NULL,
+                           cex_reference_label = 1,
                            rect_max_y = 1,
                            rect_min_y = 0,
                            rect_min_x = 0,
                            rect_max_x = 1,
-                           title_cex = 1.2,
+                           cex_title = 1.2,
                            cex_label = 1.2,
+                           y_title = rect_max_y,
                            col_outline = "black",
                            fill = "gray",
                            label_pos = "top",
@@ -1952,14 +1863,16 @@ plot_level_bar <- function(title = "",
   rect_x_center <- (rect_max_x + rect_min_x) / 2
   rect_y_center <- (rect_max_y + rect_min_y) / 2
 
+  y_scaled <- rect_min_y + value / max_value * (rect_max_y - rect_min_y)
+
   ## Title ================================================================
 
   text(
     x = rect_x_center,
-    y = rect_max_y,
+    y = y_title,
     labels = title,
     pos = 3,
-    cex = title_cex
+    cex = cex_title
   )
 
   ## Filling ==============================================================
@@ -1968,9 +1881,9 @@ plot_level_bar <- function(title = "",
     xleft = rect_min_x,
     xright = rect_max_x,
     ybottom = rect_min_y,
-    ytop = rect_min_y + value / max_value * (rect_max_y - rect_min_y),
+    ytop = y_scaled,
     col = fill,
-    border = NA
+    border = "black"
   )
 
   ## Top of filling =======================================================
@@ -1978,8 +1891,8 @@ plot_level_bar <- function(title = "",
   segments(
     x0 = rect_min_x,
     x1 = rect_max_x,
-    y0 = rect_min_y + value / max_value * (rect_max_y - rect_min_y),
-    y1 = rect_min_y + value / max_value * (rect_max_y - rect_min_y),
+    y0 = y_scaled,
+    y1 = y_scaled,
     lwd = 1
   )
 
@@ -1997,19 +1910,44 @@ plot_level_bar <- function(title = "",
     )
   }
 
+  ## Reference Line =======================================================
+
+  if (!is.na(y_reference)) {
+    y_reference_scaled <- rect_min_y + y_reference / max_value * (rect_max_y - rect_min_y)
+
+    segments(
+      x0 = rect_min_x,
+      x1 = rect_max_x,
+      y0 = y_reference_scaled,
+      y1 = y_reference_scaled,
+      lwd = 1,
+      lty = 3
+    )
+
+    if (!is.null(y_reference_label)) {
+      text(
+        x = rect_x_center,
+        y = y_reference_scaled,
+        labels = y_reference_label,
+        pos = 1,
+        cex = cex_reference_label
+      )
+    }
+  }
+
   ## Value Text ===========================================================
 
   if (label_pos == "top") {
     x_text <- rect_x_center
-    y_text <- rect_max_y
+    y_text <- y_scaled
     pos_label <- 3
   } else if (label_pos == "left") {
     x_text <- rect_min_x
-    y_text <- rect_min_y + value / max_value * (rect_max_y - rect_min_y)
+    y_text <- y_scaled
     pos_label <- 2
   } else if (label_pos == "right") {
     x_text <- rect_max_x
-    y_text <- rect_min_y + value / max_value * (rect_max_y - rect_min_y)
+    y_text <- y_scaled
     pos_label <- 4
   }
 
