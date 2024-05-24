@@ -579,8 +579,6 @@ plot.FFTrees <- function(x = NULL,
     # def_par <- par(no.readonly = TRUE)  # is NOT used anywhere?
 
     ball_box_width <- 10
-    label_box_height <- 2
-    label_box_width <- 5
 
     # Cue labels:
     if (is.null(cue.labels)) {
@@ -963,358 +961,19 @@ plot.FFTrees <- function(x = NULL,
 
       par(xpd = FALSE)
 
-
       # Plot main TREE: ------
 
-      # Set initial subplot center:
-      subplot_center <- c(0, -4)
-
-      # Loop over levels: ------
-      for (level_i in 1:min(c(n_levels, 6))) {
-        # Cue label:
-        cur_cue <- cue.labels[level_i]
-
-        # Get stats for current level:
-        hi_i <- level_stats$hi_m[level_i]
-        fa_i <- level_stats$fa_m[level_i]
-        mi_i <- level_stats$mi_m[level_i]
-        cr_i <- level_stats$cr_m[level_i]
-
-
-        # Top: If level_i == 1, draw top textbox: ----
-
-        if (level_i == 1) {
-          rect(subplot_center[1] - label_box_width / 2,
-            subplot_center[2] + 2 - label_box_height / 2,
-            subplot_center[1] + label_box_width / 2,
-            subplot_center[2] + 2 + label_box_height / 2,
-            col = "white",
-            border = "black"
-          )
-
-          points(
-            x = subplot_center[1],
-            y = subplot_center[2] + 2,
-            cex = decision_node_cex,
-            pch = decision_node_pch
-          )
-
-          text(
-            x = subplot_center[1],
-            y = subplot_center[2] + 2,
-            labels = cur_cue,
-            cex = label_box_text_cex # WAS: get_label_cex(cur_cue, label_box_text_cex = label_box_text_cex)
-          )
-        } # if (level_i == 1).
-
-        # Left (Noise) classification / New level: ----
-
-        # Exit node on 0 / FALSE / noise / left: ----
-
-        # if (level_stats$exit[level_i] %in% c(0, .5) | paste(level_stats$exit[level_i]) %in% c("0", ".5")) {
-        if ((level_stats$exit[level_i] %in% exit_types[c(1, 3)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(1, 3)], collapse = ", "))) {
-          segments(subplot_center[1],
-            subplot_center[2] + 1,
-            subplot_center[1] - 2,
-            subplot_center[2] - 2,
-            lty = segment_lty,
-            lwd = segment_lwd
-          )
-
-          arrows(
-            x0 = subplot_center[1] - 2,
-            y0 = subplot_center[2] - 2,
-            x1 = subplot_center[1] - 2 - arrow_length,
-            y1 = subplot_center[2] - 2,
-            lty = arrow_lty,
-            lwd = arrow_lwd,
-            col = arrow_col,
-            length = arrow_head_length
-          )
-
-          # Decision text:
-
-          if (decision.cex > 0) {
-            text(
-              x = subplot_center[1] - 2 - arrow_length * .7,
-              y = subplot_center[2] - 2.2,
-              labels = decision.labels[1],
-              pos = 1, font = 3, cex = decision.cex
-            )
-          }
-
-          if (ball_loc == "fixed") {
-            ball_x_lim <- c(-max(ball_box_fixed_x_shift), -min(ball_box_fixed_x_shift))
-
-            ball_y_lim <- c(
-              subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
-              subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
-            )
-          }
-
-          if (ball_loc == "variable") {
-            ball_x_lim <- c(
-              subplot_center[1] - ball_box_horiz_shift - ball_box_width / 2,
-              subplot_center[1] - ball_box_horiz_shift + ball_box_width / 2
-            )
-
-            ball_y_lim <- c(
-              subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
-              subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
-            )
-          }
-
-
-          if ((max(c(cr_i, mi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
-            plot_icon_array(
-              x_lim = ball_x_lim,
-              y_lim = ball_y_lim,
-              n_vec = c(cr_i, mi_i),
-              pch_vec = c(noise_ball_pch, signal_ball_pch),
-              ball_cex = ball_cex,
-              # bg_vec = c(noise_ball_bg, signal_ball_bg),
-              bg_vec = c(col_correct_bg, col_error_bg),
-              col_vec = c(col_correct_border, col_error_border),
-              freq_text = TRUE,
-              n_per_icon = n.per.icon,
-              show_truth_labels = FALSE,
-              show_exemplar_total = FALSE
-            )
-          }
-
-          # level break label:
-          pos_dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level_i] == c(">", ">=", "!=", "=", "<=", "<"))]
-          neg_dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level_i] == c("<=", "<", "=", "!=", ">", ">="))]
-
-          text_outline(
-            x = subplot_center[1] - 1,
-            y = subplot_center[2],
-            labels = paste(pos_dir_symbol, " ", level_stats$threshold[level_i], sep = ""),
-            pos = 2, cex = break_label_cex, r = .1
-          )
-
-          points(
-            x = subplot_center[1] - 2,
-            y = subplot_center[2] - 2,
-            pch = exit_node_pch,
-            cex = exit_node_cex,
-            bg = col_exit_node_bg
-          )
-
-          text(
-            x = subplot_center[1] - 2,
-            y = subplot_center[2] - 2,
-            labels = substr(decision.labels[1], 1, 1)
-          )
-        } # if (exit node on left).
-
-
-        # New level on 1 / TRUE / signal / right: ----
-
-        # if ((level_stats$exit[level_i] %in% c(1)) | (paste(level_stats$exit[level_i]) %in% c("1"))) {
-        if ((level_stats$exit[level_i] %in% exit_types[c(2)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(2)], collapse = ", "))) {
-          segments(subplot_center[1],
-            subplot_center[2] + 1,
-            subplot_center[1] - 2,
-            subplot_center[2] - 2,
-            lty = segment_lty,
-            lwd = segment_lwd
-          )
-
-          rect(subplot_center[1] - 2 - label_box_width / 2,
-            subplot_center[2] - 2 - label_box_height / 2,
-            subplot_center[1] - 2 + label_box_width / 2,
-            subplot_center[2] - 2 + label_box_height / 2,
-            col = "white",
-            border = "black"
-          )
-
-          if (level_i < 6) {
-            text(
-              x = subplot_center[1] - 2,
-              y = subplot_center[2] - 2,
-              labels = cue.labels[level_i + 1],
-              cex = label_box_text_cex
-            )
-          } else {
-            text(
-              x = subplot_center[1] - 2,
-              y = subplot_center[2] - 2,
-              labels = paste0("+ ", n_levels - 6, " More"),
-              cex = label_box_text_cex,
-              font = 3
-            )
-          }
-        } # if (new level on right).
-
-
-        # Right (Signal) classification / New level: ----
-
-        # Exit node on 1 / TRUE / signal / right: ----
-
-        # if ((level_stats$exit[level_i] %in% c(1, .5)) | (paste(level_stats$exit[level_i]) %in% c("1", ".5"))) {
-        if ((level_stats$exit[level_i] %in% exit_types[c(2, 3)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(2, 3)], collapse = ", "))) {
-          segments(subplot_center[1],
-            subplot_center[2] + 1,
-            subplot_center[1] + 2,
-            subplot_center[2] - 2,
-            lty = segment_lty,
-            lwd = segment_lwd
-          )
-
-          arrows(
-            x0 = subplot_center[1] + 2,
-            y0 = subplot_center[2] - 2,
-            x1 = subplot_center[1] + 2 + arrow_length,
-            y1 = subplot_center[2] - 2,
-            lty = arrow_lty,
-            lwd = arrow_lwd,
-            col = arrow_col,
-            length = arrow_head_length
-          )
-
-          # Decision text:
-
-          if (decision.cex > 0) {
-            text(
-              x = subplot_center[1] + 2 + arrow_length * .7,
-              y = subplot_center[2] - 2.2,
-              labels = decision.labels[2],
-              pos = 1,
-              font = 3,
-              cex = decision.cex
-            )
-          }
-
-          if (ball_loc == "fixed") {
-            ball_x_lim <- c(min(ball_box_fixed_x_shift), max(ball_box_fixed_x_shift))
-            ball_y_lim <- c(
-              subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
-              subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
-            )
-          }
-
-          if (ball_loc == "variable") {
-            ball_x_lim <- c(
-              subplot_center[1] + ball_box_horiz_shift - ball_box_width / 2,
-              subplot_center[1] + ball_box_horiz_shift + ball_box_width / 2
-            )
-
-            ball_y_lim <- c(
-              subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
-              subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
-            )
-          }
-
-          if ((max(c(fa_i, hi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
-            plot_icon_array(
-              x_lim = ball_x_lim,
-              y_lim = ball_y_lim,
-              n_vec = c(fa_i, hi_i),
-              pch_vec = c(noise_ball_pch, signal_ball_pch),
-              ball_cex = ball_cex,
-              # bg_vec = c(noise_ball_bg, signal_ball_bg),
-              bg_vec = c(col_error_bg, col_correct_bg),
-              col_vec = c(col_error_border, col_correct_border),
-              freq_text = TRUE,
-              n_per_icon = n.per.icon,
-              show_truth_labels = FALSE, show_exemplar_total = FALSE
-            )
-          }
-
-          # level break label:
-          dir_symbol <- c("<=", "<", "=", "!=", ">", ">=") # as (local) constant
-
-          pos_dir_symbol <- dir_symbol[which(level_stats$direction[level_i] == c("<=", "<", "=", "!=", ">", ">="))]
-          neg_dir_symbol <- dir_symbol[which(level_stats$direction[level_i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
-
-
-          text_outline(subplot_center[1] + 1,
-            subplot_center[2],
-            labels = paste(pos_dir_symbol, " ", level_stats$threshold[level_i], sep = ""),
-            pos = 4, cex = break_label_cex, r = .1
-          )
-
-          points(
-            x = subplot_center[1] + 2,
-            y = subplot_center[2] - 2,
-            pch = exit_node_pch,
-            cex = exit_node_cex,
-            bg = col_exit_node_bg
-          )
-
-          text(
-            x = subplot_center[1] + 2,
-            y = subplot_center[2] - 2,
-            labels = substr(decision.labels[2], 1, 1)
-          )
-        } # if (exit node on right).
-
-        # New level on 0 / FALSE / noise / left: ----
-
-        # if (level_stats$exit[level_i] %in% 0 | paste(level_stats$exit[level_i]) %in% c("0")) {
-        if ((level_stats$exit[level_i] %in% exit_types[c(1)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(1)], collapse = ", "))) {
-          segments(subplot_center[1],
-            subplot_center[2] + 1,
-            subplot_center[1] + 2,
-            subplot_center[2] - 2,
-            lty = segment_lty,
-            lwd = segment_lwd
-          )
-
-          if (level_i < 6) {
-            rect(subplot_center[1] + 2 - label_box_width / 2,
-              subplot_center[2] - 2 - label_box_height / 2,
-              subplot_center[1] + 2 + label_box_width / 2,
-              subplot_center[2] - 2 + label_box_height / 2,
-              col = "white",
-              border = "black"
-            )
-
-            text(
-              x = subplot_center[1] + 2,
-              y = subplot_center[2] - 2,
-              labels = cue.labels[level_i + 1],
-              cex = label_box_text_cex
-            )
-          } else {
-            rect(subplot_center[1] + 2 - label_box_width / 2,
-              subplot_center[2] - 2 - label_box_height / 2,
-              subplot_center[1] + 2 + label_box_width / 2,
-              subplot_center[2] - 2 + label_box_height / 2,
-              col = "white",
-              border = "black", lty = 2
-            )
-
-            text(
-              x = subplot_center[1] + 2,
-              y = subplot_center[2] - 2,
-              labels = paste0("+ ", n_levels - 6, " More"),
-              cex = label_box_text_cex,
-              font = 3
-            )
-          }
-        } # if (new level on right).
-
-
-        # Update plot center: ----
-
-        # if (identical(paste(level_stats$exit[level_i]), "0")) { # 0 / FALSE / noise / left:
-        if (identical(paste(level_stats$exit[level_i]), paste0(exit_types[1]))) {
-          subplot_center <- c(
-            subplot_center[1] + 2,
-            subplot_center[2] - 4
-          )
-        } # if (identical exit 0 / left etc.
-
-        # if (identical(paste(level_stats$exit[level_i]), "1")) { # 1 / TRUE / signal / right:
-        if (identical(paste(level_stats$exit[level_i]), paste0(exit_types[2]))) {
-          subplot_center <- c(
-            subplot_center[1] - 2,
-            subplot_center[2] - 4
-          )
-        } # if (identical exit 1 / right etc.
-      } # for (level_i etc. loop.
+      plot_fft(
+        level_stats = level_stats,
+        cue.cex = cue.cex,
+        threshold.cex = threshold.cex,
+        decision.cex = decision.cex,
+        decision.labels = decision.labels,
+        ball_loc = ball_loc,
+        show.icons = show.icons,
+        n.per.icon = n.per.icon,
+        grayscale = grayscale
+      )
     } # if (show.middle).
 
     if (show.bottom == TRUE) { # obtain tree statistics:
@@ -2075,19 +1734,404 @@ plot_icon_array <- function(x_lim = c(-10, 0),
   }
 
   par(xpd = FALSE)
-} # plot_icon_array().
+}
+
+plot_fft <- function(level_stats,
+                     cue.cex = NULL,
+                     threshold.cex = NULL,
+                     decision.cex = NULL,
+                     decision.labels = NULL,
+                     ball_loc = "variable",
+                     show.icons = TRUE,
+                     n.per.icon = NULL,
+                     grayscale = FALSE) {
+  subplot_center <- c(0, -4)
+  label_box_height <- 2
+  label_box_width <- 5
+  f_cex <- 1
+  segment_lty <- 1
+  segment_lwd <- 1
+  arrow_lty <- 1
+  arrow_lwd <- 1
+  arrow_length <- 2.50
+  arrow_head_length <- .08
+  arrow_col <- gray(0) # = black
+  decision_node_pch <- NA_integer_
+  decision_node_cex <- 4 * f_cex
+  exit_node_cex <- 4 * f_cex
+  ball_box_height <- 2.5
+  ball_box_horiz_shift <- 10
+  ball_box_vert_shift <- -1
+  ball_box_max_shift_p <- .9
+  ball_box_min_shift_p <- .4
+  ball_box_width <- 10
+  col_exit_node_bg <- "white"
+
+  ball_col <- c(gray(0), gray(0)) # = black
+  ball_bg <- c(gray(1), gray(1)) # = white
+  ball_pch <- c(21, 24)
+  ball_cex <- c(1, 1)
+
+  noise_ball_pch <- ball_pch[1]
+  signal_ball_pch <- ball_pch[2]
+  noise_ball_col <- ball_col[1]
+  signal_ball_col <- ball_col[2]
+  noise_ball_bg <- ball_bg[1]
+  signal_ball_bg <- ball_bg[2]
+  exit_node_pch <- 21
+
+  if (!grayscale) {
+    col_error_bg <- "#FF7352CC"
+    col_error_border <- "#AD1A0AE6"
+    col_correct_bg <- "#89FF6FCC"
+    col_correct_border <- "#24AB18E6"
+  } else {
+    # Grayscale colors
+
+    col_error_bg <- gray(.1)
+    col_error_border <- gray(0)
+    col_correct_bg <- gray(1)
+    col_correct_border <- gray(0)
+  }
+
+  plotting_parameters_df <- data.frame(
+    n_levels = 1:6,
+    plot_height = c(10, 12, 15, 19, 23, 25),
+    plot_width = c(14, 16, 20, 24, 28, 32) * 1, # stretch to default width
+    label_box_text_cex = cue.cex,
+    break_label_cex = threshold.cex
+  )
+
+  n_levels <- nrow(level_stats)
 
 
+  # local variables:
+  if (n_levels < 6) {
+    label_box_text_cex <- plotting_parameters_df$label_box_text_cex[n_levels]
+    break_label_cex <- plotting_parameters_df$break_label_cex[n_levels]
+    plot_height <- plotting_parameters_df$plot_height[n_levels]
+    plot_width <- plotting_parameters_df$plot_width[n_levels]
+  } else { # n_levels >= 6:
 
-# ToDo: ------
+    label_box_text_cex <- plotting_parameters_df$label_box_text_cex[6]
+    break_label_cex <- plotting_parameters_df$break_label_cex[6]
+    plot_height <- plotting_parameters_df$plot_height[6]
+    plot_width <- plotting_parameters_df$plot_width[6]
+  }
 
-# - Further cleanup & clutter reduction:
-#   - Remove ROC curve parts to a separate function, and
-#     handle what == "roc" as a special case (like what = "cues").
+  cue.labels <- level_stats$cue
 
-# - Issue #91: Allow data to accept new test data (as df).
-#   Suggestion: Use a 'newdata' argument for this purpose, as in predict().)
+  for (level_i in 1:min(c(n_levels, 6))) {
+    cur_cue <- cue.labels[level_i]
 
-# - Offer options for adding/changing color information.
+    hi_i <- level_stats$hi_m[level_i]
+    fa_i <- level_stats$fa_m[level_i]
+    mi_i <- level_stats$mi_m[level_i]
+    cr_i <- level_stats$cr_m[level_i]
 
-# eof.
+
+    if (level_i == 1) {
+      rect(subplot_center[1] - label_box_width / 2,
+        subplot_center[2] + 2 - label_box_height / 2,
+        subplot_center[1] + label_box_width / 2,
+        subplot_center[2] + 2 + label_box_height / 2,
+        col = "white",
+        border = "black"
+      )
+
+      points(
+        x = subplot_center[1],
+        y = subplot_center[2] + 2,
+        cex = decision_node_cex,
+        pch = decision_node_pch
+      )
+
+      text(
+        x = subplot_center[1],
+        y = subplot_center[2] + 2,
+        labels = cur_cue,
+        cex = label_box_text_cex # WAS: get_label_cex(cur_cue, label_box_text_cex = label_box_text_cex)
+      )
+    }
+
+    if ((level_stats$exit[level_i] %in% exit_types[c(1, 3)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(1, 3)], collapse = ", "))) {
+      segments(subplot_center[1],
+        subplot_center[2] + 1,
+        subplot_center[1] - 2,
+        subplot_center[2] - 2,
+        lty = segment_lty,
+        lwd = segment_lwd
+      )
+
+      arrows(
+        x0 = subplot_center[1] - 2,
+        y0 = subplot_center[2] - 2,
+        x1 = subplot_center[1] - 2 - arrow_length,
+        y1 = subplot_center[2] - 2,
+        lty = arrow_lty,
+        lwd = arrow_lwd,
+        col = arrow_col,
+        length = arrow_head_length
+      )
+
+      if (decision.cex > 0) {
+        text(
+          x = subplot_center[1] - 2 - arrow_length * .7,
+          y = subplot_center[2] - 2.2,
+          labels = decision.labels[1],
+          pos = 1, font = 3, cex = decision.cex
+        )
+      }
+
+      if (ball_loc == "fixed") {
+        ball_x_lim <- c(-max(ball_box_fixed_x_shift), -min(ball_box_fixed_x_shift))
+
+        ball_y_lim <- c(
+          subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+          subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
+        )
+      }
+
+      if (ball_loc == "variable") {
+        ball_x_lim <- c(
+          subplot_center[1] - ball_box_horiz_shift - ball_box_width / 2,
+          subplot_center[1] - ball_box_horiz_shift + ball_box_width / 2
+        )
+
+        ball_y_lim <- c(
+          subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+          subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
+        )
+      }
+
+
+      if ((max(c(cr_i, mi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
+        plot_icon_array(
+          x_lim = ball_x_lim,
+          y_lim = ball_y_lim,
+          n_vec = c(cr_i, mi_i),
+          pch_vec = c(noise_ball_pch, signal_ball_pch),
+          ball_cex = ball_cex,
+          bg_vec = c(col_correct_bg, col_error_bg),
+          col_vec = c(col_correct_border, col_error_border),
+          freq_text = TRUE,
+          n_per_icon = n.per.icon,
+          show_truth_labels = FALSE,
+          show_exemplar_total = FALSE
+        )
+      }
+
+      pos_dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level_i] == c(">", ">=", "!=", "=", "<=", "<"))]
+      neg_dir_symbol <- c("<=", "<", "=", "!=", ">", ">=")[which(level_stats$direction[level_i] == c("<=", "<", "=", "!=", ">", ">="))]
+
+      text_outline(
+        x = subplot_center[1] - 1,
+        y = subplot_center[2],
+        labels = paste(pos_dir_symbol, " ", level_stats$threshold[level_i], sep = ""),
+        pos = 2, cex = break_label_cex, r = .1
+      )
+
+      points(
+        x = subplot_center[1] - 2,
+        y = subplot_center[2] - 2,
+        pch = exit_node_pch,
+        cex = exit_node_cex,
+        bg = col_exit_node_bg
+      )
+
+      text(
+        x = subplot_center[1] - 2,
+        y = subplot_center[2] - 2,
+        labels = substr(decision.labels[1], 1, 1)
+      )
+    } # if (exit node on left).
+
+    if ((level_stats$exit[level_i] %in% exit_types[c(2)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(2)], collapse = ", "))) {
+      segments(subplot_center[1],
+        subplot_center[2] + 1,
+        subplot_center[1] - 2,
+        subplot_center[2] - 2,
+        lty = segment_lty,
+        lwd = segment_lwd
+      )
+
+      rect(subplot_center[1] - 2 - label_box_width / 2,
+        subplot_center[2] - 2 - label_box_height / 2,
+        subplot_center[1] - 2 + label_box_width / 2,
+        subplot_center[2] - 2 + label_box_height / 2,
+        col = "white",
+        border = "black"
+      )
+
+      if (level_i < 6) {
+        text(
+          x = subplot_center[1] - 2,
+          y = subplot_center[2] - 2,
+          labels = cue.labels[level_i + 1],
+          cex = label_box_text_cex
+        )
+      } else {
+        text(
+          x = subplot_center[1] - 2,
+          y = subplot_center[2] - 2,
+          labels = paste0("+ ", n_levels - 6, " More"),
+          cex = label_box_text_cex,
+          font = 3
+        )
+      }
+    } # if (new level on right).
+
+
+    if ((level_stats$exit[level_i] %in% exit_types[c(2, 3)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(2, 3)], collapse = ", "))) {
+      segments(subplot_center[1],
+        subplot_center[2] + 1,
+        subplot_center[1] + 2,
+        subplot_center[2] - 2,
+        lty = segment_lty,
+        lwd = segment_lwd
+      )
+
+      arrows(
+        x0 = subplot_center[1] + 2,
+        y0 = subplot_center[2] - 2,
+        x1 = subplot_center[1] + 2 + arrow_length,
+        y1 = subplot_center[2] - 2,
+        lty = arrow_lty,
+        lwd = arrow_lwd,
+        col = arrow_col,
+        length = arrow_head_length
+      )
+
+      if (decision.cex > 0) {
+        text(
+          x = subplot_center[1] + 2 + arrow_length * .7,
+          y = subplot_center[2] - 2.2,
+          labels = decision.labels[2],
+          pos = 1,
+          font = 3,
+          cex = decision.cex
+        )
+      }
+
+      if (ball_loc == "fixed") {
+        ball_x_lim <- c(min(ball_box_fixed_x_shift), max(ball_box_fixed_x_shift))
+        ball_y_lim <- c(
+          subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+          subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
+        )
+      }
+
+      if (ball_loc == "variable") {
+        ball_x_lim <- c(
+          subplot_center[1] + ball_box_horiz_shift - ball_box_width / 2,
+          subplot_center[1] + ball_box_horiz_shift + ball_box_width / 2
+        )
+
+        ball_y_lim <- c(
+          subplot_center[2] + ball_box_vert_shift - ball_box_height / 2,
+          subplot_center[2] + ball_box_vert_shift + ball_box_height / 2
+        )
+      }
+
+      if ((max(c(fa_i, hi_i), na.rm = TRUE) > 0) & (show.icons == TRUE)) {
+        plot_icon_array(
+          x_lim = ball_x_lim,
+          y_lim = ball_y_lim,
+          n_vec = c(fa_i, hi_i),
+          pch_vec = c(noise_ball_pch, signal_ball_pch),
+          ball_cex = ball_cex,
+          # bg_vec = c(noise_ball_bg, signal_ball_bg),
+          bg_vec = c(col_error_bg, col_correct_bg),
+          col_vec = c(col_error_border, col_correct_border),
+          freq_text = TRUE,
+          n_per_icon = n.per.icon,
+          show_truth_labels = FALSE, show_exemplar_total = FALSE
+        )
+      }
+
+      dir_symbol <- c("<=", "<", "=", "!=", ">", ">=") # as (local) constant
+
+      pos_dir_symbol <- dir_symbol[which(level_stats$direction[level_i] == c("<=", "<", "=", "!=", ">", ">="))]
+      neg_dir_symbol <- dir_symbol[which(level_stats$direction[level_i] == rev(c("<=", "<", "=", "!=", ">", ">=")))]
+
+
+      text_outline(subplot_center[1] + 1,
+        subplot_center[2],
+        labels = paste(pos_dir_symbol, " ", level_stats$threshold[level_i], sep = ""),
+        pos = 4, cex = break_label_cex, r = .1
+      )
+
+      points(
+        x = subplot_center[1] + 2,
+        y = subplot_center[2] - 2,
+        pch = exit_node_pch,
+        cex = exit_node_cex,
+        bg = col_exit_node_bg
+      )
+
+      text(
+        x = subplot_center[1] + 2,
+        y = subplot_center[2] - 2,
+        labels = substr(decision.labels[2], 1, 1)
+      )
+    } # if (exit node on right).
+
+
+    if ((level_stats$exit[level_i] %in% exit_types[c(1)]) | (paste(level_stats$exit[level_i]) %in% paste(exit_types[c(1)], collapse = ", "))) {
+      segments(subplot_center[1],
+        subplot_center[2] + 1,
+        subplot_center[1] + 2,
+        subplot_center[2] - 2,
+        lty = segment_lty,
+        lwd = segment_lwd
+      )
+
+      if (level_i < 6) {
+        rect(subplot_center[1] + 2 - label_box_width / 2,
+          subplot_center[2] - 2 - label_box_height / 2,
+          subplot_center[1] + 2 + label_box_width / 2,
+          subplot_center[2] - 2 + label_box_height / 2,
+          col = "white",
+          border = "black"
+        )
+
+        text(
+          x = subplot_center[1] + 2,
+          y = subplot_center[2] - 2,
+          labels = cue.labels[level_i + 1],
+          cex = label_box_text_cex
+        )
+      } else {
+        rect(subplot_center[1] + 2 - label_box_width / 2,
+          subplot_center[2] - 2 - label_box_height / 2,
+          subplot_center[1] + 2 + label_box_width / 2,
+          subplot_center[2] - 2 + label_box_height / 2,
+          col = "white",
+          border = "black", lty = 2
+        )
+
+        text(
+          x = subplot_center[1] + 2,
+          y = subplot_center[2] - 2,
+          labels = paste0("+ ", n_levels - 6, " More"),
+          cex = label_box_text_cex,
+          font = 3
+        )
+      }
+    } # if (new level on right).
+
+    if (identical(paste(level_stats$exit[level_i]), paste0(exit_types[1]))) {
+      subplot_center <- c(
+        subplot_center[1] + 2,
+        subplot_center[2] - 4
+      )
+    } # if (identical exit 0 / left etc.
+
+    if (identical(paste(level_stats$exit[level_i]), paste0(exit_types[2]))) {
+      subplot_center <- c(
+        subplot_center[1] - 2,
+        subplot_center[2] - 4
+      )
+    } # if (identical exit 1 / right etc.
+  } # for (level_i etc. loop.
+}
