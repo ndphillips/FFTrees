@@ -213,8 +213,6 @@ plot.FFTrees <- function(x = NULL,
     }
   }
 
-
-
   valid_what <- c(
     "all", "default",
     "cues", "tree", "icontree", "roc"
@@ -1253,7 +1251,6 @@ plot_icon_array <- function(x_lim = c(-10, 0),
                             ball_lwd = .70,
                             freq_text = TRUE,
                             freq_text_cex = 1.2,
-                            # rev_order = FALSE,  # is NOT used anywhere?
                             box_col = NULL,
                             box_bg = NULL,
                             n_per_icon = NULL,
@@ -1929,7 +1926,9 @@ plot_confusion <- function(lloc,
   )
 }
 
-plot_roc <- function(lloc, main = NULL, header_y = 1,
+plot_roc <- function(lloc,
+                     main = NULL,
+                     header_y = 1,
                      subheader_y = .925,
                      header_cex = 1.10,
                      subheader_cex = .90,
@@ -1960,7 +1959,6 @@ plot_roc <- function(lloc, main = NULL, header_y = 1,
   # y-locations of legend labels (default: using full height):
   roc_lbl_y <- seq(.10, .90, length.out = 5) # SVM, RF, LR, CART, FFT
 
-
   # Reset some parameters:
   if (is.null(main) == FALSE) {
     roc_title <- main
@@ -1975,7 +1973,7 @@ plot_roc <- function(lloc, main = NULL, header_y = 1,
   diag_col <- gray(.60) # as in showcues()
   diag_lty <- 1 # as in showcues()
 
-  x_d <- .035
+  x_d <- .015
 
   # y-locations of legend labels (cluster labels on top right):
   roc_lbl_y <- seq(.55, .95, length.out = 5) # SVM, RF, LR, CART, FFT
