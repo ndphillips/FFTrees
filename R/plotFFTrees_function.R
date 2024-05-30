@@ -34,7 +34,7 @@
 #'   \item{'cues'}{Plot only the marginal accuracy of cues in ROC space.
 #'   Note that cue accuracies are \emph{not} shown when calling \code{what = 'all'} and use the \code{\link{showcues}} function.}
 #'   \item{'icontree'}{Plot tree diagram with icon arrays on exit nodes.
-#'   Consider also setting \code{n.per.icon} and \code{show.iconguide}.}
+#'   Consider also setting \code{n_per_icon} and \code{show.iconguide}.}
 #'   \item{'tree'}{Plot only the tree diagram.}
 #'   \item{'roc'}{Plot only the performance of tree(s) (and comparison algorithms) in ROC space.}
 #' }
@@ -74,7 +74,7 @@
 #' @param label.tree A label for the FFT (optional, as character string).
 #' @param label.performance A label for the performance section (optional, as character string).
 #'
-#' @param n.per.icon The number of cases represented by each icon (as numeric).
+#' @param n_per_icon The number of cases represented by each icon (as numeric).
 #' @param level.type The type of performance levels to be drawn at the bottom (as character string, either \code{"bar"} or \code{"line"}.
 #' Default: \code{level.type = "bar"}.
 #'
@@ -114,7 +114,7 @@
 #'
 #' # Visualize tree diagram with icon arrays on exit nodes:
 #' plot(heart_fft,
-#'   what = "icontree", n.per.icon = 2,
+#'   what = "icontree", n_per_icon = 2,
 #'   main = "Diagnosing heart disease"
 #' )
 #'
@@ -127,7 +127,7 @@
 #'   main = "Predicting heart disease",
 #'   cue.labels = c("1. thal?", "2. cp?", "3. ca?", "4. exang"),
 #'   decision.labels = c("ok", "treat"), truth.labels = c("Healthy", "Sick"),
-#'   n.per.icon = 2,
+#'   n_per_icon = 2,
 #'   show.header = TRUE, show.confusion = TRUE, show.levels = TRUE, show.roc = TRUE,
 #'   hlines = FALSE, font = 3, col = "steelblue"
 #' )
@@ -177,7 +177,7 @@ plot.FFTrees <- function(x = NULL,
                          hlines = TRUE,
                          label.tree = NULL,
                          label.performance = NULL,
-                         n.per.icon = NULL,
+                         n_per_icon = NULL,
                          level.type = "bar",
                          # deprecated arguments:
                          which.tree = NULL, # deprecated: Use tree instead.
@@ -568,7 +568,7 @@ plot.FFTrees <- function(x = NULL,
       plotting_parameters_df <- data.frame(
         n_levels = 1:6,
         plot_height = c(10, 12, 15, 19, 23, 25),
-        plot_width = c(14, 16, 20, 24, 28, 32) * 0.80, # stretch wider (but not too wide for n.per.icon = 1)
+        plot_width = c(14, 16, 20, 24, 28, 32) * 0.80, # stretch wider (but not too wide for n_per_icon = 1)
         label_box_text_cex = cue.cex,
         break_label_cex = threshold.cex
       )
@@ -638,16 +638,6 @@ plot.FFTrees <- function(x = NULL,
 
     ball_box_fixed_x_shift <- c(ball_box_min_shift_p * plot_width, ball_box_max_shift_p * plot_width)
 
-    # Determine N per ball:
-    if (is.null(n.per.icon)) {
-      max_n_side <- max(c(n_pos_cases, n_neg_cases))
-
-      i <- max_n_side / c(1, 5, 10^(1:10))
-      i[i > 50] <- 0
-
-      n.per.icon <- c(1, 5, 10^(1:10))[which(i == max(i))]
-    }
-
     noise_ball_pch <- ball_pch[1]
     signal_ball_pch <- ball_pch[2]
     noise_ball_col <- ball_col[1]
@@ -713,7 +703,7 @@ plot.FFTrees <- function(x = NULL,
         bg_vec = c(noise_ball_bg, signal_ball_bg),
         col_vec = c(noise_ball_col, signal_ball_col),
         ball_cex = ball_cex,
-        n_per_icon = n.per.icon,
+        n_per_icon = n_per_icon,
         truth.labels = truth.labels,
         show_truth_labels = TRUE,
         show_exemplar_total = TRUE
@@ -807,7 +797,7 @@ plot.FFTrees <- function(x = NULL,
         decision.labels = decision.labels,
         ball_loc = ball_loc,
         show.icons = show.icons,
-        n.per.icon = n.per.icon,
+        n_per_icon = n_per_icon,
         grayscale = grayscale,
         add = TRUE
       )
@@ -843,7 +833,6 @@ plot.FFTrees <- function(x = NULL,
 
         par(xpd = FALSE)
       } # if (what != "roc").
-
 
       # Level parameters:
       level_height_max <- .65
@@ -1096,15 +1085,9 @@ plot_icon_array <- function(x_lim = c(-10, 0),
   # box_y_center <- sum(y_lim) / 2      # is NOT used anywhere?
   # box_x_width <- x_lim[2] - x_lim[1]  # is NOT used anywhere?
 
-
   if (is.null(n_per_icon)) { # determine cases per ball/icon:
 
-    max_n_side <- max(c(a_n, b_n))
-
-    i <- max_n_side / c(1, 5, 10, 50, 100, 1000, 10000)
-    i[i > 50] <- 0
-
-    n_per_icon <- c(1, 5, 10, 50, 100, 1000, 10000)[which(i == max(i))]
+    n_per_icon <- calculate_n_per_icon(max(c(a_n, b_n)))
   }
 
   # Determine general ball/icon locations:
@@ -1168,7 +1151,7 @@ plot_icon_array <- function(x_lim = c(-10, 0),
   })
 
   if (show_legend) {
-    text(.98, 0, labels = paste("Showing ", n.per.icon, " cases per icon:", sep = ""), pos = 2)
+    text(.98, 0, labels = paste("Showing ", n_per_icon, " cases per icon:", sep = ""), pos = 2)
     points(.98, 0, pch = noise_ball_pch, cex = ball_cex)
     points(.99, 0, pch = signal_ball_pch, cex = ball_cex)
   }
@@ -1185,7 +1168,7 @@ plot_fft <- function(level_stats = NULL,
                      show.icons = TRUE,
                      plot_width = NULL,
                      plot_height = NULL,
-                     n.per.icon = NULL,
+                     n_per_icon = NULL,
                      grayscale = FALSE,
                      add = FALSE) {
   subplot_center <- c(0, -4)
@@ -1274,6 +1257,10 @@ plot_fft <- function(level_stats = NULL,
   }
 
   cue.labels <- level_stats$cue
+
+  if (is.null(n_per_icon)) {
+    n_per_icon <- calculate_n_per_icon(max(c(level_stats$hi, level_stats$fa, level_stats$mi, level_stats$cr)))
+  }
 
   if (!add) {
     plot.new()
@@ -1376,7 +1363,7 @@ plot_fft <- function(level_stats = NULL,
           bg_vec = c(col_correct_bg, col_error_bg),
           col_vec = c(col_correct_border, col_error_border),
           freq_text = TRUE,
-          n_per_icon = n.per.icon,
+          n_per_icon = n_per_icon,
           show_truth_labels = FALSE,
           show_exemplar_total = FALSE
         )
@@ -1504,7 +1491,7 @@ plot_fft <- function(level_stats = NULL,
           bg_vec = c(col_error_bg, col_correct_bg),
           col_vec = c(col_error_border, col_correct_border),
           freq_text = TRUE,
-          n_per_icon = n.per.icon,
+          n_per_icon = n_per_icon,
           show_truth_labels = FALSE, show_exemplar_total = FALSE
         )
       }
@@ -1923,7 +1910,6 @@ plot_icon_guide <- function(what = NULL,
                             col_error_bg = NULL,
                             ball_cex = NULL,
                             show_icon_guide_legend = TRUE) {
-
   col_panel_line <- "black"
 
   # Parameters:
@@ -2041,8 +2027,14 @@ pluck_level_stats <- function(fft,
   return(out)
 }
 
-
 # Assert
 assert_fft_has_tree <- function(fft, tree) {
   assertthat::assert_that(tree %in% fft$trees$level_stats$train$tree)
+}
+
+calculate_n_per_icon <- function(n_max) {
+  i <- n_max / c(1, 5, 10, 50, 100, 1000, 10000, 100000)
+  i[i > 50] <- 0
+
+  n_per_icon <- c(1, 5, 10, 50, 100, 1000, 10000, 100000)[which(i == max(i))]
 }
