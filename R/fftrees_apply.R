@@ -636,6 +636,30 @@ fftrees_apply <- function(x,
 
     # Add final tree results to level_stats_ls and decisions_ls: ----
 
+
+    # Add marginal classification statistics to level_stats / Frequencies per level:
+
+    level_stats_i$hi_m <- NA # initialize marginal freqs
+    level_stats_i$fa_m <- NA
+    level_stats_i$mi_m <- NA
+    level_stats_i$cr_m <- NA
+
+    for (i in 1:level_n) {
+      if (i == 1) {
+        level_stats_i$hi_m[1] <- level_stats_i$hi[1]
+        level_stats_i$fa_m[1] <- level_stats_i$fa[1]
+        level_stats_i$mi_m[1] <- level_stats_i$mi[1]
+        level_stats_i$cr_m[1] <- level_stats_i$cr[1]
+      }
+
+      if (i > 1) {
+        level_stats_i$hi_m[i] <- level_stats_i$hi[i] - level_stats_i$hi[i - 1]
+        level_stats_i$fa_m[i] <- level_stats_i$fa[i] - level_stats_i$fa[i - 1]
+        level_stats_i$mi_m[i] <- level_stats_i$mi[i] - level_stats_i$mi[i - 1]
+        level_stats_i$cr_m[i] <- level_stats_i$cr[i] - level_stats_i$cr[i - 1]
+      }
+    } # for n_levels.
+
     level_stats_ls[[tree_i]] <- level_stats_i
 
     decisions_ls[[tree_i]] <- decisions_df[ , names(decisions_df) %in% c("current_decision", "current_cue_values") == FALSE]
@@ -669,7 +693,6 @@ fftrees_apply <- function(x,
     tree_stats$mcu[tree_i] <- mean(decisions_ls[[tree_i]]$levelout)
 
   }
-
 
   # Add results to x$trees (given mydata type): ----
 
