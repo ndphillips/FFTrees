@@ -52,5 +52,5 @@ Default: \code{quiet_mis = FALSE} (i.e., show user feedback).}
 The main input are 2 logical vectors of prediction and criterion values.
 }
 \details{
-The primary confusion matrix is computed by \code{\link{caret::confusionMatrix}}.
+The primary confusion matrix is computed by \code{\link[caret]{confusionMatrix}}.
 }
