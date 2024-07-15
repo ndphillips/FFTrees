@@ -200,7 +200,7 @@ add_stats <- function(data, # df with frequency counts of classification outcome
 #'
 #' The main input are 2 logical vectors of prediction and criterion values.
 #'
-#' The primary confusion matrix is computed by \code{\link{confusionMatrix}} of the \strong{caret} package.
+#' The primary confusion matrix is computed by \code{\link[caret]{confusionMatrix}}.
 #'
 #' @param prediction_v logical. A logical vector of predictions.
 #' @param criterion_v logical. A logical vector of (TRUE) criterion values.
