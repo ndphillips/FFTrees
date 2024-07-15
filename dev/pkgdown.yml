@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   FFTrees_accuracy_statistics: FFTrees_accuracy_statistics.html
@@ -9,8 +9,7 @@ articles:
   FFTrees_mytree: FFTrees_mytree.html
   FFTrees_plot: FFTrees_plot.html
   guide: guide.html
-last_built: 2024-05-23T07:36Z
+last_built: 2024-07-15T07:51Z
 urls:
   reference: https://ndphillips.github.io/FFTrees/reference
   article: https://ndphillips.github.io/FFTrees/articles
-
