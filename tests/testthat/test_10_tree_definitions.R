@@ -33,24 +33,29 @@ test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitio
   # 4. Edit individual tree definitions: ------
 
   # Reorder nodes:
-  my_fft_1 <- reorder_nodes(fft = fft_1, order = c(2, 1))     # reverse cues
-  my_fft_2 <- reorder_nodes(fft = fft_3, order = c(2, 1, 3))  # no new exit node
-  my_fft_3 <- reorder_nodes(fft = fft_3, order = c(1, 3, 2))  # new exit node
+  my_fft_1 <- reorder_nodes(fft = fft_1, order = c(2, 1), quiet = TRUE)     # reverse cues
+  my_fft_2 <- reorder_nodes(fft = fft_3, order = c(2, 1, 3), quiet = TRUE)  # no new exit node
+  my_fft_3 <- reorder_nodes(fft = fft_3, order = c(1, 3, 2), quiet = TRUE)  # new exit node
 
   # Flip exits:
-  my_fft_4 <- flip_exits(my_fft_1, nodes = 1)           # flip exits of node 1
-  my_fft_5 <- flip_exits(my_fft_2, nodes = c(1, 2, 3))  # flip only exits of node 1 and 2
+  my_fft_4 <- flip_exits(my_fft_1, nodes = 1, quiet = TRUE)           # flip exits of node 1
+  my_fft_5 <- flip_exits(my_fft_2, nodes = c(1, 2, 3), quiet = TRUE)  # flip only exits of node 1 and 2
 
   # Drop nodes:
-  my_fft_1 <- drop_nodes(my_fft_1, nodes = 2)  # drop exit node
-  my_fft_2 <- drop_nodes(my_fft_2, nodes = 2)  # drop non-exit node
+  my_fft_1 <- drop_nodes(my_fft_1, nodes = 2, quiet = TRUE)  # drop exit node
+  my_fft_2 <- drop_nodes(my_fft_2, nodes = 2, quiet = TRUE)  # drop non-exit node
 
   # Edit nodes:
-  my_fft_3 <- edit_nodes(my_fft_3, nodes = c(1, 2), direction = c("<", "<="), threshold = c(5, 6), exit = c(1, 0))  # edit 2 nodes
+  my_fft_3 <- edit_nodes(my_fft_3,                           # edit 2 nodes:
+                         nodes = c(1, 2),
+                         direction = c("<", "<="),
+                         threshold = c(5, 6),
+                         exit = c(1, 0),
+                         quiet = TRUE)
 
   # Add nodes:
-  my_fft_4 <- add_nodes(my_fft_4, nodes = 2, class = "n", cue = "sep.len", direction = "<=", threshold = "5", exit = 0)   # new 2nd node
-  my_fft_5 <- add_nodes(my_fft_5, nodes = 4, class = "n", cue = "sep.len", direction = ">", threshold = "5", exit = 0.5)  # new final node
+  my_fft_4 <- add_nodes(my_fft_4, nodes = 2, class = "n", cue = "sep.len", direction = "<=", threshold = "5", exit = 0, quiet = TRUE)  # new 2nd node
+  my_fft_5 <- add_nodes(my_fft_5, nodes = 4, class = "n", cue = "sep.len", direction = ">", threshold = "5", exit = .5, quiet = TRUE)  # new final node
 
 
 
