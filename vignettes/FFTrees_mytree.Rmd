@@ -288,9 +288,9 @@ plot(fft_4, n.per.icon = 50, what = "all", show.iconguide = TRUE)
 #   Overall accuracy is 10% above baseline (predicting False for all cases).
 ```
 
-<!-- ToDo: Illustrate 4., as case is instructive. -->
+<!-- ToDo: Illustrate 4., as this case is instructive. -->
 
-<!-- ToDo: 2nd way to specify an FFT:  -->
+<!-- NEXT: 2nd way to specify an FFT:  -->
 <!-- 2. as a data frame using the `tree.definitions` argument  -->
 
 
@@ -364,7 +364,7 @@ When looking at **Figure\ 3**, we first move down on the right side (from retrie
 
 We illustrate a typical workflow by redefining some FFTs that were built in the [Tutorial: FFTs for heart disease](FFTrees_heart.html) and evaluating them on the (full) `heartdisease` data. 
 
-To obtain a set of existing tree definitions, we use our default algorithms to create an `FFTrees` object\ `x`:
+To obtain a set of existing tree definitions, we use our default algorithm to create an `FFTrees` object\ `x`:
 
 ```{r fft-treedef-01, message = FALSE}
 # Create an FFTrees object x:
@@ -401,7 +401,7 @@ Alternatively, we can use the `get_fft_df()` utility function on\ `x` to obtain 
 (tree_dfs <- get_fft_df(x))
 ```
 
-The resulting R object\ `tree_dfs` is a data frame with `r ncol(tree_dfs)` variables. 
+The resulting R object\ `tree_dfs` is a data frame with `r ncol(tree_dfs)`\ variables. 
 Each of its `r nrow(tree_dfs)` rows defines an FFT in the context of our current `FFTrees` object\ `x` (see the vignette on [Creating FFTs with FFTrees()](FFTrees_function.html) for help on interpreting tree definitions). 
 As the "ifan" algorithm responsible for creating these trees yields a family of highly similar FFTs (which vary only by their exits, and may truncate some cues), we may want to explore alternative versions of these trees. 
 
@@ -481,6 +481,7 @@ For instance, the tree definition with a signal exit at the first node of `my_ff
 (my_fft_3 <- flip_exits(my_fft_1, nodes = 2))
 (my_fft_4 <- flip_exits(my_fft_1, nodes = c(1, 2)))
 ```
+
 
 #### Using **magrittr** pipes to combine steps
 
@@ -569,8 +570,8 @@ When using the main `FFTrees()` function with a set of `tree.definitions` (as a 
 Importantly, however, the input of `tree.definitions` prevents the generation of new FFTs (via the "ifan" or "dfan" algorithms) and instead evaluates the FFT definitions provided on the data specified:^[If the `tree.definitions` contain cue variables or values that cannot be found in the data, this will result in errors.] 
 
 ```{r use-tree-definitions-01}
-# Evaluate tree.definitions for an existing FFTrees object y:
-y <- FFTrees(object = x,                      # an existing FFTrees object
+# Evaluate new tree.definitions for an existing FFTrees object x:
+y <- FFTrees(object = x,                      # existing FFTrees object x
              tree.definitions = my_tree_dfs,  # new set of FFT definitions
              main = "Heart Disease 2"         # new label
              )
