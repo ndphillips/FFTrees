@@ -156,6 +156,7 @@ plot(mushrooms_ring_fft, data = "test")
 As we can see, this tree (in `mushrooms_ring_fft`) has both sensitivity and specificity values of around\ $80$%, but does not perform as well as our earlier one (in `mushrooms_fft`). 
 This suggests that we should discard the expert's advice and primarily rely on the\ `odor` and\ `sporepc` cues. 
 
+
 ### Iris.v data 
 
 ```{r iris-image, fig.align = "center", out.width = "225px", echo = FALSE}
@@ -170,7 +171,7 @@ In this example, we'll create trees using the entire dataset (without splitting 
 # Create FFTrees object for iris data:
 iris_fft <- FFTrees(formula = virginica ~.,
                     data = iris.v,
-                    main = "Iris",
+                    main = "Iris viginica",
                     decision.labels = c("Not-Vir", "Vir"))
 ```
 
@@ -187,6 +188,7 @@ summary(iris_fft)  # summarize FFTrees object
 
 However, let's first take a look at the individual training cue accuracies... 
 
+
 #### Visualizing cue accuracies
 
 We can plot the training cue accuracies during training by specifying `what = "cues"`:
@@ -199,6 +201,7 @@ plot(iris_fft, what = "cues")
 It looks like the two cues\ `pet.len` and\ `pet.wid` are the best predictors for this dataset. 
 Based on this insight, we should expect the final trees will likely use one or both of these cues.
 
+
 #### Visualizing FFT performance 
 
 Now let's visualize the best tree:
@@ -210,6 +213,7 @@ plot(iris_fft)
 
 Indeed, it turns out that the best tree only uses the\ `pet.len` and\ `pet.wid` cues (in that order). 
 For this data, the fitted tree exhibits a performance with a sensitivity of\ 100% and a specificity of\ 94%. 
+
 
 #### Viewing alternative FFTs
 
