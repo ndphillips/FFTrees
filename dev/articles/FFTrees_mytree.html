@@ -72,7 +72,7 @@
                         <h4 data-toc-skip class="author">Hansjörg Neth
 and Nathaniel Phillips</h4>
             
-            <h4 data-toc-skip class="date">2024-07-15</h4>
+            <h4 data-toc-skip class="date">2024-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_mytree.Rmd" class="external-link"><code>vignettes/FFTrees_mytree.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_mytree.Rmd</code></div>
@@ -357,8 +357,8 @@ perfect — so check out whether you can create even better ones!</p>
 <!-- TESTing: -->
 <!-- 1. In `fftrees_wordstofftrees()`, "Otherwise" part is being ignored. -->
 <!-- 2. In `fftrees_ffttowords()`, the final sentence always predicts positive (True) instances first. -->
-<!-- ToDo: Illustrate 4., as case is instructive. -->
-<!-- ToDo: 2nd way to specify an FFT:  -->
+<!-- ToDo: Illustrate 4., as this case is instructive. -->
+<!-- NEXT: 2nd way to specify an FFT:  -->
 <!-- 2. as a data frame using the `tree.definitions` argument  -->
 </div>
 </div>
@@ -488,7 +488,7 @@ built in the <a href="FFTrees_heart.html">Tutorial: FFTs for heart
 disease</a> and evaluating them on the (full) <code>heartdisease</code>
 data.</p>
 <p>To obtain a set of existing tree definitions, we use our default
-algorithms to create an <code>FFTrees</code> object <code>x</code>:</p>
+algorithm to create an <code>FFTrees</code> object <code>x</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create an FFTrees object x:</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FFTrees.html">FFTrees</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">diagnosis</span> <span class="op">~</span> <span class="va">.</span>,           <span class="co"># criterion and (all) predictors</span></span>
@@ -522,8 +522,8 @@ the set of generated tree definitions:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5     3 c;c;n   thal;cp;ca       =;=;&gt;      rd,fd;a;0           0;0;0.5  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6     4 c;c;n;c thal;cp;ca;slope =;=;&gt;;=    rd,fd;a;0;flat,down 0;0;0;0.5</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span>     7     4 c;c;n;c thal;cp;ca;slope =;=;&gt;;=    rd,fd;a;0;flat,down 1;1;1;0.5</span></span></code></pre>
-<p>The resulting R object <code>tree_dfs</code> is a data frame with 7
-variables. Each of its 7 rows defines an FFT in the context of our
+<p>The resulting R object <code>tree_dfs</code> is a data frame with
+7 variables. Each of its 7 rows defines an FFT in the context of our
 current <code>FFTrees</code> object <code>x</code> (see the vignette on
 <a href="FFTrees_function.html">Creating FFTs with FFTrees()</a> for
 help on interpreting tree definitions). As the “ifan” algorithm
@@ -783,8 +783,8 @@ data specified:<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" dat
 variables or values that cannot be found in the data, this will result
 in errors.&lt;/p&gt;"><sup>2</sup></a></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Evaluate tree.definitions for an existing FFTrees object y:</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FFTrees.html">FFTrees</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">x</span>,                      <span class="co"># an existing FFTrees object</span></span>
+<code class="sourceCode R"><span><span class="co"># Evaluate new tree.definitions for an existing FFTrees object x:</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FFTrees.html">FFTrees</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">x</span>,                      <span class="co"># existing FFTrees object x</span></span>
 <span>             tree.definitions <span class="op">=</span> <span class="va">my_tree_dfs</span>,  <span class="co"># new set of FFT definitions</span></span>
 <span>             main <span class="op">=</span> <span class="st">"Heart Disease 2"</span>         <span class="co"># new label</span></span>
 <span>             <span class="op">)</span></span></code></pre></div>
