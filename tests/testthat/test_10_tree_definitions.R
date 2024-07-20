@@ -1,10 +1,11 @@
 context("Get, edit, and use tree.definitions")
 
-# Create FFTs from tree.definitions and edited tree.definitions:
+# Create new FFTs from edited tree.definitions:
 
-test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitions", {
+test_that("Can get, edit, collect, and create FFTs from tree.definitions", {
 
-  # 1. Create FFTrees object x for iris data: ------
+  # 1. Create an FFTrees object x (for iris data): ------
+
   x <- FFTrees(formula = virginica ~ .,
                data = iris.v,
                main = "Iris viginica",
@@ -13,18 +14,19 @@ test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitio
 
 
 
-  # 2. Get tree definitions: ------
+  # 2. Extract/get tree definitions: ------
 
-  # Get tree definitions of x (as non-tidy df):
+  # Get tree definitions of x (as 1 non-tidy df):
+
   tree_dfs <- get_fft_df(x)
 
-  # tree_dfs  # 6 original tree definitions
+  # tree_dfs  # 6 tree definitions
 
 
 
   # 3. Extract individual tree definitions: ------
 
-  # Get specific trees (each tree as 1 tidy df):
+  # Get/read specific trees (each tree as 1 tidy df):
   fft_1 <- read_fft_df(ffts_df = tree_dfs, tree = 1)
   fft_3 <- read_fft_df(ffts_df = tree_dfs, tree = 3)
 
@@ -33,7 +35,7 @@ test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitio
   # 4. Edit individual tree definitions: ------
 
   # Reorder nodes:
-  my_fft_1 <- reorder_nodes(fft = fft_1, order = c(2, 1), quiet = TRUE)     # reverse cues
+  my_fft_1 <- reorder_nodes(fft = fft_1, order = c(2, 1),    quiet = TRUE)  # reverse cues
   my_fft_2 <- reorder_nodes(fft = fft_3, order = c(2, 1, 3), quiet = TRUE)  # no new exit node
   my_fft_3 <- reorder_nodes(fft = fft_3, order = c(1, 3, 2), quiet = TRUE)  # new exit node
 
@@ -49,7 +51,7 @@ test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitio
   my_fft_3 <- edit_nodes(my_fft_3,                           # edit 2 nodes:
                          nodes = c(1, 2),
                          direction = c("<", "<="),
-                         threshold = c(5, 6),
+                         threshold = c(4.5, 5.5),
                          exit = c(1, 0),
                          quiet = TRUE)
 
@@ -61,7 +63,7 @@ test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitio
 
   # 5. Convert and add/collect/gather tree definitions: ------
 
-  # Write FFT definition (into non-tidy df):
+  # Write FFT definition (into 1 non-tidy df):
   my_tree_dfs <- write_fft_df(my_fft_1, tree = 1)
 
   # Add other trees (using pipes):
@@ -72,34 +74,45 @@ test_that("Can create, extract, edit, add, and evaluate FFTs from tree.definitio
 
   # my_tree_dfs  # => 5 new tree definitions
 
-  # add set of new trees to old ones:
+
+  # Add the set of 5 new trees to 6 original ones (re-numbering new ones):
   all_fft_dfs <- add_fft_df(my_tree_dfs, tree_dfs)
-  # all_fft_dfs  # contains 6 old and 5 new tree definitions (re-numbering new ones)
+  # all_fft_dfs  # => 6 old and 5 new trees = 11 trees
 
 
 
-  # 6. Apply tree.definitions to data: ------
+  # 6. Apply new tree.definitions to data: ------
+
 
   # a: Evaluate new tree.definitions for an existing FFTrees object x:
+
   y <- FFTrees(object = x,                      # existing FFTrees object x
                tree.definitions = all_fft_dfs,  # set of all FFT definitions
-               main = "Iris y",                 # new label
+               main = "Iris 2",                 # new label
                quiet = TRUE
   )
 
 
   # b: Create a new FFTrees object z (using formula and original data):
+
   z <- FFTrees(formula = virginica ~ .,
                data = iris.v,                   # using original data
                tree.definitions = all_fft_dfs,  # set of all FFT definitions
-               main = "Iris z",                 # new label
+               main = "Iris 2",                 # new label
                quiet = TRUE
   )
 
 
+
   # 7. Compare results: ------
+
   # summary(y)
   # summary(z)
+
+  # all.equal(y, z)
+
+  # # Note: Tree #11 is remarkably bad (bacc = 11%).
+  # plot(z, tree = 11)
 
 
 
