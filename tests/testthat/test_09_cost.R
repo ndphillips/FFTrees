@@ -1,4 +1,4 @@
-context("Costs work")
+context("Verify costs work")
 
 
 test_that("Using goal = 'cost' kills a high cost cue", {
@@ -26,6 +26,7 @@ test_that("Using goal = 'cost' kills a high cost cue", {
   )
 
 })
+
 
 
 test_that("Changing costs without changing goal does NOT affect FFT creation", {
@@ -56,6 +57,7 @@ test_that("Changing costs without changing goal does NOT affect FFT creation", {
 })
 
 
+
 test_that("Changing costs and goal = 'cost' DOES affect FFT creation", {
 
   # Create FFTs with outcome costs and goal 'cost':
@@ -81,6 +83,7 @@ test_that("Changing costs and goal = 'cost' DOES affect FFT creation", {
   ))
 
 })
+
 
 
 # eof.

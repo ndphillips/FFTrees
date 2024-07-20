@@ -1,6 +1,6 @@
 context("Handle NA data")
 
-# NA values in predictors:
+# Create FFTs when data has NA values in different types of predictors:
 
 test_that("FFTrees works with NA values in categorical predictors", {
 
@@ -12,8 +12,8 @@ test_that("FFTrees works with NA values in categorical predictors", {
 
   # Main: Create an FFTrees object:
   fft_NA_1 <- FFTrees(crit ~ .,
-                 data = data_NA_categorical,
-                 quiet = TRUE)
+                      data = data_NA_categorical,
+                      quiet = TRUE)
 
   testthat::expect_is(fft_NA_1, "FFTrees")
 
@@ -31,8 +31,8 @@ test_that("FFTrees works with NA values in 2 numeric predictors", {
 
   # Create an FFTrees object:
   fft_NA_2 <- FFTrees(crit ~ .,
-                 data = data_NA_numeric,
-                 quiet = TRUE)
+                      data = data_NA_numeric,
+                      quiet = TRUE)
 
   testthat::expect_is(fft_NA_2, "FFTrees")
 
