@@ -54,15 +54,20 @@
 </ul></div>
 <div class="section level3">
 <h3 id="minor-changes-2-0-0-9000">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-2-0-0-9000"></a></h3>
+<p>Plotting:</p>
 <ul><li>
+<code><a href="../reference/plot.FFTrees.html">plot.FFTrees()</a></code> now labels row of 2x2 confusion matrix as “Prediction” when using “test” data.</li>
+<li>
 <code><a href="../reference/plot.FFTrees.html">plot.FFTrees()</a></code> now has a <code>truth.labels</code> argument which, if set, distinguishes labels of true (signal vs. noise) cases from decision outcomes.</li>
 <li>
 <code><a href="../reference/plot.FFTrees.html">plot.FFTrees()</a></code> now has a <code>grayscale</code> argument which, if TRUE, creates a grayscale plot.</li>
-<li>Increased value of <code>cost_cues_default</code> from 0 to 1, so that default cue costs correspond to <code>mcu</code>.</li>
+</ul><!-- Costs: --><p>Decision costs:</p>
+<ul><li>Increased value of <code>cost_cues_default</code> from 0 to 1, so that default cue costs correspond to <code>mcu</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="details-2-0-0-9000">Details<a class="anchor" aria-label="anchor" href="#details-2-0-0-9000"></a></h3>
-<ul><li>Added <code>@aliases FFTrees-package</code> to documentation of main <code><a href="../reference/FFTrees.html">FFTrees()</a></code> function.</li>
+<ul><li>Fix bug for missing plot title.</li>
+<li>Added <code>@aliases FFTrees-package</code> to documentation of main <code><a href="../reference/FFTrees.html">FFTrees()</a></code> function.</li>
 <li>Removed redundant <code>data_old</code> folder.</li>
 </ul><!-- Older versions: --><hr></div>
 </div>
@@ -438,7 +443,7 @@ E.g., <code>my.tree = 'If age &gt; 30, predict True. If sex = {m}, predict False
 <code><a href="../reference/predict.FFTrees.html">predict.FFTrees()</a></code> now works better with <code>tibble</code> inputs.</li>
 </ul></li>
 <li>Changed the <code>fft</code> label to <code>FFTrees</code> throughout the package to avoid confusion with fast fourier transform. Thus, the main tree building function is now <code><a href="../reference/FFTrees.html">FFTrees()</a></code> and the new tree object class is <code>FFTrees</code>.</li>
-</ul><!-- footer: --><hr><p>[File <code>NEWS.md</code> last updated on 2024-05-21.]</p>
+</ul><!-- footer: --><hr><p>[File <code>NEWS.md</code> last updated on 2024-09-04.]</p>
 <!-- eof. -->
 </div>
 </div>
