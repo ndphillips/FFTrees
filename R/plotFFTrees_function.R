@@ -1640,7 +1640,7 @@ plot.FFTrees <- function(x = NULL,
             # print(lloc)  # 4debugging
 
 
-            # Classification table: ----
+            # Classification table: 2x2 matrix / confusion matrix: ----
 
             if (show.confusion) {
 
@@ -1695,15 +1695,18 @@ plot.FFTrees <- function(x = NULL,
                 decision.labels[1], adj = 1
               )
 
+              # Adjust row category label:
+              if (data == "test") {
+                row_lbl <- "Prediction"
+              } else { # default:
+                row_lbl <- "Decision"
+              }
+
               text(
                 x = final_classtable_x[1] - .065,
                 y = mean(final_classtable_y), cex = header_cex,
-                "Decision"
+                row_lbl
               )
-
-              # text(x = final_classtable_x[1] - .05,
-              #      y = mean(final_classtable_y), cex = header_cex,
-              #      "Decision", srt = 90, pos = 3)
 
 
               # Add final frequencies: ----
