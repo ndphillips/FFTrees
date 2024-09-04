@@ -422,7 +422,11 @@ get_x_dev <- function(string, csf = .80){
   # csf: constant scaling factor
   # Returns a difference value that depends on string width (from min = .15 upwards).
 
-  n_char <- nchar(string)
+  if (!is.na(string)) {
+    n_char <- nchar(string)
+  } else {
+    n_char <- 0
+  }
 
   if (n_char > 15){ # widen rectangle:
 
