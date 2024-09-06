@@ -366,7 +366,7 @@
 #' @format A data frame containing 303 rows and 14 columns, with the following variables:
 #'
 #' \describe{
-#'   \item{diagnosis}{True value of binary criterion: TRUE = Heart disease, FALSE = No Heart disease}
+#'   \item{diagnosis}{True value of binary criterion: TRUE = Heart disease, FALSE = No heart disease}
 #'   \item{age}{Age (in years)}
 #'   \item{sex}{Sex, 1 = male, 0 = female}
 #'   \item{cp}{Chest pain type: ta = typical angina, aa = atypical angina, np = non-anginal pain, a = asymptomatic}
