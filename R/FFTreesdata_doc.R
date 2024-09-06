@@ -383,6 +383,16 @@
 #'
 #' }
 #'
+#' @details
+#' Note that this is a simplified version of the 303 cases of the Cleveland Clinic Foundation
+#' (V.A. Medical Center, Long Beach and Cleveland Clinic Foundation; Principal investigator: Robert Detrano, MD, PhD).
+#'
+#' The original dataset contains 3 further subsets (from Budapest, Hungary; Long Beach CA; and Zurich, Switzerland),
+#' a total of 76 raw attributes, and some missing values.
+#'
+#' The original criterion variable \code{num} is integer valued from 0 (no presence) to 4 (maximum).
+#' To obtain a binary criterion \code{diagnosis}, values from 1 to 3 have been collapsed to \code{TRUE}.
+#'
 #' @family datasets
 #'
 #' @seealso \code{\link{heart.cost}} dataset for cost information.
