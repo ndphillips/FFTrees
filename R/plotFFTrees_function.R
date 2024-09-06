@@ -1793,7 +1793,7 @@ plot.FFTrees <- function(x = NULL,
 
         # Add accuracy info (below 2x2 matrix): ----
 
-        add_acc_lbl <- FALSE  # +++ here now +++
+        add_acc_lbl <- TRUE  # +++ here now +++
 
         if (add_acc_lbl){
 
