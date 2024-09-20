@@ -1070,10 +1070,12 @@ plot.FFTrees <- function(x = NULL,
 
 
         # Heading:
-        text(-plot_width  * .60 * f_x,
-             -plot_height * leg_head_y * f_y,
-             paste(get_exit_word, decision.labels[1], sep = " "),
-             cex = 1.2, font = 3
+        text(x = -plot_width  * .60 * f_x,
+             y = -plot_height * leg_head_y * f_y,
+             # labels = paste(get_exit_word, decision.labels[1], sep = " "),  # no quotes
+             labels = paste0(get_exit_word, " '", decision.labels[1], "'"),  # in quotes
+             cex = 1.2,
+             font = 3  # italics
         )
 
         # Noise balls:
@@ -1097,15 +1099,17 @@ plot.FFTrees <- function(x = NULL,
         # (b) Signal panel (on right): ----
 
         # Heading:
-        text( plot_width  * .60 * f_x,
-              -plot_height * leg_head_y * f_y,
-              paste(get_exit_word, decision.labels[2], sep = " "),
-              cex = 1.2, font = 3
+        text(x = plot_width  * .60 * f_x,
+             y = -plot_height * leg_head_y * f_y,
+             # labels = paste(get_exit_word, decision.labels[2], sep = " "), # no quotes
+             labels = paste0(get_exit_word, " '", decision.labels[2], "'"),  # in quotes
+             cex = 1.2,
+             font = 3  # italics
         )
 
         # Signal balls:
-        points(c(plot_width   * .50,  plot_width  * .70 ) * f_x,
-               c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
+        points(x= c(plot_width   * .50,  plot_width  * .70 ) * f_x,
+               y = c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
                pch = c(noise_ball_pch, signal_ball_pch),
                bg = c(col_error_bg, col_correct_bg),
                col = c(col_error_border, col_correct_border),
@@ -1113,8 +1117,8 @@ plot.FFTrees <- function(x = NULL,
         )
 
         # Labels:
-        text(c( plot_width  * .50,  plot_width  * .70) * f_x,
-             c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
+        text(x = c( plot_width  * .50,  plot_width  * .70) * f_x,
+             y = c(-plot_height * leg_ball_y, -plot_height * leg_ball_y) * f_y,
              labels = c("False\nAlarm", "Hit"),
              pos = c(2, 4), offset = .80, cex = 1
         )
@@ -1692,25 +1696,34 @@ plot.FFTrees <- function(x = NULL,
 
         # Row titles: ----
 
+        # bottom category label:
         text(
           x = final_classtable_x[1] - .01,
-          y = final_classtable_y[1] + .75 * diff(final_classtable_y), cex = subheader_cex,
-          decision.labels[2], adj = 1
+          y = final_classtable_y[1] + .75 * diff(final_classtable_y),
+          labels = decision.labels[2],
+          cex = subheader_cex,
+          adj = 1,
+          font = 3  # italics
         )
 
+        # top category label:
         text(
           x = final_classtable_x[1] - .01,
-          y = final_classtable_y[1] + .25 * diff(final_classtable_y), cex = subheader_cex,
-          decision.labels[1], adj = 1
+          y = final_classtable_y[1] + .25 * diff(final_classtable_y),
+          labels = decision.labels[1],
+          cex = subheader_cex,
+          adj = 1,
+          font = 3  # italics
         )
 
-        # Adjust row category label:
+        # row category type:
         if (data == "test") {
           row_lbl <- "Prediction"
         } else { # default:
           row_lbl <- "Decision"
         }
 
+        # category type label:
         text(
           x = final_classtable_x[1] - .065,
           y = mean(final_classtable_y), cex = header_cex,
