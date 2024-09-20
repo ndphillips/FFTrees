@@ -1791,7 +1791,7 @@ plot.FFTrees <- function(x = NULL,
         )
 
 
-        # Add accuracy info (below 2x2 matrix): ----
+        # Add accuracy label (below the 2x2 matrix): ----
 
         add_acc_lbl <- TRUE  # +++ here now +++
 
@@ -1801,14 +1801,14 @@ plot.FFTrees <- function(x = NULL,
 
           if (names(bacc_wacc) == "bacc"){ # show bacc value:
 
-            bacc_value <- lloc[lloc$element == "bacc", "value_name"]  # lloc table lookup
-            acc_summary_lbl <- paste0("bacc = .", bacc_value) # bacc
+            bacc_value      <- lloc[lloc$element == "bacc", "value_name"]  # lloc table lookup
+            acc_summary_lbl <- paste0("bacc = ", bacc_value, "%") # bacc
 
           } else { # show wacc (and sens.w) values:
 
             wacc_value <- lloc[lloc$element == "wacc", "value_name"]  # lloc table lookup
             sens.w_lbl <- paste0("sens.w = .", pretty_dec(sens.w))
-            acc_summary_lbl <- paste0("wacc = .", wacc_value, " (", sens.w_lbl, ")")  # wacc (sens.w)
+            acc_summary_lbl <- paste0("wacc = ", wacc_value, "% (", sens.w_lbl, ")")  # wacc (sens.w)
 
           } # if (bacc_wacc).
 
