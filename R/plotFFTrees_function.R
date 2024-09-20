@@ -1309,10 +1309,12 @@ plot.FFTrees <- function(x = NULL,
             bg = col_exit_node_bg
           )
 
+          # Label for noise:
           text(
             x = subplot_center[1] - 2,
             y = subplot_center[2] - 2,
-            labels = substr(decision.labels[1], 1, 1)
+            labels = substr(decision.labels[1], 1, 1) # initial of 1st label
+            # labels = "\u2014" # ASCII code of em-dash/minus symbol ("--")
           )
 
         } # if (exit node on left).
@@ -1465,10 +1467,12 @@ plot.FFTrees <- function(x = NULL,
             bg = col_exit_node_bg
           )
 
+          # Label for signal:
           text(
             x = subplot_center[1] + 2,
             y = subplot_center[2] - 2,
-            labels = substr(decision.labels[2], 1, 1)
+            labels = substr(decision.labels[2], 1, 1) # initial of 1st label
+            # labels = "\u002B" # ASCII code of plus symbol "+"
           )
 
         } # if (exit node on right).
