@@ -378,7 +378,7 @@
 #'   \item{exang}{Exercise induced angina: 1 = yes, 0 = no}
 #'   \item{oldpeak}{ST depression induced by exercise relative to rest }
 #'   \item{slope}{The slope of the peak exercise ST segment. }
-#'   \item{ca}{Number of major vessels (0-3) colored by flourosopy }
+#'   \item{ca}{Number of major vessels (0-3) colored by flouroscopy }
 #'   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversible defect}
 #'
 #' }
