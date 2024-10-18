@@ -366,7 +366,7 @@
 #' @format A data frame containing 303 rows and 14 columns, with the following variables:
 #'
 #' \describe{
-#'   \item{diagnosis}{True value of binary criterion: TRUE = Heart disease, FALSE = No Heart disease}
+#'   \item{diagnosis}{True value of binary criterion: TRUE = Heart disease, FALSE = No heart disease}
 #'   \item{age}{Age (in years)}
 #'   \item{sex}{Sex, 1 = male, 0 = female}
 #'   \item{cp}{Chest pain type: ta = typical angina, aa = atypical angina, np = non-anginal pain, a = asymptomatic}
@@ -378,10 +378,20 @@
 #'   \item{exang}{Exercise induced angina: 1 = yes, 0 = no}
 #'   \item{oldpeak}{ST depression induced by exercise relative to rest }
 #'   \item{slope}{The slope of the peak exercise ST segment. }
-#'   \item{ca}{Number of major vessels (0-3) colored by flourosopy }
+#'   \item{ca}{Number of major vessels (0-3) colored by flouroscopy }
 #'   \item{thal}{"normal" = normal, "fd" = fixed defect, "rd" = reversible defect}
 #'
 #' }
+#'
+#' @details
+#' Note that this is a simplified version of the 303 cases of the Cleveland Clinic Foundation
+#' (V.A. Medical Center, Long Beach and Cleveland Clinic Foundation; Principal investigator: Robert Detrano, MD, PhD).
+#'
+#' The original dataset contains 3 further subsets (from Budapest, Hungary; Long Beach CA; and Zurich, Switzerland),
+#' a total of 76 raw attributes, and some missing values.
+#'
+#' The original criterion variable \code{num} is integer valued from 0 (no presence) to 4 (maximum).
+#' To obtain a binary criterion \code{diagnosis}, values from 1 to 3 have been collapsed to \code{TRUE}.
 #'
 #' @family datasets
 #'
