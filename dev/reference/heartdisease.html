@@ -55,7 +55,7 @@
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
     <p>A data frame containing 303 rows and 14 columns, with the following variables:</p>
 <dl><dt>diagnosis</dt>
-<dd><p>True value of binary criterion: TRUE = Heart disease, FALSE = No Heart disease</p></dd>
+<dd><p>True value of binary criterion: TRUE = Heart disease, FALSE = No heart disease</p></dd>
 
   <dt>age</dt>
 <dd><p>Age (in years)</p></dd>
@@ -91,7 +91,7 @@
 <dd><p>The slope of the peak exercise ST segment.</p></dd>
 
   <dt>ca</dt>
-<dd><p>Number of major vessels (0-3) colored by flourosopy</p></dd>
+<dd><p>Number of major vessels (0-3) colored by flouroscopy</p></dd>
 
   <dt>thal</dt>
 <dd><p>"normal" = normal, "fd" = fixed defect, "rd" = reversible defect</p></dd>
@@ -102,6 +102,15 @@
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
     <p><a href="https://archive.ics.uci.edu/ml/datasets/Heart+Disease" class="external-link">https://archive.ics.uci.edu/ml/datasets/Heart+Disease</a></p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Note that this is a simplified version of the 303 cases of the Cleveland Clinic Foundation
+(V.A. Medical Center, Long Beach and Cleveland Clinic Foundation; Principal investigator: Robert Detrano, MD, PhD).</p>
+<p>The original dataset contains 3 further subsets (from Budapest, Hungary; Long Beach CA; and Zurich, Switzerland),
+a total of 76 raw attributes, and some missing values.</p>
+<p>The original criterion variable <code>num</code> is integer valued from 0 (no presence) to 4 (maximum).
+To obtain a binary criterion <code>diagnosis</code>, values from 1 to 3 have been collapsed to <code>TRUE</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -134,7 +143,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
