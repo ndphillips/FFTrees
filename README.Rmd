@@ -281,7 +281,7 @@ When using **FFTrees** in your own work, please cite us and share your experienc
 
 <!-- Examples uses/publications (with links): -->
 
-By\ 2024, over 130\ scientific publications have used or cited **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list). 
+By\ 2025, over 150\ scientific publications have used or cited **FFTrees** (see [Google Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601) for the full list). 
 Examples include: 
 
 - Lötsch, J., Haehner, A., & Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. 
