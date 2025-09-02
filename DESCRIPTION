@@ -29,7 +29,7 @@ Suggests:
     spelling,
     tidyselect
 License: CC0
-URL: https://CRAN.R-project.org/package=FFTrees, https://ndphillips.github.io/FFTrees/
+URL: https://CRAN.R-project.org/package=FFTrees, https://www.nathanieldphillips.co/FFTrees/
 BugReports: https://github.com/ndphillips/FFTrees/issues
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
