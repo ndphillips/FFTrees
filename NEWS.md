@@ -514,6 +514,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2025-09-02.]
+[File `NEWS.md` last updated on 2025-09-03.]
 
 <!-- eof. -->

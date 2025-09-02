@@ -344,6 +344,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2025-09-02.\]
+\[File `README.Rmd` last updated on 2025-09-03.\]
 
 <!-- eof. -->
