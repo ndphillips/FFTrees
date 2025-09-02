@@ -21,7 +21,7 @@ knitr::opts_chunk$set(collapse = FALSE,
 url_pkg_CRAN   <- "https://CRAN.R-project.org/package=FFTrees"
 url_pkg_GitHub <- "https://github.com/ndphillips/FFTrees"
 url_pkg_issues <- "https://github.com/ndphillips/FFTrees/issues"
-url_doc_GitHub <- "https://ndphillips.github.io/FFTrees/"
+url_doc_GitHub <- "https://www.nathanieldphillips.co/FFTrees/"
 url_app_shiny  <- "https://econpsychbasel.shinyapps.io/shinyfftrees/"
 
 url_JDM_issue <- "https://journal.sjdm.org/vol12.4.html"
@@ -307,7 +307,6 @@ doi\ [10.1038/s41598-018-38091-4](https://doi.org/10.1038/s41598-018-38091-4)
 Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. 
 _PloS One_, _14_(6). 
 doi\ [10.1371/journal.pone.0216697](https://doi.org/10.1371/journal.pone.0216697)
-
 
 <!-- footer: -->
 

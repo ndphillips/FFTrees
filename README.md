@@ -272,7 +272,7 @@ available:
 |:---|:---|:---|
 | A. **FFTrees** (R package): | [Release version](https://CRAN.R-project.org/package=FFTrees) | <https://CRAN.R-project.org/package=FFTrees> |
 |   | [Development version](https://github.com/ndphillips/FFTrees) | <https://github.com/ndphillips/FFTrees> |
-| B. Other resources: | [Online documentation](https://ndphillips.github.io/FFTrees/) | <https://ndphillips.github.io/FFTrees/> |
+| B. Other resources: | [Online documentation](https://www.nathanieldphillips.co/FFTrees/) | <https://www.nathanieldphillips.co/FFTrees/> |
 |   | [Online demo](https://econpsychbasel.shinyapps.io/shinyfftrees/) (running v1.3.3) | <https://econpsychbasel.shinyapps.io/shinyfftrees/> |
 
 <!-- Citation and references: -->
@@ -344,6 +344,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2025-09-02.\]
+\[File `README.Rmd` last updated on 2025-09-03.\]
 
 <!-- eof. -->

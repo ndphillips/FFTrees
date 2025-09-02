@@ -36,7 +36,7 @@ Chemical and tasting data from wines in Northern Portugal.
 P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis (2009).
  Modeling wine preferences by data mining from physicochemical properties.
  \emph{Decision Support Systems}, \emph{47} (4), 547--553.
- \url{https://doi.org/10.1016/j.dss.2009.05.016}
+ \doi{10.1016/j.dss.2009.05.016}
 }
 \seealso{
 Other datasets: 

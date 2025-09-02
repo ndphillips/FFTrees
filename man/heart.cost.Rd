@@ -9,7 +9,7 @@ A list of length 13 containing the cost of each cue in the \code{\link{heartdise
 Each list element is a single (positive numeric) value.
 }
 \source{
-\url{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}
+\code{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}
 }
 \usage{
 heart.cost

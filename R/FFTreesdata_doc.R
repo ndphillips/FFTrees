@@ -350,7 +350,7 @@
 #'
 #' @seealso \code{\link{heartdisease}} data.
 #'
-#' @source \url{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}
+#' @source \code{https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/costs/}
 #'
 
 "heart.cost"
@@ -688,7 +688,7 @@
 #' Dawson, Robert J. MacG. (1995).
 #' The ‘Unusual Episode’ Data Revisited.
 #' \emph{Journal of Statistics Education}, \emph{3}.
-#' \url{https://doi.org/10.1080/10691898.1995.11910499}.
+#' \doi{10.1080/10691898.1995.11910499}.
 #'
 #' @source \url{https://www.encyclopedia-titanica.org}
 #'
@@ -789,7 +789,7 @@
 #'  P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis (2009).
 #'  Modeling wine preferences by data mining from physicochemical properties.
 #'  \emph{Decision Support Systems}, \emph{47} (4), 547--553.
-#'  \url{https://doi.org/10.1016/j.dss.2009.05.016}
+#'  \doi{10.1016/j.dss.2009.05.016}
 #'
 
 "wine"
