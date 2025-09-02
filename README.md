@@ -1,30 +1,44 @@
 
 <!-- README.md is generated from README.Rmd. Please only edit the .Rmd file! -->
+
 <!-- Title, version and logo: -->
 
-# FFTrees 2.0.0.9000 <img src = "man/figures/logo.png" align = "right" alt = "FFTrees" width = "160" />
+# FFTrees 2.1.0 <img src = "man/figures/logo.png" align = "right" alt = "FFTrees" width = "160" />
 
 <!-- Devel badges start: -->
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
-[![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
-[![Total
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees)
-[![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml)
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+
+<!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color="00a9e0")](https://www.r-pkg.org/pkg/FFTrees) -->
+
+<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color="00a9e0")](https://www.r-pkg.org/pkg/FFTrees) -->
+
+<!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
+
 <!-- Devel badges end. -->
 
 <!-- Release badges start: -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='00a9e0')](https://www.r-pkg.org/pkg/FFTrees) -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees)
+[![Total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=%2200a9e0%22)](https://www.r-pkg.org/pkg/FFTrees)
 <!-- Release badges end. -->
+
 <!-- ALL badges start: -->
+
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
+
 <!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
+
 <!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color=brightgreen)](https://www.r-pkg.org/pkg/FFTrees) -->
+
 <!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color='b22222')](https://www.r-pkg.org/pkg/FFTrees) -->
+
 <!-- ALL badges end. -->
+
 <!-- Pkg goal: -->
 
 The R package **FFTrees** creates, visualizes and evaluates
@@ -46,11 +60,17 @@ requiring less information, FFTs tend to be robust against overfitting,
 and are easy to interpret, use, and communicate.
 
 <!-- Quote (cited in guide.Rmd):   -->
+
 <!-- In the words of @burton2020:  -->
+
 <!-- "human users could interpret, justify, control, and interact with a fast-and-frugal decision aid..."  -->
+
 <!-- [@burton2020. p.\ 229] -->
+
 <!-- Full quote: -->
+
 <!-- These fast-and-frugal trees (Hafenbrädl et al.,2016; Phillips, Neth, Woike, & Gaissmaier, 2017) are especially relevant to the algorithm aversion discussion not only because they allow the human decision maker to dictate the external measures upon which an augmented decision will be judged, but also because they are transparent. This in turn suggests that human users could interpret, justify, control, and interact with a fast-and-frugal decision aid, which touches on virtually all the drivers of algorithm aversion covered in this review.  -->
+
 <!-- Source: [@burton2020. p.\ 229] -->
 
 ## Installation
@@ -93,14 +113,14 @@ and columns of both subsets of the `heartdisease` data:
 
 - `heart.train` (the training / fitting data) describes 150 patients:
 
-| diagnosis | age | sex | cp  | trestbps | chol | fbs | restecg     | thalach | exang | oldpeak | slope |  ca | thal   |
-|:----------|----:|----:|:----|---------:|-----:|----:|:------------|--------:|------:|--------:|:------|----:|:-------|
-| FALSE     |  44 |   0 | np  |      108 |  141 |   0 | normal      |     175 |     0 |     0.6 | flat  |   0 | normal |
-| FALSE     |  51 |   0 | np  |      140 |  308 |   0 | hypertrophy |     142 |     0 |     1.5 | up    |   1 | normal |
-| FALSE     |  52 |   1 | np  |      138 |  223 |   0 | normal      |     169 |     0 |     0.0 | up    |   1 | normal |
-| TRUE      |  48 |   1 | aa  |      110 |  229 |   0 | normal      |     168 |     0 |     1.0 | down  |   0 | rd     |
-| FALSE     |  59 |   1 | aa  |      140 |  221 |   0 | normal      |     164 |     1 |     0.0 | up    |   0 | normal |
-| FALSE     |  58 |   1 | np  |      105 |  240 |   0 | hypertrophy |     154 |     1 |     0.6 | flat  |   0 | rd     |
+| diagnosis | age | sex | cp | trestbps | chol | fbs | restecg | thalach | exang | oldpeak | slope | ca | thal |
+|:---|---:|---:|:---|---:|---:|---:|:---|---:|---:|---:|:---|---:|:---|
+| FALSE | 44 | 0 | np | 108 | 141 | 0 | normal | 175 | 0 | 0.6 | flat | 0 | normal |
+| FALSE | 51 | 0 | np | 140 | 308 | 0 | hypertrophy | 142 | 0 | 1.5 | up | 1 | normal |
+| FALSE | 52 | 1 | np | 138 | 223 | 0 | normal | 169 | 0 | 0.0 | up | 1 | normal |
+| TRUE | 48 | 1 | aa | 110 | 229 | 0 | normal | 168 | 0 | 1.0 | down | 0 | rd |
+| FALSE | 59 | 1 | aa | 140 | 221 | 0 | normal | 164 | 1 | 0.0 | up | 0 | normal |
+| FALSE | 58 | 1 | np | 105 | 240 | 0 | hypertrophy | 154 | 1 | 0.6 | flat | 0 | rd |
 
 **Table 1**: Beginning of the `heart.train` subset (using the data of
 150 patients for fitting/training FFTs).
@@ -108,14 +128,14 @@ and columns of both subsets of the `heartdisease` data:
 - `heart.test` (the testing / prediction data) describes 153 different
   patients on the same variables:
 
-| diagnosis | age | sex | cp  | trestbps | chol | fbs | restecg     | thalach | exang | oldpeak | slope |  ca | thal   |
-|:----------|----:|----:|:----|---------:|-----:|----:|:------------|--------:|------:|--------:|:------|----:|:-------|
-| FALSE     |  51 |   0 | np  |      120 |  295 |   0 | hypertrophy |     157 |     0 |     0.6 | up    |   0 | normal |
-| TRUE      |  45 |   1 | ta  |      110 |  264 |   0 | normal      |     132 |     0 |     1.2 | flat  |   0 | rd     |
-| TRUE      |  53 |   1 | a   |      123 |  282 |   0 | normal      |      95 |     1 |     2.0 | flat  |   2 | rd     |
-| TRUE      |  45 |   1 | a   |      142 |  309 |   0 | hypertrophy |     147 |     1 |     0.0 | flat  |   3 | rd     |
-| FALSE     |  66 |   1 | a   |      120 |  302 |   0 | hypertrophy |     151 |     0 |     0.4 | flat  |   0 | normal |
-| TRUE      |  48 |   1 | a   |      130 |  256 |   1 | hypertrophy |     150 |     1 |     0.0 | up    |   2 | rd     |
+| diagnosis | age | sex | cp | trestbps | chol | fbs | restecg | thalach | exang | oldpeak | slope | ca | thal |
+|:---|---:|---:|:---|---:|---:|---:|:---|---:|---:|---:|:---|---:|:---|
+| FALSE | 51 | 0 | np | 120 | 295 | 0 | hypertrophy | 157 | 0 | 0.6 | up | 0 | normal |
+| TRUE | 45 | 1 | ta | 110 | 264 | 0 | normal | 132 | 0 | 1.2 | flat | 0 | rd |
+| TRUE | 53 | 1 | a | 123 | 282 | 0 | normal | 95 | 1 | 2.0 | flat | 2 | rd |
+| TRUE | 45 | 1 | a | 142 | 309 | 0 | hypertrophy | 147 | 1 | 0.0 | flat | 3 | rd |
+| FALSE | 66 | 1 | a | 120 | 302 | 0 | hypertrophy | 151 | 0 | 0.4 | flat | 0 | normal |
+| TRUE | 48 | 1 | a | 130 | 256 | 1 | hypertrophy | 150 | 1 | 0.0 | up | 2 | rd |
 
 **Table 2**: Beginning of the `heart.test` subset (used to predict
 `diagnosis` for 153 new patients).
@@ -248,12 +268,12 @@ package enables us to design and evaluate a range of FFTs.
 The following versions of **FFTrees** and corresponding resources are
 available:
 
-| Type:                       | Version:                                                                          | URL:                                                |
-|:----------------------------|:----------------------------------------------------------------------------------|:----------------------------------------------------|
-| A. **FFTrees** (R package): | [Release version](https://CRAN.R-project.org/package=FFTrees)                     | <https://CRAN.R-project.org/package=FFTrees>        |
-|                             | [Development version](https://github.com/ndphillips/FFTrees)                      | <https://github.com/ndphillips/FFTrees>             |
-| B. Other resources:         | [Online documentation](https://ndphillips.github.io/FFTrees/)                     | <https://ndphillips.github.io/FFTrees/>             |
-|                             | [Online demo](https://econpsychbasel.shinyapps.io/shinyfftrees/) (running v1.3.3) | <https://econpsychbasel.shinyapps.io/shinyfftrees/> |
+| Type: | Version: | URL: |
+|:---|:---|:---|
+| A. **FFTrees** (R package): | [Release version](https://CRAN.R-project.org/package=FFTrees) | <https://CRAN.R-project.org/package=FFTrees> |
+|   | [Development version](https://github.com/ndphillips/FFTrees) | <https://github.com/ndphillips/FFTrees> |
+| B. Other resources: | [Online documentation](https://ndphillips.github.io/FFTrees/) | <https://ndphillips.github.io/FFTrees/> |
+|   | [Online demo](https://econpsychbasel.shinyapps.io/shinyfftrees/) (running v1.3.3) | <https://econpsychbasel.shinyapps.io/shinyfftrees/> |
 
 <!-- Citation and references: -->
 
@@ -324,6 +344,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2024-05-23.\]
+\[File `README.Rmd` last updated on 2025-09-02.\]
 
 <!-- eof. -->
