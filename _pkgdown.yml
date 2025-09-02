@@ -1,15 +1,15 @@
-## _pkgdown.yml FFTrees | 2024 05 21
+## _pkgdown.yml FFTrees | 2025 09 02
 ## ---------------------------------
 
-url: https://ndphillips.github.io/FFTrees/
+url: https://www.nathanieldphillips.co/FFTrees/
 
 development:
-  mode: devel # devel OR release
+  mode: release # devel OR release
 
 template:
   bootstrap: 5
-  # bootswatch: litera # release
-  bootswatch: spacelab # devel
+  bootswatch: litera # release
+  # bootswatch: spacelab # devel
 
 toc:
   depth: 3
