@@ -1,198 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FFTrees_accuracy_statistics.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FFTrees_examples.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FFTrees_function.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FFTrees_heart.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FFTrees_mytree.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FFTrees_plot.html</loc>
-  </url>
-  <url>
-    <loc>/articles/guide.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FFTrees-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FFTrees.guide.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FFTrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_fft_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_nodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/blood.html</loc>
-  </url>
-  <url>
-    <loc>/reference/breastcancer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/car.html</loc>
-  </url>
-  <url>
-    <loc>/reference/classtable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/contraceptive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/creditapproval.html</loc>
-  </url>
-  <url>
-    <loc>/reference/describe_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/drop_nodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/edit_nodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fact_clean.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fertility.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_apply.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_create.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_cuerank.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_define.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_ffttowords.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_grow_fan.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_ranktrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_threshold_factor_grid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_threshold_numeric_grid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fftrees_wordstofftrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/flip_exits.html</loc>
-  </url>
-  <url>
-    <loc>/reference/forestfires.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_best_tree.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_exit_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_fft_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heart.cost.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heart.test.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heart.train.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heartdisease.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/inwords.html</loc>
-  </url>
-  <url>
-    <loc>/reference/iris.v.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mushrooms.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.FFTrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/predict.FFTrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.FFTrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_fft_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reorder_nodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/select_nodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/showcues.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sonar.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summary.FFTrees.html</loc>
-  </url>
-  <url>
-    <loc>/reference/titanic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/voting.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_fft_df.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/404.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/FFTrees_accuracy_statistics.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/FFTrees_examples.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/FFTrees_function.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/FFTrees_heart.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/FFTrees_mytree.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/FFTrees_plot.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/guide.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/articles/index.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/authors.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/index.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/news/index.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/FFTrees-package.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/FFTrees.guide.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/FFTrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/add_fft_df.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/add_nodes.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/add_stats.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/blood.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/breastcancer.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/car.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/classtable.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/contraceptive.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/creditapproval.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/describe_data.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/drop_nodes.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/edit_nodes.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fact_clean.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fertility.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_apply.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_create.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_cuerank.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_define.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_ffttowords.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_grow_fan.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_ranktrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_threshold_factor_grid.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_threshold_numeric_grid.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/fftrees_wordstofftrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/flip_exits.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/forestfires.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/get_best_tree.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/get_exit_type.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/get_fft_df.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/heart.cost.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/heart.test.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/heart.train.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/heartdisease.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/index.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/inwords.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/iris.v.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/mushrooms.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/plot.FFTrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/predict.FFTrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/print.FFTrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/read_fft_df.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/reorder_nodes.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/select_nodes.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/showcues.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/sonar.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/summary.FFTrees.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/titanic.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/voting.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/wine.html</loc></url>
+<url><loc>https://www.nathanieldphillips.co/FFTrees/reference/write_fft_df.html</loc></url>
 </urlset>
+
