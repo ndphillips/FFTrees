@@ -1,12 +1,14 @@
-# FFTrees 2.0.0.9000 
+# FFTrees 2.1.0
 
-This is the current development version of **FFTrees**, available at <https://github.com/ndphillips/FFTrees>. 
+**FFTrees** version 2.1.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2025-09-03]. 
+This version reduces non-essential functionality, increases robustness, and fixes some bugs. 
 
 
-## Breaking Changes
+## Breaking changes
 
 - Deprecated all applications of non-FFT competitive algorithms (i.e., LR, SVM, RF) in FFT creation. 
-From now on, consider using other packages such as **parsnip** or **tidymodels** to create and evaluate these models.
+From now on, consider using dedicated packages (such as **parsnip** or **tidymodels**) to create and evaluate these models.
+
 
 ## Major changes
 
@@ -19,7 +21,7 @@ Plotting:
 
 - `plot.FFTrees()` now labels row of 2x2 confusion matrix as "Prediction" when using "test" data. 
 - `plot.FFTrees()` now has a `truth.labels` argument which, if set, distinguishes labels of true (signal vs. noise) cases from decision outcomes. 
-- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a grayscale plot. 
+- `plot.FFTrees()` now has a `grayscale` argument which, if TRUE, creates a gray scale plot. 
 
 <!-- Costs: --> 
 
@@ -30,9 +32,14 @@ Decision costs:
 
 ## Details
 
-- Fix bug for missing plot title. 
+- Fixed bug for missing plot title. 
 - Added `@aliases FFTrees-package` to documentation of main `FFTrees()` function.
 - Removed redundant `data_old` folder. 
+
+
+<!-- Development version: --> 
+
+The current development version of **FFTrees** is available at <https://github.com/ndphillips/FFTrees>. 
 
 
 <!-- Older versions: --> 
@@ -507,6 +514,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2024-09-04.]
+[File `NEWS.md` last updated on 2025-09-02.]
 
 <!-- eof. -->

@@ -39,7 +39,8 @@ This tutorial on using the **FFTrees** package follows the examples presented in
 
 - Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). 
 FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. 
-_Judgment and Decision Making_, _12_ (4), 344–368.
+_Judgment and Decision Making_, _12_ (4), 344–368. 
+<https://doi.org/10.1017/S1930297500006239>
 
 In the following, we explain how to use **FFTrees** to create, evaluate and visualize FFTs in four simple steps. 
 
