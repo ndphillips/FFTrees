@@ -32,7 +32,7 @@ the same data (in a 4-dimensional \code{table}).
 Dawson, Robert J. MacG. (1995).
 The ‘Unusual Episode’ Data Revisited.
 \emph{Journal of Statistics Education}, \emph{3}.
-\url{https://doi.org/10.1080/10691898.1995.11910499}.
+\doi{10.1080/10691898.1995.11910499}.
 }
 \seealso{
 Other datasets: 

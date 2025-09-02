@@ -13,7 +13,7 @@ Create, visualize, and test fast-and-frugal decision trees (FFTs) using the algo
 Useful links:
 \itemize{
   \item \url{https://CRAN.R-project.org/package=FFTrees}
-  \item \url{https://ndphillips.github.io/FFTrees/}
+  \item \url{https://www.nathanieldphillips.co/FFTrees/}
   \item Report bugs at \url{https://github.com/ndphillips/FFTrees/issues}
 }
 
