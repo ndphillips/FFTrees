@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Nathaniel
 Phillips and Hansjörg Neth</h4>
             
-            <h4 data-toc-skip class="date">2025-09-02</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_accuracy_statistics.Rmd" class="external-link"><code>vignettes/FFTrees_accuracy_statistics.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_accuracy_statistics.Rmd</code></div>
@@ -100,7 +100,7 @@ the best training tree:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">heart.fft</span>, tree <span class="op">=</span> <span class="st">"best.train"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_accuracy_statistics_files/figure-html/fft-plot-1-1.png" alt="**Figure 1**: Example FFT for the `heartdisease` data." width="580px"><p class="caption">
+<img src="FFTrees_accuracy_statistics_files/figure-html/fft-plot-1-1.png" class="r-plt" alt="**Figure 1**: Example FFT for the `heartdisease` data." width="580px"><p class="caption">
 <strong>Figure 1</strong>: Example FFT for the <code>heartdisease</code>
 data.
 </p>
@@ -112,7 +112,7 @@ a <em>2 x 2 matrix</em> or <em>confusion table</em> (see <a href="https://en.w
 from this seemingly simple matrix. Here is a generic version of a
 confusion table:</p>
 <div class="figure" style="text-align: center">
-<img src="confusiontable.jpg" alt="**Figure 2**: A 2x2 matrix illustrating the frequency counts of 4 possible outcomes." width="50%"><p class="caption">
+<img src="confusiontable.jpg" class="r-plt" alt="**Figure 2**: A 2x2 matrix illustrating the frequency counts of 4 possible outcomes." width="50%"><p class="caption">
 <strong>Figure 2</strong>: A 2x2 matrix illustrating the frequency
 counts of 4 possible outcomes.
 </p>
@@ -152,22 +152,22 @@ those in cells <em>fa</em> and <em>mi</em>.</p>
 <tr class="odd">
 <td align="left"><code>hi</code></td>
 <td align="left">Number of hits</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 1)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 1)</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>mi</code></td>
 <td align="left">Number of misses</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 1)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 1)</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>fa</code></td>
 <td align="left">Number of false-alarms</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 0)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 0)</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>cr</code></td>
 <td align="left">Number of correct rejections</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 0)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 0)</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>N</code></td>
@@ -178,7 +178,7 @@ those in cells <em>fa</em> and <em>mi</em>.</p>
 </table>
 <p><strong>Table 1</strong>: Definitions of the frequency counts in a
 2x2 confusion table. The notation
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N()</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N()</annotation></semantics></math>
 means number of cases (or frequency counts).</p>
 <div class="section level3">
 <h3 id="conditional-accuracy-statistics">Conditional accuracy statistics<a class="anchor" aria-label="anchor" href="#conditional-accuracy-statistics"></a>
@@ -206,12 +206,12 @@ or columns of the confusion table:</p>
 <tr class="odd">
 <td align="left"><code>sens</code></td>
 <td align="left">Sensitivity</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mtext mathvariant="normal">hi</mtext><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">mi</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\text{Decision} = 1 \ \vert\ \text{Truth} = 1) = \text{hi} / (\text{hi} + \text{mi})</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mtext mathvariant="normal">hi</mtext><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">mi</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\text{Decision} = 1 \ \vert\ \text{Truth} = 1) = \text{hi} / (\text{hi} + \text{mi})</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>spec</code></td>
 <td align="left">Specificity</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mtext mathvariant="normal">cr</mtext><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">cr</mtext><mo>+</mo><mtext mathvariant="normal">fa</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\text{Decision} = 0 \ \vert\ \text{Truth} = 0) = \text{cr} / (\text{cr} + \text{fa})</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mtext mathvariant="normal">cr</mtext><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">cr</mtext><mo>+</mo><mtext mathvariant="normal">fa</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\text{Decision} = 0 \ \vert\ \text{Truth} = 0) = \text{cr} / (\text{cr} + \text{fa})</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>far</code></td>
@@ -223,24 +223,24 @@ or columns of the confusion table:</p>
 <tr class="even">
 <td align="left"><code>ppv</code></td>
 <td align="left">Positive predictive value</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mtext mathvariant="normal">hi</mtext><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">fa</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\text{Truth} = 1 \ \vert\ \text{Decision} = 1) = \text{hi} / (\text{hi} + \text{fa})</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mtext mathvariant="normal">hi</mtext><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">fa</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\text{Truth} = 1 \ \vert\ \text{Decision} = 1) = \text{hi} / (\text{hi} + \text{fa})</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>npv</code></td>
 <td align="left">Negative predictive value</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mtext mathvariant="normal">cr</mtext><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">cr</mtext><mo>+</mo><mtext mathvariant="normal">mi</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\text{Truth} = 0 \ \vert\ \text{Decision} = 0) = \text{cr} / (\text{cr} + \text{mi})</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="postfix">|</mo><mspace width="0.222em"></mspace><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mtext mathvariant="normal">cr</mtext><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">cr</mtext><mo>+</mo><mtext mathvariant="normal">mi</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\text{Truth} = 0 \ \vert\ \text{Decision} = 0) = \text{cr} / (\text{cr} + \text{mi})</annotation></semantics></math></td>
 </tr>
 </tbody>
 </table>
 <p><strong>Table 2</strong>: Conditional accuracy statistics based on
 either the rows or columns of a 2x2 confusion table.</p>
 <p>The <em>sensitivity</em> (aka. <em>hit-rate</em>) is defined as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>e</mi><mi>n</mi><mi>s</mi><mo>=</mo><mi>h</mi><mi>i</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>h</mi><mi>i</mi><mo>+</mo><mi>m</mi><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">sens = hi/(hi + mi)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>e</mi><mi>n</mi><mi>s</mi><mo>=</mo><mi>h</mi><mi>i</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mi>i</mi><mo>+</mo><mi>m</mi><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">sens = hi/(hi + mi)</annotation></semantics></math>
 and represents the percentage of cases with positive criterion values
 that were correctly predicted by the algorithm. Similarly,
 <em>specificity</em> (aka. <em>correct rejection rate</em>, or the
 complement of the <em>false alarm rate</em>) is defined as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi><mo>=</mo><mi>c</mi><mi>r</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>a</mi><mo>+</mo><mi>c</mi><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">spec = cr/(fa + cr)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi><mo>=</mo><mi>c</mi><mi>r</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mi>a</mi><mo>+</mo><mi>c</mi><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">spec = cr/(fa + cr)</annotation></semantics></math>
 and represents the percentage of cases with negative criterion values
 correctly predicted by the algorithm.</p>
 <p>The <em>positive-predictive
@@ -274,7 +274,7 @@ confusion table:</p>
 <tr class="odd">
 <td align="left"><code>acc</code></td>
 <td align="left">Accuracy</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">cr</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">mi</mtext><mo>+</mo><mtext mathvariant="normal">fa</mtext><mo>+</mo><mtext mathvariant="normal">cr</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">(\text{hi} + \text{cr}) / (\text{hi} + \text{mi} + \text{fa} + \text{cr})</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">cr</mtext><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">hi</mtext><mo>+</mo><mtext mathvariant="normal">mi</mtext><mo>+</mo><mtext mathvariant="normal">fa</mtext><mo>+</mo><mtext mathvariant="normal">cr</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\text{hi} + \text{cr}) / (\text{hi} + \text{mi} + \text{fa} + \text{cr})</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>bacc</code></td>
@@ -284,7 +284,7 @@ confusion table:</p>
 <tr class="odd">
 <td align="left"><code>wacc</code></td>
 <td align="left">Weighted accuracy</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">sens</mtext><mo>×</mo><mi>w</mi><mo>+</mo><mtext mathvariant="normal">spec</mtext><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{sens} \times w + \text{spec} \times (1 - w)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">sens</mtext><mo>×</mo><mi>w</mi><mo>+</mo><mtext mathvariant="normal">spec</mtext><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>w</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\text{sens} \times w + \text{spec} \times (1 - w)</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>bpv</code></td>
@@ -345,7 +345,7 @@ making classifications, averaged across all cases</td>
 <td align="left"><code>pci</code></td>
 <td align="left">Percentage of cues ignored: Percentage of cues ignored
 when classifying cases</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">cues in data</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mtext mathvariant="normal">mcu</mtext></mrow><annotation encoding="application/x-tex">N(\text{cues in data}) - \text{mcu}</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">cues in data</mtext><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mtext mathvariant="normal">mcu</mtext></mrow><annotation encoding="application/x-tex">N(\text{cues in data}) - \text{mcu}</annotation></semantics></math></td>
 </tr>
 </tbody>
 </table>
@@ -539,7 +539,7 @@ Decision Making</em>, <em>12</em>(4), 344–368. <a href="https://doi.org/10.101
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

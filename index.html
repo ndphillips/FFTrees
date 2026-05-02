@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,17 +66,15 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="fftrees-210-">FFTrees 2.1.0 <a class="anchor" aria-label="anchor" href="#fftrees-210-"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="fftrees-2109001-">FFTrees 2.1.0.9001 <a class="anchor" aria-label="anchor" href="#fftrees-2109001-"></a>
 </h1>
 </div>
 <!-- Devel badges start: -->
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
-<!-- [![Downloads/month](https://cranlogs.r-pkg.org/badges/FFTrees?color="00a9e0")](https://www.r-pkg.org/pkg/FFTrees) -->
-<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color="00a9e0")](https://www.r-pkg.org/pkg/FFTrees) -->
-<!-- [![R-CMD-check](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml) -->
-<!-- Devel badges end. -->
+<p><a href="https://CRAN.R-project.org/package=FFTrees" class="external-link"><img src="https://www.r-pkg.org/badges/version/FFTrees" alt="CRAN status"></a> <a href="https://www.r-pkg.org/pkg/FFTrees" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/FFTrees?color=%2200a9e0%22" alt="Downloads/month"></a> <a href="https://www.r-pkg.org/pkg/FFTrees" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=%2200a9e0%22" alt="Total downloads"></a> <a href="https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ndphillips/FFTrees/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- Devel badges end. --></p>
 <!-- Release badges start: -->
-<p><a href="https://CRAN.R-project.org/package=FFTrees" class="external-link"><img src="https://www.r-pkg.org/badges/version/FFTrees" alt="CRAN status"></a> <a href="https://www.r-pkg.org/pkg/FFTrees" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color=%2200a9e0%22" alt="Total downloads"></a> <!-- Release badges end. --></p>
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
+<!-- [![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/FFTrees?color="00a9e0")](https://www.r-pkg.org/pkg/FFTrees) -->
+<!-- Release badges end. -->
 <!-- ALL badges start: -->
 <!-- [![CRAN status](https://www.r-pkg.org/badges/version/FFTrees)](https://CRAN.R-project.org/package=FFTrees) -->
 <!-- [![Build Status](https://travis-ci.org/ndphillips/FFTrees.svg?branch=master)](https://travis-ci.org/ndphillips/FFTrees) -->
@@ -116,9 +114,32 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://CRAN.R-project.org/package=FFTrees" class="external-link">FFTrees</a></span><span class="op">)</span>  <span class="co"># load package</span></span></code></pre></div>
 <div class="section level3">
+<h3 id="questions-answered-by-ffts">Questions answered by FFTs<a class="anchor" aria-label="anchor" href="#questions-answered-by-ffts"></a>
+</h3>
+<!-- 0. FFTs provide binary predictions: -->
+<p>A <em>fast-and-frugal tree</em> (FFT) provides answers to binary prediction problems like:</p>
+<ul>
+<li>Which of 2 categories should we predict for each individual case in the data?</li>
+<li>How successful is this prediction process for a sample of cases?</li>
+</ul>
+<!-- 1. Creating FFTs: --><p>To <em>create</em> FFTs, we must answer 2 key questions:</p>
+<ul>
+<li>Which variables should we use to predict the criterion?</li>
+<li>How should we combine those predictor variables into FFTs?</li>
+</ul>
+<!-- 2. Measuring performance of FFTs: --><p>Once we have created FFTs, questions regarding their <em>performance</em> include:</p>
+<ul>
+<li>How accurate are the predictions of a specific FFT?</li>
+<li>How costly are the predictions of each algorithm?</li>
+</ul>
+<p>Answering these performance-related questions requires applying FFTs to data.</p>
+<!-- The FFTrees package: -->
+<p>The <strong>FFTrees</strong> package answers these questions by creating, evaluating, and visualizing FFTs.</p>
+</div>
+<div class="section level3">
 <h3 id="using-data">Using data<a class="anchor" aria-label="anchor" href="#using-data"></a>
 </h3>
-<p>The <code>heartdisease</code> data provides medical information for 303 patients that were examined for heart disease. The full data contains a binary criterion variable describing the true state of each patient and were split into two subsets: A <code>heart.train</code> set for fitting decision trees, and <code>heart.test</code> set for a testing these trees. Here are the first rows and columns of both subsets of the <code>heartdisease</code> data:</p>
+<p>Any prediction problem requires some data that contains some predictors and a criterion variable. The <code>heartdisease</code> data provides medical information for 303 patients that were examined for heart disease. The full data contains a binary criterion variable describing the true state of each patient and were split into two subsets: A <code>heart.train</code> set for fitting decision trees, and <code>heart.test</code> set for a testing these trees. Here are the first rows and columns of both subsets of the <code>heartdisease</code> data:</p>
 <ul>
 <li>
 <code>heart.train</code> (the training / fitting data) describes 150 patients:</li>
@@ -140,7 +161,7 @@
 <col width="7%">
 <col width="7%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">diagnosis</th>
 <th align="right">age</th>
 <th align="right">sex</th>
@@ -157,7 +178,7 @@
 <th align="left">thal</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">44</td>
 <td align="right">0</td>
@@ -173,7 +194,7 @@
 <td align="right">0</td>
 <td align="left">normal</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">51</td>
 <td align="right">0</td>
@@ -189,7 +210,7 @@
 <td align="right">1</td>
 <td align="left">normal</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">52</td>
 <td align="right">1</td>
@@ -205,7 +226,7 @@
 <td align="right">1</td>
 <td align="left">normal</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">TRUE</td>
 <td align="right">48</td>
 <td align="right">1</td>
@@ -221,7 +242,7 @@
 <td align="right">0</td>
 <td align="left">rd</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">59</td>
 <td align="right">1</td>
@@ -237,7 +258,7 @@
 <td align="right">0</td>
 <td align="left">normal</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">58</td>
 <td align="right">1</td>
@@ -277,7 +298,7 @@
 <col width="7%">
 <col width="7%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">diagnosis</th>
 <th align="right">age</th>
 <th align="right">sex</th>
@@ -294,7 +315,7 @@
 <th align="left">thal</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">51</td>
 <td align="right">0</td>
@@ -310,7 +331,7 @@
 <td align="right">0</td>
 <td align="left">normal</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">TRUE</td>
 <td align="right">45</td>
 <td align="right">1</td>
@@ -326,7 +347,7 @@
 <td align="right">0</td>
 <td align="left">rd</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">TRUE</td>
 <td align="right">53</td>
 <td align="right">1</td>
@@ -342,7 +363,7 @@
 <td align="right">2</td>
 <td align="left">rd</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">TRUE</td>
 <td align="right">45</td>
 <td align="right">1</td>
@@ -358,7 +379,7 @@
 <td align="right">3</td>
 <td align="left">rd</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">FALSE</td>
 <td align="right">66</td>
 <td align="right">1</td>
@@ -374,7 +395,7 @@
 <td align="right">0</td>
 <td align="left">normal</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">TRUE</td>
 <td align="right">48</td>
 <td align="right">1</td>
@@ -394,21 +415,6 @@
 </table>
 <p><strong>Table 2</strong>: Beginning of the <code>heart.test</code> subset (used to predict <code>diagnosis</code> for 153 new patients).</p>
 <p>Our challenge is to predict each patient’s <code>diagnosis</code> — a column of logical values indicating the true state of each patient (i.e., <code>TRUE</code> or <code>FALSE</code>, based on the patient suffering or not suffering from heart disease) — from the values of potential predictors.</p>
-</div>
-<div class="section level3">
-<h3 id="questions-answered-by-ffts">Questions answered by FFTs<a class="anchor" aria-label="anchor" href="#questions-answered-by-ffts"></a>
-</h3>
-<p>To solve binary classification problems by FFTs, we must answer two key questions:</p>
-<ul>
-<li>Which of the variables should we use to predict the criterion?</li>
-<li>How should we use and combine predictor variables into FFTs?</li>
-</ul>
-<p>Once we have created some FFTs, additional questions include:</p>
-<ul>
-<li>How accurate are the predictions of a specific FFT?</li>
-<li>How costly are the predictions of each algorithm?</li>
-</ul>
-<p>The <strong>FFTrees</strong> package answers these questions by creating, evaluating, and visualizing FFTs.</p>
 </div>
 <div class="section level3">
 <h3 id="creating-fast-and-frugal-trees-ffts">Creating fast-and-frugal trees (FFTs)<a class="anchor" aria-label="anchor" href="#creating-fast-and-frugal-trees-ffts"></a>
@@ -433,7 +439,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">heart_fft</span>,</span>
 <span>     data <span class="op">=</span> <span class="st">"test"</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Heart Disease"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-example-heart-plot-1.png" width="650" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/README-example-heart-plot-1.png" alt="" width="650" style="display: block; margin: auto;"></p>
 <p><strong>Figure 1</strong>: A fast-and-frugal tree (FFT) predicting heart disease for <code>test</code> data and its performance characteristics.</p>
 <ul>
 <li>A summary of the trees in our <code>FFTrees</code> object and their key performance statistics can be obtained by <code>summary(heart_fft)</code>.</li>
@@ -469,7 +475,7 @@ otherwise, predict <em>Disease</em>.</li>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">my_fft</span>,</span>
 <span>     data <span class="op">=</span> <span class="st">"test"</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"My custom FFT"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-example-heart-verbal-1.png" width="650" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/README-example-heart-verbal-1.png" alt="" width="650" style="display: block; margin: auto;"></p>
 <p><strong>Figure 2</strong>: An FFT predicting heart disease created from a verbal description.</p>
 <p>The performance measures (in the bottom panel of <strong>Figure 2</strong>) show that this particular tree is somewhat biased: It has nearly perfect <em>sensitivity</em> (i.e., is good at identifying cases of <em>Disease</em>) but suffers from low <em>specificity</em> (i.e., performs poorly in identifying <em>Healthy</em> cases). Expressed in terms of its errors, <code>my_fft</code> incurs few misses at the expense of many false alarms. Although the <em>accuracy</em> of our custom tree still exceeds the data’s baseline by a fair amount, the FFTs in <code>heart_fft</code> (created above) strike a better balance.</p>
 <!-- A range of options, rather than 1 optimum: -->
@@ -487,28 +493,28 @@ otherwise, predict <em>Disease</em>.</li>
 <col width="33%">
 <col width="33%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Type:</th>
 <th align="left">Version:</th>
 <th align="left">URL:</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">A. <strong>FFTrees</strong> (R package):</td>
 <td align="left"><a href="https://CRAN.R-project.org/package=FFTrees" class="external-link">Release version</a></td>
 <td align="left"><a href="https://CRAN.R-project.org/package=FFTrees" class="external-link uri">https://CRAN.R-project.org/package=FFTrees</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"> </td>
 <td align="left"><a href="https://github.com/ndphillips/FFTrees" class="external-link">Development version</a></td>
 <td align="left"><a href="https://github.com/ndphillips/FFTrees" class="external-link uri">https://github.com/ndphillips/FFTrees</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">B. Other resources:</td>
 <td align="left"><a href="https://www.nathanieldphillips.co/FFTrees/">Online documentation</a></td>
 <td align="left"><a href="https://www.nathanieldphillips.co/FFTrees/" class="uri">https://www.nathanieldphillips.co/FFTrees/</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"> </td>
 <td align="left">
 <a href="https://econpsychbasel.shinyapps.io/shinyfftrees/" class="external-link">Online demo</a> (running v1.3.3)</td>
@@ -529,7 +535,7 @@ otherwise, predict <em>Disease</em>.</li>
 </ul>
 <p>We encourage you to read the article to learn more about the history of FFTs and how the <strong>FFTrees</strong> package creates, visualizes, and evaluates them. When using <strong>FFTrees</strong> in your own work, please cite us and share your experiences (e.g., <a href="https://github.com/ndphillips/FFTrees/issues" class="external-link">on GitHub</a>) so we can continue developing the package.</p>
 <!-- Examples uses/publications (with links): -->
-<p>By 2025, over 150 scientific publications have used or cited <strong>FFTrees</strong> (see <a href="https://scholar.google.com/scholar?oi=bibs&amp;hl=en&amp;cites=205528310591558601" class="external-link">Google Scholar</a> for the full list). Examples include:</p>
+<p>By 2026, over 160 scientific publications have used or cited <strong>FFTrees</strong> (see <a href="https://scholar.google.com/scholar?oi=bibs&amp;hl=en&amp;cites=205528310591558601" class="external-link">Google Scholar</a> for the full list). Examples include:</p>
 <ul>
 <li><p>Lötsch, J., Haehner, A., &amp; Hummel, T. (2020). Machine-learning-derived rules set excludes risk of Parkinson’s disease in patients with olfactory or gustatory symptoms with high accuracy. <em>Journal of Neurology</em>, <em>267</em>(2), 469–478. doi <a href="https://doi.org/10.1007/s00415-019-09604-6" class="external-link">10.1007/s00415-019-09604-6</a></p></li>
 <li><p>Kagan, R., Parlee, L., Beckett, B., Hayden, J. B., Gundle, K. R., &amp; Doung, Y. C. (2020). Radiographic parameter-driven decision tree reliably predicts aseptic mechanical failure of compressive osseointegration fixation. <em>Acta Orthopaedica</em>, <em>91</em>(2), 171–176. doi <a href="https://doi.org/10.1080/17453674.2020.1716295" class="external-link">10.1080/17453674.2020.1716295</a></p></li>
@@ -538,7 +544,7 @@ otherwise, predict <em>Disease</em>.</li>
 <li><p>Buchinsky, F. J., Valentino, W. L., Ruszkay, N., Powell, E., Derkay, C. S., Seedat, R. Y., … &amp; Mortelliti, A. J. (2019). Age at diagnosis, but not HPV type, is strongly associated with clinical course in recurrent respiratory papillomatosis. <em>PloS One</em>, <em>14</em>(6). doi <a href="https://doi.org/10.1371/journal.pone.0216697" class="external-link">10.1371/journal.pone.0216697</a></p></li>
 </ul>
 <!-- footer: --><hr>
-<p>[File <code>README.Rmd</code> last updated on 2025-09-03.]</p>
+<p>[File <code>README.Rmd</code> last updated on 2026-05-02.]</p>
 <!-- eof. -->
 </div>
 </div>
@@ -587,7 +593,7 @@ otherwise, predict <em>Disease</em>.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

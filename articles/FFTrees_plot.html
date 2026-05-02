@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Nathaniel
 Phillips and Hansjörg Neth</h4>
             
-            <h4 data-toc-skip class="date">2025-09-02</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_plot.Rmd" class="external-link"><code>vignettes/FFTrees_plot.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_plot.Rmd</code></div>
@@ -120,7 +120,7 @@ package).</p>
 <div class="section level3">
 <h3 id="the-titanic-data">The Titanic data<a class="anchor" aria-label="anchor" href="#the-titanic-data"></a>
 </h3>
-<p><img src="titanic.jpg" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="titanic.jpg" class="r-plt" alt="" width="50%" style="display: block; margin: auto;"></p>
 <p>The <code>titanic</code> dataset contains basic survival statistics
 of <em>Titanic</em> passengers. For each passenger, we know in which
 class s/he traveled, as well as binary categories specifying age, sex,
@@ -255,7 +255,7 @@ predicting survival:</p>
 <span><span class="co"><span style="color: #585858;">#&gt; </span><span style="color: #767676;">— Cue accuracies ranked by bacc</span></span></span>
 <span><span class="co"><span style="color: #767676;">#&gt; </span></span></span></code></pre>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-cues-1.png" alt="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset." width="500px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-cues-1.png" class="r-plt" alt="**Figure 1**: Cue accuracies of FFTs predicting survival in the `titanic` dataset." width="500px"><p class="caption">
 <strong>Figure 1</strong>: Cue accuracies of FFTs predicting survival in
 the <code>titanic</code> dataset.
 </p>
@@ -283,7 +283,7 @@ best one, given our current goal):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">titanic.fft</span>, tree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-plot-1.png" alt="**Figure 2**: Plotting the best FFT of an `FFTrees` object." width="75%"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-plot-1.png" class="r-plt" alt="**Figure 2**: Plotting the best FFT of an `FFTrees` object." width="75%"><p class="caption">
 <strong>Figure 2</strong>: Plotting the best FFT of an
 <code>FFTrees</code> object.
 </p>
@@ -380,7 +380,7 @@ plots:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">titanic.fft</span>, what <span class="op">=</span> <span class="st">"icontree"</span>, </span>
 <span>     n.per.icon <span class="op">=</span> <span class="fl">50</span>, show.iconguide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-what-tree-1.png" alt="**Figure 3**: An FFT diagram with icon arrays on exit nodes." width="550px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-what-tree-1.png" class="r-plt" alt="**Figure 3**: An FFT diagram with icon arrays on exit nodes." width="550px"><p class="caption">
 <strong>Figure 3</strong>: An FFT diagram with icon arrays on exit
 nodes.
 </p>
@@ -390,7 +390,7 @@ nodes.
 <code class="sourceCode R"><span><span class="co"># Plot only the performance comparison in ROC space:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">titanic.fft</span>, what <span class="op">=</span> <span class="st">"roc"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-what-roc-1.png" alt="**Figure 4**: Performance comparison of FFTs in ROC space." width="550px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-what-roc-1.png" class="r-plt" alt="**Figure 4**: Performance comparison of FFTs in ROC space." width="550px"><p class="caption">
 <strong>Figure 4</strong>: Performance comparison of FFTs in ROC space.
 </p>
 </div>
@@ -411,7 +411,7 @@ For example:</li>
 <span>     show.header <span class="op">=</span> <span class="cn">FALSE</span>     <span class="co"># hide header</span></span>
 <span>     <span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-args-1.png" alt="**Figure 5**: Plotting selected elements." width="550px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-args-1.png" class="r-plt" alt="**Figure 5**: Plotting selected elements." width="550px"><p class="caption">
 <strong>Figure 5</strong>: Plotting selected elements.
 </p>
 </div>
@@ -496,7 +496,7 @@ data:</p>
 <code class="sourceCode R"><span><span class="co"># print(titanic.pred.fft, tree = 1)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">titanic.pred.fft</span>, tree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-train-1.png" alt="**Figure 6**: Plotting the best FFT on _training_ data." width="580px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-train-1.png" class="r-plt" alt="**Figure 6**: Plotting the best FFT on _training_ data." width="580px"><p class="caption">
 <strong>Figure 6</strong>: Plotting the best FFT on <em>training</em>
 data.
 </p>
@@ -514,7 +514,7 @@ CART performed even worse than Tree #1.</p>
 <code class="sourceCode R"><span><span class="co"># print(titanic.pred.fft, data = "test", tree = 1)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">titanic.pred.fft</span>, data <span class="op">=</span> <span class="st">"test"</span>, tree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-test-1.png" alt="**Figure 7**: Plotting the best FFT on _test_ data." width="580px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-test-1.png" class="r-plt" alt="**Figure 7**: Plotting the best FFT on _test_ data." width="580px"><p class="caption">
 <strong>Figure 7</strong>: Plotting the best FFT on <em>test</em> data.
 </p>
 </div>
@@ -529,7 +529,7 @@ liberal tree (i.e., with the highest sensitivity):</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">titanic.pred.fft</span>, data <span class="op">=</span> <span class="st">"test"</span>, tree <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_plot_files/figure-html/titanic-viz-2-1.png" alt="**Figure 8**: Plotting Tree #2." width="580px"><p class="caption">
+<img src="FFTrees_plot_files/figure-html/titanic-viz-2-1.png" class="r-plt" alt="**Figure 8**: Plotting Tree #2." width="580px"><p class="caption">
 <strong>Figure 8</strong>: Plotting Tree #2.
 </p>
 </div>
@@ -625,7 +625,7 @@ the package</td>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

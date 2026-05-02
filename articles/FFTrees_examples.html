@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Nathaniel
 Phillips and Hansjörg Neth</h4>
             
-            <h4 data-toc-skip class="date">2025-09-02</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_examples.Rmd" class="external-link"><code>vignettes/FFTrees_examples.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_examples.Rmd</code></div>
@@ -88,7 +88,7 @@ comparison across 10 real-world datasets.)</span></p>
 <div class="section level3">
 <h3 id="mushrooms-data">Mushrooms data<a class="anchor" aria-label="anchor" href="#mushrooms-data"></a>
 </h3>
-<p><img src="mushrooms.jpg" width="225px" style="display: block; margin: auto;"></p>
+<p><img src="mushrooms.jpg" class="r-plt" alt="" width="225px" style="display: block; margin: auto;"></p>
 <p>The <code>mushrooms</code> dataset contains data about mushrooms (see
 <code><a href="../reference/mushrooms.html">?mushrooms</a></code> for details). The goal of our model is to
 predict which mushrooms are <code>poisonous</code> based on 22 cues
@@ -284,7 +284,7 @@ set:</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #585858;">Plotting cue training statistics:</span></span></span>
 <span><span class="co"><span style="color: #585858;">#&gt; </span><span style="color: #767676;">— Cue accuracies ranked by bacc</span></span></span>
 <span><span class="co"><span style="color: #767676;">#&gt; </span></span></span></code></pre>
-<p><img src="FFTrees_examples_files/figure-html/fft-mushrooms-1-plot-cues-1.png" width="450px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_examples_files/figure-html/fft-mushrooms-1-plot-cues-1.png" class="r-plt" alt="" width="450px" style="display: block; margin: auto;"></p>
 <p>It looks like the cues <code>oder</code> and <code>sporepc</code> are
 the best predictors. In fact, the single cue <code>odor</code> has a hit
 rate
@@ -302,7 +302,7 @@ to the test data:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the best FFT (for test data): </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mushrooms_fft</span>, data <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_examples_files/figure-html/fft-mushrooms-1-plot-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_examples_files/figure-html/fft-mushrooms-1-plot-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <p>Indeed, it looks like the best tree only uses the <code>odor</code>
 and <code>sporepc</code> cues. In our test dataset, the tree had a
 <em>false alarm rate</em>
@@ -346,7 +346,7 @@ the test dataset:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plotting the best training FFT (for test data): </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mushrooms_ring_fft</span>, data <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_examples_files/figure-html/fft-mushrooms-2-plot-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_examples_files/figure-html/fft-mushrooms-2-plot-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <!-- Conclusion: -->
 <p>As we can see, this tree (in <code>mushrooms_ring_fft</code>) has
 both sensitivity and specificity values of
@@ -360,26 +360,26 @@ and <code>sporepc</code> cues.</p>
 <div class="section level3">
 <h3 id="iris-v-data">Iris.v data<a class="anchor" aria-label="anchor" href="#iris-v-data"></a>
 </h3>
-<p><img src="virginica.jpg" width="225px" style="display: block; margin: auto;"></p>
+<p><img src="virginica.jpg" class="r-plt" alt="" width="225px" style="display: block; margin: auto;"></p>
 <p>The <code>iris.v</code> dataset contains data about 150 flowers (see
-<code><a href="../reference/iris.v.html">?iris.v</a></code>). Our goal is to predict which flowers are of the
-class <em>Virginica</em>. In this example, we’ll create trees using the
-entire dataset (without splitting the available data into explicit
+<code><a href="../reference/iris.v.html">?iris.v</a></code>). Our present goal is to predict which flowers are
+of the class <em>Virginica</em>. In this example, we create trees using
+the entire dataset (without splitting the available data into explicit
 training vs. test subsets), so that we are really fitting the data,
-rather than engaging in genuine prediction:</p>
+rather than engaging in prediction:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create FFTrees object for iris data:</span></span>
 <span><span class="va">iris_fft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FFTrees.html">FFTrees</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">virginica</span> <span class="op">~</span><span class="va">.</span>,</span>
 <span>                    data <span class="op">=</span> <span class="va">iris.v</span>,</span>
-<span>                    main <span class="op">=</span> <span class="st">"Iris viginica"</span>,</span>
+<span>                    main <span class="op">=</span> <span class="st">"Iris virginica"</span>,</span>
 <span>                    decision.labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not-Vir"</span>, <span class="st">"Vir"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The <strong>FFTrees</strong> package provides various functions to
-inspect the <code>FFTrees</code> object <code>iris_fft</code>. For
+inspect the <code>FFTrees</code> object <code>iris_fft</code>. For
 summary information on the best training tree, we can print the
 <code>FTrees</code> object (by evaluating <code>iris_fft</code> or
-<code>print(iris_fft)</code>). Alternatively, we could visualize the
-tree (via <code>plot(iris_fft)</code>) or summarize the
-<code>FFTrees</code> object (via <code>summary(iris_fft)</code>):</p>
+<code>print(iris_fft)</code>). Alternatively, we can visualize the tree
+(via <code>plot(iris_fft)</code>) or summarize the <code>FFTrees</code>
+object (via <code>summary(iris_fft)</code>):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Inspect resulting FFTs: </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">iris_fft</span><span class="op">)</span>    <span class="co"># summarize best training tree</span></span>
@@ -398,10 +398,10 @@ accuracies…</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #585858;">Plotting cue training statistics:</span></span></span>
 <span><span class="co"><span style="color: #585858;">#&gt; </span><span style="color: #767676;">— Cue accuracies ranked by bacc</span></span></span>
 <span><span class="co"><span style="color: #767676;">#&gt; </span></span></span></code></pre>
-<p><img src="FFTrees_examples_files/figure-html/iris-plot-cues-1.png" width="450px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_examples_files/figure-html/iris-plot-cues-1.png" class="r-plt" alt="" width="450px" style="display: block; margin: auto;"></p>
 <p>It looks like the two cues <code>pet.len</code>
-and <code>pet.wid</code> are the best predictors for this dataset. Based
-on this insight, we should expect the final trees will likely use one or
+and <code>pet.wid</code> are the best predictors for this data. Based on
+this insight, we should expect the final trees will likely use one or
 both of these cues.</p>
 </div>
 <div class="section level4">
@@ -411,7 +411,7 @@ both of these cues.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot best FFT: </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">iris_fft</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_examples_files/figure-html/iris-plot-fft-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_examples_files/figure-html/iris-plot-fft-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <p>Indeed, it turns out that the best tree only uses
 the <code>pet.len</code> and <code>pet.wid</code> cues (in that order).
 For this data, the fitted tree exhibits a performance with a sensitivity
@@ -427,7 +427,7 @@ close to 100%. Let’s plot this tree:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot FFT #2: </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">iris_fft</span>, tree <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_examples_files/figure-html/iris-plot-fft-2-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_examples_files/figure-html/iris-plot-fft-2-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <p>As we can see, this tree does indeed have a higher specificity
 (of 98%), but this increase comes at a cost of a lower sensitivity
 (of 90%). Such trade-offs between conflicting measures are inevitable
@@ -536,7 +536,7 @@ Decision Making</em>, <em>12</em>(4), 344–368. <a href="https://doi.org/10.101
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

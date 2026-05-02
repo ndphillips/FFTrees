@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Nathaniel
 Phillips and Hansjörg Neth</h4>
             
-            <h4 data-toc-skip class="date">2025-09-02</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_function.Rmd" class="external-link"><code>vignettes/FFTrees_function.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_function.Rmd</code></div>
@@ -109,7 +109,7 @@ problem from the domain of clinical diagnostics is:</p>
 <li>Which patient has heart disease, given some data on patients’
 general health and diagnostic symptoms?</li>
 </ul>
-<p><img src="CoronaryArtery.jpg" width="250px" style="display: block; margin: auto;"></p>
+<p><img src="CoronaryArtery.jpg" class="r-plt" alt="" width="250px" style="display: block; margin: auto;"></p>
 <p>To address this problem, the <strong>FFTrees</strong> package
 includes the <code>heartdisease</code> data. But rather than using the
 full dataset to fit our FFTs, we have split the data into a training set
@@ -300,22 +300,22 @@ statistics provided:</p>
 <tr class="even">
 <td align="left"><code>hi</code></td>
 <td align="left">Number of hits</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 1)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 1)</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>mi</code></td>
 <td align="left">Number of misses</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 1)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 1)</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>fa</code></td>
 <td align="left">Number of false-alarms</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 0)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>1</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 1 \land \text{Truth} = 0)</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>cr</code></td>
 <td align="left">Number of correct rejections</td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 0)</annotation></semantics></math></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">Decision</mtext><mo>=</mo><mn>0</mn><mo>∧</mo><mtext mathvariant="normal">Truth</mtext><mo>=</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{Decision} = 0 \land \text{Truth} = 0)</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left"><code>N</code></td>
@@ -475,7 +475,7 @@ cue, with the top five cues highlighted and listed:</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #585858;">Plotting cue training statistics:</span></span></span>
 <span><span class="co"><span style="color: #585858;">#&gt; </span><span style="color: #767676;">— Cue accuracies ranked by bacc</span></span></span>
 <span><span class="co"><span style="color: #767676;">#&gt; </span></span></span></code></pre>
-<p><img src="FFTrees_function_files/figure-html/fft-plot-cues-1.png" width="500px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_function_files/figure-html/fft-plot-cues-1.png" class="r-plt" alt="" width="500px" style="display: block; margin: auto;"></p>
 <!-- Hint: Plotting vignette -->
 <p>See the <a href="FFTrees_plot.html">Plotting FFTrees objects</a>
 vignette for more details on visualizing cue accuracies and FFTs.</p>
@@ -718,7 +718,7 @@ will visualize the best training tree applied to the test data:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">heart.fft</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Heart Disease"</span>,</span>
 <span>     decision.labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Healthy"</span>, <span class="st">"Disease"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_function_files/figure-html/fft-plot-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_function_files/figure-html/fft-plot-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <!-- Hint: Plotting vignette -->
 <p>See the <a href="FFTrees_plot.html">Plotting FFTrees objects</a>
 vignette for more details on visualizing trees.</p>
@@ -746,7 +746,7 @@ using (curly) brackets.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">myheart_fft</span>, </span>
 <span>     main <span class="op">=</span> <span class="st">"Specifying a manual FFT"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_function_files/figure-html/fft-my-tree-plot-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_function_files/figure-html/fft-my-tree-plot-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <p>As we can see, the performance of this particular tree is pretty
 terrible — but this should motivate you to build better FFTs
 yourself!</p>
@@ -850,7 +850,7 @@ Decision Making</em>, <em>12</em>(4), 344–368. <a href="https://doi.org/10.101
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

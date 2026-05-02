@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.0" id="fftrees-210">FFTrees 2.1.0<a class="anchor" aria-label="anchor" href="#fftrees-210"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.1.0" id="fftrees-210">FFTrees 2.1.0<a class="anchor" aria-label="anchor" href="#fftrees-210"></a></h2><p class="text-muted">CRAN release: 2025-09-02</p>
 <p><strong>FFTrees</strong> version 2.1.0 was released <a href="https://CRAN.R-project.org/package=FFTrees" class="external-link">on CRAN</a> [on 2025-09-03]. This version reduces non-essential functionality, increases robustness, and fixes some bugs.</p>
 <div class="section level3">
 <h3 id="breaking-changes-2-1-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-1-0"></a></h3>
@@ -390,7 +390,7 @@ E.g., <code>my.tree = 'If age &gt; 30, predict True. If sex = {m}, predict False
 </ul></div>
 <div class="section level3">
 <h3 id="id_120-1-2">1.2.0<a class="anchor" aria-label="anchor" href="#id_120-1-2"></a></h3>
-<ul><li><p>Changed wording of statistics throughout package: <code>hr</code> (<em>hit rate</em>) and <code>far</code> (<em>false alarm rate</em>) (based on the classification frequency values <code>hi</code> and <code>fa</code>), are now <code>sens</code> for <em>sensitivity</em> and <code>spec</code> for <em>specificity</em> (1 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>−</mo><annotation encoding="application/x-tex">-</annotation></semantics></math><code>far</code>), respectively.</p></li>
+<ul><li><p>Changed wording of statistics throughout package: <code>hr</code> (<em>hit rate</em>) and <code>far</code> (<em>false alarm rate</em>) (based on the classification frequency values <code>hi</code> and <code>fa</code>), are now <code>sens</code> for <em>sensitivity</em> and <code>spec</code> for <em>specificity</em> (1 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>−</mi><annotation encoding="application/x-tex">-</annotation></semantics></math><code>far</code>), respectively.</p></li>
 <li><p>The <code>rank.method</code> argument is now deprecated. Use <code>algorithm</code> instead.</p></li>
 <li><p>Added a <code>stats</code> argument to <code><a href="../reference/plot.FFTrees.html">plot.FFTrees()</a></code>. When <code>stats = FALSE</code>, only the tree will be plotted without reference to any statistical output.</p></li>
 <li><p>Grouped all competitive algorithm results (regression, cart, random forests, support vector machines) to the new <code>x.fft$comp</code> slot rather than a separate first level list for each algorithm. Also replaced separate algorithm wrappers with one general <code>comp_pred()</code> wrapper function.</p></li>
@@ -458,7 +458,7 @@ E.g., <code>my.tree = 'If age &gt; 30, predict True. If sex = {m}, predict False
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

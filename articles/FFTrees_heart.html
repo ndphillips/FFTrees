@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Nathaniel
 Phillips and Hansjörg Neth</h4>
             
-            <h4 data-toc-skip class="date">2025-09-02</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_heart.Rmd" class="external-link"><code>vignettes/FFTrees_heart.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_heart.Rmd</code></div>
@@ -238,7 +238,7 @@ data are summarized.</p></li>
 <p>All statistics to evaluate each tree can be derived from a 2 x 2
 confusion table:</p>
 <div class="figure" style="text-align: center">
-<img src="confusiontable.jpg" alt="**Table 1**: A 2x2 confusion table illustrating the types of frequency counts for 4 possible outcomes." width="50%"><p class="caption">
+<img src="confusiontable.jpg" class="r-plt" alt="**Table 1**: A 2x2 confusion table illustrating the types of frequency counts for 4 possible outcomes." width="50%"><p class="caption">
 <strong>Table 1</strong>: A 2x2 confusion table illustrating the types
 of frequency counts for 4 possible outcomes.
 </p>
@@ -258,7 +258,7 @@ of an FFT for a different dataset:</p>
 <code class="sourceCode R"><span><span class="co"># Plot predictions of the best FFT when applied to test data:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">heart.fft</span>,      <span class="co"># An FFTrees object</span></span>
 <span>     data <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span>  <span class="co"># data to use (i.e., either "train" or "test")?</span></span></code></pre></div>
-<p><img src="FFTrees_heart_files/figure-html/fft-plot-1.png" width="580px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_heart_files/figure-html/fft-plot-1.png" class="r-plt" alt="" width="580px" style="display: block; margin: auto;"></p>
 <div class="section level4">
 <h4 id="other-arguments-1">Other arguments<a class="anchor" aria-label="anchor" href="#other-arguments-1"></a>
 </h4>
@@ -279,7 +279,7 @@ the argument <code>stats = FALSE</code>.</p></li>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot only the tree, without accuracy statistics:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">heart.fft</span>, what <span class="op">=</span> <span class="st">"tree"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FFTrees_heart_files/figure-html/fft-no-stats-1.png" width="500px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_heart_files/figure-html/fft-no-stats-1.png" class="r-plt" alt="" width="500px" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot(heart.fft, stats = FALSE)  #  The 'stats' argument has been deprecated.</span></span></code></pre></div>
 <ul>
@@ -299,7 +299,7 @@ space), specify <code>what = "cues"</code>:</p></li>
 <pre><code><span><span class="co">#&gt; <span style="color: #585858;">Plotting cue training statistics:</span></span></span>
 <span><span class="co"><span style="color: #585858;">#&gt; </span><span style="color: #767676;">— Cue accuracies ranked by bacc</span></span></span>
 <span><span class="co"><span style="color: #767676;">#&gt; </span></span></span></code></pre>
-<p><img src="FFTrees_heart_files/figure-html/fft-cues-1.png" width="500px" style="display: block; margin: auto;"></p>
+<p><img src="FFTrees_heart_files/figure-html/fft-cues-1.png" class="r-plt" alt="" width="500px" style="display: block; margin: auto;"></p>
 <p>See the <a href="FFTrees_plot.html">Plotting FFTrees</a> vignette for
 details on plotting FFTs.</p>
 </div>
@@ -457,7 +457,7 @@ Decision Making</em>, <em>12</em>(4), 344–368. <a href="https://doi.org/10.101
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

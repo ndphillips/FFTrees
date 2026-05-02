@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Hansjörg Neth
 and Nathaniel Phillips</h4>
             
-            <h4 data-toc-skip class="date">2025-09-02</h4>
+            <h4 data-toc-skip class="date">2026-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_mytree.Rmd" class="external-link"><code>vignettes/FFTrees_mytree.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_mytree.Rmd</code></div>
@@ -243,7 +243,7 @@ constructed FFT (<code>my_fft</code>) did on the training data:</p>
 <code class="sourceCode R"><span><span class="co"># Inspect FFTrees object:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">my_fft</span>, data <span class="op">=</span> <span class="st">"train"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_mytree_files/figure-html/my-tree-plot-1-1.png" alt="**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`." width="580px"><p class="caption">
+<img src="FFTrees_mytree_files/figure-html/my-tree-plot-1-1.png" class="r-plt" alt="**Figure 1**: An FFT manually constructed using the `my.tree` argument of `FFTrees()`." width="580px"><p class="caption">
 <strong>Figure 1</strong>: An FFT manually constructed using the
 <code>my.tree</code> argument of <code><a href="../reference/FFTrees.html">FFTrees()</a></code>.
 </p>
@@ -344,7 +344,7 @@ its tree definition:</p>
 <span><span class="co"># 'if (cp  = a), predict 1' in the tree definition corresponds to </span></span>
 <span><span class="co"># 'if (cp != a), predict 0' in the my.tree description and plot.  </span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="FFTrees_mytree_files/figure-html/my-tree-plot-fft-2-1.png" alt="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`." width="580px"><p class="caption">
+<img src="FFTrees_mytree_files/figure-html/my-tree-plot-fft-2-1.png" class="r-plt" alt="**Figure 2**: Another FFT manually constructed using the `my.tree` argument of `FFTrees()`." width="580px"><p class="caption">
 <strong>Figure 2</strong>: Another FFT manually constructed using the
 <code>my.tree</code> argument of <code><a href="../reference/FFTrees.html">FFTrees()</a></code>.
 </p>
@@ -404,7 +404,7 @@ grammar of FFTs.</p>
 <h4 id="overview-retrieving-manipulating-and-using-fft-definitions">Overview: Retrieving, manipulating, and using FFT definitions<a class="anchor" aria-label="anchor" href="#overview-retrieving-manipulating-and-using-fft-definitions"></a>
 </h4>
 <div class="figure" style="text-align: center">
-<img src="gFFTs.png" alt="**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)&lt;br&gt;and 6 tree trimming functions (in blue)." width="500px"><p class="caption">
+<img src="gFFTs.png" class="r-plt" alt="**Figure 3**: Overview of 4 tree definition and conversion functions (in yellow)&lt;br&gt;and 6 tree trimming functions (in blue)." width="500px"><p class="caption">
 <strong>Figure 3</strong>: Overview of 4 tree definition and conversion
 functions (in yellow)<br>and 6 tree trimming functions (in blue).
 </p>
@@ -615,7 +615,7 @@ directions. As every non-final node allows for two alternative exits, a
 tree containing
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> nodes
 has
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>2</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">2^{(n-1)}</annotation></semantics></math> exit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>2</mn><mrow><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">2^{(n-1)}</annotation></semantics></math> exit
 structures (i.e.,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>2</mn></msup><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">2^2 = 4</annotation></semantics></math>
 for 3 cues). The
@@ -841,7 +841,7 @@ and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external
 <span><span class="co"># plot(y, tree = 1)</span></span></code></pre></div>
 <p>Comparing the accuracy statistics of our new FFTs (in
 object <code>y</code>) to our original FFTs (in object <code>x</code>)
-shows that swapping the 2nd and 3rd cue had hardly an effect. Upon
+shows that swapping the 2nd and 3rd cues hardly had an effect. Upon
 reflection, this is not surprising: Most people are still classified
 into the same categories as before. However, if we were to evaluate the
 costs of classification (e.g., by considering the <code>pci</code>
@@ -858,7 +858,7 @@ FFTs defined by the <code>tree.definitions</code> argument. This
 circumvented the FFT building algorithms and used the provided FFT
 definitions instead. Thus, the ordinary distinction between training and
 test data no longer applies in this context: As no model is being fitted
-here, both sets were used to evaluate the FFTs in
+here, both sets were used to evaluate (or “test”) the FFTs in
 <code>tree.definitions</code> on these data.
 <!-- 1. Using only data, as train vs. data.test not used here:  -->
 Acknowledging this, we may use the full dataset of
@@ -1015,7 +1015,7 @@ the package</td>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
