@@ -72,15 +72,15 @@ is set to the signal value (i.e., \code{exit_types[2]}).
 \code{\link{add_fft_df}} for adding FFTs to tree definitions;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other tree definition and manipulation functions: 
-\code{\link{add_fft_df}()},
-\code{\link{drop_nodes}()},
-\code{\link{edit_nodes}()},
-\code{\link{flip_exits}()},
-\code{\link{get_fft_df}()},
-\code{\link{read_fft_df}()},
-\code{\link{reorder_nodes}()},
-\code{\link{select_nodes}()},
-\code{\link{write_fft_df}()}
+Other tree definition and manipulation functions:
+\code{\link[=add_fft_df]{add_fft_df()}},
+\code{\link[=drop_nodes]{drop_nodes()}},
+\code{\link[=edit_nodes]{edit_nodes()}},
+\code{\link[=flip_exits]{flip_exits()}},
+\code{\link[=get_fft_df]{get_fft_df()}},
+\code{\link[=read_fft_df]{read_fft_df()}},
+\code{\link[=reorder_nodes]{reorder_nodes()}},
+\code{\link[=select_nodes]{select_nodes()}},
+\code{\link[=write_fft_df]{write_fft_df()}}
 }
 \concept{tree definition and manipulation functions}

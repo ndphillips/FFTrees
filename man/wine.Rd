@@ -39,7 +39,7 @@ P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis (2009).
  \doi{10.1016/j.dss.2009.05.016}
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

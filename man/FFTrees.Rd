@@ -21,6 +21,7 @@ FFTrees(
   stopping.rule = "exemplars",
   stopping.par = 0.1,
   sens.w = 0.5,
+  digits = 2,
   cost.outcomes = NULL,
   cost.cues = NULL,
   main = NULL,
@@ -106,6 +107,12 @@ Default: \code{stopping.par = .10}.}
 sensitivity relative to specificity when optimizing \emph{weighted} accuracy (e.g., \code{goal = 'wacc'}).
 Default: \code{sens.w = .50} (i.e., \code{wacc} corresponds to \code{bacc}).}
 
+\item{digits}{An integer value specifying the number of decimal digits to which
+non-integer numeric cue thresholds are rounded (when ranking cues and when
+expressing FFTs in words). The value is stored as \code{x$params$digits} and
+passed along with the \code{FFTrees} object \code{x}.
+Default: \code{digits = 2}.}
+
 \item{cost.outcomes}{A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
 The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
 (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
@@ -148,7 +155,8 @@ for initial vs. final steps, missing cases, and parameter settings, respectively
 Setting list elements to \code{FALSE} is helpful when diagnosing errors.
 Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.}
 
-\item{comp, do.comp, do.lr, do.cart, do.svm, do.rf, force, rank.method, rounding, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).}
+\item{comp, do.comp, do.lr, do.cart, do.svm, do.rf, force, rank.method, rounding, store.data, verbose}{Deprecated arguments (unused or replaced, to be retired in future releases).
+Note: \code{rounding} has been replaced by \code{digits} (see above).}
 }
 \value{
 An \code{FFTrees} object with the following elements:

@@ -35,7 +35,7 @@ The ‘Unusual Episode’ Data Revisited.
 \doi{10.1080/10691898.1995.11910499}.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

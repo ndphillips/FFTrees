@@ -35,8 +35,8 @@ get_exit_type(c("left",  "right",  "both"))
 \seealso{
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other utility functions: 
-\code{\link{get_best_tree}()},
-\code{\link{get_fft_df}()}
+Other utility functions:
+\code{\link[=get_best_tree]{get_best_tree()}},
+\code{\link[=get_fft_df]{get_fft_df()}}
 }
 \concept{utility functions}

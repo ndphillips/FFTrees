@@ -53,7 +53,7 @@ We made the following enhancements to the original data for improved usability:
 Other than that, the data remains consistent with the original dataset.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

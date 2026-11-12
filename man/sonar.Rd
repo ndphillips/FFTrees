@@ -99,7 +99,7 @@ Analysis of hidden units in a layered network trained to classify sonar targets.
 \emph{Neural Networks}, \emph{1}, pp. 75--89.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

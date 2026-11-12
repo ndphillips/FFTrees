@@ -184,7 +184,7 @@ plot(heart_fft, tree = 2, data = heart.test,
 \code{\link{summary.FFTrees}} for summarizing FFTs;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other plot functions: 
-\code{\link{showcues}()}
+Other plot functions:
+\code{\link[=showcues]{showcues()}}
 }
 \concept{plot functions}

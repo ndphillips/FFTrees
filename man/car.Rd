@@ -43,7 +43,7 @@ Bohanec, M., Rajkovic, V. (1990): Expert system for decision making.
 \emph{Sistemica}, \emph{1} (1), 145--157.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{contraceptive}},

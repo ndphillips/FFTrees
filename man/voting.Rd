@@ -61,7 +61,7 @@ Congressional Quarterly Almanac, 98th Congress, 2nd session 1984,
 Washington, D.C., 1985.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

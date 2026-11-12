@@ -40,8 +40,8 @@ creating new trees (see \code{goal.chase} and \code{fftrees_ranktrees()}).
 \seealso{
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other utility functions: 
-\code{\link{get_exit_type}()},
-\code{\link{get_fft_df}()}
+Other utility functions:
+\code{\link[=get_exit_type]{get_exit_type()}},
+\code{\link[=get_fft_df]{get_fft_df()}}
 }
 \concept{utility functions}

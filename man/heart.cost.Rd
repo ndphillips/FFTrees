@@ -20,7 +20,7 @@ This data further characterizes the variables (cues) in the \code{\link{heartdis
 \seealso{
 \code{\link{heartdisease}} data.
 
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},
