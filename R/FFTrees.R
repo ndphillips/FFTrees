@@ -78,6 +78,12 @@
 #' sensitivity relative to specificity when optimizing \emph{weighted} accuracy (e.g., \code{goal = 'wacc'}).
 #' Default: \code{sens.w = .50} (i.e., \code{wacc} corresponds to \code{bacc}).
 #'
+#' @param digits An integer value specifying the number of decimal digits to which
+#' non-integer numeric cue thresholds are rounded (when ranking cues and when
+#' expressing FFTs in words). The value is stored as \code{x$params$digits} and
+#' passed along with the \code{FFTrees} object \code{x}.
+#' Default: \code{digits = 2}.
+#'
 #' @param cost.outcomes A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
 #' The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
 #' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
@@ -117,6 +123,7 @@
 #' Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.
 #'
 #' @param comp,do.comp,do.lr,do.cart,do.svm,do.rf,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
+#' Note: \code{rounding} has been replaced by \code{digits} (see above).
 #'
 #' @return An \code{FFTrees} object with the following elements:
 #' \describe{
@@ -199,6 +206,8 @@ FFTrees <- function(formula = NULL,
                     #
                     sens.w = .50,
                     #
+                    digits = 2,
+                    #
                     cost.outcomes = NULL,     # (default set in fftrees_create.R)
                     cost.cues = NULL,         # (default set in fftrees_create.R)
                     #
@@ -270,7 +279,9 @@ FFTrees <- function(formula = NULL,
   }
 
   if (!is.null(rounding)) {
-    warning("The argument 'rounding' is deprecated and ignored.")
+    warning("The argument 'rounding' is deprecated. Use 'digits' instead.")
+
+    digits <- rounding
   }
 
   if (!is.null(store.data)) {
@@ -429,6 +440,8 @@ FFTrees <- function(formula = NULL,
                       #
                       sens.w = sens.w,
                       #
+                      digits = digits,
+                      #
                       cost.outcomes = cost.outcomes,
                       cost.cues = cost.cues,
                       #
@@ -471,7 +484,7 @@ FFTrees <- function(formula = NULL,
 
   x <- fftrees_ffttowords(x,
                           mydata = "train",  # data type: 'train'->'decide' or 'test'->'predict'
-                          digits = 2)
+                          digits = x$params$digits)
 
 
 
