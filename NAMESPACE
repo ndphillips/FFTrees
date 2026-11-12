@@ -31,46 +31,64 @@ export(showcues)
 export(write_fft_df)
 import(testthat)
 importFrom(caret,confusionMatrix)
-importFrom(cli,cli_progress_bar)
-importFrom(cli,cli_progress_done)
-importFrom(cli,cli_progress_update)
-importFrom(cli,style_underline)
-importFrom(dplyr,"%>%")
-importFrom(dplyr,near)
-importFrom(dplyr,pull)
-importFrom(grDevices,col2rgb)
-importFrom(grDevices,gray)
-importFrom(grDevices,rgb)
-importFrom(graphics,abline)
-importFrom(graphics,arrows)
-importFrom(graphics,axis)
-importFrom(graphics,layout)
-importFrom(graphics,legend)
-importFrom(graphics,mtext)
-importFrom(graphics,par)
-importFrom(graphics,plot)
-importFrom(graphics,points)
-importFrom(graphics,rect)
-importFrom(graphics,segments)
-importFrom(graphics,text)
-importFrom(graphics,title)
+importFrom(cli,
+  cli_progress_bar,
+  cli_progress_done,
+  cli_progress_update,
+  style_underline
+)
+importFrom(dplyr,
+  "%>%",
+  near,
+  pull
+)
+importFrom(grDevices,
+  col2rgb,
+  gray,
+  rgb
+)
+importFrom(graphics,
+  abline,
+  arrows,
+  axis,
+  layout,
+  legend,
+  mtext,
+  par,
+  plot,
+  points,
+  rect,
+  segments,
+  text,
+  title
+)
 importFrom(knitr,kable)
 importFrom(magrittr,"%>%")
-importFrom(scales,comma)
-importFrom(scales,percent)
-importFrom(stats,as.formula)
-importFrom(stats,formula)
-importFrom(stats,glm)
-importFrom(stats,median)
-importFrom(stats,model.frame)
-importFrom(stats,predict)
-importFrom(stats,qnorm)
-importFrom(stats,sd)
-importFrom(stats,var)
-importFrom(stringr,str_detect)
-importFrom(stringr,str_extract)
+importFrom(scales,
+  comma,
+  percent
+)
+importFrom(stats,
+  as.formula,
+  formula,
+  glm,
+  median,
+  model.frame,
+  predict,
+  qnorm,
+  sd,
+  var
+)
+importFrom(stringr,
+  str_detect,
+  str_extract
+)
 importFrom(testthat,expect_true)
-importFrom(tibble,as_tibble)
-importFrom(tibble,tibble)
-importFrom(utils,browseVignettes)
-importFrom(utils,vignette)
+importFrom(tibble,
+  as_tibble,
+  tibble
+)
+importFrom(utils,
+  browseVignettes,
+  vignette
+)
