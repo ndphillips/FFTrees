@@ -8,12 +8,16 @@ Log of changes:
 
 ## Major changes
 
-- none yet
+- Restored the rounding of numeric cue threshold values (from earlier versions) via a consistent `digits` parameter: 
+    - `FFTrees()` gained a `digits` argument (Default: `digits = 2`) whose value is stored as `x$params$digits` 
+    and passed along with the `FFTrees` object `x`. 
+    - `fftrees_cuerank()` and `fftrees_ffttowords()` now use `x$params$digits` (by default) to round numeric cue thresholds. 
 
 
 ## Minor changes
 
-- none yet
+- Deprecated the `rounding` argument (in `FFTrees()` and `fftrees_cuerank()`) in favor of the consistent `digits` argument. 
+When `rounding` is still provided, its value is used as `digits` (with a deprecation warning). 
 
 
 ## Details
