@@ -19,6 +19,7 @@ fftrees_create(
   stopping.rule = NULL,
   stopping.par = NULL,
   sens.w = NULL,
+  digits = NULL,
   cost.outcomes = NULL,
   cost.cues = NULL,
   main = NULL,
@@ -58,6 +59,9 @@ fftrees_create(
 
 \item{sens.w}{numeric.}
 
+\item{digits}{numeric. The number of decimal digits to which non-integer
+numeric cue thresholds are rounded. Stored as \code{x$params$digits}.}
+
 \item{cost.outcomes}{list.}
 
 \item{cost.cues}{list.}
@@ -79,7 +83,8 @@ Default: \code{my.goal.fun = NULL}.}
 \item{my.tree}{A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.}
 
-\item{quiet}{A list of logical elements.}
+\item{quiet}{A list of 4 logical arguments: Should detailed progress reports be suppressed?
+Default: \code{quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)}.}
 }
 \value{
 A new \code{FFTrees} object.

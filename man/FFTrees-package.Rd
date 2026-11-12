@@ -23,6 +23,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Hansjoerg Neth \email{h.neth@uni.kn} (\href{https://orcid.org/0000-0001-5427-3141}{ORCID})
   \item Nathaniel Phillips \email{Nathaniel.D.Phillips.is@gmail.com} (\href{https://orcid.org/0000-0002-8969-7013}{ORCID})
   \item Jan Woike (\href{https://orcid.org/0000-0002-6816-121X}{ORCID})
   \item Wolfgang Gaissmaier (\href{https://orcid.org/0000-0001-6273-178X}{ORCID})

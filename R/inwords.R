@@ -50,7 +50,7 @@ inwords <- function(x, data = NULL, tree = 1) {
 
   if (is.null(data) == FALSE){ # re-generate tree descriptions in x:
 
-    x <- fftrees_ffttowords(x = x, mydata = data, digits = 2)
+    x <- fftrees_ffttowords(x = x, mydata = data, digits = x$params$digits)
 
   }
 

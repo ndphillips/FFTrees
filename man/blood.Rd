@@ -37,7 +37,7 @@ blood
 Data from the Blood Transfusion Service Center in Hsin-Chu City in Taiwan.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{breastcancer}},
 \code{\link{car}},
 \code{\link{contraceptive}},

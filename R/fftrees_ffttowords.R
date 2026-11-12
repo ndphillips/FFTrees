@@ -25,6 +25,7 @@
 #' @param mydata The type of data to which a tree is being applied (as character string "train" or "test").
 #' Default: \code{mydata = "train"}.
 #' @param digits How many digits to round numeric values (as integer)?
+#' Default: \code{digits = NULL} uses the current value of \code{x$params$digits}.
 #'
 #' @return A modified \code{FFTrees} object \code{x} with
 #' \code{x$trees$inwords} containing a list of string vectors.
@@ -52,7 +53,18 @@
 
 fftrees_ffttowords <- function(x = NULL,
                                mydata = "train",
-                               digits = 2) {
+                               digits = NULL) {
+
+  # Default 'digits' to current value of x$params$digits: ----
+
+  if (is.null(digits)) {
+    digits <- x$params$digits
+  }
+
+  if (is.null(digits)) {  # fallback (e.g., for objects created before 'digits' existed):
+    digits <- 2
+  }
+
 
   # Simplify: ----
 

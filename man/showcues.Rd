@@ -63,7 +63,7 @@ showcues(heart.fft,
 \code{\link{summary.FFTrees}} for summarizing FFTs;
 \code{\link{FFTrees}} for creating FFTs from and applying them to data.
 
-Other plot functions: 
-\code{\link{plot.FFTrees}()}
+Other plot functions:
+\code{\link[=plot.FFTrees]{plot.FFTrees()}}
 }
 \concept{plot functions}

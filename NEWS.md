@@ -1,3 +1,35 @@
+
+# FFTrees 2.1.9002
+
+This is the current development version of **FFTrees** at <https://github.com/ndphillips/FFTrees>. 
+
+Log of changes: 
+
+
+## Major changes
+
+- Restored the rounding of numeric cue threshold values (from earlier versions) via a consistent `digits` parameter: 
+    - `FFTrees()` gained a `digits` argument (Default: `digits = 2`) whose value is stored as `x$params$digits` 
+    and passed along with the `FFTrees` object `x`. 
+    - `fftrees_cuerank()` and `fftrees_ffttowords()` now use `x$params$digits` (by default) to round numeric cue thresholds. 
+
+
+## Minor changes
+
+- Deprecated the `rounding` argument (in `FFTrees()` and `fftrees_cuerank()`) in favor of the consistent `digits` argument. 
+When `rounding` is still provided, its value is used as `digits` (with a deprecation warning). 
+
+
+## Details
+
+- Updated documentation. 
+
+
+
+<!-- Published versions: --> 
+
+------ 
+
 # FFTrees 2.1.0
 
 **FFTrees** version 2.1.0 was released [on CRAN](https://CRAN.R-project.org/package=FFTrees) [on 2025-09-03]. 
@@ -514,6 +546,6 @@ Thus, the main tree building function is now `FFTrees()` and the new tree object
 
 ------ 
 
-[File `NEWS.md` last updated on 2025-09-03.]
+[File `NEWS.md` last updated on 2026-11-12.]
 
 <!-- eof. -->

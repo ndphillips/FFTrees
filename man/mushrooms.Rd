@@ -73,7 +73,7 @@ Mushroom records drawn from The Audubon Society Field Guide to North American Mu
 G.H. Lincoff (Pres.), New York: A.A. Knopf.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

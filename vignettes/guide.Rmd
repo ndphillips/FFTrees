@@ -64,7 +64,7 @@ The R package **FFTrees** [@phillips2017FFTrees; @FFTrees-pkg] makes it easy to 
 FFTs are simple and transparent decision algorithms for solving binary classification problems in an\ effective and efficient fashion. 
 
 
-## Fast-and-Frugal Trees (FFTs) 
+## Fast-and-frugal trees (FFTs) 
 
 <!-- Defining FFTs: -->
 

@@ -25,6 +25,9 @@
 #'
 #' @param sens.w numeric.
 #'
+#' @param digits numeric. The number of decimal digits to which non-integer
+#' numeric cue thresholds are rounded. Stored as \code{x$params$digits}.
+#'
 #' @param cost.outcomes list.
 #' @param cost.cues list.
 #'
@@ -43,7 +46,8 @@
 #' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
-#' @param quiet A list of logical elements.
+#' @param quiet A list of 4 logical arguments: Should detailed progress reports be suppressed?
+#' Default: \code{quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)}.
 #'
 #'
 #' @return A new \code{FFTrees} object.
@@ -77,6 +81,8 @@ fftrees_create <- function(formula = NULL,
                            stopping.par = NULL,
                            #
                            sens.w = NULL,
+                           #
+                           digits = NULL,
                            #
                            cost.outcomes = NULL,
                            cost.cues = NULL,
@@ -135,6 +141,16 @@ fftrees_create <- function(formula = NULL,
   testthat::expect_true(!is.null(sens.w), info = "sens.w is NULL")
   testthat::expect_lte(sens.w, expected = 1)
   testthat::expect_gte(sens.w, expected = 0)
+
+
+  # digits: ----
+
+  testthat::expect_true(!is.null(digits), info = "digits is NULL")
+  testthat::expect_true(is.numeric(digits), info = "digits is not numeric")
+  testthat::expect_true(length(digits) == 1, info = "digits is not of length 1")
+  testthat::expect_gte(digits, expected = 0)
+
+  digits <- as.integer(digits)  # coerce to integer
 
 
   # goal: ----
@@ -808,6 +824,8 @@ fftrees_create <- function(formula = NULL,
       stopping.par = stopping.par,
       #
       sens.w = sens.w,
+      #
+      digits = digits,
       #
       cost.outcomes = cost.outcomes,
       cost.cues = cost.cues,

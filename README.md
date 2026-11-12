@@ -3,7 +3,7 @@
 
 <!-- Title, version and logo: -->
 
-# FFTrees 2.1.0.9001 <img src = "man/figures/logo.png" align = "right" alt = "FFTrees" width = "160" />
+# FFTrees 2.1.0.9002 <img src = "man/figures/logo.png" align = "right" alt = "FFTrees" width = "160" />
 
 <!-- Devel badges start: -->
 
@@ -322,7 +322,7 @@ continue developing the package.
 
 <!-- Examples uses/publications (with links): -->
 
-By 2026, over 160 scientific publications have used or cited **FFTrees**
+By 2026, over 180 scientific publications have used or cited **FFTrees**
 (see [Google
 Scholar](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=205528310591558601)
 for the full list). Examples include:
@@ -362,6 +362,6 @@ for the full list). Examples include:
 
 ------------------------------------------------------------------------
 
-\[File `README.Rmd` last updated on 2026-05-02.\]
+\[File `README.Rmd` last updated on 2026-11-12.\]
 
 <!-- eof. -->

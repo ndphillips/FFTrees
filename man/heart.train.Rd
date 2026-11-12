@@ -21,7 +21,7 @@ The data in \code{\link{heartdisease}} contains both subsets.
 \seealso{
 \code{\link{heartdisease}} dataset.
 
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

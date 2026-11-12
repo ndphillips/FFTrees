@@ -47,7 +47,7 @@ To obtain a binary criterion \code{diagnosis}, values from 1 to 3 have been coll
 \seealso{
 \code{\link{heart.cost}} dataset for cost information.
 
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

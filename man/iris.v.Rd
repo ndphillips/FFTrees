@@ -46,7 +46,7 @@ Fisher, R.A. (1936): The use of multiple measurements in taxonomic problems.
 Annual Eugenics, 7, Part II, pp. 179--188.
 }
 \seealso{
-Other datasets: 
+Other datasets:
 \code{\link{blood}},
 \code{\link{breastcancer}},
 \code{\link{car}},

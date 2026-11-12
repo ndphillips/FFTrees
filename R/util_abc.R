@@ -510,6 +510,9 @@ get_lhs_formula <- function(formula){
   # Main:
   lhs_name <- paste(formula)[2]
 
+  # Verify lhs_name:
+  testthat::expect_true(!is.na(lhs_name), info = "lhs_name is NA")
+
   # Output:
   return(lhs_name)
 
