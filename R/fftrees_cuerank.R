@@ -20,9 +20,10 @@
 #' @param newdata A dataset with cues to be ranked (as data frame).
 #' @param data The type of data with cues to be ranked (as character: \code{'train'}, \code{'test'}, or \code{'dynamic'}).
 #' Default: \code{data = 'train'}.
-#' @param rounding integer. An integer value indicating the decimal digit
+#' @param digits integer. An integer value indicating the decimal digit
 #' to which non-integer numeric cue thresholds are to be rounded.
-#' Default: \code{rounding = NULL} (i.e., no rounding).
+#' Default: \code{digits = NULL} uses the current value of \code{x$params$digits}.
+#' @param rounding Deprecated: Use \code{digits} instead.
 #'
 #' @return A modified \code{FFTrees} object (with cue rank information
 #' for the current \code{data} type in \code{x$cues$stats}).
@@ -36,9 +37,24 @@
 fftrees_cuerank <- function(x = NULL,
                             newdata = NULL,
                             data = "train",    # type of data
-                            rounding = NULL) { # ToDo: Use a sensible default, e.g., rounding = 3 (in the FFTrees() function)
+                            digits = NULL,     # defaults to x$params$digits (below)
+                            rounding = NULL) {  # deprecated: use digits instead
 
   # Prepare: ------
+
+  # Handle deprecated 'rounding' argument: ----
+
+  if (!is.null(rounding)) {
+    warning("The argument 'rounding' is deprecated. Use 'digits' instead.")
+
+    digits <- rounding
+  }
+
+  # Default 'digits' to current value of x$params$digits:
+  if (is.null(digits)) {
+    digits <- x$params$digits
+  }
+
 
   # Verify inputs: ----
 
@@ -180,10 +196,10 @@ fftrees_cuerank <- function(x = NULL,
           }
 
           # Round cue levels:
-          if (!is.null(rounding)) {
+          if (!is.null(digits)) {
 
             cue_i_levels <- round(cue_i_levels,
-                                  digits = rounding
+                                  digits = digits
             )
 
           }
