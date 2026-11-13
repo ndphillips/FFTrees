@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">FFTrees</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9002</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Hansjörg Neth
 and Nathaniel Phillips</h4>
             
-            <h4 data-toc-skip class="date">2026-11-12</h4>
+            <h4 data-toc-skip class="date">2026-11-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ndphillips/FFTrees/blob/master/vignettes/FFTrees_mytree.Rmd" class="external-link"><code>vignettes/FFTrees_mytree.Rmd</code></a></small>
       <div class="d-none name"><code>FFTrees_mytree.Rmd</code></div>
@@ -281,11 +281,13 @@ verbal description is a mixed affair: The tree has a rather high
 sensitivity (of 91%), but its low specificity (of only 10%) allows for
 many false alarms. Consequently, its accuracy measures fail to exceed
 the baseline level.</p>
+<!-- Minor tweaks can improve performance: -->
+<!-- Alternative example and improved FFT: -->
 </div>
 <div class="section level4">
 <h4 id="creating-an-alternative-fft">Creating an alternative FFT<a class="anchor" aria-label="anchor" href="#creating-an-alternative-fft"></a>
 </h4>
-<p>Let’s see if we can come up with a better FFT. The following example
+<p>Let’s see if we can come up with a better FFT! The following example
 uses the cues <code>thal</code>, <code>cp</code>, and <code>ca</code> in
 the <code>my.tree</code> argument:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -297,12 +299,11 @@ the <code>my.tree</code> argument:</p>
 <span><span class="st">                               If cp != {a}, predict False. </span></span>
 <span><span class="st">                               If ca &gt; 1, predict True. </span></span>
 <span><span class="st">                               Otherwise, predict False."</span><span class="op">)</span></span></code></pre></div>
-<!-- Show the flexibility in interpreting `my.tree`: -->
+<!-- Show the flexibility in phrasing/interpreting `my.tree`: -->
 <p>As <strong>FFTrees</strong> aims to interpret the
 <code>my.tree</code> argument to the best of its abilities, there is
-some flexibility in entering a verbal description of an FFT. For
-instance, we also could have described our desired FFT in more flowery
-terms:</p>
+some flexibility in phrasing an FFT’s verbal description. For instance,
+we also could have described our desired FFT in more flowery terms:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a 2nd FFT from an alternative FFT description (as my.tree): </span></span>
 <span><span class="va">my_fft_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FFTrees.html">FFTrees</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">diagnosis</span> <span class="op">~</span><span class="va">.</span>,</span>
@@ -310,8 +311,8 @@ terms:</p>
 <span>                    main <span class="op">=</span> <span class="st">"My 2nd FFT"</span>, </span>
 <span>                    my.tree <span class="op">=</span> <span class="st">"If thal equals {rd,fd}, we shall say True.  </span></span>
 <span><span class="st">                               When Cp differs from {a}, let's predict False. </span></span>
-<span><span class="st">                               Whenever CA happens to exceed 1, we will insist on True.</span></span>
-<span><span class="st">                               Else, we give up and go away."</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="st">                               Whenever CA happens to exceed 1, we must insist on True.</span></span>
+<span><span class="st">                               Else, we give up and humbly resign from this endeavor."</span><span class="op">)</span> </span></code></pre></div>
 <p>However, as the vocabulary of <strong>FFTrees</strong> is limited, it
 is safer to enter cue directions in their symbolic form (i.e.,
 using <code>=</code>, <code>&lt;</code>, <code>&lt;=</code>,

@@ -178,7 +178,7 @@ level.
 
 #### Creating an alternative FFT
 
-Let’s see if we can come up with a better FFT. The following example
+Let’s see if we can come up with a better FFT! The following example
 uses the cues `thal`, `cp`, and `ca` in the `my.tree` argument:
 
 ``` r
@@ -194,9 +194,9 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
 ```
 
 As **FFTrees** aims to interpret the `my.tree` argument to the best of
-its abilities, there is some flexibility in entering a verbal
-description of an FFT. For instance, we also could have described our
-desired FFT in more flowery terms:
+its abilities, there is some flexibility in phrasing an FFT’s verbal
+description. For instance, we also could have described our desired FFT
+in more flowery terms:
 
 ``` r
 
@@ -206,8 +206,8 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
                     main = "My 2nd FFT", 
                     my.tree = "If thal equals {rd,fd}, we shall say True.  
                                When Cp differs from {a}, let's predict False. 
-                               Whenever CA happens to exceed 1, we will insist on True.
-                               Else, we give up and go away.") 
+                               Whenever CA happens to exceed 1, we must insist on True.
+                               Else, we give up and humbly resign from this endeavor.") 
 ```
 
 However, as the vocabulary of **FFTrees** is limited, it is safer to

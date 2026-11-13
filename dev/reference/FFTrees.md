@@ -4,12 +4,12 @@
 creating fast-and-frugal trees (FFTs).
 
 FFTs are decision algorithms for solving binary classification tasks,
-i.e., they predict the values of a binary criterion variable based on 1
-or multiple predictor variables (cues).
+i.e., they predict the values of a binary criterion variable based on
+one or multiple predictor variables (cues).
 
 Using `FFTrees` on `data` usually generates a range of FFTs and
-corresponding summary statistics (as an `FFTrees` object) that can then
-be printed, plotted, and examined further.
+corresponding summary statistics (as an `FFTrees` object) that can be
+printed, plotted, and examined further.
 
 The criterion and predictor variables are specified in
 [`formula`](https://rdrr.io/r/stats/formula.html) notation. Based on the
