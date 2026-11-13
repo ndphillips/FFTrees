@@ -148,10 +148,31 @@ As it turns out, the performance of our first FFT created from a verbal descript
 The tree has a rather high sensitivity (of\ 91%), but its low specificity (of only\ 10%) allows for many false alarms. 
 Consequently, its accuracy measures fail to exceed the baseline level. 
 
+<!-- Minor tweaks can improve performance: -->
+
+```{r my-tree-fft-1-tweak, echo = FALSE, eval = FALSE}
+# A few exploratory tweaks can improve a tree's performance. 
+# For instance, the following verbal definition would achieve an overall accuracy of 70%:
+
+verbal_2 <- "If age < 45, predict False. 
+             If sex = 1, predict True.
+             If thal = {fd, rd}, predict True.
+             Otherwise, predict False."
+
+my_fft <- FFTrees(formula = diagnosis ~.,
+                  data = heartdisease,
+                  main = "My 2nd FFT", 
+                  my.tree = verbal_2)
+
+plot(my_fft, data = "train")
+```
+
+
+<!-- Alternative example and improved FFT: -->
 
 #### Creating an alternative FFT
 
-Let's see if we can come up with a better FFT. 
+Let's see if we can come up with a better FFT! 
 The following example uses the cues\ `thal`, `cp`, and\ `ca` in the `my.tree` argument: 
 
 ```{r my-tree-fft-2-create, eval = FALSE, message = FALSE, results = 'hide'}
@@ -165,9 +186,9 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
                                Otherwise, predict False.")
 ```
 
-<!-- Show the flexibility in interpreting `my.tree`: -->
+<!-- Show the flexibility in phrasing/interpreting `my.tree`: -->
 
-As **FFTrees** aims to interpret the `my.tree` argument to the best of its abilities, there is some flexibility in entering a verbal description of an\ FFT. For instance, we also could have described our desired FFT in more flowery terms:
+As **FFTrees** aims to interpret the `my.tree` argument to the best of its abilities, there is some flexibility in phrasing an FFT's verbal description. For instance, we also could have described our desired FFT in more flowery terms:
 
 ```{r my-tree-fft-2-create-2, eval = TRUE, message = FALSE, results = 'hide'}
 # Create a 2nd FFT from an alternative FFT description (as my.tree): 
@@ -176,8 +197,8 @@ my_fft_2 <- FFTrees(formula = diagnosis ~.,
                     main = "My 2nd FFT", 
                     my.tree = "If thal equals {rd,fd}, we shall say True.  
                                When Cp differs from {a}, let's predict False. 
-                               Whenever CA happens to exceed 1, we will insist on True.
-                               Else, we give up and go away.") 
+                               Whenever CA happens to exceed 1, we must insist on True.
+                               Else, we give up and humbly resign from this endeavor.") 
 ```
 
 However, as the vocabulary of **FFTrees** is limited, it is safer to enter cue directions in their symbolic form (i.e., using\ `=`, `<`, `<=`, `>`, `>=`, or\ `!=`).^[Interpretable `my.tree` descriptions must avoid using "is" and "is not" without additional qualifications (like "equal", "different", "larger", "smaller", etc.).] 
