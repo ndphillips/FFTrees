@@ -9,6 +9,7 @@
 #' @param repeat.cues Can cues be considered/used repeatedly (as logical)?
 #' Default: \code{repeat.cues = TRUE}, but only relevant when using the \code{dfan} algorithm.
 #'
+#'
 #' @seealso
 #' \code{\link{fftrees_create}} for creating \code{FFTrees} objects;
 #' \code{\link{fftrees_define}} for defining FFTs;

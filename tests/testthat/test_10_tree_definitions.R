@@ -1,4 +1,4 @@
-context("Get, edit, and use tree.definitions")
+context("Get, edit, and use 'tree.definitions'")
 
 # Create new FFTs from edited tree.definitions:
 

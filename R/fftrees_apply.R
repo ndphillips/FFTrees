@@ -10,7 +10,9 @@
 #' by \code{\link{predict.FFTrees}}.
 #'
 #' @param x An object with FFT definitions which are to be applied to current data (as an \code{FFTrees} object).
+#'
 #' @param mydata The type of data to which the FFT should be applied (as character, either \code{"train"} or \code{"test"}).
+#'
 #' @param newdata New data to which an FFT should be applied (as a data frame).
 #'
 #' @param fin_NA_pred What outcome should be predicted if the \emph{final} node in a tree has a cue value of \code{NA}
@@ -23,6 +25,7 @@
 #'   \item{'dnk'}{yet ToDo: abstain from classifying / decide to 'do not know' / defer (i.e., tertium datur)}
 #'   }
 #' Default: \code{fin_NA_pred = "majority"}.
+#'
 #'
 #' @return A modified \code{FFTrees} object (with lists in \code{x$trees} containing information on FFT decisions and statistics).
 #'
