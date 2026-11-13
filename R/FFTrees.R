@@ -2,10 +2,12 @@
 #'
 #' @description \code{FFTrees} is the workhorse function of the \strong{FFTrees} package for creating fast-and-frugal trees (FFTs).
 #'
-#' FFTs are decision algorithms for solving binary classification tasks, i.e., they predict the values of a binary criterion variable based on 1 or multiple predictor variables (cues).
+#' FFTs are decision algorithms for solving binary classification tasks,
+#' i.e., they predict the values of a binary criterion variable based on one or multiple predictor variables (cues).
 #'
-#' Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
-#' that can then be printed, plotted, and examined further.
+#' Using \code{FFTrees} on \code{data} usually generates a range of FFTs
+#' and corresponding summary statistics (as an \code{FFTrees} object)
+#' that can be printed, plotted, and examined further.
 #'
 #' The criterion and predictor variables are specified in \code{\link{formula}} notation.
 #' Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset
@@ -13,8 +15,8 @@
 #'
 #' If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
 #' no new FFTs are created.
-#' When both arguments are provided, \code{tree.definitions} take priority over the FFTs in an existing \code{object}.
-#' Specifically,
+#' When both arguments are provided, \code{tree.definitions} take priority over the FFTs
+#' in an existing \code{object}. Specifically,
 #'
 #' \itemize{
 #'
@@ -26,24 +28,32 @@
 #' }
 #'
 #' @param formula A formula. A \code{\link{formula}} specifying a binary criterion variable (as logical) as a function of 1 or more predictor variables (cues).
+#'
 #' @param data A data frame. A dataset used for training (fitting) FFTs and alternative algorithms.
 #' \code{data} must contain the binary criterion variable specified in \code{formula} and potential predictors (which can be categorical or numeric variables).
+#'
 #' @param data.test A data frame. An optional dataset used for model testing (prediction) with the same structure as data.
+#'
 #' @param algorithm A character string. The algorithm used to create FFTs. Can be \code{'ifan'}, \code{'dfan'}.
+#'
 #' @param train.p numeric. What percentage of the data to use for training when \code{data.test} is not specified?
 #' For example, \code{train.p = .50} will randomly split \code{data} into a 50\% training set and a 50\% test set.
 #' Default: \code{train.p = 1} (i.e., using \emph{all} data for training).
 #'
+#'
 #' @param goal A character string indicating the statistic to maximize when \emph{selecting trees}:
 #' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based on \code{cost.outcomes} and \code{cost.cues}).
+#'
 #' @param goal.chase A character string indicating the statistic to maximize when \emph{constructing trees}:
 #' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based on \code{cost.outcomes} and \code{cost.cues}).
+#'
 #' @param goal.threshold A character string indicating the criterion to maximize when \emph{optimizing cue thresholds}:
 #' \code{"acc"} = overall accuracy, \code{"bacc"} = balanced accuracy, \code{"wacc"} = weighted accuracy,
 #' \code{"dprime"} = discriminability, \code{"cost"} = costs (based only on \code{cost.outcomes}, as \code{cost.cues} are constant per cue).
 #' All default goals are set in \code{\link{fftrees_create}}.
+#'
 #'
 #' @param max.levels integer. The maximum number of nodes (or levels) considered for an FFT.
 #' As all combinations of possible exit structures are considered, larger values of \code{max.levels} will create larger sets of FFTs.
@@ -51,6 +61,7 @@
 #' @param numthresh.method How should thresholds for numeric cues be determined (as character)?
 #' \code{"o"} will optimize thresholds (for \code{goal.threshold}), while \code{"m"} will use the median.
 #' Default: \code{numthresh.method = "o"}.
+#'
 #' @param numthresh.n The number of numeric thresholds to try (as integer).
 #' Default: \code{numthresh.n = 10}.
 #'
@@ -68,15 +79,18 @@
 #'   }
 #' All stopping methods use \code{stopping.par} to set a numeric threshold value.
 #' Default: \code{stopping.rule = "exemplars"}.
+#'
 #' @param stopping.par numeric. A numeric parameter indicating the criterion value for the current \code{stopping.rule}.
 #' For stopping.rule \code{"levels"}, this is the number of desired levels (as an integer).
 #' For stopping rule \code{"exemplars"}, this is the smallest proportion of exemplars allowed in the last level.
 #' For stopping.rule \code{"statdelta"}, this is the minimum required change (in the \code{goal.chase} value) to include a level.
 #' Default: \code{stopping.par = .10}.
 #'
+#'
 #' @param sens.w A numeric value from \code{0} to \code{1} indicating how to weight
 #' sensitivity relative to specificity when optimizing \emph{weighted} accuracy (e.g., \code{goal = 'wacc'}).
 #' Default: \code{sens.w = .50} (i.e., \code{wacc} corresponds to \code{bacc}).
+#'
 #'
 #' @param digits An integer value specifying the number of decimal digits to which
 #' non-integer numeric cue thresholds are rounded (when ranking cues and when
@@ -84,22 +98,28 @@
 #' passed along with the \code{FFTrees} object \code{x}.
 #' Default: \code{digits = 2}.
 #'
+#'
 #' @param cost.outcomes A list of length 4 specifying the cost value for one of the 4 possible classification outcomes.
 #' The list elements must be named \code{'hi'}, \code{'fa'}, \code{'mi'}, and \code{'cr'}
 #' (for specifying the costs of a hit, false alarm, miss, and correct rejection, respectively) and provide a numeric cost value.
 #' E.g.; \code{cost.outcomes = listc("hi" = 0, "fa" = 10, "mi" = 20, "cr" = 0)} imposes false alarm and miss costs of \code{10} and \code{20} units, respectively, while correct decisions have no costs.
+#'
 #' @param cost.cues A list containing the cost of each cue (in some common unit).
 #' Each list element must have a name corresponding to a cue (i.e., a variable in \code{data}), and should be a single (positive numeric) value.
 #' Cues in \code{data} that are not present in \code{cost.cues} are assumed to have no costs (i.e., a cost value of \code{0}).
 #'
+#'
 #' @param main string. An optional label for the dataset. Passed on to other functions, like \code{\link{plot.FFTrees}}, and \code{\link{print.FFTrees}}.
+#'
 #' @param decision.labels A vector of strings of length 2 for the text labels for negative and positive decision/prediction outcomes
 #' (i.e., left vs. right, noise vs. signal, 0 vs. 1, respectively, as character).
 #' E.g.; \code{decision.labels = c("Healthy", "Diseased")}.
 #'
+#'
 #' @param my.goal The name of an optimization measure defined by \code{my.goal.fun} (as a character string).
 #' Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
 #' Default: \code{my.goal = NULL}.
+#'
 #' @param my.goal.fun The definition of an outcome measure to optimize, defined as a function
 #' of the frequency counts of the 4 basic classification outcomes \code{hi, fa, mi, cr}
 #' (i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).
@@ -109,12 +129,15 @@
 #' @param my.tree A verbal description of an FFT, i.e., an "FFT in words" (as character string).
 #' For example, \code{my.tree = "If age > 20, predict TRUE. If sex = {m}, predict FALSE. Otherwise, predict TRUE."}.
 #'
+#'
 #' @param object An optional existing \code{FFTrees} object.
 #' When specified, no new FFTs are fitted, but existing trees are applied to \code{data} and \code{data.test}.
 #' When \code{formula}, \code{data} or \code{data.test} are not specified, the current values of \code{object} are used.
+#'
 #' @param tree.definitions An optional \code{data.frame} of hard-coded FFT definitions (in the format of \code{x$trees$definitions} of an \code{FFTrees} object \code{x}).
 #' If specified, no new FFTs are being fitted (i.e., \code{algorithm} and functions for evaluating cues and creating FFTs are skipped).
 #' Instead, the tree definitions provided are used to re-evaluate the current \code{FFTrees} object on current data.
+#'
 #'
 #' @param quiet A list of 4 logical arguments: Should detailed progress reports be suppressed?
 #' Default: \code{quiet = list(ini = TRUE, fin = FALSE, mis = FALSE, set = TRUE)},
@@ -122,8 +145,10 @@
 #' Setting list elements to \code{FALSE} is helpful when diagnosing errors.
 #' Providing a single logical value sets all elements to \code{TRUE} or \code{FALSE}.
 #'
+#'
 #' @param comp,do.comp,do.lr,do.cart,do.svm,do.rf,force,rank.method,rounding,store.data,verbose Deprecated arguments (unused or replaced, to be retired in future releases).
 #' Note: \code{rounding} has been replaced by \code{digits} (see above).
+#'
 #'
 #' @return An \code{FFTrees} object with the following elements:
 #' \describe{

@@ -23,8 +23,11 @@
 #' }
 #'
 #' @param x The current \code{FFTrees} object (to be changed and returned).
+#'
 #' @param object An existing \code{FFTrees} object (with tree definitions).
-#' @param tree.definitions A \code{data.frame}. An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
+#'
+#' @param tree.definitions A \code{data.frame}.
+#' An optional hard-coded definition of FFTs (in the same format as in an \code{FFTrees} object).
 #' If specified, no new FFTs are created, but the tree definitions in \code{object} or \code{x} are replaced by the tree definitions provided
 #' and the current object is re-evaluated.
 #'

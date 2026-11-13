@@ -22,8 +22,10 @@
 #' \code{FALSE} or noise) usually requires a reversal (e.g., negating cue direction).
 #'
 #' @param x An \code{FFTrees} object created with \code{\link{FFTrees}}.
+#'
 #' @param mydata The type of data to which a tree is being applied (as character string "train" or "test").
 #' Default: \code{mydata = "train"}.
+#'
 #' @param digits How many digits to round numeric values (as integer)?
 #' Default: \code{digits = NULL} uses the current value of \code{x$params$digits}.
 #'

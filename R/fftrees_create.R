@@ -37,6 +37,7 @@
 #' @param my.goal The name of an optimization measure defined by \code{my.goal.fun} (as a character string).
 #' Example: \code{my.goal = "my_acc"} (see \code{my.goal.fun} for corresponding function).
 #' Default: \code{my.goal = NULL}.
+#'
 #' @param my.goal.fun The definition of an outcome measure to optimize, defined as a function
 #' of the frequency counts of the 4 basic classification outcomes \code{hi, fa, mi, cr}
 #' (i.e., an R function with 4 arguments \code{hi, fa, mi, cr}).

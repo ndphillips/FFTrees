@@ -17,7 +17,9 @@
 #' beginning with "otherwise").
 #'
 #' @param x An \code{FFTrees} object.
+#'
 #' @param my.tree A character string. A verbal description (as a string of text) defining an FFT.
+#'
 #'
 #' @return An \code{FFTrees} object with a new tree definition as described by \code{my.tree}.
 #'
