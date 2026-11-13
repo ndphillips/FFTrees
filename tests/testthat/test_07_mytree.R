@@ -1,4 +1,4 @@
-context("Create FFTs from verbal descriptions with my.tree")
+context("Create FFTs from verbal descriptions with 'my.tree'")
 
 
 test_that("Can build tree based on best auto-generated tree in words (v1)", {
