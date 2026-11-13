@@ -173,10 +173,12 @@ An \code{FFTrees} object with the following elements:
 \description{
 \code{FFTrees} is the workhorse function of the \strong{FFTrees} package for creating fast-and-frugal trees (FFTs).
 
-FFTs are decision algorithms for solving binary classification tasks, i.e., they predict the values of a binary criterion variable based on 1 or multiple predictor variables (cues).
+FFTs are decision algorithms for solving binary classification tasks,
+i.e., they predict the values of a binary criterion variable based on one or multiple predictor variables (cues).
 
-Using \code{FFTrees} on \code{data} usually generates a range of FFTs and corresponding summary statistics (as an \code{FFTrees} object)
-that can then be printed, plotted, and examined further.
+Using \code{FFTrees} on \code{data} usually generates a range of FFTs
+and corresponding summary statistics (as an \code{FFTrees} object)
+that can be printed, plotted, and examined further.
 
 The criterion and predictor variables are specified in \code{\link{formula}} notation.
 Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a (required) training dataset
@@ -184,8 +186,8 @@ Based on the settings of \code{data} and \code{data.test}, FFTs are trained on a
 
 If an existing \code{FFTrees} object \code{object} or \code{tree.definitions} are provided as inputs,
 no new FFTs are created.
-When both arguments are provided, \code{tree.definitions} take priority over the FFTs in an existing \code{object}.
-Specifically,
+When both arguments are provided, \code{tree.definitions} take priority over the FFTs
+in an existing \code{object}. Specifically,
 
 \itemize{
 
